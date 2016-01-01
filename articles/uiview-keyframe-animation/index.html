@@ -1,0 +1,679 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Animation,Swift," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="本文首发CSDN，如需转载请与CSDN联系。
+
+前言有些时候大家可能会遇到制作复杂、具有连贯性UIView动画的需求，这时大家可能会使用在completion闭包中衔接一段一段的动画，使之成为一段连续的动画。
+如果我们只是连接2个，或者3个动画，这种方式或许还行得通，但如果有更多的动画片段需要连接的时候，这种方式会带来灾难性的问题，你的代码会非常的冗余，不断的在completion闭包中嵌套代码，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS UIView Animation - Keyframe">
+<meta property="og:url" content="http://www.devtalking.com/articles/uiview-keyframe-animation/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="本文首发CSDN，如需转载请与CSDN联系。
+
+前言有些时候大家可能会遇到制作复杂、具有连贯性UIView动画的需求，这时大家可能会使用在completion闭包中衔接一段一段的动画，使之成为一段连续的动画。
+如果我们只是连接2个，或者3个动画，这种方式或许还行得通，但如果有更多的动画片段需要连接的时候，这种方式会带来灾难性的问题，你的代码会非常的冗余，不断的在completion闭包中嵌套代码，">
+<meta property="og:image" content="http://d.pr/i/1e4Jg+">
+<meta property="og:image" content="http://d.pr/i/1hiaq+">
+<meta property="og:image" content="http://d.pr/i/10vBK+">
+<meta property="og:updated_time" content="2016-01-01T14:14:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS UIView Animation - Keyframe">
+<meta name="twitter:description" content="本文首发CSDN，如需转载请与CSDN联系。
+
+前言有些时候大家可能会遇到制作复杂、具有连贯性UIView动画的需求，这时大家可能会使用在completion闭包中衔接一段一段的动画，使之成为一段连续的动画。
+如果我们只是连接2个，或者3个动画，这种方式或许还行得通，但如果有更多的动画片段需要连接的时候，这种方式会带来灾难性的问题，你的代码会非常的冗余，不断的在completion闭包中嵌套代码，">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> iOS UIView Animation - Keyframe | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS UIView Animation - Keyframe
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-07-28T00:00:00+08:00" content="2015-07-28">
+              2015-07-28
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p> 本文首发<a href="http://www.csdn.net/article/2015-07-28/2825314-ios-uiview-animation-5" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+</blockquote>
+<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>有些时候大家可能会遇到制作复杂、具有连贯性UIView动画的需求，这时大家可能会使用在<code>completion</code>闭包中衔接一段一段的动画，使之成为一段连续的动画。</p>
+<p>如果我们只是连接2个，或者3个动画，这种方式或许还行得通，但如果有更多的动画片段需要连接的时候，这种方式会带来灾难性的问题，你的代码会非常的冗余，不断的在<code>completion</code>闭包中嵌套代码，使代码维护起来相当的困难。所以今天向大家介绍能更好地实现这个需求的方法，Keyframe动画。</p>
+<p>Keyframe动画可以让我们有效的拆分由若干段动画连接而成的复杂动画，可以较为精准的定义每段动画的起始点及持续时间，并且在代码组织方面也非常清晰。先看看今天要带大家实现的动画Demo：</p>
+<iframe src="https://player.vimeo.com/video/134543973?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
+
+<h2 id="u4F7F_u7528_u573A_u666F"><a href="#u4F7F_u7528_u573A_u666F" class="headerlink" title="使用场景"></a>使用场景</h2><p>我们先来认识一下，在什么样的场景下需要使用Keyframe动画。如图下所示，这是一个由四段动画组成的一个复杂动画，让UIView沿着长方形的轨迹运动：</p>
+<p><img src="http://d.pr/i/1e4Jg+" alt="Keyframe-1"></p>
+<p>我们来看看用代码如何实现：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    view.center.x += <span class="number">200.0</span></span><br><span class="line">&#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">    <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">        view.center.y += <span class="number">100.0</span></span><br><span class="line">    &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">        <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">            view.center.x -= <span class="number">200.0</span></span><br><span class="line">        &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">            <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">                view.center.y -= <span class="number">100.0</span></span><br><span class="line">            &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>通过上面的伪代码可以看到，我们使用了<code>completion</code>闭包的方式连接每一段的动画，代码看起来尚且算清晰，可读性也马马虎虎。但是大家想象一下，如果我们使UIView按照一个复杂的路线运行，这一段动画可能有十几、几十段动画组成的，那么如果再使用<code>completion</code>闭包这种方式连接，那代码是多么的惨不忍睹。幸好我们有Keyframe动画，下面就让我们来看看如何使用Keyframe动画。</p>
+<h2 id="Keyframe_u52A8_u753B"><a href="#Keyframe_u52A8_u753B" class="headerlink" title="Keyframe动画"></a>Keyframe动画</h2><p>首先我们会使用到UIView的另一个动画方法<code>animateKeyframesWithDuration(_: delay: options: animations: completion: )</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="comment">// add keyframes</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>这个方法的几个参数与前几个使用过的动画方法参数一样。上面代码片段的意思是整个关键帧动画的持续时间为2秒、无延迟、无动画选项、执行完毕后无后续执行的代码。</p>
+<blockquote>
+<p>注：该方法的动画选项不再是<code>UIViewAnimationOptions</code>，而是<code>UIViewKeyframeAnimationOptions</code>。具体的内容大家可以去查阅Apple的文档。</p>
+</blockquote>
+<p>接下来我们要在<code>animations</code>闭包中添加关键帧了：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x += <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p><code>addKeyframeWithRelativeStartTime(_: relativeDuration: animations: )</code>是UIView添加关键帧的方法，该方法有三个参数：</p>
+<ul>
+<li>startTime：关键帧开始时间，该时间是相对整个关键帧动画持续时间的相对时间，一般值在0到1之间。如果为0，则表明这一关键帧从整个动画的第0秒开始执行，如果设为0.5，则表明从整个动画的中间开始执行。</li>
+<li>relativeDuration：关键帧持续时间，该时间同样是相对整个关键帧动画持续时间的相对时间，一般值也在0到1之间。如果设为0.25，则表明这一关键帧的持续时间为整个动画持续时间的四分之一。</li>
+<li>animations：设置视图动画属性的动画闭包。</li>
+</ul>
+<p>我们解释一下上面这段代码。整个关键帧动画的持续时间为2秒，第一个关键帧从第0秒开始，运行0.5秒结束。下面我们完成其他三个关键帧：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x += <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.25</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.y += <span class="number">100.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.5</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x -= <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.75</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.y -= <span class="number">100.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>第二个关键帧的开始时间为0.25，也就是从整个动画时间的第0.5时开始执行，同样持续0.5秒。后两个关键帧的参数就不难理解了。</p>
+<p>现在整个代码看起来非常整洁，条理清晰，可读性非常好，而且可以有更精确的控制。即使再多几个关键帧也同样可以从容应对。</p>
+<p>关键帧动画不仅仅用于同一个视图的分段动画，也可使使用于不同视图的组合动画，由于我们还没讲到图层动画，所以，开篇的示例动画中就使用了关键帧动画实现了多个视图的组合动画。</p>
+<h2 id="u793A_u4F8B_u52A8_u753B"><a href="#u793A_u4F8B_u52A8_u753B" class="headerlink" title="示例动画"></a>示例动画</h2><p>在这个示例中虽然看起来是一个纸飞机视图的连续动画，但其实是由三个纸飞机视图组合而成的：</p>
+<p><img src="http://d.pr/i/1hiaq+" alt="Keyframe-2"></p>
+<p>从图中可以看到其实是有三个纸飞机视图，只不过在界面加载之前2号和3号纸飞机视图的透明度都是为零。</p>
+<p>整个动画是由这三个纸飞机视图通过关键帧动画组合而成：</p>
+<p><img src="http://d.pr/i/10vBK+" alt="Keyframe-3"></p>
+<p>图中标示出了三个飞机视图的运行轨迹、视图大小、视图透明度的状态，我们来看看代码如何实现：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> zoomInScaleTransform = <span class="type">CGAffineTransformMakeScale</span>(<span class="number">0.2</span>, <span class="number">0.2</span>)</span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">3</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.2</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.center.x += <span class="keyword">self</span>.view.frame.width</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.center.y += -<span class="number">180</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.transform = zoomInScaleTransform</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.3</span>, relativeDuration: <span class="number">0.01</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.alpha = <span class="number">1</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.transform = zoomInScaleTransform</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.3</span>, relativeDuration: <span class="number">0.5</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.center.x -= <span class="keyword">self</span>.view.frame.width</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.center.y += <span class="number">90</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.9</span>, relativeDuration: <span class="number">0.01</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneComeBack.alpha = <span class="number">1</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.9</span>, relativeDuration: <span class="number">0.2</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneComeBack.center.x += <span class="number">33</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">self</span>.restorePaperAirplaneStatus()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>大家看到这大家可能会有疑问了，三段动画怎么会有五个关键帧呢，我们来刨析一下：</p>
+<ul>
+<li>第一个关键帧：完成1号纸飞机视图运动到右上角并移出屏幕，视图逐渐变小的动画。该关键帧从整个动画的第0秒开始执行，持续时间为0.6秒。</li>
+<li>第二个关键帧：由于2号纸飞机视图的初始透明度为零，所以在第二个关键帧将透明度设为1，并且缩小视图。注意这两个动作需要在瞬间完成，所以<code>relativeDuration</code>设为0.01，一个极短的时间。开始时间为整个动画的第0.9秒开始，较第一个关键帧延迟0.3秒。</li>
+<li>第三个关键帧：与第二个关键帧同时开始执行，完成2号纸飞机视图从小变大、并且往左下角运动，一直移出屏幕。持续时间为1.5秒。</li>
+<li>第四个关键帧：与第二个关键帧作用相似，改变3号纸飞机视图的透明度，同样是在瞬间完成。</li>
+<li>第五个关键帧：与第四个关键帧同时执行， 完成向右移动的动画，持续0.6秒。</li>
+</ul>
+<p>关键帧完成之后，在<code>completion</code>闭包中调用<code>restorePaperAirplaneStatus()</code>方法，恢复3个纸飞机视图的状态及位置，以便再次执行动画。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>大家在使用关键帧动画时，对于关键帧的开始时间和持续时间需要仔细设置，保证每个关键帧在合适的时间开始，执行恰当的持续时间。在必要时候也需要在关键帧里修改视图的一些状态，但要设置极短的持续时间，表示瞬间完成。</p>
+<p>下一篇会向大家介绍在使用Auto Layout的情况下，如何通过约束实现动画，好了今天就先到这里吧。</p>
+<p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Animation/" rel="tag">#Animation</a>
+          
+            <a href="/tags/Swift/" rel="tag">#Swift</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/uiview-animation-practice/" rel="next" title="iOS UIView Animation - Practice">
+                <i class="fa fa-chevron-left"></i> iOS UIView Animation - Practice
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/uistackview/" rel="prev" title="UIStackView小窥">
+                UIStackView小窥 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u524D_u8A00"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4F7F_u7528_u573A_u666F"><span class="nav-number">2.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Keyframe_u52A8_u753B"><span class="nav-number">3.</span> <span class="nav-text">Keyframe动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u793A_u4F8B_u52A8_u753B"><span class="nav-number">4.</span> <span class="nav-text">示例动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u603B_u7ED3"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

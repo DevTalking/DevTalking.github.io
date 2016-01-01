@@ -1,0 +1,653 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Extension,Swift," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="我们先想象一下，我们已经有一个很牛逼的应用了，我们姑且叫做重要信息记事本。它的功能就是将我们认为是重要的信息记录下，便于我们随时查看。那么何为重要信息呢？重要信息可以是很多类型的信息，比如武功秘籍、食谱、生日、一段牛逼的代码等等。当我们已经有了这样一个应用后，接下来应该考虑的事情就是如何记录重要信息了。通常思维下，你们可能认为应该是先打开这个应用，然后将重要信息敲进去。是这样么？你当用户是傻子么，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在Swift中创建Action扩展">
+<meta property="og:url" content="http://www.devtalking.com/articles/how-to-create-action-extension/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="我们先想象一下，我们已经有一个很牛逼的应用了，我们姑且叫做重要信息记事本。它的功能就是将我们认为是重要的信息记录下，便于我们随时查看。那么何为重要信息呢？重要信息可以是很多类型的信息，比如武功秘籍、食谱、生日、一段牛逼的代码等等。当我们已经有了这样一个应用后，接下来应该考虑的事情就是如何记录重要信息了。通常思维下，你们可能认为应该是先打开这个应用，然后将重要信息敲进去。是这样么？你当用户是傻子么，">
+<meta property="og:image" content="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension1.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension2.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension3.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension4.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension5.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension6.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension7.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension8.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension9.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension10.png">
+<meta property="og:updated_time" content="2016-01-01T13:48:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何在Swift中创建Action扩展">
+<meta name="twitter:description" content="我们先想象一下，我们已经有一个很牛逼的应用了，我们姑且叫做重要信息记事本。它的功能就是将我们认为是重要的信息记录下，便于我们随时查看。那么何为重要信息呢？重要信息可以是很多类型的信息，比如武功秘籍、食谱、生日、一段牛逼的代码等等。当我们已经有了这样一个应用后，接下来应该考虑的事情就是如何记录重要信息了。通常思维下，你们可能认为应该是先打开这个应用，然后将重要信息敲进去。是这样么？你当用户是傻子么，">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 如何在Swift中创建Action扩展 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                如何在Swift中创建Action扩展
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-09-22T00:00:00+08:00" content="2014-09-22">
+              2014-09-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>我们先想象一下，我们已经有一个很牛逼的应用了，我们姑且叫做重要信息记事本。它的功能就是将我们认为是重要的信息记录下，便于我们随时查看。那么何为重要信息呢？重要信息可以是很多类型的信息，比如武功秘籍、食谱、生日、一段牛逼的代码等等。当我们已经有了这样一个应用后，接下来应该考虑的事情就是如何记录重要信息了。通常思维下，你们可能认为应该是先打开这个应用，然后将重要信息敲进去。是这样么？你当用户是傻子么，什么年代了还手敲，简直弱爆了。下面我向你们介绍一个很酷的方法，那就是通过Action扩展，将信息记录到我们的应用中。下面例子的主要功能是将Safari浏览的网页中的信息保存在我们应用中。</p>
+<h2 id="u89C1_u8BC1_u5947_u8FF9_u7684_u65F6_u523B"><a href="#u89C1_u8BC1_u5947_u8FF9_u7684_u65F6_u523B" class="headerlink" title="见证奇迹的时刻"></a>见证奇迹的时刻</h2><p>先通过<em>File &gt; New &gt; Project</em>菜单创建一个新的工程，选择<strong>Single View Application</strong>：</p>
+<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension1.png" alt="图片"></p>
+<p>然后通过<em>File &gt; New &gt; Target</em>菜单给给工程添加一个<strong>Target</strong>，选择<strong>Action Extension</strong>：</p>
+<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension2.png" alt="图片"></p>
+<p>在创建Action扩展时需要指定一个Aciton类型，Apple提供了两种Action扩展的类型模板。一种是有用户界面的类型，包含一个<code>UIViewController</code>和一个<code>Storeboard</code>文件，可以自定义显示界面和行为。另一种是不带用户界面的类型，这种类型只允许我们处理来自Host应用的请求。</p>
+<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension3.png" alt="图片"></p>
+<p>现在我们在工程中就可以看到刚才创建的Action扩展<strong>NoteAppExtension</strong>，它包含两个主要的文件，一个是<code>Action.js</code>，另一个是<code>ActionRequestHandler.swift</code>：</p>
+<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension4.png" alt="图片"></p>
+<p>我们来看看这两个文件的作用。<code>Action.js</code>文件用来实现和处理浏览器中请求的逻辑，在本文的例子中，它主要实现用户在浏览器中选中文本并发送到我们的应用中。<code>ActionRequestHandler.swift</code>用来处理Host应用发送的请求和参数。</p>
+<p>在实现逻辑之前我们需要设置一下扩展的属性，打开<code>Info.plist</code>文件将<code>NSExtensionActivationSupportsWebURLWithMaxCount</code>属性设置为1，该设置让扩展知道我们需要请求一个URL。</p>
+<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension5.png" alt="图片"></p>
+<p>我们<code>Action.js</code>文件中有如下内容：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Action</span> = function() &#123;&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="type">Action</span>.prototype = &#123;</span><br><span class="line">    </span><br><span class="line">    run: function(arguments) &#123;</span><br><span class="line">		<span class="comment">// 在这个方法里，你可以通过document操作HTML中的元素，或者可以将HTML中的内容传给ActionRequestHandler文件的代码。</span></span><br><span class="line">        </span><br><span class="line">		<span class="comment">// 在本文的例子中，我们不做任何更新，只是将HTML中选中的内容穿给ActionRequestHandler文件的代码。</span></span><br><span class="line">        <span class="keyword">var</span> selected = <span class="string">"No Text Selected"</span>;</span><br><span class="line">        <span class="keyword">if</span> (window.getSelection) &#123;</span><br><span class="line">            selected = window.getSelection().getRangeAt(<span class="number">0</span>).<span class="built_in">toString</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            selected = document.getSelection().getRangeAt(<span class="number">0</span>).<span class="built_in">toString</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        arguments.completionFunction(&#123;<span class="string">"args"</span> : selected&#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    finalize: function(arguments) &#123;</span><br><span class="line">		<span class="comment">// 当ActionRequestHandler文件中的itemLoadCompletedWithPreprocessingResults方法执行完之后会调用该方法。</span></span><br><span class="line">        </span><br><span class="line">		<span class="comment">// 如果ActionRequestHandler文件向HTML返回了信息，我们可以通过arguments["message"]来查看，并且可以根据该信息操作HTML中的元素。</span></span><br><span class="line">        alert(arguments[<span class="string">"message"</span>])</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">var</span> <span class="type">ExtensionPreprocessingJS</span> = new <span class="type">Action</span></span><br></pre></td></tr></table></figure>
+<p>Safari与Action扩展的交互就是通过<code>Action.js</code>文件中的<code>run</code>和<code>finalize</code>这两个方法实现的。当我们在Safari中使用Action扩展时就会调用<code>run</code>方法，它能让我们在该方法中操作当前Safari显示页面的DOM元素。当Action扩展处理完逻辑向Safari返回信息时会调用<code>finalize</code>方法，在我们的例子中，我们通过<code>self.extensionContext!.completeRequestReturningItems(nil, completionHandler: nil)</code>这段代码向Safari返回信息。该方法的第一个参数就是要返回的信息，它会将信息传给<code>Action.js</code>文件，然后通过js代码操作HTML。如果第一个参数传入<code>nil</code>，那就意味着不会调用<code>Action.js</code>文件中的<code>finalize</code>方法。<code>run</code>和<code>finalize</code>这两个方法的参数<code>arguments</code>都包含着一些信息，只不过一个是来自与HTML，一个来自<code>ActionRequestHandler</code>文件。</p>
+<p><strong>一定要记住：</strong>我们必须要实例化<code>ExtensionPreprocessingJS</code>这个全局变量，因为它是Safari和Action扩展之间的桥梁。</p>
+<p>我们的<code>ActionRequestHandler</code>文件内容如下：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ActionRequestHandler</span>: <span class="title">NSObject</span>, <span class="title">NSExtensionRequestHandling</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">var</span> extensionContext: <span class="type">NSExtensionContext</span>?</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">beginRequestWithExtensionContext</span><span class="params">(context: NSExtensionContext!)</span></span> &#123;</span><br><span class="line">        <span class="keyword">self</span>.extensionContext = context</span><br><span class="line">        <span class="keyword">let</span> identifierType = <span class="type">NSString</span>(format: kUTTypePropertyList, <span class="type">NSUTF8StringEncoding</span>)</span><br><span class="line">        <span class="keyword">for</span> (item: <span class="type">NSExtensionItem</span>) <span class="keyword">in</span> context.inputItems <span class="keyword">as</span> [<span class="type">NSExtensionItem</span>] &#123;</span><br><span class="line">            <span class="keyword">for</span> (itemProvider: <span class="type">NSItemProvider</span>) <span class="keyword">in</span> item.attachments <span class="keyword">as</span> [<span class="type">NSItemProvider</span>] &#123;</span><br><span class="line">                <span class="keyword">if</span> itemProvider.hasItemConformingToTypeIdentifier(identifierType) &#123;</span><br><span class="line">                    itemProvider.loadItemForTypeIdentifier(identifierType, options: <span class="literal">nil</span>, completionHandler: &#123;(item, error) <span class="keyword">in</span></span><br><span class="line">                        <span class="keyword">let</span> dictionary = item <span class="keyword">as</span> <span class="type">NSDictionary</span></span><br><span class="line">                        dispatch_async(dispatch_get_main_queue(), &#123;</span><br><span class="line">                            <span class="keyword">self</span>.itemLoadCompletedWithPreprocessingResults(dictionary[<span class="type">NSExtensionJavaScriptPreprocessingResultsKey</span>] <span class="keyword">as</span> <span class="type">NSDictionary</span>)</span><br><span class="line">                        &#125;)</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">itemLoadCompletedWithPreprocessingResults</span><span class="params">(javaScriptPreprocessingResults: NSDictionary)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> text = javaScriptPreprocessingResults[<span class="string">"args"</span>] <span class="keyword">as</span>? <span class="type">String</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> userDefaults = <span class="type">NSUserDefaults</span>(suiteName: <span class="string">"group.name"</span>)</span><br><span class="line">            userDefaults.setValue(text, forKey: <span class="string">"note"</span>)</span><br><span class="line">            userDefaults.synchronize()</span><br><span class="line">            <span class="keyword">self</span>.doneWithResults([<span class="string">"message"</span>: <span class="string">"Successfully added to the note app"</span>])</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">doneWithResults</span><span class="params">(resultsForJavaScriptFinalizeArg: NSDictionary?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> resultsForJavaScriptFinalize = resultsForJavaScriptFinalizeArg &#123;</span><br><span class="line">            <span class="keyword">let</span> identifierType = <span class="type">NSString</span>(format: kUTTypePropertyList, <span class="type">NSUTF8StringEncoding</span>)</span><br><span class="line">			<span class="comment">// 创建合适返回类型的标示符。            </span></span><br><span class="line"></span><br><span class="line">			<span class="comment">// 这里创建的resultsItem将作为Action.js文件中finalize方法的参数。</span></span><br><span class="line">            <span class="keyword">var</span> resultsDictionary = [<span class="type">NSExtensionJavaScriptFinalizeArgumentKey</span>: resultsForJavaScriptFinalize]</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">var</span> resultsProvider = <span class="type">NSItemProvider</span>(item: resultsDictionary, typeIdentifier: identifierType)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">var</span> resultsItem = <span class="type">NSExtensionItem</span>()</span><br><span class="line">            resultsItem.attachments = [resultsProvider]</span><br><span class="line">            </span><br><span class="line">			<span class="comment">// 这段代码意味着Action扩展已经处理完了逻辑，现在将信息返回给Action.js文件。</span></span><br><span class="line">            <span class="keyword">self</span>.extensionContext!.completeRequestReturningItems([resultsItem], completionHandler: <span class="literal">nil</span>)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="comment">// 就算我们没有任何要返回的信息，也要执行这段代码，用于告知我们的Action扩展已经完成了逻辑处理。</span></span><br><span class="line">            <span class="keyword">self</span>.extensionContext!.completeRequestReturningItems(<span class="literal">nil</span>, completionHandler: <span class="literal">nil</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">self</span>.extensionContext = <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在我们可以运行一下我们的应用，然后打开Safari，在Action选项中开启我们的Action扩展：</p>
+<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension6.png" alt="图片"></p>
+<p>然后我们就可以在Action栏中看到我们的扩展了：</p>
+<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension7.png" alt="图片"></p>
+<p>我们使用Safari随便打开一个含有文字的页面，选中一段文字，然后打开Action栏，点击<strong>NoteApp</strong>扩展，此时我们的扩展就会将选中的这段文字发送给我们的应用，形成一条新的重要信息。</p>
+<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension8.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension9.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension10.png" alt="图片"></p>
+<p>以上只是一个简单的Aciton扩展的例子，但我们可以由此延伸出更多有用、有创意的功能，让我们的生活更加美好。</p>
+<p>本文例子的代码可以在这里下载：<a href="https://github.com/jorjuela33/NoteApp" target="_blank" rel="external">NoteApp</a></p>
+<p>原文地址：<a href="http://nsnerd.co/action-extension-in-swift/" target="_blank" rel="external">Action Extension in Swift</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Extension/" rel="tag">#Extension</a>
+          
+            <a href="/tags/Swift/" rel="tag">#Swift</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/ios8-day-by-day-day2-sharing-extension/" rel="next" title="iOS8 Day-by-Day-- Day2 -- 分享应用扩展">
+                <i class="fa fa-chevron-left"></i> iOS8 Day-by-Day-- Day2 -- 分享应用扩展
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/tuple-in-swift/" rel="prev" title="Swift中的元组（Tuples）">
+                Swift中的元组（Tuples） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u89C1_u8BC1_u5947_u8FF9_u7684_u65F6_u523B"><span class="nav-number">1.</span> <span class="nav-text">见证奇迹的时刻</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

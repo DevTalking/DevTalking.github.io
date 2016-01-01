@@ -1,0 +1,636 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Swift," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="在Swift中，类型分为两类：第一种是值类型，该类型的每个实例持有数据的副本，并且该副本对于每个实例来说是独一无二的一份，比如结构体（struct）、枚举（enum）、元组（tuple）都是值类型。第二种是参照类型，该类型的实例共享数据唯一的一份副本（在native层面说的话，就是该类型的每个实例都指向内存中的同一个地址），比如类（class）就是参照类型。在这篇文章中，我们将深入探讨值类型和参照">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swift中的值类型和参照类型">
+<meta property="og:url" content="http://www.devtalking.com/articles/swift-value-and-reference-types/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="在Swift中，类型分为两类：第一种是值类型，该类型的每个实例持有数据的副本，并且该副本对于每个实例来说是独一无二的一份，比如结构体（struct）、枚举（enum）、元组（tuple）都是值类型。第二种是参照类型，该类型的实例共享数据唯一的一份副本（在native层面说的话，就是该类型的每个实例都指向内存中的同一个地址），比如类（class）就是参照类型。在这篇文章中，我们将深入探讨值类型和参照">
+<meta property="og:updated_time" content="2016-01-01T13:27:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Swift中的值类型和参照类型">
+<meta name="twitter:description" content="在Swift中，类型分为两类：第一种是值类型，该类型的每个实例持有数据的副本，并且该副本对于每个实例来说是独一无二的一份，比如结构体（struct）、枚举（enum）、元组（tuple）都是值类型。第二种是参照类型，该类型的实例共享数据唯一的一份副本（在native层面说的话，就是该类型的每个实例都指向内存中的同一个地址），比如类（class）就是参照类型。在这篇文章中，我们将深入探讨值类型和参照">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> Swift中的值类型和参照类型 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Swift中的值类型和参照类型
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-17T00:00:00+08:00" content="2014-08-17">
+              2014-08-17
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>在Swift中，类型分为两类：第一种是<strong>值类型</strong>，该类型的每个实例持有数据的副本，并且该副本对于每个实例来说是独一无二的一份，比如结构体（struct）、枚举（enum）、元组（tuple）都是值类型。第二种是<strong>参照类型</strong>，该类型的实例共享数据唯一的一份副本（在native层面说的话，就是该类型的每个实例都指向内存中的同一个地址），比如类（class）就是参照类型。在这篇文章中，我们将深入探讨值类型和参照类型的使用价值，以及如何在某种场景下选择正确的类型。</p>
+<h2 id="u5B83_u4EEC_u6709_u4EC0_u4E48_u4E0D_u540C_uFF1F"><a href="#u5B83_u4EEC_u6709_u4EC0_u4E48_u4E0D_u540C_uFF1F" class="headerlink" title="它们有什么不同？"></a>它们有什么不同？</h2><p>值类型最基本的特点就是复制，这影响到它的赋值、初始化、传参等操作。来看看下面的代码示例：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 值类型示例</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">S</span> </span>&#123; <span class="keyword">var</span> data: <span class="type">Int</span> = -<span class="number">1</span> &#125;</span><br><span class="line"><span class="keyword">var</span> a = <span class="type">S</span>()</span><br><span class="line"><span class="keyword">var</span> b = a						<span class="comment">// a复制一份，并将副本赋值给了b</span></span><br><span class="line">a.data = <span class="number">42</span>						<span class="comment">// a的数据改变了，但是b的并没有改变</span></span><br><span class="line"><span class="built_in">println</span>(<span class="string">"<span class="subst">\(a.data)</span>, <span class="subst">\(b.data)</span>"</span>)	<span class="comment">// prints "42, -1"</span></span><br></pre></td></tr></table></figure>
+<p>参照类型的复制行为其实是隐式的创建了一个共享的实例，作为原始类型的参照。下面的例子中，两个变量都会参照唯一的那个共享实例的数据，所当改变这两个变量中任何一个的数据，都会同样作用于原始类型的数据：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 参照类型示例</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123; <span class="keyword">var</span> data: <span class="type">Int</span> = -<span class="number">1</span> &#125;</span><br><span class="line"><span class="keyword">var</span> x = <span class="type">C</span>()</span><br><span class="line"><span class="keyword">var</span> y = x		<span class="comment">// 将x赋值给y</span></span><br><span class="line">x.data = <span class="number">42</span>		<span class="comment">// 修改了x的数据，其实是修改了参照数据，那么y的数据也会改变 </span></span><br><span class="line"><span class="built_in">println</span>(<span class="string">"<span class="subst">\(x.data)</span>, <span class="subst">\(y.data)</span>"</span>)	<span class="comment">// prints "42, 42"</span></span><br></pre></td></tr></table></figure>
+<h2 id="Mutation_u5728_u5B89_u5168_u6027_u4E2D_u7684_u89D2_u8272"><a href="#Mutation_u5728_u5B89_u5168_u6027_u4E2D_u7684_u89D2_u8272" class="headerlink" title="Mutation在安全性中的角色"></a>Mutation在安全性中的角色</h2><p>选择值类型的一个很重要的原因是可以让你比较容易的理解和掌控你的代码。如果你使用值类型，那么都是唯一的数据值、类型的副本在和你打交道，你对数据的修改只作用于数据所属的类型实例，所以你可以不用担心因为你在某个地方对数据的修改而影响到其他地方的数据。这在多线程环境中非常有用，因为在多线程下，不同的线程有可能会在你不知情的情况下改变数据。发生这种Bug后，调试起来就非常困难。</p>
+<p>因为值类型和参照类型的表象区别就在于当你修改类型实例的数据时，它们对原始类型数据的处理方式不同。但是有一种情况，值类型和参照类型的处理方式却又相似，那就是当类型实例的数据为只读的时候。在不存在修改的情况下，值类型和参照类型就没什么区别了。</p>
+<p>你可能会觉得这一点很有用，假如说一个<code>class</code>是完全不能被重定义的，那么就比较符合使用Cocoa的<code>NSObject</code>对象的一些习惯，并能很好的保持原本的语义。今天，在Swift你可以通过定义不可改变的存储属性来创建一个不可重定义的类，这样可以避免暴露出的API被修改。事实上，许多普通的Cocoa框架里的类，比如<code>NSURL</code>，都被定义成了不可重定义的类。尽管如此，Swift目前还不提供任何机制像结构体（struct）和枚举（enum）一样去强制使一个<code>class</code>成为不可重定义的类（比如像子类）。</p>
+<h2 id="u5982_u4F55_u9009_u62E9_u6B63_u786E_u7684_u7C7B_u578B_uFF1F"><a href="#u5982_u4F55_u9009_u62E9_u6B63_u786E_u7684_u7C7B_u578B_uFF1F" class="headerlink" title="如何选择正确的类型？"></a>如何选择正确的类型？</h2><p>如果你想创建一个新类型，那么你应该选择值类型还是参照类型呢？当你使用Cocoa框架时，很多API都是<code>NSObject</code>的子类，那么你就必须要使用参照类型，也就是<code>class</code>。在其他情况下，这里有一些指导建议你可以参考：</p>
+<p>使用值类型的情形：</p>
+<ul>
+<li>使用<code>==</code>运算符比较实例数据的时候。</li>
+<li>你想单独复制一份实例数据的时候。</li>
+<li>当在多线程环境下操作数据的时候。</li>
+</ul>
+<p>使用参照类型（比如<code>class</code>）的情形：</p>
+<ul>
+<li>当使用<code>===</code>运算符判断两个对象是否引用同一个对象实例的时候。</li>
+<li>当上下文需要创建一个共享的、可变的对象时。</li>
+</ul>
+<p>在Swift中，<code>Array</code>、<code>String</code>、<code>Dictionary</code>都是值类型。它们的使用方式类似C语言中得<code>int</code>，每一个实例都有一份数据。你不需要进行显示的复制操作去防止数据在你不知情的情况下被修改。更重要的是，你可以跨线程进行传参而不需要考虑同步的问题，因为传递值类型很安全。秉着高安全性的精神，这种类型划分模式能帮助你在Swift中写出更加有可预测性的代码。</p>
+<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=10" target="_blank" rel="external">Value and Reference Types</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Swift/" rel="tag">#Swift</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/ios8-day-by-day-day1-swift-guide/" rel="next" title="iOS8 Day-by-Day -- Day1 -- Swift引子">
+                <i class="fa fa-chevron-left"></i> iOS8 Day-by-Day -- Day1 -- Swift引子
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/implicitly-converting-functions-return-optionals/" rel="prev" title="Swift中将函数的返回值隐式转换为Optional类型的特性">
+                Swift中将函数的返回值隐式转换为Optional类型的特性 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u5B83_u4EEC_u6709_u4EC0_u4E48_u4E0D_u540C_uFF1F"><span class="nav-number">1.</span> <span class="nav-text">它们有什么不同？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mutation_u5728_u5B89_u5168_u6027_u4E2D_u7684_u89D2_u8272"><span class="nav-number">2.</span> <span class="nav-text">Mutation在安全性中的角色</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5982_u4F55_u9009_u62E9_u6B63_u786E_u7684_u7C7B_u578B_uFF1F"><span class="nav-number">3.</span> <span class="nav-text">如何选择正确的类型？</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

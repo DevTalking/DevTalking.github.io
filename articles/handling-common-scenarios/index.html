@@ -1,0 +1,738 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Swift," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="当你在开发一个应用扩展，让其执行某个任务时，你可能会遇到一些常见的，或者说在多种扩展中都会出现的通用的问题，并且必须要处理这些问题。在这一章节中，我们将帮助你如何应对和处理这些常见的问题。
+使用内嵌框架共享代码你可以创建一个内嵌框架，用于在应用扩展和它的载体应用之间共享代码。比如，你开发了一个图片滤镜的照片编辑扩展，同时该扩展的载体应用也有这个功能，那么你就可以将实现该功能的代码封装成一个框架，让">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常见问题的处理方案 -- iOS8/OS X v10.10应用扩展编程指南">
+<meta property="og:url" content="http://www.devtalking.com/articles/handling-common-scenarios/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="当你在开发一个应用扩展，让其执行某个任务时，你可能会遇到一些常见的，或者说在多种扩展中都会出现的通用的问题，并且必须要处理这些问题。在这一章节中，我们将帮助你如何应对和处理这些常见的问题。
+使用内嵌框架共享代码你可以创建一个内嵌框架，用于在应用扩展和它的载体应用之间共享代码。比如，你开发了一个图片滤镜的照片编辑扩展，同时该扩展的载体应用也有这个功能，那么你就可以将实现该功能的代码封装成一个框架，让">
+<meta property="og:image" content="http://www.devtalking.com/postImages/handling-common-scenarios1.png">
+<meta property="og:updated_time" content="2016-01-01T13:34:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="常见问题的处理方案 -- iOS8/OS X v10.10应用扩展编程指南">
+<meta name="twitter:description" content="当你在开发一个应用扩展，让其执行某个任务时，你可能会遇到一些常见的，或者说在多种扩展中都会出现的通用的问题，并且必须要处理这些问题。在这一章节中，我们将帮助你如何应对和处理这些常见的问题。
+使用内嵌框架共享代码你可以创建一个内嵌框架，用于在应用扩展和它的载体应用之间共享代码。比如，你开发了一个图片滤镜的照片编辑扩展，同时该扩展的载体应用也有这个功能，那么你就可以将实现该功能的代码封装成一个框架，让">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 常见问题的处理方案 -- iOS8/OS X v10.10应用扩展编程指南 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                常见问题的处理方案 -- iOS8/OS X v10.10应用扩展编程指南
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-27T00:00:00+08:00" content="2014-08-27">
+              2014-08-27
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>当你在开发一个应用扩展，让其执行某个任务时，你可能会遇到一些常见的，或者说在多种扩展中都会出现的通用的问题，并且必须要处理这些问题。在这一章节中，我们将帮助你如何应对和处理这些常见的问题。</p>
+<h2 id="u4F7F_u7528_u5185_u5D4C_u6846_u67B6_u5171_u4EAB_u4EE3_u7801"><a href="#u4F7F_u7528_u5185_u5D4C_u6846_u67B6_u5171_u4EAB_u4EE3_u7801" class="headerlink" title="使用内嵌框架共享代码"></a>使用内嵌框架共享代码</h2><p>你可以创建一个内嵌框架，用于在应用扩展和它的载体应用之间共享代码。比如，你开发了一个图片滤镜的照片编辑扩展，同时该扩展的载体应用也有这个功能，那么你就可以将实现该功能的代码封装成一个框架，让扩展<code>target</code>和载体应用<code>target</code>都使用这个框架。</p>
+<p>你要确保你创建的内嵌框架不包含应用扩展不能使用的API。这类API一般使用<code>unavailability</code>宏来标记，比如像<code>NS_EXTENSION_UNAVAILABLE</code>。</p>
+<p>如果你创建的内嵌框架中包含应用扩展不能使用的API，那么你将其Link到载体应用没关系，载体应用可以正常使用框架中的API，但是不能与应用扩展共享代码，也就是应用扩展不能使用该框架提供的所有API，继而无法做到代码共享。如果你上传App Store的应用扩展中有这种框架，或者应用扩展中使用了不允许使用的API，那么审核时会被拒绝。</p>
+<p>如果我们要想应用扩展使用内嵌框架，那么首先要配置一下。将<code>target</code>的<code>Require Only App-Extension-Safe API</code>选项设置为<code>Yes</code>。如果你不这样设置，那么Xcode会向你提示警告：<code>linking against dylib not safe for use in application extensions</code>。</p>
+<blockquote>
+<p>重要提示：如果载体应用要使用内嵌框架，那么必须要支持<code>arm64</code>架构，否则在上传App Store时会被拒绝。（如“创建应用扩展”章节中介绍的，所有应用扩展都要支持<code>arm64</code>架构。）</p>
+</blockquote>
+<p>在配置你的Xcode项目时，在<code>Build Phases</code>选项卡的<code>Copy Files</code>项中一定要将<code>Destination</code>设置为<code>Frameworks</code>。</p>
+<blockquote>
+<p>重要提示：我们要始终将<code>Destination</code>设置为<code>Frameworks</code>，如果你将其设置为<code>SharedFramework</code>，那么上传App Store时会被拒绝的。</p>
+</blockquote>
+<p>你可以让载体应用支持iOS7或更早的版本，但当在iOS8或更新的版本中运行时，要特别注意内嵌框架的安全性。详细内容可以参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW3" target="_blank" rel="external">Deploying a Containing App to Older Versions of iOS</a>。</p>
+<p>有关创建和使用内嵌框架的更多内容，请观看<a href="https://developer.apple.com/videos/wwdc/2014" target="_blank" rel="external">WWDC 2014的视频</a>“Building Modern Frameworks”。</p>
+<h2 id="u4E0E_u8F7D_u4F53_u5E94_u7528_u5171_u4EAB_u6570_u636E"><a href="#u4E0E_u8F7D_u4F53_u5E94_u7528_u5171_u4EAB_u6570_u636E" class="headerlink" title="与载体应用共享数据"></a>与载体应用共享数据</h2><p>虽然应用扩展的包内嵌在载体应用中，但是应用扩展和载体应用的安全域还是不一样的。默认情况下，应用扩展和载体应用是不能直接访问对方内容的。</p>
+<p>不过你可以通过数据共享来实现这个愿望。比如，你希望应用扩展和它的载体应用共享一个单一的大数据集。比如<code>prerendered assets</code>。</p>
+<p>要实现数据共享，我们要使用Xcode或者开发者门户网站允许应用扩展和它的载体应用成为一个应用组，然后在开发者门户网站中注册应用组，并指明在载体应用中使用该应用组。关于应用组的知识请查阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/AboutEntitlements.html#//apple_ref/doc/uid/TP40011195" target="_blank" rel="external">Entitlement Key Reference</a>文档的<a href="https://developer.apple.com/library/prerelease/ios/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/EnablingAppSandbox.html#//apple_ref/doc/uid/TP40011195-CH4-SW19" target="_blank" rel="external">Adding an App to an App Group</a>章节。</p>
+<p>当你设置好应用组后，应用扩展和它的载体应用就可以通过<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSUserDefaults_Class/index.html#//apple_ref/occ/cl/NSUserDefaults" target="_blank" rel="external">NSUserDefaults</a>API共享访问用户的信息。我们可以使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSUserDefaults_Class/index.html#//apple_ref/occ/instm/NSUserDefaults/initWithSuiteName:" target="_blank" rel="external">initWithSuiteName:</a>方法实例化一个<code>NSUserDefaults</code>对象，然后传入共享组的标示符。比如一个共享扩展，它或许会更新用户最近经常使用的共享账号，那么我们可以这样来写：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Create and share access to an NSUserDefaults object.</span></span><br><span class="line"><span class="type">NSUserDefaults</span> *mySharedDefaults = [[<span class="type">NSUserDefaults</span> alloc] initWithSuiteName:@<span class="string">"com.example.domain.MyShareExtension"</span>];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">// Use the shared user defaults object to update the user's account.</span></span><br><span class="line">[mySharedDefaults setObject:theAccountName forKey:@<span class="string">"lastAccountName"</span>];</span><br></pre></td></tr></table></figure>
+<p>下图向我们展示了应用扩展和它的载体应用是如何通过共享容器实现数据共享的：  </p>
+<p><img src="http://www.devtalking.com/postImages/handling-common-scenarios1.png" alt="结构"></p>
+<blockquote>
+<p>重要提示：如果你的应用扩展使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSession_class/index.html#//apple_ref/occ/cl/NSURLSession" target="_blank" rel="external">NSURLSession</a>类执行后台的上传下载任务时，你必须要设置一个共享容器。这样扩展和载体应用就可以访问到转换传输的数据。后台上传下载的更多知识请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW2" target="_blank" rel="external"> Performing Uploads and Downloads</a>。</p>
+</blockquote>
+<p>如果你设置了共享容器，那么载体应用和它包含的扩展就可以对共享容器里的内容进行读写操作了。同时你还必须要对数据的操作进行同步，以避免数据损坏或出错。使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIDocument_Class/index.html#//apple_ref/occ/cl/UIDocument" target="_blank" rel="external">UIDocument</a>类、Core Data或者SQLite可以帮助定位、协调操作共享容器中的内容。</p>
+<h2 id="u8BBF_u95EE_u7F51_u9875"><a href="#u8BBF_u95EE_u7F51_u9875" class="headerlink" title="访问网页"></a>访问网页</h2><p>在分享扩展（iOS与OS X平台）和Action扩展（iOS平台）中，一般都允许用户使用Safari浏览器执访问网页并通过执行JavaScript脚本将结果返回到扩展中。你也可以在你的扩展运行之前或执行完任务之后通过JavaScript文件修改网页内容。比如分享扩展，它可以帮助用户将网页上的内容分享到用户的社交网站上，或者iOS上的Action扩展可能会显示当前网页的指定翻译内容。</p>
+<p>如果要通过应用扩展访问网页并操作网页内容，那么需要遵循下面几个步骤：</p>
+<ul>
+<li>创建一个JavaScript文件，并申明一个全局对象，名为<code>ExtensionPreprocessingJS</code>并将其实例化。</li>
+<li>在应用扩展的属性列表文件中添加关键字<code>NSExtensionJavaScriptPreprocessingFile</code>，给Safari浏览器指明使用哪个JavaScript文件。</li>
+<li>在<code>NSExtensionActivationRule</code>字典中，将<code>NSExtensionActivationSupportsWebURLWithMaxCount</code>赋值一个非零的值。（更多关于<code>NSExtensionActivationRule</code>字典的知识请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW8" target="_blank" rel="external">Declaring Supported Data Types for a Share or Action Extension</a>。）</li>
+<li>当你的应用扩展开始运行时，使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSItemProvider_Class/index.html#//apple_ref/occ/cl/NSItemProvider" target="_blank" rel="external">NSItemProvider</a>类从JavaScript文件的返回值中获取结果。</li>
+<li>在iOS系统的应用扩展中，如果你希望当应用扩展执行完任务后实时更新网页内容，那么你要向JavaScript文件中传入内容。（在这一步中也使用<code>NSItemProvider</code>类。）</li>
+</ul>
+<p>为了告知Safari你的应用扩展中包含一个JavaScript文件，你需要在应用扩展的<code>Info.plist</code>文件中，向<code>NSExtensionAttributes</code>字典添加<code>NSExtensionJavaScriptPreprocessingFile</code>关键字来指明你的JavaScript文件。这个关键字的值就是你希望当你的应用扩展运行前，Safari要加载的JavaScript文件的名称。比如：</p>
+<pre><code>&lt;key&gt;NSExtensionAttributes&lt;/key&gt;
+    &lt;dict&gt;
+        &lt;key&gt;NSExtensionJavaScriptPreprocessingFile&lt;/key&gt;
+        &lt;string&gt;MyJavaScriptFile&lt;/string&gt;
+    &lt;/dict&gt;
+</code></pre><p>在iOS和OS X平台中，在你自定义的JavaScript类中可以定义一个<code>run()</code>函数，该函数就是Safari加载JavaScript文件的入口。在<code>run()</code>函数中，Safari提供了一个名为<code>completionFunction</code>的参数，你可以使用键值对象的形式将结果传给应用扩展。</p>
+<p>在iOS平台中，你还可以定义一个<code>finalize()</code>函数，当应用扩展在任务结束阶段调用<code>completeRequestReturningItems:expirationHandler:completion:</code>方法时Safari会调用<code>finalize()</code>函数。在该函数中，可以通过向<code>completeRequestReturningItems:expirationHandler:completion:</code>方法传值，来改变网页内容。</p>
+<p>比如，你的iOS应用扩展需要基于一个网页URI启动，并且当它结束运行时改变网页的背景色，那么你需要这样写JavaScript代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">MyExtensionJavaScriptClass</span> = function() &#123;&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="type">MyExtensionJavaScriptClass</span>.prototype = &#123;</span><br><span class="line">    run: function(arguments) &#123;</span><br><span class="line">    <span class="comment">// Pass the baseURI of the webpage to the extension.</span></span><br><span class="line">        arguments.completionFunction(&#123;<span class="string">"baseURI"</span>: document.baseURI&#125;);</span><br><span class="line">    &#125;,</span><br><span class="line"> </span><br><span class="line">	<span class="comment">// Note that the finalize function is only available in iOS.</span></span><br><span class="line">    finalize: function(arguments) &#123;</span><br><span class="line">    <span class="comment">// arguments contains the value the extension provides in [NSExtensionContext completeRequestReturningItems:expirationHandler:completion:].</span></span><br><span class="line">    <span class="comment">// In this example, the extension provides a color as a returning item.</span></span><br><span class="line">    document.body.style.backgroundColor = arguments[<span class="string">"bgColor"</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// The JavaScript file must contain a global object named "ExtensionPreprocessingJS".</span></span><br><span class="line"><span class="keyword">var</span> <span class="type">ExtensionPreprocessingJS</span> = new <span class="type">MyExtensionJavaScriptClass</span>;</span><br></pre></td></tr></table></figure>
+<p>在iOS和OS X平台中，你需要编写代码来处理<code>fun()</code>函数返回的值，为获取到字典中的值，我们需要指定<code>kUTTypePropertyList</code>类型作为标示符传入<code>NSItemProvider</code>类的<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSItemProvider_Class/index.html#//apple_ref/occ/instm/NSItemProvider/loadItemForTypeIdentifier:options:completionHandler:" target="_blank" rel="external"> loadItemForTypeIdentifier:options:completionHandler:</a>方法。在该字典中使用<code>NSExtensionJavaScriptPreprocessingResultsKey</code>作为<code>key</code>来取值。比如下面例子中我们想要获取将URI传入<code>run()</code>的返回值：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">[imageProvider loadItemForTypeIdentifier:kUTTypePropertyList options:<span class="literal">nil</span> completionHandler:^(<span class="type">NSDictionary</span> *item, <span class="type">NSError</span> *error) &#123;</span><br><span class="line">    <span class="type">NSDictionary</span> *results = (<span class="type">NSDictionary</span> *)item;</span><br><span class="line">        <span class="type">NSString</span> *baseURI = [[results objectForKey:<span class="type">NSExtensionJavaScriptPreprocessingResultsKey</span>] objectForKey:@<span class="string">"baseURI"</span>];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p><code>finalize()</code>函数是在当应用扩展执行完任务后传参并调用的，创建一个含有我们需要处理的值的字典，然后用<code>NSItemProvider</code>的<code>initWithItem:typeIdentifier:</code>方法来封装该字典。比如当扩展执行完任务后我们想让网页变为红色，我们可以这样写：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSExtensionItem</span> *extensionItem = [[<span class="type">NSExtensionItem</span> alloc] <span class="keyword">init</span>];</span><br><span class="line">extensionItem.attachments = @[[[<span class="type">NSItemProvider</span> alloc] initWithItem: @&#123;<span class="type">NSExtensionJavaScriptFinalizeArgumentKey</span>: @&#123;@<span class="string">"bgColor"</span>:@<span class="string">"red"</span>&#125;&#125; typeIdentifier:(<span class="type">NSString</span> *)kUTTypePropertyList]];</span><br><span class="line">[[<span class="keyword">self</span> extensionContext] completeRequestReturningItems:@[extensionItem] expirationHandler:<span class="literal">nil</span> completion:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
+<h2 id="u6267_u884C_u4E0A_u4F20_u4E0B_u8F7D_u4EFB_u52A1"><a href="#u6267_u884C_u4E0A_u4F20_u4E0B_u8F7D_u4EFB_u52A1" class="headerlink" title="执行上传下载任务"></a>执行上传下载任务</h2><p>用户一般的操作习惯都倾向于当使用你的应用扩展完成某个任务后，可以将结果立即反馈在使用扩展的应用中。如果一个扩展要处理的任务包含较长时间的上传下载操作时，你要确保当你的应用扩展关闭后能继续完成该任务。为实现这个功能，我们需要使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSession_class/index.html#//apple_ref/occ/cl/NSURLSession" target="_blank" rel="external">NSURLSession</a>类创建一个URL会话并创建后台的上传下载任务。</p>
+<blockquote>
+<p>提示：你可以回想一下其他类型的后台任务，比如后台支持VoIP、后台播放音乐，这些是不能用应用扩展去实现的。更多信息请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionCreation.html#//apple_ref/doc/uid/TP40014214-CH5-SW3" target="_blank" rel="external">Respond to the Host App’s Request</a>。</p>
+</blockquote>
+<p>当你的应用扩展准备好上传下载任务后，扩展会完成调用它的应用发出的请求，并在不影响上传下载任务的前提下终止扩展。更多关于扩展处理主叫应用请求的知识请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionCreation.html#//apple_ref/doc/uid/TP40014214-CH5-SW3" target="_blank" rel="external">Respond to the Host App’s Request</a>。在iOS系统中，如果你的应用扩展在执行完后台任务时并没有在运行，那么系统会自动在后台运行扩展的载体应用，并调用<a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIApplicationDelegate_Protocol/index.html#//apple_ref/occ/intfm/UIApplicationDelegate/application:handleEventsForBackgroundURLSession:completionHandler:" target="_blank" rel="external">application:handleEventsForBackgroundURLSession:completionHandler:</a>代理方法。</p>
+<blockquote>
+<p>重要提示：如果你的应用扩展在后台创建了<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSession_class/index.html#//apple_ref/occ/cl/NSURLSession" target="_blank" rel="external">NSURLSession</a>任务，那么你必须要设置一个共享容器，以确保扩展和载体应用实现数据共享。我们可以在<code>NSURLSessionConfiguration</code>类中使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSessionConfiguration_class/index.html#//apple_ref/occ/instp/NSURLSessionConfiguration/sharedContainerIdentifier" target="_blank" rel="external">sharedContainerIdentifier</a>属性来指定一个共享容器的标示符，然后我们就可以通过该标示符获取到共享容器。<br>请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW6" target="_blank" rel="external">Sharing Data with Your Containing App</a>文档来设置共享容器。</p>
+</blockquote>
+<p>下面的例子展示了如何配置一个URL会话，并创建一个下载任务：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSURLSession</span> *mySession = [<span class="keyword">self</span> configureMySession];</span><br><span class="line"><span class="type">NSURL</span> *url = [<span class="type">NSURL</span> <span class="type">URLWithString</span>:@<span class="string">"http://www.example.com/LargeFile.zip"</span>];</span><br><span class="line"><span class="type">NSURLSessionTask</span> *myTask = [mySession downloadTaskWithURL:url];</span><br><span class="line">[myTask resume];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">- (<span class="type">NSURLSession</span> *) configureMySession &#123;</span><br><span class="line">    <span class="keyword">if</span> (!mySession) &#123;</span><br><span class="line">        <span class="type">NSURLSessionConfiguration</span>* config = [<span class="type">NSURLSessionConfiguration</span> backgroundSessionConfigurationWithIdentifier:@“com.mycompany.myapp.backgroundsession”];</span><br><span class="line">		<span class="comment">// To access the shared container you set up, use the sharedContainerIdentifier property on your configuration object.</span></span><br><span class="line">		config.sharedContainerIdentifier = @“com.mycompany.myappgroupidentifier”;</span><br><span class="line">        mySession = [<span class="type">NSURLSession</span> sessionWithConfiguration:config delegate:<span class="keyword">self</span> delegateQueue:<span class="literal">nil</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> mySession;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为在单位时间内只能由一个进程使用后台会话，所以你需要为载体应用中的所有扩展创建不同的后台会话（每个后台会话都要有一个唯一的标示符）。在这里我们建议当载体应用在后台处理扩展的任务时，只使用一个该扩展创建的后台会话。如果你要执行其他的网络相关的任务，那么就要创建相应的URL会话。</p>
+<p>如果你需要在后台创建URL会话之前完成主叫应用的请求，那么要确保创建和使用会话的代码是有效可执行的。当你的扩展调用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionContext_Class/index.html#//apple_ref/occ/instm/NSExtensionContext/completeRequestReturningItems:completionHandler:" target="_blank" rel="external">completeRequestReturningItems:completionHandler:</a>方法告知主叫应用已经完成相关请求后，系统就可以随时终止你的应用扩展。</p>
+<h2 id="u4E3A_u5206_u4EAB_u548CAction_u6269_u5C55_u7533_u660E_u652F_u6301_u7684_u6570_u636E_u7C7B_u578B"><a href="#u4E3A_u5206_u4EAB_u548CAction_u6269_u5C55_u7533_u660E_u652F_u6301_u7684_u6570_u636E_u7C7B_u578B" class="headerlink" title="为分享和Action扩展申明支持的数据类型"></a>为分享和Action扩展申明支持的数据类型</h2><p>在你的分享或Action扩展中，在它们的工作中可能会使用到一些数据，并且这些数据的类型各不相同。为了确保只有当用户在主叫应用中选择了你的扩展支持的数据类型时，才会展示你的扩展功能。你需要在扩展的属性列表文件中添加<code>NSExtensionActivationRule</code>关键字。你也可以使用该关键字指定扩展处理每种类型的最大数目。当你的应用扩展运行时，系统会用改关键字的值与扩展数据项的<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionItem_Class/index.html#//apple_ref/occ/instp/NSExtensionItem/attachments" target="_blank" rel="external">attachments</a>属性值作比较。关于<code>NSExtensionActivationRule</code>关键字的详细信息可以参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/SystemExtensionKeys.html#//apple_ref/doc/uid/TP40014212-SW2" target="_blank" rel="external">Action Extension Keys</a>文档中的<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009247" target="_blank" rel="external">Information Property List Key Reference</a>章节。</p>
+<p>比如，你可以申明你的分享扩展支持最大处理10张图片，一部影片和一个网站URL。你可以参考下面的写法：</p>
+<pre><code>&lt;key&gt;NSExtensionAttributes&lt;/key&gt;
+    &lt;dict&gt;
+        &lt;key&gt;NSExtensionActivationRule&lt;/key&gt;
+        &lt;dict&gt;
+            &lt;key&gt;NSExtensionActivationSupportsImageWithMaxCount&lt;/key&gt;
+            &lt;integer&gt;10&lt;/integer&gt;
+            &lt;key&gt;NSExtensionActivationSupportsMovieWithMaxCount&lt;/key&gt;
+            &lt;integer&gt;1&lt;/integer&gt;
+            &lt;key&gt;NSExtensionActivationSupportsWebURLWithMaxCount&lt;/key&gt;
+            &lt;integer&gt;1&lt;/integer&gt;
+        &lt;/dict&gt;
+    &lt;/dict&gt;
+</code></pre><p>如果你想指定不支持的数据类型，那么你可以将该类型的值设置为0，或者在<code>NSExtensionActivationRule</code>中不添加该类型即可。</p>
+<blockquote>
+<p>提示：如果你的分享扩展或iOS中的Action扩展需要访问网页，那你必须要确保<code>NSExtensionActivationSupportsWebURLWithMaxCount</code>关键字的值不为0（更多关于在应用扩展中通过JavaScript访问网页的内容请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ShareSheet.html#//apple_ref/doc/uid/TP40014214-CH12-SW8" target="_blank" rel="external">Accessing a Webpage</a>）。</p>
+</blockquote>
+<p>你也可以使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionItem_Class/index.html#//apple_ref/doc/uid/TP40014375-CH1" target="_blank" rel="external">NSExtensionItem</a>定义的<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/DevPedia-CocoaCore/UniformTypeIdentifier.html#//apple_ref/doc/uid/TP40008195-CH60" target="_blank" rel="external">UTI</a>子类型以便数据检测器检测文本信息，比如电话号码或通讯地址。</p>
+<p><code>NSExtensionActivationRule</code>字典中的关键字足以满足大多数应用的过滤需求。如果你需要做更复杂的过滤，比如像<code>public.url</code>和<code>public.image</code>之间的区别，那么你就得在文本中创建断言语句。如果你要创建一个断言，那么就将<code>NSExtensionActivationRule</code>关键字的值设置为你指定的断言字符串。（在运行时，系统会自动将该字符串编译为<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSPredicate_Class/index.html#//apple_ref/occ/cl/NSPredicate" target="_blank" rel="external">NSPredicate</a>对象）</p>
+<p>比如，一个应用扩展的附件属性可以指定为PDF文件，可以这样写：</p>
+<pre><code>{extensionItems = ({
+    attachments =     (
+                {
+            registeredTypeIdentifiers =             (
+             &quot;com.adobe.pdf&quot;,
+            &quot;public.file-url&quot;
+            );
+        }
+    );
+})}
+</code></pre><p>为了指定你的应用扩展可以处理PDF文件，你可以像这样创建断言字符串：</p>
+<pre><code>SUBQUERY(extensionItems, $extensionItem, SUBQUERY($extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;com.adobe.pdf&quot;).@count == 1).@count == 1
+</code></pre><p>开发过程中，在你创建断言语句之前你可以使用<code>TRUEPREDICATE</code>常量（结果为<code>true</code>）测试你的代码路径。更多断言语句的语法知识请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Conceptual/Predicates/Articles/pSyntax.html#//apple_ref/doc/uid/TP40001795" target="_blank" rel="external">Predicate Format String Syntax</a>。</p>
+<blockquote>
+<p>重要提示：在将你的载体应用上传App Store之前，要确保所有的<code>TRUEPREDICATE</code>常量已经替换为指定的断言语句或<code>NSExtensionActivationRule</code>关键字，不然载体应用会被App Store拒绝。</p>
+</blockquote>
+<h2 id="u914D_u7F6E_u8F7D_u4F53_u5E94_u7528_u4EE5_u9002_u7528_u4E8E_u8001_u7248_u672C_u7684iOS_u7CFB_u7EDF"><a href="#u914D_u7F6E_u8F7D_u4F53_u5E94_u7528_u4EE5_u9002_u7528_u4E8E_u8001_u7248_u672C_u7684iOS_u7CFB_u7EDF" class="headerlink" title="配置载体应用以适用于老版本的iOS系统"></a>配置载体应用以适用于老版本的iOS系统</h2><p>如果你在载体应用中使用了内嵌框架，那么它就可以在iOS8.0之后的版本中使用，即便内嵌框架不支持老版本的系统也没关系。</p>
+<p>使载体应用能做到上述这一点的是<a href="x-man-page://dlopen" target="_blank" rel="external">dlopen</a>命令，它可以使你使用条件链接和加载框架包的机制。你可以使用这个命令来代替编译时链接，你可以在Xcode的General 选项或Build Phases选项中对该命令进行编辑。其原理就是只有当载体应用在iOS8.0或更高的版本中运行时，才会链接使用内嵌框架。</p>
+<blockquote>
+<p>重要提示：如果你的载体应用使用了内嵌框架，那么就必须要支持<code>arm64</code>架构，否则会被App Store拒绝。</p>
+</blockquote>
+<h3 id="u8BBE_u7F6EXcode_u9879_u76EE_u4E2D_u5E94_u7528_u6269_u5C55_u7684_u6761_u4EF6_u94FE_u63A5"><a href="#u8BBE_u7F6EXcode_u9879_u76EE_u4E2D_u5E94_u7528_u6269_u5C55_u7684_u6761_u4EF6_u94FE_u63A5" class="headerlink" title="设置Xcode项目中应用扩展的条件链接"></a>设置Xcode项目中应用扩展的条件链接</h3><ol>
+<li>将每一个应用扩展的运行系统版本设置为iOS8.0或更高，通常选中Xcode中的<code>target</code>，在<code>General</code>选项中设置<code>Deployment info</code>。</li>
+<li>将你载体应用的运行系统版本设置为你想支持的最低iOS版本。</li>
+<li>在你的载体应用中，通过<a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIDevice_Class/index.html#//apple_ref/occ/instp/UIDevice/systemVersion" target="_blank" rel="external">systemVersion</a>方法，在运行时检查判断iOS的版本，并判断是否执行<code>dlopen</code>命令。只有你的载体应用在iOS8.0或更高的版本中运行时才会指定<code>dlopen</code>命令。</li>
+</ol>
+<p>特定的iOS API通过<code>dlopen</code>命令使用内嵌框架。你必须选择性的使用这些API，就像使用<code>dlopen</code>命令时那样。这些API都是<a href="https://developer.apple.com/library/prerelease/ios/documentation/CoreFoundation/Reference/CFBundleRef/index.html#//apple_ref/c/tdef/CFBundleRef" target="_blank" rel="external">CFBundleRef</a>的封装类型：</p>
+<ul>
+<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/CoreFoundation/Reference/CFBundleRef/index.html#//apple_ref/c/func/CFBundleGetFunctionPointerForName" target="_blank" rel="external">CFBundleGetFunctionPointerForName</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/CoreFoundation/Reference/CFBundleRef/index.html#//apple_ref/c/func/CFBundleGetFunctionPointersForNames" target="_blank" rel="external">CFBundleGetFunctionPointersforNames</a></li>
+</ul>
+<p>还有来自<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSBundle_Class/index.html#//apple_ref/occ/cl/NSBundle" target="_blank" rel="external">NSBundle</a>类的方法：</p>
+<ul>
+<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSBundle_Class/index.html#//apple_ref/occ/instm/NSBundle/load" target="_blank" rel="external">load</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSBundle_Class/index.html#//apple_ref/occ/instm/NSBundle/loadAndReturnError:" target="_blank" rel="external">loadAndReturnError:</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSBundle_Class/index.html#//apple_ref/occ/instm/NSBundle/classNamed:" target="_blank" rel="external">classNamed:</a></li>
+</ul>
+<p>因为你一般会将载体应用的运行系统版本配置为较低的版本，所以这些API通常都是在运行时检查，只有确保载体应用在iOS8.0或更高版本中运行时才会使用这些API。</p>
+<p>原文地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW1" target="_blank" rel="external">Handling Common Scenarios</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Swift/" rel="tag">#Swift</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/swift-uikit-dynamics-2/" rel="next" title="Swift中的UIKit动力学（二）">
+                <i class="fa fa-chevron-left"></i> Swift中的UIKit动力学（二）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/optionals-case-study/" rel="prev" title="Swift中Optional类型的使用案例分析：valuesForKeys">
+                Swift中Optional类型的使用案例分析：valuesForKeys <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u4F7F_u7528_u5185_u5D4C_u6846_u67B6_u5171_u4EAB_u4EE3_u7801"><span class="nav-number">1.</span> <span class="nav-text">使用内嵌框架共享代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4E0E_u8F7D_u4F53_u5E94_u7528_u5171_u4EAB_u6570_u636E"><span class="nav-number">2.</span> <span class="nav-text">与载体应用共享数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u8BBF_u95EE_u7F51_u9875"><span class="nav-number">3.</span> <span class="nav-text">访问网页</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6267_u884C_u4E0A_u4F20_u4E0B_u8F7D_u4EFB_u52A1"><span class="nav-number">4.</span> <span class="nav-text">执行上传下载任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4E3A_u5206_u4EAB_u548CAction_u6269_u5C55_u7533_u660E_u652F_u6301_u7684_u6570_u636E_u7C7B_u578B"><span class="nav-number">5.</span> <span class="nav-text">为分享和Action扩展申明支持的数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u914D_u7F6E_u8F7D_u4F53_u5E94_u7528_u4EE5_u9002_u7528_u4E8E_u8001_u7248_u672C_u7684iOS_u7CFB_u7EDF"><span class="nav-number">6.</span> <span class="nav-text">配置载体应用以适用于老版本的iOS系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u8BBE_u7F6EXcode_u9879_u76EE_u4E2D_u5E94_u7528_u6269_u5C55_u7684_u6761_u4EF6_u94FE_u63A5"><span class="nav-number">6.1.</span> <span class="nav-text">设置Xcode项目中应用扩展的条件链接</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,774 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="GOJS,JavaScript," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="你可以自定义节点的样式和行为。
+常规节点简单的框图节点大多数情况下，我们的节点都是一个框包含着文本信息（TextBlock），并且将排列属性设置为Panel.Auto。
+diagram.nodeTemplate =
+$(go.Node, &amp;quot;Auto&amp;quot;,
+  $(go.Shape, &amp;quot;Rectangle&amp;quot;,
+    new go.Binding(&amp;quot;f">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GOJS教程 -- 如何使用Nodes">
+<meta property="og:url" content="http://www.devtalking.com/articles/gojs-nodes/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="你可以自定义节点的样式和行为。
+常规节点简单的框图节点大多数情况下，我们的节点都是一个框包含着文本信息（TextBlock），并且将排列属性设置为Panel.Auto。
+diagram.nodeTemplate =
+$(go.Node, &amp;quot;Auto&amp;quot;,
+  $(go.Shape, &amp;quot;Rectangle&amp;quot;,
+    new go.Binding(&amp;quot;f">
+<meta property="og:image" content="http://www.devtalking.com/postImages/node1.jpg">
+<meta property="og:image" content="http://www.devtalking.com/postImages/node2.jpg">
+<meta property="og:image" content="http://www.devtalking.com/postImages/node3.jpg">
+<meta property="og:image" content="http://www.devtalking.com/postImages/node4.jpg">
+<meta property="og:image" content="http://www.devtalking.com/postImages/node5.jpg">
+<meta property="og:image" content="http://www.devtalking.com/postImages/node6.jpg">
+<meta property="og:updated_time" content="2016-01-01T06:56:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GOJS教程 -- 如何使用Nodes">
+<meta name="twitter:description" content="你可以自定义节点的样式和行为。
+常规节点简单的框图节点大多数情况下，我们的节点都是一个框包含着文本信息（TextBlock），并且将排列属性设置为Panel.Auto。
+diagram.nodeTemplate =
+$(go.Node, &amp;quot;Auto&amp;quot;,
+  $(go.Shape, &amp;quot;Rectangle&amp;quot;,
+    new go.Binding(&amp;quot;f">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> GOJS教程 -- 如何使用Nodes | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                GOJS教程 -- 如何使用Nodes
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-07-23T00:00:00+08:00" content="2014-07-23">
+              2014-07-23
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>你可以自定义节点的样式和行为。</p>
+<h2 id="u5E38_u89C4_u8282_u70B9"><a href="#u5E38_u89C4_u8282_u70B9" class="headerlink" title="常规节点"></a>常规节点</h2><h3 id="u7B80_u5355_u7684_u6846_u56FE_u8282_u70B9"><a href="#u7B80_u5355_u7684_u6846_u56FE_u8282_u70B9" class="headerlink" title="简单的框图节点"></a>简单的框图节点</h3><p>大多数情况下，我们的节点都是一个框包含着文本信息（<code>TextBlock</code>），并且将排列属性设置为<code>Panel.Auto</code>。</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  $(go.Shape, &quot;Rectangle&quot;,
+    new go.Binding(&quot;fill&quot;, &quot;color&quot;)),
+  $(go.TextBlock,
+    { margin: 5 },
+    new go.Binding(&quot;text&quot;, &quot;key&quot;))
+);
+
+diagram.model.nodeDataArray = [
+    { key: &quot;Alpha&quot;, color: &quot;lightblue&quot; }
+];
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node1.jpg" alt="node"></p>
+<h3 id="u5176_u4ED6_u5F62_u72B6_u7684_u6846_u56FE_u8282_u70B9"><a href="#u5176_u4ED6_u5F62_u72B6_u7684_u6846_u56FE_u8282_u70B9" class="headerlink" title="其他形状的框图节点"></a>其他形状的框图节点</h3><p>下面的例子中展示其他几种形状的框图：</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  $(go.Shape,
+    new go.Binding(&quot;figure&quot;, &quot;fig&quot;),
+    new go.Binding(&quot;fill&quot;, &quot;color&quot;)),
+  $(go.TextBlock,
+    { margin: 5 },
+    new go.Binding(&quot;text&quot;, &quot;key&quot;))
+);
+
+diagram.model.nodeDataArray = [
+    { key: &quot;Alpha&quot;, color: &quot;lightblue&quot;, fig: &quot;RoundedRectangle&quot; },
+    { key: &quot;Beta&quot;, color: &quot;lightblue&quot;, fig: &quot;Ellipse&quot; },
+    { key: &quot;Gamma&quot;, color: &quot;lightblue&quot;, fig: &quot;Hexagon&quot; },
+    { key: &quot;Delta&quot;, color: &quot;lightblue&quot;, fig: &quot;FramedRectangle&quot; },
+    { key: &quot;Epsilon&quot;, color: &quot;lightblue&quot;, fig: &quot;Cloud&quot; },
+    { key: &quot;Zeta&quot;, color: &quot;lightblue&quot;, fig: &quot;Procedure&quot; }
+];
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node2.jpg" alt="node"></p>
+<h3 id="u8F83_u590D_u6742_u7684_u6846_u56FE_u8282_u70B9"><a href="#u8F83_u590D_u6742_u7684_u6846_u56FE_u8282_u70B9" class="headerlink" title="较复杂的框图节点"></a>较复杂的框图节点</h3><p>一个排列参数设置为<code>Panel.Auto</code>的节点中，你不必将<code>TextBlock</code>局限为一个，你可以根据情况自行组合<code>Panel</code>对象。下面的例子中就使用<code>TablePanel</code>包含了多个<code>TextBlock</code>。</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  $(go.Shape,
+    { fill: $(go.Brush, go.Brush.Linear, { 0: &quot;white&quot;, 1: &quot;lightblue&quot; }),
+      stroke: &quot;darkblue&quot;, strokeWidth: 2 }),
+  $(go.Panel, &quot;Table&quot;,
+    { defaultAlignment: go.Spot.Left, margin: 4 },
+    $(go.RowColumnDefinition, { column: 1, width: 4 }),
+    $(go.TextBlock,
+      { row: 0, column: 0, columnSpan: 3, alignment: go.Spot.Center },
+      { font: &quot;bold 12pt sans-serif&quot; },
+      new go.Binding(&quot;text&quot;, &quot;key&quot;)),
+    $(go.TextBlock, &quot;First: &quot;,
+      { row: 1, column: 0 }),
+    $(go.TextBlock,
+      { row: 1, column: 2 },
+      new go.Binding(&quot;text&quot;, &quot;prop1&quot;)),
+    $(go.TextBlock, &quot;Second: &quot;,
+      { row: 2, column: 0 }),
+    $(go.TextBlock,
+      { row: 2, column: 2 },
+      new go.Binding(&quot;text&quot;, &quot;prop2&quot;))
+  )
+);
+
+diagram.model.nodeDataArray = [
+    { key: &quot;Alpha&quot;, prop1: &quot;value of &apos;prop1&apos;&quot;, prop2: &quot;the other property&quot; }
+];
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node3.jpg" alt="node"></p>
+<h2 id="u7B80_u5355_u7EC4_u5408_u8282_u70B9"><a href="#u7B80_u5355_u7EC4_u5408_u8282_u70B9" class="headerlink" title="简单组合节点"></a>简单组合节点</h2><h3 id="u56FE_u6807_u8282_u70B9"><a href="#u56FE_u6807_u8282_u70B9" class="headerlink" title="图标节点"></a>图标节点</h3><p>像下面例子这种的节点，一般元素的排列属性都设置为<code>Panel.Vertical</code>，也就是说上面是图，下面是文字信息。</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Vertical&quot;,
+  $(go.Picture,
+    { maxSize: new go.Size(50, 50) },
+    new go.Binding(&quot;source&quot;, &quot;img&quot;)),
+  $(go.TextBlock,
+    { margin: new go.Margin(3, 0, 0, 0),
+      maxSize: new go.Size(100, 30),
+      editable: true, isMultiline: false },
+    new go.Binding(&quot;text&quot;, &quot;text&quot;))
+);
+
+diagram.model.nodeDataArray = [
+    { text: &quot;kitten&quot;, img: &quot;images/50x40.png&quot; }
+];
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node4.jpg" alt="node"></p>
+<h3 id="u5C0F_u56FE_u6807_u8282_u70B9"><a href="#u5C0F_u56FE_u6807_u8282_u70B9" class="headerlink" title="小图标节点"></a>小图标节点</h3><p>一般这种节点元素的排列属性为<code>Panel.Horizontal</code>，水平排列，就是左边是图，右边是文字信息。</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Horizontal&quot;,
+  $(go.Picture,
+    { maxSize: new go.Size(16, 16) },
+    new go.Binding(&quot;source&quot;, &quot;img&quot;)),
+  $(go.TextBlock,
+    { margin: new go.Margin(0, 0, 0, 2) },
+    new go.Binding(&quot;text&quot;, &quot;text&quot;))
+);
+
+diagram.model.nodeDataArray = [
+    { text: &quot;kitten&quot;, img: &quot;images/50x40.png&quot; }
+];
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node5.jpg" alt="node"></p>
+<h2 id="u590D_u6742_u7EC4_u5408_u8282_u70B9"><a href="#u590D_u6742_u7EC4_u5408_u8282_u70B9" class="headerlink" title="复杂组合节点"></a>复杂组合节点</h2><p>有时候，你需要在节点中展示更多的信息。那么我们就需要将元素排列属性设置为<code>Panel.Spot</code>，这个属性的意思就是<code>Node</code>里的元素都排列在这个<code>Node</code>中的各个锚点上。</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Spot&quot;,
+  // the main content:
+  $(go.Panel, &quot;Vertical&quot;,
+    $(go.Picture,
+      { maxSize: new go.Size(50, 50) },
+      new go.Binding(&quot;source&quot;, &quot;img&quot;)),
+    $(go.TextBlock,
+      { margin: new go.Margin(3, 0, 0, 0) },
+      new go.Binding(&quot;text&quot;, &quot;text&quot;),
+      new go.Binding(&quot;stroke&quot;, &quot;error&quot;, function(err) { return err ? &quot;red&quot; : &quot;black&quot; }))
+  ),
+  // decorations:
+  $(go.Shape, &quot;TriangleUp&quot;,
+    { alignment: go.Spot.TopLeft,
+      fill: &quot;yellow&quot;, width: 14, height: 14,
+      visible: false },
+    new go.Binding(&quot;visible&quot;, &quot;info&quot;, function(i) { return i ? true : false; })),
+  $(go.Shape, &quot;StopSign&quot;,
+    { alignment: go.Spot.TopRight,
+      fill: &quot;red&quot;, width: 14, height: 14,
+      visible: false },
+    new go.Binding(&quot;visible&quot;, &quot;error&quot;)),
+  {
+    toolTip:
+      $(go.Adornment, &quot;Auto&quot;,
+        $(go.Shape, { fill: &quot;#FFFFCC&quot; },
+          new go.Binding(&quot;visible&quot;, &quot;info&quot;, function(i) { return i ? true : false; })),
+        $(go.TextBlock, { margin: 4 },
+          new go.Binding(&quot;text&quot;, &quot;info&quot;))
+      )
+  }
+);
+
+diagram.model.nodeDataArray = [
+    { text: &quot;kitten&quot;, img: &quot;images/50x40.png&quot;, info: &quot;&quot; },
+    { text: &quot;kitten&quot;, img: &quot;images/50x40.png&quot;, error: true, info: &quot;shredded curtains&quot; }
+];
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node6.jpg" alt="node"></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/GOJS/" rel="tag">#GOJS</a>
+          
+            <a href="/tags/JavaScript/" rel="tag">#JavaScript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/gojs-links/" rel="next" title="GOJS教程 -- 如何使用Links">
+                <i class="fa fa-chevron-left"></i> GOJS教程 -- 如何使用Links
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/swift-access-control/" rel="prev" title="Swift新特性 -- 访问控制（Access Control）">
+                Swift新特性 -- 访问控制（Access Control） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u5E38_u89C4_u8282_u70B9"><span class="nav-number">1.</span> <span class="nav-text">常规节点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u7B80_u5355_u7684_u6846_u56FE_u8282_u70B9"><span class="nav-number">1.1.</span> <span class="nav-text">简单的框图节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5176_u4ED6_u5F62_u72B6_u7684_u6846_u56FE_u8282_u70B9"><span class="nav-number">1.2.</span> <span class="nav-text">其他形状的框图节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8F83_u590D_u6742_u7684_u6846_u56FE_u8282_u70B9"><span class="nav-number">1.3.</span> <span class="nav-text">较复杂的框图节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7B80_u5355_u7EC4_u5408_u8282_u70B9"><span class="nav-number">2.</span> <span class="nav-text">简单组合节点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u56FE_u6807_u8282_u70B9"><span class="nav-number">2.1.</span> <span class="nav-text">图标节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5C0F_u56FE_u6807_u8282_u70B9"><span class="nav-number">2.2.</span> <span class="nav-text">小图标节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u590D_u6742_u7EC4_u5408_u8282_u70B9"><span class="nav-number">3.</span> <span class="nav-text">复杂组合节点</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

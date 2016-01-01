@@ -1,0 +1,716 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="GOJS,JavaScript," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="Parts是一个图表对象，它继承自Panel。它是所有用户操作级别对象的基类。因为它继承自Panel，所以它实际上也是其他GraphObject可视对象的容器。也同样因为继承自Panel，所以它的超类是GraphObject，因此Parts也拥有GraphObject的属性，比如GraphObject.actualBounds、GraphObject.contextMenu、GraphObject">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GOJS教程 -- 如何构建Parts">
+<meta property="og:url" content="http://www.devtalking.com/articles/gojs-build-diagram/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="Parts是一个图表对象，它继承自Panel。它是所有用户操作级别对象的基类。因为它继承自Panel，所以它实际上也是其他GraphObject可视对象的容器。也同样因为继承自Panel，所以它的超类是GraphObject，因此Parts也拥有GraphObject的属性，比如GraphObject.actualBounds、GraphObject.contextMenu、GraphObject">
+<meta property="og:image" content="http://www.devtalking.com/postImages/buildSimpleDiagram.jpg">
+<meta property="og:image" content="http://www.devtalking.com/postImages/buildSimpleDiagram.jpg">
+<meta property="og:image" content="http://www.devtalking.com/postImages/buildSimpleDiagram.jpg">
+<meta property="og:image" content="http://www.devtalking.com/postImages/buildSimpleDiagramWithBrush.jpg">
+<meta property="og:image" content="http://www.devtalking.com/postImages/buildSimpleDiagramWithBrush2.jpg">
+<meta property="og:updated_time" content="2016-01-01T06:46:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GOJS教程 -- 如何构建Parts">
+<meta name="twitter:description" content="Parts是一个图表对象，它继承自Panel。它是所有用户操作级别对象的基类。因为它继承自Panel，所以它实际上也是其他GraphObject可视对象的容器。也同样因为继承自Panel，所以它的超类是GraphObject，因此Parts也拥有GraphObject的属性，比如GraphObject.actualBounds、GraphObject.contextMenu、GraphObject">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> GOJS教程 -- 如何构建Parts | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                GOJS教程 -- 如何构建Parts
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-07-19T00:00:00+08:00" content="2014-07-19">
+              2014-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p><code>Parts</code>是一个图表对象，它继承自<code>Panel</code>。它是所有用户操作级别对象的基类。因为它继承自<code>Panel</code>，所以它实际上也是其他<code>GraphObject</code>可视对象的容器。也同样因为继承自<code>Panel</code>，所以它的超类是<code>GraphObject</code>，因此<code>Parts</code>也拥有<code>GraphObject</code>的属性，比如<code>GraphObject.actualBounds</code>、<code>GraphObject.contextMenu</code>、<code>GraphObject.visible</code>。  </p>
+<p>如果你只想创建一个用户可以选中并拖拽移动的可视对象，那么创建<code>Parts</code>就可以满足你。但通常情况下<code>Parts</code>并不能满足我们，所以我们一般创建的是<code>Node</code>和<code>Link</code>，它们都继承自<code>Parts</code>。<br>gojs框架提供两种构建对象的语法，即普通的JavaScript语法和gojs的进阶语法，下面我们来一一了解一下。  </p>
+<h2 id="u4F20_u7EDF_u6784_u5EFA_u8BED_u6CD5"><a href="#u4F20_u7EDF_u6784_u5EFA_u8BED_u6CD5" class="headerlink" title="传统构建语法"></a>传统构建语法</h2><p><code>Node</code>是gojs中最低级的<code>GraphObject</code>对象容器，它只能包含继承自<code>GraphObject</code>对象的<code>TextBlock</code>和<code>Shape</code>对象。<code>Node</code>的父类<code>Part</code>可包含<code>Node</code>和<code>Link</code>对象，<code>Node</code>的超类<code>Panel</code>就能包含更多的<code>GraphObject</code>对象了。 <code>Diagram</code>是gojs中最大的<code>GraphObject</code>对象容器，<code>Palette</code>次之。</p>
+<p>一个最简单的<code>Node</code>是由<code>TextBlock</code>和<code>Shape</code>组成的：  </p>
+<pre><code>var node = new go.Node(go.Panel.Auto);
+var shape = new go.Shape();
+shape.figure = &quot;RoundedRectangle&quot;;
+shape.fill = &quot;lightblue&quot;;
+node.add(shape);
+var textblock = new go.TextBlock();
+textblock.text = &quot;Hello!&quot;;
+textblock.margin = 5;
+node.add(textblock);
+diagram.add(node);
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagram.jpg" alt="diagram">  </p>
+<p>上面的图片就是通过上述代码创建的Diagram，虽然这里只是图片展示，但实际上他是有交互行为的，你可以选中<code>Node</code>，并拖拽移动。  </p>
+<p>虽然通过这种语法构建Diagram没有问题，但是如果工程量比较大的时候，这种方式会使代码的可读性变的很差，维护起来也很困难。幸好，gojs为我们提供了另一种构建Diagram的语法。</p>
+<h2 id="gojs_u6784_u5EFA_u8BED_u6CD5"><a href="#gojs_u6784_u5EFA_u8BED_u6CD5" class="headerlink" title="gojs构建语法"></a>gojs构建语法</h2><p>gojs定义了一个用于创建<code>GraphObject</code>对象的静态函数<code>GraphObject.make</code>。如果使用该方法创建对象，我们就不用再关心要创建什么样的对象变量名，什么地方该使用什么变量等。该方法还支持内嵌模式，这样的好处就是代码不会是一行一行罗列下来，而是能够表达出层级关系和所属关系的结构体。  </p>
+<p><code>GraphObject.make</code>函数的参数量是可变的，但是第一个参数必须是一个<code>GraphObject</code>对象的子类。其他的参数一般有这么几种：</p>
+<ul>
+<li>普通JavaScript的键值对象，用于设置构建类型的相关属性比如<code>{ figure:&quot;RoundedRectangle&quot; }</code>。</li>
+<li>构建对象的子元素，比如说给<code>Node</code>里添加一个<code>Shape</code>。</li>
+<li>一个枚举类型的参数，一般该参数用于设定构建对象在Diagram中的排列方式，比如平铺排列、垂直排列等，以及嵌套元素的自适应方法。</li>
+<li>一个字符串，这个参数一般作为第二个参数，用于设置某个<code>GraphObject</code>子类型的第一属性，比如设置<code>TextBlock</code>的<code>text</code>、<code>Shape</code>的<code>figure</code>、<code>Picture</code>的<code>source</code>、<code>Panel</code>的<code>type</code>等。</li>
+<li>如果构建的是一个<code>Table Panel</code>，那么有一个<code>RowCoumnDefinition</code>属性，用于描述<code>row</code>和<code>column</code>的信息。不过有一点要注意的是，如果构建的是一个<code>Diagram</code>，那么这个字符串必须是<code>DIV</code>的<code>id</code>。</li>
+<li>一个JavaScript数组，它的作用有点像元组，如果过一个函数的返回类型由多个的时候，用它来储存。</li>
+</ul>
+<p>下面我们用<code>go.GraphObject.make</code>语法来构建一个与上述例子相同的Diagram：</p>
+<pre><code>// 注意，这里的$可以更换，随你喜好    
+var $ = go.GraphObject.make;
+diagram.add(
+$(go.Node, go.Panel.Auto,
+  $(go.Shape,
+    { figure: &quot;RoundedRectangle&quot;,
+      fill: &quot;lightblue&quot; }),
+  $(go.TextBlock,
+    { text: &quot;Hello!&quot;,
+      margin: 5 })
+));
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagram.jpg" alt="diagram"> </p>
+<p>上面的代码还可以进行简化，将枚举类型参数替换为字符串，可参阅上文中提到的参数类型： </p>
+<pre><code>var $ = go.GraphObject.make;
+diagram.add(
+$(go.Node, &quot;Auto&quot;,
+  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightblue&quot; }),
+  $(go.TextBlock, &quot;Hello!&quot;, { margin: 5 })
+));
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagram.jpg" alt="diagram"> </p>
+<p>使用<code>go.GraphObject.make</code>不仅可以构建可视对象，还可以方便的实例化gojs中的装饰对象，可以动态的创建某些作为参数或属性的对象。比如上述例子中的<code>Node</code>是蓝色，我们可以使用样式刷对象（<code>Brush</code>）对其颜色进行修饰：  </p>
+<pre><code>diagram.add(
+$(go.Node, &quot;Auto&quot;,
+  $(go.Shape, &quot;RoundedRectangle&quot;,
+    { fill: $(go.Brush, go.Brush.Linear,
+              { 0.0: &quot;Violet&quot;, 1.0: &quot;Lavender&quot; }) }),
+  $(go.TextBlock, &quot;Hello!&quot;,
+    { margin: 5 })
+));
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagramWithBrush.jpg" alt="diagram"> </p>
+<p>下面我们再来看一个构建<code>Diagram</code>的例子：  </p>
+<pre><code>var myDiagram =
+$(go.Diagram, &quot;myDiagramDiv&quot;,  // must name or refer to the DIV HTML element
+  {
+    // any initial diagram is centered in the viewport
+    initialContentAlignment: go.Spot.Center,
+
+    // don&apos;t initialize some properties until after a new model has been loaded
+    &quot;InitialLayoutCompleted&quot;: loadDiagramProperties,  // this DiagramEvent listener is defined below
+
+    // have mouse wheel events zoom in and out instead of scroll up and down
+    &quot;toolManager.mouseWheelBehavior&quot;: go.ToolManager.WheelZoom,
+
+    // specify a data object to copy for each new Node that is created by clicking
+    &quot;clickCreatingTool.archetypeNodeData&quot;: { text: &quot;new node&quot; }
+  });
+
+function loadDiagramProperties(e) { . . . }
+</code></pre><p>从上面的例子中可以看出，第二个参数为<code>DIV</code>的<code>id</code>，第三个参数就是键值对象了，其实就是json字符串，用于配置<code>Diagram</code>的相关属性。<br>我们也可以单独创建能够复用的对象，比如样式刷（<code>Brush</code>）：</p>
+<pre><code>var violetbrush = $(go.Brush, go.Brush.Linear, { 0.0: &quot;Violet&quot;, 1.0: &quot;Lavender&quot; });
+
+diagram.add(
+$(go.Node, &quot;Auto&quot;,
+  $(go.Shape, &quot;RoundedRectangle&quot;,
+    { fill: violetbrush }),
+  $(go.TextBlock, &quot;Hello!&quot;,
+    { margin: 5 })
+));
+
+diagram.add(
+$(go.Node, &quot;Auto&quot;,
+  $(go.Shape, &quot;Ellipse&quot;,
+    { fill: violetbrush }),
+  $(go.TextBlock, &quot;Goodbye!&quot;,
+    { margin: 5 })
+));
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagramWithBrush2.jpg" alt="diagram"> </p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/GOJS/" rel="tag">#GOJS</a>
+          
+            <a href="/tags/JavaScript/" rel="tag">#JavaScript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/gojs-simple-diagram/" rel="next" title="JavaScript图表图形框架 -- GOJS简介">
+                <i class="fa fa-chevron-left"></i> JavaScript图表图形框架 -- GOJS简介
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/gojs-textblock/" rel="prev" title="GOJS教程 -- 如何使用TextBlocks">
+                GOJS教程 -- 如何使用TextBlocks <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u4F20_u7EDF_u6784_u5EFA_u8BED_u6CD5"><span class="nav-number">1.</span> <span class="nav-text">传统构建语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gojs_u6784_u5EFA_u8BED_u6CD5"><span class="nav-number">2.</span> <span class="nav-text">gojs构建语法</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

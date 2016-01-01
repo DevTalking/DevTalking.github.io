@@ -1,0 +1,721 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Auto Layout,Size Classes,Swift," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="译者的话：本文是自适应布局的巩固篇，所以对布局约束的添加操作步骤等没有详细的说明。如果看着吃力的话请先移步Swift自适应布局（Adaptive Layout）教程。
+
+Apple从iOS6加入了Auto Layout后开始就比较委婉的开始鼓励、建议开发者使用自适应布局，但是到目前为止，我感觉大多数开发者一直在回避这个问题，不管是不是由于历史原因造成的，至少他们在心底还坚守着固定布局的老传统思想。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为iPhone6设计自适应布局（一）">
+<meta property="og:url" content="http://www.devtalking.com/articles/adaptive-layout-for-iphone6-1/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="译者的话：本文是自适应布局的巩固篇，所以对布局约束的添加操作步骤等没有详细的说明。如果看着吃力的话请先移步Swift自适应布局（Adaptive Layout）教程。
+
+Apple从iOS6加入了Auto Layout后开始就比较委婉的开始鼓励、建议开发者使用自适应布局，但是到目前为止，我感觉大多数开发者一直在回避这个问题，不管是不是由于历史原因造成的，至少他们在心底还坚守着固定布局的老传统思想。">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-1.gif">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-2.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-3.gif">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-4.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-5.gif">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-6.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-7.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-8.gif">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-9.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-10.gif">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-11.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-12.gif">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-13.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-14.gif">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-15.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-16.gif">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-17.gif">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-18.gif">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-19.gif">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-20.gif">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-21.gif">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-22.gif">
+<meta property="og:updated_time" content="2016-01-01T13:54:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="为iPhone6设计自适应布局（一）">
+<meta name="twitter:description" content="译者的话：本文是自适应布局的巩固篇，所以对布局约束的添加操作步骤等没有详细的说明。如果看着吃力的话请先移步Swift自适应布局（Adaptive Layout）教程。
+
+Apple从iOS6加入了Auto Layout后开始就比较委婉的开始鼓励、建议开发者使用自适应布局，但是到目前为止，我感觉大多数开发者一直在回避这个问题，不管是不是由于历史原因造成的，至少他们在心底还坚守着固定布局的老传统思想。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 为iPhone6设计自适应布局（一） | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                为iPhone6设计自适应布局（一）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-10-16T00:00:00+08:00" content="2014-10-16">
+              2014-10-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p>译者的话：<br>本文是自适应布局的巩固篇，所以对布局约束的添加操作步骤等没有详细的说明。如果看着吃力的话请先移步<a href="http://www.devtalking.com/articles/adaptive-layout-1/">Swift自适应布局（Adaptive Layout）教程</a>。</p>
+</blockquote>
+<p>Apple从iOS6加入了Auto Layout后开始就比较委婉的开始鼓励、建议开发者使用自适应布局，但是到目前为止，我感觉大多数开发者一直在回避这个问题，不管是不是由于历史原因造成的，至少他们在心底还坚守着固定布局的老传统思想。</p>
+<p>随着iPhone6、iPhone6 Plus的到来，使用自适应布局更是迫在眉睫的事，固定布局的老传统思想脆弱的不堪一击。现在的iPhone有4种尺寸，如果算上iPad，现在Apple的iOS设备有5种尺寸。我们在准备使用自适应布局设计应用界面之前，可以把这5种尺寸划分为3种分辨率和屏幕方向，这样在设计时分类会更加清晰一些。</p>
+<p>我们先来看一张自适应布局的效果图：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-1.gif" alt="图片"></p>
+<p>当你们学习完这篇文章后，你们应该会比较自如的使用 <em>storyboard</em>、<em>constaints</em>、<em>size classes</em> 这三个Apple在Xcode里提供的工具，去探索和构建巧妙的自适应布局。</p>
+<h2 id="Storyboards"><a href="#Storyboards" class="headerlink" title="Storyboards"></a>Storyboards</h2><p>在Xcode中，storyboard是一个可以让我们对应用界面进行可视化布局的工具，你首先可以在storyboard文件中看到一个或若干个iOS设备屏幕大小的布局区，然后你可以从组件库（Object Library）中拖拽组件到屏幕布局区中进行布局（比如按钮、图片、文本框、labels等），你还可以定义屏幕布局区之间的连接关系。</p>
+<p>用Xcode的术语来说，人们可以看到、触碰到或以其他方式（按钮、图片、文本框、labels等）进行交互的用户界面被称为<em>views</em>。屏幕中包含和管理这些views的容器称为<em>view controller</em>。</p>
+<p>当我们在storyboard中添加一个view controller后，我们所看到的并不是一个我们熟知的屏幕尺寸，而是一个600X600的正方形：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-2.png" alt="图片"></p>
+<p>从上图我们可以很明显的看出，storyboard中显示的屏幕尺寸不是实际设备的尺寸。Apple这样做的目的是将屏幕尺寸进行了抽象化，也就是说你可以将这个正方形的屏幕看成iphone4的屏幕，也可以将它看成iphone6的屏幕。</p>
+<h3 id="u6A21_u62DF_u5668_u7684_u5C3A_u5BF8"><a href="#u6A21_u62DF_u5668_u7684_u5C3A_u5BF8" class="headerlink" title="模拟器的尺寸"></a>模拟器的尺寸</h3><p>当你习惯了600X600的屏幕后，你可能会用着很爽，但是有些时候，我们也需要将它改成实际的屏幕尺寸来设计一些东西。</p>
+<p>我们可以很方便的在Xcode中改变view controller的模拟屏幕尺寸和屏幕方向：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-3.gif" alt="图片"></p>
+<h2 id="u5E03_u5C40_u7EA6_u675F"><a href="#u5E03_u5C40_u7EA6_u675F" class="headerlink" title="布局约束"></a>布局约束</h2><p>介绍布局约束的最好、最直观的方法就是向你们展示一个示例。</p>
+<p>首先我们将storyboard中的屏幕布局区域的尺寸调整为iphone5s的尺寸，也就是4寸屏幕，然后添加两个正方形的view，并排放置在屏幕顶部，一个设置为蓝色，一个设置为粉色。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-4.png" alt="图片"></p>
+<p>我们选择iPhone5s模拟器设备并编译运行应用，可以看到一蓝一粉这两个方块按照我们设定的那样杵在竖屏方向的屏幕上，没有问题。当我们把设备调整为横屏时，这两个方块像拥护党一样拥护着他们的坐标位置，所以在横屏的时候看着就不是那么完美：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-5.gif" alt="图片"></p>
+<p>我们再将模拟器改为iPhone6，然后编译运行，此时在竖屏的时候就已经感觉无法再爱了。这两个方块并没有按照我们设置或设想的那样在屏幕顶部中间，而是偏向了左边，在右边有一块留白区域。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-6.png" alt="图片"></p>
+<p>这是就是没有布局约束而导致的，蓝色粉色方块的大小、坐标位置都是固定的，都是在4寸屏幕的参照下设置的，不论在哪种尺寸的屏幕下，它们都在固定的那个坐标位置和固定的大小，所以就会出现上面的情况。</p>
+<p>那么接下来让我们给这两个方块添加一些布局约束，再看看会有什么神奇的事情发生。</p>
+<h3 id="u9875_u8FB9_u95F4_u8DDD_u7EA6_u675F_uFF08Leading_and_Trailing_space_uFF09"><a href="#u9875_u8FB9_u95F4_u8DDD_u7EA6_u675F_uFF08Leading_and_Trailing_space_uFF09" class="headerlink" title="页边间距约束（Leading and Trailing space）"></a>页边间距约束（Leading and Trailing space）</h3><p>页边间距约束分前部间距约束（Leading space constaint）和尾部间距约束（Trailing space constaint）。从屏幕上说就是左边距和右边距。我们给蓝色方块添加左边距约束，其值设置为10，给粉色方块设置右边距约束，其值也设置为10。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-7.png" alt="图片"></p>
+<p>我们再次在iPhone5s模拟器中运行应用，当横屏时蓝色方块被左边距约束拉到了屏幕左边，粉色方块被右边距约束拉到了屏幕右边。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-8.gif" alt="图片"></p>
+<h3 id="u6C34_u5E73_u95F4_u8DDD_u7EA6_u675F_uFF08Horizontal_space_constaint_uFF09"><a href="#u6C34_u5E73_u95F4_u8DDD_u7EA6_u675F_uFF08Horizontal_space_constaint_uFF09" class="headerlink" title="水平间距约束（Horizontal space constaint）"></a>水平间距约束（Horizontal space constaint）</h3><p>给蓝色方块和粉色方块添加水平间距约束，其值设置为10。这个约束会使这两个方块之间的距离永远约束为10。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-9.png" alt="图片"></p>
+<p>我们再来运行应用，现在横屏时两个方块之间的间距、它们与屏幕边缘的间距都和竖屏时显示的一样了。但是其中粉色方块为了满足水平间距约束自行增加了方块的宽度，变成了长方形。简直是一只老鼠坏了一锅汤有木有。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-10.gif" alt="图片"></p>
+<p>从上面这个效果我们可以得知，除非我们特别限制了view的尺寸，否则的话iOS会为满足布局约束而改变view的尺寸，也就是保持一个自然的尺寸。</p>
+<h3 id="u7B49_u5BBD_u7EA6_u675F_uFF08Equal_widths_constaint_uFF09"><a href="#u7B49_u5BBD_u7EA6_u675F_uFF08Equal_widths_constaint_uFF09" class="headerlink" title="等宽约束（Equal widths constaint）"></a>等宽约束（Equal widths constaint）</h3><p>我们给这两个方块添加一个等宽约束来改善上面的情况。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-11.png" alt="图片"></p>
+<p>再次运行应用，现在在横屏时由于等宽约束的作用，两个方块的宽度保持了一致。我们已经非常接近完美了。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-12.gif" alt="图片"></p>
+<h3 id="u65B9_u5411_u6BD4_u4F8B_u7EA6_u675F_uFF08Aspect_ratio_constaint_uFF09"><a href="#u65B9_u5411_u6BD4_u4F8B_u7EA6_u675F_uFF08Aspect_ratio_constaint_uFF09" class="headerlink" title="方向比例约束（Aspect ratio constaint）"></a>方向比例约束（Aspect ratio constaint）</h3><p>从上面的运行情况来看各个约束都工作正常，但唯一不足的是本来在竖屏是两个正方形方块，在横屏时缺变成了长方形方块，由范爷变成了凤姐这是人类无法接受的。</p>
+<p>我们给这两个方块添加方向比例约束来解决这个问题。这个约束使方块在满足其他约束的前提下始终保持高和宽的比例相同。所以在横屏时就会以方块的宽度为比例标准，将高度的比例改为宽度的比例。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-13.png" alt="图片"></p>
+<p>用iPhone5s模拟器编译运行应用，现在在横屏状态下两个正方形方块完美的呈现在我们眼前。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-14.gif" alt="图片"></p>
+<p>我们在iPhone6模拟器上再编译运行应用，从下面的图中我们可以很清晰的看到添加约束之前和之后的变化。布局约束根据多出的空间大小将方块放大到合适的尺寸以满足约束。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-15.png" alt="图片"></p>
+<h3 id="u5B9E_u8DF5_u5E03_u5C40_u7EA6_u675F"><a href="#u5B9E_u8DF5_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="实践布局约束"></a>实践布局约束</h3><p>到目前为止，你们已经看到布局约束神奇的作用和效果。是时候让你们在你们自己的storyboard文件中添加布局约束了。</p>
+<p>熟练布局约束最好的方法就是多练习，从添加少量的布局约束开始，一步步达到自己想要的效果。</p>
+<p>另外有一点，我始终不认为添加过多的布局约束会对应用的性能产生影响。但是我们也不能滥用约束布局，好钢要用在刀刃上，我们尽可能用最节俭的约束布局达到我们想要的效果。</p>
+<h3 id="u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F_u7684_u65B9_u5F0F"><a href="#u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F_u7684_u65B9_u5F0F" class="headerlink" title="添加布局约束的方式"></a>添加布局约束的方式</h3><p>这里向大家介绍三种在storyboard中添加约束的方式：</p>
+<h4 id="1-_u5E95_u90E8_u5E03_u5C40_u7EA6_u675F_u6309_u94AE"><a href="#1-_u5E95_u90E8_u5E03_u5C40_u7EA6_u675F_u6309_u94AE" class="headerlink" title="1.底部布局约束按钮"></a>1.底部布局约束按钮</h4><p>这种方式可能是最简单直观的一种方式，在屏幕上选择一个或多个对象，然后点击底部的布局约束按钮添加一个或多个需要的约束。它的好处是可以直观的看到当前选择的对象已经添加了该类中的那些约束。</p>
+<p>如果你指选择了一个对象想要添加某个约束，但发现该约束是不可选的，那么就意味着这个约束是适用于两个以上对象的约束。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-16.gif" alt="图片"></p>
+<h4 id="2-_u6309_u4F4FControl_u952E_u62D6_u62FD_u9F20_u6807"><a href="#2-_u6309_u4F4FControl_u952E_u62D6_u62FD_u9F20_u6807" class="headerlink" title="2.按住Control键拖拽鼠标"></a>2.按住Control键拖拽鼠标</h4><p>你也可以选择一个对象，然后按住Control键和鼠标左键，拖拽鼠标到另一个对象（容器对象，也就是父对象或者选中对象自己），松开鼠标后会弹出适用的约束菜单，你可以选择约束进行添加。</p>
+<p>这是我偏爱的一种方式，因为它比上面那种方式来的快多了。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-17.gif" alt="图片"></p>
+<h4 id="3-_u83DC_u5355/_u7ED1_u5B9A_u5FEB_u6377_u952E"><a href="#3-_u83DC_u5355/_u7ED1_u5B9A_u5FEB_u6377_u952E" class="headerlink" title="3.菜单/绑定快捷键"></a>3.菜单/绑定快捷键</h4><p>你也可以通过菜单选项<code>editor —&gt; pin</code>给一个或多个对象添加布局约束。这是效率最低的一种方式。如果你发现有些约束你会一遍遍的反复添加，那么你就可以给该约束绑定一个快捷键来提高效率。</p>
+<h3 id="u68C0_u67E5_u548C_u7F16_u8F91_u5DF2_u6DFB_u52A0_u7684_u5E03_u5C40_u7EA6_u675F"><a href="#u68C0_u67E5_u548C_u7F16_u8F91_u5DF2_u6DFB_u52A0_u7684_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="检查和编辑已添加的布局约束"></a>检查和编辑已添加的布局约束</h3><p>检查约束最简单的方式就是选中一个对象，然后打开右侧工具栏，选择Size Inspector面板。或者在storyboard界面左侧的结构树中查看约束。</p>
+<p>通过这两种方式，你都可以选择某个约束，然后编辑它。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-18.gif" alt="图片"></p>
+<h3 id="u79FB_u9664_u5E03_u5C40_u7EA6_u675F"><a href="#u79FB_u9664_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="移除布局约束"></a>移除布局约束</h3><p>布局约束可以添加自然也就可以删除。选中某个约束使其高亮显示，然后按下Delete键移除该约束。</p>
+<p>如果想移除某个对象上所有的约束，有一个快捷的方式。选择该对象，然后在底部点击Resolve Auto Layout Issues按钮，选择Clear Constaints。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-19.gif" alt="图片"></p>
+<h3 id="u5E03_u5C40_u51FA_u73B0_u7684_u95EE_u9898_u548C_u51B2_u7A81"><a href="#u5E03_u5C40_u51FA_u73B0_u7684_u95EE_u9898_u548C_u51B2_u7A81" class="headerlink" title="布局出现的问题和冲突"></a>布局出现的问题和冲突</h3><p>我们在添加约束时，经常伴随有警告或者错误出现。虽然有些警告是因为我们还没有添加完约束出现的，当我们添加完我们设想的约束后警告就会自然消失。但大多数的警告还是指明我们的约束确实存在问题，需要我们修复。</p>
+<p>查看警告或错误最方便的方式就是在storyboard左侧的结构树中，在view controller的右边会出现一个红色或黄色的小图标，向我们指明这里存在问题：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-20.gif" alt="图片"></p>
+<h3 id="u9519_u8BEF_u6446_u653Eview_u7684_u8B66_u544A"><a href="#u9519_u8BEF_u6446_u653Eview_u7684_u8B66_u544A" class="headerlink" title="错误摆放view的警告"></a>错误摆放view的警告</h3><p>view位置的错误摆放是一个很常见的警告。当一个view没有摆放在约束规定的位置的时候，会出现该警告。</p>
+<p>这些问题会在你切换不同设备的模拟器或鼠标不小心移动了某个对象时出现。</p>
+<p>选中一个错误摆放的对象，在屏幕上会出现布局约束给你提示的正确的摆放位置。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-21.gif" alt="图片"></p>
+<p>点击左侧出现的黄色警告图片，会弹出一个菜单，你可以选择让Xcode改变约束，以适应当前该对象的位置，但通常情况下我们都选择让Xcode将该对象移动到约束规定的位置。</p>
+<h3 id="u7F3A_u5C11_u5E03_u5C40_u7EA6_u675F_u7684_u9519_u8BEF"><a href="#u7F3A_u5C11_u5E03_u5C40_u7EA6_u675F_u7684_u9519_u8BEF" class="headerlink" title="缺少布局约束的错误"></a>缺少布局约束的错误</h3><p>我们回到早些时候的示例中。这时候我们没有给方块添加Y坐标位置的约束。在运行时没有问题，因为iOS会假设方块的位置就是我们在storyboard中摆放的那个位置。但是Xcode会提示我们一个缺失约束的错误，为了避免意外发生（更换设备尺寸），我还是要根据Xcode的提示添加缺失的约束。</p>
+<p>我们给这两个方块添加一个<em>top space to to layout guide</em>约束使方块的位置更加清晰，并消除Xcode的错误提示。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-22.gif" alt="图片"></p>
+<p>未完待续……</p>
+<p>原文地址：<a href="http://mathewsanders.com/designing-adaptive-layouts-for-iphone-6-plus" target="_blank" rel="external">ADAPTIVE LAYOUTS FOR iPHONE 6</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Auto-Layout/" rel="tag">#Auto Layout</a>
+          
+            <a href="/tags/Size-Classes/" rel="tag">#Size Classes</a>
+          
+            <a href="/tags/Swift/" rel="tag">#Swift</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/adaptive-layout-2/" rel="next" title="Swift自适应布局（Adaptive Layout）教程（二）">
+                <i class="fa fa-chevron-left"></i> Swift自适应布局（Adaptive Layout）教程（二）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/adaptive-layout-for-iphone6-2/" rel="prev" title="为iPhone6设计自适应布局（二）">
+                为iPhone6设计自适应布局（二） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Storyboards"><span class="nav-number">1.</span> <span class="nav-text">Storyboards</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u6A21_u62DF_u5668_u7684_u5C3A_u5BF8"><span class="nav-number">1.1.</span> <span class="nav-text">模拟器的尺寸</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5E03_u5C40_u7EA6_u675F"><span class="nav-number">2.</span> <span class="nav-text">布局约束</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u9875_u8FB9_u95F4_u8DDD_u7EA6_u675F_uFF08Leading_and_Trailing_space_uFF09"><span class="nav-number">2.1.</span> <span class="nav-text">页边间距约束（Leading and Trailing space）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6C34_u5E73_u95F4_u8DDD_u7EA6_u675F_uFF08Horizontal_space_constaint_uFF09"><span class="nav-number">2.2.</span> <span class="nav-text">水平间距约束（Horizontal space constaint）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7B49_u5BBD_u7EA6_u675F_uFF08Equal_widths_constaint_uFF09"><span class="nav-number">2.3.</span> <span class="nav-text">等宽约束（Equal widths constaint）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u65B9_u5411_u6BD4_u4F8B_u7EA6_u675F_uFF08Aspect_ratio_constaint_uFF09"><span class="nav-number">2.4.</span> <span class="nav-text">方向比例约束（Aspect ratio constaint）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5B9E_u8DF5_u5E03_u5C40_u7EA6_u675F"><span class="nav-number">2.5.</span> <span class="nav-text">实践布局约束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F_u7684_u65B9_u5F0F"><span class="nav-number">2.6.</span> <span class="nav-text">添加布局约束的方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-_u5E95_u90E8_u5E03_u5C40_u7EA6_u675F_u6309_u94AE"><span class="nav-number">2.6.1.</span> <span class="nav-text">1.底部布局约束按钮</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-_u6309_u4F4FControl_u952E_u62D6_u62FD_u9F20_u6807"><span class="nav-number">2.6.2.</span> <span class="nav-text">2.按住Control键拖拽鼠标</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-_u83DC_u5355/_u7ED1_u5B9A_u5FEB_u6377_u952E"><span class="nav-number">2.6.3.</span> <span class="nav-text">3.菜单/绑定快捷键</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u68C0_u67E5_u548C_u7F16_u8F91_u5DF2_u6DFB_u52A0_u7684_u5E03_u5C40_u7EA6_u675F"><span class="nav-number">2.7.</span> <span class="nav-text">检查和编辑已添加的布局约束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u79FB_u9664_u5E03_u5C40_u7EA6_u675F"><span class="nav-number">2.8.</span> <span class="nav-text">移除布局约束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5E03_u5C40_u51FA_u73B0_u7684_u95EE_u9898_u548C_u51B2_u7A81"><span class="nav-number">2.9.</span> <span class="nav-text">布局出现的问题和冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u9519_u8BEF_u6446_u653Eview_u7684_u8B66_u544A"><span class="nav-number">2.10.</span> <span class="nav-text">错误摆放view的警告</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7F3A_u5C11_u5E03_u5C40_u7EA6_u675F_u7684_u9519_u8BEF"><span class="nav-number">2.11.</span> <span class="nav-text">缺少布局约束的错误</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

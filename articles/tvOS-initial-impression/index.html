@@ -1,0 +1,713 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="tvOS," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="作者：Chris Wagner  原文地址：tvOS SDK: An iOS Developer’s Initial Impressions
+在Walter Isaacson编写的《Steve Jobs》的最后一章中，Steve说过“我最终实现并让它拥有了你们能想象到的最简单的用户界面”。当时他指的就是Apple TV。
+Steve不幸离世已经过去很久了，但是人们一直翘首以盼着这款产品。就在昨天2">
+<meta property="og:type" content="article">
+<meta property="og:title" content=" 一个iOS开发者对tvOS SDK的初探">
+<meta property="og:url" content="http://www.devtalking.com/articles/tvOS-initial-impression/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="作者：Chris Wagner  原文地址：tvOS SDK: An iOS Developer’s Initial Impressions
+在Walter Isaacson编写的《Steve Jobs》的最后一章中，Steve说过“我最终实现并让它拥有了你们能想象到的最简单的用户界面”。当时他指的就是Apple TV。
+Steve不幸离世已经过去很久了，但是人们一直翘首以盼着这款产品。就在昨天2">
+<meta property="og:image" content="http://d.pr/i/lDJy+">
+<meta property="og:image" content="http://d.pr/i/14HgX+">
+<meta property="og:image" content="http://d.pr/i/1iJ3p+">
+<meta property="og:image" content="http://d.pr/i/Lpd3+">
+<meta property="og:image" content="http://d.pr/i/1cedk+">
+<meta property="og:image" content="http://d.pr/i/1d2Gx+">
+<meta property="og:image" content="http://d.pr/i/1aHGu+">
+<meta property="og:image" content="http://d.pr/i/190dr+">
+<meta property="og:image" content="http://d.pr/i/11tBa+">
+<meta property="og:image" content="http://d.pr/i/xkr7+">
+<meta property="og:updated_time" content="2016-01-01T14:18:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content=" 一个iOS开发者对tvOS SDK的初探">
+<meta name="twitter:description" content="作者：Chris Wagner  原文地址：tvOS SDK: An iOS Developer’s Initial Impressions
+在Walter Isaacson编写的《Steve Jobs》的最后一章中，Steve说过“我最终实现并让它拥有了你们能想象到的最简单的用户界面”。当时他指的就是Apple TV。
+Steve不幸离世已经过去很久了，但是人们一直翘首以盼着这款产品。就在昨天2">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title>  一个iOS开发者对tvOS SDK的初探 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                 一个iOS开发者对tvOS SDK的初探
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-09-17T00:00:00+08:00" content="2015-09-17">
+              2015-09-17
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>作者：<a href="http://www.raywenderlich.com/u/cwagdev" target="_blank" rel="external">Chris Wagner</a>  原文地址：<a href="http://www.raywenderlich.com/114313/tvos-initial-impressions" target="_blank" rel="external">tvOS SDK: An iOS Developer’s Initial Impressions</a></p>
+<p>在Walter Isaacson编写的《Steve Jobs》的最后一章中，Steve说过“我最终实现并让它拥有了你们能想象到的最简单的用户界面”。当时他指的就是Apple TV。</p>
+<p>Steve不幸离世已经过去很久了，但是人们一直翘首以盼着这款产品。就在昨天2015年9月9日，超过四个春秋的期盼，我们终于等来了这个礼物，虽然可能与Steve对这款产品的愿景和理想有所差距，但是革命的步伐已经坚实的迈出了第一步。</p>
+<p>作为一名iOS开发者，昨天的产品发布会让我心潮澎湃，因为Apple宣布，新的Apple TV集成了App Store，这就意味着我们可以为它开发专有的应用，并且会让我们重新认知已了解的iOS知识，以及会开启更多新的展现想法、创意的机会。</p>
+<p>我和其他教程团队的成员已经开始深入研究tvOS SDK，并且正在努力准备一些有价值的tvOS教程（通宵达旦！），在此同时，我想从一个iOS开发者的视角与大家分享我对tvOS的初步印象。</p>
+<p>让我们一探究竟吧！</p>
+<h2 id="u57FA_u672C_u6982_u5FF5"><a href="#u57FA_u672C_u6982_u5FF5" class="headerlink" title="基本概念"></a>基本概念</h2><p>老款的Apple TV其实类似一个机顶盒，主要提供的功能是让用户通过及其简单的操作界面导航或浏览视频内容。昨天发布的新Apple TV在此基础上进一步的扩充功能，使一些成熟的应用能在Apple TV中运行，比如购物应用，甚至是游戏。</p>
+<p><img src="http://d.pr/i/lDJy+" alt="tvOS-1"></p>
+<p>让我们来看看以下这些信息：</p>
+<ul>
+<li><strong>硬件规格：</strong> 值得一说规格是64位 A8处理器，32G或64G的存储空间，2G的内存，1080p的分辨率以及支持HDMI，Siri远程遥控，新的Apple TV遥控器。</li>
+<li><strong>价格：</strong> 新Apple TV的定价为32G 149美元，64G 199美元。这样的定价出乎大多人的以外，原以为新Apple TV的价格会更高一些。</li>
+<li><strong>发售时间：</strong> Apple在发布会上给出了一个非常模糊和不确定的发售时间“十月下旬”，但是Apple在发布会之后就立即向开发者们提供了tvOS SDK。现在离正式发售已时日不多，如果大家有针对新Apple TV好的想法，我建议你们要抓紧时间了。</li>
+<li><strong>开发硬件：</strong> Apple已经宣布了一个开发者计划允许已经注册的开发者们请求<a href="https://developer.apple.com/tvos/developer-kit/" target="_blank" rel="external">Apple TV Developer Kit</a>。该计划可以让开发者们提前对Apple TV进行开发测试。这看起来似乎是一件很美好的事，但是如果你真的要加入该开发者计划，那么仔细看看下面的建议：</li>
+</ul>
+<p>-&gt; <strong>注意：</strong> 众所周知，iOS、OSX的开发者计划都是收费的，tvOS的开发者计划应该也不例外，不过之前对于该计划的收费信息是非常含糊不清的，但是现在我们通过Apple员工在开发者论坛上发的帖子中<a href="https://forums.developer.apple.com/thread/16984#51332" target="_blank" rel="external">确认</a>了该计划只需要话费1美元即可加入。如果大家有意为tvOS贡献一份力量，或者需要编写教程材料的话，强烈建议你们加入该开发计划。</p>
+<h2 id="u5F00_u53D1_tvOS__u5E94_u7528"><a href="#u5F00_u53D1_tvOS__u5E94_u7528" class="headerlink" title="开发 tvOS 应用"></a>开发 tvOS 应用</h2><p>啰嗦完一堆后，显然最重要的事就是怎样为新Apple TV开发应用，这应该也是大家最感兴趣的事！</p>
+<p>为新Apple TV开发应用实际就是在为tvOS开发应用，当然tvOS这个名字是由Apple根据不同设备而创造的。tvOS仍然是基于iOS开发的，所以有很多框架大家都应该非常熟悉了。</p>
+<p>如果要为tvOS开发应用，大家必须要从开发者中心下载<a href="https://developer.apple.com/xcode/download/" target="_blank" rel="external">Xcode7.1</a>进行开发。该版本是Xcode新的beta版，目前只有该版本支持tvOS以及提供tvOS的模拟器。如果你有需要的话，也可同时下载Xcode7 GM版本，他们可以共存于你们的电脑中。</p>
+<p>Apple提供了两种在tvOS上开发应用的方法：</p>
+<ol>
+<li><strong>TVML Apps：</strong> 这类应用是使用完整的新开发技术开发的，比如TVML、TVJS、TVMLKit。这对我们来说是一个巨大的惊喜，我们会在之后有较详细的介绍。</li>
+<li><strong>Custom Apps：</strong> 这类应用是使用我们已经比较熟悉的开发技术进行开发的，比如大家熟知的一些iOS框架，Storyboard、UIKit、Auto Layout等。</li>
+</ol>
+<p>当你们在为Apple TV开发应用时，你们会发现Xcode中会出现单独的程序目标（这意味着用户将会单独购买的形式购买tvOS应用）。虽然Apple在发布会上说Apple TV中的应用支持通用购买模式，也就是针对iOS和tvOS都支持的应用，用户只需要购买一次即可同时在iPhone和Apple TV上使用。但是从目前的情况来看，我们还不确定Apple是如何实现的，或许在Itunes Connect中支持连接两个程序目标的功能即将来临？</p>
+<h3 id="TVML_Apps"><a href="#TVML_Apps" class="headerlink" title="TVML Apps"></a>TVML Apps</h3><p>先前我提过，为tvOS开发应用有两种方式，第一种就是通过TVML、TVJS和TVMLKit技术。如果这些缩写对于你们来说非常陌生，那么不要着急，这就告诉你们他们都是什么：</p>
+<ul>
+<li><strong>TVML</strong>是一种基于“Television Markup Language”的XML格式。</li>
+<li><strong>TVJS</strong>是基于JavaScript APIs的脚本语言，它可以根据TVML中定义的内容展示应用。</li>
+<li><strong>TVMLKit</strong>是连接TVML、TVJS和原生tvOS应用的工具包。</li>
+</ul>
+<p>如果你是一名经常使用原生APIs开发原生iOS应用的开发者，那么看到这些类似前端的技术可能会有点退缩。但希望你能保持一颗学习的心，学习了解这些新的强大的特性。</p>
+<p>我在这列举一个非常典型的Apple TV的应用场景。大家可以想象一下：你们想把一些内容或信息展现给用户，这些内容和信息储存在你们的服务器上，并且这些内容的格式、查询方式都服务于iPhone或iPad中的应用，那么你肯定会希望你的tvOS中的应用也能方便的使用这些内容，并做到与iOS中应用有相似的展现、查询、导航方式。</p>
+<p><img src="http://d.pr/i/14HgX+" alt="tvOS-2"></p>
+<p>如果我列举的这个例子正好是你们tvOS应用的需求，那么你可能需要考虑如何使用TVMLKit工具包。Apple已经为我们开发者完成了一些主要的工作，比如提供了许多可重用的tvOS界面展示模板，这些模板大都与iOS应用的界面神似，所以用户们并不会感到陌生，这些模板大概有18种之多。大多数模板都可以让你创建出脱凡的、非常适合家中电视展示的界面。大家可以访问Apple的<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/TextboxTemplate.html#//apple_ref/doc/uid/TP40015064-CH2-SW8" target="_blank" rel="external">文档</a>查看这些我们强烈推荐使用的模板。</p>
+<p><img src="http://d.pr/i/1iJ3p+" alt="tvOS-3"></p>
+<p>我也推荐大家在tvOS模拟器运行<a href="https://developer.apple.com/library/prerelease/tvos/samplecode/TVMLCatalog/Introduction/Intro.html#//apple_ref/doc/uid/TP40016505" target="_blank" rel="external">TVML Catalog sample app</a>去查看每个模板。同时你需要启动一个本地的web服务器，便于tvOS应用通过模板展示内容时访问，所以你需要仔细查阅<strong>README.md</strong>文件去了解相关内容。</p>
+<p>诚然TVMLKit还有许多知识点，如果你希望基于它开发一款tvOS应用，那么我提到的一些文档是非常值得你们去查阅参考的。这里我着重推荐大家首先看看如何使用菜单导航类的模板，比如<strong>menuBarTemplate</strong>、<strong>mainTemplate</strong>、<strong>searchTemplate</strong>等。然而，如果你希望用户不只是被动的通过你的tvOS应用观看或收听内容，而是希望用户与应用有更多的交互，给用户高质量的用户体验，那么你们就需要了解如何开发完整的自定义的tvOS应用。</p>
+<h3 id="Custom_Apps"><a href="#Custom_Apps" class="headerlink" title="Custom Apps"></a>Custom Apps</h3><p>你所知道的大多数iOS框架，比如UIKit、Core Graphics、CloudKit等等都可以在tvOS中使用。你可以在Apple提供的这个<a href="https://developer.apple.com/library/prerelease/tvos/releasenotes/General/tvOS90APIDiffs/index.html#//apple_ref/doc/uid/TP40016577" target="_blank" rel="external">文档</a>中查看哪些框架可以用，哪些不可以使用。如果你现在正是一名iOS开发者，那么会对这个文档中的列表非常熟悉。而且不管使用Swift还是Objective-C或者C都可以开发tvOS应用。</p>
+<p>尽管如此，如果想开发自定义的tvOS应用，还是有许多新的知识需要我们学习，作为一名iOS开发者，也应该掌握甚至精通这些新的知识。</p>
+<h2 id="Focus_Engine"><a href="#Focus_Engine" class="headerlink" title="Focus Engine"></a>Focus Engine</h2><p>其中一个对于iOS开发者比较陌生的概念是用户输入/选择方法。在使用Apple TV的过程中，用户不会用手指去按压或滑动屏幕，取而代之的是使用Apple提供的遥控器或者是一些游戏控制器。</p>
+<p>tvOS采用了一个被称为<strong>Focus Engine</strong>的引擎系统，它在整个tvOS中有且只有一个。该引擎负责响应当用户使用遥控器上的手势操作或按键操作对菜单或内容进行上下左右的选择。</p>
+<p>Focus Engine会自动根据用户的选择决定要聚焦或展示的视图，你不需要在代码中做任何类似选中或导航的处理。比如说，此时展示的界面是你已经在Storyboard中设计好的视图布局，其中有一个视图是当前聚焦状态，那么当用户通过手势往右滑动时，Focus Engine会自动根据当前聚焦的视图找到与之相邻的左边的视图，并将其选中和聚焦。</p>
+<p><img src="http://d.pr/i/Lpd3+" alt="tvOS-4"></p>
+<p>作为一个开发者，你必须要学习与Focus Engine相关的API，比如当聚焦的视图发生变化时如何获取通知、如何通过编码触发聚焦视图的改变扥等。更多关于Focus Engine的API可以参阅App Programming Guide for tvOS文档中的<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/WorkingwiththeAppleTVRemote.html#//apple_ref/doc/uid/TP40015241-CH5-SW14" target="_blank" rel="external"> Supporting Focus Within Your App</a>章节。</p>
+<h2 id="TVServices"><a href="#TVServices" class="headerlink" title="TVServices"></a>TVServices</h2><p>虽然iOS开发者在tvOS应用的开发过程中，主要使用的是一些已经比较熟悉的iOS框架，但是也有一些tvOS特有的框架需要开发者们去了解掌握，比如像新加入的<code>TVServices</code>框架。</p>
+<p><code>TVServices</code>的主要作用是描述你的应用的内容，以便tvOS在首页的顶部栏位显示。在首页顶部栏位显示的应用都是用户自己设置的，用户可以将他们认为最为常用的或最为重要的应用放在首页顶部栏位，便于快速打开或浏览其中主要信息。</p>
+<p><img src="http://d.pr/i/1cedk+" alt="tvOS-5"></p>
+<p>你们的应用可以在用户不进入应用的情况下，向用户提供简短的、感兴趣的信息，这就会使你的应用有了额外价值，使用<code>TVServices</code>无疑是提高你的应用下载量的绝佳手段。比如一个游戏应用，通过<code>TVServices</code>显示游戏存档，那么用户就可以直接从首页通过游戏存档进入游戏。如果是一个社交应用，那么就可以在首页显示社交动态信息，如果是一个照片分享应用，那么就可以显示近期朋友和家人分享的照片。</p>
+<p>更多关于<code>TVServices</code>的信息可以查阅<a href="https://developer.apple.com/library/prerelease/tvos/documentation/TVServices/Reference/TVServices_Ref/index.html#//apple_ref/doc/uid/TP40016412" target="_blank" rel="external">TVServices Framework Reference</a>文档。使用好它对你的应用非常有益。</p>
+<h2 id="Parallax_Images"><a href="#Parallax_Images" class="headerlink" title="Parallax Images"></a>Parallax Images</h2><p>还有一件会让你疑惑的可能就是在发布会的Keynote中，Apple着重强调了图片和应用图标的视差效果。这是一个非常棒的视图效果，但是为什么这个特性会被放在Keynote中提及，它为什么这么重要呢？</p>
+<p>如果你使用了tvOS模拟器，你就会明白为什么这个特性如此重要。当移动聚焦视图时，你需要向左或向右滑动，但如果你只滑动了一点，Apple会对当前聚焦的视图做一个轻微的旋转处理，目的是让用户知道现在正在作以操作（但是还需要继续滑动来改变聚焦视图）。这是一个着眼于细节但又非常有用的特性。</p>
+<p><img src="http://d.pr/i/1d2Gx+" alt="tvOS-6"></p>
+<p>Apple把视差效果看做tvOS设计中的一个关键组成部分，并强烈建议应用图标和电影海报使用该特性。不过感谢Apple在App Programming Guide for tvOS文档中提供了<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/CreatingParallaxArtwork.html#//apple_ref/doc/uid/TP40015241-CH19-SW1" target="_blank" rel="external">Creating Parallax Artwork</a>章节，帮助我们创建视差特性的图片资源，以及为我们提供了视察图片资源的预览应用。</p>
+<p><img src="http://d.pr/i/1aHGu+" alt="tvOS-7"></p>
+<h2 id="Controllers"><a href="#Controllers" class="headerlink" title="Controllers"></a>Controllers</h2><p>每一个购买了新Apple TV的用户，都会收到一个功能强大的新版遥控器。上一代只能上下左右简单选择方位以及只有几个简单导航按键的遥控器，而新一代的Apple TV遥控器增加了更多令人激动的新特性：</p>
+<ul>
+<li><strong>玻璃触控板：</strong>位于遥控器的顶部，可以让用户在其上面进行一些手势操作，比如滑动、轻拍、点击。</li>
+<li><strong>麦克风：</strong>可以让用户通过遥控器访问Siri（Siri有使用国家的限制）以及可以通过语音控制电视的音量。</li>
+<li><strong>陀螺仪：</strong>结合动作传感器可以为用户提供非常棒的游戏体验。用户可以通过倾斜遥控器在游戏中控制方向盘开车，或者控制英雄奔跑穿越山洞。</li>
+</ul>
+<p><img src="http://d.pr/i/190dr+" alt="tvOS-8"></p>
+<p>你可以使用你知道的处理手势操作的API去监听滑动或轻点，还有一些新的API去监听遥控器上不同的按钮，比如<code>pressesBegan()</code>、<code>pressesEnded()</code>、<code>pressesChanged()</code>和<code>pressesCancelled()</code>。</p>
+<p>遥控器通过蓝牙技术与Apple TV主机交互，这意味着为蓝牙游戏控制器敞开的大门（恕我直言，用Apple的遥控器玩游戏并不是很好的选择）。Apple已经宣布<a href="https://steelseries.com/gaming-controllers/nimbus" target="_blank" rel="external">Nimbus Steelseries Controller</a>将会支持新Apple TV。想了解更多关于这方面的信息请查阅<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/WorkingwithGameControllers.html#//apple_ref/doc/uid/TP40015241-CH18-SW1" target="_blank" rel="external">Working with Game Controllers</a>。</p>
+<h2 id="tvOS_and_Games"><a href="#tvOS_and_Games" class="headerlink" title="tvOS and Games"></a>tvOS and Games</h2><p>我们衷心的希望游戏能在tvOS上火起来，Apple似乎是直接瞄准了任天堂漠不关心的一个游戏市场。</p>
+<p>tvOS有很健壮的游戏技术作为支撑，SpriteKit和SceneKit都可以在tvOS中正常工作，在Keynote中Crossy Roads开发者展示了他们的tvOS游戏，该游戏使用Unity开发，所以这也暗示着在不久的将来tvOS也会支持Unity开发的游戏。</p>
+<p>大多数用SceneKit开发的游戏都可以无缝移植到新Apple TV中。比如Ray就将教程中介绍过的Zombie Conga游戏移植到了新Apple TV中，花费时间还不到10分钟，几乎不需要修改任何代码。</p>
+<p>-&gt; 注：游戏视频可前往原文查看，但需要科学上网。</p>
+<h2 id="Limitations"><a href="#Limitations" class="headerlink" title="Limitations"></a>Limitations</h2><p>或许目前关于tvOS比较有疑惑的两点就是本地存储和应用大小的限制。</p>
+<h3 id="Limitation_3A_Local_Storage"><a href="#Limitation_3A_Local_Storage" class="headerlink" title="Limitation: Local Storage"></a>Limitation: Local Storage</h3><p>关于本地存储，基本确定是没有！如果你的应用需要持久化用户的数据，那么你需要使用iCloud、CloudKit或者自己的备份服务去实现。任何试图存在Apple TV中的数据都不保证在下次打开应用时还嫩存在。如果你想同步不同设置之间的数据，那么你就需要将数据线存在某个地方，但绝不是Apple TV中。</p>
+<p><img src="http://d.pr/i/11tBa+" alt="tvOS-9"></p>
+<p>一定要牢记这点，它对于你设计tvOS应用的结构时很关键。这里列出了一些规则：</p>
+<ul>
+<li><strong>如果你需要存储的数据量小于1MB</strong>，iCloud的key-value存储方式是一个可以选择的方案。但是要切记，iCloud KVS严格限制了只能有所属者才可以访问数据，并且不能共享给其他用户。</li>
+<li><strong>如果你需要分享事件或者数据给其他用户</strong>，CloudKit是一个不错的选择方案。</li>
+<li><strong>如果你开发的是一个跨平台的应用或者有特殊的需求</strong>，你就得使用你自己的备份服务了。</li>
+</ul>
+<h3 id="Limitation_3A_App_Size"><a href="#Limitation_3A_App_Size" class="headerlink" title="Limitation: App Size"></a>Limitation: App Size</h3><p>另一个限制是关于应用大小的限制，规定不能超过200MB。</p>
+<p><img src="http://d.pr/i/xkr7+" alt="tvOS-10"></p>
+<p>在你们掀桌之前，请回顾一下WWDC2015以及介绍过的“On-Demand Resources”相关API。这几乎像是Apple为tvOS提前铺垫的。</p>
+<p>这些API通过按需下载资源文件减小应用初始安装时的大小。开发者可以在Xcode中给多媒体资源文件用标签进行标记，将应用提交后，App Store会自动根据标记将多媒体资源文件拆分为一个一个下载包。当用户在使用应用时如果需要用到某类标记的资源文件，就可以请求下载该标记的资源文件。当然你得有预期的判断，要先于用户使用资源前开始下载他们需要的资源，这样对于用户来说他们根本不会感受到因为下载资源带来的不好的用户体验。</p>
+<p>举一个简单的例子，比如你有一款游戏应用有10个关卡。在用户安装该游戏时可以只包含两个关卡的多媒体资源文件。一旦用户完成了第一个关卡，你应该发送一个下载请求，下载第三个关卡的多媒体资源文件。当用户完成了第二个关卡时，第三个关卡需要的资源文件早已下载好准备妥当。在用户的整个游戏过程中，你就可以运用该机制一步一步去下载所需的资源文件。</p>
+<p>虽然这种机制对于开发者来说无疑增加了工作量，但是这对用户来说是一件非常愉悦的事情。你试想一下，用户是愿意等待下载一个1GB大小的游戏呢，还是更愿意下载一个100MB大小的游戏并立即开始游戏呢。不过该机制也存在一个隐患，如果用户的网络条件很差，他们一般都更愿意在晚上挂着下载。那么如果用户在白天玩你的游戏，然后同时用龟速的网络下载后面关卡的资源文件，这简直是令人发指的用户体验。不幸的是作为tvOS开发者，在这种情形下目前也无能为力。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tvOS/" rel="tag">#tvOS</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/calayer-animation-replicator-animation/" rel="next" title="CALayer Animation - Replicator Animation">
+                <i class="fa fa-chevron-left"></i> CALayer Animation - Replicator Animation
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/calayer-animation-gradient-animation/" rel="prev" title="CALayer Animation - Gradient Animation">
+                CALayer Animation - Gradient Animation <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u57FA_u672C_u6982_u5FF5"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5F00_u53D1_tvOS__u5E94_u7528"><span class="nav-number">2.</span> <span class="nav-text">开发 tvOS 应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TVML_Apps"><span class="nav-number">2.1.</span> <span class="nav-text">TVML Apps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Custom_Apps"><span class="nav-number">2.2.</span> <span class="nav-text">Custom Apps</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Focus_Engine"><span class="nav-number">3.</span> <span class="nav-text">Focus Engine</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TVServices"><span class="nav-number">4.</span> <span class="nav-text">TVServices</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Parallax_Images"><span class="nav-number">5.</span> <span class="nav-text">Parallax Images</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Controllers"><span class="nav-number">6.</span> <span class="nav-text">Controllers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tvOS_and_Games"><span class="nav-number">7.</span> <span class="nav-text">tvOS and Games</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Limitations"><span class="nav-number">8.</span> <span class="nav-text">Limitations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Limitation_3A_Local_Storage"><span class="nav-number">8.1.</span> <span class="nav-text">Limitation: Local Storage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Limitation_3A_App_Size"><span class="nav-number">8.2.</span> <span class="nav-text">Limitation: App Size</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

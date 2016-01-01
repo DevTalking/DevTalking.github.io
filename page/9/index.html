@@ -1,0 +1,897 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Hexo,next" />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="程序员说">
+<meta property="og:url" content="http://www.devtalking.com/page/9/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="程序员说">
+<meta name="twitter:description">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column 
+   page-home 
+">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/access-control-and-protected/" itemprop="url">
+                  Swift中的访问控制与protected
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-20T00:00:00+08:00" content="2014-08-20">
+              2014-08-20
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>当Swift提供了访问控制特性后大家对该特性的响应非常积极和强烈。同时也有很多开发者朋友会问，“为什么Swift中没有提供<code>protected</code>访问级别呢？” 然而在很多其他语言中有这种访问控制级别，就是只能由子类可以访问某些方法或属性的访问级别。</p>
+<p>当定义Swift的访问级别时，我们主要考虑了以下两个使用情况：</p>
+<ul>
+<li>在App中隐藏<code>class</code>的私人信息。</li>
+<li>在App客户端中隐藏框架中的实现细节。</li>
+</ul>
+<p>这两种情况就分别对应了<code>private</code>和<code>internal</code>访问级别。</p>
+<p>相比之下，<code>protected</code>级别保护了继承者的访问权限，这个新的访问控制级别给我们带来全新的思考方式和设计模式。但实际上，该级别并没有提供真正意义上的保护，因为子类总是能通过<code>public</code>级别的方法和属性去暴露<code>protected</code>级别的API。它也没有提供额外的优化解决机制，因为一个父类的方法或属性可以被很多个子类重写，很难控制。所以也没有必要在这方面进行限制，也就是说在现有机制下，子类可以访问父类的一些成员，但是在子类中使用的，或帮助子类实现某些功能的类并不一定能访问到该子类父类的成员。</p>
+<p>正如一些开发者指出的，Apple的框架里有些API被分离出来，专门供子类使用。那么为什么不使用<code>protected</code>级别控制一下呢？我们查看了相关代码后，发现这些API大体符合这么两点情况。第一，一些方法在子类外没有用，所以没有必要将其保护为只能由子类使用。第二，一些方法可以被重写，但不能被调用。比如<code>drawRect(_:)</code>方法，在<code>UIKit</code>框架代码库中肯定可以使用，但是在<code>UIKit</code>框架之外就没法使用了。</p>
+<p>在扩展类的时候，如何与<code>protected</code>级别的成员交互也思考的不是很明确。比如一个类的扩展是否可以访问该类的<code>protected</code>成员呢？或者一个子类的扩展是否能访问其父类的<code>protected</code>成员呢？在相同模块中申明类的扩展会有什么影响呢？</p>
+<p>还有一个影响我们设计的原因是：现在已有的应用大多数都使用了Apple提供的或第三方提供的框架。Objective-C的方法和属性通常都是在<code>.h</code>公共头文件中申明的，但同样可以加在类扩展的<code>.m</code>实现文件中。当公共类的某些部分在框架的其他地方使用，但没有超出框架外时，开发者就要创建第二个头文件用于内部使用。这些种情况就对应着Swift中的<code>public</code>、<code>private</code>、<code>internal</code>三种访问级别。</p>
+<p>Swift提供的访问控制特性本着单一、易于理解、与继承无关的原则。我们认为现在这种模式很简单也很容易理解，并且大多数的应用场景是想隐藏类或框架中一些功能实现细节。这种访问控制机制可能和你以前使用的其他语言不太一样，但是我们鼓励你们大胆的去尝试。</p>
+<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=11" target="_blank" rel="external">Access Control and protected</a></p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/implicitly-converting-functions-return-optionals/" itemprop="url">
+                  Swift中将函数的返回值隐式转换为Optional类型的特性
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-19T00:00:00+08:00" content="2014-08-19">
+              2014-08-19
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>一个函数A的参数是返回值为<code>Optional</code>类型的函数，如果你传入了一个返回值不是<code>Optional</code>的函数，那么函数A会自动将传入函数的返回值转换为<code>Optional</code>类型，来看代码示例：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 函数B的返回值为Int类型</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">()</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数A的参数是返回值为Optional(Int)类型</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把函数B作为参数传入函数A，输出结果为Optional(1)</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
+<p>更棒的是你还可以使用经过转换后的函数，比如：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 让函数A返回作为参数的函数</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?)-&gt;()-&gt;<span class="type">Int</span>? &#123;</span><br><span class="line">    <span class="keyword">return</span> fun;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line"><span class="keyword">let</span> j = &#123; ++i &#125;</span><br><span class="line"> </span><br><span class="line">j() <span class="comment">// returns 1</span></span><br><span class="line">j() <span class="comment">// returns 2</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> h = <span class="type">A</span>(j)</span><br><span class="line"> </span><br><span class="line">h() <span class="comment">// returns &#123;Some 3&#125;</span></span><br><span class="line">h() <span class="comment">// returns &#123;Some 4&#125;</span></span><br><span class="line">j() <span class="comment">// returns 5</span></span><br></pre></td></tr></table></figure>
+<p>这种特性只能作用于函数的返回值，如果是下面这种情况，就不好使了：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">(i: Int)</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">(Int?)</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 编译失败，不能将B函数参数的Int类型隐式转换为Int?类型</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
+<p>这是因为函数B希望它的参数永远不能为nil，当接收到值为nil的参数后它就不知道该怎么办了。但如果函数B的参数为<code>Optional</code>类型，而函数A希望传入的函数参数为非<code>Optional</code>呢？我们来看看：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">(i: Int?)</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i ?? <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">(Int?)</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 编译成功，并做了隐式转换，</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
+<p>上面的特新其实可以理解为，编译器使用了一个闭包，调用了你传入的函数并进行了封包操作：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">()</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun());</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="type">A</span>( &#123; <span class="type">Optional</span>(<span class="type">B</span>()) &#125; );</span><br></pre></td></tr></table></figure>
+<p>这是Swift很有意思也很有用的一个特性。</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/swift-value-and-reference-types/" itemprop="url">
+                  Swift中的值类型和参照类型
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-17T00:00:00+08:00" content="2014-08-17">
+              2014-08-17
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>在Swift中，类型分为两类：第一种是<strong>值类型</strong>，该类型的每个实例持有数据的副本，并且该副本对于每个实例来说是独一无二的一份，比如结构体（struct）、枚举（enum）、元组（tuple）都是值类型。第二种是<strong>参照类型</strong>，该类型的实例共享数据唯一的一份副本（在native层面说的话，就是该类型的每个实例都指向内存中的同一个地址），比如类（class）就是参照类型。在这篇文章中，我们将深入探讨值类型和参照类型的使用价值，以及如何在某种场景下选择正确的类型。</p>
+<h2 id="u5B83_u4EEC_u6709_u4EC0_u4E48_u4E0D_u540C_uFF1F"><a href="#u5B83_u4EEC_u6709_u4EC0_u4E48_u4E0D_u540C_uFF1F" class="headerlink" title="它们有什么不同？"></a>它们有什么不同？</h2><p>值类型最基本的特点就是复制，这影响到它的赋值、初始化、传参等操作。来看看下面的代码示例：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 值类型示例</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">S</span> </span>&#123; <span class="keyword">var</span> data: <span class="type">Int</span> = -<span class="number">1</span> &#125;</span><br><span class="line"><span class="keyword">var</span> a = <span class="type">S</span>()</span><br><span class="line"><span class="keyword">var</span> b = a						<span class="comment">// a复制一份，并将副本赋值给了b</span></span><br><span class="line">a.data = <span class="number">42</span>						<span class="comment">// a的数据改变了，但是b的并没有改变</span></span><br><span class="line"><span class="built_in">println</span>(<span class="string">"<span class="subst">\(a.data)</span>, <span class="subst">\(b.data)</span>"</span>)	<span class="comment">// prints "42, -1"</span></span><br></pre></td></tr></table></figure>
+<p>参照类型的复制行为其实是隐式的创建了一个共享的实例，作为原始类型的参照。下面的例子中，两个变量都会参照唯一的那个共享实例的数据，所当改变这两个变量中任何一个的数据，都会同样作用于原始类型的数据：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 参照类型示例</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123; <span class="keyword">var</span> data: <span class="type">Int</span> = -<span class="number">1</span> &#125;</span><br><span class="line"><span class="keyword">var</span> x = <span class="type">C</span>()</span><br><span class="line"><span class="keyword">var</span> y = x		<span class="comment">// 将x赋值给y</span></span><br><span class="line">x.data = <span class="number">42</span>		<span class="comment">// 修改了x的数据，其实是修改了参照数据，那么y的数据也会改变 </span></span><br><span class="line"><span class="built_in">println</span>(<span class="string">"<span class="subst">\(x.data)</span>, <span class="subst">\(y.data)</span>"</span>)	<span class="comment">// prints "42, 42"</span></span><br></pre></td></tr></table></figure>
+<h2 id="Mutation_u5728_u5B89_u5168_u6027_u4E2D_u7684_u89D2_u8272"><a href="#Mutation_u5728_u5B89_u5168_u6027_u4E2D_u7684_u89D2_u8272" class="headerlink" title="Mutation在安全性中的角色"></a>Mutation在安全性中的角色</h2><p>选择值类型的一个很重要的原因是可以让你比较容易的理解和掌控你的代码。如果你使用值类型，那么都是唯一的数据值、类型的副本在和你打交道，你对数据的修改只作用于数据所属的类型实例，所以你可以不用担心因为你在某个地方对数据的修改而影响到其他地方的数据。这在多线程环境中非常有用，因为在多线程下，不同的线程有可能会在你不知情的情况下改变数据。发生这种Bug后，调试起来就非常困难。</p>
+<p>因为值类型和参照类型的表象区别就在于当你修改类型实例的数据时，它们对原始类型数据的处理方式不同。但是有一种情况，值类型和参照类型的处理方式却又相似，那就是当类型实例的数据为只读的时候。在不存在修改的情况下，值类型和参照类型就没什么区别了。</p>
+<p>你可能会觉得这一点很有用，假如说一个<code>class</code>是完全不能被重定义的，那么就比较符合使用Cocoa的<code>NSObject</code>对象的一些习惯，并能很好的保持原本的语义。今天，在Swift你可以通过定义不可改变的存储属性来创建一个不可重定义的类，这样可以避免暴露出的API被修改。事实上，许多普通的Cocoa框架里的类，比如<code>NSURL</code>，都被定义成了不可重定义的类。尽管如此，Swift目前还不提供任何机制像结构体（struct）和枚举（enum）一样去强制使一个<code>class</code>成为不可重定义的类（比如像子类）。</p>
+<h2 id="u5982_u4F55_u9009_u62E9_u6B63_u786E_u7684_u7C7B_u578B_uFF1F"><a href="#u5982_u4F55_u9009_u62E9_u6B63_u786E_u7684_u7C7B_u578B_uFF1F" class="headerlink" title="如何选择正确的类型？"></a>如何选择正确的类型？</h2><p>如果你想创建一个新类型，那么你应该选择值类型还是参照类型呢？当你使用Cocoa框架时，很多API都是<code>NSObject</code>的子类，那么你就必须要使用参照类型，也就是<code>class</code>。在其他情况下，这里有一些指导建议你可以参考：</p>
+<p>使用值类型的情形：</p>
+<ul>
+<li>使用<code>==</code>运算符比较实例数据的时候。</li>
+<li>你想单独复制一份实例数据的时候。</li>
+<li>当在多线程环境下操作数据的时候。</li>
+</ul>
+<p>使用参照类型（比如<code>class</code>）的情形：</p>
+<ul>
+<li>当使用<code>===</code>运算符判断两个对象是否引用同一个对象实例的时候。</li>
+<li>当上下文需要创建一个共享的、可变的对象时。</li>
+</ul>
+<p>在Swift中，<code>Array</code>、<code>String</code>、<code>Dictionary</code>都是值类型。它们的使用方式类似C语言中得<code>int</code>，每一个实例都有一份数据。你不需要进行显示的复制操作去防止数据在你不知情的情况下被修改。更重要的是，你可以跨线程进行传参而不需要考虑同步的问题，因为传递值类型很安全。秉着高安全性的精神，这种类型划分模式能帮助你在Swift中写出更加有可预测性的代码。</p>
+<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=10" target="_blank" rel="external">Value and Reference Types</a></p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/ios8-day-by-day-day1-swift-guide/" itemprop="url">
+                  iOS8 Day-by-Day -- Day1 -- Swift引子
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-15T00:00:00+08:00" content="2014-08-15">
+              2014-08-15
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h2 id="u5F00_u573A_u767D"><a href="#u5F00_u573A_u767D" class="headerlink" title="开场白"></a>开场白</h2><p>在今年的WWDC大会上绝对不容忽视的一点就是苹果除了宣布iOS8的发布，还介绍了一门新的编程语言Swift。是与Objective-C大不相同的一门语言，它不但是强类型的语言，而且吸收了当前多种优秀编程语言的特点。  </p>
+<p>为了能够涵盖到Swift语言所有的新特性，该博客系列将只使用Swift语言来进行讲解。我认为，学习如何使用Swift语言、如何与Cocoa框架交互最有价值的资料应该官方提供的两个文档。我相信如果你一开始就跟着这两个文档学习，你能避免不少弯路。</p>
+<ul>
+<li><a href="https://itunes.apple.com/us/book/the-swift-programming-language/id881256329?mt=11&amp;ls=1" target="_blank" rel="external">The Swift Programming Language</a></li>
+<li><a href="https://itunes.apple.com/us/book/using-swift-cocoa-objective/id888894773?mt=11&amp;ls=1" target="_blank" rel="external">Using Swift with Cocoa and Objective-C</a></li>
+</ul>
+<p>你还应该经常去看<a href="https://developer.apple.com/swift/blog/" target="_blank" rel="external">Swift官方博客</a>以及Apple提供的关于该语言的其他<a href="https://developer.apple.com/swift/resources/" target="_blank" rel="external">资源</a>。</p>
+<p>既然已经有很多资料和文档能帮助你学习如何使用Swift语言，所以这个博客系列不会将已有的知识点重复讲解。相反，我会根据初学者在使用Swift语言中可能会遇到的一些陷阱、难以理解的知识点进行讲解，尤其当和系统框架一起使用的时候。</p>
+<p>今天这篇文章主要使用Xcode 6提供的<code>Playground</code>演示每个章节的代码示例。你可以在ShinobiControls的Github主页上下载这些示例代码。地址：<a href="https://github.com/ShinobiControls/iOS8-day-by-day" target="_blank" rel="external">github.com/ShinobiControls/iOS8-day-by-day</a>。</p>
+<p>如果你对这篇文章里的知识点有什么问题或者其他建议，你可以联系我。我会在最新一期的博客中进行说明。你可以在底部进行评论或者给我发Twitter-<a href="https://twitter.com/iwantmyrealname" target="_blank" rel="external">@iwantmyrealname</a>。</p>
+<h2 id="u6784_u9020_u51FD_u6570"><a href="#u6784_u9020_u51FD_u6570" class="headerlink" title="构造函数"></a>构造函数</h2><p>Swift围绕着对象构造过程形成了一个概念，包括命名、方便的构造器以及在对象的构造阶段指定了严格的调用顺序等。在未来几周内，该博客系列将会有一篇文章深入详细地介绍Swift中对象的构造过程，以及对你写的Objective-C有何影响。</p>
+<p>Swift与Objective-C另外一个最大的不同之处就是构造函数的返回值和构造失败的处理。在Objective-C中的构造器大多数都是这样： </p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- (instancetype)<span class="keyword">init</span> &#123;</span><br><span class="line">	<span class="keyword">self</span> = [<span class="keyword">super</span> <span class="keyword">init</span>];</span><br><span class="line">  	<span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">    	<span class="comment">// Do some stuff</span></span><br><span class="line">  	&#125;</span><br><span class="line">  	<span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然而在Swift中是这样：  </p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">init</span> &#123;</span><br><span class="line">  	variableA = <span class="number">10</span></span><br><span class="line">  	...</span><br><span class="line">  	<span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里要注意的是，Objective-C中的构造器负责<strong>创建</strong>并返回<code>self</code>，但是Swift中的构造函数却没有返回值。这意味着在Swift的构造函数中不可能也没有机会返回一个<code>nil</code>的返回值，而这在Objective-C中恰恰是表明构造失败的通用模式。</p>
+<p>这显然是Swift语言新的Beta版中需要修改的问题。那么现在我们唯一的解决办法是通过类方法返回一个Optional类型用于表明是否构造成功：  </p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">  	<span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">myFactoryMethod</span>() -&gt; <span class="title">MyClass</span>? </span>&#123;</span><br><span class="line">    	...</span><br><span class="line">  	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有趣的是Objective-C中的工厂方法被转换成了Swift中的构造方法，这一点显然是不可取的。但是，到目前为止，我们只能选择Swift提供的有潜在隐患的构造方法。</p>
+<h2 id="u53EF_u53D8_u6027"><a href="#u53EF_u53D8_u6027" class="headerlink" title="可变性"></a>可变性</h2><p>在Cocoa开发者中，可变性这个概念已然不是什么新鲜的东西了，比如在合适的情景下，我们会使用<code>NSArray</code>的可变类型<code>NSMutableArray</code>。Swift将这个概念进行了升华，并且它将不可变性升级为一个基本概念。</p>
+<p>Swift中用<code>let</code>关键字定义一个不可变的变量，也就是常量。比如说：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> a = <span class="type">MyClass</span>()</span><br><span class="line">a = <span class="type">MySecondClass</span>() <span class="comment">// 不允许</span></span><br></pre></td></tr></table></figure>
+<p>这意味着，我们不能改变被<code>let</code>关键字定义的常量的值，以及该常量引用对象的类型。这里需要注意的是，如果引用的类型是一个值类型（比如结构体）那么不论是引用类型还是引用类型自身都是不可变的。如果引用的是一个类，那么它的引用类型也是是不可变的，但是引用类型自身是可以改变的。  </p>
+<p>我们来看看下面这个结构体：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">MyStruct</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> t = <span class="number">12</span></span><br><span class="line">  <span class="keyword">var</span> u: <span class="type">String</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你用<code>var</code>关键字定义一个变量名叫<code>struct1</code>，那么你可以对其做以下操作：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> struct1 = <span class="type">MyStruct</span>(t: <span class="number">15</span>, u: <span class="string">"Hello"</span>)</span><br><span class="line">struct1.t = <span class="number">13</span> <span class="comment">// 编译错误，因为t是一个常量，也就是不可变属性</span></span><br><span class="line">struct1.u = <span class="string">"GoodBye"</span></span><br><span class="line">struct1 = <span class="type">MyStruct</span>(t: <span class="number">10</span>, u: <span class="string">"You"</span>)</span><br></pre></td></tr></table></figure>
+<p>你可以对<code>u</code>属性重新赋值，也可以对<code>struct1</code>重新赋值，因为他们都是用<code>var</code>定义的变量。但是你不能对<code>t</code>属性重新赋值，因为它是用<code>let</code>定义的常量属性。下面我们再来看看如果用<code>let</code>关键字定义一个<code>MyStruct</code>的实例常量，会发生什么：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> struct2 = <span class="type">MyStruct</span>(t: <span class="number">12</span>, u: <span class="string">"World"</span>)</span><br><span class="line">struct2.u = <span class="string">"Planet"</span> <span class="comment">// 编译错误，struct2是一个常量，也就是不可变的</span></span><br><span class="line">struct2 = <span class="type">MyStruct</span>(t: <span class="number">10</span>, u: <span class="string">"Defeat"</span>) <span class="comment">// 编译错误，struct2的类型是不可变的</span></span><br></pre></td></tr></table></figure>
+<p>在上述代码片段的情况下，你不能改变<code>struct2</code>的类型，同样也不能改变这个类型自身（比如该类型的属性<code>u</code>），这是因为结构体是一个<strong>值类型</strong>。</p>
+<p>但如果引用的是一个类，那么上述代码示例的结果就会有所不同了，我们先看看下面这个类的定义：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> t = <span class="number">12</span></span><br><span class="line">  <span class="keyword">var</span> u: <span class="type">String</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">init</span>(t: <span class="type">Int</span>, u: <span class="type">String</span>) &#123;</span><br><span class="line">    <span class="keyword">self</span>.t = t</span><br><span class="line">    <span class="keyword">self</span>.u = u</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们使用<code>var</code>定义一个变量<code>class1</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> class1 = <span class="type">MyClass</span>(t: <span class="number">15</span>, u: <span class="string">"Hello"</span>)</span><br><span class="line">class1.t = <span class="number">13</span> <span class="comment">// 编译错误，因为t是一个常量，也就是不可变属性</span></span><br><span class="line">class1.u = <span class="string">"GoodBye"</span></span><br><span class="line">class1 = <span class="type">MyClass</span>(t: <span class="number">10</span>, u: <span class="string">"You"</span>)</span><br></pre></td></tr></table></figure>
+<p>从上述代码示例可以看出，你可以改变类型以及该类型中使用<code>var</code>定义的属性，但是不能改变使用<code>let</code>定义的属性。当我们用<code>let</code>定义一个常量<code>class2</code>，看看会发生什么：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> class2 = <span class="type">MyClass</span>(t: <span class="number">12</span>, u: <span class="string">"World"</span>)</span><br><span class="line">class2.u = <span class="string">"Planet"</span> <span class="comment">// 编译通过</span></span><br><span class="line">class2 = <span class="type">MyClass</span>(t: <span class="number">11</span>, u: <span class="string">"Geoid"</span>) <span class="comment">// 编译错误，class2的类型是不可变的</span></span><br></pre></td></tr></table></figure>
+<p>从上述代码示例中可以看出，你可以改变类型自身，也就是可以改变类型中使用<code>var</code>定义的属性。这是因为类是一个<strong>引用类型</strong>。</p>
+<p>这种行为很好理解，在文档中也有较全面的解释。但是当我们查看Swift中的集合类型时，就会产生一些疑惑。</p>
+<p><code>NSArray</code>是一个引用类型。也就是说，当你实例化一个<code>NSArray</code>时，你创建的变量实际是指向了该数组在内存中的位置，所以在Objective-C中，用<code>*</code>号定义该变量。如果你回顾一下我们刚才说的使用<code>let</code>和<code>var</code>关键字定义引用类型和值类型的知识点，那么你应该基本清楚<code>let</code>与<code>var</code>关键字的用法和区别。但实际上，在Objective-C中，要想使用一个可变的<code>NSArray</code>，你需要使用另外一个类<code>NSMutableArray</code>。</p>
+<p>Swift中的数组与Objective-C中的就有很大区别了，数组不再是引用类型，而是值类型。这意味着在使用中，它们像上述代码示例中的结构体一样使用，而不像类那样使用。因此，<code>let</code>和<code>var</code>关键字不仅仅是指定变量是否可以被重新定义，同时也会指定创建的数组是否是一个可变数组。</p>
+<p>使用<code>var</code>定义的数组不仅可以对其重新赋值，也可以改变数组：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> array1 = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>]</span><br><span class="line">array1.append(<span class="number">5</span>)  <span class="comment">// [1,2,3,4,5]</span></span><br><span class="line">array1[<span class="number">0</span>] = <span class="number">27</span>    <span class="comment">// [27,2,3,4,5]</span></span><br><span class="line">array1 = [<span class="number">3</span>,<span class="number">2</span>]    <span class="comment">// [3,2]</span></span><br></pre></td></tr></table></figure>
+<p>但是用<code>let</code>定义的数组都不能进行上述的改变：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> array2 = [<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>]</span><br><span class="line">array2.append(<span class="number">0</span>) <span class="comment">// 编译错误，array2是不可变数组</span></span><br><span class="line">array2[<span class="number">2</span>] = <span class="number">36</span>   <span class="comment">// 编译错误，array2是不可变数组</span></span><br><span class="line">array2 = [<span class="number">5</span>,<span class="number">6</span>]   <span class="comment">// 编译错误，不能对array2重新赋值</span></span><br></pre></td></tr></table></figure>
+<p>在这一点，Swift与Objective-C有巨大的差异，所以会给我们在实际开发中造成一些概念上混淆。也许在Swift之后的版本中对此会有所改变，所以要时刻关注Swift的文档。</p>
+<p>通过上面的示例代码我们可以得出一个结论，因为在Swift中数组是一个值类型，所以当你创建一个数组时，实际上是将数组的副本赋值给了变量或常量。但在Objective-C中，创建一个数组时，是将一个指针赋值给变量，也就是引用了该数组在内存中的地址。所以在Objective-C中将它作为方法的参数传递时，始终传递的是数组在内存中的那块相同的地址。而在Swift中，传递的是数组的副本。同时根据数组中存储的对象的类型你可以对数组进行完全复制或者部分复制。在开发过程中要时刻注意这点。</p>
+<h2 id="u5F3A_u7C7B_u578B_u548CAnyObject"><a href="#u5F3A_u7C7B_u578B_u548CAnyObject" class="headerlink" title="强类型和AnyObject"></a>强类型和AnyObject</h2><p>强类型是Swift语言最大的一个特点。它可以提高我们代码的安全性，因此，以前在Objective-C中会在运行时才能发现的异常，现在在编译时就可以发现了。</p>
+<p>这一点非常棒。但是当你在Swift中使用Objective-C框架进行开发时，你要特别注意<code>AnyObject</code>这个类型。它相当于Objective-C中的<code>id</code>。在有些时候，<code>AnyObject</code>给我们的感觉好像又不太符合Swift的特性。因为你可以将<code>AnyObject</code>作为任何的类型去使用，但是这会导致程序在运行时发生异常。实际上，<code>AnyObject</code>的使用方式大多时候都和Objective-C中的<code>id</code>一样。不同的一点是，当你用<code>AnyObject</code>代表一个类型，但是你使用了该类型中并不存在的方法或属性时，它会返回<code>nil</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> myString: <span class="type">AnyObject</span> = <span class="string">"hello"</span></span><br><span class="line">myString.cornerRadius <span class="comment">// 返回 nil</span></span><br></pre></td></tr></table></figure>
+<p>为了更符合Swift语言的特性，在使用Cocoa API时，你也许该使用如下的模式：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">someFunc</span><span class="params">(parameter: AnyObject!)</span></span> -&gt; <span class="type">AnyObject</span>! &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> castedParameter = parameter <span class="keyword">as</span>? <span class="type">NSString</span> &#123;</span><br><span class="line">    <span class="comment">// Now I know I have a string :)</span></span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你确定你传入的参数就是<code>String</code>类型的，你就没必要在强制转换时用<code>?</code>来保护了：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> castedParameter = parameter <span class="keyword">as</span> <span class="type">NSString</span></span><br></pre></td></tr></table></figure>
+<p>根据上述内容我们得知，转换数组其实也是一件很容易的事情。你从Cocoa框架接收的所有数组的类型都是<code>[AnyObject]</code>，因为<code>NSArray</code>不支持泛型。然而在大多数情况下，不是所有的元素都是同一类型，但是他们都有已知类型。所以你可以使用有条件判断的转换，也可以不用条件判断进行转换，像下面代码中的语法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">someArrayFunc</span><span class="params">(parameter: [AnyObject]!)</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> newArray = parameter <span class="keyword">as</span> [<span class="type">String</span>]</span><br><span class="line">  <span class="comment">// Do something with your strings :)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="u534F_u8BAE_u4E00_u81F4_u6027"><a href="#u534F_u8BAE_u4E00_u81F4_u6027" class="headerlink" title="协议一致性"></a>协议一致性</h2><p>协议在Swift很好理解，定义方式如下：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">MyProtocol</span> </span>&#123;</span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">myProtocolMethod</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有件事一定是你经常想做的，那就是判断一个对象是否遵循了指定的协议，我们可以这样写：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> class1AsMyProtocol = class1 <span class="keyword">as</span>? <span class="type">MyProtocol</span> &#123;</span><br><span class="line">  <span class="comment">// We're in</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是这里存在一个错误，因为判断指定的这个协议必须是一个Objective-C协议，所以在定义协议时要加上<code>@objc</code>标签;</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@objc</span> <span class="class"><span class="keyword">protocol</span> <span class="title">MyNewProtocol</span> </span>&#123;</span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">myProtocolMethod</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> class1AsMyNewProtocol = class1 <span class="keyword">as</span>? <span class="type">MyNewProtocol</span> &#123;</span><br><span class="line">  <span class="comment">// We're in</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然看起来只是加了<code>@objc</code>标签，但实际上不仅如此，因为在协议前加上了<code>@objc</code>标签，所以协议里的所有属性和方法返回值类型都被解析成Objective-C中的类型了。</p>
+<h2 id="u679A_u4E3E"><a href="#u679A_u4E3E" class="headerlink" title="枚举"></a>枚举</h2><p>枚举在Swift中变得更加实用。现在不仅可以在枚举中关联值（它们可以是不同类型的），也可以包含函数。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">MyEnum</span> </span>&#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="type">FirstType</span></span><br><span class="line">  <span class="keyword">case</span> <span class="type">IntType</span> (<span class="type">Int</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="type">StringType</span> (<span class="type">String</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="type">TupleType</span> (<span class="type">Int</span>, <span class="type">String</span>)</span><br><span class="line"></span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">prettyFormat</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> .<span class="type">FirstType</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"No params"</span></span><br><span class="line">    <span class="keyword">case</span> .<span class="type">IntType</span>(<span class="keyword">let</span> value):      </span><br><span class="line">	  <span class="keyword">return</span> <span class="string">"One param: <span class="subst">\(value)</span>"</span>    </span><br><span class="line">	<span class="keyword">case</span> .<span class="type">StringType</span>(<span class="keyword">let</span> value):</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"One param: <span class="subst">\(value)</span>"</span></span><br><span class="line">    <span class="keyword">case</span> .<span class="type">TupleType</span>(<span class="keyword">let</span> v1, <span class="keyword">let</span> v2):</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"Some params: <span class="subst">\(v1)</span>, <span class="subst">\(v2)</span>"</span></span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"Nothing to see here"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这非常有用：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> enum1 = <span class="type">MyEnum</span>.<span class="type">FirstType</span></span><br><span class="line">enum1.prettyFormat() <span class="comment">// "No params"</span></span><br><span class="line">enum1 = .<span class="type">TupleType</span>(<span class="number">12</span>, <span class="string">"Hello"</span>)</span><br><span class="line">enum1.prettyFormat() <span class="comment">// "Some params: 12, Hello"</span></span><br></pre></td></tr></table></figure>
+<p>只需要做一些小练习，你就能体会出它的强大之处。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>Swift的确很强大，它还需要我们通过实践去摸索新的开发模式，而不必局限在Objective-C的模式中。这篇文章列举了一些从Objective-C转到Swift中可能遇到的潜在的问题和疑惑，但希望不要让你对Swift却步。所有与本博客系列相关的项目和代码示例都是用Swift写的，并且都很通俗易懂。</p>
+<p>本文中的代码示例都是在<code>Playground</code>中完成的，你可以在<a href="https://github.com/ShinobiControl/iOS8-day-by-day" target="_blank" rel="external">github.com/ShinobiControl/iOS8-day-by-day</a>下载这些示例。</p>
+<p>原文地址：<a href="http://www.shinobicontrols.com/blog/posts/2014/07/17/ios8-day-by-day-day-1-blaggers-guide-to-swift" target="_blank" rel="external">iOS8 Day-by-Day :: Day 1 :: Blagger’s Guide to Swift</a></p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/swift-nil-coalescing/" itemprop="url">
+                  Swift中Nil Coalescing运算符的使用技巧
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-13T00:00:00+08:00" content="2014-08-13">
+              2014-08-13
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>在Swift官方《The Swift Programming Language》文档的<code>Basic Operators</code>一节中添加了<code>Nil Coalescing Operator</code>小结，介绍了一个新的运算符<strong>Nil Coalescing</strong>，符号是<code>??</code>，它的表现形成如下：</p>
+<pre><code>let c = a ?? b
+</code></pre><p>这个运算符有两个条件：</p>
+<ul>
+<li><code>a</code>必须是<code>Optional</code>类型的。</li>
+<li><code>b</code>的类型必须要和<code>a</code>解包后的值类型一致。</li>
+</ul>
+<p>符合这两个条件后，我们来解释一下上述这行代码，意思就是<code>c</code>的值是<code>a</code>或<code>b</code>中一个的值，但有前提条件，就是当<code>a</code>解包后值不为<code>nil</code>时，那么就将<code>a</code>解包后的值赋值给<code>c</code>，如果<code>a</code>解包后值为<code>nil</code>，那么就将<code>b</code>的值赋值给<code>c</code>。</p>
+<p>我们还可以用三目运算来更形象的解释这个运算符：</p>
+<pre><code>let c = a != nil ? a! : b
+</code></pre><p>从上面的代码我们很容易理解，当<code>a</code>的值不等于<code>nil</code>时，将<code>a</code>解包后的值赋值给<code>c</code>，否则将<code>b</code>的值赋值给<code>c</code>。</p>
+<p>我们来看看官方给的代码示例：</p>
+<pre><code>let defaultColorName = &quot;red&quot;
+var userDefinedColorName: String?   // 默认值为nil
+
+var colorNameToUse = userDefinedColorName ?? defaultColorName
+// 因为userDefinedColorName的值是nil，所以colorNameToUse的值为&quot;red&quot;
+
+
+userDefinedColorName = &quot;green&quot;
+colorNameToUse = userDefinedColorName ?? defaultColorName
+// 因为userDefinedColorName的值不为nil，所以colorNameToUse的值为&quot;green&quot;
+</code></pre><p>大家看到这应该对<strong>Nil Coalescing</strong>这个运算符有比较清晰的理解了，但在实际运用中，我们还需要注意以下几点。</p>
+<h2 id="u7F16_u8BD1_u5668_u4E2D_u7684_u7C7B_u578B_u5339_u914D_u539F_u5219"><a href="#u7F16_u8BD1_u5668_u4E2D_u7684_u7C7B_u578B_u5339_u914D_u539F_u5219" class="headerlink" title="编译器中的类型匹配原则"></a>编译器中的类型匹配原则</h2><blockquote>
+<p>原谅我在末尾加的<code>;</code>，编码习惯而已 = =|| </p>
+</blockquote>
+<p>我们先来看一段代码：</p>
+<pre><code>let a: Int? = nil;
+let b: Int? = 7;
+
+let c = a != nil ? a! : b; // 因为a的默认值为nil，所以c的值为{Some 7}
+let d = a ?? b; // 这里d的值为nil，这是怎么回事？
+</code></pre><p>首先我们需要注意的是，在官方文档中有这么一句话：<code>“The expression b must match the type that is stored inside a”</code>。但是上面的代码示例中，我们的<code>b</code>是<code>Int?</code>类型，那么此时我们的编译器会怎么处理呢？我们通过自己实现一个Nil Coalescing运算符来说明，代码片段如下：</p>
+<pre><code>infix operator ??? {
+    associativity right;
+    precedence 110;
+}
+
+func ???&lt;T&gt;(a: T?, b: @autoclosure () -&gt; T) -&gt; T {
+    return a != nil ? a! : b();
+}
+
+let d = a ??? b; // 这里d的值仍然是nil
+</code></pre><p>从上面的代码片段中我们可以看出，<code>a</code>的类型是根据传入的<code>b</code>的类型决定的，所以当我们传入的<code>b</code>是<code>Int?</code>类型时，编译器其实将<code>a</code>的类型自动转换为<code>Int??</code>类型了，也就是<code>Optional(a)</code>，那么我们就能解释<code>let d = a ?? b;</code>这行代码。因为<code>a == nil</code>但是<code>Optional(a) != nil</code>，所以<code>d = Optional(a)!</code>，<code>d</code>的值为<code>nil</code>。</p>
+<h2 id="Nil_Coalescing_u8FD0_u7B97_u7B26_u8FD4_u56DE_u503C_u7684_u7C7B_u578B"><a href="#Nil_Coalescing_u8FD0_u7B97_u7B26_u8FD4_u56DE_u503C_u7684_u7C7B_u578B" class="headerlink" title="Nil Coalescing运算符返回值的类型"></a>Nil Coalescing运算符返回值的类型</h2><p>我们先看示例代码片段：</p>
+<pre><code>let a: Int? = nil;
+let b: Int? = 5;
+let c: Int? = 6;
+
+// 因为a的默认值为nil，所以将b的值赋值给x，x的值为{Some 5}，类型为Int?
+let x = a != nil ? a! : b;
+// 因为c的值不为nil，所以将c解包后的值赋值给y，但是y的值却是{Some 6}，而不是6，这是怎么回事？
+let y = c != nil ? c! : b;
+</code></pre><p>根据上面我们提到的编译器中类型判断的原则就可以理解了，因为<code>b</code>的类型是<code>Int?</code>，所以在编译时<code>c</code>的类型已经成了<code>Int??</code>,所以为<code>Int??</code>解包的类型就是<code>Int?</code>了。</p>
+<p>如果我们声明变量<code>y</code>的类型，编译器就要提出抗议了：</p>
+<pre><code>// 如何a为Int?类型，那么编译器就不会通过，因为会导致赋值运算符两边类型不等
+let x: Int = a != nil ? a! : b;
+
+// 这种写法和上面一样，都不会编译通过
+let y: Int = a ?? b;
+</code></pre>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+ </div>
+
+        
+
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,833 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Hexo,next" />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="程序员说">
+<meta property="og:url" content="http://www.devtalking.com/page/7/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="程序员说">
+<meta name="twitter:description">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column 
+   page-home 
+">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/swift-final/" itemprop="url">
+                  Swift中的final修饰符（Xcode 6 GM）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-09-11T00:00:00+08:00" content="2014-09-11">
+              2014-09-11
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>Swift中的<code>final</code>修饰符可以防止类（class）被继承，还可以防止子类重写父类的属性、方法以及下标。需要注意的是，<code>final</code>修饰符只能用于类，不能修饰结构体（struct）和枚举（enum），因为结构体和枚举只能遵循协议（protocol）。虽然协议也可以遵循其他协议，但是它并不能重写遵循的协议的任何成员，这就是结构体和枚举不需要<code>final</code>修饰的原因。</p>
+<h2 id="final_u4FEE_u9970_u7B26_u7684_u51E0_u70B9_u4F7F_u7528_u539F_u5219"><a href="#final_u4FEE_u9970_u7B26_u7684_u51E0_u70B9_u4F7F_u7528_u539F_u5219" class="headerlink" title="final修饰符的几点使用原则"></a>final修饰符的几点使用原则</h2><ul>
+<li><code>final</code>修饰符只能修饰类，表明该类不能被其他类继承，也就是它没资格当父类。</li>
+<li><code>final</code>修饰符也可以修饰类中的属性、方法和下标，但前提是该类并没有被<code>final</code>修饰过。</li>
+<li><code>final</code>不能修饰结构体和枚举。</li>
+</ul>
+<h2 id="u4EE3_u7801_u793A_u4F8B"><a href="#u4EE3_u7801_u793A_u4F8B" class="headerlink" title="代码示例"></a>代码示例</h2><figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">	<span class="comment">//Todo...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaglevTrain</span>: <span class="title">Train</span> </span>&#123;  <span class="comment">// 编译失败</span></span><br><span class="line">	<span class="comment">//Todo...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码中，因为<code>Train</code>类被<code>final</code>修饰过，所以当<code>MaglevTrain</code>类继承了<code>Train</code>后，编译器会提示错误。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">	<span class="keyword">final</span> <span class="func"><span class="keyword">func</span> <span class="title">method</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="comment">//Todo...	</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaglevTrain</span>: <span class="title">Train</span> </span>&#123;  </span><br><span class="line">	<span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">method</span><span class="params">()</span></span> &#123;  <span class="comment">// 编译失败</span></span><br><span class="line">		<span class="comment">//Todo...</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码中，因为<code>Train</code>类中的<code>method</code>方法被<code>final</code>修饰过，所以当子类<code>MaglevTrain</code>重写父类的<code>method</code>方法时，编译器会提示错误。</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/patterns-playground/" itemprop="url">
+                  通过Playground展示一些编码模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-09-08T00:00:00+08:00" content="2014-09-08">
+              2014-09-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>在Swift中，根据已有的、明确的规则或约定，描述和匹配一组值的方式，我们可将其称之为一种编码模式，比如：</p>
+<ul>
+<li>所有的元组在取数据时是从0开始的。</li>
+<li>表示数字的范围我们可以使用<code>1...5</code>这种形式。</li>
+<li>匹配或判断某些类实例的类型。</li>
+</ul>
+<p>该Playground文件需要使用OS X Mavericks或OS X Yosemite beta系统中的Xcode6打开。</p>
+<h2 id="Patterns-playground"><a href="#Patterns-playground" class="headerlink" title="Patterns.playground"></a>Patterns.playground</h2><p>这个playground文件介绍了一些匹配模式的概念。在Swift中，你可以使用条件语句（比如<code>switch</code>语句）通过简明、易读的方式匹配多个值，这种方式就是一种模式。</p>
+<blockquote>
+<p>注意：<br>如果你看不到控制台输出界面，你可以通过View &gt; Assistant Editor &gt; Show Assistant Editor选项或使用Option-Command-Return快捷键打开Timeline区域。</p>
+</blockquote>
+<h3 id="u5339_u914D_u5143_u7EC4_u4E2D_u7684_u503C"><a href="#u5339_u914D_u5143_u7EC4_u4E2D_u7684_u503C" class="headerlink" title="匹配元组中的值"></a>匹配元组中的值</h3><p>下面这个例子向你展示了如何使用匹配模式写出简明、优雅的<code>switch</code>语句。在这个例子中使用了FizzBuzz游戏作为场景进行说明。我们先来简单介绍一下这个游戏，在FizzBuzz游戏中，你从1开始数数，如果你数到的数字能被3整除，那么你就不能说出该数字而要说“Fizz”。如果你数到的数字能被5整除，那么你就要说“Buzz”。如果你数到的数字既能被3整除又能被5整除，那么你就要说“FizzBuzz”。所以一般情况下数数的情形像这样：“1，2，Fizz，4，Buzz…”。那么在这个例子中我们用一个名为<code>fizzBuzz</code>的函数代表该游戏，这个函数有一个参数，代表我们要数的数字，因为我们需要说出“Fizz”、“Buzz”以及“FizzBuzz”，所以返回值为<code>String</code>类型。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">fizzBuzz</span><span class="params">(number: Int)</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> (number % <span class="number">3</span>, number % <span class="number">5</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> (<span class="number">0</span>, <span class="number">0</span>):</span><br><span class="line">        <span class="comment">// number既能被3整除又能被5整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"FizzBuzz!"</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">0</span>, <span class="number">_</span>):</span><br><span class="line">        <span class="comment">// number能被3整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Fizz!"</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">_</span>, <span class="number">0</span>):</span><br><span class="line">        <span class="comment">// number能被5整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Buzz!"</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">_</span>, <span class="number">_</span>):</span><br><span class="line">        <span class="comment">// number既不能被3整除也不能被5整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"<span class="subst">\(number)</span>"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们通过<code>for</code>循环语句，让<code>fizzBuzz</code>函数参数从1到100执行100次，模拟我们在游戏中从1数到100。然后看看控制台输出的结果。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span>...<span class="number">100</span> &#123;</span><br><span class="line">    <span class="built_in">println</span>(fizzBuzz(i))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>fizzBuzz</code>函数中的<code>switch</code>语句中，判断表达式是一个元组，它包含两个成员，这两个成员也是表达式。第一个表达式<code>number % 3</code>，意思是<code>number</code>取3的余数，第二个表达式<code>number % 5</code>，意思是<code>number</code>取5的余数。每一个<code>case</code>语句都对该元组中这两个表达式计算出的值进行匹配判断。</p>
+<p>比如，如果<code>number</code>等于15，那么<code>(number % 3, number % 5)</code>的结果就是<code>(0, 0)</code>，这代表15既能被3整除又能5整除。这符合<code>switch</code>语句中的第一个<code>case</code>判断，所以返回“FizzBuzz!”。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">fizzBuzz(<span class="number">15</span>)</span><br></pre></td></tr></table></figure>
+<p>如果<code>number</code>等于6，那么元组的结果为<code>(0, 1)</code>，这将符合<code>switch</code>语句中的第二个<code>case</code>判断<code>(0, _)</code>，因为下划线在Swift中约定是通配符，它代表任何值。所以将返回“Fizz!”。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">fizzBuzz(<span class="number">6</span>)</span><br></pre></td></tr></table></figure>
+<p>如果<code>number</code>等于11，那么元组的结果为<code>(2, 1)</code>，这将符合<code>switch</code>语句中的第四个<code>case</code>判断<code>(_, _)</code>，因为第四个<code>case</code>判断的是既不能被3整除又不能被5整除的情况，所以用两个下划线表示元组中的两个成员。返回结果为“11”。</p>
+<blockquote>
+<p>练习：<br>让<code>fizzBuzz</code>函数根据其他数字返回不同的消息。<br>再加一种数字的特殊情况，让该函数返回“Bang!”。使用返回“Fizz!”和“Buzz!”相同的模式，比如如果<code>number</code>能被7整除，就返回“Bang!”。别忘了还有“FizzBuzzBang!”这种情况，尽可能将<code>case</code>情况列举全。<br>如果最后一个<code>case</code>你用<code>default</code>代替<code>case (_ ,_)</code>会发生什么呢？这两种方式都能正确的返回不满足其他<code>case</code>的值么？</p>
+</blockquote>
+<h3 id="u679A_u4E3E_u548C_u5173_u8054_u503C"><a href="#u679A_u4E3E_u548C_u5173_u8054_u503C" class="headerlink" title="枚举和关联值"></a>枚举和关联值</h3><p>使用枚举和它的关联值匹配枚举中特定的<code>case</code>场景也是一种匹配模式。下面的例子使用枚举展示了火车的到站时间状态。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Status</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">OnTime</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Delayed</span>(minutes: <span class="type">Int</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果火车正点到站，那么它的状态为<code>Status.OnTime</code>，并且没有关联值。当火车晚点，那么它的状态为<code>Status.Delayed(Int)</code>，并需要传入一个关联值用于表示火车到底晚了多久。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> goodNews = <span class="type">Status</span>.<span class="type">OnTime</span></span><br><span class="line"><span class="keyword">let</span> badNews = <span class="type">Status</span>.<span class="type">Delayed</span>(minutes: <span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+<p>这里有一个名为<code>Train</code>的类，包含一个<code>status</code>属性，默认值为<code>Status.OnTime</code>。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> status = <span class="type">Status</span>.<span class="type">OnTime</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你可以使用匹配模式，将<code>Status.Delayed(Int)</code>这种情况的关联值提出来进行判断。下面的代码将<code>Train</code>类进行了扩展，使之遵循<code>Printable</code>协议，添加了一个只读属性<code>description</code>。这个扩展可以很容易的检索出包含火车晚点分钟数的<code>String</code>字符串，并返回。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Train</span>: <span class="title">Printable</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> description: <span class="type">String</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">switch</span> status &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> .<span class="type">OnTime</span>:</span><br><span class="line">            <span class="comment">// 满足正点到达的情况，返回“On time”</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">"On time"</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Delayed</span>(<span class="keyword">let</span> minutes) <span class="keyword">where</span> <span class="number">0</span>...<span class="number">5</span> ~= minutes:</span><br><span class="line">            <span class="comment">// 将传入的关联值通过“~=”操作符在一定范围内匹配</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Slight delay of <span class="subst">\(minutes)</span> min"</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Delayed</span>(<span class="number">_</span>):</span><br><span class="line">            <span class="comment">// 用下划线通配符匹配不在晚点分钟数范围内的情况</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Delayed"</span></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>switch</code>语句中的第一个<code>case</code>用于匹配当火车状态为<code>OnTime</code>时的情况，并返回简单的字符串。</p>
+<p>第二个<code>case</code>要稍复杂一些，它创建了一个临时常量<code>minutes</code>来表示传入的关联值，并用<code>where</code>关键字申明一个0到5的范围，判断<code>minutes</code>是否在该范围内，如果在该范围内，那么将这个关联值嵌入字符串返回。</p>
+<p>第三个<code>case</code>用于匹配不在晚点范围内的情况。</p>
+<p>你现在可以创建一些<code>Train</code>类的实例验证一下。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> trainOne = <span class="type">Train</span>()</span><br><span class="line"><span class="keyword">let</span> trainTwo = <span class="type">Train</span>()</span><br><span class="line"><span class="keyword">let</span> trainThree = <span class="type">Train</span>()</span><br><span class="line"></span><br><span class="line">trainTwo.status = .<span class="type">Delayed</span>(minutes: <span class="number">2</span>)</span><br><span class="line">trainThree.status = .<span class="type">Delayed</span>(minutes: <span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+<p>然后使用<code>description</code>属性查看每个<code>Train</code>实例的状态值。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">trainOne.description</span><br><span class="line">trainTwo.description</span><br><span class="line">trainThree.description</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>练习：<br>改变<code>trainTwo</code>和<code>trainThree</code>的<code>status</code>属性，看看它们的<code>description</code>属性有何变化。<br>改变<code>Train</code>扩展中<code>switch</code>的最后一个<code>case</code>语句，让它返回包含关联值的字符串，比如“Delayed by 17 min”。<br>加分项，再增加一种<code>case</code>情况，当关联值大于60时，返回列车晚点几小时几分的字符串。<br>提示：可以使用<code>&gt;=</code>操作符。</p>
+</blockquote>
+<h3 id="u68C0_u67E5_u548C_u8F6C_u6362_u5B50_u7C7B_u578B"><a href="#u68C0_u67E5_u548C_u8F6C_u6362_u5B50_u7C7B_u578B" class="headerlink" title="检查和转换子类型"></a>检查和转换子类型</h3><p>还有一种模式可以让你动态的匹配类的实例。考虑一下下面代码中类的所属关系：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">cleanPassengerCars</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Clean the passenger cars"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaglevTrain</span>: <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">referToSpecialist</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Refer the maglev to a specialist"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> maglev = <span class="type">MaglevTrain</span>()</span><br><span class="line"><span class="keyword">let</span> train = <span class="type">Train</span>()</span><br></pre></td></tr></table></figure>
+<p>有一种简单的类型匹配模式，使用<code>is</code>关键字就可以进行父类与子类之间的匹配和判断。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">trainDescription</span><span class="params">(train: Train)</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> train &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="keyword">is</span> <span class="type">MaglevTrain</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"The fastest train on earth."</span></span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Some other kind of train."</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你可以将刚才创建的<code>Train</code>类和<code>MaglevTrain</code>类实例传入<code>trainDescription</code>函数，看看会有什么结果。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">trainDescription(maglev)</span><br><span class="line">trainDescription(train)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>练习：<br>在<code>trainDescription</code>函数中的<code>switch语句中</code>再添加一个<code>case</code>，用于匹配判断<code>train</code>是不是<code>Train</code>类型的，然后看看会提示什么错误？为什么呢？<br>再定义一个<code>Train</code>类的子类<code>SteamTrain</code>，然后在<code>trainDescription</code>函数的<code>switch</code>语句中添加一个<code>case</code>，用于匹配判断<code>train</code>的类型是不是<code>SteamTrain</code>，然后返回适当的字符串描述。将<code>SteamTrain</code>实例传入<code>trainDescription</code>函数，看看是否返回正确的描述。</p>
+</blockquote>
+<p>不过使用<code>is</code>关键字匹配类型只适用于检查子类。如果你想检查对象类型是不是某个类的子类，并且想使用父类的属性或方法时，可以使用<code>as</code>关键字（作用类似类型强制转换中的<code>as</code>）将判断的对象类型转换为父类型，这样在<code>switch</code>语句中就可以同时进行类型检查和类型转换了。使用<code>as</code>关键字时，需要先创建一个临时常量，用于表示需要判断或转换的对象。</p>
+<p>下面的代码中有一个名为<code>determineMaintenanceRequirements</code>的函数，在<code>switch</code>语句中判断对象的类型是不是<code>MaglevTrain</code>的子类，如果是<code>MaglevTrain</code>的子类，那么将该对象的类型转换为<code>MaglevTrain</code>。如果转换成功，就可以使用转换后类型的方法。如果失败则返回<code>default</code>的返回值。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">determineMaintenanceRequirements</span><span class="params">(train: Train)</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> train &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="keyword">let</span> maglev <span class="keyword">as</span> <span class="type">MaglevTrain</span>:</span><br><span class="line">        <span class="keyword">return</span> maglev.referToSpecialist()</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">return</span> train.cleanPassengerCars()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">determineMaintenanceRequirements(train)</span><br><span class="line">determineMaintenanceRequirements(maglev)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>练习：<br>在<code>SteamTrain</code>类中添加一个名为<code>cleanFirebox</code>的函数，在<code>determineMaintenanceRequirements</code>函数中的<code>switch</code>语句里添加一个<code>case</code>语句，用于判断对象的类型是不是<code>SteamTrain</code>的子类，如果是，将对象的类型转换为<code>SteamTrain</code>类型，并调用<code>SteamTrain</code>类的<code>cleanFirebox</code>函数。然后将<code>SteamTrain</code>类的实例传入<code>determineMaintenanceRequirements</code>函数看看是否能返回正确的描述信息。</p>
+</blockquote>
+<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=13" target="_blank" rel="external">Patterns Playground</a></p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/pike5/" itemprop="url">
+                  Rob Pike 程序开发五项原则
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-09-05T00:00:00+08:00" content="2014-09-05">
+              2014-09-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>与程序员们共勉：</p>
+<ol>
+<li>你无法断定程序会在什么地方耗费运行时间。瓶颈经常出现在想不到的地方，所以别急于胡乱找个地方改代码，除非你已经证实那儿就是瓶颈所在。</li>
+<li>估量。在你没对代码进行估量，特别是没找到最耗时的那部分之前，别去优化速度。</li>
+<li>花哨的算法在 n 很小时通常很慢，而 n 通常很小。花哨算法的常数复杂度很大。除非你确定 n 总是很大，否则不要用花哨算法（即使 n 很大，也优先考虑原则 2 ）。比如，解决常见问题时，最简单的树——二叉树（binary tree）,总是比那些复杂的树（AVL树，伸展树（splay tree）和红黑树、B-树（B-tree）,多叉树（trie））来的高校。</li>
+<li>花哨的算法比简单算法更容易出 bug 、更难实现。尽量使用简单的算法配合简单的数据结构。只要掌握了数据结构中的四大法宝，就可以包打天下，他们是：array 、linked list 、hash table、binary tree 。这四大法宝可不是各自为战的，灵活结合才能游刃有余。比如，一个用hash table组织的symbol table，其中是一个个由字符型array构成的linked list。</li>
+<li>以数据为中心。如果已经选择了正确的数据结构并且把一切都组织得井井有条，正确的算法也就不言自明。编程的核心是数据结构，而不是算法。</li>
+</ol>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/how-to-test-library-with-playground/" itemprop="url">
+                  如何用Playground测试自己开发的库或第三方库
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-09-04T00:00:00+08:00" content="2014-09-04">
+              2014-09-04
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>距离Swift发布已经过去快2个月了，各路前辈和大神写教程、写出、录教学视频忙的不亦乐乎，我们也从中学习到了很多关于Swift有用的知识。在学习的过程中也见证了Apple一次次对Swift修正的历程，在正式版来临之际，我想说说被很多前辈和大神视为玩物的东西–Playground。</p>
+<p>我觉得Swift提供的Playground非常有趣，至少对初学者来说是一个能抓住眼球的重要因素。并且我认为Playground其实挺有用的，比如学习Swift的各种新特性、写一些有趣的代码片段、验证一些算法、甚至可以用它写一个小游戏等等，包括TopCoder的Swift Challange都要求使用Playground。但是很关键的一点是以上这些Playground的应用场景与真实的项目、产品开发之间没有太多的交际，换句话说就是Playground在实际开发中基本帮不上什么忙，这也正式很多人觉得目前的Playground没什么大用的原因。</p>
+<p>但事实真的是如此吗？是，好像又不是，今天我在这里就介绍一个Playground在实际开发中的用途 – 使用Playground在开发中测试自己的库或第三方的库。在80%的第三方常用库还是Objective-C的情况下，我们可以用Playground来测试在Swift中的使用健康程度，从而能更从容的选择继续使用还是更换方案。</p>
+<ul>
+<li>第一步：创建iOS Framework &amp; library project或打开已有的项目。</li>
+<li>第二步：将其存为workspace。</li>
+<li>第三步：新建Playground文件。</li>
+<li>第四步：在64位的模拟器（iPhone5s）上编译运行你的Framework。</li>
+<li>第五步：在Playground中导入库并编写测试代码。</li>
+</ul>
+<p>这样你就可以在Playground中看到每一行代码的运行情况，是不是很酷呢！</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/custom-subscripts-in-swift/" itemprop="url">
+                  在Swift中自定义下标（Subscripts）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-09-03T00:00:00+08:00" content="2014-09-03">
+              2014-09-03
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>通常情况下，我们在使用数组（Array）或字典（Dictionary）时会使用到下标。其实在Swift中，我们还可以给类（class）自定义下标，下面就让我们来看看Swift中是如何自定义下标的。</p>
+<h2 id="u901A_u8FC7Subscript_u8D4B_u503C_u548C_u83B7_u53D6_u503C"><a href="#u901A_u8FC7Subscript_u8D4B_u503C_u548C_u83B7_u53D6_u503C" class="headerlink" title="通过Subscript赋值和获取值"></a>通过Subscript赋值和获取值</h2><p>我们先看看下面这个类：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DailyMeal</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">MealTime</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Breakfast</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Lunch</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Dinner</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> meals: [<span class="type">MealTime</span> : <span class="type">String</span>] = [:]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们使用该类时可以直接用<code>meals</code>字典，以枚举作为key来查询，像这样：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday.meals[.<span class="type">Breakfast</span>] = <span class="string">"Toast"</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> someMeal = monday.meals[.<span class="type">Breakfast</span>]</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">println</span>(someMeal)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到目前呢，我们创建了<code>DailyMeal</code>类的实例变量<code>monday</code>，并可以使用<code>DailyMeal</code>类中的<code>meals</code>字典进行查询。但是大家有没有感觉<code>monday.meals[]</code>这种写法很累赘呢？至少我看<code>meals</code>就很不顺眼，有没有更简单快捷的方法让我们直接使用<code>monday</code>变量就能赋值或获取<code>Breakfast</code>的值呢？别着急，今天的主角要登场了，让我们先在<code>DailyMeal</code>类中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span>?</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">get</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> meals[requestedMeal]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">set</span>(newMealName)</span><br><span class="line">    &#123;</span><br><span class="line">        meals[requestedMeal] = newMealName</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码就是一个自定义下标，看起来是不是有点像计算类属性的<code>getter</code>、<code>setter</code>方法的写法呢？但是它们还是有区别的，首先下标使用<code>subscript</code>关键字，然后跟一个圆括号，里面是该下标的参数和参数类型（在实际使用中该参数就相当于数组的index和字典的key一样），最后有该下标的返回值类型。</p>
+<p>从上面代码可以看到，在下标的<code>getter</code>和<code>setter</code>方法中，其实还是在对<code>meals</code>数组进行操作，但是我们通过下标就可以将对<code>meals</code>数组的操作屏蔽掉。现在来看看我们应该怎样使用：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday[.<span class="type">Breakfast</span>] = <span class="string">"Toast"</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> someMeal = monday[.<span class="type">Breakfast</span>]</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">println</span>(someMeal) <span class="comment">// Toast</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在是不是已经没有碍眼的<code>meals</code>了呢，使用起来更加简洁，语义也更加明确了呢，这就是下标最简单的一个用法。</p>
+<p>如果上面的代码中我们不给<code>monday[.Breakfast]</code>赋值，直接输出值会得到什么结果呢？细心的同学可能会注意到，在定义下标时它的返回值是Optional类型的，所以不赋值直接输出的结果是<code>nil</code>，这样就显得太没礼貌了，所以我们再来改造一下下标的代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">get</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> thisMeal = meals[requestedMeal]</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> thisMeal</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Ramen"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">set</span>(newMealName)</span><br><span class="line">    &#123;</span><br><span class="line">        meals[requestedMeal] = newMealName</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们看到下标的返回值从<code>String?</code>改为了<code>String</code>，那么相应的我们要在<code>getter</code>方法中对<code>meals[requestedMeal]</code>的值进行判断，如果没有赋值的话，我们将返回一个默认值<code>Ramen</code>（兰州拉面让人欲罢不能）。现在我们就可以这样用啦：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday[.<span class="type">Lunch</span>] = <span class="string">"Pizza"</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(monday[.<span class="type">Lunch</span>])         <span class="comment">//Output:  "Pizza"</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(monday[.<span class="type">Dinner</span>])        <span class="comment">//Output:  "Ramen"</span></span><br></pre></td></tr></table></figure>
+<p>现在使用<code>DailyMeal</code>类是不是感觉到很简介，语义很明确也很健壮呢，答案是肯定的。我们通过下标避免向用户暴露不必要的API，同时也达到了高维护性的目的。</p>
+<p><code>DailyMeal</code>类的完整代码如下：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DailyMeal</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">MealTime</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Breakfast</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Lunch</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Dinner</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">var</span> meals: [<span class="type">MealTime</span> : <span class="type">String</span>] = [:]    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> thisMeal = meals[requestedMeal]</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> thisMeal</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">"Ramen"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">set</span>(newMealName)</span><br><span class="line">        &#123;</span><br><span class="line">            meals[requestedMeal] = newMealName</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="u53EA_u8BFB_u4E0B_u6807"><a href="#u53EA_u8BFB_u4E0B_u6807" class="headerlink" title="只读下标"></a>只读下标</h2><p>何为只读下标，顾名思义就是不能通过下标赋值，只能通过下标查询。这种下标的应用场景一般是实现一些数据公式、数据函数，它们一般都是只需要你指定一个数字，然后返回该公式对该数字的计算结果。下面我们用一个阶乘的例子来说明只读下标：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">FactorialGenerator</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">subscript</span>(n: <span class="type">Int</span>) -&gt; <span class="type">Int</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> result = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> n &gt; <span class="number">0</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span> value <span class="keyword">in</span> <span class="number">1</span>...n</span><br><span class="line">            &#123;</span><br><span class="line">                result *= value</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同学们可能已经注意到了，上面的下标并没有<code>getter</code>和<code>setter</code>方法。这是因为，如果你想定义一个只读的下标，那么可以不实现<code>setter</code>方法，并且可以省略<code>getter</code>方法的<code>get</code>关键字。Swfit的编译器会判断出这是一个只读的下标，如果你强行通过下标赋值，那么编译器会报错。</p>
+<p>让我们来使用以下这个阶乘结构体：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> factorial = <span class="type">FactorialGenerator</span>()</span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(<span class="string">"Five factorial is equal to <span class="subst">\(factorial[<span class="number">5</span>])</span>."</span>)</span><br><span class="line"><span class="comment">//Output:  "Five factorial is equal to 120."</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(<span class="string">"Ten Factorial is equal to <span class="subst">\(factorial[<span class="number">10</span>])</span>."</span>)</span><br><span class="line"><span class="comment">//Output:  "Ten Factorial is equal to 3628800."</span></span><br></pre></td></tr></table></figure>
+<p>当然上面这个示例只是展示了只读下标的语法和应用场景，阶乘的实现逻辑在这就不累赘了。总的来说，我们可以通过下标简化暴露给用户的API，你可以在用户毫不知情的情况下更改某个API的功能。不仅使代码更易读，同时也大大提高了代码的可维护性，是不是很酷呢！</p>
+<p>参考原文：<a href="http://www.codingexplorer.com/custom-subscripts-swift/?utm_source=feedly&amp;utm_reader=feedly&amp;utm_medium=rss&amp;utm_campaign=custom-subscripts-swift" target="_blank" rel="external">Custom Subscripts in Swift</a></p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+ </div>
+
+        
+
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

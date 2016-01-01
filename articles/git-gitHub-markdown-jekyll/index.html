@@ -1,0 +1,774 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Github,Jekyll,Pages," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="以前建过个人网站，也用过第三方的博客系统，然后又回归到自建的个人博客，但总有不敬人意的地方。比如自建的博客涉及到购买的服务器的稳定性、流量成本、维护成本、数据的安全性、文本编辑器的舒适度等，第三方的博客系统又觉得局限性比较大、缺乏插件、觉得不牛逼等原因。总之人是很贪心的，总想找到一个既不用担心服务器稳定性、又不用担心流量成本、也不用担心数据安全性、而且还能方便的维护资源、并且还有丰富的插件的个人博">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git+GitHub+Markdown+Jekyll=Perfect Personal Blog">
+<meta property="og:url" content="http://www.devtalking.com/articles/git-gitHub-markdown-jekyll/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="以前建过个人网站，也用过第三方的博客系统，然后又回归到自建的个人博客，但总有不敬人意的地方。比如自建的博客涉及到购买的服务器的稳定性、流量成本、维护成本、数据的安全性、文本编辑器的舒适度等，第三方的博客系统又觉得局限性比较大、缺乏插件、觉得不牛逼等原因。总之人是很贪心的，总想找到一个既不用担心服务器稳定性、又不用担心流量成本、也不用担心数据安全性、而且还能方便的维护资源、并且还有丰富的插件的个人博">
+<meta property="og:updated_time" content="2016-01-01T03:37:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git+GitHub+Markdown+Jekyll=Perfect Personal Blog">
+<meta name="twitter:description" content="以前建过个人网站，也用过第三方的博客系统，然后又回归到自建的个人博客，但总有不敬人意的地方。比如自建的博客涉及到购买的服务器的稳定性、流量成本、维护成本、数据的安全性、文本编辑器的舒适度等，第三方的博客系统又觉得局限性比较大、缺乏插件、觉得不牛逼等原因。总之人是很贪心的，总想找到一个既不用担心服务器稳定性、又不用担心流量成本、也不用担心数据安全性、而且还能方便的维护资源、并且还有丰富的插件的个人博">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> Git+GitHub+Markdown+Jekyll=Perfect Personal Blog | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Git+GitHub+Markdown+Jekyll=Perfect Personal Blog
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-06-17T00:00:00+08:00" content="2014-06-17">
+              2014-06-17
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>以前建过个人网站，也用过第三方的博客系统，然后又回归到自建的个人博客，但总有不敬人意的地方。比如自建的博客涉及到购买的服务器的稳定性、流量成本、维护成本、数据的安全性、文本编辑器的舒适度等，第三方的博客系统又觉得局限性比较大、缺乏插件、觉得不牛逼等原因。总之人是很贪心的，总想找到一个既不用担心服务器稳定性、又不用担心流量成本、也不用担心数据安全性、而且还能方便的维护资源、并且还有丰富的插件的个人博客解决方案。于是外事问Google，经过一阵寻觅后发现大牛们的博客方案不正是我所需要的么，于是便有了上一篇的补脑笔记，把涉及到的知识大概整理了一下，准备开始搭建自己的个人学习笔记博客。今天这篇笔记将记录我使用Git+GitHub+Markdown+Jekyll搭建博客系统的过程。</p>
+<blockquote>
+<p>注：以下过程均在OS X系统上操作，Win系统的童靴请勿效仿，但可借鉴。</p>
+</blockquote>
+<h2 id="GitHub"><a href="#GitHub" class="headerlink" title="GitHub"></a>GitHub</h2><blockquote>
+<p>让人不再担心本地备份与远程协作，一切提交均有记录，均可追溯。</p>
+</blockquote>
+<h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2><blockquote>
+<p>让人不再担心写废，想到哪里，写到哪里。</p>
+</blockquote>
+<p>由于OS X系统自带Git，所以不需要再安装Git，自带的Git版本为1.8.5.2。</p>
+<h2 id="Markdown"><a href="#Markdown" class="headerlink" title="Markdown"></a>Markdown</h2><blockquote>
+<p>不再忧虑排版，专注于写作。</p>
+</blockquote>
+<p>Markdown是我认为最好的写作利器没有之一。GitHub完美支持，个人写作使用的DayOne也完美支持，Win系统下也有MarkdownPad这种成熟的工具。</p>
+<h2 id="u4EC0_u4E48_u662FGithub_Pages"><a href="#u4EC0_u4E48_u662FGithub_Pages" class="headerlink" title="什么是Github Pages"></a>什么是Github Pages</h2><blockquote>
+<p>Github Pages：Websites for you and your projects.</p>
+</blockquote>
+<p>Github Pages 是面向用户、组织和项目开放的公共静态页面搭建托管服 务，站点可以被免费托管在 Github 上，你可以选择使用 Github Pages 默 认提供的域名 username.github.io 或者自定义域名来发布站点。Github Pages 支持自动利用 Jekyll 生成站点，也同样支持纯 HTML 文档，将你的 Jekyll 站点托管在 Github Pages 上是一个不错的选择。</p>
+<p>通俗一点讲。你可以将你个人网站的html、css、js、image等按一定<strong>目录结构</strong>托管在github上，以index.html为入口（即个人网站首页），使用username.github.io就可以访问你的个人网站了。</p>
+<p>再通俗一点讲。github为你提供了一台无限流量、稳定、的服务器。你将个人网站的资源以一定<strong>目录结构</strong>上传（托管）到github，该服务器的ip就是username.github.io。</p>
+<p>上述两次提到<strong>目录结构</strong>，下面我解释一下这个目录结构。</p>
+<h2 id="u4EC0_u4E48_u662FJekyll"><a href="#u4EC0_u4E48_u662FJekyll" class="headerlink" title="什么是Jekyll"></a>什么是Jekyll</h2><p>Jekyll 的核心其实是一个文本转换引擎。它的概念其实就是： 你用你最喜欢的标记语言来写文章，可以是 Markdown，也可以是 Textile,或者就是简单的 HTML, 然后 Jekyll 就会帮你套入一个或一系列的布局中。在整个过程中你可以设置URL路径, 你的文本在布局中的显示样式等等。这些都可以通过纯文本编辑来实现，最终生成的静态页面就是你的成品了。</p>
+<h2 id="u5982_u4F55_u4F7F_u7528Github_Pages_u4E0EJekyll"><a href="#u5982_u4F55_u4F7F_u7528Github_Pages_u4E0EJekyll" class="headerlink" title="如何使用Github Pages与Jekyll"></a>如何使用Github Pages与Jekyll</h2><h3 id="Jekyll_u76EE_u5F55_u7ED3_u6784"><a href="#Jekyll_u76EE_u5F55_u7ED3_u6784" class="headerlink" title="Jekyll目录结构"></a>Jekyll目录结构</h3><p>上述多次提到的目录结构即Jekyll的目录结构。如下：</p>
+<pre><code>.   
+|--_config.yml&gt;  
+|--_drafts  
+       |--articles1.textile 
+    |--articles2.md
+|--_includes
+    |--footer.html
+    |--header.html
+|--_layouts
+    |--default.html
+    |--post.html
+|--_posts
+    |--2014-06-17-articles1.textile
+    |--2014-06-17-articles1.md
+|--_site
+|--index.html
+|--other files
+</code></pre><ul>
+<li><code>_config.yml</code>：保存配置数据。  </li>
+<li><code>_drafts</code>：存放未发布的文章。  </li>
+<li><code>_includes</code>：存放页面片段，即页头（<code>head.html</code>）、页脚（<code>footer.html</code>）、导航（<code>navigation.html</code>）、评论（<code>disqus_comments.html</code>）等，这些资源通过标签添加到index.html中，从而形成一个完整的页面。  </li>
+<li><code>_layouts</code>：存放模板文件。文章模板、关于页面模板、首页模板等。  </li>
+<li><code>_posts</code>：存放文章的文件。并且文章文件名称要符合<code>YEAR-MONTH-DAY-title.MARKUP</code>格式。</li>
+<li><code>_site</code>：经过jekyll转换的页面。</li>
+<li><code>index.html</code>：网站首页。</li>
+<li><code>other files</code>：其他文件，存放css、js、image等。</li>
+</ul>
+<h3 id="Jekyll_u89E3_u6790_u6D41_u7A0B"><a href="#Jekyll_u89E3_u6790_u6D41_u7A0B" class="headerlink" title="Jekyll解析流程"></a>Jekyll解析流程</h3><ul>
+<li>首先会加载_posts及文件夹下的所有文章，将其参数和文章内容组织保存在内存中，所有的文章的内容、参数都在site.posts对象（其他文件夹下的文章不会放入site.posts中）。</li>
+<li>其次加载_layouts文件夹下的所有模板。</li>
+<li>再次加载_includes文件夹下的所有需要被引入的内容。</li>
+<li>最后根据每一篇需要编译的文章选择的其参数定义的模板来创建一个模板，并将当前文章的内容、参数等进行扩展后放在page对象、content对象中，然后进行模板的编译，生成html文件，并按照一定规则放在_site文件夹下。也就是说在创建一篇文章时，其实所有文章的内容都已经被读取出来了，这也为文章相互之间的关联提供了可能。</li>
+</ul>
+<h3 id="u5728_u672C_u5730_u5B89_u88C5jekyll"><a href="#u5728_u672C_u5730_u5B89_u88C5jekyll" class="headerlink" title="在本地安装jekyll"></a>在本地安装jekyll</h3><blockquote>
+<p>注：这里默认安装环境已具备Ruby、RubyGems环境。</p>
+</blockquote>
+<ul>
+<li>安装jekyll：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo gem update &#8212;system&#10;$ sudo gem install jekyll</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装模板，默认的模板是Maruku，我们替换为RDiscount。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo gem install rdiscount</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Maruku是纯ruby写的Markdown模板解释器。<br>RDiscount是C写的模板解释器。</p>
+</blockquote>
+<p>为什么要替换为RDiscount呢，有心人对两者做了比较，优劣可见一斑。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Maruku: 08.424132s total time, 00.084241s average  &#10;RDiscount: 00.082019s total time, 00.000820s average</span><br></pre></td></tr></table></figure>
+<ul>
+<li>新建一个jekyll目录：  </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ jekyll new blog</span><br></pre></td></tr></table></figure>
+<ul>
+<li>进入到该目录下，你就能看到上述的目录结构：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cd blog</span><br></pre></td></tr></table></figure>
+<p>jekyll集成了一个开发用的服务器，可以让你使用浏览器在本地进行预览。启动server，访问地址为<a href="http://localhost:4000/：" target="_blank" rel="external">http://localhost:4000/：</a></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ jekyll serve</span><br></pre></td></tr></table></figure>
+<p>至此，一个简单的基于本机服务器的jekyll框架的个人网站就算搭建完毕，在浏览器中访问<a href="http://localhost:4000/，就可以看到index.html中的内容，一般在制作模板时多采在本地安装的方式，便于调试。更多配置信息请参见[Jekyll文档](http://jekyllcn.com/docs/home/)。" target="_blank" rel="external">http://localhost:4000/，就可以看到index.html中的内容，一般在制作模板时多采在本地安装的方式，便于调试。更多配置信息请参见[Jekyll文档](http://jekyllcn.com/docs/home/)。</a></p>
+<h3 id="u7ED3_u5408Github_Pages_u4F7F_u7528Jekyll"><a href="#u7ED3_u5408Github_Pages_u4F7F_u7528Jekyll" class="headerlink" title="结合Github Pages使用Jekyll"></a>结合Github Pages使用Jekyll</h3><p>这篇笔记的主题不是如何在本机搭建个人网站，所以这种使用方式是重点。</p>
+<p>由于Github Pages完美支持Jekyll，所以你只需要安照Jekyll的文件目录结构，托管在Github中即可，不需要在本机安装Jekyll，只需要关注于github，可以借鉴大师们设计的Jekyll模板，然后push或pull你的文章即可。</p>
+<ul>
+<li>注册GitHub账号，只需要一个邮箱和密码。<a href="https://github.com" target="_blank" rel="external">GitHub官网</a></li>
+<li>创建一个Repository，命名格式为：username.github.io，这样就生成了你的User site。可参见<a href="https://pages.github.com" target="_blank" rel="external">GitHub Pages</a></li>
+</ul>
+<blockquote>
+<p>注意：这里的username必须和你的账号名一致。</p>
+</blockquote>
+<ul>
+<li>不管用命令行还是用Finder，总之新建一个目录，我这里起名为GitRepo。</li>
+<li>进入GitRepo目录，键入git init命令，初始化一个git库。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /Users/JaceFu/GitRepo</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将刚才在Github中创建的Repo克隆到你本地的Git库中，即刚在本地创建的GitRepo目录中。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /Users/JaceFu/GitRepo&#10;git clone https://github.com/username/username.github.io</span><br></pre></td></tr></table></figure>
+<p>在GitRepo文件中会看到名为username.github.io的文件，这就是你从Github中克隆的Repo文件。</p>
+<ul>
+<li>Hello World，进入Repo目录中，创建一个HTML文件，名为index，内容为“Hello World”。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /Users/JaceFu/GitRepo/username.github.io&#10;echo &#8220;Hello World&#8221; &#62; index.html</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将创建的index.html文件push到github中</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /Users/JaceFu/GitRepo/username.github.io&#10;git add .&#10;git commit -m &#8220;Hello World update&#8221;&#10;git push</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>在浏览器中访问<code>http://username.github.io</code>，你将会看到index.html文件中的内容，我们这里会显示“Hello World”。至此，基于Github Pages功能的个人站点就算搭建好了。</p>
+</li>
+<li><p>在克隆到本地的Repo文件中，按照上述的Jekyll文件目录结构手动创建所需的文件资源，并上传。由于Github本身完美支持Jekyll，所以只要符合Jekyll的文件目录，Github就自动使用Jekyll解析形成页面。</p>
+</li>
+</ul>
+<p>至此，我们应该有了一定的理解，这里我再简单梳理一下：</p>
+<ul>
+<li>Jekyll可以将我们使用markdown写的文章按照指定模板解析为html文件。</li>
+<li>Github Pages可以充当我们的服务器，通过username.github.io可以访问到我们上传的html页面。</li>
+<li>Github Pages完美支持Jekyll，所以不需要我们自己编写复杂的html页面，只要将Jekyll的目录结构上传至Github中，就可以通过username.github.io访问由Jekyll解析生成的html页面，从而形成了个人网站。</li>
+</ul>
+<h3 id="u914D_u7F6E_config-yml_u6587_u4EF6"><a href="#u914D_u7F6E_config-yml_u6587_u4EF6" class="headerlink" title="配置_config.yml文件"></a>配置_config.yml文件</h3><p>基本配置参见<a href="http://jekyllcn.com/docs/configuration/" target="_blank" rel="external">官方配置文档</a>。<br>不同的模板，在该文件中的配置项也不一样，因为我自己使用了大师设计的模板，配置了如下参数（部分）：</p>
+<ul>
+<li>title：网站名称。</li>
+<li>description：网站说明。</li>
+<li>logo：网站logo。</li>
+<li>disqus_shortname：disqus标示符。</li>
+<li>search：是否运行搜索。</li>
+<li>url：网站中一些资源文件使用的url地址。</li>
+<li>encoding：编码。</li>
+<li>markdown：md解析模板。</li>
+<li>timezone：时区。</li>
+</ul>
+<h3 id="u7F16_u5199_u535A_u6587"><a href="#u7F16_u5199_u535A_u6587" class="headerlink" title="编写博文"></a>编写博文</h3><p>可以看一下_posts下的jekyll给的例子：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#10;---&#10;layout: post&#10;title:  &#34;Welcome to Jekyll!&#34;&#10;date:   2014-01-27 21:57:11&#10;categories: jekyll update&#10;&#10;---&#10;&#10;You&#39;ll find this post in your `_posts` directory - edit this post and re-build (or run with the `-w` switch) to see your changes!&#10;To add new posts, simply add a file in the `_posts` directory that follows the convention: YYYY-MM-DD-name-of-post.ext.&#10;&#10;Jekyll also offers powerful support for code snippets:&#10;&#10;&#123; % highlight ruby % &#125; &#10;def print_hi(name)&#10;  puts &#34;Hi, #&#123;name&#125;&#34;&#10;end&#10;print_hi(&#39;Tom&#39;)&#10;&#10;#=&#62; prints &#39;Hi, Tom&#39; to STDOUT.&#10;&#10;&#123; % endhighlight % &#125;&#10;&#10;Check out the [Jekyll docs][jekyll] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll&#39;s GitHub repo][jekyll-gh].&#10;&#10;[jekyll-gh]: https://github.com/mojombo/jekyll&#10;[jekyll]:    http://jekyllrb.com</span><br></pre></td></tr></table></figure>
+<p>可以看到在博文的最上方有被两个—包裹起来的一段，这里就定义了文章的一些参数，更多参数在FrontMatter和Variables获取，简单的只需要关注几个就好：</p>
+<ul>
+<li>title：文章的标题。</li>
+<li>date：文章的日期。</li>
+<li>categories：定义了文章所属的目录。</li>
+<li>layout：文章所使用的模板名称。</li>
+<li>tags：文章标签。</li>
+</ul>
+<p>这里就写一个最简单的文章，只是用其中的两个参数：layout，title，如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#10;---&#10;layout: mylayout&#10;title: hello-jekyll&#10;&#10;---&#10;&#10;Hello jekyll!</span><br></pre></td></tr></table></figure>
+<p>将这个写完的文章保存为 “年-月-日-标题.markdown”的名字形式，上传至Github中的_posts文件中，Jekyll会自动解析生成该文章的html页面。</p>
+<blockquote>
+<p>注：文章的文件名不要使用中文，否则会出现Bug。</p>
+</blockquote>
+<h3 id="u7F16_u5199_u6A21_u677F"><a href="#u7F16_u5199_u6A21_u677F" class="headerlink" title="编写模板"></a>编写模板</h3><p>如果想自己编写模板可以参见<a href="http://blog.segmentfault.com/skyinlayer/1190000000406013" target="_blank" rel="external">如何创建Jekyll模板</a>。<br>或者可以使用大师们设计好的模板。<a href="http://yuanyong.org/blog/collect-jekyll-theme.html" target="_blank" rel="external">Jekyll模板锦集</a>。</p>
+<h3 id="u4E2A_u6027_u57DF_u540D"><a href="#u4E2A_u6027_u57DF_u540D" class="headerlink" title="个性域名"></a>个性域名</h3><p>个人网站要有一个称心的域名，使用username.github.io实在不像话，所以我说一下如何配置个性域名。如何申请域名这里就不再累赘。</p>
+<p>在Github中的User Site Repo根目录（即Github中Jekyll目录的根目录）下创建CNAME目录，内容为你的个性域名，格式为www.yourdomain.com即可。</p>
+<p>然后在域名管理系统中解析域名，添加CNAME记录，服务器为username.github.io。等待一个多小时后，就可以使用自己的域名访问了。</p>
+<h2 id="u7ED3_u675F"><a href="#u7ED3_u675F" class="headerlink" title="结束"></a>结束</h2><p>至此，使用Github Pages和Jekyll搭建个人网站的过程记录完毕。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Github/" rel="tag">#Github</a>
+          
+            <a href="/tags/Jekyll/" rel="tag">#Jekyll</a>
+          
+            <a href="/tags/Pages/" rel="tag">#Pages</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/supplementary-brain/" rel="next" title="你要补脑 - Git|GitHub|Ruby|rbenv|brew|gem|jekyll">
+                <i class="fa fa-chevron-left"></i> 你要补脑 - Git|GitHub|Ruby|rbenv|brew|gem|jekyll
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/you-should-know-block/" rel="prev" title="Objective-C中的Block">
+                Objective-C中的Block <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GitHub"><span class="nav-number">1.</span> <span class="nav-text">GitHub</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git"><span class="nav-number">2.</span> <span class="nav-text">Git</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Markdown"><span class="nav-number">3.</span> <span class="nav-text">Markdown</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4EC0_u4E48_u662FGithub_Pages"><span class="nav-number">4.</span> <span class="nav-text">什么是Github Pages</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4EC0_u4E48_u662FJekyll"><span class="nav-number">5.</span> <span class="nav-text">什么是Jekyll</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5982_u4F55_u4F7F_u7528Github_Pages_u4E0EJekyll"><span class="nav-number">6.</span> <span class="nav-text">如何使用Github Pages与Jekyll</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Jekyll_u76EE_u5F55_u7ED3_u6784"><span class="nav-number">6.1.</span> <span class="nav-text">Jekyll目录结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Jekyll_u89E3_u6790_u6D41_u7A0B"><span class="nav-number">6.2.</span> <span class="nav-text">Jekyll解析流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5728_u672C_u5730_u5B89_u88C5jekyll"><span class="nav-number">6.3.</span> <span class="nav-text">在本地安装jekyll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7ED3_u5408Github_Pages_u4F7F_u7528Jekyll"><span class="nav-number">6.4.</span> <span class="nav-text">结合Github Pages使用Jekyll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u914D_u7F6E_config-yml_u6587_u4EF6"><span class="nav-number">6.5.</span> <span class="nav-text">配置_config.yml文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7F16_u5199_u535A_u6587"><span class="nav-number">6.6.</span> <span class="nav-text">编写博文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7F16_u5199_u6A21_u677F"><span class="nav-number">6.7.</span> <span class="nav-text">编写模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4E2A_u6027_u57DF_u540D"><span class="nav-number">6.8.</span> <span class="nav-text">个性域名</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7ED3_u675F"><span class="nav-number">7.</span> <span class="nav-text">结束</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

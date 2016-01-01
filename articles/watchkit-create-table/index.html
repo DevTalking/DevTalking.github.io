@@ -1,0 +1,658 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Swift,WatchKit," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="上篇文章向大家演示了如何创建一个Helloworld Apple Watch App。这篇文章向大家演示如何使用WatchKit给你的Watch App创建Table。我们在Helloworld项目的基础上进行完善。
+创建一个Table打开Interface.storyboard文件，删除我们之前添加的Label，然后将一个Table组件拖拽到你的Watch屏幕中。
+
+这里要注意一下，WatchK">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用WatchKit创建Table">
+<meta property="og:url" content="http://www.devtalking.com/articles/watchkit-create-table/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="上篇文章向大家演示了如何创建一个Helloworld Apple Watch App。这篇文章向大家演示如何使用WatchKit给你的Watch App创建Table。我们在Helloworld项目的基础上进行完善。
+创建一个Table打开Interface.storyboard文件，删除我们之前添加的Label，然后将一个Table组件拖拽到你的Watch屏幕中。
+
+这里要注意一下，WatchK">
+<meta property="og:image" content="http://www.devtalking.com/postImages/watchkit-create-table-1.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/watchkit-create-table-2.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/watchkit-create-table-3.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/watchkit-create-table-4.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/watchkit-create-table-5.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/watchkit-create-table-6.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/watchkit-create-table-7.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/watchkit-create-table-8.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/watchkit-create-table-9.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/watchkit-create-table-10.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/watchkit-create-table-11.png">
+<meta property="og:updated_time" content="2016-01-01T13:59:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用WatchKit创建Table">
+<meta name="twitter:description" content="上篇文章向大家演示了如何创建一个Helloworld Apple Watch App。这篇文章向大家演示如何使用WatchKit给你的Watch App创建Table。我们在Helloworld项目的基础上进行完善。
+创建一个Table打开Interface.storyboard文件，删除我们之前添加的Label，然后将一个Table组件拖拽到你的Watch屏幕中。
+
+这里要注意一下，WatchK">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 如何使用WatchKit创建Table | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                如何使用WatchKit创建Table
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-11-23T00:00:00+08:00" content="2014-11-23">
+              2014-11-23
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>上篇文章向大家演示了如何创建一个Helloworld Apple Watch App。这篇文章向大家演示如何使用WatchKit给你的Watch App创建Table。我们在Helloworld项目的基础上进行完善。</p>
+<h2 id="u521B_u5EFA_u4E00_u4E2ATable"><a href="#u521B_u5EFA_u4E00_u4E2ATable" class="headerlink" title="创建一个Table"></a>创建一个Table</h2><p>打开<strong>Interface.storyboard</strong>文件，删除我们之前添加的Label，然后将一个Table组件拖拽到你的Watch屏幕中。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-1.png" alt="pic"></p>
+<p>这里要注意一下，WatchKit中每一个WKInterfaceTableRow都是一个<strong>Table Row Controller</strong>，如果你展开它，你会发现它里面有一个<strong>Group</strong>，我们分别将一个Label和Image组件拖拽至Group中。调整Label和Image的大小，调整到你觉得合适就可以。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-2.png" alt="pic"></p>
+<h2 id="u521B_u5EFA_u81EA_u5B9A_u4E49_u7684Table_Row_Controller"><a href="#u521B_u5EFA_u81EA_u5B9A_u4E49_u7684Table_Row_Controller" class="headerlink" title="创建自定义的Table Row Controller"></a>创建自定义的Table Row Controller</h2><p>我们选中TableRowController，然后选择右侧工具栏的Identify inspector，我们可以在<strong>Custom Class</strong>一栏中看到，其实TableRowController是一个<strong>NSObject</strong>。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-3.png" alt="pic"></p>
+<p>我们可以创建一个自己的NSObject，然后将TableRowController的class设置为我们创建的NSObject，这样就达到了自定义的目的。我们在<strong>HelloworldWatchKit WatchKit Extension</strong>目录中创建一个Swfit文件，让它继承NSObject，然后导入WatchKit框架。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-4.png" alt="pic"></p>
+<p>将TableRowController的class设置为<code>MyTableRowController</code>，并给它设置一个Identifier。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-5.png" alt="pic"></p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-6.png" alt="pic"></p>
+<p>现在你就可以在<code>MyTableRowController</code>中添加Label和Image的<strong>IBOutlet</strong>了。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-7.png" alt="pic"></p>
+<h2 id="u521B_u5EFA_u6570_u636E_u6E90"><a href="#u521B_u5EFA_u6570_u636E_u6E90" class="headerlink" title="创建数据源"></a>创建数据源</h2><p>我们知道，在UIKit的<code>UITableView</code>或者<code>UITableViewController</code>中都有DataSource，负责Table Row中的数据，但是在WatchKit中的TableRowController并没有DataSource，但是这个概念是有的，也就是说我们要为TableRowController创建一个数据源，不论是数组还是字典。在这里，我们创建一个数组，作为TableRowController的数据源，数组中的元素都是<code>String</code>。因为我们的TableRowController中有一个Image组件、一个Label组件，所以我们将图片的名字作为数组的元素。</p>
+<p>我们在<code>InterfaceController</code>中创建一个数据源<code>weather</code>数组，数组元素是图片名称，然后创建Table的IBOutlet。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-8.png" alt="pic"></p>
+<h2 id="u52A0_u8F7D_u6570_u636E_u6E90"><a href="#u52A0_u8F7D_u6570_u636E_u6E90" class="headerlink" title="加载数据源"></a>加载数据源</h2><p>我们在<code>InterfaceController</code>中添加<code>loadTableData()</code>方法，然后在<code>init()</code>方法中调用。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-9.png" alt="pic"></p>
+<p>现在编译运行一下，你就会看到Watch中显示出了Table，是不是很酷呢！</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-10.png" alt="pic"></p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-11.png" alt="pic"></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Swift/" rel="tag">#Swift</a>
+          
+            <a href="/tags/WatchKit/" rel="tag">#WatchKit</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/helloworld-watchkit-app/" rel="next" title="Helloworld Apple Watch App">
+                <i class="fa fa-chevron-left"></i> Helloworld Apple Watch App
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/watchkit-pagebase-navigation/" rel="prev" title="使用WatchKit实现Page-Based Navigation">
+                使用WatchKit实现Page-Based Navigation <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u521B_u5EFA_u4E00_u4E2ATable"><span class="nav-number">1.</span> <span class="nav-text">创建一个Table</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u521B_u5EFA_u81EA_u5B9A_u4E49_u7684Table_Row_Controller"><span class="nav-number">2.</span> <span class="nav-text">创建自定义的Table Row Controller</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u521B_u5EFA_u6570_u636E_u6E90"><span class="nav-number">3.</span> <span class="nav-text">创建数据源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u52A0_u8F7D_u6570_u636E_u6E90"><span class="nav-number">4.</span> <span class="nav-text">加载数据源</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,741 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="GOJS,JavaScript," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="通过Shape你可以构建一个几何图形，并且可以控制它的形状和轮廓颜色以及填充色等。  
+图形你可以通过Shape.figure属性设置它的形状。让你使用GraphObject.make方法构建时，你可以将形状参数以字符串形式作为第二个参数。你可能还需要通过GraphObject.desiredSize、GraphObject.width、GraphObject.height属性设置Shape的尺寸">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GOJS教程 -- 如何使用Shape">
+<meta property="og:url" content="http://www.devtalking.com/articles/gojs-shape/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="通过Shape你可以构建一个几何图形，并且可以控制它的形状和轮廓颜色以及填充色等。  
+图形你可以通过Shape.figure属性设置它的形状。让你使用GraphObject.make方法构建时，你可以将形状参数以字符串形式作为第二个参数。你可能还需要通过GraphObject.desiredSize、GraphObject.width、GraphObject.height属性设置Shape的尺寸">
+<meta property="og:image" content="http://www.devtalking.com/postImages/shape1.jpg">
+<meta property="og:image" content="http://www.devtalking.com/postImages/shape2.jpg">
+<meta property="og:image" content="http://www.devtalking.com/postImages/shape3.jpg">
+<meta property="og:image" content="http://www.devtalking.com/postImages/shape4.jpg">
+<meta property="og:image" content="http://www.devtalking.com/postImages/shape5.jpg">
+<meta property="og:image" content="http://www.devtalking.com/postImages/shape6.jpg">
+<meta property="og:updated_time" content="2016-01-01T06:50:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GOJS教程 -- 如何使用Shape">
+<meta name="twitter:description" content="通过Shape你可以构建一个几何图形，并且可以控制它的形状和轮廓颜色以及填充色等。  
+图形你可以通过Shape.figure属性设置它的形状。让你使用GraphObject.make方法构建时，你可以将形状参数以字符串形式作为第二个参数。你可能还需要通过GraphObject.desiredSize、GraphObject.width、GraphObject.height属性设置Shape的尺寸">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> GOJS教程 -- 如何使用Shape | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                GOJS教程 -- 如何使用Shape
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-07-21T00:00:00+08:00" content="2014-07-21">
+              2014-07-21
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>通过<code>Shape</code>你可以构建一个几何图形，并且可以控制它的形状和轮廓颜色以及填充色等。  </p>
+<h2 id="u56FE_u5F62"><a href="#u56FE_u5F62" class="headerlink" title="图形"></a>图形</h2><p>你可以通过<code>Shape.figure</code>属性设置它的形状。让你使用<code>GraphObject.make</code>方法构建时，你可以将形状参数以字符串形式作为第二个参数。你可能还需要通过<code>GraphObject.desiredSize</code>、<code>GraphObject.width</code>、<code>GraphObject.height</code>属性设置<code>Shape</code>的尺寸大小。  </p>
+<p>下面的例子中列出了一些常用的<code>Shape</code>形状，并且你可以看到它们的名字：</p>
+<pre><code>diagram.add(
+$(go.Part, &quot;Horizontal&quot;,
+  $(go.Shape, &quot;Rectangle&quot;,
+              { width: 40, height: 60, margin: 4, fill: null }),
+  $(go.Shape, &quot;RoundedRectangle&quot;,
+              { width: 40, height: 60, margin: 4, fill: null }),
+  $(go.Shape, &quot;Ellipse&quot;,
+              { width: 40, height: 60, margin: 4, fill: null }),
+  $(go.Shape, &quot;Triangle&quot;,
+              { width: 40, height: 60, margin: 4, fill: null }),
+  $(go.Shape, &quot;Diamond&quot;,
+              { width: 40, height: 60, margin: 4, fill: null })
+));
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/shape1.jpg" alt="shape"></p>
+<h2 id="u586B_u5145_u8272_u4E0E_u8F6E_u5ED3"><a href="#u586B_u5145_u8272_u4E0E_u8F6E_u5ED3" class="headerlink" title="填充色与轮廓"></a>填充色与轮廓</h2><p>可以通过<code>Shape.stroke</code>属性设置<code>Shape</code>的轮廓线条颜色。通过<code>Shape.strokeWidth</code>设置轮廓线条的粗细度。通过<code>Shape.fill</code>属性设置填充颜色。  </p>
+<pre><code>diagram.add(
+$(go.Part, &quot;Horizontal&quot;,
+  $(go.Shape, { figure: &quot;Club&quot;, width: 40, height: 40, margin: 4
+                }),  // default fill and stroke are &quot;black&quot;
+  $(go.Shape, { figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
+                fill: &quot;green&quot; }),
+  $(go.Shape, { figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
+                fill: &quot;green&quot;, stroke: null }),
+  $(go.Shape, { figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
+                fill: null, stroke: &quot;green&quot; }),
+  $(go.Shape, { figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
+                fill: null, stroke: &quot;green&quot;, strokeWidth: 3 }),
+  $(go.Shape, { figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
+                fill: null, stroke: &quot;green&quot;, strokeWidth: 6 }),
+  $(go.Shape, { figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
+                fill: &quot;green&quot;, background: &quot;orange&quot; })
+));
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/shape2.jpg" alt="shape"></p>
+<p><code>Shape.stroke</code>和<code>Shape.fill</code>属性的值一般使用CSS设置，它们的默认颜色都是黑色。但是我们最常用的还是将它们设置为<code>null</code>或<code>transparent</code>，前者意思是空，后者是透明，在表象上，这两者是没有差距的，但是在点击行为上有区别。如果设置为<code>null</code>，那么只能点击图形的轮廓才能选中，点击图形里面是无法选中的。而如设置为<code>transparent</code>，点击图形的任何地方都可以选中该图形。  </p>
+<pre><code>diagram.add(
+$(go.Part, &quot;Table&quot;,
+  $(go.Shape, { row: 0, column: 0, figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
+                fill: &quot;green&quot; }),
+  $(go.TextBlock, &quot;green&quot;, { row: 1, column: 0 }),
+  $(go.Shape, { row: 0, column: 1, figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
+                fill: &quot;white&quot; }),
+  $(go.TextBlock, &quot;white&quot;, { row: 1, column: 1 }),
+  $(go.Shape, { row: 0, column: 2, figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
+                fill: &quot;transparent&quot; }),
+  $(go.TextBlock, &quot;transparent&quot;, { row: 1, column: 2 }),
+  $(go.Shape, { row: 0, column: 3, figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
+                fill: null }),
+  $(go.TextBlock, &quot;null&quot;, { row: 1, column: 3 })
+));
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/shape3.jpg" alt="shape"></p>
+<h2 id="u51E0_u4F55_u5F62_u72B6"><a href="#u51E0_u4F55_u5F62_u72B6" class="headerlink" title="几何形状"></a>几何形状</h2><p>形状其实就是若干个不同坐标的点，然后被线连起来形成的。上述的例子中，我们使用的都是gojs定义好的一些形成，然而gojs也支持用户自定义形状，可以使用<code>Shape.geometry</code>属性。可以通过<code>Geometry.parse</code>来创建一个几何图形，不过<code>Geometry</code>的表达式交为复杂，我们将在后期对其进行详细的介绍。  </p>
+<p>下面的例子中，我们展示了通过<code>Geometry.parse</code>方法创建自定义“W”几何图形的过程：</p>
+<pre><code>var W_geometry = go.Geometry.parse(&quot;M 0,0 L 10,50 20,10 30,50 40,0&quot;, false);
+diagram.add(
+$(go.Part, &quot;Horizontal&quot;,
+  $(go.Shape, { geometry: W_geometry, strokeWidth: 2 }),
+  $(go.Shape, { geometry: W_geometry, stroke: &quot;blue&quot;, strokeWidth: 10,
+                strokeJoin: &quot;miter&quot;, strokeCap: &quot;butt&quot; }),
+  $(go.Shape, { geometry: W_geometry, stroke: &quot;blue&quot;, strokeWidth: 10,
+                strokeJoin: &quot;miter&quot;, strokeCap: &quot;round&quot; }),
+  $(go.Shape, { geometry: W_geometry, stroke: &quot;blue&quot;, strokeWidth: 10,
+                strokeJoin: &quot;miter&quot;, strokeCap: &quot;square&quot; }),
+  $(go.Shape, { geometry: W_geometry, stroke: &quot;green&quot;, strokeWidth: 10,
+                strokeJoin: &quot;bevel&quot;, strokeCap: &quot;butt&quot; }),
+  $(go.Shape, { geometry: W_geometry, stroke: &quot;green&quot;, strokeWidth: 10,
+                strokeJoin: &quot;bevel&quot;, strokeCap: &quot;round&quot; }),
+  $(go.Shape, { geometry: W_geometry, stroke: &quot;green&quot;, strokeWidth: 10,
+                strokeJoin: &quot;bevel&quot;, strokeCap: &quot;square&quot; }),
+  $(go.Shape, { geometry: W_geometry, stroke: &quot;red&quot;, strokeWidth: 10,
+                strokeJoin: &quot;round&quot;, strokeCap: &quot;butt&quot; }),
+  $(go.Shape, { geometry: W_geometry, stroke: &quot;red&quot;, strokeWidth: 10,
+                strokeJoin: &quot;round&quot;, strokeCap: &quot;round&quot; }),
+  $(go.Shape, { geometry: W_geometry, stroke: &quot;red&quot;, strokeWidth: 10,
+                strokeJoin: &quot;round&quot;, strokeCap: &quot;square&quot; }),
+  $(go.Shape, { geometry: W_geometry, stroke: &quot;purple&quot;, strokeWidth: 2,
+                strokeDashArray: [4, 2] }),
+  $(go.Shape, { geometry: W_geometry, stroke: &quot;purple&quot;, strokeWidth: 2,
+                strokeDashArray: [6, 6, 2, 2] })
+));
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/shape4.jpg" alt="shape"></p>
+<h2 id="u89D2_u5EA6_u548C_u6BD4_u4F8B"><a href="#u89D2_u5EA6_u548C_u6BD4_u4F8B" class="headerlink" title="角度和比例"></a>角度和比例</h2><p>除了通过<code>GraphObject.desiredSize</code>，<code>GraphObject.width</code>，<code>GraphObject.height</code>这几个属性设置<code>Shape</code>的尺寸大小外，还可以使用<code>GraphObject.angle</code>和<code>GraphObject.scale</code>属性设置<code>Shape</code>的角度和比例。   </p>
+<pre><code>diagram.add(
+$(go.Part, &quot;Table&quot;,
+  $(go.Shape, { row: 0, column: 1,
+                figure: &quot;Club&quot;, fill: &quot;green&quot;, width: 40, height: 40,
+                }),  // default angle is zero; default scale is one
+  $(go.Shape, { row: 0, column: 2,
+                figure: &quot;Club&quot;, fill: &quot;green&quot;, width: 40, height: 40,
+                angle: 30 }),
+  $(go.Shape, { row: 0, column: 3,
+                figure: &quot;Club&quot;, fill: &quot;green&quot;, width: 40, height: 40,
+                scale: 1.5 }),
+  $(go.Shape, { row: 0, column: 4,
+                figure: &quot;Club&quot;, fill: &quot;green&quot;, width: 40, height: 40,
+                angle: 30, scale: 1.5 })
+));
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/shape5.jpg" alt="shape"></p>
+<p>下面的例子中，将<code>Shape.fill</code>的属性设置为<code>Brush</code>画笔对象，并使用了线性渐变画笔给<code>Shape</code>填充颜色。    </p>
+<pre><code>diagram.add(
+$(go.Part, &quot;Table&quot;,
+  $(go.Shape, { row: 0, column: 0,
+                figure: &quot;Club&quot;, width: 40, height: 40, angle: 0, scale: 1.5,
+                fill: $(go.Brush, go.Brush.Linear, { 0.0: &quot;blue&quot;, 1.0: &quot;red&quot; }),
+                background: $(go.Brush, go.Brush.Linear, { 0.0: &quot;yellow&quot;, 1.0: &quot;green&quot; }),
+                areaBackground: $(go.Brush, go.Brush.Linear, { 0.0: &quot;gray&quot;, 1.0: &quot;lightgray&quot; }) }),
+  $(go.Shape, { row: 0, column: 1, width: 10, fill: null, stroke: null }),
+  $(go.Shape, { row: 0, column: 2,
+                figure: &quot;Club&quot;, width: 40, height: 40, angle: 45, scale: 1.5,
+                fill: $(go.Brush, go.Brush.Linear, { 0.0: &quot;blue&quot;, 1.0: &quot;red&quot; }),
+                background: $(go.Brush, go.Brush.Linear, { 0.0: &quot;yellow&quot;, 1.0: &quot;green&quot; }),
+                areaBackground: $(go.Brush, go.Brush.Linear, { 0.0: &quot;black&quot;, 1.0: &quot;lightgray&quot; }) })
+));
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/shape6.jpg" alt="shape"></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/GOJS/" rel="tag">#GOJS</a>
+          
+            <a href="/tags/JavaScript/" rel="tag">#JavaScript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/gojs-textblock/" rel="next" title="GOJS教程 -- 如何使用TextBlocks">
+                <i class="fa fa-chevron-left"></i> GOJS教程 -- 如何使用TextBlocks
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/gojs-links/" rel="prev" title="GOJS教程 -- 如何使用Links">
+                GOJS教程 -- 如何使用Links <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u56FE_u5F62"><span class="nav-number">1.</span> <span class="nav-text">图形</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u586B_u5145_u8272_u4E0E_u8F6E_u5ED3"><span class="nav-number">2.</span> <span class="nav-text">填充色与轮廓</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u51E0_u4F55_u5F62_u72B6"><span class="nav-number">3.</span> <span class="nav-text">几何形状</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u89D2_u5EA6_u548C_u6BD4_u4F8B"><span class="nav-number">4.</span> <span class="nav-text">角度和比例</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

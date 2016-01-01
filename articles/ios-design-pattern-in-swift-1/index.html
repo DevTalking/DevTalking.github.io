@@ -1,0 +1,732 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Design Pattern,Swift," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="iOS设计模式 - 大伙应该都听说过，但是有多少人真正的了解他们呢？虽然大多数开发者都认同设计模式的重要性，但是在实际开发中却并不怎么注意使用设计模式，而且关于设计模式的文章也是凤毛麟角，这更使得开发者无从下手去学习设计模式。
+设计模式是一个处理软件设计中常见问题的解决方法，并可以重复使用。它向开发者提供了设计模板，使开发者更容易写出逻辑清晰、具有可复用性的代码。它还可以使代码具有松耦合性，能让开">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swift中的iOS设计模式（一）">
+<meta property="og:url" content="http://www.devtalking.com/articles/ios-design-pattern-in-swift-1/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="iOS设计模式 - 大伙应该都听说过，但是有多少人真正的了解他们呢？虽然大多数开发者都认同设计模式的重要性，但是在实际开发中却并不怎么注意使用设计模式，而且关于设计模式的文章也是凤毛麟角，这更使得开发者无从下手去学习设计模式。
+设计模式是一个处理软件设计中常见问题的解决方法，并可以重复使用。它向开发者提供了设计模板，使开发者更容易写出逻辑清晰、具有可复用性的代码。它还可以使代码具有松耦合性，能让开">
+<meta property="og:image" content="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-1.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-2.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-3.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-4.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-5.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-6.png">
+<meta property="og:updated_time" content="2016-01-01T14:04:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Swift中的iOS设计模式（一）">
+<meta name="twitter:description" content="iOS设计模式 - 大伙应该都听说过，但是有多少人真正的了解他们呢？虽然大多数开发者都认同设计模式的重要性，但是在实际开发中却并不怎么注意使用设计模式，而且关于设计模式的文章也是凤毛麟角，这更使得开发者无从下手去学习设计模式。
+设计模式是一个处理软件设计中常见问题的解决方法，并可以重复使用。它向开发者提供了设计模板，使开发者更容易写出逻辑清晰、具有可复用性的代码。它还可以使代码具有松耦合性，能让开">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> Swift中的iOS设计模式（一） | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Swift中的iOS设计模式（一）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-01-05T00:00:00+08:00" content="2015-01-05">
+              2015-01-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p><strong>iOS设计模式</strong> - 大伙应该都听说过，但是有多少人真正的了解他们呢？虽然大多数开发者都认同设计模式的重要性，但是在实际开发中却并不怎么注意使用设计模式，而且关于设计模式的文章也是凤毛麟角，这更使得开发者无从下手去学习设计模式。</p>
+<p>设计模式是一个处理软件设计中常见问题的解决方法，并可以重复使用。它向开发者提供了设计模板，使开发者更容易写出逻辑清晰、具有可复用性的代码。它还可以使代码具有松耦合性，能让开发者轻松的更新或替换项目中使用的组件。</p>
+<p>在本教程中，大伙要开发一个音乐仓库应用，能显示你们收藏的专辑以及相关信息。</p>
+<p>在开发过程中，大伙会逐渐掌握大多数通用的Cocoa设计模式：</p>
+<ul>
+<li><strong>构建设计模式：</strong>Singleton。</li>
+<li><strong>架构设计模式：</strong>MVC，Decorator，Adapter，Facade。</li>
+<li><strong>行为设计模式：</strong>Observer，Memento。</li>
+</ul>
+<p>千万不要认为该文章只是对设计模式理论上的讲解，大伙需要在你们的音乐仓库应用中运用到这些设计模式。你们的应用最终看起来大概是这个模样：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-1.png" alt="pic"></p>
+<h2 id="u51C6_u5907_u5F00_u59CB"><a href="#u51C6_u5907_u5F00_u59CB" class="headerlink" title="准备开始"></a>准备开始</h2><p>从这里下载<a href="http://cdn1.raywenderlich.com/wp-content/uploads/2014/11/BlueLibrarySwift-Starter.zip" target="_blank" rel="external">初始项目</a>，解压Zip文件，然后在Xcode中打开<strong>BlueLibrarySwift.xcodeproj</strong>工程。</p>
+<p>在开始之前，有三件事需要大伙注意：</p>
+<ul>
+<li>在<code>ViewController</code>中有两个<code>IBOutlet</code>连接着Storyboard中的TableView和Toolbar。</li>
+<li>在Storyboard中的<code>ViewController</code>里含有三个组件，并且设置了AutoLayout布局约束。最上面的组件用来显示音乐专辑的封面。中间是一个TableView，用来显示与该专辑相关的信息。最下面是两个Toolbar按钮，一个是撤销操作按钮，另一个是删除选中专辑的按钮。你们的Storyboard看起来应该是下面这个样子：</li>
+</ul>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-2.png" alt="pic"></p>
+<ul>
+<li>在工程里还有一个HTTP Client类（<code>HTTPClient</code>），这个类目前是空的，但是你们在之后会充实它。</li>
+</ul>
+<blockquote>
+<p><strong>注意：</strong>你们知道吗，当你们创建了一个新的Xcode项目后，你们所编写的代码其实就已经在遵循一定的设计模式了，Model-View-Controller, Delegate, Protocol, Singleton这些设计模式统统可以免费使用哦。</p>
+</blockquote>
+<p>在带你们深入了解第一个设计模式之前，你们需要创建两个类，用于存储和展示音乐专辑的数据。</p>
+<p>点击菜单 <strong>File\New\File…</strong> （或者按下 <strong>Command+N</strong> 快捷键）。选择 <strong>iOS &gt; Cocoa Touch Class</strong> ，点击 <strong>Next</strong>。设置该类的名称为 <strong>Album</strong> ，并让它继承 <strong>NSObject</strong>。最后选择语言为 <strong>Swift</strong> 然后点击 <strong>Next</strong>，最后点击 <strong>Create</strong>。</p>
+<p>打开<strong>Album.swift</strong>文件，在<strong>Album</strong>类中定义如下属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> title : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> artist : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> genre : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> coverUrl : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> year : <span class="type">String</span>!</span><br></pre></td></tr></table></figure>
+<p>然后添加一个初始化方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">init</span>(title: <span class="type">String</span>, artist: <span class="type">String</span>, genre: <span class="type">String</span>, coverUrl: <span class="type">String</span>, year: <span class="type">String</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">self</span>.title = title</span><br><span class="line">  <span class="keyword">self</span>.artist = artist</span><br><span class="line">  <span class="keyword">self</span>.genre = genre</span><br><span class="line">  <span class="keyword">self</span>.coverUrl = coverUrl</span><br><span class="line">  <span class="keyword">self</span>.year = year</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码为<strong>Album</strong>类创建了一个初始化方法，当你要创建一个新的专辑时你要通过这个初始化方法，传入专辑名称、演唱者、风格、专辑封面图片的URL以及年份这些属性。</p>
+<p>接下来需要再添加一个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">description</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"title: <span class="subst">\(title)</span>"</span> +</span><br><span class="line">   <span class="string">"artist: <span class="subst">\(artist)</span>"</span> +</span><br><span class="line">   <span class="string">"genre: <span class="subst">\(genre)</span>"</span> +</span><br><span class="line">   <span class="string">"coverUrl: <span class="subst">\(coverUrl)</span>"</span> +</span><br><span class="line">   <span class="string">"year: <span class="subst">\(year)</span>"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>description()</code>方法将专辑的这些属性拼成一个字符串，并返回。</p>
+<p>我们再次通过刚才创建类的步骤创建一个名为<strong>AlibumView</strong>的类，注意该类要继承<strong>UIView</strong>。</p>
+<p>打开<strong>AlbumView.swift</strong>文件，在该类中添加两个属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> coverImage: <span class="type">UIImageView</span>! </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> indicator: <span class="type">UIActivityIndicatorView</span>!</span><br></pre></td></tr></table></figure>
+<p><code>coverImage</code>属性用来展示专辑封面，<code>indicator</code>是当正在下载封面图片时转动的菊花。</p>
+<p>大伙注意，这里的两个属性分配了<code>private</code>访问级别，也就是说这两个属性只能在<strong>AlbumView.swift</strong>文件中使用，因为其他的类压根没有必要知道这两个属性的存在。（译者：其实这里用不用private都无所谓，因为咱们写的又不是library或者framework。）</p>
+<p>接下来为<code>AlbumView</code>类添加初始化方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">required</span> <span class="keyword">init</span>(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>(coder: aDecoder)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">init</span>(frame: <span class="type">CGRect</span>, albumCover: <span class="type">String</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>(frame: frame)</span><br><span class="line">  backgroundColor = <span class="type">UIColor</span>.blackColor()</span><br><span class="line">  coverImage = <span class="type">UIImageView</span>(frame: <span class="type">CGRectMake</span>(<span class="number">5</span>, <span class="number">5</span>, frame.size.width - <span class="number">10</span>, frame.size.height - <span class="number">10</span>))</span><br><span class="line">  addSubview(coverImage)</span><br><span class="line">  indicator = <span class="type">UIActivityIndicatorView</span>()</span><br><span class="line">  indicator.center = center</span><br><span class="line">  indicator.activityIndicatorViewStyle = .<span class="type">WhiteLarge</span></span><br><span class="line">  indicator.startAnimating()</span><br><span class="line">  addSubview(indicator)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于<code>UIView</code>遵循了<code>NSCoding</code>，而<code>AlbumView</code>又继承了<code>UIView</code>，所以这里需要写一个<code>NSCoder</code>的初始化方法，但我们不会在这个方法中处理什么逻辑，所以调用<code>super.init</code>即可。</p>
+<p><code>AlbumView</code>真正的初始化方法是另外一个<code>init</code>方法，在这个方法中设置了一些默认的属性，比如将背景色设置为黑色、实例化了<code>coverImage</code>属性，并让它与父容器有5px的四周间距、实例化<code>indicator</code>并设置位置及风格。</p>
+<p>最后再添加一个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">highlightAlbum</span><span class="params">(#didHighlightView: Bool)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> didHighlightView == <span class="literal">true</span> &#123;</span><br><span class="line">    backgroundColor = <span class="type">UIColor</span>.whiteColor()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    backgroundColor = <span class="type">UIColor</span>.blackColor()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法是专辑封面高亮开关，高亮时专辑封面背景色为白色，否则为黑色。</p>
+<p>现在编译你们的工程，确保一切都没有问题，然后准备开始第一个设计模式的学习。</p>
+<h2 id="u8BBE_u8BA1_u6A21_u5F0F_u7684_u738B_u8005_-_MVC_u6A21_u5F0F"><a href="#u8BBE_u8BA1_u6A21_u5F0F_u7684_u738B_u8005_-_MVC_u6A21_u5F0F" class="headerlink" title="设计模式的王者 - MVC模式"></a>设计模式的王者 - MVC模式</h2><p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-3.png" alt="pic"></p>
+<p>Model-View-Controller (MVC)设计模式是Cocoa框架的基石，毋庸置疑它是开发者们最常用的设计模式没有之一。它把应用中的对象按它们的角色进行分类，并鼓励开发者按这种角色分类创建项目目录，将代码放置在合适的位置，保证项目结构清晰明确。</p>
+<p>顾名思义，MVC中有三种角色：</p>
+<ul>
+<li><strong>Model：</strong>这种对象保存应用程序的数据，并定义如何操作处理这些数据。比如之前你们创建的<code>Album</code>类就是一个Model对象。</li>
+<li><strong>View：</strong>这种对象主要负责Model对象的呈现，以及用户交互。基本上，由<code>UIView</code>衍生出的类都是View对象。在你们的音乐仓库应用中<code>AlbumView</code>就是一个View对象。</li>
+<li><strong>Controller：</strong>这种对象充当着应用程序的协调者，由它来协调所有的事情。它会访问Model对象的数据，然后展示在相应的View对象中；它也会监听用户在View对象上的交互，从而通知Model对象进行相应的数据操作等等。你们应用中的<code>ViewController</code>就是一个Controller对象。</li>
+</ul>
+<p>下图可以很好的说明Model对象和View对象是如何通过Controller对象进行通信的：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-4.png" alt="pic"></p>
+<p>当Model对象的数据发生改变时，它会通知Controller对象，然后Controller对象更新对应的View对象上展示的数据。当用户在View对象进行了交互操作时，View对象会通知Controller对象，然后Controller对象会更新对应的Model对象中的数据。</p>
+<p>你们可能会有这样的疑惑，为什么不把这些操作处理都写在Controller对象中呢，这样就不用通知来通知去的，不是更简单吗？</p>
+<p>我告诉你们两个概念，你们就明白这样做的目的了，那就是低耦合性和高复用性。我举个例子，在一个应用中每个界面中的数据大多数是来自于多个Model对象，如果把View对象和Model对象绑定死了，那么就没法处理这种情况了。</p>
+<p>拿咱们这个音乐仓库的应用来说，如果你们以后想做一个电影仓库或者图书仓库，你仍然可以使用<code>AlbumView</code>这个View对象来展示你的电影或者图书Model对象。假如你的电影仓库应用需要展示电影主题曲的一些信息，那么或许你就可以直接复用<code>Album</code>对象，因为<code>Album</code>对象不依赖于任何View对象。这就是MVC设计模式的强大之处。</p>
+<h2 id="u5982_u4F55_u4F7F_u7528MVC_u8BBE_u8BA1_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528MVC_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="如何使用MVC设计模式"></a>如何使用MVC设计模式</h2><p>首先，你要确保项目中每个类的功能，要么是Controller，要么是View，要么是Model。千万不要将两种角色混合于一个类，每个类只有单一的职责。不过，到目前为止，你们已经创建了标准的Model类<code>Album</code>和View类<code>AlbumView</code>。</p>
+<p>其次，为了使项目目录结构清晰明了，以及能够更感官的实行MVC模式，你们需要在工程中创建三个文件组，来区分开这三种角色的文件。</p>
+<p>通过<strong>File\New\Group</strong>（或同时按下<strong>Command+Option+N</strong>）在工程中创建一个名为 <strong>Model</strong> 的文件组，然后以同样的方式创建 <strong>View</strong> 文件组和 <strong>Model</strong> 文件组。</p>
+<p>最后将 <strong>Album.swift</strong> 文件拖进Model文件组，将 <strong>AlbumView.swift</strong>文件拖进View文件组，将 <strong>ViewController.swift</strong> 文件拖进Model文件组。</p>
+<p>此时，你们的项目目录结构应该是这样的：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-5.png" alt="pic"></p>
+<p>现在的项目结构看起来已然井然有序，当然你们还可以创建其他的文件组和类文件，但是要记住的是，Model、View、Controller这三个文件组是整个程序的核心所在。</p>
+<p>现在项目结构已经理清楚了，接下来的工作就需要从某个地方获取到专辑的相关数据。你们可以创建一个名为API的类，用于负责整个应用的数据管理工作。并且将拉开你们要了解的下一个设计模式 – Singleton。</p>
+<h2 id="Singleton_u8BBE_u8BA1_u6A21_u5F0F"><a href="#Singleton_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="Singleton设计模式"></a>Singleton设计模式</h2><p>单例模式使一个类在整个应用生命周期内只存在一个实例，并且有一个全局的方法来访问这个实例。在单例模式下，当第一次访问某个类的实例时，该类通常使用延迟加载的方式创建该类的单例。</p>
+<blockquote>
+<p><strong>注意：</strong> Apple在iOS和OSX中大量使用了单例模式，比如： <strong>NSUserDefaults.standardUserDefaults()</strong>， <strong>UIApplication.sharedApplication()</strong>， <strong>UIScreen.mainScreen()</strong>， <strong>NSFileManager.defaultManager()</strong>。</p>
+</blockquote>
+<p>你们可能会有疑问，为什么我们要这么在意一个类有一个或多个实例？代码和内存现在是如此的廉价，不是么？</p>
+<p>其实不然，有些情况下，确实只需要类实例化一次，且仅有一次。比如有这么一种情况，在一个应用的生命周期里，应用（Application）设备的主屏幕是只存在一份的，那么你当然希望应用和设备屏幕的实例有且只有一个。或者你需要一个全局的处理配置的类，这样能线程安全的访问配置文件，避免多个配置类同时访问一个配置文件。这些就是单例模式的好处所在。</p>
+<h2 id="u5982_u4F55_u4F7F_u7528Singleton_u8BBE_u8BA1_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528Singleton_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="如何使用Singleton设计模式"></a>如何使用Singleton设计模式</h2><p>先看看下面这张图：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-6.png" alt="pic"></p>
+<p>上图是Logger的类图，从图中可以看出，Logger有一个<code>instance</code>属性以及<code>sharedInstance</code>和<code>init</code>两个方法。</p>
+<p>当第一次调用<code>sharedInstance</code>方法时，<code>instance</code>属性还没有初始化，所以你会创建一个新的Logger类实例，并返回一个该实例的引用。</p>
+<p>当再次调用<code>sharedInstance</code>方法时，<code>instance</code>属性会立即返回，并且不需要再进行任何实例化操作。这个逻辑就保证了Logger类的实例有且仅有一份。</p>
+<p>你们将要通过Singleton设计模式，创建一个单例的类用于管理所有专辑的数据。</p>
+<p>你们应该注意到了，在项目的目录结构中，有一个文件组叫做API，这个文件组里存放的类基本都是为应用提供服务的类。我们在这个文件组中创建一个名为 <strong>LibraryAPI</strong> 的类。</p>
+<p>打开 <strong>LibraryAPI.swift</strong> 文件，添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//1</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">var</span> <span class="title">sharedInstance</span>: <span class="title">LibraryAPI</span> </span>&#123;</span><br><span class="line">  <span class="comment">//2</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="comment">//3</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">let</span> instance = <span class="type">LibraryAPI</span>()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//4</span></span><br><span class="line">  <span class="keyword">return</span> <span class="type">Singleton</span>.instance</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>创建一个类变量的计算属性。类变量类似Objective-C中的类方法，也就是说在任何时候你访问<code>sharedInstance</code>属性时，都不需要对<code>LibraryAPI</code>进行实例化，关于属性类型更多的知识请参阅Swift文档 – <a href="https://developer.apple.com/library/ios/documentation/swift/conceptual/swift_programming_language/Properties.html" target="_blank" rel="external">properties</a>。</li>
+<li>在类变量中内嵌一个结构体，名为<code>Singleton</code>。</li>
+<li><code>Singleton</code>中包含一个名为<code>instance</code>的静态常量属性。用<code>static</code>申明属性意味着该属性只能存在一份。这里要注意的是Swift中的静态属性都会延迟加载，也就是说只有<code>instance</code>被使用时，才会初始化它。还要注意的一点是，一旦<code>instance</code>被初始化了，那么它就是一个常量属性，不会有第二次初始化的机会了。这就是Singleton模式的精髓所在。</li>
+<li>返回该计算属性的值。</li>
+</ol>
+<blockquote>
+<p><strong>注意：</strong>如果想了解Swift中创建单例的其他方法请参阅这里：<a href="https://github.com/hpique/SwiftSingleton" target="_blank" rel="external">Github page</a>。</p>
+</blockquote>
+<p>你们现在已经有一个单例模式的对象，作为管理专辑数据的入口。接下来要更进一步，创建一个类，用于处理你们数据的持久性。</p>
+<p>继续在 <strong>API</strong> 这个文件组中创建一个类，名为<code>PersistencyManager</code>，并让它继承<code>NSObject</code>类。</p>
+<p>打开 <strong>PersistencyManager.swift</strong> 文件，申明一个属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> albums = [<span class="type">Album</span>]()</span><br></pre></td></tr></table></figure>
+<p>这里申明了一个private访问权限的变量属性，用于储存专辑数据。这个数组是可变数组，所以你们可以很轻松的增删专辑。</p>
+<p>接下来我们在该类中添加如下初始化方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">  <span class="comment">//Dummy list of albums</span></span><br><span class="line">  <span class="keyword">let</span> album1 = <span class="type">Album</span>(title: <span class="string">"Best of Bowie"</span>,</span><br><span class="line">         artist: <span class="string">"David Bowie"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_david%20bowie_best%20of%20bowie.png"</span>,</span><br><span class="line">         year: <span class="string">"1992"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album2 = <span class="type">Album</span>(title: <span class="string">"It's My Life"</span>,</span><br><span class="line">         artist: <span class="string">"No Doubt"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_no%20doubt_its%20my%20life%20%20bathwater.png"</span>,</span><br><span class="line">         year: <span class="string">"2003"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album3 = <span class="type">Album</span>(title: <span class="string">"Nothing Like The Sun"</span>,</span><br><span class="line">         artist: <span class="string">"Sting"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_sting_nothing%20like%20the%20sun.png"</span>,</span><br><span class="line">         year: <span class="string">"1999"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album4 = <span class="type">Album</span>(title: <span class="string">"Staring at the Sun"</span>,</span><br><span class="line">         artist: <span class="string">"U2"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_u2_staring%20at%20the%20sun.png"</span>,</span><br><span class="line">         year: <span class="string">"2000"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album5 = <span class="type">Album</span>(title: <span class="string">"American Pie"</span>,</span><br><span class="line">         artist: <span class="string">"Madonna"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_madonna_american%20pie.png"</span>,</span><br><span class="line">         year: <span class="string">"2000"</span>)</span><br><span class="line"> </span><br><span class="line">  albums = [album1, album2, album3, album4, album5]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在初始化方法中，你们可以构建一些专辑添加到<code>albums</code>数组中，这里我构建了5个专辑。</p>
+<p>然后再添加几个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAlbums</span><span class="params">()</span></span> -&gt; [<span class="type">Album</span>] &#123;</span><br><span class="line">  <span class="keyword">return</span> albums</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">addAlbum</span><span class="params">(album: Album, index: Int)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (albums.<span class="built_in">count</span> &gt;= index) &#123; </span><br><span class="line">    albums.insert(album, atIndex: index)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    albums.append(album)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">deleteAlbumAtIndex</span><span class="params">(index: Int)</span></span> &#123;</span><br><span class="line">  albums.removeAtIndex(index)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这些方法可以让你们方便的存、取、删除<code>album</code>数组中的专辑。</p>
+<p>然后编译你们的项目，确保编译通过。此时大伙也许又有了疑问，我们应该如何使用<code>PersistencyManager</code>类呢？别着急，在下一节里，会向大家介绍 <strong>Facade</strong> 设计模式，届时你们就会明白<code>LibraryAPI</code>与<code>PersistencyManager</code>之间的关系，以及如何使用<code>PersistencyManager</code>了。</p>
+<p>未完待续……</p>
+<p>原文地址：<a href="http://www.raywenderlich.com/86477/introducing-ios-design-patterns-in-swift-part-1" target="_blank" rel="external">Introducing iOS Design Patterns in Swift</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Design-Pattern/" rel="tag">#Design Pattern</a>
+          
+            <a href="/tags/Swift/" rel="tag">#Swift</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/text-kit-tutorial-in-swift-2/" rel="next" title="如何在Swift中运用Text Kit框架（二）">
+                <i class="fa fa-chevron-left"></i> 如何在Swift中运用Text Kit框架（二）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/ios-design-pattern-in-swift-2/" rel="prev" title="Swift中的iOS设计模式（二）">
+                Swift中的iOS设计模式（二） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u51C6_u5907_u5F00_u59CB"><span class="nav-number">1.</span> <span class="nav-text">准备开始</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u8BBE_u8BA1_u6A21_u5F0F_u7684_u738B_u8005_-_MVC_u6A21_u5F0F"><span class="nav-number">2.</span> <span class="nav-text">设计模式的王者 - MVC模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5982_u4F55_u4F7F_u7528MVC_u8BBE_u8BA1_u6A21_u5F0F"><span class="nav-number">3.</span> <span class="nav-text">如何使用MVC设计模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Singleton_u8BBE_u8BA1_u6A21_u5F0F"><span class="nav-number">4.</span> <span class="nav-text">Singleton设计模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5982_u4F55_u4F7F_u7528Singleton_u8BBE_u8BA1_u6A21_u5F0F"><span class="nav-number">5.</span> <span class="nav-text">如何使用Singleton设计模式</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

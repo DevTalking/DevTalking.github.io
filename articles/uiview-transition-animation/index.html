@@ -1,0 +1,710 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Animation,Swift," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="本文首发CSDN，如需转载请与CSDN联系。
+
+前言在上两篇文章中向大家介绍了如何创建基于动画属性的视图动画，比如位置、透明度等。但是大家有没有想过添加或删除一个视图时怎样添加相应地动画呢？
+当然我们可以用第一篇文章中对用户名、密码输入框的处理办法，但是还有更好的办法处理这种状况。那就是在这篇文章中将向大家介绍的过渡转变（Transition）动画。
+过渡转变动画是Apple预定义的动画集，它没有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS UIView Animation - Transition">
+<meta property="og:url" content="http://www.devtalking.com/articles/uiview-transition-animation/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="本文首发CSDN，如需转载请与CSDN联系。
+
+前言在上两篇文章中向大家介绍了如何创建基于动画属性的视图动画，比如位置、透明度等。但是大家有没有想过添加或删除一个视图时怎样添加相应地动画呢？
+当然我们可以用第一篇文章中对用户名、密码输入框的处理办法，但是还有更好的办法处理这种状况。那就是在这篇文章中将向大家介绍的过渡转变（Transition）动画。
+过渡转变动画是Apple预定义的动画集，它没有">
+<meta property="og:image" content="http://d.pr/i/VeYP+">
+<meta property="og:image" content="http://d.pr/i/1406Q+">
+<meta property="og:updated_time" content="2016-01-01T14:12:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS UIView Animation - Transition">
+<meta name="twitter:description" content="本文首发CSDN，如需转载请与CSDN联系。
+
+前言在上两篇文章中向大家介绍了如何创建基于动画属性的视图动画，比如位置、透明度等。但是大家有没有想过添加或删除一个视图时怎样添加相应地动画呢？
+当然我们可以用第一篇文章中对用户名、密码输入框的处理办法，但是还有更好的办法处理这种状况。那就是在这篇文章中将向大家介绍的过渡转变（Transition）动画。
+过渡转变动画是Apple预定义的动画集，它没有">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> iOS UIView Animation - Transition | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS UIView Animation - Transition
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-07-08T00:00:00+08:00" content="2015-07-08">
+              2015-07-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><blockquote>
+<p> 本文首发<a href="http://www.csdn.net/article/2015-07-06/2825139-ios-uiview-animation-3" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+</blockquote>
+<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>在上两篇文章中向大家介绍了如何创建基于动画属性的视图动画，比如位置、透明度等。但是大家有没有想过添加或删除一个视图时怎样添加相应地动画呢？</p>
+<p>当然我们可以用第一篇文章中对用户名、密码输入框的处理办法，但是还有更好的办法处理这种状况。那就是在这篇文章中将向大家介绍的过渡转变（Transition）动画。</p>
+<p>过渡转变动画是Apple预定义的动画集，它没有更改视图某属性起始值和终止值的概念，而只需要你设定不同的动画选项即可。</p>
+<h2 id="u6DFB_u52A0_u65B0_u89C6_u56FE"><a href="#u6DFB_u52A0_u65B0_u89C6_u56FE" class="headerlink" title="添加新视图"></a>添加新视图</h2><p>在进行示例之前，大家需要注意一点过渡转变动画与动画属性动画的不同之处。我们在创建动画属性动画时只需要在<code>animations</code>闭包中添加对视图动画属性修改的代码即可，它没有作用域或作用视图的概念。而在过渡转变动画中有作用视图的概念，也就是说我们调用过渡转变动画方法时需要指定一个作用视图。</p>
+<p>明确这点不同之后，我们对作用视图再作进一步的说明。过渡转变动画中的作用视图并不是我们的目标视图，而是目标视图的容器视图，那么大家不难想象，如果该容器视图中有多个子视图，那么这些子视图都会有过渡转变动画效果。下面用示例像大家说明。</p>
+<p>先看看一个简单的视图结构：</p>
+<p><img src="http://d.pr/i/VeYP+" alt="视图结构"></p>
+<p>很明显，我们添加了一个视图作为容器视图，并且尺寸等于屏幕尺寸。在<code>ViewController.swift</code>中有该容器视图的Outlet以及一个图片视图：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">weak</span> <span class="keyword">var</span> containerView: <span class="type">UIView</span>!</span><br><span class="line"><span class="keyword">let</span> ipadView = <span class="type">UIImageView</span>(frame: <span class="type">CGRectMake</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">151.5</span>))</span><br></pre></td></tr></table></figure>
+<p>在<code>viewDidLoad()</code>方法中给<code>ipadView</code>指定图片：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ipadView.image = <span class="type">UIImage</span>(named: <span class="string">"ipad"</span>)</span><br></pre></td></tr></table></figure>
+<p>然后在<code>viewDidAppear()</code>方法中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.containerView, duration: <span class="number">1.5</span>, options: .<span class="type">TransitionFlipFromBottom</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.containerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>上述代码就是我们今天的主角，过渡转变方法之一，它同样是<code>UIView</code>的类方法，共有五个参数：</p>
+<ul>
+<li><code>view</code>：第一个参数，也就是作用视图，一般都是容器视图。</li>
+<li><code>duration</code>：动画持续时间。</li>
+<li><code>options</code>：过渡转变动画选项，由它来确定过渡转变的具体展现形式。</li>
+<li><code>animations</code>：动画闭包。</li>
+<li><code>completion</code>：动画结束后执行该闭包中的代码。</li>
+</ul>
+<p>除了第一个参数，其他四个参数大家应该都不会陌生。这段代码用文字解释出来就是将容器视图（<code>containerView</code>）添加子视图（<code>ipadView</code>）的过程使用<code>.TransitionFlipFromBottom</code>类型的过渡转变动画展示出来，持续时间为1.5秒。编译运行看看效果：</p>
+<iframe src="https://player.vimeo.com/video/132628194?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
+
+<p>我们再来添加一个子视图（该子视图的初始化代码不再累赘）：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.containerView, duration: <span class="number">1.5</span>, options: .<span class="type">TransitionFlipFromBottom</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.containerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">    <span class="keyword">self</span>.containerView.addSubview(<span class="keyword">self</span>.iphoneView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>编译运行看看效果：</p>
+<iframe src="https://player.vimeo.com/video/132628304?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
+
+<p>大家可以看到这两个子视图都依托与它们的容器视图进行了过渡转变动画。下面的列表是所有过渡转变动画的动画选项，大家可以在你们自己的项目中逐个实验：</p>
+<ul>
+<li><code>.TransitionFlipFromLeft</code></li>
+<li><code>.TransitionFlipFromRight</code></li>
+<li><code>.TransitionCurlUp</code></li>
+<li><code>.TransitionCurlDown</code></li>
+<li><code>.TransitionCrossDissolve</code></li>
+<li><code>.TransitionFlipFromTop</code></li>
+<li><code>.TransitionFlipFromBottom</code></li>
+</ul>
+<p>如果我们有多个目标视图，想进行不同的过渡转变动画怎么办？那我们就创建多个目标视图的容器视图，尺寸与目标视图一致，放置在合适的位置：</p>
+<p><img src="http://d.pr/i/1406Q+" alt="视图结构"></p>
+<p>从上图中可以看出，我们在屏幕上放置了四个容器视图，显而易见，我们要分别对这四个容器视图添加过渡转变动画。当然容器视图里要添加什么样的视图随个人喜好。</p>
+<p>在<code>viewDidLoad()</code>方法中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.ipadContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromBottom</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.ipadContainerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.iphoneContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromLeft</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.iphoneContainerView.addSubview(<span class="keyword">self</span>.iphoneView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.webContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromRight</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.webContainerView.addSubview(<span class="keyword">self</span>.webView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(textContainerView, duration: <span class="number">2</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionCrossDissolve</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.textContainerView.addSubview(<span class="keyword">self</span>.textView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>通过上述代码可以看出，我们对四个容器视图分别添加了过渡转变动画，并且<code>options</code>参数使用了<code>.CurveEaseOut</code>和不同的过渡转变动画选项。编译运行看看效果：</p>
+<iframe src="https://player.vimeo.com/video/132628896?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
+
+<p>是不是有点儿意思！不过细心的朋友应该发现了，过渡转变动画的方法没有<code>delay</code>这个很有用的属性，这就导致过渡转变动画都是同时发生，不能设置延迟时间。不过我们可以曲线救国，自己写一个<code>delay</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">delay</span><span class="params">(seconds: Double, completion:<span class="params">()</span></span></span>-&gt;()) &#123;</span><br><span class="line">    <span class="keyword">let</span> popTime = dispatch_time(<span class="type">DISPATCH_TIME_NOW</span>, <span class="type">Int64</span>( <span class="type">Double</span>(<span class="type">NSEC_PER_SEC</span>) * seconds ))</span><br><span class="line">    dispatch_after(popTime, dispatch_get_main_queue()) &#123;</span><br><span class="line">        completion()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后我们修改<code>viewDidLoad()</code>方法中的代码如下：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">delay(<span class="number">0</span>, completion: &#123;</span><br><span class="line">   <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.ipadContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromBottom</span>], animations: &#123;</span><br><span class="line">       <span class="keyword">self</span>.ipadContainerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">   &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">delay(<span class="number">1</span>, completion: &#123;</span><br><span class="line">    <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.iphoneContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromLeft</span>], animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.iphoneContainerView.addSubview(<span class="keyword">self</span>.iphoneView)</span><br><span class="line">    &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"> &#125;)</span><br><span class="line">        </span><br><span class="line">delay(<span class="number">2</span>, completion: &#123;</span><br><span class="line">    <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.webContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromRight</span>], animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.webContainerView.addSubview(<span class="keyword">self</span>.webView)</span><br><span class="line">     &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">delay(<span class="number">3</span>, completion: &#123;</span><br><span class="line">    <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.textContainerView, duration: <span class="number">2</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionCrossDissolve</span>], animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.textContainerView.addSubview(<span class="keyword">self</span>.textView)</span><br><span class="line">    &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
+<p>我们将每个过渡转变动画延迟1秒进行，编译运行看看效果：</p>
+<iframe src="https://player.vimeo.com/video/132629174?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
+
+<p>现在的效果是不是更好了呢！ : ]</p>
+<h2 id="u79FB_u9664_u89C6_u56FE"><a href="#u79FB_u9664_u89C6_u56FE" class="headerlink" title="移除视图"></a>移除视图</h2><p>过渡转变动画同样可以用来移除视图。我们在屏幕底部添加一个<code>UIButton</code>，当点击这个按钮的时候，通过过渡转变动画移除按钮上方的那两排字，并且改变屏幕背景色。<code>go()</code>方法是按钮连接在代码中的<strong>Touch Up Inside</strong>方法，在该方法中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.view.backgroundColor = <span class="type">UIColor</span>(red: <span class="number">252.0</span>/<span class="number">255.0</span>, green: <span class="number">155.0</span>/<span class="number">255.0</span>, blue: <span class="number">65.0</span>/<span class="number">255.0</span>, alpha: <span class="number">1</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p> 编译运行看看效果：</p>
+ <iframe src="https://player.vimeo.com/video/132629842?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
+
+<h2 id="u66FF_u6362_u89C6_u56FE"><a href="#u66FF_u6362_u89C6_u56FE" class="headerlink" title="替换视图"></a>替换视图</h2><p> 在这一节我们将要学习过渡转变动画的另一个方法，替换视图方法。我设计的场景是当点击<strong>Go</strong>按钮后，除了上一节中的动画效果以外，iPad、iPhone、Web视图也会移位并且替换为别的视图，我们继续在<code>go()</code>方法中的添加如下代码：</p>
+ <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"> </span><br><span class="line"> <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">     <span class="keyword">self</span>.iphoneView.frame = <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">     <span class="keyword">self</span>.iphoneContainerView.frame = <span class="type">CGRectMake</span>(<span class="number">26</span>, <span class="number">130</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">  &#125;, completion: &#123;</span><br><span class="line">  		(flag: <span class="type">Bool</span>) <span class="keyword">in</span></span><br><span class="line">        		<span class="keyword">if</span> flag &#123;</span><br><span class="line">                		<span class="type">UIView</span>.transitionFromView(<span class="keyword">self</span>.iphoneContainerView, toView: <span class="keyword">self</span>.supportIphone, duration: <span class="number">0.33</span>, options: .<span class="type">TransitionCrossDissolve</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">               	&#125;</span><br><span class="line"> &#125;)</span><br><span class="line">        </span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">1</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.ipadView.frame = <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">    <span class="keyword">self</span>.ipadContainerView.frame = <span class="type">CGRectMake</span>(<span class="number">26</span>, <span class="number">242</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">  &#125;, completion: &#123;</span><br><span class="line">  		(flag: <span class="type">Bool</span>) <span class="keyword">in</span></span><br><span class="line">        		<span class="keyword">if</span> flag &#123;</span><br><span class="line">                		<span class="type">UIView</span>.transitionFromView(<span class="keyword">self</span>.ipadContainerView, toView: <span class="keyword">self</span>.supportIpad, duration: <span class="number">0.33</span>, options: .<span class="type">TransitionCrossDissolve</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">                &#125;</span><br><span class="line">&#125;)</span><br><span class="line">        </span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">2</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.webView.frame = <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">    <span class="keyword">self</span>.webContainerView.frame = <span class="type">CGRectMake</span>(<span class="number">26</span>, <span class="number">354</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">&#125;, completion: &#123;</span><br><span class="line">		(flag: <span class="type">Bool</span>) <span class="keyword">in</span></span><br><span class="line">        		<span class="keyword">if</span> flag &#123;</span><br><span class="line">                		<span class="type">UIView</span>.transitionFromView(<span class="keyword">self</span>.webContainerView, toView: <span class="keyword">self</span>.supportWeb, duration: <span class="number">0.33</span>, options: .<span class="type">TransitionCrossDissolve</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">        		&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p> 我们来解释一下上述的代码，拿iPhone视图为例，首先通过动画属性动画改变它的尺寸大小和位置。然后在<code>completion</code>闭包中添加替换视图方法，该方法有五个参数：</p>
+<ul>
+<li><code>fromView</code>：被替换的视图。</li>
+<li><code>toView</code>：替换之后的视图。</li>
+<li><code>duration</code>：动画持续时间。</li>
+<li><code>options</code>：动画选项。</li>
+<li><code>completion</code>：动画执行结束后执行该闭包中的代码。</li>
+</ul>
+<p>要注意的是该方法的作用视图可以是容器视图，也可以是目标视图。编译运行看看效果：</p>
+<iframe src="https://player.vimeo.com/video/132631364?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
+
+<h2 id="u663E_u793A/_u9690_u85CF_u89C6_u56FE"><a href="#u663E_u793A/_u9690_u85CF_u89C6_u56FE" class="headerlink" title="显示/隐藏视图"></a>显示/隐藏视图</h2><p>过渡转变动画也可以用于显示或隐藏视图，这里给出伪代码供参考：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.someContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromBottom</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.someView.hidden = <span class="literal">true</span></span><br><span class="line">    <span class="comment">// self.someView.hidden = false</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="u7ED3_u675F_u8BED"><a href="#u7ED3_u675F_u8BED" class="headerlink" title="结束语"></a>结束语</h2><p>过渡转变动画有很多动画选项，大家可以自行试试，找出自己喜欢的或最合适的过渡转变动画选项，并且可以尝试过渡转变动画和属性动画的组合，可以使你们的App更加有趣。好了今天就到这里。</p>
+<p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Animation/" rel="tag">#Animation</a>
+          
+            <a href="/tags/Swift/" rel="tag">#Swift</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/uiview-spring-animation/" rel="next" title="iOS UIView Animation - Spring">
+                <i class="fa fa-chevron-left"></i> iOS UIView Animation - Spring
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/uiview-animation-practice/" rel="prev" title="iOS UIView Animation - Practice">
+                iOS UIView Animation - Practice <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u524D_u8A00"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6DFB_u52A0_u65B0_u89C6_u56FE"><span class="nav-number">2.</span> <span class="nav-text">添加新视图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u79FB_u9664_u89C6_u56FE"><span class="nav-number">3.</span> <span class="nav-text">移除视图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u66FF_u6362_u89C6_u56FE"><span class="nav-number">4.</span> <span class="nav-text">替换视图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u663E_u793A/_u9690_u85CF_u89C6_u56FE"><span class="nav-number">5.</span> <span class="nav-text">显示/隐藏视图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7ED3_u675F_u8BED"><span class="nav-number">6.</span> <span class="nav-text">结束语</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

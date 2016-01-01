@@ -1,0 +1,760 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Auto Layout,Size Classes,Swift," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="给TextContainer中添加内容打开 Main.storyboard ，从组件库（Object Library）中拖拽两个 Label 组件到TextContainer中，位置可以随意摆放：
+
+先选择靠上的Label，然后点击底部的 Align 按钮，添加一个 Horizontal Center in Container 约束，再点击 Pin 按钮，添加一个 Top Spacing to n">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swift自适应布局（Adaptive Layout）教程（二）">
+<meta property="og:url" content="http://www.devtalking.com/articles/adaptive-layout-2/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="给TextContainer中添加内容打开 Main.storyboard ，从组件库（Object Library）中拖拽两个 Label 组件到TextContainer中，位置可以随意摆放：
+
+先选择靠上的Label，然后点击底部的 Align 按钮，添加一个 Horizontal Center in Container 约束，再点击 Pin 按钮，添加一个 Top Spacing to n">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-35.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-36.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-37.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-38.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-39.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-40.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-41.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-42.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-43.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-44.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-45.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-46.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-47.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-48.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-49.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-50.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-51.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-52.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-53.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-54.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-55.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-56.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-57.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-58.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-59.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-60.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-61.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-62.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-63.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-64.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-65.png">
+<meta property="og:image" content="http://www.devtalking.com/postImages/adaptive-layout-66.png">
+<meta property="og:updated_time" content="2016-01-01T13:52:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Swift自适应布局（Adaptive Layout）教程（二）">
+<meta name="twitter:description" content="给TextContainer中添加内容打开 Main.storyboard ，从组件库（Object Library）中拖拽两个 Label 组件到TextContainer中，位置可以随意摆放：
+
+先选择靠上的Label，然后点击底部的 Align 按钮，添加一个 Horizontal Center in Container 约束，再点击 Pin 按钮，添加一个 Top Spacing to n">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> Swift自适应布局（Adaptive Layout）教程（二） | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Swift自适应布局（Adaptive Layout）教程（二）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-10-13T00:00:00+08:00" content="2014-10-13">
+              2014-10-13
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h2 id="u7ED9TextContainer_u4E2D_u6DFB_u52A0_u5185_u5BB9"><a href="#u7ED9TextContainer_u4E2D_u6DFB_u52A0_u5185_u5BB9" class="headerlink" title="给TextContainer中添加内容"></a>给TextContainer中添加内容</h2><p>打开 <strong>Main.storyboard</strong> ，从组件库（Object Library）中拖拽两个 <strong>Label</strong> 组件到TextContainer中，位置可以随意摆放：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-35.png" alt="图片"></p>
+<p>先选择靠上的Label，然后点击底部的 <strong>Align</strong> 按钮，添加一个 <strong>Horizontal Center in Container</strong> 约束，再点击 <strong>Pin</strong> 按钮，添加一个 <strong>Top Spacing to nearest neighbor</strong> 约束，设置其值为10：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-36.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/adaptive-layout-37.png" alt="图片"></p>
+<p>然后选择右侧工具栏中的 <strong>Attribute Inspector</strong> 页签，将该Label的 <strong>Text</strong> 属性设置为 <strong>Cupertino</strong> ，<strong>Color</strong> 属性设置为 <strong>White</strong> ，<strong>Font</strong> 属性设置为 <strong>Helvetica Neue, Thin</strong> ， <strong>Size</strong> 属性设置为 <strong>150</strong>。</p>
+<p>这时同学们可能会发现基本看不到刚才设置的文字的全貌，这是因为Label大小的原因。别着急，我们很快就会解决这个问题。</p>
+<p>现在选择另一个Label，按照上述的方法给它也添加一个 <strong>Horizontal Center in Container</strong> 约束以及一个 <strong>Bottom Spacing<br>to nearest neighbor</strong> 约束，将其值设置为10。打开右侧工具栏中的 <strong>Size Inspector</strong> 看看：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-38.png" alt="图片"></p>
+<p>然后选择 <strong>Attribute Inspector</strong> 将该Label的 <strong>Text</strong> 属性设置为 <strong>28C</strong> ， <strong>Color</strong> 属性设置为 <strong>White</strong>， 将 <strong>Font</strong> 属性设置为 <strong>Helvetica Neue, Thin</strong>， 将 <strong>Size</strong> 属性设置为 <strong>250</strong>。</p>
+<p>现在是时候解决Label大小的问题了。选中view controller的view，点击底部的 <strong>Resolve Auto Layout Issues</strong> 按钮，在弹出菜单中选择 <strong>All Views\Update Frames</strong> ，现在看看<code>storyboard</code>中发生了什么：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-39.png" alt="图片"></p>
+<p>我们看到了刚才设置的城市和温度，但是他们有一点点重叠，这可不是我们想要的结果。在我们修改这个问题之前，先看看预览编辑区的显示情况。我们发现在iPad下显示貌似还挺完美：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-40.png" alt="图片"></p>
+<p>但是在iPhone下不出所料的无法直视，字体太大了：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-41.png" alt="图片"></p>
+<p>接下来让我们解决这个重叠和字体大小的问题。</p>
+<h2 id="Size_Classes"><a href="#Size_Classes" class="headerlink" title="Size Classes"></a>Size Classes</h2><p>通用的<code>storyboard</code>文件固然很好，但是你想真正把它玩转还是得花功夫去研究它，这是一件很有挑战性的工作，当然我们也要懂得运用一些现有的工具来帮助我们。Xcode6就为我们提供了一些工具和技巧，帮助我们更好的实现自适应布局。</p>
+<p>自适应布局有一个很重要的概念就是 <strong>Size Classes</strong>。它并不代表真正的尺寸，而是我们从感官上感觉尺寸的种类，通过这种种类的组合，表示出不同屏幕尺寸设备的横屏及竖屏。</p>
+<p>Xcode6为我们提供了两个种类：普通（<strong>Regular</strong>）和紧凑（<strong>Compact</strong>）。虽然它们涉及到视图的物理尺寸，但一般它们只代表视图的语义尺寸，即不是真正的尺寸，而是我们从感官上分出的尺寸种类。</p>
+<p>下面这个表格向同学们展示了size classes和各个尺寸设备竖屏、横屏之间的关系：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-42.png" alt="图片"></p>
+<p>上表中的这些size classes组合都是我们在开发应用中经常碰到的。然而你也可以在视图的任何一个层级中覆盖这些size classes。当以后我们开发Apple Watch应用时显得尤其有用。</p>
+<h2 id="Size_Classes_u4E0E_u5F00_u53D1_u8005"><a href="#Size_Classes_u4E0E_u5F00_u53D1_u8005" class="headerlink" title="Size Classes与开发者"></a>Size Classes与开发者</h2><p>何为设计应用的UI？虽然现在你们的应用已经知道要使用Size Classes，并且你们在<code>storyboard</code>文件中设计应用界面时已经抛开了具体尺寸大小的束缚。但是你们难道没有发现在所有尺寸的设备中，不管是竖屏还是横屏，应用的界面布局都是一致的吗？只是自适应了尺寸大小而已。这还远远不是设计。</p>
+<p>当你们决心要设计自适应的界面并已经开始设计的时候，有一点很关键。那就是要知道界面在不同的Size Classes要有继承的关系。你们应该首先设计一个基础的界面，然后根据不同尺寸的横竖屏在基础的界面上进行自定义。千万不要把不同的Size Classes当做独立的屏幕尺寸去设计UI。应该在你们的脑海中建立起界面的一个继承关系的思想，也就是大多数的设备使用基础界面，然后特别的尺寸及横竖屏再根据情况基于基础界面修改。</p>
+<p>在本文中，一直没有像大家介绍过如何设置特殊设备的布局，那是应为自适应布局的核心概念Size Classes本身就是由各种特殊设备的特点抽象而来的。也就是说一个Size Classes就意味着一种特殊设备的布局特点，其实普通情况也是特殊情况中的一种。所以说我们可以组合不同的Size Classes来满足各种特殊的布局情况，比如一个支持自适应的视图，它可以在应用的父视图控制器中自适应，也可以在某一个功能的视图控制器容器中自适应。但是两者自适应后的布局却不相同。</p>
+<p>这种改进对Apple本身也是有益的，因为他们不断的改变移动设备的尺寸，但从来没有强迫开发者和设计者重新开发和设计他们的应用以适应新尺寸的设备。这就不会让开发者和设计者对Apple不断改变设备尺寸这件事有抗拒心理。</p>
+<p>接下来，我们将自定义Size Classes以适应iPhone横屏的时候，因为现在的布局在横屏时用户体验很糟糕。</p>
+<h2 id="u4F7F_u7528Size_Classes"><a href="#u4F7F_u7528Size_Classes" class="headerlink" title="使用Size Classes"></a>使用Size Classes</h2><p>回到 <strong>Main.storyboard</strong>，点击底部的 <strong>w Any h Any</strong>，你就可以看到Size Classes的选择器了：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-43.png" alt="图片"></p>
+<p>在这个由9个方格组成的网格中，你就可以选择你想在<code>storyboard</code>中显示的Size Class。一共有9种组合方式：3种垂直的也就是竖屏的（任意尺寸（Any），普通（regular），紧凑（compact））选择和3种水平的也就是横屏（任意尺寸（Any），普通（regular），紧凑（compact））的选择。</p>
+<blockquote>
+<p>注意：这里有一点需要大家注意。在Size Classes中，有两个重要的概念叫做<em>水平（Horizontal）</em>和<em>垂直（Vertical）</em>。但是在IB中叫做 <em>宽（Width）</em>和<em>高（Height）</em>。但他们是等价的，所以大家记住这个概念有两种叫法就可以了。</p>
+</blockquote>
+<p>目前我们的布局在紧凑高度（Compact Height）时显示的很糟糕，也就是iPhone横屏时。我们来解决这个问题，在Size Classes选择器中选择 <strong>Any Width | Compact Height</strong> 的组合：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-44.png" alt="图片"></p>
+<p>这时你会发现在<code>storyboard</code>中会立即出现2个变化：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-45.png" alt="图片"></p>
+<ol>
+<li><code>storyboard</code>中的view controller变成了我们刚才设置的size class。</li>
+<li><code>storyboard</code>底部会出现蓝色的长条区域，并显示出当前我们正在使用的size class。</li>
+</ol>
+<p>为了在该size class下改变布局，我们要临时改变一些之前设置好的约束。在自动布局中这种操作有个术语叫做 <strong>装配（installing）</strong> 和 <strong>卸载（uninstalling）</strong> 约束。当一个约束在当前的size class中是适用的，我们就将该约束装配在当前的size class中，如果不适用，我们就卸载它。</p>
+<p>选择image view，在右侧工具栏中选择 <strong>Size Inspector</strong>。你可以看到在image view上添加的所有约束：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-46.png" alt="图片"></p>
+<p>单击鼠标左键选择 <strong>Align Center X to: Superview</strong> 约束，然后按下键盘上的 <strong>Delete</strong> 键来卸载该约束。这时我们可以看到在<code>storyboard</code>中这个约束就立即消失了，并且在<code>storyboard</code>的结构目中和 Size Inspector中该约束都变成了灰色：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-47.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/adaptive-layout-48.png" alt="图片"></p>
+<blockquote>
+<p>注意：你可以在Size Inspector中点击 <strong>All</strong> 来查看当前size class卸载掉的约束。</p>
+</blockquote>
+<p>鼠标双击刚才卸载的那条约束，我们可以看到在约束编辑界面的底部出现了额外的2个选项：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-49.png" alt="图片"></p>
+<p>这两个选项的意思就是这条约束在基础布局中是可用的，但在当前的 <strong>Any Width | Compact Height</strong> 布局中是不可用的。  </p>
+<p>按照上面的步骤卸载掉image view上的另外3个约束：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-50.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/adaptive-layout-51.png" alt="图片"></p>
+<p>现在你就可以添加适合当前size class的约束了。我们添加一个 <strong>Align/Vertical Center in Container</strong> 约束，再添加一个 <strong>Pin/Left Spacing to nearest neighbor</strong> 约束，其值设置为10：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-52.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/adaptive-layout-53.png" alt="图片"></p>
+<p>选择image view，按住 <strong>Ctrl</strong> 键从image view上拖拽至view controller的view上，在弹出的菜单中选择 <strong>Equal Widths</strong> 约束。</p>
+<p>打开右侧工具栏中的 <strong>Size Inspector</strong> 页签，双击 <strong>Equal Width to: Superview</strong> 打开该约束的属性编辑界面。如果 <strong>First Item</strong> 属性的值不是 <strong>cloud.Width</strong> ，那么点击输入框，在下拉菜单中选择 <strong>Reverse First and Second Item</strong>。然后将 <strong>Multiplier</strong> 属性的值设置为 <strong>0.45</strong>。</p>
+<p>现在image view在所有的size class中显示应该都没有什么问题了。但是text container view还有点问题。你需要给它添加一个约束，让它显示在该size class屏幕的右侧。</p>
+<p><code>TextContainer</code> view现在有两种约束在身。一种是内部约束，它约束了两个Label的位置，这些约束在各size class中表现的还不错。另一种是外部的约束，它们限制了text container view的左、右、底部与它容器的左、右、底部的间距。这些约束在当前的size class中表现的就不尽如人意了。如果想使text container view在当前size class中位于容器的右下角位置，你得卸载掉左侧的约束。</p>
+<p>选中 <strong>Left Spacing to nearest neighbor</strong> 约束：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-54.png" alt="图片"></p>
+<p>按 <strong>Cmd-Delete</strong> 卸载该约束，和之前一样，被卸载的约束显示为灰色。</p>
+<p>现在你需要再添加两个约束将TextContainer限制在正确的位置上。一个是让text container view的宽度为它容器（view controller的view）宽度的一半。另一个是将text container view固定在顶部。</p>
+<p>按理来说，你现在需要选中text container view然后按住Ctrl键和鼠标左键拖动鼠标到view controller view上，然后选择约束。但是目前的情况由于image view和text container view占满了整个view controller，所以你很难选中view controller的view。同学们可以通过<code>storyboard</code>的结构树上进行该操作，会容易很多。</p>
+<p>在结构树中选中TextContainer，按住 <strong>Ctrl</strong> 键和鼠标左键，拖动鼠标到结构树的View上：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-55.png" alt="图片"></p>
+<p>弹出菜单中显示了可用的约束，按住 <strong>Shift</strong> 键点击 <strong>Top Space to Top Layout Guide</strong> 和 <strong>Equal Widths</strong> 约束：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-56.png" alt="图片"></p>
+<p>然后选中TextContainer，在 <strong>Size Inspector</strong> 中设置刚刚添加的两个约束：</p>
+<ul>
+<li>将 <strong>Top Space to: Top Layout Guide </strong> 约束的值设置为0。</li>
+<li>将 <strong>Equal Width</strong> 约束的 <strong>Multiplier</strong> 的值设置为0.5。这里要注意 <strong>First Item</strong> 和 <strong>Second Item</strong> 这两个属性的值。前者应为TextContainer view，后者为view controller view。如果不一致，那么点击任意一个输入框，选择 <strong>Reverse First and Second Item</strong>。</li>
+</ul>
+<p>现在点击<code>storyboard</code>界面底部的 <strong>Resolve Auto Layout Issues</strong> 按钮，然后选择 <strong>All Views\Update frames</strong> 。看看发生了什么变化呢：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-57.png" alt="图片"></p>
+<p>到目前为止，我们的布局已经越来越接近完美了，唯一一点不足的就是字体大小的自适应，我们会在下一节解决它！</p>
+<h2 id="u6587_u5B57_u5C5E_u6027_u7684_u81EA_u9002_u5E94"><a href="#u6587_u5B57_u5C5E_u6027_u7684_u81EA_u9002_u5E94" class="headerlink" title="文字属性的自适应"></a>文字属性的自适应</h2><p>目前TextContainer中的文字尺寸在iPad设备上，也就是使用普通（Regular）size class显示还比较正常。但是当使用紧凑（Compact）size class时文字尺寸就显得太大了，以至于都超出了视图。不过同学们不要怕，我们照样可以在不同的Size Classes中设置不同的文字尺寸来做到自适应。</p>
+<blockquote>
+<p>注意：与重写布局不同，在不同的size class中改变文字的属性始终会影响基础布局中的文字。它不能像布局一样，在不同的size class中设置不同的属性值。我们通过下面的方法来解决这一问题。</p>
+</blockquote>
+<p>回到<code>storyboard</code>文件中，将目前的size class改为最基础的 <strong>Any Width | Any Height</strong> 。</p>
+<p>选择显示Cupertino的Label，打开 <strong>Attribute Inspector</strong> 。点击 <strong>Font</strong> 属性前面的 <strong>+</strong> 号：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-58.png" alt="图片"></p>
+<p>弹出的菜单内容是让我们选择一种size class的组合来重写该组合下的文字属性。我们选择 <strong>Compact Width &gt; Any Height</strong>：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-59.png" alt="图片"></p>
+<p>这时就会出现另外一个文字属性下拉框，针对于我们刚才选择的 <strong>Compact Width | Any Height</strong> size class，我们将字体大小改为90：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-60.png" alt="图片"></p>
+<p>再选择显示温度的Label，重复刚才的操作，选择size class组合时选择 <strong>Compact Width &gt; Any Height</strong>。设置字体大小为150。</p>
+<p>在预览区域会自动更新我们刚才的设置：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-61.png" alt="图片"></p>
+<p>现在看起来稍微好一些了，但是显示 <strong>Cupertino</strong> 的Label被截掉了两头。同学们可能会继续调整字体大小使Cupertino显示完全，虽然目前看起来完美了，但是当换一个城市名称后或许又会出现刚才的问题。比如Washington, D.C这么长的名称，又比如Kleinfeltersville, PA这个更长的名称。那么我们应该如何设计呢？</p>
+<p>我们的救世主 <strong>自动布局（Auto Layout）</strong> 再次出马。你只需要给显示城市名称和温度的这两个Label设置一个相对于TextContainer view的宽度约束即可。选中显示Cupertino的Label，按住 <strong>Ctrl</strong> 键和鼠标左键，拖动鼠标到TextContainer view，在弹出菜单中选择 <strong>Equal Widths</strong> 约束。对显示温度的Label做相同的操作。之后在预览界面看看发生了什么：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-62.png" alt="图片"></p>
+<p>呃……貌似还是有问题，城市名显示不完全。Label中的文字长度超出了允许显示的空间。不过我们可以通过一个选项，让Label自动判断当前的空间可以显示多大的字体。</p>
+<p>选择显示Cupertino的Label，然后打开 <strong>Attribute Inspector</strong>。将 <strong>AutoShrink</strong> 属性设置为 <strong>Minimum font scale</strong>，将其值设置为0.5。将 <strong>Alignment</strong> 属性设置为 <strong>Centered</strong>：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-63.png" alt="图片"></p>
+<p>对显示温度的Label做相同的操作。</p>
+<p>再来看看预览区域，是不是在不同尺寸的iPhone横屏、竖屏下显示都比较完美了：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-64.png" alt="图片"></p>
+<p>是时候在不同的设备上编译运行我们的程序了。用设备来检验才是最保险的。iPhone下的横屏、竖屏是多么的完美：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-65.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/adaptive-layout-66.png" alt="图片"></p>
+<p>同学们，至此你们已经学习到了自适应布局最基本的技能。恭喜你们！</p>
+<p>原文地址：<a href="http://www.raywenderlich.com/83276/beginning-adaptive-layout-tutorial" target="_blank" rel="external">Beginning Adaptive Layout Tutorial</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Auto-Layout/" rel="tag">#Auto Layout</a>
+          
+            <a href="/tags/Size-Classes/" rel="tag">#Size Classes</a>
+          
+            <a href="/tags/Swift/" rel="tag">#Swift</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/adaptive-layout-1/" rel="next" title="Swift自适应布局（Adaptive Layout）教程（一）">
+                <i class="fa fa-chevron-left"></i> Swift自适应布局（Adaptive Layout）教程（一）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/adaptive-layout-for-iphone6-1/" rel="prev" title="为iPhone6设计自适应布局（一）">
+                为iPhone6设计自适应布局（一） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u7ED9TextContainer_u4E2D_u6DFB_u52A0_u5185_u5BB9"><span class="nav-number">1.</span> <span class="nav-text">给TextContainer中添加内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Size_Classes"><span class="nav-number">2.</span> <span class="nav-text">Size Classes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Size_Classes_u4E0E_u5F00_u53D1_u8005"><span class="nav-number">3.</span> <span class="nav-text">Size Classes与开发者</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4F7F_u7528Size_Classes"><span class="nav-number">4.</span> <span class="nav-text">使用Size Classes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6587_u5B57_u5C5E_u6027_u7684_u81EA_u9002_u5E94"><span class="nav-number">5.</span> <span class="nav-text">文字属性的自适应</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

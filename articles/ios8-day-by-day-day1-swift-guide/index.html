@@ -1,0 +1,689 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Swift,iOS8," />
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="开场白在今年的WWDC大会上绝对不容忽视的一点就是苹果除了宣布iOS8的发布，还介绍了一门新的编程语言Swift。是与Objective-C大不相同的一门语言，它不但是强类型的语言，而且吸收了当前多种优秀编程语言的特点。  
+为了能够涵盖到Swift语言所有的新特性，该博客系列将只使用Swift语言来进行讲解。我认为，学习如何使用Swift语言、如何与Cocoa框架交互最有价值的资料应该官方提供的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS8 Day-by-Day -- Day1 -- Swift引子">
+<meta property="og:url" content="http://www.devtalking.com/articles/ios8-day-by-day-day1-swift-guide/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="开场白在今年的WWDC大会上绝对不容忽视的一点就是苹果除了宣布iOS8的发布，还介绍了一门新的编程语言Swift。是与Objective-C大不相同的一门语言，它不但是强类型的语言，而且吸收了当前多种优秀编程语言的特点。  
+为了能够涵盖到Swift语言所有的新特性，该博客系列将只使用Swift语言来进行讲解。我认为，学习如何使用Swift语言、如何与Cocoa框架交互最有价值的资料应该官方提供的">
+<meta property="og:updated_time" content="2016-01-01T13:23:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS8 Day-by-Day -- Day1 -- Swift引子">
+<meta name="twitter:description" content="开场白在今年的WWDC大会上绝对不容忽视的一点就是苹果除了宣布iOS8的发布，还介绍了一门新的编程语言Swift。是与Objective-C大不相同的一门语言，它不但是强类型的语言，而且吸收了当前多种优秀编程语言的特点。  
+为了能够涵盖到Swift语言所有的新特性，该博客系列将只使用Swift语言来进行讲解。我认为，学习如何使用Swift语言、如何与Cocoa框架交互最有价值的资料应该官方提供的">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> iOS8 Day-by-Day -- Day1 -- Swift引子 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS8 Day-by-Day -- Day1 -- Swift引子
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-15T00:00:00+08:00" content="2014-08-15">
+              2014-08-15
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h2 id="u5F00_u573A_u767D"><a href="#u5F00_u573A_u767D" class="headerlink" title="开场白"></a>开场白</h2><p>在今年的WWDC大会上绝对不容忽视的一点就是苹果除了宣布iOS8的发布，还介绍了一门新的编程语言Swift。是与Objective-C大不相同的一门语言，它不但是强类型的语言，而且吸收了当前多种优秀编程语言的特点。  </p>
+<p>为了能够涵盖到Swift语言所有的新特性，该博客系列将只使用Swift语言来进行讲解。我认为，学习如何使用Swift语言、如何与Cocoa框架交互最有价值的资料应该官方提供的两个文档。我相信如果你一开始就跟着这两个文档学习，你能避免不少弯路。</p>
+<ul>
+<li><a href="https://itunes.apple.com/us/book/the-swift-programming-language/id881256329?mt=11&amp;ls=1" target="_blank" rel="external">The Swift Programming Language</a></li>
+<li><a href="https://itunes.apple.com/us/book/using-swift-cocoa-objective/id888894773?mt=11&amp;ls=1" target="_blank" rel="external">Using Swift with Cocoa and Objective-C</a></li>
+</ul>
+<p>你还应该经常去看<a href="https://developer.apple.com/swift/blog/" target="_blank" rel="external">Swift官方博客</a>以及Apple提供的关于该语言的其他<a href="https://developer.apple.com/swift/resources/" target="_blank" rel="external">资源</a>。</p>
+<p>既然已经有很多资料和文档能帮助你学习如何使用Swift语言，所以这个博客系列不会将已有的知识点重复讲解。相反，我会根据初学者在使用Swift语言中可能会遇到的一些陷阱、难以理解的知识点进行讲解，尤其当和系统框架一起使用的时候。</p>
+<p>今天这篇文章主要使用Xcode 6提供的<code>Playground</code>演示每个章节的代码示例。你可以在ShinobiControls的Github主页上下载这些示例代码。地址：<a href="https://github.com/ShinobiControls/iOS8-day-by-day" target="_blank" rel="external">github.com/ShinobiControls/iOS8-day-by-day</a>。</p>
+<p>如果你对这篇文章里的知识点有什么问题或者其他建议，你可以联系我。我会在最新一期的博客中进行说明。你可以在底部进行评论或者给我发Twitter-<a href="https://twitter.com/iwantmyrealname" target="_blank" rel="external">@iwantmyrealname</a>。</p>
+<h2 id="u6784_u9020_u51FD_u6570"><a href="#u6784_u9020_u51FD_u6570" class="headerlink" title="构造函数"></a>构造函数</h2><p>Swift围绕着对象构造过程形成了一个概念，包括命名、方便的构造器以及在对象的构造阶段指定了严格的调用顺序等。在未来几周内，该博客系列将会有一篇文章深入详细地介绍Swift中对象的构造过程，以及对你写的Objective-C有何影响。</p>
+<p>Swift与Objective-C另外一个最大的不同之处就是构造函数的返回值和构造失败的处理。在Objective-C中的构造器大多数都是这样： </p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- (instancetype)<span class="keyword">init</span> &#123;</span><br><span class="line">	<span class="keyword">self</span> = [<span class="keyword">super</span> <span class="keyword">init</span>];</span><br><span class="line">  	<span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">    	<span class="comment">// Do some stuff</span></span><br><span class="line">  	&#125;</span><br><span class="line">  	<span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然而在Swift中是这样：  </p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">init</span> &#123;</span><br><span class="line">  	variableA = <span class="number">10</span></span><br><span class="line">  	...</span><br><span class="line">  	<span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里要注意的是，Objective-C中的构造器负责<strong>创建</strong>并返回<code>self</code>，但是Swift中的构造函数却没有返回值。这意味着在Swift的构造函数中不可能也没有机会返回一个<code>nil</code>的返回值，而这在Objective-C中恰恰是表明构造失败的通用模式。</p>
+<p>这显然是Swift语言新的Beta版中需要修改的问题。那么现在我们唯一的解决办法是通过类方法返回一个Optional类型用于表明是否构造成功：  </p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">  	<span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">myFactoryMethod</span>() -&gt; <span class="title">MyClass</span>? </span>&#123;</span><br><span class="line">    	...</span><br><span class="line">  	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有趣的是Objective-C中的工厂方法被转换成了Swift中的构造方法，这一点显然是不可取的。但是，到目前为止，我们只能选择Swift提供的有潜在隐患的构造方法。</p>
+<h2 id="u53EF_u53D8_u6027"><a href="#u53EF_u53D8_u6027" class="headerlink" title="可变性"></a>可变性</h2><p>在Cocoa开发者中，可变性这个概念已然不是什么新鲜的东西了，比如在合适的情景下，我们会使用<code>NSArray</code>的可变类型<code>NSMutableArray</code>。Swift将这个概念进行了升华，并且它将不可变性升级为一个基本概念。</p>
+<p>Swift中用<code>let</code>关键字定义一个不可变的变量，也就是常量。比如说：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> a = <span class="type">MyClass</span>()</span><br><span class="line">a = <span class="type">MySecondClass</span>() <span class="comment">// 不允许</span></span><br></pre></td></tr></table></figure>
+<p>这意味着，我们不能改变被<code>let</code>关键字定义的常量的值，以及该常量引用对象的类型。这里需要注意的是，如果引用的类型是一个值类型（比如结构体）那么不论是引用类型还是引用类型自身都是不可变的。如果引用的是一个类，那么它的引用类型也是是不可变的，但是引用类型自身是可以改变的。  </p>
+<p>我们来看看下面这个结构体：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">MyStruct</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> t = <span class="number">12</span></span><br><span class="line">  <span class="keyword">var</span> u: <span class="type">String</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你用<code>var</code>关键字定义一个变量名叫<code>struct1</code>，那么你可以对其做以下操作：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> struct1 = <span class="type">MyStruct</span>(t: <span class="number">15</span>, u: <span class="string">"Hello"</span>)</span><br><span class="line">struct1.t = <span class="number">13</span> <span class="comment">// 编译错误，因为t是一个常量，也就是不可变属性</span></span><br><span class="line">struct1.u = <span class="string">"GoodBye"</span></span><br><span class="line">struct1 = <span class="type">MyStruct</span>(t: <span class="number">10</span>, u: <span class="string">"You"</span>)</span><br></pre></td></tr></table></figure>
+<p>你可以对<code>u</code>属性重新赋值，也可以对<code>struct1</code>重新赋值，因为他们都是用<code>var</code>定义的变量。但是你不能对<code>t</code>属性重新赋值，因为它是用<code>let</code>定义的常量属性。下面我们再来看看如果用<code>let</code>关键字定义一个<code>MyStruct</code>的实例常量，会发生什么：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> struct2 = <span class="type">MyStruct</span>(t: <span class="number">12</span>, u: <span class="string">"World"</span>)</span><br><span class="line">struct2.u = <span class="string">"Planet"</span> <span class="comment">// 编译错误，struct2是一个常量，也就是不可变的</span></span><br><span class="line">struct2 = <span class="type">MyStruct</span>(t: <span class="number">10</span>, u: <span class="string">"Defeat"</span>) <span class="comment">// 编译错误，struct2的类型是不可变的</span></span><br></pre></td></tr></table></figure>
+<p>在上述代码片段的情况下，你不能改变<code>struct2</code>的类型，同样也不能改变这个类型自身（比如该类型的属性<code>u</code>），这是因为结构体是一个<strong>值类型</strong>。</p>
+<p>但如果引用的是一个类，那么上述代码示例的结果就会有所不同了，我们先看看下面这个类的定义：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> t = <span class="number">12</span></span><br><span class="line">  <span class="keyword">var</span> u: <span class="type">String</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">init</span>(t: <span class="type">Int</span>, u: <span class="type">String</span>) &#123;</span><br><span class="line">    <span class="keyword">self</span>.t = t</span><br><span class="line">    <span class="keyword">self</span>.u = u</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们使用<code>var</code>定义一个变量<code>class1</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> class1 = <span class="type">MyClass</span>(t: <span class="number">15</span>, u: <span class="string">"Hello"</span>)</span><br><span class="line">class1.t = <span class="number">13</span> <span class="comment">// 编译错误，因为t是一个常量，也就是不可变属性</span></span><br><span class="line">class1.u = <span class="string">"GoodBye"</span></span><br><span class="line">class1 = <span class="type">MyClass</span>(t: <span class="number">10</span>, u: <span class="string">"You"</span>)</span><br></pre></td></tr></table></figure>
+<p>从上述代码示例可以看出，你可以改变类型以及该类型中使用<code>var</code>定义的属性，但是不能改变使用<code>let</code>定义的属性。当我们用<code>let</code>定义一个常量<code>class2</code>，看看会发生什么：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> class2 = <span class="type">MyClass</span>(t: <span class="number">12</span>, u: <span class="string">"World"</span>)</span><br><span class="line">class2.u = <span class="string">"Planet"</span> <span class="comment">// 编译通过</span></span><br><span class="line">class2 = <span class="type">MyClass</span>(t: <span class="number">11</span>, u: <span class="string">"Geoid"</span>) <span class="comment">// 编译错误，class2的类型是不可变的</span></span><br></pre></td></tr></table></figure>
+<p>从上述代码示例中可以看出，你可以改变类型自身，也就是可以改变类型中使用<code>var</code>定义的属性。这是因为类是一个<strong>引用类型</strong>。</p>
+<p>这种行为很好理解，在文档中也有较全面的解释。但是当我们查看Swift中的集合类型时，就会产生一些疑惑。</p>
+<p><code>NSArray</code>是一个引用类型。也就是说，当你实例化一个<code>NSArray</code>时，你创建的变量实际是指向了该数组在内存中的位置，所以在Objective-C中，用<code>*</code>号定义该变量。如果你回顾一下我们刚才说的使用<code>let</code>和<code>var</code>关键字定义引用类型和值类型的知识点，那么你应该基本清楚<code>let</code>与<code>var</code>关键字的用法和区别。但实际上，在Objective-C中，要想使用一个可变的<code>NSArray</code>，你需要使用另外一个类<code>NSMutableArray</code>。</p>
+<p>Swift中的数组与Objective-C中的就有很大区别了，数组不再是引用类型，而是值类型。这意味着在使用中，它们像上述代码示例中的结构体一样使用，而不像类那样使用。因此，<code>let</code>和<code>var</code>关键字不仅仅是指定变量是否可以被重新定义，同时也会指定创建的数组是否是一个可变数组。</p>
+<p>使用<code>var</code>定义的数组不仅可以对其重新赋值，也可以改变数组：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> array1 = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>]</span><br><span class="line">array1.append(<span class="number">5</span>)  <span class="comment">// [1,2,3,4,5]</span></span><br><span class="line">array1[<span class="number">0</span>] = <span class="number">27</span>    <span class="comment">// [27,2,3,4,5]</span></span><br><span class="line">array1 = [<span class="number">3</span>,<span class="number">2</span>]    <span class="comment">// [3,2]</span></span><br></pre></td></tr></table></figure>
+<p>但是用<code>let</code>定义的数组都不能进行上述的改变：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> array2 = [<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>]</span><br><span class="line">array2.append(<span class="number">0</span>) <span class="comment">// 编译错误，array2是不可变数组</span></span><br><span class="line">array2[<span class="number">2</span>] = <span class="number">36</span>   <span class="comment">// 编译错误，array2是不可变数组</span></span><br><span class="line">array2 = [<span class="number">5</span>,<span class="number">6</span>]   <span class="comment">// 编译错误，不能对array2重新赋值</span></span><br></pre></td></tr></table></figure>
+<p>在这一点，Swift与Objective-C有巨大的差异，所以会给我们在实际开发中造成一些概念上混淆。也许在Swift之后的版本中对此会有所改变，所以要时刻关注Swift的文档。</p>
+<p>通过上面的示例代码我们可以得出一个结论，因为在Swift中数组是一个值类型，所以当你创建一个数组时，实际上是将数组的副本赋值给了变量或常量。但在Objective-C中，创建一个数组时，是将一个指针赋值给变量，也就是引用了该数组在内存中的地址。所以在Objective-C中将它作为方法的参数传递时，始终传递的是数组在内存中的那块相同的地址。而在Swift中，传递的是数组的副本。同时根据数组中存储的对象的类型你可以对数组进行完全复制或者部分复制。在开发过程中要时刻注意这点。</p>
+<h2 id="u5F3A_u7C7B_u578B_u548CAnyObject"><a href="#u5F3A_u7C7B_u578B_u548CAnyObject" class="headerlink" title="强类型和AnyObject"></a>强类型和AnyObject</h2><p>强类型是Swift语言最大的一个特点。它可以提高我们代码的安全性，因此，以前在Objective-C中会在运行时才能发现的异常，现在在编译时就可以发现了。</p>
+<p>这一点非常棒。但是当你在Swift中使用Objective-C框架进行开发时，你要特别注意<code>AnyObject</code>这个类型。它相当于Objective-C中的<code>id</code>。在有些时候，<code>AnyObject</code>给我们的感觉好像又不太符合Swift的特性。因为你可以将<code>AnyObject</code>作为任何的类型去使用，但是这会导致程序在运行时发生异常。实际上，<code>AnyObject</code>的使用方式大多时候都和Objective-C中的<code>id</code>一样。不同的一点是，当你用<code>AnyObject</code>代表一个类型，但是你使用了该类型中并不存在的方法或属性时，它会返回<code>nil</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> myString: <span class="type">AnyObject</span> = <span class="string">"hello"</span></span><br><span class="line">myString.cornerRadius <span class="comment">// 返回 nil</span></span><br></pre></td></tr></table></figure>
+<p>为了更符合Swift语言的特性，在使用Cocoa API时，你也许该使用如下的模式：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">someFunc</span><span class="params">(parameter: AnyObject!)</span></span> -&gt; <span class="type">AnyObject</span>! &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> castedParameter = parameter <span class="keyword">as</span>? <span class="type">NSString</span> &#123;</span><br><span class="line">    <span class="comment">// Now I know I have a string :)</span></span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你确定你传入的参数就是<code>String</code>类型的，你就没必要在强制转换时用<code>?</code>来保护了：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> castedParameter = parameter <span class="keyword">as</span> <span class="type">NSString</span></span><br></pre></td></tr></table></figure>
+<p>根据上述内容我们得知，转换数组其实也是一件很容易的事情。你从Cocoa框架接收的所有数组的类型都是<code>[AnyObject]</code>，因为<code>NSArray</code>不支持泛型。然而在大多数情况下，不是所有的元素都是同一类型，但是他们都有已知类型。所以你可以使用有条件判断的转换，也可以不用条件判断进行转换，像下面代码中的语法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">someArrayFunc</span><span class="params">(parameter: [AnyObject]!)</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> newArray = parameter <span class="keyword">as</span> [<span class="type">String</span>]</span><br><span class="line">  <span class="comment">// Do something with your strings :)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="u534F_u8BAE_u4E00_u81F4_u6027"><a href="#u534F_u8BAE_u4E00_u81F4_u6027" class="headerlink" title="协议一致性"></a>协议一致性</h2><p>协议在Swift很好理解，定义方式如下：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">MyProtocol</span> </span>&#123;</span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">myProtocolMethod</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有件事一定是你经常想做的，那就是判断一个对象是否遵循了指定的协议，我们可以这样写：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> class1AsMyProtocol = class1 <span class="keyword">as</span>? <span class="type">MyProtocol</span> &#123;</span><br><span class="line">  <span class="comment">// We're in</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是这里存在一个错误，因为判断指定的这个协议必须是一个Objective-C协议，所以在定义协议时要加上<code>@objc</code>标签;</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@objc</span> <span class="class"><span class="keyword">protocol</span> <span class="title">MyNewProtocol</span> </span>&#123;</span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">myProtocolMethod</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> class1AsMyNewProtocol = class1 <span class="keyword">as</span>? <span class="type">MyNewProtocol</span> &#123;</span><br><span class="line">  <span class="comment">// We're in</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然看起来只是加了<code>@objc</code>标签，但实际上不仅如此，因为在协议前加上了<code>@objc</code>标签，所以协议里的所有属性和方法返回值类型都被解析成Objective-C中的类型了。</p>
+<h2 id="u679A_u4E3E"><a href="#u679A_u4E3E" class="headerlink" title="枚举"></a>枚举</h2><p>枚举在Swift中变得更加实用。现在不仅可以在枚举中关联值（它们可以是不同类型的），也可以包含函数。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">MyEnum</span> </span>&#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="type">FirstType</span></span><br><span class="line">  <span class="keyword">case</span> <span class="type">IntType</span> (<span class="type">Int</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="type">StringType</span> (<span class="type">String</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="type">TupleType</span> (<span class="type">Int</span>, <span class="type">String</span>)</span><br><span class="line"></span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">prettyFormat</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> .<span class="type">FirstType</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"No params"</span></span><br><span class="line">    <span class="keyword">case</span> .<span class="type">IntType</span>(<span class="keyword">let</span> value):      </span><br><span class="line">	  <span class="keyword">return</span> <span class="string">"One param: <span class="subst">\(value)</span>"</span>    </span><br><span class="line">	<span class="keyword">case</span> .<span class="type">StringType</span>(<span class="keyword">let</span> value):</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"One param: <span class="subst">\(value)</span>"</span></span><br><span class="line">    <span class="keyword">case</span> .<span class="type">TupleType</span>(<span class="keyword">let</span> v1, <span class="keyword">let</span> v2):</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"Some params: <span class="subst">\(v1)</span>, <span class="subst">\(v2)</span>"</span></span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"Nothing to see here"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这非常有用：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> enum1 = <span class="type">MyEnum</span>.<span class="type">FirstType</span></span><br><span class="line">enum1.prettyFormat() <span class="comment">// "No params"</span></span><br><span class="line">enum1 = .<span class="type">TupleType</span>(<span class="number">12</span>, <span class="string">"Hello"</span>)</span><br><span class="line">enum1.prettyFormat() <span class="comment">// "Some params: 12, Hello"</span></span><br></pre></td></tr></table></figure>
+<p>只需要做一些小练习，你就能体会出它的强大之处。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>Swift的确很强大，它还需要我们通过实践去摸索新的开发模式，而不必局限在Objective-C的模式中。这篇文章列举了一些从Objective-C转到Swift中可能遇到的潜在的问题和疑惑，但希望不要让你对Swift却步。所有与本博客系列相关的项目和代码示例都是用Swift写的，并且都很通俗易懂。</p>
+<p>本文中的代码示例都是在<code>Playground</code>中完成的，你可以在<a href="https://github.com/ShinobiControl/iOS8-day-by-day" target="_blank" rel="external">github.com/ShinobiControl/iOS8-day-by-day</a>下载这些示例。</p>
+<p>原文地址：<a href="http://www.shinobicontrols.com/blog/posts/2014/07/17/ios8-day-by-day-day-1-blaggers-guide-to-swift" target="_blank" rel="external">iOS8 Day-by-Day :: Day 1 :: Blagger’s Guide to Swift</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Swift/" rel="tag">#Swift</a>
+          
+            <a href="/tags/iOS8/" rel="tag">#iOS8</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/swift-nil-coalescing/" rel="next" title="Swift中Nil Coalescing运算符的使用技巧">
+                <i class="fa fa-chevron-left"></i> Swift中Nil Coalescing运算符的使用技巧
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/swift-value-and-reference-types/" rel="prev" title="Swift中的值类型和参照类型">
+                Swift中的值类型和参照类型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">65</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u5F00_u573A_u767D"><span class="nav-number">1.</span> <span class="nav-text">开场白</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6784_u9020_u51FD_u6570"><span class="nav-number">2.</span> <span class="nav-text">构造函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u53EF_u53D8_u6027"><span class="nav-number">3.</span> <span class="nav-text">可变性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5F3A_u7C7B_u578B_u548CAnyObject"><span class="nav-number">4.</span> <span class="nav-text">强类型和AnyObject</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u534F_u8BAE_u4E00_u81F4_u6027"><span class="nav-number">5.</span> <span class="nav-text">协议一致性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u679A_u4E3E"><span class="nav-number">6.</span> <span class="nav-text">枚举</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u603B_u7ED3"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
