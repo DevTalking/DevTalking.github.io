@@ -300,7 +300,7 @@
     <link href="http://www.devtalking.com//articles/tvOS-initial-impression/"/>
     <id>http://www.devtalking.com//articles/tvOS-initial-impression/</id>
     <published>2015-09-16T16:00:00.000Z</published>
-    <updated>2016-01-01T14:18:38.000Z</updated>
+    <updated>2016-01-02T16:09:32.000Z</updated>
     <content type="html"><![CDATA[<p>作者：<a href="http://www.raywenderlich.com/u/cwagdev" target="_blank" rel="external">Chris Wagner</a>  原文地址：<a href="http://www.raywenderlich.com/114313/tvos-initial-impressions" target="_blank" rel="external">tvOS SDK: An iOS Developer’s Initial Impressions</a></p>
 <p>在Walter Isaacson编写的《Steve Jobs》的最后一章中，Steve说过“我最终实现并让它拥有了你们能想象到的最简单的用户界面”。当时他指的就是Apple TV。</p>
 <p>Steve不幸离世已经过去很久了，但是人们一直翘首以盼着这款产品。就在昨天2015年9月9日，超过四个春秋的期盼，我们终于等来了这个礼物，虽然可能与Steve对这款产品的愿景和理想有所差距，但是革命的步伐已经坚实的迈出了第一步。</p>
@@ -308,7 +308,7 @@
 <p>我和其他教程团队的成员已经开始深入研究tvOS SDK，并且正在努力准备一些有价值的tvOS教程（通宵达旦！），在此同时，我想从一个iOS开发者的视角与大家分享我对tvOS的初步印象。</p>
 <p>让我们一探究竟吧！</p>
 <h2 id="u57FA_u672C_u6982_u5FF5"><a href="#u57FA_u672C_u6982_u5FF5" class="headerlink" title="基本概念"></a>基本概念</h2><p>老款的Apple TV其实类似一个机顶盒，主要提供的功能是让用户通过及其简单的操作界面导航或浏览视频内容。昨天发布的新Apple TV在此基础上进一步的扩充功能，使一些成熟的应用能在Apple TV中运行，比如购物应用，甚至是游戏。</p>
-<p><img src="http://d.pr/i/lDJy+" alt="tvOS-1"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_02-457x320.jpg" alt="tvOS-1"></p>
 <p>让我们来看看以下这些信息：</p>
 <ul>
 <li><strong>硬件规格：</strong> 值得一说规格是64位 A8处理器，32G或64G的存储空间，2G的内存，1080p的分辨率以及支持HDMI，Siri远程遥控，新的Apple TV遥控器。</li>
@@ -334,9 +334,9 @@
 </ul>
 <p>如果你是一名经常使用原生APIs开发原生iOS应用的开发者，那么看到这些类似前端的技术可能会有点退缩。但希望你能保持一颗学习的心，学习了解这些新的强大的特性。</p>
 <p>我在这列举一个非常典型的Apple TV的应用场景。大家可以想象一下：你们想把一些内容或信息展现给用户，这些内容和信息储存在你们的服务器上，并且这些内容的格式、查询方式都服务于iPhone或iPad中的应用，那么你肯定会希望你的tvOS中的应用也能方便的使用这些内容，并做到与iOS中应用有相似的展现、查询、导航方式。</p>
-<p><img src="http://d.pr/i/14HgX+" alt="tvOS-2"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_03-700x296.jpg" alt="tvOS-2"></p>
 <p>如果我列举的这个例子正好是你们tvOS应用的需求，那么你可能需要考虑如何使用TVMLKit工具包。Apple已经为我们开发者完成了一些主要的工作，比如提供了许多可重用的tvOS界面展示模板，这些模板大都与iOS应用的界面神似，所以用户们并不会感到陌生，这些模板大概有18种之多。大多数模板都可以让你创建出脱凡的、非常适合家中电视展示的界面。大家可以访问Apple的<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/TextboxTemplate.html#//apple_ref/doc/uid/TP40015064-CH2-SW8" target="_blank" rel="external">文档</a>查看这些我们强烈推荐使用的模板。</p>
-<p><img src="http://d.pr/i/1iJ3p+" alt="tvOS-3"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_04-700x296.jpg" alt="tvOS-3"></p>
 <p>我也推荐大家在tvOS模拟器运行<a href="https://developer.apple.com/library/prerelease/tvos/samplecode/TVMLCatalog/Introduction/Intro.html#//apple_ref/doc/uid/TP40016505" target="_blank" rel="external">TVML Catalog sample app</a>去查看每个模板。同时你需要启动一个本地的web服务器，便于tvOS应用通过模板展示内容时访问，所以你需要仔细查阅<strong>README.md</strong>文件去了解相关内容。</p>
 <p>诚然TVMLKit还有许多知识点，如果你希望基于它开发一款tvOS应用，那么我提到的一些文档是非常值得你们去查阅参考的。这里我着重推荐大家首先看看如何使用菜单导航类的模板，比如<strong>menuBarTemplate</strong>、<strong>mainTemplate</strong>、<strong>searchTemplate</strong>等。然而，如果你希望用户不只是被动的通过你的tvOS应用观看或收听内容，而是希望用户与应用有更多的交互，给用户高质量的用户体验，那么你们就需要了解如何开发完整的自定义的tvOS应用。</p>
 <h3 id="Custom_Apps"><a href="#Custom_Apps" class="headerlink" title="Custom Apps"></a>Custom Apps</h3><p>你所知道的大多数iOS框架，比如UIKit、Core Graphics、CloudKit等等都可以在tvOS中使用。你可以在Apple提供的这个<a href="https://developer.apple.com/library/prerelease/tvos/releasenotes/General/tvOS90APIDiffs/index.html#//apple_ref/doc/uid/TP40016577" target="_blank" rel="external">文档</a>中查看哪些框架可以用，哪些不可以使用。如果你现在正是一名iOS开发者，那么会对这个文档中的列表非常熟悉。而且不管使用Swift还是Objective-C或者C都可以开发tvOS应用。</p>
@@ -344,25 +344,25 @@
 <h2 id="Focus_Engine"><a href="#Focus_Engine" class="headerlink" title="Focus Engine"></a>Focus Engine</h2><p>其中一个对于iOS开发者比较陌生的概念是用户输入/选择方法。在使用Apple TV的过程中，用户不会用手指去按压或滑动屏幕，取而代之的是使用Apple提供的遥控器或者是一些游戏控制器。</p>
 <p>tvOS采用了一个被称为<strong>Focus Engine</strong>的引擎系统，它在整个tvOS中有且只有一个。该引擎负责响应当用户使用遥控器上的手势操作或按键操作对菜单或内容进行上下左右的选择。</p>
 <p>Focus Engine会自动根据用户的选择决定要聚焦或展示的视图，你不需要在代码中做任何类似选中或导航的处理。比如说，此时展示的界面是你已经在Storyboard中设计好的视图布局，其中有一个视图是当前聚焦状态，那么当用户通过手势往右滑动时，Focus Engine会自动根据当前聚焦的视图找到与之相邻的左边的视图，并将其选中和聚焦。</p>
-<p><img src="http://d.pr/i/Lpd3+" alt="tvOS-4"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_05-700x328.jpg" alt="tvOS-4"></p>
 <p>作为一个开发者，你必须要学习与Focus Engine相关的API，比如当聚焦的视图发生变化时如何获取通知、如何通过编码触发聚焦视图的改变扥等。更多关于Focus Engine的API可以参阅App Programming Guide for tvOS文档中的<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/WorkingwiththeAppleTVRemote.html#//apple_ref/doc/uid/TP40015241-CH5-SW14" target="_blank" rel="external"> Supporting Focus Within Your App</a>章节。</p>
 <h2 id="TVServices"><a href="#TVServices" class="headerlink" title="TVServices"></a>TVServices</h2><p>虽然iOS开发者在tvOS应用的开发过程中，主要使用的是一些已经比较熟悉的iOS框架，但是也有一些tvOS特有的框架需要开发者们去了解掌握，比如像新加入的<code>TVServices</code>框架。</p>
 <p><code>TVServices</code>的主要作用是描述你的应用的内容，以便tvOS在首页的顶部栏位显示。在首页顶部栏位显示的应用都是用户自己设置的，用户可以将他们认为最为常用的或最为重要的应用放在首页顶部栏位，便于快速打开或浏览其中主要信息。</p>
-<p><img src="http://d.pr/i/1cedk+" alt="tvOS-5"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_06-478x320.jpg" alt="tvOS-5"></p>
 <p>你们的应用可以在用户不进入应用的情况下，向用户提供简短的、感兴趣的信息，这就会使你的应用有了额外价值，使用<code>TVServices</code>无疑是提高你的应用下载量的绝佳手段。比如一个游戏应用，通过<code>TVServices</code>显示游戏存档，那么用户就可以直接从首页通过游戏存档进入游戏。如果是一个社交应用，那么就可以在首页显示社交动态信息，如果是一个照片分享应用，那么就可以显示近期朋友和家人分享的照片。</p>
 <p>更多关于<code>TVServices</code>的信息可以查阅<a href="https://developer.apple.com/library/prerelease/tvos/documentation/TVServices/Reference/TVServices_Ref/index.html#//apple_ref/doc/uid/TP40016412" target="_blank" rel="external">TVServices Framework Reference</a>文档。使用好它对你的应用非常有益。</p>
 <h2 id="Parallax_Images"><a href="#Parallax_Images" class="headerlink" title="Parallax Images"></a>Parallax Images</h2><p>还有一件会让你疑惑的可能就是在发布会的Keynote中，Apple着重强调了图片和应用图标的视差效果。这是一个非常棒的视图效果，但是为什么这个特性会被放在Keynote中提及，它为什么这么重要呢？</p>
 <p>如果你使用了tvOS模拟器，你就会明白为什么这个特性如此重要。当移动聚焦视图时，你需要向左或向右滑动，但如果你只滑动了一点，Apple会对当前聚焦的视图做一个轻微的旋转处理，目的是让用户知道现在正在作以操作（但是还需要继续滑动来改变聚焦视图）。这是一个着眼于细节但又非常有用的特性。</p>
-<p><img src="http://d.pr/i/1d2Gx+" alt="tvOS-6"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_07.jpg" alt="tvOS-6"></p>
 <p>Apple把视差效果看做tvOS设计中的一个关键组成部分，并强烈建议应用图标和电影海报使用该特性。不过感谢Apple在App Programming Guide for tvOS文档中提供了<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/CreatingParallaxArtwork.html#//apple_ref/doc/uid/TP40015241-CH19-SW1" target="_blank" rel="external">Creating Parallax Artwork</a>章节，帮助我们创建视差特性的图片资源，以及为我们提供了视察图片资源的预览应用。</p>
-<p><img src="http://d.pr/i/1aHGu+" alt="tvOS-7"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_08.jpg" alt="tvOS-7"></p>
 <h2 id="Controllers"><a href="#Controllers" class="headerlink" title="Controllers"></a>Controllers</h2><p>每一个购买了新Apple TV的用户，都会收到一个功能强大的新版遥控器。上一代只能上下左右简单选择方位以及只有几个简单导航按键的遥控器，而新一代的Apple TV遥控器增加了更多令人激动的新特性：</p>
 <ul>
 <li><strong>玻璃触控板：</strong>位于遥控器的顶部，可以让用户在其上面进行一些手势操作，比如滑动、轻拍、点击。</li>
 <li><strong>麦克风：</strong>可以让用户通过遥控器访问Siri（Siri有使用国家的限制）以及可以通过语音控制电视的音量。</li>
 <li><strong>陀螺仪：</strong>结合动作传感器可以为用户提供非常棒的游戏体验。用户可以通过倾斜遥控器在游戏中控制方向盘开车，或者控制英雄奔跑穿越山洞。</li>
 </ul>
-<p><img src="http://d.pr/i/190dr+" alt="tvOS-8"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_09.jpg" alt="tvOS-8"></p>
 <p>你可以使用你知道的处理手势操作的API去监听滑动或轻点，还有一些新的API去监听遥控器上不同的按钮，比如<code>pressesBegan()</code>、<code>pressesEnded()</code>、<code>pressesChanged()</code>和<code>pressesCancelled()</code>。</p>
 <p>遥控器通过蓝牙技术与Apple TV主机交互，这意味着为蓝牙游戏控制器敞开的大门（恕我直言，用Apple的遥控器玩游戏并不是很好的选择）。Apple已经宣布<a href="https://steelseries.com/gaming-controllers/nimbus" target="_blank" rel="external">Nimbus Steelseries Controller</a>将会支持新Apple TV。想了解更多关于这方面的信息请查阅<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/WorkingwithGameControllers.html#//apple_ref/doc/uid/TP40015241-CH18-SW1" target="_blank" rel="external">Working with Game Controllers</a>。</p>
 <h2 id="tvOS_and_Games"><a href="#tvOS_and_Games" class="headerlink" title="tvOS and Games"></a>tvOS and Games</h2><p>我们衷心的希望游戏能在tvOS上火起来，Apple似乎是直接瞄准了任天堂漠不关心的一个游戏市场。</p>
@@ -371,7 +371,7 @@
 <p>-&gt; 注：游戏视频可前往原文查看，但需要科学上网。</p>
 <h2 id="Limitations"><a href="#Limitations" class="headerlink" title="Limitations"></a>Limitations</h2><p>或许目前关于tvOS比较有疑惑的两点就是本地存储和应用大小的限制。</p>
 <h3 id="Limitation_3A_Local_Storage"><a href="#Limitation_3A_Local_Storage" class="headerlink" title="Limitation: Local Storage"></a>Limitation: Local Storage</h3><p>关于本地存储，基本确定是没有！如果你的应用需要持久化用户的数据，那么你需要使用iCloud、CloudKit或者自己的备份服务去实现。任何试图存在Apple TV中的数据都不保证在下次打开应用时还嫩存在。如果你想同步不同设置之间的数据，那么你就需要将数据线存在某个地方，但绝不是Apple TV中。</p>
-<p><img src="http://d.pr/i/11tBa+" alt="tvOS-9"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_10-480x313.jpg" alt="tvOS-9"></p>
 <p>一定要牢记这点，它对于你设计tvOS应用的结构时很关键。这里列出了一些规则：</p>
 <ul>
 <li><strong>如果你需要存储的数据量小于1MB</strong>，iCloud的key-value存储方式是一个可以选择的方案。但是要切记，iCloud KVS严格限制了只能有所属者才可以访问数据，并且不能共享给其他用户。</li>
@@ -379,7 +379,7 @@
 <li><strong>如果你开发的是一个跨平台的应用或者有特殊的需求</strong>，你就得使用你自己的备份服务了。</li>
 </ul>
 <h3 id="Limitation_3A_App_Size"><a href="#Limitation_3A_App_Size" class="headerlink" title="Limitation: App Size"></a>Limitation: App Size</h3><p>另一个限制是关于应用大小的限制，规定不能超过200MB。</p>
-<p><img src="http://d.pr/i/xkr7+" alt="tvOS-10"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/FlipTable-250x228.png" alt="tvOS-10"></p>
 <p>在你们掀桌之前，请回顾一下WWDC2015以及介绍过的“On-Demand Resources”相关API。这几乎像是Apple为tvOS提前铺垫的。</p>
 <p>这些API通过按需下载资源文件减小应用初始安装时的大小。开发者可以在Xcode中给多媒体资源文件用标签进行标记，将应用提交后，App Store会自动根据标记将多媒体资源文件拆分为一个一个下载包。当用户在使用应用时如果需要用到某类标记的资源文件，就可以请求下载该标记的资源文件。当然你得有预期的判断，要先于用户使用资源前开始下载他们需要的资源，这样对于用户来说他们根本不会感受到因为下载资源带来的不好的用户体验。</p>
 <p>举一个简单的例子，比如你有一款游戏应用有10个关卡。在用户安装该游戏时可以只包含两个关卡的多媒体资源文件。一旦用户完成了第一个关卡，你应该发送一个下载请求，下载第三个关卡的多媒体资源文件。当用户完成了第二个关卡时，第三个关卡需要的资源文件早已下载好准备妥当。在用户的整个游戏过程中，你就可以运用该机制一步一步去下载所需的资源文件。</p>
