@@ -255,7 +255,7 @@
 </ol>
 <p>这两种方式没有孰优孰劣之分，都是Apple推荐的方法，只是按需所取，以及你更想尝试哪种方式。</p>
 <p>在这篇教程中，你们的目标是开发以个能播放<a href="http://www.rwdevcon.com/" target="_blank" rel="external">RWDevCon</a>讨论视频的tvOS应用：</p>
-<p><img src="http://d.pr/i/15VpZ+" alt="tvOS-1"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-1.gif" alt="tvOS-1"></p>
 <p>虽然用上述两种方式都可以开发这个应用，但是使用TVML会更加容易一些。所以这就是你在这篇教程中要学和要做的东西。</p>
 <h2 id="u4EC0_u4E48_u662FTVML_uFF1F"><a href="#u4EC0_u4E48_u662FTVML_uFF1F" class="headerlink" title="什么是TVML？"></a>什么是TVML？</h2><p>正如我刚才提到的，第一种开发tvOS应用的方式是通过TVML、TVJS和TVMLKit这些新的技术实现的。如果你们对这些简称比较陌生，不要惊慌，因为他们本就是新鲜玩意。这里我简单解释一下：</p>
 <ul>
@@ -265,9 +265,9 @@
 </ul>
 <p>如果你是一名经常使用原生API开发原生iOS应用的开发者，那么看到这些类似前端的技术可能会有点退缩。但希望你能保持一颗学习的心，学习了解这些新的强大的特性。</p>
 <p>我在这列举一个非常典型的Apple TV的应用场景。大家可以想象一下：你们想把一些内容或信息展现给用户，这些内容和信息储存在你们的服务器上，并且这些内容的格式、查询方式都服务于iPhone或iPad中的应用，那么你肯定会希望你的tvOS中的应用也能方便的使用这些内容，并做到与iOS中应用有相似的展现、查询、导航方式。</p>
-<p><img src="http://d.pr/i/177tr+" alt="tvOS-2"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-2.jpg" alt="tvOS-2"></p>
 <p>上述的这个场景恰恰是我们这片教程中的场景。我们已经有<a href="http://www.rwdevcon.com/" target="_blank" rel="external">RWDevCon</a>网站，上面有许多技术讨论视频，所以运用TVML模板应该很容易实现。并且我们也没有很严格的用户界面的需求，所以我们可以简单方便的使用Apple提供的UI<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/TextboxTemplate.html#//apple_ref/doc/uid/TP40015064-CH2-SW8" target="_blank" rel="external">模板</a>。</p>
-<p><img src="http://d.pr/i/1kr9X+" alt="tvOS-3"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-3.jpg" alt="tvOS-3"></p>
 <p>简而言之：</p>
 <ul>
 <li><strong>开发TVML App</strong>：如果你主要是通过tvOS应用展现一些内容，不论是音频、视频、文本、图片，并且你已经有服务器存储这些资源。那么使用TVML开发是不错的选择。</li>
@@ -276,13 +276,13 @@
 <p>现在你们已经大概了解了TVML是如何工作的，以及我们为什么要在这篇教程中使用TVML开发tvOS应用。想要更深入的了解，最好的办法就是由你们在实践中去学习、理解了。让我们开始动手吧！</p>
 <h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><p>首先你们要确保已经下载并安装了Xcode7.1或更高版本。</p>
 <p>然后通过 <strong>File\New\Project</strong> 创建新工程，在侧边栏选择 <strong>tvOS\Application\Single View Application</strong> 模板，然后点击 <strong>Next</strong>：</p>
-<p><img src="http://d.pr/i/1dwle+" alt="tvOS-4"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-4.png" alt="tvOS-4"></p>
 <p>项目名称输入 <strong>RWDevCon</strong> ,语言选择 <strong>Swift</strong> ，确保下面的两个复选框为未选中状态，也就是不使用Core Data和单元测试，然后点击 <strong>Next</strong>：</p>
-<p><img src="http://d.pr/i/1bev5+" alt="tvOS-5"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-5.png" alt="tvOS-5"></p>
 <p>选择一个目录，点击 <strong>Save</strong> 保存你的项目。Xcode会为你创建一个带有Storyboard的空工程（如果你开发自定义UI的tvOS应用，那么你需要使用Storyboard）。</p>
 <p>然而在该教程中你不需要使用Storybard，因为我们会使用TVML来展示应用的UI，而不是用Storybard去设计UI。所以将 <strong>Main.storyboard</strong> 和 <strong>ViewController.swift</strong> 删去，在提示框中选择 <strong>Move To Trash</strong> 彻底删除。</p>
 <p>接着打开 <strong>Info.plist</strong> 文件，删掉<code>Main storybaord file base name</code>属性。最后添加新的属性<code>App Transport Security Settings</code>（区分大小写），以及它的子属性<code>Allow Arbitrary Loads</code>，并将其值设为<code>YES</code>。</p>
-<p><img src="http://d.pr/i/1l9e9+" alt="tvOS-6"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-6.png" alt="tvOS-6"></p>
 <blockquote>
 <p>注意：在iOS9中，Apple不允许应用链接非HHTPS协议的服务，所以刚才的操作是很有必要的，因为在该教程中，你们将会以HTTP协议访问本地的服务器，所以你需要在Info.plist中添加上述属性以便允许应用通过HTTP协议访问服务器。</p>
 </blockquote>
@@ -322,9 +322,9 @@
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">cd ~/<span class="type">Desktop</span>/client</span><br><span class="line">python -m <span class="type">SimpleHTTPServer</span> <span class="number">9001</span></span><br></pre></td></tr></table></figure>
 <p>这两行命令的作用是在先前创建的client目录中开启一个基于Python的web服务器。现在，你们可以准备起飞了！</p>
 <p>回到你的Xcode项目中编译运行程序。你应该可以看到你的第一个tvOS TVML应用了！</p>
-<p><img src="http://d.pr/i/17mKy+" alt="tvOS-7"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-7.png" alt="tvOS-7"></p>
 <p>我不知道你们的感觉如何，但是当我第一次运行成功后，我的感受就像下面这个家伙一样：</p>
-<p><img src="http://d.pr/i/1bKTC+" alt="tvOS-8"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-8.png" alt="tvOS-8"></p>
 <p>在继续进行教程之前，我想花点时间对你们目前已经完成的工作作以总结：</p>
 <ol>
 <li>你们创建了<code>TVApplicationController</code>实例。它用于管理JavaScript代码。</li>
@@ -341,7 +341,7 @@
 <li>在该模板里，根据Apple的<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/TextboxTemplate.html#//apple_ref/doc/uid/TP40015064-CH2-SW8" target="_blank" rel="external">Apple TV Markup Language Reference</a>文档规范，添加了按钮、标题、描述三个标签。</li>
 </ol>
 <p>保存你们刚才编辑的JavaScript文件，再次编译运行。你们看到在提示信息下面出现了一个按钮。瞧，TVML是不是将构建tvOS UI变得很简单！</p>
-<p><img src="http://d.pr/i/Hvf8+" alt="tvOS-9"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-9.png" alt="tvOS-9"></p>
 <blockquote>
 <p>注意：在一个模板中，你能添加的元素数量和类型基于这个的模板的类型。比如，一个 <strong>loading Template</strong> 就不允许有任何按钮出现。此外，你可以自定义字体、颜色和其他一些属性。但是这些知识已经超越了该教程的范畴。你们可以查阅<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/index.html#//apple_ref/doc/uid/TP40015064-CH41-SW1" target="_blank" rel="external">Apple TV Markup Language Reference</a>文档去了解更多TVML模板的信息。</p>
 </blockquote>
@@ -363,17 +363,17 @@
 <li>这里，你应该处理异常信息，稍后我们完善这里。</li>
 </ol>
 <p>在继续进行之前，编译运行程序，确保JavaScript文件修改过之后程序仍能正常运行。此时，我们通过<code>Presenter</code>类对JavaScript代码的重构有了一个良好的开端：</p>
-<p><img src="http://d.pr/i/10CKz+" alt="tvOS-10"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-10.png" alt="tvOS-10"></p>
 <p>现在，看看上面代码中被注释的那行，你们能否自行完成对异常处理的挑战呢。如果<code>evaluateScripts</code>处理失败，可能是因为JavaScript文件的路径写错了，那么你可能会希望在此时显示一个提示消息给用户。<strong>提示：</strong> 之所以在这里出现了异常，是因为<code>Presenter</code>类加载失败导致，所以在这里你不能使用<code>Presenter</code>类显示提示信息的界面。</p>
 <p>你应该通过之前所学到的知识来解决该问题。如果你们觉得有困难，那么可以参照下面的代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//将这两行代码插入evaluateScripts的else代码块中. </span></span><br><span class="line"><span class="keyword">var</span> errorDoc = createAlert(<span class="string">"Evaluate Scripts Error"</span>, <span class="string">"Error attempting to evaluate external JavaScript files."</span>);</span><br><span class="line">navigationDocument.presentModal(errorDoc);</span><br></pre></td></tr></table></figure>
 <p>想要测试错误信息，你们可以修改一下JavaScript文件的路径，比如把<code>Presenter.js</code>改为<code>Presentr.js</code>：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">$&#123;options.<span class="type">BASEURL</span>&#125;js/<span class="type">Presentr</span>.js</span><br></pre></td></tr></table></figure>
 <h2 id="u4F7F_u7528CatalogTemplate"><a href="#u4F7F_u7528CatalogTemplate" class="headerlink" title="使用CatalogTemplate"></a>使用CatalogTemplate</h2><p><strong>catalogTemplate</strong>模板同样也是Apple提供的18个模板中的一个。它的作用是以分组的形式展现内容，用它来展示你们最喜欢的RWDevCon视频最好不过了！ <strong>catalogTemplate</strong>有许多有意思的元素：</p>
-<p><img src="http://d.pr/i/1jOeY+" alt="tvOS-11"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-11.jpg" alt="tvOS-11"></p>
 <h3 id="u590D_u5408_u5143_u7D20_u548C_u7B80_u5355_u5143_u7D20"><a href="#u590D_u5408_u5143_u7D20_u548C_u7B80_u5355_u5143_u7D20" class="headerlink" title="复合元素和简单元素"></a>复合元素和简单元素</h3><p>该模板中的<code>banner</code>元素在应用顶部，用于展示应用基本信息，比如名称、标题等。它本身是一个 <strong>复合元素</strong> ，也就是说它是由多个 <strong>简单元素</strong> 组合而成。比如，在<code>banner</code>中很显然有标题，那么该标题就是一个简单的<code>title</code>元素，并且在<code>title</code>背后还有背景图片，这又是另外一个简单元素<code>background</code>。所以<code>banner</code>是由两个简单元素组合而成。</p>
 <p>让我们来试试这个模板吧。打开 <strong>client</strong> 文件夹，在 <strong>js</strong> 文件夹的同级目录新建两个文件夹，分别命名为 <strong>images</strong> 和 <strong>templates</strong> 。此时你的 <strong>client</strong> 文件夹里的内容应该是这样的：</p>
-<p><img src="http://d.pr/i/1hfPh+" alt="tvOS-12"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-12.png" alt="tvOS-12"></p>
 <p>你们会需要图片构建模板中的Cells，在我们这个场景中就是一个一个的视频，图片自然就是视频的封面了。我已经为你们准备好了封面图片，你们可以从<a href="/cdn3.raywenderlich.com/wp-content/uploads/2015/09/images.zip">这里下载</a>。下载成功后，将他们解压放在刚才你们创建的 <strong>images</strong> 文件夹中。</p>
 <p>现在，你们即将要做的工作是在屏幕中显示图片!新建一个JavaScript文件，命名为 <strong>RWDevConTemplate.xml.js</strong> ，将其存在 <strong>templates</strong> 文件夹中。</p>
 <p>打开 <strong>RWDevConTemplate.xml.js</strong> ，添加如下代码：</p>
@@ -391,7 +391,7 @@
 <li>使用<code>resourceLoader</code>加载TVML模板，然后使用<code>Presenter</code>展现在屏幕上。</li>
 </ol>
 <p>编译运行程序，你们应该会看到如下界面：</p>
-<p><img src="http://d.pr/i/14uAf+" alt="tvOS-13"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-13.png" alt="tvOS-13"></p>
 <p>恭喜你们，现在你们已经可以通过更好的方式从JavaScript文件中加载TVML模板信息了，而不再使用硬编码写死在代码里！</p>
 <h3 id="u5B8C_u5584catalogTemplate"><a href="#u5B8C_u5584catalogTemplate" class="headerlink" title="完善catalogTemplate"></a>完善catalogTemplate</h3><p>你管你们信不信，我们要做的tvOS应用马上要接近尾声了。通过TVML开发tvOS应用最优雅的一件事就是添加界面元素非常之简单。</p>
 <p>打开 <strong>RWDevConTemplate.xml.js</strong> 文件，按照如下代码更新之前代码：</p>
@@ -401,19 +401,19 @@
 <li><code>listItemLockup</code>代表一个组，它以<code>listItemLockup</code>标签开头。在该标签中，通过<code>title</code>标签定义了它的名称“Inspiration Videos”，然后通过<code>decorationLabel</code>标签定义了该组中包含内容的数量。</li>
 </ol>
 <p>编译运行程序，在模拟器中你们会看到如下界面：</p>
-<p><img src="http://d.pr/i/1h23O+" alt="tvOS-14"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-14.png" alt="tvOS-14"></p>
 <p>看着还不赖吧！</p>
 <h3 id="u5B8C_u6210catalogTemplate"><a href="#u5B8C_u6210catalogTemplate" class="headerlink" title="完成catalogTemplate"></a>完成catalogTemplate</h3><p>最后，我们准备在模板中添加cell，用于展示每一个视频。打开 <strong>RWDevConTemplate.xml.js</strong> 添加如下代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Template</span> = function() &#123; <span class="keyword">return</span> `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">  &lt;document&gt;</span><br><span class="line">    &lt;catalogTemplate&gt; </span><br><span class="line">      &lt;banner&gt; </span><br><span class="line">        &lt;title&gt;<span class="type">RWDevConHighlights</span>&lt;/title&gt;</span><br><span class="line">      &lt;/banner&gt;</span><br><span class="line">      &lt;list&gt; </span><br><span class="line">        &lt;section&gt; </span><br><span class="line">	  &lt;listItemLockup&gt; </span><br><span class="line">	    &lt;title&gt;<span class="type">Inspiration</span> <span class="type">Videos</span>&lt;/title&gt;</span><br><span class="line">	    &lt;decorationLabel&gt;<span class="number">13</span>&lt;/decorationLabel&gt;</span><br><span class="line">            <span class="comment">//1. add from here</span></span><br><span class="line">	    &lt;relatedContent&gt; </span><br><span class="line">	      &lt;grid&gt;</span><br><span class="line">	        &lt;section&gt; </span><br><span class="line">                  <span class="comment">//2</span></span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ray-Wenderlich-Teamwork.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ray.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ryan-Nystrom-Contributing.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ryan.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">	          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Matthijs-Hollemans-Math-Isnt-Scary.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/matthijs.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Vicki-Wenderlich-Identity.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/vicki.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">	          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Alexis-Gallagher-Identity.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/alexis.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">	          &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Marin-Todorov-RW-Folklore.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/marin.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Chris-Wagner-Craftsmanship.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/chris.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">	          &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Cesare-Rocchi-Cognition.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/cesare.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ellen-Shapiro-Starting-Over.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ellen.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Jake-Gundersen-Opportunity.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/jake.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Kim-Pedersen-Finishing.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/kim.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">	          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Tammy-Coron-Possible.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/tammy.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Saul-Mora-NSBrief.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/saul.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;		</span><br><span class="line">		&lt;/section&gt;</span><br><span class="line">	      &lt;/grid&gt;</span><br><span class="line">	    &lt;/relatedContent&gt;</span><br><span class="line">	  &lt;/listItemLockup&gt;</span><br><span class="line">        &lt;/section&gt;</span><br><span class="line">      &lt;/list&gt;</span><br><span class="line">    &lt;/catalogTemplate&gt;</span><br><span class="line">  &lt;/document&gt;`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ol>
 <li>从上述代码中可以看到，在<code>listItemLockup</code>标签中添加了<code>relatedContent</code>，该标签是的作用是显示图中红色圆圈区域的：</li>
 </ol>
-<p><img src="http://d.pr/i/138wG+" alt="tvOS-15"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-15.png" alt="tvOS-15"></p>
 <ol>
 <li>每个<code>lockup</code>代表一个视频，每个该标签中都有<code>videoURL</code>的属性，它的值就是 <strong>RWDevCon</strong> 网站上视频的地址。对于之后播放视频至关重要。</li>
 </ol>
 <p>编译运行程序，会看到被你赋予新生命力的应用：</p>
-<p><img src="http://d.pr/i/1hFsE+" alt="tvOS-16"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-16.png" alt="tvOS-16"></p>
 <p>现在，我们已经在“Inspiration Videos”这个组里添加了若干视频。让我们打开遥控器的模拟器，选中模拟器，在菜单栏中选择 <strong>Hardware\Show Apple TV Remote</strong> 。你可以通过遥控器中的 <strong>option</strong> 键选择不同的视频。</p>
 <h2 id="u64AD_u653E_u89C6_u9891"><a href="#u64AD_u653E_u89C6_u9891" class="headerlink" title="播放视频"></a>播放视频</h2><p>到目前为止，我们已经构建好了应用的页面，看起来还是不错的。此时，你们可以再想想如果用iOS框架完成你们现在已经完成的布局，应该如何做。Apple把一些UI的细节全都抽象了出来，通过一个个模板提供给我们使用，可以让我们简单方便的通过模板创建出完美的界面，不得不说Apple做的太棒了。</p>
 <p>接下来让我们完成最后两个遗留的功能：选择视频和播放视频。</p>
@@ -427,7 +427,7 @@
 <p>现在你们已经实现了选择视频后的响应事件。是时候将选择事件与每个视频关联在一起了。打开 <strong>application.js</strong> 文件，在<code>App.onLaunch</code>方法中添加如下代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">App</span>.onLaunch = function(options) &#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">  <span class="comment">//在resourceLoader.loadResource中...</span></span><br><span class="line">  <span class="keyword">var</span> doc = <span class="type">Presenter</span>.makeDocument(resource);</span><br><span class="line">  doc.addEventListener(<span class="string">"select"</span>, <span class="type">Presenter</span>.load.bind(<span class="type">Presenter</span>)); <span class="comment">//add this line</span></span><br><span class="line">  <span class="type">Presenter</span>.pushDocument(doc);</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上述代码中的<code>addEventListener</code>方法相当于iOS中按钮的<code>@IBAction</code>。编译运行程序，选择一个视频播放，你会看到一个完美的视频播放应用：</p>
-<p><img src="http://d.pr/i/Jwvc+" alt="tvOS-17"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-17.gif" alt="tvOS-17"></p>
 <p>大家可以在这里下载教程中的完整项目：<a href="http://cdn5.raywenderlich.com/wp-content/uploads/2015/09/client.zip" target="_blank" rel="external">client</a>和<a href="http://cdn5.raywenderlich.com/wp-content/uploads/2015/09/RWDevCon.zip" target="_blank" rel="external">RWDevCon</a>。</p>
 
             
