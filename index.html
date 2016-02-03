@@ -441,7 +441,7 @@
 </ul>
 <p>大体的参数其实和使用<code>NSThread</code>创建线程基本一致，不过需要注意的是通过<code>pthread_create()</code>创建的线程是Joinable类型的，如果要将新线程设置为Detach类型，需要在创建前使用<code>pthread_attr_setdetachstate(&amp;attr, PTHREAD_CREATE_DETACHED);</code>函数设置其线程属性。</p>
 <p>在Cocoa框架中，上文提到的那些同步机制，比如线程锁，当二级线程创建后才就会自动生成。如果在程序中使用POSIX API创建线程，那么Cocoa框架是无法得知当前程序已处于多线程状态的，所以就不会自动开启相关的同步机制，而当我们又没有通过POSIX API手动控制的话，就有可能导致应用程序崩溃的情况。另外要注意的一点是Cocoa框架中的线程锁是不能操作通过POSIX API创建的线程的，反之亦然。所以当Cocoa框架与POSIX API混用的时候，在同步机制方面一定要配套使用。</p>
-<p><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/donate.png"><br></a><br><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/guanzhugongzhonghao.png"><br></a></p>
+<p><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/donate.png"><br></a><br><a href="http://www.devtalking.com/gongzhonghao.html"><br>    <img border="0" src="http://www.devtalking.com/guanzhugongzhonghao.png"><br></a></p>
 
             
           </span>

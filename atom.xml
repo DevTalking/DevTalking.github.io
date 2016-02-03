@@ -35,7 +35,7 @@
     <link href="http://www.devtalking.com//articles/read-threading-programming-guide-1/"/>
     <id>http://www.devtalking.com//articles/read-threading-programming-guide-1/</id>
     <published>2016-01-31T16:00:00.000Z</published>
-    <updated>2016-02-03T10:11:09.000Z</updated>
+    <updated>2016-02-03T10:13:13.000Z</updated>
     <content type="html"><![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/54092" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 <blockquote>
 <p>记得第一次读这个文档还是3年前，那时也只是泛读。如今关于iOS多线程的文章层出不穷，但我觉得若想更好的领会各个实践者的文章，应该先仔细读读官方的相关文档，打好基础，定会有更好的效果。文章中有对官方文档的翻译，也有自己的理解，官方文档中代码片段的示例在这篇文章中都进行了完整的重写，还有一些文档中没有的代码示例，并且都使用Swift完成，给大家一些Objc与Swift转换的参考。<br>官方文档地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Conceptual/Multithreading/Introduction/Introduction.html" target="_blank" rel="external">Threading Programming Guide</a></p>
@@ -156,7 +156,7 @@
 </ul>
 <p>大体的参数其实和使用<code>NSThread</code>创建线程基本一致，不过需要注意的是通过<code>pthread_create()</code>创建的线程是Joinable类型的，如果要将新线程设置为Detach类型，需要在创建前使用<code>pthread_attr_setdetachstate(&amp;attr, PTHREAD_CREATE_DETACHED);</code>函数设置其线程属性。</p>
 <p>在Cocoa框架中，上文提到的那些同步机制，比如线程锁，当二级线程创建后才就会自动生成。如果在程序中使用POSIX API创建线程，那么Cocoa框架是无法得知当前程序已处于多线程状态的，所以就不会自动开启相关的同步机制，而当我们又没有通过POSIX API手动控制的话，就有可能导致应用程序崩溃的情况。另外要注意的一点是Cocoa框架中的线程锁是不能操作通过POSIX API创建的线程的，反之亦然。所以当Cocoa框架与POSIX API混用的时候，在同步机制方面一定要配套使用。</p>
-<p><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/donate.png"><br></a><br><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/guanzhugongzhonghao.png"><br></a></p>
+<p><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/donate.png"><br></a><br><a href="http://www.devtalking.com/gongzhonghao.html"><br>    <img border="0" src="http://www.devtalking.com/guanzhugongzhonghao.png"><br></a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/54092" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
