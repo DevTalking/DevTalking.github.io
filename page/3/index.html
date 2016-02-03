@@ -192,168 +192,6 @@
             
             
               
-                <a class="post-title-link" href="/articles/uiview-transition-animation/" itemprop="url">
-                  iOS UIView Animation - Transition
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-07-08T00:00:00+08:00" content="2015-07-08">
-              2015-07-08
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/uiview-transition-animation/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/uiview-transition-animation/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <blockquote>
-<p> 本文首发<a href="http://www.csdn.net/article/2015-07-06/2825139-ios-uiview-animation-3" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-</blockquote>
-<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>在上两篇文章中向大家介绍了如何创建基于动画属性的视图动画，比如位置、透明度等。但是大家有没有想过添加或删除一个视图时怎样添加相应地动画呢？</p>
-<p>当然我们可以用第一篇文章中对用户名、密码输入框的处理办法，但是还有更好的办法处理这种状况。那就是在这篇文章中将向大家介绍的过渡转变（Transition）动画。</p>
-<p>过渡转变动画是Apple预定义的动画集，它没有更改视图某属性起始值和终止值的概念，而只需要你设定不同的动画选项即可。</p>
-<h2 id="u6DFB_u52A0_u65B0_u89C6_u56FE"><a href="#u6DFB_u52A0_u65B0_u89C6_u56FE" class="headerlink" title="添加新视图"></a>添加新视图</h2><p>在进行示例之前，大家需要注意一点过渡转变动画与动画属性动画的不同之处。我们在创建动画属性动画时只需要在<code>animations</code>闭包中添加对视图动画属性修改的代码即可，它没有作用域或作用视图的概念。而在过渡转变动画中有作用视图的概念，也就是说我们调用过渡转变动画方法时需要指定一个作用视图。</p>
-<p>明确这点不同之后，我们对作用视图再作进一步的说明。过渡转变动画中的作用视图并不是我们的目标视图，而是目标视图的容器视图，那么大家不难想象，如果该容器视图中有多个子视图，那么这些子视图都会有过渡转变动画效果。下面用示例像大家说明。</p>
-<p>先看看一个简单的视图结构：</p>
-<p><img src="http://d.pr/i/VeYP+" alt="视图结构"></p>
-<p>很明显，我们添加了一个视图作为容器视图，并且尺寸等于屏幕尺寸。在<code>ViewController.swift</code>中有该容器视图的Outlet以及一个图片视图：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">weak</span> <span class="keyword">var</span> containerView: <span class="type">UIView</span>!</span><br><span class="line"><span class="keyword">let</span> ipadView = <span class="type">UIImageView</span>(frame: <span class="type">CGRectMake</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">151.5</span>))</span><br></pre></td></tr></table></figure>
-<p>在<code>viewDidLoad()</code>方法中给<code>ipadView</code>指定图片：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ipadView.image = <span class="type">UIImage</span>(named: <span class="string">"ipad"</span>)</span><br></pre></td></tr></table></figure>
-<p>然后在<code>viewDidAppear()</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.containerView, duration: <span class="number">1.5</span>, options: .<span class="type">TransitionFlipFromBottom</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.containerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>上述代码就是我们今天的主角，过渡转变方法之一，它同样是<code>UIView</code>的类方法，共有五个参数：</p>
-<ul>
-<li><code>view</code>：第一个参数，也就是作用视图，一般都是容器视图。</li>
-<li><code>duration</code>：动画持续时间。</li>
-<li><code>options</code>：过渡转变动画选项，由它来确定过渡转变的具体展现形式。</li>
-<li><code>animations</code>：动画闭包。</li>
-<li><code>completion</code>：动画结束后执行该闭包中的代码。</li>
-</ul>
-<p>除了第一个参数，其他四个参数大家应该都不会陌生。这段代码用文字解释出来就是将容器视图（<code>containerView</code>）添加子视图（<code>ipadView</code>）的过程使用<code>.TransitionFlipFromBottom</code>类型的过渡转变动画展示出来，持续时间为1.5秒。编译运行看看效果：</p>
-<iframe src="https://player.vimeo.com/video/132628194?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>我们再来添加一个子视图（该子视图的初始化代码不再累赘）：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.containerView, duration: <span class="number">1.5</span>, options: .<span class="type">TransitionFlipFromBottom</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.containerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">    <span class="keyword">self</span>.containerView.addSubview(<span class="keyword">self</span>.iphoneView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>编译运行看看效果：</p>
-<iframe src="https://player.vimeo.com/video/132628304?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>大家可以看到这两个子视图都依托与它们的容器视图进行了过渡转变动画。下面的列表是所有过渡转变动画的动画选项，大家可以在你们自己的项目中逐个实验：</p>
-<ul>
-<li><code>.TransitionFlipFromLeft</code></li>
-<li><code>.TransitionFlipFromRight</code></li>
-<li><code>.TransitionCurlUp</code></li>
-<li><code>.TransitionCurlDown</code></li>
-<li><code>.TransitionCrossDissolve</code></li>
-<li><code>.TransitionFlipFromTop</code></li>
-<li><code>.TransitionFlipFromBottom</code></li>
-</ul>
-<p>如果我们有多个目标视图，想进行不同的过渡转变动画怎么办？那我们就创建多个目标视图的容器视图，尺寸与目标视图一致，放置在合适的位置：</p>
-<p><img src="http://d.pr/i/1406Q+" alt="视图结构"></p>
-<p>从上图中可以看出，我们在屏幕上放置了四个容器视图，显而易见，我们要分别对这四个容器视图添加过渡转变动画。当然容器视图里要添加什么样的视图随个人喜好。</p>
-<p>在<code>viewDidLoad()</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.ipadContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromBottom</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.ipadContainerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.iphoneContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromLeft</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.iphoneContainerView.addSubview(<span class="keyword">self</span>.iphoneView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.webContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromRight</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.webContainerView.addSubview(<span class="keyword">self</span>.webView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(textContainerView, duration: <span class="number">2</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionCrossDissolve</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.textContainerView.addSubview(<span class="keyword">self</span>.textView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>通过上述代码可以看出，我们对四个容器视图分别添加了过渡转变动画，并且<code>options</code>参数使用了<code>.CurveEaseOut</code>和不同的过渡转变动画选项。编译运行看看效果：</p>
-<iframe src="https://player.vimeo.com/video/132628896?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>是不是有点儿意思！不过细心的朋友应该发现了，过渡转变动画的方法没有<code>delay</code>这个很有用的属性，这就导致过渡转变动画都是同时发生，不能设置延迟时间。不过我们可以曲线救国，自己写一个<code>delay</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">delay</span><span class="params">(seconds: Double, completion:<span class="params">()</span></span></span>-&gt;()) &#123;</span><br><span class="line">    <span class="keyword">let</span> popTime = dispatch_time(<span class="type">DISPATCH_TIME_NOW</span>, <span class="type">Int64</span>( <span class="type">Double</span>(<span class="type">NSEC_PER_SEC</span>) * seconds ))</span><br><span class="line">    dispatch_after(popTime, dispatch_get_main_queue()) &#123;</span><br><span class="line">        completion()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后我们修改<code>viewDidLoad()</code>方法中的代码如下：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">delay(<span class="number">0</span>, completion: &#123;</span><br><span class="line">   <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.ipadContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromBottom</span>], animations: &#123;</span><br><span class="line">       <span class="keyword">self</span>.ipadContainerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">   &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">delay(<span class="number">1</span>, completion: &#123;</span><br><span class="line">    <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.iphoneContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromLeft</span>], animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.iphoneContainerView.addSubview(<span class="keyword">self</span>.iphoneView)</span><br><span class="line">    &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"> &#125;)</span><br><span class="line">        </span><br><span class="line">delay(<span class="number">2</span>, completion: &#123;</span><br><span class="line">    <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.webContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromRight</span>], animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.webContainerView.addSubview(<span class="keyword">self</span>.webView)</span><br><span class="line">     &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">delay(<span class="number">3</span>, completion: &#123;</span><br><span class="line">    <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.textContainerView, duration: <span class="number">2</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionCrossDissolve</span>], animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.textContainerView.addSubview(<span class="keyword">self</span>.textView)</span><br><span class="line">    &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
-<p>我们将每个过渡转变动画延迟1秒进行，编译运行看看效果：</p>
-<iframe src="https://player.vimeo.com/video/132629174?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>现在的效果是不是更好了呢！ : ]</p>
-<h2 id="u79FB_u9664_u89C6_u56FE"><a href="#u79FB_u9664_u89C6_u56FE" class="headerlink" title="移除视图"></a>移除视图</h2><p>过渡转变动画同样可以用来移除视图。我们在屏幕底部添加一个<code>UIButton</code>，当点击这个按钮的时候，通过过渡转变动画移除按钮上方的那两排字，并且改变屏幕背景色。<code>go()</code>方法是按钮连接在代码中的<strong>Touch Up Inside</strong>方法，在该方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.view.backgroundColor = <span class="type">UIColor</span>(red: <span class="number">252.0</span>/<span class="number">255.0</span>, green: <span class="number">155.0</span>/<span class="number">255.0</span>, blue: <span class="number">65.0</span>/<span class="number">255.0</span>, alpha: <span class="number">1</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p> 编译运行看看效果：</p>
- <iframe src="https://player.vimeo.com/video/132629842?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<h2 id="u66FF_u6362_u89C6_u56FE"><a href="#u66FF_u6362_u89C6_u56FE" class="headerlink" title="替换视图"></a>替换视图</h2><p> 在这一节我们将要学习过渡转变动画的另一个方法，替换视图方法。我设计的场景是当点击<strong>Go</strong>按钮后，除了上一节中的动画效果以外，iPad、iPhone、Web视图也会移位并且替换为别的视图，我们继续在<code>go()</code>方法中的添加如下代码：</p>
- <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"> </span><br><span class="line"> <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">     <span class="keyword">self</span>.iphoneView.frame = <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">     <span class="keyword">self</span>.iphoneContainerView.frame = <span class="type">CGRectMake</span>(<span class="number">26</span>, <span class="number">130</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">  &#125;, completion: &#123;</span><br><span class="line">  		(flag: <span class="type">Bool</span>) <span class="keyword">in</span></span><br><span class="line">        		<span class="keyword">if</span> flag &#123;</span><br><span class="line">                		<span class="type">UIView</span>.transitionFromView(<span class="keyword">self</span>.iphoneContainerView, toView: <span class="keyword">self</span>.supportIphone, duration: <span class="number">0.33</span>, options: .<span class="type">TransitionCrossDissolve</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">               	&#125;</span><br><span class="line"> &#125;)</span><br><span class="line">        </span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">1</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.ipadView.frame = <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">    <span class="keyword">self</span>.ipadContainerView.frame = <span class="type">CGRectMake</span>(<span class="number">26</span>, <span class="number">242</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">  &#125;, completion: &#123;</span><br><span class="line">  		(flag: <span class="type">Bool</span>) <span class="keyword">in</span></span><br><span class="line">        		<span class="keyword">if</span> flag &#123;</span><br><span class="line">                		<span class="type">UIView</span>.transitionFromView(<span class="keyword">self</span>.ipadContainerView, toView: <span class="keyword">self</span>.supportIpad, duration: <span class="number">0.33</span>, options: .<span class="type">TransitionCrossDissolve</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">                &#125;</span><br><span class="line">&#125;)</span><br><span class="line">        </span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">2</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.webView.frame = <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">    <span class="keyword">self</span>.webContainerView.frame = <span class="type">CGRectMake</span>(<span class="number">26</span>, <span class="number">354</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">&#125;, completion: &#123;</span><br><span class="line">		(flag: <span class="type">Bool</span>) <span class="keyword">in</span></span><br><span class="line">        		<span class="keyword">if</span> flag &#123;</span><br><span class="line">                		<span class="type">UIView</span>.transitionFromView(<span class="keyword">self</span>.webContainerView, toView: <span class="keyword">self</span>.supportWeb, duration: <span class="number">0.33</span>, options: .<span class="type">TransitionCrossDissolve</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">        		&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p> 我们来解释一下上述的代码，拿iPhone视图为例，首先通过动画属性动画改变它的尺寸大小和位置。然后在<code>completion</code>闭包中添加替换视图方法，该方法有五个参数：</p>
-<ul>
-<li><code>fromView</code>：被替换的视图。</li>
-<li><code>toView</code>：替换之后的视图。</li>
-<li><code>duration</code>：动画持续时间。</li>
-<li><code>options</code>：动画选项。</li>
-<li><code>completion</code>：动画执行结束后执行该闭包中的代码。</li>
-</ul>
-<p>要注意的是该方法的作用视图可以是容器视图，也可以是目标视图。编译运行看看效果：</p>
-<iframe src="https://player.vimeo.com/video/132631364?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<h2 id="u663E_u793A/_u9690_u85CF_u89C6_u56FE"><a href="#u663E_u793A/_u9690_u85CF_u89C6_u56FE" class="headerlink" title="显示/隐藏视图"></a>显示/隐藏视图</h2><p>过渡转变动画也可以用于显示或隐藏视图，这里给出伪代码供参考：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.someContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromBottom</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.someView.hidden = <span class="literal">true</span></span><br><span class="line">    <span class="comment">// self.someView.hidden = false</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="u7ED3_u675F_u8BED"><a href="#u7ED3_u675F_u8BED" class="headerlink" title="结束语"></a>结束语</h2><p>过渡转变动画有很多动画选项，大家可以自行试试，找出自己喜欢的或最合适的过渡转变动画选项，并且可以尝试过渡转变动画和属性动画的组合，可以使你们的App更加有趣。好了今天就到这里。</p>
-<p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 <a class="post-title-link" href="/articles/uiview-spring-animation/" itemprop="url">
                   iOS UIView Animation - Spring
                 </a>
@@ -942,6 +780,195 @@
 
 
     
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/ios-design-pattern-in-swift-1/" itemprop="url">
+                  Swift中的iOS设计模式（一）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-01-05T00:00:00+08:00" content="2015-01-05">
+              2015-01-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/ios-design-pattern-in-swift-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/ios-design-pattern-in-swift-1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p><strong>iOS设计模式</strong> - 大伙应该都听说过，但是有多少人真正的了解他们呢？虽然大多数开发者都认同设计模式的重要性，但是在实际开发中却并不怎么注意使用设计模式，而且关于设计模式的文章也是凤毛麟角，这更使得开发者无从下手去学习设计模式。</p>
+<p>设计模式是一个处理软件设计中常见问题的解决方法，并可以重复使用。它向开发者提供了设计模板，使开发者更容易写出逻辑清晰、具有可复用性的代码。它还可以使代码具有松耦合性，能让开发者轻松的更新或替换项目中使用的组件。</p>
+<p>在本教程中，大伙要开发一个音乐仓库应用，能显示你们收藏的专辑以及相关信息。</p>
+<p>在开发过程中，大伙会逐渐掌握大多数通用的Cocoa设计模式：</p>
+<ul>
+<li><strong>构建设计模式：</strong>Singleton。</li>
+<li><strong>架构设计模式：</strong>MVC，Decorator，Adapter，Facade。</li>
+<li><strong>行为设计模式：</strong>Observer，Memento。</li>
+</ul>
+<p>千万不要认为该文章只是对设计模式理论上的讲解，大伙需要在你们的音乐仓库应用中运用到这些设计模式。你们的应用最终看起来大概是这个模样：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-1.png" alt="pic"></p>
+<h2 id="u51C6_u5907_u5F00_u59CB"><a href="#u51C6_u5907_u5F00_u59CB" class="headerlink" title="准备开始"></a>准备开始</h2><p>从这里下载<a href="http://cdn1.raywenderlich.com/wp-content/uploads/2014/11/BlueLibrarySwift-Starter.zip" target="_blank" rel="external">初始项目</a>，解压Zip文件，然后在Xcode中打开<strong>BlueLibrarySwift.xcodeproj</strong>工程。</p>
+<p>在开始之前，有三件事需要大伙注意：</p>
+<ul>
+<li>在<code>ViewController</code>中有两个<code>IBOutlet</code>连接着Storyboard中的TableView和Toolbar。</li>
+<li>在Storyboard中的<code>ViewController</code>里含有三个组件，并且设置了AutoLayout布局约束。最上面的组件用来显示音乐专辑的封面。中间是一个TableView，用来显示与该专辑相关的信息。最下面是两个Toolbar按钮，一个是撤销操作按钮，另一个是删除选中专辑的按钮。你们的Storyboard看起来应该是下面这个样子：</li>
+</ul>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-2.png" alt="pic"></p>
+<ul>
+<li>在工程里还有一个HTTP Client类（<code>HTTPClient</code>），这个类目前是空的，但是你们在之后会充实它。</li>
+</ul>
+<blockquote>
+<p><strong>注意：</strong>你们知道吗，当你们创建了一个新的Xcode项目后，你们所编写的代码其实就已经在遵循一定的设计模式了，Model-View-Controller, Delegate, Protocol, Singleton这些设计模式统统可以免费使用哦。</p>
+</blockquote>
+<p>在带你们深入了解第一个设计模式之前，你们需要创建两个类，用于存储和展示音乐专辑的数据。</p>
+<p>点击菜单 <strong>File\New\File…</strong> （或者按下 <strong>Command+N</strong> 快捷键）。选择 <strong>iOS &gt; Cocoa Touch Class</strong> ，点击 <strong>Next</strong>。设置该类的名称为 <strong>Album</strong> ，并让它继承 <strong>NSObject</strong>。最后选择语言为 <strong>Swift</strong> 然后点击 <strong>Next</strong>，最后点击 <strong>Create</strong>。</p>
+<p>打开<strong>Album.swift</strong>文件，在<strong>Album</strong>类中定义如下属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> title : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> artist : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> genre : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> coverUrl : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> year : <span class="type">String</span>!</span><br></pre></td></tr></table></figure>
+<p>然后添加一个初始化方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">init</span>(title: <span class="type">String</span>, artist: <span class="type">String</span>, genre: <span class="type">String</span>, coverUrl: <span class="type">String</span>, year: <span class="type">String</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">self</span>.title = title</span><br><span class="line">  <span class="keyword">self</span>.artist = artist</span><br><span class="line">  <span class="keyword">self</span>.genre = genre</span><br><span class="line">  <span class="keyword">self</span>.coverUrl = coverUrl</span><br><span class="line">  <span class="keyword">self</span>.year = year</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码为<strong>Album</strong>类创建了一个初始化方法，当你要创建一个新的专辑时你要通过这个初始化方法，传入专辑名称、演唱者、风格、专辑封面图片的URL以及年份这些属性。</p>
+<p>接下来需要再添加一个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">description</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"title: <span class="subst">\(title)</span>"</span> +</span><br><span class="line">   <span class="string">"artist: <span class="subst">\(artist)</span>"</span> +</span><br><span class="line">   <span class="string">"genre: <span class="subst">\(genre)</span>"</span> +</span><br><span class="line">   <span class="string">"coverUrl: <span class="subst">\(coverUrl)</span>"</span> +</span><br><span class="line">   <span class="string">"year: <span class="subst">\(year)</span>"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>description()</code>方法将专辑的这些属性拼成一个字符串，并返回。</p>
+<p>我们再次通过刚才创建类的步骤创建一个名为<strong>AlibumView</strong>的类，注意该类要继承<strong>UIView</strong>。</p>
+<p>打开<strong>AlbumView.swift</strong>文件，在该类中添加两个属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> coverImage: <span class="type">UIImageView</span>! </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> indicator: <span class="type">UIActivityIndicatorView</span>!</span><br></pre></td></tr></table></figure>
+<p><code>coverImage</code>属性用来展示专辑封面，<code>indicator</code>是当正在下载封面图片时转动的菊花。</p>
+<p>大伙注意，这里的两个属性分配了<code>private</code>访问级别，也就是说这两个属性只能在<strong>AlbumView.swift</strong>文件中使用，因为其他的类压根没有必要知道这两个属性的存在。（译者：其实这里用不用private都无所谓，因为咱们写的又不是library或者framework。）</p>
+<p>接下来为<code>AlbumView</code>类添加初始化方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">required</span> <span class="keyword">init</span>(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>(coder: aDecoder)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">init</span>(frame: <span class="type">CGRect</span>, albumCover: <span class="type">String</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>(frame: frame)</span><br><span class="line">  backgroundColor = <span class="type">UIColor</span>.blackColor()</span><br><span class="line">  coverImage = <span class="type">UIImageView</span>(frame: <span class="type">CGRectMake</span>(<span class="number">5</span>, <span class="number">5</span>, frame.size.width - <span class="number">10</span>, frame.size.height - <span class="number">10</span>))</span><br><span class="line">  addSubview(coverImage)</span><br><span class="line">  indicator = <span class="type">UIActivityIndicatorView</span>()</span><br><span class="line">  indicator.center = center</span><br><span class="line">  indicator.activityIndicatorViewStyle = .<span class="type">WhiteLarge</span></span><br><span class="line">  indicator.startAnimating()</span><br><span class="line">  addSubview(indicator)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于<code>UIView</code>遵循了<code>NSCoding</code>，而<code>AlbumView</code>又继承了<code>UIView</code>，所以这里需要写一个<code>NSCoder</code>的初始化方法，但我们不会在这个方法中处理什么逻辑，所以调用<code>super.init</code>即可。</p>
+<p><code>AlbumView</code>真正的初始化方法是另外一个<code>init</code>方法，在这个方法中设置了一些默认的属性，比如将背景色设置为黑色、实例化了<code>coverImage</code>属性，并让它与父容器有5px的四周间距、实例化<code>indicator</code>并设置位置及风格。</p>
+<p>最后再添加一个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">highlightAlbum</span><span class="params">(#didHighlightView: Bool)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> didHighlightView == <span class="literal">true</span> &#123;</span><br><span class="line">    backgroundColor = <span class="type">UIColor</span>.whiteColor()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    backgroundColor = <span class="type">UIColor</span>.blackColor()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法是专辑封面高亮开关，高亮时专辑封面背景色为白色，否则为黑色。</p>
+<p>现在编译你们的工程，确保一切都没有问题，然后准备开始第一个设计模式的学习。</p>
+<h2 id="u8BBE_u8BA1_u6A21_u5F0F_u7684_u738B_u8005_-_MVC_u6A21_u5F0F"><a href="#u8BBE_u8BA1_u6A21_u5F0F_u7684_u738B_u8005_-_MVC_u6A21_u5F0F" class="headerlink" title="设计模式的王者 - MVC模式"></a>设计模式的王者 - MVC模式</h2><p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-3.png" alt="pic"></p>
+<p>Model-View-Controller (MVC)设计模式是Cocoa框架的基石，毋庸置疑它是开发者们最常用的设计模式没有之一。它把应用中的对象按它们的角色进行分类，并鼓励开发者按这种角色分类创建项目目录，将代码放置在合适的位置，保证项目结构清晰明确。</p>
+<p>顾名思义，MVC中有三种角色：</p>
+<ul>
+<li><strong>Model：</strong>这种对象保存应用程序的数据，并定义如何操作处理这些数据。比如之前你们创建的<code>Album</code>类就是一个Model对象。</li>
+<li><strong>View：</strong>这种对象主要负责Model对象的呈现，以及用户交互。基本上，由<code>UIView</code>衍生出的类都是View对象。在你们的音乐仓库应用中<code>AlbumView</code>就是一个View对象。</li>
+<li><strong>Controller：</strong>这种对象充当着应用程序的协调者，由它来协调所有的事情。它会访问Model对象的数据，然后展示在相应的View对象中；它也会监听用户在View对象上的交互，从而通知Model对象进行相应的数据操作等等。你们应用中的<code>ViewController</code>就是一个Controller对象。</li>
+</ul>
+<p>下图可以很好的说明Model对象和View对象是如何通过Controller对象进行通信的：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-4.png" alt="pic"></p>
+<p>当Model对象的数据发生改变时，它会通知Controller对象，然后Controller对象更新对应的View对象上展示的数据。当用户在View对象进行了交互操作时，View对象会通知Controller对象，然后Controller对象会更新对应的Model对象中的数据。</p>
+<p>你们可能会有这样的疑惑，为什么不把这些操作处理都写在Controller对象中呢，这样就不用通知来通知去的，不是更简单吗？</p>
+<p>我告诉你们两个概念，你们就明白这样做的目的了，那就是低耦合性和高复用性。我举个例子，在一个应用中每个界面中的数据大多数是来自于多个Model对象，如果把View对象和Model对象绑定死了，那么就没法处理这种情况了。</p>
+<p>拿咱们这个音乐仓库的应用来说，如果你们以后想做一个电影仓库或者图书仓库，你仍然可以使用<code>AlbumView</code>这个View对象来展示你的电影或者图书Model对象。假如你的电影仓库应用需要展示电影主题曲的一些信息，那么或许你就可以直接复用<code>Album</code>对象，因为<code>Album</code>对象不依赖于任何View对象。这就是MVC设计模式的强大之处。</p>
+<h2 id="u5982_u4F55_u4F7F_u7528MVC_u8BBE_u8BA1_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528MVC_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="如何使用MVC设计模式"></a>如何使用MVC设计模式</h2><p>首先，你要确保项目中每个类的功能，要么是Controller，要么是View，要么是Model。千万不要将两种角色混合于一个类，每个类只有单一的职责。不过，到目前为止，你们已经创建了标准的Model类<code>Album</code>和View类<code>AlbumView</code>。</p>
+<p>其次，为了使项目目录结构清晰明了，以及能够更感官的实行MVC模式，你们需要在工程中创建三个文件组，来区分开这三种角色的文件。</p>
+<p>通过<strong>File\New\Group</strong>（或同时按下<strong>Command+Option+N</strong>）在工程中创建一个名为 <strong>Model</strong> 的文件组，然后以同样的方式创建 <strong>View</strong> 文件组和 <strong>Model</strong> 文件组。</p>
+<p>最后将 <strong>Album.swift</strong> 文件拖进Model文件组，将 <strong>AlbumView.swift</strong>文件拖进View文件组，将 <strong>ViewController.swift</strong> 文件拖进Model文件组。</p>
+<p>此时，你们的项目目录结构应该是这样的：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-5.png" alt="pic"></p>
+<p>现在的项目结构看起来已然井然有序，当然你们还可以创建其他的文件组和类文件，但是要记住的是，Model、View、Controller这三个文件组是整个程序的核心所在。</p>
+<p>现在项目结构已经理清楚了，接下来的工作就需要从某个地方获取到专辑的相关数据。你们可以创建一个名为API的类，用于负责整个应用的数据管理工作。并且将拉开你们要了解的下一个设计模式 – Singleton。</p>
+<h2 id="Singleton_u8BBE_u8BA1_u6A21_u5F0F"><a href="#Singleton_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="Singleton设计模式"></a>Singleton设计模式</h2><p>单例模式使一个类在整个应用生命周期内只存在一个实例，并且有一个全局的方法来访问这个实例。在单例模式下，当第一次访问某个类的实例时，该类通常使用延迟加载的方式创建该类的单例。</p>
+<blockquote>
+<p><strong>注意：</strong> Apple在iOS和OSX中大量使用了单例模式，比如： <strong>NSUserDefaults.standardUserDefaults()</strong>， <strong>UIApplication.sharedApplication()</strong>， <strong>UIScreen.mainScreen()</strong>， <strong>NSFileManager.defaultManager()</strong>。</p>
+</blockquote>
+<p>你们可能会有疑问，为什么我们要这么在意一个类有一个或多个实例？代码和内存现在是如此的廉价，不是么？</p>
+<p>其实不然，有些情况下，确实只需要类实例化一次，且仅有一次。比如有这么一种情况，在一个应用的生命周期里，应用（Application）设备的主屏幕是只存在一份的，那么你当然希望应用和设备屏幕的实例有且只有一个。或者你需要一个全局的处理配置的类，这样能线程安全的访问配置文件，避免多个配置类同时访问一个配置文件。这些就是单例模式的好处所在。</p>
+<h2 id="u5982_u4F55_u4F7F_u7528Singleton_u8BBE_u8BA1_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528Singleton_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="如何使用Singleton设计模式"></a>如何使用Singleton设计模式</h2><p>先看看下面这张图：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-6.png" alt="pic"></p>
+<p>上图是Logger的类图，从图中可以看出，Logger有一个<code>instance</code>属性以及<code>sharedInstance</code>和<code>init</code>两个方法。</p>
+<p>当第一次调用<code>sharedInstance</code>方法时，<code>instance</code>属性还没有初始化，所以你会创建一个新的Logger类实例，并返回一个该实例的引用。</p>
+<p>当再次调用<code>sharedInstance</code>方法时，<code>instance</code>属性会立即返回，并且不需要再进行任何实例化操作。这个逻辑就保证了Logger类的实例有且仅有一份。</p>
+<p>你们将要通过Singleton设计模式，创建一个单例的类用于管理所有专辑的数据。</p>
+<p>你们应该注意到了，在项目的目录结构中，有一个文件组叫做API，这个文件组里存放的类基本都是为应用提供服务的类。我们在这个文件组中创建一个名为 <strong>LibraryAPI</strong> 的类。</p>
+<p>打开 <strong>LibraryAPI.swift</strong> 文件，添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//1</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">var</span> <span class="title">sharedInstance</span>: <span class="title">LibraryAPI</span> </span>&#123;</span><br><span class="line">  <span class="comment">//2</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="comment">//3</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">let</span> instance = <span class="type">LibraryAPI</span>()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//4</span></span><br><span class="line">  <span class="keyword">return</span> <span class="type">Singleton</span>.instance</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>创建一个类变量的计算属性。类变量类似Objective-C中的类方法，也就是说在任何时候你访问<code>sharedInstance</code>属性时，都不需要对<code>LibraryAPI</code>进行实例化，关于属性类型更多的知识请参阅Swift文档 – <a href="https://developer.apple.com/library/ios/documentation/swift/conceptual/swift_programming_language/Properties.html" target="_blank" rel="external">properties</a>。</li>
+<li>在类变量中内嵌一个结构体，名为<code>Singleton</code>。</li>
+<li><code>Singleton</code>中包含一个名为<code>instance</code>的静态常量属性。用<code>static</code>申明属性意味着该属性只能存在一份。这里要注意的是Swift中的静态属性都会延迟加载，也就是说只有<code>instance</code>被使用时，才会初始化它。还要注意的一点是，一旦<code>instance</code>被初始化了，那么它就是一个常量属性，不会有第二次初始化的机会了。这就是Singleton模式的精髓所在。</li>
+<li>返回该计算属性的值。</li>
+</ol>
+<blockquote>
+<p><strong>注意：</strong>如果想了解Swift中创建单例的其他方法请参阅这里：<a href="https://github.com/hpique/SwiftSingleton" target="_blank" rel="external">Github page</a>。</p>
+</blockquote>
+<p>你们现在已经有一个单例模式的对象，作为管理专辑数据的入口。接下来要更进一步，创建一个类，用于处理你们数据的持久性。</p>
+<p>继续在 <strong>API</strong> 这个文件组中创建一个类，名为<code>PersistencyManager</code>，并让它继承<code>NSObject</code>类。</p>
+<p>打开 <strong>PersistencyManager.swift</strong> 文件，申明一个属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> albums = [<span class="type">Album</span>]()</span><br></pre></td></tr></table></figure>
+<p>这里申明了一个private访问权限的变量属性，用于储存专辑数据。这个数组是可变数组，所以你们可以很轻松的增删专辑。</p>
+<p>接下来我们在该类中添加如下初始化方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">  <span class="comment">//Dummy list of albums</span></span><br><span class="line">  <span class="keyword">let</span> album1 = <span class="type">Album</span>(title: <span class="string">"Best of Bowie"</span>,</span><br><span class="line">         artist: <span class="string">"David Bowie"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_david%20bowie_best%20of%20bowie.png"</span>,</span><br><span class="line">         year: <span class="string">"1992"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album2 = <span class="type">Album</span>(title: <span class="string">"It's My Life"</span>,</span><br><span class="line">         artist: <span class="string">"No Doubt"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_no%20doubt_its%20my%20life%20%20bathwater.png"</span>,</span><br><span class="line">         year: <span class="string">"2003"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album3 = <span class="type">Album</span>(title: <span class="string">"Nothing Like The Sun"</span>,</span><br><span class="line">         artist: <span class="string">"Sting"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_sting_nothing%20like%20the%20sun.png"</span>,</span><br><span class="line">         year: <span class="string">"1999"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album4 = <span class="type">Album</span>(title: <span class="string">"Staring at the Sun"</span>,</span><br><span class="line">         artist: <span class="string">"U2"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_u2_staring%20at%20the%20sun.png"</span>,</span><br><span class="line">         year: <span class="string">"2000"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album5 = <span class="type">Album</span>(title: <span class="string">"American Pie"</span>,</span><br><span class="line">         artist: <span class="string">"Madonna"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_madonna_american%20pie.png"</span>,</span><br><span class="line">         year: <span class="string">"2000"</span>)</span><br><span class="line"> </span><br><span class="line">  albums = [album1, album2, album3, album4, album5]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在初始化方法中，你们可以构建一些专辑添加到<code>albums</code>数组中，这里我构建了5个专辑。</p>
+<p>然后再添加几个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAlbums</span><span class="params">()</span></span> -&gt; [<span class="type">Album</span>] &#123;</span><br><span class="line">  <span class="keyword">return</span> albums</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">addAlbum</span><span class="params">(album: Album, index: Int)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (albums.<span class="built_in">count</span> &gt;= index) &#123; </span><br><span class="line">    albums.insert(album, atIndex: index)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    albums.append(album)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">deleteAlbumAtIndex</span><span class="params">(index: Int)</span></span> &#123;</span><br><span class="line">  albums.removeAtIndex(index)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这些方法可以让你们方便的存、取、删除<code>album</code>数组中的专辑。</p>
+<p>然后编译你们的项目，确保编译通过。此时大伙也许又有了疑问，我们应该如何使用<code>PersistencyManager</code>类呢？别着急，在下一节里，会向大家介绍 <strong>Facade</strong> 设计模式，届时你们就会明白<code>LibraryAPI</code>与<code>PersistencyManager</code>之间的关系，以及如何使用<code>PersistencyManager</code>了。</p>
+<p>未完待续……</p>
+<p>原文地址：<a href="http://www.raywenderlich.com/86477/introducing-ios-design-patterns-in-swift-part-1" target="_blank" rel="external">Introducing iOS Design Patterns in Swift</a></p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -984,7 +1011,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">67</span>
+              <span class="site-state-item-count">66</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
