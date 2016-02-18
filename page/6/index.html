@@ -192,6 +192,163 @@
             
             
               
+                <a class="post-title-link" href="/articles/adaptive-layout-for-iphone6-1/" itemprop="url">
+                  为iPhone6设计自适应布局（一）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-10-16T00:00:00+08:00" content="2014-10-16">
+              2014-10-16
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/adaptive-layout-for-iphone6-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/adaptive-layout-for-iphone6-1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <blockquote>
+<p>译者的话：<br>本文是自适应布局的巩固篇，所以对布局约束的添加操作步骤等没有详细的说明。如果看着吃力的话请先移步<a href="http://www.devtalking.com/articles/adaptive-layout-1/">Swift自适应布局（Adaptive Layout）教程</a>。</p>
+</blockquote>
+<p>Apple从iOS6加入了Auto Layout后开始就比较委婉的开始鼓励、建议开发者使用自适应布局，但是到目前为止，我感觉大多数开发者一直在回避这个问题，不管是不是由于历史原因造成的，至少他们在心底还坚守着固定布局的老传统思想。</p>
+<p>随着iPhone6、iPhone6 Plus的到来，使用自适应布局更是迫在眉睫的事，固定布局的老传统思想脆弱的不堪一击。现在的iPhone有4种尺寸，如果算上iPad，现在Apple的iOS设备有5种尺寸。我们在准备使用自适应布局设计应用界面之前，可以把这5种尺寸划分为3种分辨率和屏幕方向，这样在设计时分类会更加清晰一些。</p>
+<p>我们先来看一张自适应布局的效果图：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-1.gif" alt="图片"></p>
+<p>当你们学习完这篇文章后，你们应该会比较自如的使用 <em>storyboard</em>、<em>constaints</em>、<em>size classes</em> 这三个Apple在Xcode里提供的工具，去探索和构建巧妙的自适应布局。</p>
+<h2 id="Storyboards"><a href="#Storyboards" class="headerlink" title="Storyboards"></a>Storyboards</h2><p>在Xcode中，storyboard是一个可以让我们对应用界面进行可视化布局的工具，你首先可以在storyboard文件中看到一个或若干个iOS设备屏幕大小的布局区，然后你可以从组件库（Object Library）中拖拽组件到屏幕布局区中进行布局（比如按钮、图片、文本框、labels等），你还可以定义屏幕布局区之间的连接关系。</p>
+<p>用Xcode的术语来说，人们可以看到、触碰到或以其他方式（按钮、图片、文本框、labels等）进行交互的用户界面被称为<em>views</em>。屏幕中包含和管理这些views的容器称为<em>view controller</em>。</p>
+<p>当我们在storyboard中添加一个view controller后，我们所看到的并不是一个我们熟知的屏幕尺寸，而是一个600X600的正方形：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-2.png" alt="图片"></p>
+<p>从上图我们可以很明显的看出，storyboard中显示的屏幕尺寸不是实际设备的尺寸。Apple这样做的目的是将屏幕尺寸进行了抽象化，也就是说你可以将这个正方形的屏幕看成iphone4的屏幕，也可以将它看成iphone6的屏幕。</p>
+<h3 id="u6A21_u62DF_u5668_u7684_u5C3A_u5BF8"><a href="#u6A21_u62DF_u5668_u7684_u5C3A_u5BF8" class="headerlink" title="模拟器的尺寸"></a>模拟器的尺寸</h3><p>当你习惯了600X600的屏幕后，你可能会用着很爽，但是有些时候，我们也需要将它改成实际的屏幕尺寸来设计一些东西。</p>
+<p>我们可以很方便的在Xcode中改变view controller的模拟屏幕尺寸和屏幕方向：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-3.gif" alt="图片"></p>
+<h2 id="u5E03_u5C40_u7EA6_u675F"><a href="#u5E03_u5C40_u7EA6_u675F" class="headerlink" title="布局约束"></a>布局约束</h2><p>介绍布局约束的最好、最直观的方法就是向你们展示一个示例。</p>
+<p>首先我们将storyboard中的屏幕布局区域的尺寸调整为iphone5s的尺寸，也就是4寸屏幕，然后添加两个正方形的view，并排放置在屏幕顶部，一个设置为蓝色，一个设置为粉色。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-4.png" alt="图片"></p>
+<p>我们选择iPhone5s模拟器设备并编译运行应用，可以看到一蓝一粉这两个方块按照我们设定的那样杵在竖屏方向的屏幕上，没有问题。当我们把设备调整为横屏时，这两个方块像拥护党一样拥护着他们的坐标位置，所以在横屏的时候看着就不是那么完美：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-5.gif" alt="图片"></p>
+<p>我们再将模拟器改为iPhone6，然后编译运行，此时在竖屏的时候就已经感觉无法再爱了。这两个方块并没有按照我们设置或设想的那样在屏幕顶部中间，而是偏向了左边，在右边有一块留白区域。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-6.png" alt="图片"></p>
+<p>这是就是没有布局约束而导致的，蓝色粉色方块的大小、坐标位置都是固定的，都是在4寸屏幕的参照下设置的，不论在哪种尺寸的屏幕下，它们都在固定的那个坐标位置和固定的大小，所以就会出现上面的情况。</p>
+<p>那么接下来让我们给这两个方块添加一些布局约束，再看看会有什么神奇的事情发生。</p>
+<h3 id="u9875_u8FB9_u95F4_u8DDD_u7EA6_u675F_uFF08Leading_and_Trailing_space_uFF09"><a href="#u9875_u8FB9_u95F4_u8DDD_u7EA6_u675F_uFF08Leading_and_Trailing_space_uFF09" class="headerlink" title="页边间距约束（Leading and Trailing space）"></a>页边间距约束（Leading and Trailing space）</h3><p>页边间距约束分前部间距约束（Leading space constaint）和尾部间距约束（Trailing space constaint）。从屏幕上说就是左边距和右边距。我们给蓝色方块添加左边距约束，其值设置为10，给粉色方块设置右边距约束，其值也设置为10。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-7.png" alt="图片"></p>
+<p>我们再次在iPhone5s模拟器中运行应用，当横屏时蓝色方块被左边距约束拉到了屏幕左边，粉色方块被右边距约束拉到了屏幕右边。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-8.gif" alt="图片"></p>
+<h3 id="u6C34_u5E73_u95F4_u8DDD_u7EA6_u675F_uFF08Horizontal_space_constaint_uFF09"><a href="#u6C34_u5E73_u95F4_u8DDD_u7EA6_u675F_uFF08Horizontal_space_constaint_uFF09" class="headerlink" title="水平间距约束（Horizontal space constaint）"></a>水平间距约束（Horizontal space constaint）</h3><p>给蓝色方块和粉色方块添加水平间距约束，其值设置为10。这个约束会使这两个方块之间的距离永远约束为10。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-9.png" alt="图片"></p>
+<p>我们再来运行应用，现在横屏时两个方块之间的间距、它们与屏幕边缘的间距都和竖屏时显示的一样了。但是其中粉色方块为了满足水平间距约束自行增加了方块的宽度，变成了长方形。简直是一只老鼠坏了一锅汤有木有。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-10.gif" alt="图片"></p>
+<p>从上面这个效果我们可以得知，除非我们特别限制了view的尺寸，否则的话iOS会为满足布局约束而改变view的尺寸，也就是保持一个自然的尺寸。</p>
+<h3 id="u7B49_u5BBD_u7EA6_u675F_uFF08Equal_widths_constaint_uFF09"><a href="#u7B49_u5BBD_u7EA6_u675F_uFF08Equal_widths_constaint_uFF09" class="headerlink" title="等宽约束（Equal widths constaint）"></a>等宽约束（Equal widths constaint）</h3><p>我们给这两个方块添加一个等宽约束来改善上面的情况。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-11.png" alt="图片"></p>
+<p>再次运行应用，现在在横屏时由于等宽约束的作用，两个方块的宽度保持了一致。我们已经非常接近完美了。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-12.gif" alt="图片"></p>
+<h3 id="u65B9_u5411_u6BD4_u4F8B_u7EA6_u675F_uFF08Aspect_ratio_constaint_uFF09"><a href="#u65B9_u5411_u6BD4_u4F8B_u7EA6_u675F_uFF08Aspect_ratio_constaint_uFF09" class="headerlink" title="方向比例约束（Aspect ratio constaint）"></a>方向比例约束（Aspect ratio constaint）</h3><p>从上面的运行情况来看各个约束都工作正常，但唯一不足的是本来在竖屏是两个正方形方块，在横屏时缺变成了长方形方块，由范爷变成了凤姐这是人类无法接受的。</p>
+<p>我们给这两个方块添加方向比例约束来解决这个问题。这个约束使方块在满足其他约束的前提下始终保持高和宽的比例相同。所以在横屏时就会以方块的宽度为比例标准，将高度的比例改为宽度的比例。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-13.png" alt="图片"></p>
+<p>用iPhone5s模拟器编译运行应用，现在在横屏状态下两个正方形方块完美的呈现在我们眼前。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-14.gif" alt="图片"></p>
+<p>我们在iPhone6模拟器上再编译运行应用，从下面的图中我们可以很清晰的看到添加约束之前和之后的变化。布局约束根据多出的空间大小将方块放大到合适的尺寸以满足约束。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-15.png" alt="图片"></p>
+<h3 id="u5B9E_u8DF5_u5E03_u5C40_u7EA6_u675F"><a href="#u5B9E_u8DF5_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="实践布局约束"></a>实践布局约束</h3><p>到目前为止，你们已经看到布局约束神奇的作用和效果。是时候让你们在你们自己的storyboard文件中添加布局约束了。</p>
+<p>熟练布局约束最好的方法就是多练习，从添加少量的布局约束开始，一步步达到自己想要的效果。</p>
+<p>另外有一点，我始终不认为添加过多的布局约束会对应用的性能产生影响。但是我们也不能滥用约束布局，好钢要用在刀刃上，我们尽可能用最节俭的约束布局达到我们想要的效果。</p>
+<h3 id="u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F_u7684_u65B9_u5F0F"><a href="#u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F_u7684_u65B9_u5F0F" class="headerlink" title="添加布局约束的方式"></a>添加布局约束的方式</h3><p>这里向大家介绍三种在storyboard中添加约束的方式：</p>
+<h4 id="1-_u5E95_u90E8_u5E03_u5C40_u7EA6_u675F_u6309_u94AE"><a href="#1-_u5E95_u90E8_u5E03_u5C40_u7EA6_u675F_u6309_u94AE" class="headerlink" title="1.底部布局约束按钮"></a>1.底部布局约束按钮</h4><p>这种方式可能是最简单直观的一种方式，在屏幕上选择一个或多个对象，然后点击底部的布局约束按钮添加一个或多个需要的约束。它的好处是可以直观的看到当前选择的对象已经添加了该类中的那些约束。</p>
+<p>如果你指选择了一个对象想要添加某个约束，但发现该约束是不可选的，那么就意味着这个约束是适用于两个以上对象的约束。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-16.gif" alt="图片"></p>
+<h4 id="2-_u6309_u4F4FControl_u952E_u62D6_u62FD_u9F20_u6807"><a href="#2-_u6309_u4F4FControl_u952E_u62D6_u62FD_u9F20_u6807" class="headerlink" title="2.按住Control键拖拽鼠标"></a>2.按住Control键拖拽鼠标</h4><p>你也可以选择一个对象，然后按住Control键和鼠标左键，拖拽鼠标到另一个对象（容器对象，也就是父对象或者选中对象自己），松开鼠标后会弹出适用的约束菜单，你可以选择约束进行添加。</p>
+<p>这是我偏爱的一种方式，因为它比上面那种方式来的快多了。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-17.gif" alt="图片"></p>
+<h4 id="3-_u83DC_u5355/_u7ED1_u5B9A_u5FEB_u6377_u952E"><a href="#3-_u83DC_u5355/_u7ED1_u5B9A_u5FEB_u6377_u952E" class="headerlink" title="3.菜单/绑定快捷键"></a>3.菜单/绑定快捷键</h4><p>你也可以通过菜单选项<code>editor —&gt; pin</code>给一个或多个对象添加布局约束。这是效率最低的一种方式。如果你发现有些约束你会一遍遍的反复添加，那么你就可以给该约束绑定一个快捷键来提高效率。</p>
+<h3 id="u68C0_u67E5_u548C_u7F16_u8F91_u5DF2_u6DFB_u52A0_u7684_u5E03_u5C40_u7EA6_u675F"><a href="#u68C0_u67E5_u548C_u7F16_u8F91_u5DF2_u6DFB_u52A0_u7684_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="检查和编辑已添加的布局约束"></a>检查和编辑已添加的布局约束</h3><p>检查约束最简单的方式就是选中一个对象，然后打开右侧工具栏，选择Size Inspector面板。或者在storyboard界面左侧的结构树中查看约束。</p>
+<p>通过这两种方式，你都可以选择某个约束，然后编辑它。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-18.gif" alt="图片"></p>
+<h3 id="u79FB_u9664_u5E03_u5C40_u7EA6_u675F"><a href="#u79FB_u9664_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="移除布局约束"></a>移除布局约束</h3><p>布局约束可以添加自然也就可以删除。选中某个约束使其高亮显示，然后按下Delete键移除该约束。</p>
+<p>如果想移除某个对象上所有的约束，有一个快捷的方式。选择该对象，然后在底部点击Resolve Auto Layout Issues按钮，选择Clear Constaints。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-19.gif" alt="图片"></p>
+<h3 id="u5E03_u5C40_u51FA_u73B0_u7684_u95EE_u9898_u548C_u51B2_u7A81"><a href="#u5E03_u5C40_u51FA_u73B0_u7684_u95EE_u9898_u548C_u51B2_u7A81" class="headerlink" title="布局出现的问题和冲突"></a>布局出现的问题和冲突</h3><p>我们在添加约束时，经常伴随有警告或者错误出现。虽然有些警告是因为我们还没有添加完约束出现的，当我们添加完我们设想的约束后警告就会自然消失。但大多数的警告还是指明我们的约束确实存在问题，需要我们修复。</p>
+<p>查看警告或错误最方便的方式就是在storyboard左侧的结构树中，在view controller的右边会出现一个红色或黄色的小图标，向我们指明这里存在问题：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-20.gif" alt="图片"></p>
+<h3 id="u9519_u8BEF_u6446_u653Eview_u7684_u8B66_u544A"><a href="#u9519_u8BEF_u6446_u653Eview_u7684_u8B66_u544A" class="headerlink" title="错误摆放view的警告"></a>错误摆放view的警告</h3><p>view位置的错误摆放是一个很常见的警告。当一个view没有摆放在约束规定的位置的时候，会出现该警告。</p>
+<p>这些问题会在你切换不同设备的模拟器或鼠标不小心移动了某个对象时出现。</p>
+<p>选中一个错误摆放的对象，在屏幕上会出现布局约束给你提示的正确的摆放位置。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-21.gif" alt="图片"></p>
+<p>点击左侧出现的黄色警告图片，会弹出一个菜单，你可以选择让Xcode改变约束，以适应当前该对象的位置，但通常情况下我们都选择让Xcode将该对象移动到约束规定的位置。</p>
+<h3 id="u7F3A_u5C11_u5E03_u5C40_u7EA6_u675F_u7684_u9519_u8BEF"><a href="#u7F3A_u5C11_u5E03_u5C40_u7EA6_u675F_u7684_u9519_u8BEF" class="headerlink" title="缺少布局约束的错误"></a>缺少布局约束的错误</h3><p>我们回到早些时候的示例中。这时候我们没有给方块添加Y坐标位置的约束。在运行时没有问题，因为iOS会假设方块的位置就是我们在storyboard中摆放的那个位置。但是Xcode会提示我们一个缺失约束的错误，为了避免意外发生（更换设备尺寸），我还是要根据Xcode的提示添加缺失的约束。</p>
+<p>我们给这两个方块添加一个<em>top space to to layout guide</em>约束使方块的位置更加清晰，并消除Xcode的错误提示。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-22.gif" alt="图片"></p>
+<p>未完待续……</p>
+<p>原文地址：<a href="http://mathewsanders.com/designing-adaptive-layouts-for-iphone-6-plus" target="_blank" rel="external">ADAPTIVE LAYOUTS FOR iPHONE 6</a></p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/adaptive-layout-2/" itemprop="url">
                   Swift自适应布局（Adaptive Layout）教程（二）
                 </a>
@@ -762,195 +919,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/ios8-day-by-day-day2-sharing-extension/" itemprop="url">
-                  iOS8 Day-by-Day-- Day2 -- 分享应用扩展
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-09-17T00:00:00+08:00" content="2014-09-17">
-              2014-09-17
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/ios8-day-by-day-day2-sharing-extension/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/ios8-day-by-day-day2-sharing-extension/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h2 id="u5F00_u573A_u767D"><a href="#u5F00_u573A_u767D" class="headerlink" title="开场白"></a>开场白</h2><p>在iOS8中，有一个重量级的特性，那就是应用扩展。不论是第三方的应用还是Apple自家的应用，开发者们都可以根据这些应用自身的特点通过应用扩展提升应用与系统之间的交互性、应用的用户体验等等。目前在iOS中提供6种应用场景的扩展：</p>
-<ul>
-<li>通知界面widget</li>
-<li>分享扩展</li>
-<li>Action</li>
-<li>照片编辑扩展</li>
-<li>资源存储扩展</li>
-<li>自定义键盘</li>
-</ul>
-<p>我们在今后的文章中都会介绍以上这些场景的应用扩展，但今天我们的主角是分享扩展。</p>
-<p>关于分享其实我们都不陌生，比如我们打开一个应用，在某个内容页会有系统提供的分享按钮，点击该按钮后会出现一个应用图标列表（比如Twitter，Flickr，新浪微博等），意在让我们选择一个希望分享内容的应用。分享扩展就是能让我们可以增加这个列表，让我们自己的应用图标能出现在分享列表里。</p>
-<p>这里需要注意的是，这篇文章的内容有一定的难度，Apple提供的应用扩展特性还是比较复杂的。本文会列举最常用的使用场景作为示例来讲解分享扩展，当然你也可以在我们提供的示例基础上设计属于你自己的应用界面风格。Apple在应用扩展方面提供了非常详尽的文档，如果你在学习这篇文章的过程中有不懂的地方，你可以参阅Apple官方文档。</p>
-<p>本文的示例应用名为“ShareAlike”，我们会通过该示例应用向大家展示如何实现图片、文本信息的分享。该示例的代码可以在<a href="https://github.com/ShinobiControls/iOS8-day-by-day" target="_blank" rel="external">Github</a>中下载。</p>
-<h2 id="u521B_u5EFA_u4E00_u4E2A_u5206_u4EAB_u6269_u5C55"><a href="#u521B_u5EFA_u4E00_u4E2A_u5206_u4EAB_u6269_u5C55" class="headerlink" title="创建一个分享扩展"></a>创建一个分享扩展</h2><p>首先我们要清楚，应用扩展不能单独存在，它必须要依附一个应用程序，我们称之为应用扩展的载体应用。应用扩展以二进制文件形式存在于载体应用中。Xcode为每一种应用扩展都提供了一个模板，但是我们必须通过给一个应用程序添加Target的方式创建应用扩展的模板，创建好模板后，会在工程中增加一个应用扩展模块以及必要的属性文件。</p>
-<p>我们执行一个分享操作主要是通过一系列界面来完成，所以分享扩展的主要部分就是UI展现。因此我们可以看到分享扩展模板为我们提供了一个继承了<code>SLComposeServiceViewController</code>的类以及一个<code>storyboard</code>文件。<code>SLComposeServiceViewController</code>为我们提供了一些常规的行为（包括字数、图片展示、文本输入、发送和取消按钮），并且这些行为对应的界面都符合iOS UI的标准。在本文的示例中我们基本都会用到这些默认的行为。</p>
-<p>除了<code>UIViewController</code>的标准方法外，<code>SLComposeServiceViewController</code>还提供了一些与分享功能生命周期相关的属性和方法：</p>
-<ul>
-<li><code>presentationAnimationDidFinish()</code>方法可以让我们执行大数据量的分享任务，我们在分享图片时会用到它。</li>
-<li><code>contentText</code>是一个<code>String</code>类型的属性，它存储分享者编辑的一些文字描述。</li>
-<li><code>didSelectPost()</code>函数在点击<strong>Post</strong>按钮时调用。它是上传分享数据的入口。</li>
-<li><code>didSelectCancel()</code>函数在点击<strong>Cancel</strong>按钮时调用。</li>
-<li><code>isContentValid()</code>函数在分享者编辑的文字有变化时调用。</li>
-<li><code>charactersRemaining</code>是一个<code>Int</code>类型的属性，当描述内容有字数限制时，它表示当前还能编写的字数，如果超出字数，该属性展示的字数会变红，并用负数表示已经超出了多少字数。</li>
-</ul>
-<p>只要你的应用工程里添加了分享扩展，那么用户就能很轻松的将选中的内容分享到你的应用中。我们会一步一步展示如何实现这些有用的功能，但首先我们要学习如何编译、运行和调试。</p>
-<h2 id="u7F16_u8BD1_uFF0C_u8FD0_u884C_u548C_u8C03_u8BD5"><a href="#u7F16_u8BD1_uFF0C_u8FD0_u884C_u548C_u8C03_u8BD5" class="headerlink" title="编译，运行和调试"></a>编译，运行和调试</h2><p>在添加一个扩展Target时，Xcode会让你激活扩展的Scheme。在运行工程之前，如果我们选择app的Scheme，那么会直接运行app，如果选择扩展的Scheme，那么会出现让你选择在哪个应用程序中运行该扩展，也就是选择一个扩展的Host应用，然后就可以针对扩展进行调试了。通常情况下运行分享扩展最好的Host应用是照片应用（Photos），所以我们一般都选择照片应用，然后调试分享扩展。</p>
-<p>下面有几个步骤能帮助我们熟悉这个过程：</p>
-<ul>
-<li>不管是选择一个扩展的Host应用还是使用扩展的载体应用充当Host应用，它们都应该有比较容易能分享的内容。在示例项目中，<strong>ShareAlike</strong>扩展使用它的载体应用充当Host应用，载体应用包含一张图片和一个分享按钮，点击分享按钮时会弹出标准的分享内容界面：</li>
-</ul>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">handleShareSampleTapped</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">  shareContent(sharingText: <span class="string">"Highland Cow"</span>,</span><br><span class="line">                       sharingImage: sharingContentImageView.image)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Utility methods</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">shareContent</span><span class="params">(#sharingText: String?, sharingImage: UIImage?)</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> itemsToShare = [<span class="type">AnyObject</span>]()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> text = sharingText &#123;</span><br><span class="line">    itemsToShare.append(text)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> image = sharingImage &#123;</span><br><span class="line">    itemsToShare.append(image)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> activityViewController = <span class="type">UIActivityViewController</span>(activityItems: itemsToShare, applicationActivities: <span class="literal">nil</span>)</span><br><span class="line">  presentViewController(activityViewController, animated: <span class="literal">true</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension1.png" alt="图片">  </p>
-<ul>
-<li>在扩展中编写相关代码。</li>
-<li>调试或测试时，选择载体应用的Scheme编译并运行，当点击Share Sample时，调试器会自动关联到扩展的进程上，简言之也就是可以捕获到你在分享扩展代码中设置的断点。</li>
-<li>你也可以选择模拟器中的其他应用作为Host应用来使用分享扩展。但是调试器不会捕获到你设置的断点，也就是无法进行调试。你可以使用这种方式来测试扩展的运行情况，通常分享扩展最佳的Host应用是Photos。</li>
-</ul>
-<h2 id="u5206_u4EAB_u6269_u5C55_u7684_u5206_u4EAB_u5185_u5BB9_u5C5E_u6027_u8BBE_u7F6E"><a href="#u5206_u4EAB_u6269_u5C55_u7684_u5206_u4EAB_u5185_u5BB9_u5C5E_u6027_u8BBE_u7F6E" class="headerlink" title="分享扩展的分享内容属性设置"></a>分享扩展的分享内容属性设置</h2><p>与在<strong>Info.plist</strong>文件中设置应用一样，在扩展中也有这个文件。在该文件中有一个属性代表在分享应用列表中，我们扩展的显示名称（分享应用列表中图标下的文字）。</p>
-<p>这个属性是<strong>Bundle display name</strong>（<code>CFBundleDisplayName</code>）：</p>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension2.png" alt="图片"></p>
-<p>你还可以在<strong>Info.plist</strong>文件中定义你的分享扩展可以处理什么样的分享任务，比如说是否可以处理分享视频？</p>
-<p>在该文件中有一个名为<code>NSExtension</code>字典类型属性，展开该属性后，可以看到<code>NSExtensionAttributes</code>属性，同样是字典类型，再展开该属性我们可以看到<code>NSExtenionActivationRule</code>属性，依然是字典类型的属性。可以看到<code>NSExtension</code>中有<code>Boolean</code>类型的、<code>String</code>类型的、<code>Number</code>类型的或者字典类型的各种属性。在<code>NSExtenionActivationRule</code>属性中就有设置分享图片数量，分享视频、文件、URL数量的属性：</p>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension3.png" alt="图片"></p>
-<p>每一个属性表示的意思从字面上就可以理解，比如<code>NSExtensionActivationSupportsImageWithMaxCount</code>，类型为<code>Number</code>，值为1。意思就是我们的分享扩展支持的最大分享图片数为1，我们可以测试一下看看：</p>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension4.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension5.png" alt="图片"></p>
-<p>从上图中可以看到，当我们选择了一张照片时，在分享应用列表中有我们的ShareAlike，如果选择了两张照片，分享应用列表中就没有我们的扩展了。</p>
-<h2 id="u9A8C_u8BC1_u7528_u6237_u8F93_u5165_u7684_u5185_u5BB9"><a href="#u9A8C_u8BC1_u7528_u6237_u8F93_u5165_u7684_u5185_u5BB9" class="headerlink" title="验证用户输入的内容"></a>验证用户输入的内容</h2><p>到目前为止，你大概已经知道如何创建一个扩展并设置它的相关属性了，现在让我们看看如何实现一些自定义的扩展行为。首先，我们要知道如何验证用户的输入内容。比如我们通常情况下都需要的一个验证，就是限制用户输入的文字数量，我们可以通过<code>SLComposeServiceViewController</code>来实现它。</p>
-<p>在之前我们提到过<code>SLComposeServiceViewController</code>类的一些属性方法，其中有一个方法叫<code>isContentValid() -&gt; Bool</code>。该方法的作用时随时监听着分享界面文本域的变化，也就是说一旦用户输入或删除文字，都会触发该方法。该方法如果返回<code>true</code>，那说明用户输入的内容合法，并可以使用<strong>Post</strong>按钮完成分享，如果返回<code>false</code>，那说明输入内容不合法，并且不能使用<strong>Post</strong>按钮。下面的代码片段展示了如何实现文字数量限制功能：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> sc_maxCharactersAllowed = <span class="number">25</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">isContentValid</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> currentMessage = contentText &#123;</span><br><span class="line">    <span class="keyword">let</span> currentMessageLength = <span class="built_in">countElements</span>(currentMessage)</span><br><span class="line">    charactersRemaining = sc_maxCharactersAllowed - currentMessageLength</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="type">Int</span>(charactersRemaining) &lt; <span class="number">0</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面代码中的<code>contentText</code>是<code>SLComposeServiceViewController</code>中的属性，类型为<code>String!</code>，它存储着分享界面中<code>TextView</code>中的文本信息。<code>charactersRemaining</code>也是<code>SLComposeServiceViewController</code>中的属性，类型为<code>NSNumber</code>，他表示还有多少合法的字数以及超出的字数，并显示在分享界面的左下角。你可以用<code>countElements()</code>方法获取输入文本的字数，用于计算<code>charactersRemaining</code>的值并判断是否超出了限定的最大字数。至于<strong>Post</strong>按钮的可用和禁用由<code>charactersRemaining</code>决定，不需要我们额外设置。</p>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension6.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension7.png" alt="图片"></p>
-<h2 id="u4E0A_u4F20_u5206_u4EAB_u5185_u5BB9"><a href="#u4E0A_u4F20_u5206_u4EAB_u5185_u5BB9" class="headerlink" title="上传分享内容"></a>上传分享内容</h2><p>到目前为止，我们已经知道了如何创建一个应用扩展、如何对应用扩展进行配置、如何控制用户的操作行为等。但是作为分享扩展，它的遵旨应该是将文本、图片、视频等资源上传至某个网络客户端（比如FaceBook、Twitter、新浪微博等）。下面就让我们看看应该如何做吧。</p>
-<p>应用扩展相比载体应用或者Host应用来说，它是一个轻量级的、处理单一功能任务的组件，所以用户一般不会因为使用扩展而停止当前使用的应用或关闭正在看的内容。你可以试想一下，如果一个Host应用使用某个应用扩展让它处理一个简单的任务时，该扩展因为同时占用了Host应用的运行内存从而使Host应用不可用、退出以至于崩溃，这是多么令人发指的事情。因此，所有的上传操作都应该在后台执行（iOS7中<code>NSURLSession</code>类对实现该功能很有帮助）。你可能会认为跟着去年<a href="https://leanpub.com/ios7daybyday" target="_blank" rel="external">iOS7 Day-by-Day</a>系列文章就能很容易的实现该功能，但事实并非如此。</p>
-<p>事情往往不是你想象的那么简单。首先提取分享的内容就不是一件容易的事（比如图片），而且你还要将它们分享出去，其次应用扩展没有任何写硬盘的权限。关于第二点，有人可能会有疑问：为什么应用扩展需要写硬盘的权限呢？因为所有后台上传的网络程序，在上传时都会先将上传内容缓存在硬盘中，然后从硬盘获取缓存的内容开始上传。为了能模拟硬盘缓存，我们需要在Host应用中创建一个存放分享内容的容器，并且要允许应用扩展使用该容器缓存分享内容。我们会在下面的内容中讲解如何实现该功能，但首先，我们先来看看如何提出分享内容中的图片。</p>
-<h2 id="u63D0_u53D6_u8981_u5206_u4EAB_u7684_u56FE_u7247"><a href="#u63D0_u53D6_u8981_u5206_u4EAB_u7684_u56FE_u7247" class="headerlink" title="提取要分享的图片"></a>提取要分享的图片</h2><p>在<code>SLComposeServiceViewController</code>类中有一个属性叫<code>extensionContext</code>，它存储着与当前应用扩展有关联的所有数据，其中包含一个<code>NSInputItem</code>类型的数组，名叫<code>inputItems</code>。每个<code>NSInputItem</code>都含有一个<code>attachments</code>集合，它们的类型都为<code>NSItemProvider</code>。这些<code>attachments</code>存储的就是分享内容中的媒体资源，比如图片、视频、文件或链接。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">imageFromExtensionItem</span><span class="params">(extensionItem: NSExtensionItem, callback: <span class="params">(image: UIImage?)</span></span></span>-&gt;<span class="type">Void</span>) &#123;</span><br><span class="line">  <span class="keyword">for</span> attachment <span class="keyword">in</span> extensionItem.attachments <span class="keyword">as</span> [<span class="type">NSItemProvider</span>] &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面这个方法的作用是从分享内容中提取图片（<code>UIImage</code>），注意这个方法没有返回值，而是用一个闭包回调函数来替代。</p>
-<p>为了确定<code>attachments</code>中是否包含了图片类型的资源，我们需要用到<code>hasItemConformingToTypeIdentifier()</code>方法。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span>(attachment.hasItemConformingToTypeIdentifier(kUTTypeImage <span class="keyword">as</span> <span class="type">NSString</span>)) &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>该方法的参数类型是<code>NSString</code>，并且类型标示符<code>kUTTypeImage</code>属于<strong>MobileCoreServices</strong>框架中的属性，所以我们要引入<strong>MobileCoreServices</strong>框架：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> MobileCoreServices</span><br></pre></td></tr></table></figure>
-<p>该框架中还包含几种类型标示符：</p>
-<ul>
-<li><code>kUTTypeImage</code></li>
-<li><code>kUTTypeMovie</code></li>
-<li><code>kUTTypeAudio</code></li>
-<li><code>kUTTypeSpreadsheet</code></li>
-</ul>
-<p>现在你可以确定<code>attachments</code>中至少包含了一个图片资源，并且需要将该图片资源提取出来。因为执行该任务会消耗很高的内存资源，所以为了确保在执行时UI界面不会出现无响应的情况，它应该在后台队列中执行。我们可以使用<code>loadItemForTypeIdentifier()</code>方法，与刚才的方法类似，该方法也有类型标示符参数，并且用闭包实现对图片的操作：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Marshal on to a background thread</span></span><br><span class="line">dispatch_async(dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="type">UInt</span>(<span class="number">0</span>))) &#123;</span><br><span class="line">  attachment.loadItemForTypeIdentifier(kUTTypeImage <span class="keyword">as</span> <span class="type">NSString</span>, options: <span class="literal">nil</span>) &#123;</span><br><span class="line">      (imageProvider, error) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">      ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果你使用Objective-C，那么你可以用block将返回结果强制转换为你期望的类型（比如<code>UIImage</code>），然后实现回调。但是在Swift中就行不通了，所以上面代码中的<code>imageProvider</code>变量的类型应该是<code>NSSecureCoding</code>，然后你可以将它强转为<code>UIImage</code>类型：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> image: <span class="type">UIImage</span>? = <span class="literal">nil</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> e = error &#123;</span><br><span class="line">  <span class="built_in">println</span>(<span class="string">"Item loading error: <span class="subst">\(e.localizedDescription)</span>"</span>)</span><br><span class="line">&#125;</span><br><span class="line">image = imageProvider <span class="keyword">as</span>? <span class="type">UIImage</span></span><br><span class="line">dispatch_async(dispatch_get_main_queue()) &#123;</span><br><span class="line">  callback(image: image)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>大家注意，在<code>dispatch_async</code>中我使用了<code>callback()</code>函数，也就是<code>imageFromExtensionItem</code>方法的第二个参数，并将刚才强转为<code>UIImage</code>类型的<code>image</code>对象作为其参数。</p>
-<p>这段代码可以让用户在输入分享文本信息的同时将<code>attachments</code>中的图片提取出来。看起来非常完美：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> attachedImage: <span class="type">UIImage</span>?</span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">presentationAnimationDidFinish</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// Only interested in the first item</span></span><br><span class="line">  <span class="keyword">let</span> extensionItem = extensionContext.inputItems[<span class="number">0</span>] <span class="keyword">as</span> <span class="type">NSExtensionItem</span></span><br><span class="line">  <span class="comment">// Extract an image (if one exists)</span></span><br><span class="line">  imageFromExtensionItem(extensionItem) &#123;</span><br><span class="line">    image <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">if</span> image &#123;</span><br><span class="line">      dispatch_async(dispatch_get_main_queue()) &#123;</span><br><span class="line">        <span class="keyword">self</span>.attachedImage = image</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>该方法的作用就是提取出图片，并将提取出的图片赋值给我们定义的<code>attachedImage</code>变量。</p>
-<h2 id="u6267_u884C_u540E_u53F0_u4E0A_u4F20_u7684_u4EFB_u52A1"><a href="#u6267_u884C_u540E_u53F0_u4E0A_u4F20_u7684_u4EFB_u52A1" class="headerlink" title="执行后台上传的任务"></a>执行后台上传的任务</h2><p>一旦用户输入完要分享的文本信息，按下<strong>Post</strong>按钮后，分享扩展就应该将所有内容通过Web服务上传到某个地方。本文的示例为了达到这个目的，我们在视图控制器中定义了一个常量属性<code>sc_uploadURL</code>，值为一个URL，也就是一个服务地址：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> sc_uploadURL = <span class="string">"http://requestb.in/oha28noh"</span></span><br></pre></td></tr></table></figure>
-<p>这个URL是Request Bin的服务，Request Bin可以给你提供一个临时的URL，用于测试一些网络操作。上面代码中的这个URL对你们来说没有什么用，因为这是我申请的，你们可以去<a href="http://requestb.in/" target="_blank" rel="external">requestb.in</a>申请一个自己的URL用于测试。</p>
-<p>在前面我们提到过，应用扩展不应该和Host应用抢占内存资源，它应该在后台执行相关任务。因此，当<strong>Post</strong>按钮被按下时，在当前的Host应用中我们不会看到任何有关应用扩展的执行痕迹，像同步、网络操作等。此时，我们就需要使用<code>NSURLSession</code>给我们提供的API来实现后台的网络操作。</p>
-<p>当用户点击<strong>Post</strong>按钮后会调用<code>didSelectPost()</code>方法，它的代码片段应该是这样的：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">didSelectPost</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// Perform upload</span></span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Inform the host that we're done, so it un-blocks its UI.</span></span><br><span class="line">  extensionContext.completeRequestReturningItems(<span class="literal">nil</span>, completionHandler: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>设置<code>NSURLSession</code>很简单，有规范的设置流程：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> configName = <span class="string">"com.shinobicontrols.ShareAlike.BackgroundSessionConfig"</span></span><br><span class="line"><span class="keyword">let</span> sessionConfig = <span class="type">NSURLSessionConfiguration</span>.backgroundSessionConfigurationWithIdentifier(configName)</span><br><span class="line"><span class="comment">// Extensions aren't allowed their own cache disk space. Need to share with application</span></span><br><span class="line">sessionConfig.sharedContainerIdentifier = <span class="string">"group.ShareAlike"</span></span><br><span class="line"><span class="keyword">let</span> session = <span class="type">NSURLSession</span>(configuration: sessionConfig)</span><br></pre></td></tr></table></figure>
-<p>我们要特别注意上面代码片段中<code>sharedContainerIdentifier</code>的设置，它给<code>NSURLSession</code>使用的共享容器（用于缓存分享内容）指定了一个名称，这个容器也是扩展载体应用的一部分（在这个例子中，载体应用就是ShareAlike），所以我们要通过Xcode对载体应用进行设置：</p>
-<ol>
-<li>在工程设置面板中选择<strong>Capabilities</strong>页签，然后在左侧<strong>Targets</strong>栏中选中载体应用。</li>
-<li>开启载体应用的<strong>App Groups</strong>。</li>
-<li>创建一个App Group，起一个合适的名称，但是必须要以<code>group.</code>开头。在我们的示例中，我们刚才设置的名称为<code>group.ShareAlike</code>。</li>
-<li>Xcode会进行一系列检查，然后创建App Group。</li>
-</ol>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension8.png" alt="图片"></p>
-<p>然后选中应用扩展，开启<strong>App Groups</strong>，然后选择刚才创建好的App Group。</p>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension9.png" alt="图片"></p>
-<p>这些App Group都是登记在你的开发者账号下的，这样才能确保只有你的应用可以使用这些共享容器。</p>
-<p>Xcode会为每个工程创建一个<code>.entitlements</code>授权文件，里面就包含有共享容器的访问名称。</p>
-<p>现在<code>NSURLSession</code>就已经设置成功了，你还需要创建一个URL request对象来发送请求：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Prepare the URL Request</span></span><br><span class="line"><span class="keyword">let</span> request = urlRequestWithImage(attachedImage, text: contentText)</span><br></pre></td></tr></table></figure>
-<p><code>urlRequestWithImage</code>函数的作用是构造一个URL请求结构，通过HTTP Post方式发送一些JSON格式的数据。这其中就包含了文本内容和图片的元数据信息：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">urlRequestWithImage</span><span class="params">(image: UIImage?, text: String)</span></span> -&gt; <span class="type">NSURLRequest</span>? &#123;</span><br><span class="line">  <span class="keyword">let</span> url = <span class="type">NSURL</span>.<span class="type">URLWithString</span>(sc_uploadURL)</span><br><span class="line">  <span class="keyword">let</span> request = <span class="type">NSMutableURLRequest</span>(<span class="type">URL</span>: url)</span><br><span class="line">  request.addValue(<span class="string">"application/json"</span>, forHTTPHeaderField: <span class="string">"Content-Type"</span>)</span><br><span class="line">  request.addValue(<span class="string">"application/json"</span>, forHTTPHeaderField: <span class="string">"Accept"</span>)</span><br><span class="line">  request.<span class="type">HTTPMethod</span> = <span class="string">"POST"</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> jsonObject = <span class="type">NSMutableDictionary</span>()</span><br><span class="line">  jsonObject[<span class="string">"text"</span>] = text</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> image = image &#123;</span><br><span class="line">    jsonObject[<span class="string">"image_details"</span>] = extractDetailsFromImage(image)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Create the JSON payload</span></span><br><span class="line">  <span class="keyword">var</span> jsonError: <span class="type">NSError</span>?</span><br><span class="line">  <span class="keyword">let</span> jsonData = <span class="type">NSJSONSerialization</span>.dataWithJSONObject(jsonObject, options: <span class="literal">nil</span>, error: &amp;jsonError)</span><br><span class="line">  <span class="keyword">if</span> jsonData &#123;</span><br><span class="line">    request.<span class="type">HTTPBody</span> = jsonData</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> error = jsonError &#123;</span><br><span class="line">      <span class="built_in">println</span>(<span class="string">"JSON Error: <span class="subst">\(error.localizedDescription)</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> request</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个方法实际上并不是创建一个上传图片的请求，虽然也可以这样做，但这里我们将图片的详细信息（元数据）提取出来进行上传，下面代码是提取图片详细信息的方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">extractDetailsFromImage</span><span class="params">(image: UIImage)</span></span> -&gt; <span class="type">NSDictionary</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> resultDict = <span class="type">NSMutableDictionary</span>()</span><br><span class="line">  resultDict[<span class="string">"height"</span>] = image.size.height</span><br><span class="line">  resultDict[<span class="string">"width"</span>] = image.size.width</span><br><span class="line">  resultDict[<span class="string">"orientation"</span>] = image.imageOrientation.toRaw()</span><br><span class="line">  resultDict[<span class="string">"scale"</span>] = image.scale</span><br><span class="line">  resultDict[<span class="string">"description"</span>] = image.description</span><br><span class="line">  <span class="keyword">return</span> resultDict.copy() <span class="keyword">as</span> <span class="type">NSDictionary</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>最后你就可以通过<code>resume()</code>在后台发起上传请求了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Create the task, and kick it off</span></span><br><span class="line"><span class="keyword">let</span> task = session.dataTaskWithRequest(request)</span><br><span class="line">task.resume()</span><br></pre></td></tr></table></figure>
-<p>如果你按下<strong>Post</strong>按钮完成分享后，在requestb.in中，你应该可以看到如下的结果：</p>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension10.png" alt="图片"></p>
-<p>原文地址：<a href="http://www.shinobicontrols.com/blog/posts/2014/07/21/ios8-day-by-day-day-2-sharing-extension" target="_blank" rel="external">iOS8 Day-by-Day :: Day 2 :: Sharing Extension</a></p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -993,7 +961,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">67</span>
+              <span class="site-state-item-count">68</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

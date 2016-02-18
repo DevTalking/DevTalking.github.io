@@ -192,6 +192,100 @@
             
             
               
+                <a class="post-title-link" href="/articles/understand-how-an-extension-works/" itemprop="url">
+                  应用扩展如何工作 -- iOS8/OS X v10.10应用扩展编程指南
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-08T00:00:00+08:00" content="2014-08-08">
+              2014-08-08
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/understand-how-an-extension-works/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/understand-how-an-extension-works/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>一个应用程序扩展不是一个应用，它在主体应用程序中单独打包并生成单独的二进制文件。应用程序扩展不同于一个应用程序，它的功能相对于应用来说更加明确、单一，并且要严格遵循扩展点的协议。</p>
+<h2 id="u5E94_u7528_u7A0B_u5E8F_u6269_u5C55_u7684_u751F_u547D_u5468_u671F"><a href="#u5E94_u7528_u7A0B_u5E8F_u6269_u5C55_u7684_u751F_u547D_u5468_u671F" class="headerlink" title="应用程序扩展的生命周期"></a>应用程序扩展的生命周期</h2><p>因为一个应用程序扩展不是一个应用，所以它的生命周期和运行环境也不同于应用。一般情况来说，应用程序扩展的生命周期开始于用户从某个应用中使用它。这个应用能够让用户选择某一种扩展来实现某个特定功能或任务，这种应用我们称为<strong>扩展载体应用</strong>。当扩展载体应用给扩展发送一个请求，让扩展代替响应用户的操作时，应用扩展就会被激活并意味着生命周期也随之开始。当应用扩展完成载体应用发送的请求任务后，该扩展的生命周期也随之结束。  </p>
+<p>比如说，有这样一个场景，用户在扩展载体应用中选中一段文字，并点击分享按钮，从分享列表中选择某一个分享扩展，将选中的内容分享至社区网站。此时，扩展载体应用就会启动该扩展，让它去响应用户的请求，即分享所选文本的内容。应用扩展基本的生命周期归纳在下图2-1中。<br><img src="http://www.devtalking.com/postImages/app_extensions_lifecycle.png" alt="生命周期">  </p>
+<p>在图2-1中的第2步中，系统实例化扩展载体应用中定义好的扩展，并建立载体应用于扩展之间的通信通道。然后扩展会根据上下文场景显示相关的界面，并使用载体应用接收到的信息执行用户的操作（在上述的例子中，分享扩展就使用用户选中的文本信息来执行相关操作）。 </p>
+<p>在图2-1的第3步中，用户在扩展中执行或取消某个任务，或者直接可以忽略该扩展。在对用户的操作做出响应的过程中，扩展会根据载体应用的请求立即开始执行任务，但如果有特殊需要时，扩展也会在系统后台去执行任务，这种情况下，扩展不会显示其相关界面，并且载体应用会显示用户操作扩展前的界面。当应用扩展执行完任务后，不管是返回还是延迟返回，但最后其执行结果都要返回给载体应用。  </p>
+<p>当扩展开始执行任务之后（或者开始在系统后台执行任务），系统就会终止扩展，比如图2-1中的第4步。  </p>
+<h2 id="u5E94_u7528_u6269_u5C55_u662F_u5982_u4F55_u8FDB_u884C_u901A_u4FE1_u7684"><a href="#u5E94_u7528_u6269_u5C55_u662F_u5982_u4F55_u8FDB_u884C_u901A_u4FE1_u7684" class="headerlink" title="应用扩展是如何进行通信的"></a>应用扩展是如何进行通信的</h2><p>当应用扩展在运行的时候，它会直接和载体应用进行通信。但是应用扩展不会和调用它的应用进行直接通信，因为有可能应用扩展在运行，但是调用它的应用程序并没有运行。另外还有一点，扩展载体应用和调用扩展应用之间是绝对不会进行通信的。图2-2中描述了应用扩展、载体应用、调用扩展应用之间的关系。<br><img src="http://www.devtalking.com/postImages/simple_communication.png" alt="关系"></p>
+<p>当一个扩展需要和调用它的应用进行通信时，只能间接的通过扩展载体应用提供的上下文进行。比如说，一个应用扩展有可能会运行调用它的应用程序。在这个例子中，应用扩展不能通过API直接和调用它的应用传递消息。但是，应用扩展和调用它的应用可以共同访问一个定义为私有的共享容器。在图2-3中描述了扩展和调用扩展应用之间通信的模式。<br><img src="http://www.devtalking.com/postImages/detailed_communication.png" alt="通信"></p>
+<blockquote>
+<p>注意：在底层，系统使用进程间通信来确保应用扩展和扩展载体应用做到无缝结合。在你的代码中，你从来不会考虑这个通用的通信机制。那是因为我们使用的扩展API是扩展点和系统已经高度封装后的。  </p>
+</blockquote>
+<p>原文地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionOverview.html#//apple_ref/doc/uid/TP40014214-CH2-SW2" target="_blank" rel="external">Understand How an Extension Works</a></p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/app-extensions-increase-your-impact/" itemprop="url">
                   APP扩展提高你的影响力 -- iOS8/OS X v10.10应用扩展编程指南
                 </a>
@@ -793,129 +887,6 @@ class SecondCell: UITableViewCell {
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/swift-c-pointer/" itemprop="url">
-                  在Swift中使用C语言的指针
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-08-01T00:00:00+08:00" content="2014-08-01">
-              2014-08-01
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/swift-c-pointer/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-c-pointer/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <p>Objective-C和C语言经常需要使用到指针。Swift中的数据类型由于良好的设计，使其可以和基于指针的C语言API无缝混用。同时Swift也可以自动处理大多数将指针作为参数的情况。在这篇文章里，我们可以看到在Swift语言中如何将变量、数组、字符串当做C语言中的指针参数来使用。</p>
-<h2 id="u5C06_u8F93_u5165_u8F93_u51FA_u53C2_u6570_u4F5C_u4E3A_u6307_u9488_u53C2_u6570"><a href="#u5C06_u8F93_u5165_u8F93_u51FA_u53C2_u6570_u4F5C_u4E3A_u6307_u9488_u53C2_u6570" class="headerlink" title="将输入输出参数作为指针参数"></a>将输入输出参数作为指针参数</h2><p>C和Objective-C不支持多类型的返回值。所以Cocoa API就使用指针作为函数的输入输出参数，以用来传递多类型的数据。Swift允许使用指针参数进行类似<code>inout</code>参数的处理，所以你可以使用<code>&amp;</code>语法将一个<code>var</code>变量的引用作为指针参数进行传递。比如说，<code>UIColor</code>的<code>getRed(_:green:blue:alpha:)</code>方法，使用4个<code>CGFloat*</code>指针用来接收颜色的组成元素。我们可以使用<code>&amp;</code>将这几个颜色组成部分装配在本地变量中。</p>
-<pre><code>var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-color.getRed(&amp;r, green: &amp;g, blue: &amp;b, alpha: &amp;a)
-</code></pre><p>另外一个常见的情况出现在Cocoa <code>NSError</code>类的使用中。很多方法都使用一个<code>NSError**</code>参数来保存异常信息。比如说，我们可以通过<code>NSFileManager</code>类的<code>contentsOfDirectoryAtPath(_:error:)</code>方法，挪列出指定目录中的信息，一旦出现疑似异常信息，就将其保存在<code>NSError?</code>类型的变量中。</p>
-<pre><code>var maybeError: NSError?
-if let contents = NSFileManager.defaultManager()
-    .contentsOfDirectoryAtPath(&quot;/usr/bin&quot;, error: &amp;maybeError) {
-    // Work with the directory contents
-} else if let error = maybeError {
-    // Handle the error
-}
-</code></pre><p>为安全起见，Swift要求在使用<code>&amp;</code>传值时，变量必须是已经被初始化的。这是因为Swift无法知道也无法判断在操作指针之前，该指针是否确实在内存有指向的地址。</p>
-<h2 id="u5C06_u6570_u7EC4_u4F5C_u4E3A_u6307_u9488_u53C2_u6570"><a href="#u5C06_u6570_u7EC4_u4F5C_u4E3A_u6307_u9488_u53C2_u6570" class="headerlink" title="将数组作为指针参数"></a>将数组作为指针参数</h2><p>在C语言中，指针与数组是水乳交融，纠缠不清的。那么为了在Swift中能无缝的使用C语言中基于数组的一些API，Swift允许将<code>Array</code>作为指针参数。一个不可变数组的值可以作为一个<code>const</code>指针参数直接传递，可变数组可以使用<code>&amp;</code>作为一个非<code>const</code>指针参数进行传递，就<code>inout</code>参数一样。比如，我们使用<code>Accelerate</code>框架中的<code>vDSP_vadd</code>函数对数组<code>a</code>和数组<code>b</code>进行相加，将结果写入<code>result</code>数组：</p>
-<pre><code>import Accelerate
-
-let a: [Float] = [1, 2, 3, 4]
-let b: [Float] = [0.5, 0.25, 0.125, 0.0625]
-var result: [Float] = [0, 0, 0, 0]
-
-vDSP_vadd(a, 1, b, 1, &amp;result, 1, 4)
-
-// result now contains [1.5, 2.25, 3.125, 4.0625]
-</code></pre><h2 id="u5C06_u5B57_u7B26_u4E32_u4F5C_u4E3A_u6307_u9488_u53C2_u6570"><a href="#u5C06_u5B57_u7B26_u4E32_u4F5C_u4E3A_u6307_u9488_u53C2_u6570" class="headerlink" title="将字符串作为指针参数"></a>将字符串作为指针参数</h2><p>C语言中，传递字符串的主要方式是通过<code>const char*</code>指针。在Swift中，<code>String</code>也可以被用作<code>const char*</code>指针，用它可以向函数传递空字符串或UTF-8编码的字符串。比如，我们可以在标准的C语言和POSIX的库函数中直接使用字符串作为参数传递：</p>
-<pre><code>puts(&quot;Hello from libc&quot;)
-let fd = open(&quot;/tmp/scratch.txt&quot;, O_WRONLY|O_CREAT, 0o666)
-
-if fd &lt; 0 {
-    perror(&quot;could not open /tmp/scratch.txt&quot;)
-} else {
-    let text = &quot;Hello World&quot;
-    write(fd, text, strlen(text))
-    close(fd)
-}
-</code></pre><h2 id="u6307_u9488_u53C2_u6570_u8F6C_u6362_u7684_u5B89_u5168_u6027"><a href="#u6307_u9488_u53C2_u6570_u8F6C_u6362_u7684_u5B89_u5168_u6027" class="headerlink" title="指针参数转换的安全性"></a>指针参数转换的安全性</h2><p>Swift一直在努力让我们可以方便的、无缝的使用C语言中的指针，因为在Cocoa中已经使用的非常普遍了。虽然Swift是一个类型安全的语言，对指针参数的转换的安全性也有保障，但是相比Swift原生的其他代码来说，还是存在着一定的不安全性。所以我们在使用时要格外小心。比如说：</p>
-<ul>
-<li>如果调用者在指针返回之后保存了指针指向的对象，那么再去使用这个对象时是不安全的。这些被转换的指针参数只能在调用过程中或者发送消息过程中保证其有效性。即时你使用相同的变量、数组或者字符串作为多指针参数进行传递，你每次接收到的指针都是不同的。除非是全局或者静态变量。你可以安全的使用全局或静态变量的指针的参数，比如KVO上下文参数。</li>
-<li>当将数组或字符串作为指针参数传递时，Swift不会检查其边界值。在C语言中，数组和字符串的大小是不能增长的，所以当你将数组或字符串作为指针参数传递时，要确保它们有足够的大小，或者适合当前场景的大小。</li>
-</ul>
-<p>如果你使用的基于指针的API不在这篇指导内，或者你需要重写接收指针参数的Cocoa方法，那么你可以直接使用Swift原始内存中的不安全的指针。我们会在以后的文章中介绍更多Swift的特性。</p>
-<p>本文翻译自Swift官方博客，原文地址：<a href="https://developer.apple.com/swift/blog/?id=6" target="_blank" rel="external">Interacting with C Pointers</a></p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -958,7 +929,7 @@ if fd &lt; 0 {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">67</span>
+              <span class="site-state-item-count">68</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
