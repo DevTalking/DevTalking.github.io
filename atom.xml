@@ -1519,7 +1519,7 @@
     <link href="http://www.devtalking.com//articles/uiview-transition-animation/"/>
     <id>http://www.devtalking.com//articles/uiview-transition-animation/</id>
     <published>2015-07-07T16:00:00.000Z</published>
-    <updated>2016-01-01T14:12:24.000Z</updated>
+    <updated>2016-03-02T06:16:59.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p> 本文首发<a href="http://www.csdn.net/article/2015-07-06/2825139-ios-uiview-animation-3" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 </blockquote>
@@ -1529,7 +1529,7 @@
 <h2 id="u6DFB_u52A0_u65B0_u89C6_u56FE"><a href="#u6DFB_u52A0_u65B0_u89C6_u56FE" class="headerlink" title="添加新视图"></a>添加新视图</h2><p>在进行示例之前，大家需要注意一点过渡转变动画与动画属性动画的不同之处。我们在创建动画属性动画时只需要在<code>animations</code>闭包中添加对视图动画属性修改的代码即可，它没有作用域或作用视图的概念。而在过渡转变动画中有作用视图的概念，也就是说我们调用过渡转变动画方法时需要指定一个作用视图。</p>
 <p>明确这点不同之后，我们对作用视图再作进一步的说明。过渡转变动画中的作用视图并不是我们的目标视图，而是目标视图的容器视图，那么大家不难想象，如果该容器视图中有多个子视图，那么这些子视图都会有过渡转变动画效果。下面用示例像大家说明。</p>
 <p>先看看一个简单的视图结构：</p>
-<p><img src="http://d.pr/i/VeYP+" alt="视图结构"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/TransitionAnimation-1.png" alt="视图结构"></p>
 <p>很明显，我们添加了一个视图作为容器视图，并且尺寸等于屏幕尺寸。在<code>ViewController.swift</code>中有该容器视图的Outlet以及一个图片视图：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">weak</span> <span class="keyword">var</span> containerView: <span class="type">UIView</span>!</span><br><span class="line"><span class="keyword">let</span> ipadView = <span class="type">UIImageView</span>(frame: <span class="type">CGRectMake</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">151.5</span>))</span><br></pre></td></tr></table></figure>
 <p>在<code>viewDidLoad()</code>方法中给<code>ipadView</code>指定图片：</p>
@@ -1563,7 +1563,7 @@
 <li><code>.TransitionFlipFromBottom</code></li>
 </ul>
 <p>如果我们有多个目标视图，想进行不同的过渡转变动画怎么办？那我们就创建多个目标视图的容器视图，尺寸与目标视图一致，放置在合适的位置：</p>
-<p><img src="http://d.pr/i/1406Q+" alt="视图结构"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/TransitionAnimation-2.png" alt="视图结构"></p>
 <p>从上图中可以看出，我们在屏幕上放置了四个容器视图，显而易见，我们要分别对这四个容器视图添加过渡转变动画。当然容器视图里要添加什么样的视图随个人喜好。</p>
 <p>在<code>viewDidLoad()</code>方法中添加如下代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.ipadContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromBottom</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.ipadContainerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.iphoneContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromLeft</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.iphoneContainerView.addSubview(<span class="keyword">self</span>.iphoneView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.webContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromRight</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.webContainerView.addSubview(<span class="keyword">self</span>.webView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(textContainerView, duration: <span class="number">2</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionCrossDissolve</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.textContainerView.addSubview(<span class="keyword">self</span>.textView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
@@ -1617,17 +1617,17 @@
     <link href="http://www.devtalking.com//articles/uiview-spring-animation/"/>
     <id>http://www.devtalking.com//articles/uiview-spring-animation/</id>
     <published>2015-07-01T16:00:00.000Z</published>
-    <updated>2016-01-01T14:11:26.000Z</updated>
+    <updated>2016-03-02T06:20:52.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>本文首发<a href="http://www.csdn.net/article/2015-07-03/2825122-ios-uiview-animation-2" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 </blockquote>
 <h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>通过上一篇文章，大家应该学会了如何使用<code>UIKit</code>创建最基本的视图动画，包括如何指定视图某属性的起始值和结束值，以及动画持续时间、动画延迟时间、动画选项等概念。</p>
 <p>但是目前大家实现的动画不论是位置移动还是大小改变都是以一个单一的方向在运动，比如位置从A点到B点，大小半径从1到2:</p>
-<p><img src="http://d.pr/i/13ugd+" alt="图1"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/SpringAnimation-1.png" alt="图1"></p>
 <p>在这篇文章中，大家会学到更复杂一点的动画，让视图在一次动画中的运动轨迹像弹簧一样，有多次不同方向的运动，最后停止在终点：</p>
-<p><img src="http://d.pr/i/iUUC+" alt="图2"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/SpringAnimation-2.png" alt="图2"></p>
 <p>如果给位置移动的动画添加弹簧效果，那么视图的运动轨迹应该像下图中展现的一样：</p>
-<p><img src="http://d.pr/i/1hFxO+" alt="图3"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/SpringAnimation-3.png" alt="图3"></p>
 <p>这会使你的动画看起来更逼真、更真实、更贴近现实。在某些情况下带给用户更好的用户体验。那么让我们开始学习吧。</p>
 <h2 id="Spring_u52A8_u753B"><a href="#Spring_u52A8_u753B" class="headerlink" title="Spring动画"></a>Spring动画</h2><p>我们还是以上一篇文章中的登录页面为例，大家应该发现了那个呆板的登录按钮吧，我们今天就让它Q弹起来。</p>
 <p>打开<code>ViewController.swift</code>，在<code>viewWillAppear()</code>方法的底部添加如下代码：</p>
@@ -1698,13 +1698,13 @@
     <link href="http://www.devtalking.com//articles/uiview-first-animation/"/>
     <id>http://www.devtalking.com//articles/uiview-first-animation/</id>
     <published>2015-06-27T16:00:00.000Z</published>
-    <updated>2016-01-01T14:08:15.000Z</updated>
+    <updated>2016-03-02T06:49:39.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>本文首发<a href="http://www.csdn.net/article/2015-07-02/2825115-ios-uiview-animation-1" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 </blockquote>
 <h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>在一个看脸的社会中，不论什么事物，长的好看总是能多吸引一些目光。App同样不例外，一款面相不错的App就算功能已经被轮子千百遍，依然会有人买账，理由就是看的顺眼，于是平面设计人员越来越被重视。白驹过隙，斗转星移，人们已然不满足于静态的美感，于是动态的用户体验应运而生，平面设计人员捉襟见肘，是我们程序员出马的时候了。</p>
 <p>这篇文章是UIView Animation的第一篇，从极简的概念开始，为大家揭开Animation的神秘面纱。我们以一个登录界面为例。美丽的太阳，婀娜的云，还有几个小山包，中间静躺着用户名、密码输入框和登录按钮。搁以前，这个界面许是会亮瞎眼现如今尼玛狗都嫌。所以我们的目标是赋予这个界面生命力。</p>
-<p><img src="http://d.pr/i/18wNj+" alt="登录页"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/FirstAnimation-LoginScreen.png" alt="登录页"></p>
 <blockquote>
 <p>注意：本文章基于Swift 2.0和Xcode 7 Beta2编写。登录界面中的所有元素都已经连接到了代码中（outlet），在这个示例中我们先不使用Auto Layout和SizeClasses。</p>
 </blockquote>
@@ -1712,7 +1712,7 @@
 <h3 id="u9996_u5148"><a href="#u9996_u5148" class="headerlink" title="首先"></a>首先</h3><p>我们需要在登录界面还没有展现给用户的时候把用户名和密码的输入框移至屏幕外面。打开<code>ViewController.swift</code>，在<code>viewWillAppear()</code>方法中添加以下代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">self</span>.username.center.x -= <span class="keyword">self</span>.view.bounds.width</span><br><span class="line"><span class="keyword">self</span>.password.center.x -= <span class="keyword">self</span>.view.bounds.width</span><br></pre></td></tr></table></figure>
 <p>这两行代码使用户名、密码输入框移出屏幕外，这里可以使用简单暴力的方式，直接让<code>center</code>的<code>x</code>减去屏幕宽度。</p>
-<p><img src="http://d.pr/i/11QbT+" alt="输入框移出屏幕"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/FirstAnimation-LoginScreen-1.png" alt="输入框移出屏幕"></p>
 <h3 id="u7136_u540E"><a href="#u7136_u540E" class="headerlink" title="然后"></a>然后</h3><p>我们在<code>viewDidAppear()</code>方法中添加以下代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.username.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line">    <span class="keyword">self</span>.password.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 <p><code>animationWithDuration(_:animations:)</code>是<code>UIView</code>的类方法，从方法名就可以看出，该方法可使<code>UIView</code>动起来。它有两个参数：</p>
@@ -1721,7 +1721,7 @@
 <li><code>animation</code>：动画闭包，在这个闭包中你可以改变<code>UIView</code>的各种动画属性。</li>
 </ul>
 <p>因为该方法是一个类方法，所以在闭包中你可以同时改变多个<code>views</code>的动画属性。所以在上述代码中，同时改变了用户名和密码输入框的位置。编译运行，我们可以看到如下效果：</p>
-<p><img src="http://d.pr/i/1lMOX+" alt="FirstAnimation-1"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/FirstAnimation-1.gif" alt="FirstAnimation-1"></p>
 <p>但是由于两个输入框是同时从屏幕外滑入，略显呆板，所以我们用另一个方法再来润色一下。</p>
 <h3 id="u6700_u540E"><a href="#u6700_u540E" class="headerlink" title="最后"></a>最后</h3><p>我们更新<code>viewDidAppear()</code>中的代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.username.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line"><span class="comment">//  self.password.center.x += self.view.bounds.width</span></span><br><span class="line">&#125;)</span><br><span class="line">        </span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, delay: <span class="number">0.3</span>, options: .<span class="type">AllowUserInteraction</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.password.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
@@ -1732,7 +1732,7 @@
 <li><code>completion</code>：也是一个闭包，当动画执行完之后会执行该闭包中的逻辑，可以用来连接动画，或者是在动画结束后你需要做一些清理工作等。</li>
 </ul>
 <p>现在编译运行，可以看到如下效果：</p>
-<p><img src="http://d.pr/i/15Ork+" alt="FirstAnimation-2"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/FirstAnimation-2.gif" alt="FirstAnimation-2"></p>
 <p>用户名输入框先滑入屏幕，在0.3秒的延迟后，密码输入框紧随其后。</p>
 <h2 id="u52A8_u753B_u5C5E_u6027"><a href="#u52A8_u753B_u5C5E_u6027" class="headerlink" title="动画属性"></a>动画属性</h2><p>在上一节，我们体验了视图的简单动画效果，不难发现，其实真正导致视图动起来的是<code>animations</code>闭包中的代码，也就是对视图属性的改变，然后<code>UIView</code>的类方法生成了视图某属性的起始值和终止值之间的补间动画。这引出了另一个概念，那就是视图的动画属性，诚然不是所有的视图属性都是动画属性，下面给大家介绍一下视图的动画属性。</p>
 <h3 id="u4F4D_u7F6E_u548C_u5927_u5C0F"><a href="#u4F4D_u7F6E_u548C_u5927_u5C0F" class="headerlink" title="位置和大小"></a>位置和大小</h3><ul>

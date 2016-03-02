@@ -59,9 +59,9 @@
 前言在上两篇文章中向大家介绍了如何创建基于动画属性的视图动画，比如位置、透明度等。但是大家有没有想过添加或删除一个视图时怎样添加相应地动画呢？
 当然我们可以用第一篇文章中对用户名、密码输入框的处理办法，但是还有更好的办法处理这种状况。那就是在这篇文章中将向大家介绍的过渡转变（Transition）动画。
 过渡转变动画是Apple预定义的动画集，它没有">
-<meta property="og:image" content="http://d.pr/i/VeYP+">
-<meta property="og:image" content="http://d.pr/i/1406Q+">
-<meta property="og:updated_time" content="2016-01-01T14:12:24.000Z">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/TransitionAnimation-1.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/TransitionAnimation-2.png">
+<meta property="og:updated_time" content="2016-03-02T06:16:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS UIView Animation - Transition">
 <meta name="twitter:description" content="本文首发CSDN，如需转载请与CSDN联系。
@@ -254,7 +254,7 @@
 <h2 id="u6DFB_u52A0_u65B0_u89C6_u56FE"><a href="#u6DFB_u52A0_u65B0_u89C6_u56FE" class="headerlink" title="添加新视图"></a>添加新视图</h2><p>在进行示例之前，大家需要注意一点过渡转变动画与动画属性动画的不同之处。我们在创建动画属性动画时只需要在<code>animations</code>闭包中添加对视图动画属性修改的代码即可，它没有作用域或作用视图的概念。而在过渡转变动画中有作用视图的概念，也就是说我们调用过渡转变动画方法时需要指定一个作用视图。</p>
 <p>明确这点不同之后，我们对作用视图再作进一步的说明。过渡转变动画中的作用视图并不是我们的目标视图，而是目标视图的容器视图，那么大家不难想象，如果该容器视图中有多个子视图，那么这些子视图都会有过渡转变动画效果。下面用示例像大家说明。</p>
 <p>先看看一个简单的视图结构：</p>
-<p><img src="http://d.pr/i/VeYP+" alt="视图结构"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/TransitionAnimation-1.png" alt="视图结构"></p>
 <p>很明显，我们添加了一个视图作为容器视图，并且尺寸等于屏幕尺寸。在<code>ViewController.swift</code>中有该容器视图的Outlet以及一个图片视图：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">weak</span> <span class="keyword">var</span> containerView: <span class="type">UIView</span>!</span><br><span class="line"><span class="keyword">let</span> ipadView = <span class="type">UIImageView</span>(frame: <span class="type">CGRectMake</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">151.5</span>))</span><br></pre></td></tr></table></figure>
 <p>在<code>viewDidLoad()</code>方法中给<code>ipadView</code>指定图片：</p>
@@ -288,7 +288,7 @@
 <li><code>.TransitionFlipFromBottom</code></li>
 </ul>
 <p>如果我们有多个目标视图，想进行不同的过渡转变动画怎么办？那我们就创建多个目标视图的容器视图，尺寸与目标视图一致，放置在合适的位置：</p>
-<p><img src="http://d.pr/i/1406Q+" alt="视图结构"></p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/TransitionAnimation-2.png" alt="视图结构"></p>
 <p>从上图中可以看出，我们在屏幕上放置了四个容器视图，显而易见，我们要分别对这四个容器视图添加过渡转变动画。当然容器视图里要添加什么样的视图随个人喜好。</p>
 <p>在<code>viewDidLoad()</code>方法中添加如下代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.ipadContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromBottom</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.ipadContainerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.iphoneContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromLeft</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.iphoneContainerView.addSubview(<span class="keyword">self</span>.iphoneView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.webContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromRight</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.webContainerView.addSubview(<span class="keyword">self</span>.webView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(textContainerView, duration: <span class="number">2</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionCrossDissolve</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.textContainerView.addSubview(<span class="keyword">self</span>.textView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
