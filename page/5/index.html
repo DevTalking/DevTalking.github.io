@@ -192,6 +192,108 @@
             
             
               
+                <a class="post-title-link" href="/articles/watchkit-pagebase-navigation/" itemprop="url">
+                  使用WatchKit实现Page-Based Navigation
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-11-25T00:00:00+08:00" content="2014-11-25">
+              2014-11-25
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/watchkit-pagebase-navigation/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/watchkit-pagebase-navigation/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>这篇文章向大家展示如何使用WatchKit创建Page-Based Navigation，我们还是在Helloworld项目的基础上进行改善。</p>
+<h2 id="u521B_u5EFAController"><a href="#u521B_u5EFAController" class="headerlink" title="创建Controller"></a>创建Controller</h2><p>打开<code>Interface.storyboard</code>，再添加两个Interface Controller，然后给它们添加不同的背景色。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-pagebase-navigation-1.png" alt="pic"></p>
+<p>现在给每个Controller之间添加Segue，选中第一个Controller，按着control+鼠标左键拖拽至第二个Controller，然后选择next page。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-pagebase-navigation-2.png" alt="pic"></p>
+<p>编译运行，看看它是如何工作的：</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-pagebase-navigation-3.gif" alt="pic"></p>
+<h2 id="Interface_Controller_u751F_u547D_u5468_u671F"><a href="#Interface_Controller_u751F_u547D_u5468_u671F" class="headerlink" title="Interface Controller生命周期"></a>Interface Controller生命周期</h2><p>接下来我们自定义两个<code>WKInterfaceController</code>，分别设置给新添加的两个Interface Controller。然后我们来看看InterfaceController的生命周期。首先在<code>GreenInterfaceController</code>和<code>RedInterfaceController</code>中添加如下三个方法：</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-pagebase-navigation-4.png" alt="pic"></p>
+<p>编译运行，当Watch模拟器显示出内容时，在控制台中我们可以看到<code>GreenInterfaceController</code>和<code>RedInterfaceController</code>执行了<code>init</code>方法：</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-pagebase-navigation-5.png" alt="pic"></p>
+<p>当切换到绿色InterfaceController时，在控制台中可以看到<code>GreenInterfaceController</code>执行了<code>willActivate</code>方法：</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-pagebase-navigation-6.png" alt="pic"><br>当切换到粉红色InterfaceController时，在控制台中可以看到<code>RedInterfaceController</code>执行了<code>willActivate</code>方法，而<code>GreenInterfaceController</code>执行了<code>didDeactivate</code>方法：</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-pagebase-navigation-7.png" alt="pic"></p>
+<p>所以由此可见InterfaceController的生命周期主要由三个方法组成：</p>
+<ul>
+<li><strong>initWithContext</strong>：当Watch App第一次启动，把三个InterfaceController压入栈的时候调用该方法。</li>
+<li><strong>willActivate</strong>：当进入InterfaceController时，调用该方法。类似<code>UIViewController</code>中的<code>viewDidAppear</code>方法。</li>
+<li><strong>didDeactivate</strong>：当InterfaceController不在当前屏幕显示时调用该方法。类似<code>UIViewController</code>中的<code>viewDidDisappear</code>方法。</li>
+</ul>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/watchkit-create-table/" itemprop="url">
                   如何使用WatchKit创建Table
                 </a>
@@ -681,99 +783,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/failable-initializers/" itemprop="url">
-                  可失败构造器（Failable Initializers）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-10-21T00:00:00+08:00" content="2014-10-21">
-              2014-10-21
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/failable-initializers/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/failable-initializers/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <p><a href="https://developer.apple.com/xcode/downloads/" target="_blank" rel="external">Xcode6.1</a>中Swift的最新版本是1.1，在该版本中引入了一个新的特性：可失败构造器。通过构造器初始化实际上是给<code>class</code>或<code>struct</code>的每一个存储属性（参数）提供初始值，进行对象实例化的过程。在一些情况下，初始化的过程是有可能失败的。比如，实例化一个对象，在实例化的过程中需要访问资源文件，就像从文件中加载图片一样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSImage</span>(contentsOfFile: <span class="string">"swift.png"</span>)</span><br></pre></td></tr></table></figure>
-<p>如果该文件不存在或者因为某种原因不允许访问，那么<code>NSImage</code>的初始化过程就会失败。在Swift 1.1版本中，像这种情况可以通过可失败构造器进行捕获。如果在构造一个对象时使用可失败构造器，那么当对象构造成功时返回该对象，当对象构造失败时则返回<code>nil</code>。因此可以直接用条件判断语句使用可失败构造器来实例化对象：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> image = <span class="type">NSImage</span>(contentsOfFile: <span class="string">"swift.png"</span>) &#123;</span><br><span class="line">	<span class="comment">// loaded the image successfully</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="comment">// could not load the image</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>init</code>初始化方法可以通过在<code>init</code>关键字后面加上<code>?</code>或<code>!</code>将其变为可失败初始化方法，这样就表示某对象的初始化方法会产生两种结果。比如，将<code>Int</code>类型的<code>init</code>初始化方法变为可失败初始化方法，然后执行<code>String</code>类型转换：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Int</span> </span>&#123;</span><br><span class="line">	<span class="keyword">init</span>?(fromString: <span class="type">String</span>) &#123; </span><br><span class="line">		<span class="keyword">if</span> <span class="keyword">let</span> i = fromString.toInt() &#123;</span><br><span class="line">			<span class="comment">// Initialize</span></span><br><span class="line">			<span class="keyword">self</span> = i</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123; </span><br><span class="line">			<span class="comment">// return nil, discarding self is implied</span></span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在可失败构造器或可失败初始化方法中，一旦返回<code>nil</code>就代表构造失败或初始化失败，不会再返回其他的值。在上述的示例中，当<code>String</code>不能解析为<code>Integer</code>时会导致初始化失败，返回<code>nil</code>，否则返回解析成功后的值。</p>
-<p>可失败构造器/初始化方法解决了以前在Swift中只能通过工厂方法捕获构造或初始化失败情况的问题。比如，一个枚举，通过<code>fromRaw</code>工厂方法通过一个原始值来寻找它所对应的枚举成员，返回类型为可选枚举类型。即如果该原始值对应的枚举成员存在，那么返回该枚举成员，如果不存在则返回<code>nil</code>。现在，Swift编译器结合可失败构造器，通过可失败的初始化方法用<code>switch</code>语句判断原始值对应的枚举成员，如果没有对应的则返回<code>nil</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Color</span> : <span class="title">Int</span> </span>&#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="type">Red</span> = <span class="number">0</span>, <span class="type">Green</span> = <span class="number">1</span>, <span class="type">Blue</span> = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// implicitly synthesized</span></span><br><span class="line">	<span class="keyword">var</span> rawValue: <span class="type">Int</span> &#123; <span class="comment">/* returns raw value for current case */</span> &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// implicitly synthesized</span></span><br><span class="line">	<span class="keyword">init</span>?(rawValue: <span class="type">Int</span>) &#123;</span><br><span class="line">		<span class="keyword">switch</span> rawValue &#123; </span><br><span class="line">			<span class="keyword">case</span> <span class="number">0</span>: <span class="keyword">self</span> = .<span class="type">Red</span></span><br><span class="line">			<span class="keyword">case</span> <span class="number">1</span>: <span class="keyword">self</span> = .<span class="type">Green</span></span><br><span class="line">			<span class="keyword">case</span> <span class="number">2</span>: <span class="keyword">self</span> = .<span class="type">Blue</span></span><br><span class="line">			<span class="keyword">default</span>: <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用可失败构造器可极大程度的统一Swift中的构造对象语法，消除了构造器与工厂方法之间混乱、重复的冗余语法，使Swift更加简洁。随着可失败构造器这一特性的加入，Swift将对大多数Cocoa中带<code>NSError</code>参数的工厂初始化方法进行调整，从而加强Swift中构造对象语法的统一性，给开发者带来更好的开发体验。</p>
-<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=17" target="_blank" rel="external">Failable Initializers</a></p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -816,7 +825,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">69</span>
+              <span class="site-state-item-count">70</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -830,7 +839,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>

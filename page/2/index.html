@@ -192,6 +192,280 @@
             
             
               
+                <a class="post-title-link" href="/articles/develop-tvos-app-with-tvml/" itemprop="url">
+                  用TVML开发tvOS应用教程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-12-31T00:00:00+08:00" content="2015-12-31">
+              2015-12-31
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/develop-tvos-app-with-tvml/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/develop-tvos-app-with-tvml/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>作者：<a href="http://www.raywenderlich.com/u/Kelvin%20Lau" target="_blank" rel="external">Kelvin Lau</a> 原文地址：<a href="http://www.raywenderlich.com/114886/beginning-tvos-development-with-tvml-tutorial" target="_blank" rel="external">Beginning tvOS Development with TVML Tutorial</a></p>
+<p>在2015年9月9日的产品发布会中，Apple宣布了新一代的Apple TV以及tvOS，并且在tvOS中集成了App Store。这使得我们多年以来想在Apple TV上开发专属应用的梦想成真了。</p>
+<p>我和其他教程团队的成员已经开始深入研究tvOS SDK，并且正在努力为你们准备一些有价值的tvOS教程。在你开这篇文章之前，Chris Wagner已经写了一篇关于tvOS初步印象的<a href="http://www.raywenderlich.com/114313/tvos-initial-impressions" target="_blank" rel="external">文章</a>，我也基于这篇文章，设计了第一个tvOS的教程。</p>
+<blockquote>
+<p>译者注：可参阅Chris Wagner文章的中译版<a href="http://www.devtalking.com/articles/tvOS-initial-impression/">一个iOS开发者对tvOS SDK的初探</a>。</p>
+</blockquote>
+<p>在这篇教程中，你将会使用TVML开发你的第一款tvOS应用。信不信由你，你将会使用JavaScript管理你应用的逻辑以及创建TVML模板来展现你应用的UI。</p>
+<p>当教程结束后，你应该可以基本理解如果通过TVML和TVJS管理、控制tvOS应用。现在就我们开始吧。</p>
+<blockquote>
+<p>注意：该教程需要Xcode7.1或更高的版本，你们可以在这里<a href="https://developer.apple.com/xcode/download/" target="_blank" rel="external">下载</a>。虽然你们可以跟着该教程一步一步的进行操作，但我还是建议你们能储备一些基本的JavaScript知识。</p>
+</blockquote>
+<h2 id="u9009_u62E9_u5F00_u53D1_u65B9_u5F0F"><a href="#u9009_u62E9_u5F00_u53D1_u65B9_u5F0F" class="headerlink" title="选择开发方式"></a>选择开发方式</h2><p>Apple为开发tvOS应用提供了两种方式：</p>
+<ol>
+<li><strong>TVML Apps</strong>：这类应用是使用完整的新开发技术开发的，比如TVML、TVJS、TVMLKit。在稍后我会解释这些简称的含义以及如何使用它们。</li>
+<li><strong>Custom Apps</strong>：这类应用是使用我们已经比较熟悉的开发技术进行开发的，比如大家熟知的一些iOS框架和特性，像Storyboard、UIKit、Auto Layout等。</li>
+</ol>
+<p>这两种方式没有孰优孰劣之分，都是Apple推荐的方法，只是按需所取，以及你更想尝试哪种方式。</p>
+<p>在这篇教程中，你们的目标是开发以个能播放<a href="http://www.rwdevcon.com/" target="_blank" rel="external">RWDevCon</a>讨论视频的tvOS应用：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-1.gif" alt="tvOS-1"></p>
+<p>虽然用上述两种方式都可以开发这个应用，但是使用TVML会更加容易一些。所以这就是你在这篇教程中要学和要做的东西。</p>
+<h2 id="u4EC0_u4E48_u662FTVML_uFF1F"><a href="#u4EC0_u4E48_u662FTVML_uFF1F" class="headerlink" title="什么是TVML？"></a>什么是TVML？</h2><p>正如我刚才提到的，第一种开发tvOS应用的方式是通过TVML、TVJS和TVMLKit这些新的技术实现的。如果你们对这些简称比较陌生，不要惊慌，因为他们本就是新鲜玩意。这里我简单解释一下：</p>
+<ul>
+<li><strong>TVML</strong>是一种XML格式，基于“Television Markup Language”。</li>
+<li><strong>TVJS</strong>是基于JavaScript APIs的脚本语言，它可以根据TVML中定义的内容展示应用。</li>
+<li><strong>TVMLKit</strong>是连接TVML、TVJS和原生tvOS应用的工具包。</li>
+</ul>
+<p>如果你是一名经常使用原生API开发原生iOS应用的开发者，那么看到这些类似前端的技术可能会有点退缩。但希望你能保持一颗学习的心，学习了解这些新的强大的特性。</p>
+<p>我在这列举一个非常典型的Apple TV的应用场景。大家可以想象一下：你们想把一些内容或信息展现给用户，这些内容和信息储存在你们的服务器上，并且这些内容的格式、查询方式都服务于iPhone或iPad中的应用，那么你肯定会希望你的tvOS中的应用也能方便的使用这些内容，并做到与iOS中应用有相似的展现、查询、导航方式。</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-2.jpg" alt="tvOS-2"></p>
+<p>上述的这个场景恰恰是我们这片教程中的场景。我们已经有<a href="http://www.rwdevcon.com/" target="_blank" rel="external">RWDevCon</a>网站，上面有许多技术讨论视频，所以运用TVML模板应该很容易实现。并且我们也没有很严格的用户界面的需求，所以我们可以简单方便的使用Apple提供的UI<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/TextboxTemplate.html#//apple_ref/doc/uid/TP40015064-CH2-SW8" target="_blank" rel="external">模板</a>。</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-3.jpg" alt="tvOS-3"></p>
+<p>简而言之：</p>
+<ul>
+<li><strong>开发TVML App</strong>：如果你主要是通过tvOS应用展现一些内容，不论是音频、视频、文本、图片，并且你已经有服务器存储这些资源。那么使用TVML开发是不错的选择。</li>
+<li><strong>开发Custom App</strong>：如果你希望用户不只是被动的通过你的tvOS应用观看或收听内容，而是希望用户与应用有更多的交互，给用户高质量的用户体验。那么你应该选择使用iOS的相关技术开发自定义的应用。</li>
+</ul>
+<p>现在你们已经大概了解了TVML是如何工作的，以及我们为什么要在这篇教程中使用TVML开发tvOS应用。想要更深入的了解，最好的办法就是由你们在实践中去学习、理解了。让我们开始动手吧！</p>
+<h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><p>首先你们要确保已经下载并安装了Xcode7.1或更高版本。</p>
+<p>然后通过 <strong>File\New\Project</strong> 创建新工程，在侧边栏选择 <strong>tvOS\Application\Single View Application</strong> 模板，然后点击 <strong>Next</strong>：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-4.png" alt="tvOS-4"></p>
+<p>项目名称输入 <strong>RWDevCon</strong> ,语言选择 <strong>Swift</strong> ，确保下面的两个复选框为未选中状态，也就是不使用Core Data和单元测试，然后点击 <strong>Next</strong>：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-5.png" alt="tvOS-5"></p>
+<p>选择一个目录，点击 <strong>Save</strong> 保存你的项目。Xcode会为你创建一个带有Storyboard的空工程（如果你开发自定义UI的tvOS应用，那么你需要使用Storyboard）。</p>
+<p>然而在该教程中你不需要使用Storybard，因为我们会使用TVML来展示应用的UI，而不是用Storybard去设计UI。所以将 <strong>Main.storyboard</strong> 和 <strong>ViewController.swift</strong> 删去，在提示框中选择 <strong>Move To Trash</strong> 彻底删除。</p>
+<p>接着打开 <strong>Info.plist</strong> 文件，删掉<code>Main storybaord file base name</code>属性。最后添加新的属性<code>App Transport Security Settings</code>（区分大小写），以及它的子属性<code>Allow Arbitrary Loads</code>，并将其值设为<code>YES</code>。</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-6.png" alt="tvOS-6"></p>
+<blockquote>
+<p>注意：在iOS9中，Apple不允许应用链接非HHTPS协议的服务，所以刚才的操作是很有必要的，因为在该教程中，你们将会以HTTP协议访问本地的服务器，所以你需要在Info.plist中添加上述属性以便允许应用通过HTTP协议访问服务器。</p>
+</blockquote>
+<h2 id="u52A0_u8F7D_u4F60_u7684TVML"><a href="#u52A0_u8F7D_u4F60_u7684TVML" class="headerlink" title="加载你的TVML"></a>加载你的TVML</h2><p>tvOS应用的生命周期开始于AppDelegate。在这里，你将创建<code>TVApplicationController</code>以及应用上下文，并将它们传给主要的JavaScript文件。</p>
+<p>打开<strong>AppDelegate.swift</strong>并做下面这些事：</p>
+<ul>
+<li>删除所有的方法。</li>
+<li>导入<code>TVMLKit</code>。</li>
+<li>使AppDelegate遵循<code>TVApplicationControllerDelegate</code>协议。</li>
+</ul>
+<p>当完成这些事后，你的<strong>AppDelegate.swift</strong>看起来应该像这样：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"><span class="keyword">import</span> TVMLKit</span><br><span class="line"> </span><br><span class="line"><span class="preprocessor">@UIApplicationMain</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AppDelegate</span>: <span class="title">UIResponder</span>, <span class="title">UIApplicationDelegate</span>, <span class="title">TVApplicationControllerDelegate</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">var</span> window: <span class="type">UIWindow</span>?</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接着添加下面这些属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> appController: <span class="type">TVApplicationController</span>?</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">let</span> <span class="type">TVBaseURL</span> = <span class="string">"http://localhost:9001/"</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">let</span> <span class="type">TVBootURL</span> = <span class="string">"<span class="subst">\(AppDelegate.TVBaseURL)</span>js/application.js"</span></span><br></pre></td></tr></table></figure>
+<p><code>TVApplicationController</code>是<code>TVMLKit</code>中的一个类，它负责与你的服务器的交互。<code>TVBaseURL</code>和<code>TVBootURL</code>包含了你的服务器的地址和JavaScript文件的地址，该JavaScript文件稍后会运行在你的服务器中。</p>
+<p>接在在AppDelegate中添加如下方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">application</span><span class="params">(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?)</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">  window = <span class="type">UIWindow</span>(frame: <span class="type">UIScreen</span>.mainScreen().bounds)</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 1</span></span><br><span class="line">  <span class="keyword">let</span> appControllerContext = <span class="type">TVApplicationControllerContext</span>()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 2</span></span><br><span class="line">  <span class="keyword">guard</span> <span class="keyword">let</span> javaScriptURL = <span class="type">NSURL</span>(string: <span class="type">AppDelegate</span>.<span class="type">TVBootURL</span>) <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">fatalError</span>(<span class="string">"unable to create NSURL"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  appControllerContext.javaScriptApplicationURL = javaScriptURL</span><br><span class="line">  appControllerContext.launchOptions[<span class="string">"BASEURL"</span>] = <span class="type">AppDelegate</span>.<span class="type">TVBaseURL</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3</span></span><br><span class="line">  appController = <span class="type">TVApplicationController</span>(context: appControllerContext, window: window, delegate: <span class="keyword">self</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这些代码相对还是比较容易理解的：</p>
+<ol>
+<li>这里你首先创建了一个应用上下文<code>TVApplicationControllerContext</code>的实例，用于稍后初始化你的<code>TVApplicationController</code>。你可以理解为给一个简单的对象设置了一些属性，比如服务器的URL，然后该对象又作为属性设置给了另一个对象。</li>
+<li>给应用上下文这个对象实例设置了两个简单的属性：主JavaScript文件的路径和服务器的地址。</li>
+<li>通过你刚才设置好的应用上下文初始化<code>TVApplicationController</code>。此时就完全由Apple代码来接管了，他会加载到你的主JavaScript文件，并开始执行其内容。</li>
+</ol>
+<p>所以到目前为止，是时候让Xcode休息一会了，因为接下来你们将要编写JavaScript了。</p>
+<h2 id="The_JavaScript"><a href="#The_JavaScript" class="headerlink" title="The JavaScript"></a>The JavaScript</h2><p>在客户端-服务端这类的tvOS应用中，你的JavaScript文件通常在应用连接的服务器中。在该教程中，你们将会在Mac上搭建一个简单的服务器。</p>
+<h3 id="u5BA2_u6237_u7AEF_u4EE3_u7801"><a href="#u5BA2_u6237_u7AEF_u4EE3_u7801" class="headerlink" title="客户端代码"></a>客户端代码</h3><p>为了方便起见，我们把JavaScript文件放在桌面，在你们的 <strong>桌面</strong> 文件夹中新建一个文件夹名为 <strong>client</strong> 。在client文件夹中再新建一个文件夹名为 <strong>js</strong> 。该文件夹将作为你的JavaScript文件的容器。</p>
+<p>通过你使用的编辑JavaScript的IDE，新建一个JavaScript文件，名为 <strong>application.js</strong> ，将它保存在你刚才新建的 <strong>js</strong> 文件夹中。然后在 <strong>application.js</strong> 中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">App</span>.onLaunch = function(options) &#123;</span><br><span class="line">  <span class="comment">// 1</span></span><br><span class="line">  <span class="keyword">var</span> alert = createAlert(<span class="string">"Hello World"</span>, <span class="string">""</span>); <span class="comment">//第二个参数传入空字符串</span></span><br><span class="line">  navigationDocument.presentModal(alert);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="keyword">var</span> createAlert = function(title, description) &#123;</span><br><span class="line">  <span class="keyword">var</span> alertString = `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">    &lt;document&gt;</span><br><span class="line">      &lt;alertTemplate&gt;</span><br><span class="line">        &lt;title&gt;$&#123;title&#125;&lt;/title&gt;</span><br><span class="line">        &lt;description&gt;$&#123;description&#125;&lt;/description&gt;</span><br><span class="line">      &lt;/alertTemplate&gt;</span><br><span class="line">    &lt;/document&gt;`</span><br><span class="line">    <span class="keyword">var</span> parser = new <span class="type">DOMParser</span>();</span><br><span class="line">    <span class="keyword">var</span> alertDoc = parser.parseFromString(alertString, <span class="string">"application/xml"</span>);</span><br><span class="line">    <span class="keyword">return</span> alertDoc</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>App.onLaunch</code>是处理JavaScript文件的入口方法。之前在 <strong>AppDelegate.swift</strong> 中已经初始化好的<code>TVApplicationController</code>会将<code>TVApplicationControllerContext</code>传到这。之后你会使用到上下文中的内容，但是现在，我们只创建一个简单的提示界面并显示在屏幕上。</p>
+<ol>
+<li>通过下面定义的<code>createAlert</code>函数，我们获得到了为我们展现界面的TVML文件。<code>navigationDocument</code>类似于iOS中的<code>UINavigationController</code>，它提供像栈一样的方式，可以推出或压进展现界面的TVML文件。</li>
+<li><code>createAlert</code>是一个返回TVML文件的函数，你可以将它看作类似iOS中的<code>UIAlertController</code>。</li>
+</ol>
+<p>写到这顺便提一下，Apple已经提供了18种TVML模板供我们使用，你们可以在该<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/TextboxTemplate.html#//apple_ref/doc/uid/TP40015064-CH2-SW8" target="_blank" rel="external">Apple TV Markup Language Reference</a>中查阅完成的模板列表。</p>
+<p>上述代码中的 <strong>alertTemplate</strong> 就是这18个模板中的其中一个，它的主要用于展示重要信息，比如通过一段消息提示用户在继续操作之前需要执行其他的操作等。此时，距离你们编译运行你们的第一个tvOS应用已为时不远了。</p>
+<h3 id="u914D_u7F6E_u670D_u52A1_u5668"><a href="#u914D_u7F6E_u670D_u52A1_u5668" class="headerlink" title="配置服务器"></a>配置服务器</h3><p>打开 <strong>Terminal</strong> 输入如下命令：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">cd ~/<span class="type">Desktop</span>/client</span><br><span class="line">python -m <span class="type">SimpleHTTPServer</span> <span class="number">9001</span></span><br></pre></td></tr></table></figure>
+<p>这两行命令的作用是在先前创建的client目录中开启一个基于Python的web服务器。现在，你们可以准备起飞了！</p>
+<p>回到你的Xcode项目中编译运行程序。你应该可以看到你的第一个tvOS TVML应用了！</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-7.png" alt="tvOS-7"></p>
+<p>我不知道你们的感觉如何，但是当我第一次运行成功后，我的感受就像下面这个家伙一样：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-8.png" alt="tvOS-8"></p>
+<p>在继续进行教程之前，我想花点时间对你们目前已经完成的工作作以总结：</p>
+<ol>
+<li>你们创建了<code>TVApplicationController</code>实例。它用于管理JavaScript代码。</li>
+<li>你们创建了<code>TVApplicationControllerContext</code>实例，并在创建<code>TVApplicationController</code>时将其与之关联。应用上下文有一个<code>launchOption</code>属性，用来构建我们的<code>BASEURL</code>，也就是服务器的地址。该应用上下文也用于配置tvOS应用与哪个服务器连接。</li>
+<li>控制器被传到了JavaScript代码中。<code>App.onLaunch</code>作为整个JavaScript文件的入口方法，你们定义了<code>createAlert</code>函数，返回TVML提示信息模板文件，并由<code>navigationDocument</code>管理并展现界面。最后将“Hello World”显示在屏幕上。</li>
+</ol>
+<p>即使现在你们使用的服务器是运行在本机的，但是你们仍然可以连接一个真实的远程的服务器，可能是一个连着数据库的服务器。你们感受并想象一下应用场景，应该会很酷，对吧？</p>
+<h2 id="u5B8C_u5584TVML_u6A21_u677F"><a href="#u5B8C_u5584TVML_u6A21_u677F" class="headerlink" title="完善TVML模板"></a>完善TVML模板</h2><p>我之前提到过，<code>createAlert</code>是一个返回TVML模板文件的函数。有很多属性可由我们在TVML文件中编辑修改，作为一个实验性质的小例子，你们将会在当前的 <strong>alertTemplate</strong> 中添加一个按钮。回到你们的JavaScript代码中，将目光聚焦在<code>createAlert</code>函数上，在模板中添加一个按钮：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> alertString = `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">  &lt;document&gt;</span><br><span class="line">    &lt;alertTemplate&gt;</span><br><span class="line">      &lt;title&gt;$&#123;title&#125;&lt;/title&gt;</span><br><span class="line">      &lt;description&gt;$&#123;description&#125;&lt;/description&gt;</span><br><span class="line">      &lt;button&gt;</span><br><span class="line">        &lt;text&gt;<span class="type">OK</span>&lt;/text&gt;</span><br><span class="line">      &lt;/button&gt;</span><br><span class="line">    &lt;/alertTemplate&gt;</span><br><span class="line">  &lt;/document&gt;`</span><br></pre></td></tr></table></figure>
+<p>这里解释一下上述代码：</p>
+<ol>
+<li>一个TVML文件的第一级标签是<code>&lt;document&gt;</code>，也就是整个模板内容是由<code>&lt;document&gt;</code>和<code>&lt;/document&gt;</code>包起来的。</li>
+<li>接着你们开始定义模板。使用Apple提供的 <strong>alertTemplate</strong> 模板，通过<code>createAlert</code>函数将其返回。</li>
+<li>在该模板里，根据Apple的<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/TextboxTemplate.html#//apple_ref/doc/uid/TP40015064-CH2-SW8" target="_blank" rel="external">Apple TV Markup Language Reference</a>文档规范，添加了按钮、标题、描述三个标签。</li>
+</ol>
+<p>保存你们刚才编辑的JavaScript文件，再次编译运行。你们看到在提示信息下面出现了一个按钮。瞧，TVML是不是将构建tvOS UI变得很简单！</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-9.png" alt="tvOS-9"></p>
+<blockquote>
+<p>注意：在一个模板中，你能添加的元素数量和类型基于这个的模板的类型。比如，一个 <strong>loading Template</strong> 就不允许有任何按钮出现。此外，你可以自定义字体、颜色和其他一些属性。但是这些知识已经超越了该教程的范畴。你们可以查阅<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/index.html#//apple_ref/doc/uid/TP40015064-CH41-SW1" target="_blank" rel="external">Apple TV Markup Language Reference</a>文档去了解更多TVML模板的信息。</p>
+</blockquote>
+<h2 id="u4E30_u5BCCJavaScript_u5BA2_u6237_u7AEF"><a href="#u4E30_u5BCCJavaScript_u5BA2_u6237_u7AEF" class="headerlink" title="丰富JavaScript客户端"></a>丰富JavaScript客户端</h2><p>到目前为止，你们已经完成了一些工作，并且正按照我们的指引一步一步达成目标。在这一节中，你们将要花一点时间在不同的JavaScript文件中将一些逻辑抽象出来，便于能更好的重用。</p>
+<p>在 <strong>client/js</strong> 文件夹中新建一个JavaScript文件，名为 <strong>Presenter.js</strong> 。在该文件中，你们将定义<code>Presenter</code>类用于处理导航各个界面，或者说各个TVML模板文件，并且处理事件响应。在 <strong>Presenter.js</strong> 中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Presenter</span> = &#123;</span><br><span class="line">  <span class="comment">// 1</span></span><br><span class="line">  makeDocument: function(resource) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="type">Presenter</span>.parser) &#123;</span><br><span class="line">      <span class="type">Presenter</span>.parser = new <span class="type">DOMParser</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> doc = <span class="type">Presenter</span>.parser.parseFromString(resource, <span class="string">"application/xml"</span>);</span><br><span class="line">    <span class="keyword">return</span> doc;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 2</span></span><br><span class="line">  modalDialogPresenter: function(xml) &#123;</span><br><span class="line">    navigationDocument.presentModal(xml);</span><br><span class="line">  &#125;,</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3</span></span><br><span class="line">  pushDocument: function(xml) &#123;</span><br><span class="line">    navigationDocument.pushDocument(xml);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>让我们解释一下上述代码：</p>
+<ol>
+<li>还记得你们在之前<code>createAlert</code>函数中用过的<code>DOMParser</code>类么，它可以将TVML字符串转换为可用于展示的TVML模板对象。因为该类不需要多次创建实例，所以采用单例模式创建它。然后通过<code>DOMParser</code>的<code>parseFormString()</code>方法将TVML字符串转为模板对象。</li>
+<li><code>modalDialogPresenter</code>方法通过传入的TVML模板文件，将其模态的展现在屏幕上。</li>
+<li><code>pushDocument</code>方法是在导航栈中推送一个TVML模板文件，相当于在iOS中push出一个界面。</li>
+</ol>
+<p>在之后，你们还会用到<code>Presenter</code>类管理选中处理操作。现在，让我们使用<code>Presenter</code>类对之前的JavaScript代码进行重构。将<code>App.onLaunch</code>中的代码替换为如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">App</span>.onLaunch = function(options) &#123;</span><br><span class="line">  <span class="comment">// 1</span></span><br><span class="line">  <span class="keyword">var</span> javascriptFiles = [</span><br><span class="line">    `$&#123;options.<span class="type">BASEURL</span>&#125;js/<span class="type">Presenter</span>.js`</span><br><span class="line">  ];</span><br><span class="line">  <span class="comment">// 2</span></span><br><span class="line">  evaluateScripts(javascriptFiles, function(success) &#123;</span><br><span class="line">    <span class="keyword">if</span>(success) &#123;</span><br><span class="line">      <span class="keyword">var</span> alert = createAlert(<span class="string">"Hello World!"</span>, <span class="string">""</span>);</span><br><span class="line">      <span class="type">Presenter</span>.modalDialogPresenter(alert);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 3 Handle the error CHALLENGE!//inside else statement of evaluateScripts. </span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这些代码相对还是比较容易理解的，我们来看一下：</p>
+<ol>
+<li>首先创建一个新的JavaScript文件的数组。然后通过<code>options</code>参数获取到<code>BASEURL</code>属性，并组装<code>Presenter.js</code>的路径。这里的<code>options</code>就是之前我们在<code>AppDelegate</code>类中创建的<code>TVApplicationControllerContext</code>，<code>BASEURL</code>自然也是那时我们设置的。</li>
+<li><code>evaluateScripts</code>将加载JavaScript文件。</li>
+<li>这里，你应该处理异常信息，稍后我们完善这里。</li>
+</ol>
+<p>在继续进行之前，编译运行程序，确保JavaScript文件修改过之后程序仍能正常运行。此时，我们通过<code>Presenter</code>类对JavaScript代码的重构有了一个良好的开端：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-10.png" alt="tvOS-10"></p>
+<p>现在，看看上面代码中被注释的那行，你们能否自行完成对异常处理的挑战呢。如果<code>evaluateScripts</code>处理失败，可能是因为JavaScript文件的路径写错了，那么你可能会希望在此时显示一个提示消息给用户。<strong>提示：</strong> 之所以在这里出现了异常，是因为<code>Presenter</code>类加载失败导致，所以在这里你不能使用<code>Presenter</code>类显示提示信息的界面。</p>
+<p>你应该通过之前所学到的知识来解决该问题。如果你们觉得有困难，那么可以参照下面的代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//将这两行代码插入evaluateScripts的else代码块中. </span></span><br><span class="line"><span class="keyword">var</span> errorDoc = createAlert(<span class="string">"Evaluate Scripts Error"</span>, <span class="string">"Error attempting to evaluate external JavaScript files."</span>);</span><br><span class="line">navigationDocument.presentModal(errorDoc);</span><br></pre></td></tr></table></figure>
+<p>想要测试错误信息，你们可以修改一下JavaScript文件的路径，比如把<code>Presenter.js</code>改为<code>Presentr.js</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">$&#123;options.<span class="type">BASEURL</span>&#125;js/<span class="type">Presentr</span>.js</span><br></pre></td></tr></table></figure>
+<h2 id="u4F7F_u7528CatalogTemplate"><a href="#u4F7F_u7528CatalogTemplate" class="headerlink" title="使用CatalogTemplate"></a>使用CatalogTemplate</h2><p><strong>catalogTemplate</strong>模板同样也是Apple提供的18个模板中的一个。它的作用是以分组的形式展现内容，用它来展示你们最喜欢的RWDevCon视频最好不过了！ <strong>catalogTemplate</strong>有许多有意思的元素：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-11.jpg" alt="tvOS-11"></p>
+<h3 id="u590D_u5408_u5143_u7D20_u548C_u7B80_u5355_u5143_u7D20"><a href="#u590D_u5408_u5143_u7D20_u548C_u7B80_u5355_u5143_u7D20" class="headerlink" title="复合元素和简单元素"></a>复合元素和简单元素</h3><p>该模板中的<code>banner</code>元素在应用顶部，用于展示应用基本信息，比如名称、标题等。它本身是一个 <strong>复合元素</strong> ，也就是说它是由多个 <strong>简单元素</strong> 组合而成。比如，在<code>banner</code>中很显然有标题，那么该标题就是一个简单的<code>title</code>元素，并且在<code>title</code>背后还有背景图片，这又是另外一个简单元素<code>background</code>。所以<code>banner</code>是由两个简单元素组合而成。</p>
+<p>让我们来试试这个模板吧。打开 <strong>client</strong> 文件夹，在 <strong>js</strong> 文件夹的同级目录新建两个文件夹，分别命名为 <strong>images</strong> 和 <strong>templates</strong> 。此时你的 <strong>client</strong> 文件夹里的内容应该是这样的：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-12.png" alt="tvOS-12"></p>
+<p>你们会需要图片构建模板中的Cells，在我们这个场景中就是一个一个的视频，图片自然就是视频的封面了。我已经为你们准备好了封面图片，你们可以从<a href="/cdn3.raywenderlich.com/wp-content/uploads/2015/09/images.zip">这里下载</a>。下载成功后，将他们解压放在刚才你们创建的 <strong>images</strong> 文件夹中。</p>
+<p>现在，你们即将要做的工作是在屏幕中显示图片!新建一个JavaScript文件，命名为 <strong>RWDevConTemplate.xml.js</strong> ，将其存在 <strong>templates</strong> 文件夹中。</p>
+<p>打开 <strong>RWDevConTemplate.xml.js</strong> ，添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Template</span> = function() &#123; <span class="keyword">return</span> `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">  &lt;document&gt;</span><br><span class="line">    &lt;catalogTemplate&gt;</span><br><span class="line">      &lt;banner&gt;</span><br><span class="line">        &lt;title&gt;<span class="type">RWDevConHighlights</span>&lt;/title&gt;</span><br><span class="line">      &lt;/banner&gt;</span><br><span class="line">    &lt;/catalogTemplate&gt;</span><br><span class="line">  &lt;/document&gt;`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，我们试图通过<code>catalogTemplate</code>模板显示一个Banner条。但在使用只包含模板信息的JavaScript文件之前，我们需要通过某种方法让其他的JavaScript文件知道该文件的存在并能加载其模板信息，因为当前它没有通过任何方式向其他JavaScript文件暴露过。所以我们要创建的最后一个JavaScript文件： <strong>ResourceLoader.js</strong> 就是用来解决该问题的！</p>
+<h3 id="ResourceLoader"><a href="#ResourceLoader" class="headerlink" title="ResourceLoader"></a>ResourceLoader</h3><p>新建一个JavaScript文件，命名为 <strong>ResourceLoader.js</strong> ，保存在 <strong>js</strong> 文件夹中，和 <strong>application.js</strong> 、 <strong>Presenter.js</strong> 一起。打开 <strong>ResourceLoader.js</strong> 添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">function <span class="type">ResourceLoader</span>(baseurl) &#123;</span><br><span class="line">  this.<span class="type">BASEURL</span> = baseurl;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="type">ResourceLoader</span>.prototype.loadResource = function(resource, callback) &#123;</span><br><span class="line">  <span class="keyword">var</span> <span class="keyword">self</span> = this;</span><br><span class="line">  evaluateScripts([resource], function(success) &#123;</span><br><span class="line">    <span class="keyword">if</span>(success) &#123;</span><br><span class="line">      <span class="keyword">var</span> resource = <span class="type">Template</span>.call(<span class="keyword">self</span>);</span><br><span class="line">      callback.call(<span class="keyword">self</span>, resource);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">var</span> title = <span class="string">"Resource Loader Error"</span>,</span><br><span class="line">          description = `<span class="type">Error</span> loading resource '$&#123;resource&#125;'. \n\n <span class="type">Try</span> again later.`,</span><br><span class="line">          alert = createAlert(title, description);</span><br><span class="line">      navigationDocument.presentModal(alert);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不用过于担心看不懂这些代码逐行的含义，你们只要清楚这些代码的作用是加载其他模板文件就可以了。</p>
+<p>之前我们的主屏显示的是“Hello World”的提示信息模板，现在试着将它换成我们创建的<code>RWDevConTemplate</code>。打开 <strong>application.js</strong> 文件，根据如下代码修改之前的代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="keyword">var</span> resourceLoader;</span><br><span class="line"> </span><br><span class="line"><span class="type">App</span>.onLaunch = function(options) &#123;</span><br><span class="line">  <span class="comment">// 2</span></span><br><span class="line">  <span class="keyword">var</span> javascriptFiles = [</span><br><span class="line">    `$&#123;options.<span class="type">BASEURL</span>&#125;js/<span class="type">ResourceLoader</span>.js`, </span><br><span class="line">    `$&#123;options.<span class="type">BASEURL</span>&#125;js/<span class="type">Presenter</span>.js`</span><br><span class="line">  ];</span><br><span class="line"> </span><br><span class="line">  evaluateScripts(javascriptFiles, function(success) &#123;</span><br><span class="line">    <span class="keyword">if</span>(success) &#123;</span><br><span class="line">      <span class="comment">// 3</span></span><br><span class="line">      resourceLoader = new <span class="type">ResourceLoader</span>(options.<span class="type">BASEURL</span>);</span><br><span class="line">      resourceLoader.loadResource(`$&#123;options.<span class="type">BASEURL</span>&#125;templates/<span class="type">RWDevConTemplate</span>.xml.js`, function(resource) &#123;</span><br><span class="line">        <span class="keyword">var</span> doc = <span class="type">Presenter</span>.makeDocument(resource);</span><br><span class="line">        <span class="type">Presenter</span>.pushDocument(doc);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">var</span> errorDoc = createAlert(<span class="string">"Evaluate Scripts Error"</span>, <span class="string">"Error attempting to evaluate external JavaScript files."</span>);</span><br><span class="line">      navigationDocument.presentModal(errorDoc);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 先不管createAlert函数</span></span><br></pre></td></tr></table></figure>
+<p>此时你们已经对之前的代码进行了三处的修改：</p>
+<ol>
+<li>申明了一个<code>resourceLoader</code>变量。</li>
+<li>将 <strong>ResourceLoader.js</strong> 文件添加到JavaScript文件数组中。</li>
+<li>使用<code>resourceLoader</code>加载TVML模板，然后使用<code>Presenter</code>展现在屏幕上。</li>
+</ol>
+<p>编译运行程序，你们应该会看到如下界面：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-13.png" alt="tvOS-13"></p>
+<p>恭喜你们，现在你们已经可以通过更好的方式从JavaScript文件中加载TVML模板信息了，而不再使用硬编码写死在代码里！</p>
+<h3 id="u5B8C_u5584catalogTemplate"><a href="#u5B8C_u5584catalogTemplate" class="headerlink" title="完善catalogTemplate"></a>完善catalogTemplate</h3><p>你管你们信不信，我们要做的tvOS应用马上要接近尾声了。通过TVML开发tvOS应用最优雅的一件事就是添加界面元素非常之简单。</p>
+<p>打开 <strong>RWDevConTemplate.xml.js</strong> 文件，按照如下代码更新之前代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Template</span> = function() &#123; <span class="keyword">return</span> `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">  &lt;document&gt;</span><br><span class="line">    &lt;catalogTemplate&gt; </span><br><span class="line">      &lt;banner&gt; </span><br><span class="line">        &lt;title&gt;<span class="type">RWDevConHighlights</span>&lt;/title&gt;</span><br><span class="line">      &lt;/banner&gt;</span><br><span class="line">      <span class="comment">//add stuff here</span></span><br><span class="line">      <span class="comment">//1.</span></span><br><span class="line">      &lt;list&gt; </span><br><span class="line">        &lt;section&gt; </span><br><span class="line">          <span class="comment">//2.</span></span><br><span class="line">	  &lt;listItemLockup&gt; </span><br><span class="line">	    &lt;title&gt;<span class="type">Inspiration</span> <span class="type">Videos</span>&lt;/title&gt;</span><br><span class="line">	    &lt;decorationLabel&gt;<span class="number">13</span>&lt;/decorationLabel&gt;</span><br><span class="line">	  &lt;/listItemLockup&gt;</span><br><span class="line">        &lt;/section&gt;</span><br><span class="line">      &lt;/list&gt;</span><br><span class="line">    &lt;/catalogTemplate&gt;</span><br><span class="line">  &lt;/document&gt;`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>在上面的代码中，新定义了一个list标签，该标签中的内容就是显示在屏幕上除了Banner以外的全部内容。</li>
+<li><code>listItemLockup</code>代表一个组，它以<code>listItemLockup</code>标签开头。在该标签中，通过<code>title</code>标签定义了它的名称“Inspiration Videos”，然后通过<code>decorationLabel</code>标签定义了该组中包含内容的数量。</li>
+</ol>
+<p>编译运行程序，在模拟器中你们会看到如下界面：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-14.png" alt="tvOS-14"></p>
+<p>看着还不赖吧！</p>
+<h3 id="u5B8C_u6210catalogTemplate"><a href="#u5B8C_u6210catalogTemplate" class="headerlink" title="完成catalogTemplate"></a>完成catalogTemplate</h3><p>最后，我们准备在模板中添加cell，用于展示每一个视频。打开 <strong>RWDevConTemplate.xml.js</strong> 添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Template</span> = function() &#123; <span class="keyword">return</span> `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">  &lt;document&gt;</span><br><span class="line">    &lt;catalogTemplate&gt; </span><br><span class="line">      &lt;banner&gt; </span><br><span class="line">        &lt;title&gt;<span class="type">RWDevConHighlights</span>&lt;/title&gt;</span><br><span class="line">      &lt;/banner&gt;</span><br><span class="line">      &lt;list&gt; </span><br><span class="line">        &lt;section&gt; </span><br><span class="line">	  &lt;listItemLockup&gt; </span><br><span class="line">	    &lt;title&gt;<span class="type">Inspiration</span> <span class="type">Videos</span>&lt;/title&gt;</span><br><span class="line">	    &lt;decorationLabel&gt;<span class="number">13</span>&lt;/decorationLabel&gt;</span><br><span class="line">            <span class="comment">//1. add from here</span></span><br><span class="line">	    &lt;relatedContent&gt; </span><br><span class="line">	      &lt;grid&gt;</span><br><span class="line">	        &lt;section&gt; </span><br><span class="line">                  <span class="comment">//2</span></span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ray-Wenderlich-Teamwork.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ray.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ryan-Nystrom-Contributing.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ryan.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">	          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Matthijs-Hollemans-Math-Isnt-Scary.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/matthijs.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Vicki-Wenderlich-Identity.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/vicki.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">	          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Alexis-Gallagher-Identity.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/alexis.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">	          &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Marin-Todorov-RW-Folklore.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/marin.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Chris-Wagner-Craftsmanship.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/chris.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">	          &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Cesare-Rocchi-Cognition.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/cesare.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ellen-Shapiro-Starting-Over.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ellen.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Jake-Gundersen-Opportunity.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/jake.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Kim-Pedersen-Finishing.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/kim.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">	          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Tammy-Coron-Possible.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/tammy.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Saul-Mora-NSBrief.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/saul.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;		</span><br><span class="line">		&lt;/section&gt;</span><br><span class="line">	      &lt;/grid&gt;</span><br><span class="line">	    &lt;/relatedContent&gt;</span><br><span class="line">	  &lt;/listItemLockup&gt;</span><br><span class="line">        &lt;/section&gt;</span><br><span class="line">      &lt;/list&gt;</span><br><span class="line">    &lt;/catalogTemplate&gt;</span><br><span class="line">  &lt;/document&gt;`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>从上述代码中可以看到，在<code>listItemLockup</code>标签中添加了<code>relatedContent</code>，该标签是的作用是显示图中红色圆圈区域的：</li>
+</ol>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-15.png" alt="tvOS-15"></p>
+<ol>
+<li>每个<code>lockup</code>代表一个视频，每个该标签中都有<code>videoURL</code>的属性，它的值就是 <strong>RWDevCon</strong> 网站上视频的地址。对于之后播放视频至关重要。</li>
+</ol>
+<p>编译运行程序，会看到被你赋予新生命力的应用：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-16.png" alt="tvOS-16"></p>
+<p>现在，我们已经在“Inspiration Videos”这个组里添加了若干视频。让我们打开遥控器的模拟器，选中模拟器，在菜单栏中选择 <strong>Hardware\Show Apple TV Remote</strong> 。你可以通过遥控器中的 <strong>option</strong> 键选择不同的视频。</p>
+<h2 id="u64AD_u653E_u89C6_u9891"><a href="#u64AD_u653E_u89C6_u9891" class="headerlink" title="播放视频"></a>播放视频</h2><p>到目前为止，我们已经构建好了应用的页面，看起来还是不错的。此时，你们可以再想想如果用iOS框架完成你们现在已经完成的布局，应该如何做。Apple把一些UI的细节全都抽象了出来，通过一个个模板提供给我们使用，可以让我们简单方便的通过模板创建出完美的界面，不得不说Apple做的太棒了。</p>
+<p>接下来让我们完成最后两个遗留的功能：选择视频和播放视频。</p>
+<h3 id="u9009_u62E9_u4E8B_u4EF6"><a href="#u9009_u62E9_u4E8B_u4EF6" class="headerlink" title="选择事件"></a>选择事件</h3><p>你们可能已经注意到了，当按下 <strong>enter</strong> 键或者在 <strong>Apple TV Remote</strong> 选择视频时并没有什么反应，所以是时候来实现选择视频的功能了。</p>
+<p>打开<code>Presenter</code>，添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">load: function(event) &#123;</span><br><span class="line">  <span class="comment">//1</span></span><br><span class="line">  <span class="keyword">var</span> <span class="keyword">self</span> = this,</span><br><span class="line">  ele = event.target,</span><br><span class="line">  videoURL = ele.getAttribute(<span class="string">"videoURL"</span>)</span><br><span class="line">  <span class="keyword">if</span>(videoURL) &#123;</span><br><span class="line">    <span class="comment">//2</span></span><br><span class="line">    <span class="keyword">var</span> player = new <span class="type">Player</span>();</span><br><span class="line">    <span class="keyword">var</span> playlist = new <span class="type">Playlist</span>();</span><br><span class="line">    <span class="keyword">var</span> mediaItem = new <span class="type">MediaItem</span>(<span class="string">"video"</span>, videoURL);</span><br><span class="line"> </span><br><span class="line">    player.playlist = playlist;</span><br><span class="line">    player.playlist.push(mediaItem);</span><br><span class="line">    player.present();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<ol>
+<li><code>load</code>函数用来处理视频选择事件。它相当于iOS中的<code>@IBAction</code>，该函数的<code>event</code>参数相当于<code>sender</code>参数。每个<code>event</code>都有一个<code>target</code>，每个<code>target</code>关联着模板中的<code>lockup</code>元素。一个<code>lockup</code>代表应用中的一个视频，它里面有视频封面的属性，以及视频地址<code>videoURL</code>属性。</li>
+<li>播放视频非常简单。<code>Player</code>是 <strong>TVJS</strong> 框架提供的一个类，负责所有视频播放的相关功能。你们所要做的只是添加一个播放列表<code>playlist</code>，然后将要播放的项目<code>mediaItem</code>添加到播放列表里。最后通过<code>player.present()</code>方法就可以播放视频了。</li>
+</ol>
+<p>现在你们已经实现了选择视频后的响应事件。是时候将选择事件与每个视频关联在一起了。打开 <strong>application.js</strong> 文件，在<code>App.onLaunch</code>方法中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">App</span>.onLaunch = function(options) &#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">  <span class="comment">//在resourceLoader.loadResource中...</span></span><br><span class="line">  <span class="keyword">var</span> doc = <span class="type">Presenter</span>.makeDocument(resource);</span><br><span class="line">  doc.addEventListener(<span class="string">"select"</span>, <span class="type">Presenter</span>.load.bind(<span class="type">Presenter</span>)); <span class="comment">//add this line</span></span><br><span class="line">  <span class="type">Presenter</span>.pushDocument(doc);</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码中的<code>addEventListener</code>方法相当于iOS中按钮的<code>@IBAction</code>。编译运行程序，选择一个视频播放，你会看到一个完美的视频播放应用：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-17.gif" alt="tvOS-17"></p>
+<p>大家可以在这里下载教程中的完整项目：<a href="http://cdn5.raywenderlich.com/wp-content/uploads/2015/09/client.zip" target="_blank" rel="external">client</a>和<a href="http://cdn5.raywenderlich.com/wp-content/uploads/2015/09/RWDevCon.zip" target="_blank" rel="external">RWDevCon</a>。</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/calayer-animation-gradient-animation/" itemprop="url">
                   CALayer Animation - Gradient Animation
                 </a>
@@ -806,176 +1080,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/uistackview/" itemprop="url">
-                  UIStackView小窥
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-08-04T00:00:00+08:00" content="2015-08-04">
-              2015-08-04
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/uistackview/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/uistackview/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <p>本文首发<a href="http://www.csdn.net/article/2015-08-04/2825372/1" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>自适应、适配、布局这几个关键词一直伴随着iOS开发，从以前的单一尺寸屏幕，到现在的多尺寸屏幕，Apple一直致力于让开发人员尽可能少在这些事上耗费过多的精力，所以Apple在2012年推出了Auto Layout特性，2014年又推出了Adaptive Layout、Size Classes，2015年又推出了Stack View。这些无一不是我们开发者做适配的利器。今天就让我们看看StackView是怎么一回事。</p>
-<blockquote>
-<p>注：示例开发环境为Xcode7 Beta2</p>
-</blockquote>
-<p>我们先来看看下面这个常见的布局：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-1.png" alt="StackView-1"></p>
-<p>这是一种很常见的汉堡布局，如果我们需要让它自适应不同尺寸的屏幕，我们要添加哪些约束呢？</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-2.png" alt="StackView-2"></p>
-<p>看看图中这些约束，你们会不会感到莫名的烦躁呢，至少我是的。更让人抓狂的是，如果需要在中间再添加一个长方形，那么你要修改关联的好几个约束，有没有掀桌的冲动呢？</p>
-<p>不过，我们开发人员总是幸运的，Apple在Xcode7中添加了一个新的特性StackView，它能完美的解决这个闹心的问题。</p>
-<p>StackView其实一个视图容器，不过它会对它的子视图根据一定规则自动布局，将子视图按栈的排列方式进行布局，并且有几个主要的属性：</p>
-<ul>
-<li><p>方向<br>StackView有水平和垂直两个方向的布局模式：<br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-3.png" alt="StackView-3"></p>
-</li>
-<li><p>间隔<br>StackView可以设置子视图之间的间隔：<br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-4.png" alt="StackView-4"></p>
-</li>
-<li><p>对齐方式<br>StackView可以设置子视图的对齐方式（水平方向和垂直方向的该属性值有所区别）：<br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-5.png" alt="StackView-5"></p>
-<ul>
-<li>Fill：子视图填充StackView。</li>
-<li>Leading：靠左对齐。</li>
-<li>Trailing：靠右对齐。</li>
-<li>Center：子视图以中线为基准对齐。</li>
-<li>Top：靠顶部对齐。</li>
-<li>Bottom：靠底部对齐。</li>
-<li>First Baseline：按照第一个子视图中文字的第一行对齐。</li>
-<li>Last Baseline：按照最后一个子视图中文字的最后一行对齐。</li>
-</ul>
-</li>
-<li><p>分布比例<br>StackView可以设置子视图的分布比例：<br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-6.png" alt="StackView-6"></p>
-<ul>
-<li>Fill：默认分布方式。</li>
-<li>Fill Equally：子视图的高度或宽度保持一致。</li>
-<li>Fill：Proportionally：StackView自己计算出它认为合适的分布方式。</li>
-<li>Equal Spacing：子视图保持同等间隔的分布方式。</li>
-<li>Equal Centering：每个子视图中心线之间保持一致的分布方式。</li>
-</ul>
-</li>
-</ul>
-<p>一切让示例来说话，在这篇文章中我们将逐步开发一个电影影评的应用来详细讲解如何使用StackView。</p>
-<h2 id="u7B2C_u4E00_u4E2AStackView"><a href="#u7B2C_u4E00_u4E2AStackView" class="headerlink" title="第一个StackView"></a>第一个StackView</h2><p>打开Xcode，新建一个项目，命名为MovieRate，语言选择Swift。打开Storyboard，删掉当前的ViewController视图，重新拖入TableViewController视图，然后内嵌一个NavigationController，配色大家随意：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-7.png" alt="StackView-7"></p>
-<p>然后再删掉初始的<code>ViewController.swfit</code>文件，新建一个UITableViewController名为<code>MovieListTableViewController.swift</code>，以及一个UITableViewCell名为<code>MovieTabelViewCell.swift</code>：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-8.png" alt="StackView-8"></p>
-<p>这两个文件的作用不言而喻：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-9.png" alt="StackView-9"></p>
-<p>接下来新建一个plist文件<code>Movie.plist</code>，当做TableView的数据源：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-10.png" alt="StackView-10"></p>
-<p>然后打开StoryBoard，选择<code>MovieListTableViewController</code>，给<code>MovieTableViewCell</code>设置一个标示符<code>MovieCell</code>，往<code>MovieTableViewCell</code>中拖入两个UIImageView和一个UILabel，不用理会他们的位置和尺寸：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-11.png" alt="StackView-11"></p>
-<p>按着command键，同时选中这三个视图，然后点击右下角的Stack按钮：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-12.png" alt="StackView-12"></p>
-<p>这时，我们便创建的一个UIStackView，包含刚才选中的那三个视图，或者说我们将选中的那三个视图组合成了一个UIStackView：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-13.png" alt="StackView-13"></p>
-<p>选中这个StackView，打开右侧的属性编辑窗口，可以看到在文章前言中讲过的四个主要属性：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-14.png" alt="StackView-14"></p>
-<p>虽然被包含的两个的UIImageView和UILabel可以由UIStackView的属性设置布局，但是就UIStackView本身而言，我们还是需要设置它的相关约束：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-15.png" alt="StackView-15"></p>
-<p>这两个UIImageView一个展示电影封面图片，一个展示评分，我们在StoryBoard中设置它们的image属性，并将Model设置为Aspect Fit，看看效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-16.png" alt="StackView-16"></p>
-<p>理想总是很丰满，现实总是很骨感，设置了图片后并不是我们想要的结果，图片的大小以及与文字的间隔都有问题。而且还出现了约束错误：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-17.png" alt="StackView-17"></p>
-<p>意思是StackView里的这三个内容没有指定x坐标的约束或者宽度的约束。但是作为StackView的子视图，它们的布局情况是由StackView通过各个属性设置的，断然不能在自身上添加约束，那么如何解决这个问题呢？其实很简单，我们选中中间的UILabel，然后打开右侧的尺寸属性面板，找到这两栏：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-18.png" alt="StackView-18"></p>
-<p><em>Content Hugging Priority</em>是水平、垂直方向的拉伸优先级，我们将<em>Horizontal</em>设置为250。这样就可以告诉StackView，中间的UILabel水平拉伸的优先级是最高的，当StackView的宽度变大时优先拉伸UILabel的宽度，这样前后两个UIImageView的宽度是保持不变的，否则会默认拉伸StackView中的第一个子视图，所以我们看到第一个UIImageView的宽度被拉伸了。</p>
-<p><em>Content Compression Resistance Priority</em>是水平、垂直方向的压缩优先级，道理和上面的拉伸优先级是一样的，我们将UILabel的水平压缩优先级设为749。</p>
-<p>现在你们会发现约束错误消失了，第一个UIImageView的宽度也正常了，而中间的UILabel被拉伸了：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-19.png" alt="StackView-19"></p>
-<p>接下来在<code>MovieTableViewCell</code>中添加这两个UIImageView和UILabel的<code>IBOutlet</code>：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-20.png" alt="StackView-20"></p>
-<p>然后在<code>MovieListTableViewController</code>中实现TableView的数据展示：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-21.png" alt="StackView-21"></p>
-<p>然后编译运行程序看看效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-22.png" alt="StackView-22"></p>
-<p>横屏也很完美：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-27.png" alt="StackView-27"></p>
-<p>一个完美的Movie List页面已经展现在我们眼前，电影封面、电影名称、电影评分被StackView按合理的布局组织在TableViewCell里，我们只是给StackView设置了简单的四个约束而已。可见StackView在视图布局方面可以给我们带来很大的便利。</p>
-<h2 id="StackView_u7684_u5D4C_u5957"><a href="#StackView_u7684_u5D4C_u5957" class="headerlink" title="StackView的嵌套"></a>StackView的嵌套</h2><p>既然UIStackView继承了UIView，那么UIStackView是否可以看做是一个UIView而被包含在UIStackView内呢？答案是肯定的，这一节向大家介绍UIStackView的嵌套。</p>
-<p>一些界面发杂的App，只要你仔细分析，总会发现StackView嵌套的布局，或看似相似的布局：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-23.png" alt="StackView-23"></p>
-<p>在MovieRate这个示例中，我们将StackView的嵌套运用在电影详情页面里：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-24.png" alt="StackView-24"></p>
-<p>上图是电影详情页的布局图，从图中我们可以看到一共有三个StackView，一个嵌套在一个里面。我们在Storyboard中把这个页面创建出来（StackView的创建方法在上一节中已经介绍过了，这里就不再累赘了）：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-25.png" alt="StackView-25"></p>
-<p>详情页的数据直接写在Storyboard中了，因为只是说明StackView的嵌套特性，所以界面比较粗糙。点击TableViewCell跳转到详情页的过程不再累赘了，编译运行看看效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIStackView-26.png" alt="StackView-26"></p>
-<p>虽然有点丑，但是这个页面展示出了StackView的嵌套特性。</p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>诚然UIStackView不是万能的，但是无疑它可以在布局和自适应方面给开发者带来便利，在恰当的情形下使用StackView可以事半功倍。而且因为UIStackView是UIView的子类，所以也可以将动画效果作用于UIStackView上，在方便布局之余还能提高用户体验，何乐而不为呢，那么让我们用起来吧。</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1018,7 +1122,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">69</span>
+              <span class="site-state-item-count">70</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1032,7 +1136,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
