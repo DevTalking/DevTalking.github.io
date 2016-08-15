@@ -1,0 +1,750 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Test," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="搭建ShadowSocks服务器
+以下文章内容均在MacOS下实践。
+
+购买VPS我使用的是Vultr的VPS，他家的VPS可选的地域较为丰富，而且有日本东京，这对于家里是联通网络的比较亲和，速度较好：在系统和应用方面Vultr提供的种类也比较丰富：在价格方面，Vultr提供的最低价格为每月5美元，对应的性能足够搭建ShadowSocks：注册Vultr账号，绑定信用卡，选择自己中意的系统和价格后">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Test">
+<meta property="og:url" content="http://www.devtalking.com/articles/thisisatest/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="搭建ShadowSocks服务器
+以下文章内容均在MacOS下实践。
+
+购买VPS我使用的是Vultr的VPS，他家的VPS可选的地域较为丰富，而且有日本东京，这对于家里是联通网络的比较亲和，速度较好：在系统和应用方面Vultr提供的种类也比较丰富：在价格方面，Vultr提供的最低价格为每月5美元，对应的性能足够搭建ShadowSocks：注册Vultr账号，绑定信用卡，选择自己中意的系统和价格后">
+<meta property="og:image" content="http://www.devtalking.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.36.30.png">
+<meta property="og:image" content="http://www.devtalking.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.39.59.png">
+<meta property="og:image" content="http://www.devtalking.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.40.07.png">
+<meta property="og:image" content="http://www.devtalking.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.42.22.png">
+<meta property="og:image" content="http://www.devtalking.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.44.48.png">
+<meta property="og:image" content="http://www.devtalking.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.52.56.png">
+<meta property="og:image" content="http://www.devtalking.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-14%2014.53.28.png">
+<meta property="og:image" content="http://www.devtalking.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2021.00.31.png">
+<meta property="og:updated_time" content="2016-08-15T05:18:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Test">
+<meta name="twitter:description" content="搭建ShadowSocks服务器
+以下文章内容均在MacOS下实践。
+
+购买VPS我使用的是Vultr的VPS，他家的VPS可选的地域较为丰富，而且有日本东京，这对于家里是联通网络的比较亲和，速度较好：在系统和应用方面Vultr提供的种类也比较丰富：在价格方面，Vultr提供的最低价格为每月5美元，对应的性能足够搭建ShadowSocks：注册Vultr账号，绑定信用卡，选择自己中意的系统和价格后">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> Test | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Test
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-08-15T00:00:00+08:00" content="2016-08-15">
+              2016-08-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/thisisatest/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/thisisatest/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="u642D_u5EFAShadowSocks_u670D_u52A1_u5668"><a href="#u642D_u5EFAShadowSocks_u670D_u52A1_u5668" class="headerlink" title="搭建ShadowSocks服务器"></a>搭建ShadowSocks服务器</h1><blockquote>
+<p>以下文章内容均在MacOS下实践。</p>
+</blockquote>
+<h2 id="u8D2D_u4E70VPS"><a href="#u8D2D_u4E70VPS" class="headerlink" title="购买VPS"></a>购买VPS</h2><p>我使用的是<a href="http://www.vultr.com" target="_blank" rel="external">Vultr</a>的VPS，他家的VPS可选的地域较为丰富，而且有日本东京，这对于家里是联通网络的比较亲和，速度较好：<br><img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.36.30.png" alt="" title="Server Location"><br>在系统和应用方面Vultr提供的种类也比较丰富：<br><img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.39.59.png" alt="" title="Server Type"><br><img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.40.07.png" alt="" title="Application"><br>在价格方面，Vultr提供的最低价格为每月5美元，对应的性能足够搭建ShadowSocks：<br><img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.42.22.png" alt="" title="Server Price"><br>注册Vultr账号，绑定信用卡，选择自己中意的系统和价格后立即就会为你部署好VPS：<br><img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.44.48.png" alt=""><br>当VPS的状态为Running后，就表示VPS已经启动了，然后为该VPS配置我们的SSH公钥：<br> <img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.52.56.png" alt=""><br>大家可以看看北京联通ping东京VPS的速度：<br> <img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-14%2014.53.28.png" alt=""></p>
+<blockquote>
+<p>使用该<a href="http://www.vultr.com/?ref=6955175-3B" target="_blank" rel="external">链接</a>注册可获得20美元的优惠卷。</p>
+</blockquote>
+<h2 id="u5B89_u88C5ShadowSocks"><a href="#u5B89_u88C5ShadowSocks" class="headerlink" title="安装ShadowSocks"></a>安装ShadowSocks</h2><p>我们使用Python版的ShadowSocks进行安装，首先需要下载<a href="https://pypi.python.org/pypi/pip#downloads" target="_blank" rel="external">pip-8.1.2.tar.gz</a>，然后使用工具将其上传至VPS，我使用的是Commander One，通过SFTP连接VPS：<br><img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2021.00.31.png" alt=""><br>使用Terminal连接VPS，一步一步输入以下命令解压安装pip：</p>
+<pre><code>tar -xzvf pip-8.1.2.tar.gz
+cd pip-8.1.2
+python setup.py install
+</code></pre><p>然后通过pip安装shadowsocks：</p>
+<pre><code>pip install shadowsocks
+</code></pre><p>成功后可以看到如下信息：</p>
+<pre><code>Collecting shadowsocks
+  Downloading shadowsocks-2.8.2.tar.gz
+Installing collected packages: shadowsocks
+  Running setup.py install for shadowsocks ... done
+Successfully installed shadowsocks-2.8.2
+</code></pre><h2 id="u914D_u7F6EShadowSocks"><a href="#u914D_u7F6EShadowSocks" class="headerlink" title="配置ShadowSocks"></a>配置ShadowSocks</h2><p>进入到etc目录下，创建shadowsocks.json文件，并添加如下内容：</p>
+<pre><code>{
+    &quot;server&quot;:&quot;你的VPS的IP&quot;,
+    &quot;server_port&quot;:8388,
+    &quot;local_port&quot;:1080,
+    &quot;password&quot;:&quot;设置一个连接密码&quot;,
+    &quot;timeout&quot;:600,
+    &quot;method&quot;:&quot;aes-256-cfb&quot;,
+    &quot;auth&quot;: true
+}
+</code></pre><p>该文件就是ShadowSocks的配置文件。</p>
+<p>然后输入如下命令启动ShadowSocks服务：</p>
+<pre><code>ssserver -c /etc/shadowsocks.json -d start
+</code></pre><p>最后清空防火墙规则：</p>
+<pre><code>iptables -F
+</code></pre><p>至此ShadowSocks服务端就配置完成并可以使用了。</p>
+<pre><code>var view = UIView()
+view.backgroundColor = UIColor.redColor()
+
+class Test {
+    func thisIsATestMethod(method: String) -&gt; Bool {
+        let obj = UIView()
+    }
+}
+</code></pre><p><link rel="stylesheet" href="http://7xpp8a.com1.z0.glb.clouddn.com/rainbow.css"></p>
+<script src="http://7xpp8a.com1.z0.glb.clouddn.com/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Test/" rel="tag">#Test</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/read-concurrency-programming-guide-3/" rel="next" title="读 Concurrency Programming Guide 笔记（三）">
+                <i class="fa fa-chevron-left"></i> 读 Concurrency Programming Guide 笔记（三）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">73</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jacefu" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.devtalking.com/qrcode.jpg" target="_blank">
+                  
+                    <i class="fa fa-qrcode"></i> 微信公众号
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u642D_u5EFAShadowSocks_u670D_u52A1_u5668"><span class="nav-number">1.</span> <span class="nav-text">搭建ShadowSocks服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u8D2D_u4E70VPS"><span class="nav-number">1.1.</span> <span class="nav-text">购买VPS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5B89_u88C5ShadowSocks"><span class="nav-number">1.2.</span> <span class="nav-text">安装ShadowSocks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u914D_u7F6EShadowSocks"><span class="nav-number">1.3.</span> <span class="nav-text">配置ShadowSocks</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/thisisatest/';
+      var disqus_title = 'Test';
+      var disqus_url = 'http://www.devtalking.com//articles/thisisatest/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

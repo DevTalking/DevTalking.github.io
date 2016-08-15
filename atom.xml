@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.devtalking.com/"/>
-  <updated>2016-04-21T08:32:58.000Z</updated>
+  <updated>2016-08-15T05:18:54.000Z</updated>
   <id>http://www.devtalking.com/</id>
   
   <author>
@@ -13,6 +13,67 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Test]]></title>
+    <link href="http://www.devtalking.com//articles/thisisatest/"/>
+    <id>http://www.devtalking.com//articles/thisisatest/</id>
+    <published>2016-08-14T16:00:00.000Z</published>
+    <updated>2016-08-15T05:18:54.000Z</updated>
+    <content type="html"><![CDATA[<h1 id="u642D_u5EFAShadowSocks_u670D_u52A1_u5668"><a href="#u642D_u5EFAShadowSocks_u670D_u52A1_u5668" class="headerlink" title="搭建ShadowSocks服务器"></a>搭建ShadowSocks服务器</h1><blockquote>
+<p>以下文章内容均在MacOS下实践。</p>
+</blockquote>
+<h2 id="u8D2D_u4E70VPS"><a href="#u8D2D_u4E70VPS" class="headerlink" title="购买VPS"></a>购买VPS</h2><p>我使用的是<a href="http://www.vultr.com" target="_blank" rel="external">Vultr</a>的VPS，他家的VPS可选的地域较为丰富，而且有日本东京，这对于家里是联通网络的比较亲和，速度较好：<br><img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.36.30.png" alt="" title="Server Location"><br>在系统和应用方面Vultr提供的种类也比较丰富：<br><img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.39.59.png" alt="" title="Server Type"><br><img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.40.07.png" alt="" title="Application"><br>在价格方面，Vultr提供的最低价格为每月5美元，对应的性能足够搭建ShadowSocks：<br><img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.42.22.png" alt="" title="Server Price"><br>注册Vultr账号，绑定信用卡，选择自己中意的系统和价格后立即就会为你部署好VPS：<br><img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.44.48.png" alt=""><br>当VPS的状态为Running后，就表示VPS已经启动了，然后为该VPS配置我们的SSH公钥：<br> <img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2020.52.56.png" alt=""><br>大家可以看看北京联通ping东京VPS的速度：<br> <img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-14%2014.53.28.png" alt=""></p>
+<blockquote>
+<p>使用该<a href="http://www.vultr.com/?ref=6955175-3B" target="_blank" rel="external">链接</a>注册可获得20美元的优惠卷。</p>
+</blockquote>
+<h2 id="u5B89_u88C5ShadowSocks"><a href="#u5B89_u88C5ShadowSocks" class="headerlink" title="安装ShadowSocks"></a>安装ShadowSocks</h2><p>我们使用Python版的ShadowSocks进行安装，首先需要下载<a href="https://pypi.python.org/pypi/pip#downloads" target="_blank" rel="external">pip-8.1.2.tar.gz</a>，然后使用工具将其上传至VPS，我使用的是Commander One，通过SFTP连接VPS：<br><img src="/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-08-13%2021.00.31.png" alt=""><br>使用Terminal连接VPS，一步一步输入以下命令解压安装pip：</p>
+<pre><code>tar -xzvf pip-8.1.2.tar.gz
+cd pip-8.1.2
+python setup.py install
+</code></pre><p>然后通过pip安装shadowsocks：</p>
+<pre><code>pip install shadowsocks
+</code></pre><p>成功后可以看到如下信息：</p>
+<pre><code>Collecting shadowsocks
+  Downloading shadowsocks-2.8.2.tar.gz
+Installing collected packages: shadowsocks
+  Running setup.py install for shadowsocks ... done
+Successfully installed shadowsocks-2.8.2
+</code></pre><h2 id="u914D_u7F6EShadowSocks"><a href="#u914D_u7F6EShadowSocks" class="headerlink" title="配置ShadowSocks"></a>配置ShadowSocks</h2><p>进入到etc目录下，创建shadowsocks.json文件，并添加如下内容：</p>
+<pre><code>{
+    &quot;server&quot;:&quot;你的VPS的IP&quot;,
+    &quot;server_port&quot;:8388,
+    &quot;local_port&quot;:1080,
+    &quot;password&quot;:&quot;设置一个连接密码&quot;,
+    &quot;timeout&quot;:600,
+    &quot;method&quot;:&quot;aes-256-cfb&quot;,
+    &quot;auth&quot;: true
+}
+</code></pre><p>该文件就是ShadowSocks的配置文件。</p>
+<p>然后输入如下命令启动ShadowSocks服务：</p>
+<pre><code>ssserver -c /etc/shadowsocks.json -d start
+</code></pre><p>最后清空防火墙规则：</p>
+<pre><code>iptables -F
+</code></pre><p>至此ShadowSocks服务端就配置完成并可以使用了。</p>
+<pre><code>var view = UIView()
+view.backgroundColor = UIColor.redColor()
+
+class Test {
+    func thisIsATestMethod(method: String) -&gt; Bool {
+        let obj = UIView()
+    }
+}
+</code></pre><p><link rel="stylesheet" href="http://7xpp8a.com1.z0.glb.clouddn.com/rainbow.css"></p>
+<script src="http://7xpp8a.com1.z0.glb.clouddn.com/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="u642D_u5EFAShadowSocks_u670D_u52A1_u5668"><a href="#u642D_u5EFAShadowSocks_u670D_u52A1_u5668" class="headerlink" title="搭建ShadowSock]]>
+    </summary>
+    
+      <category term="Test" scheme="http://www.devtalking.com/tags/Test/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[读 Concurrency Programming Guide 笔记（三）]]></title>
@@ -2214,108 +2275,6 @@
     <![CDATA[<p>转眼间，Swift已经一岁多了，这门新鲜、语法时尚、类型安全、执行速度更快的语言已经渐渐的深入广大开发者的心。我同样也是非常喜爱这门新的编程语言。</p>
 <p>今年6月，一年一度的WWDC大会如期而至，在大会上Apple发布了Swift 2.0，引入了很多新的特性，以帮助]]>
     </summary>
-    
-      <category term="Swift" scheme="http://www.devtalking.com/tags/Swift/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Swift中的iOS设计模式（二）]]></title>
-    <link href="http://www.devtalking.com//articles/ios-design-pattern-in-swift-2/"/>
-    <id>http://www.devtalking.com//articles/ios-design-pattern-in-swift-2/</id>
-    <published>2015-01-13T16:00:00.000Z</published>
-    <updated>2016-01-01T14:05:49.000Z</updated>
-    <content type="html"><![CDATA[<h2 id="Facade_u8BBE_u8BA1_u6A21_u5F0F"><a href="#Facade_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="Facade设计模式"></a>Facade设计模式</h2><p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-7.png" alt="pic"></p>
-<p>Facade设计模式为多个子模块或子系统提供统一的、单独的API接口。也就是说，不用给用户暴露一堆乱七八糟的接口，只需要暴露一个简单的、标准的接口即可。</p>
-<p>下面这张图能更好的描述这个概念：</p>
-<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-8.png" alt="pic"></p>
-<p>用户在使用我们暴露的标准的API时，根本不知道在这个API底下其实疏导着大量复杂的接口。该设计模式是暴露大量接口的最佳模式，尤其当接口使用很复杂、很难理解时，尤为体现该模式的价值。</p>
-<p>Facade模式可以有效保证调用各个模块功能的接口和你隐藏起来的实现模块功能的逻辑代码是一个松耦合的关系。同时也可以减少你的子系统或子模块对外部代码的依赖。例如一个遵循Facade模式的类，如果逻辑有变化，需要修改内部实现代码，但是并不需要修改该逻辑的接口。使用接口的用户甚至根本都不知道你已经修改了该接口背后的某些逻辑功能。</p>
-<h2 id="u5982_u4F55_u4F7F_u7528Facade_u8BBE_u8BA1_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528Facade_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="如何使用Facade设计模式"></a>如何使用Facade设计模式</h2><p>目前，你们已经有<code>PersistencyManager</code>类用于在本地保存专辑的数据，以及<code>HTTPClient</code>类用于和远程服务器进行交互。项目中的其他类压根不会知道这两个类中具体的处理逻辑，因为他们将要遵循Facade模式，隐藏与<code>LibraryAPI</code>身后。</p>
-<p>要遵循Facade模式，我们要有一个暴露给用户接口的类，那就是<code>LibraryAPI</code>，它持有<code>PersistencyManager</code>和<code>HTTPClient</code>的实例，并暴露一些简单的接口来访问这两个类中的方法：</p>
-<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-9.png" alt="pic"></p>
-<p><code>LibraryAPI</code>就是作为暴露给其他类的标准接口，它能有效的向接口使用者规避掉<code>HTTPClient</code>和<code>PersistencyManager</code>复杂的逻辑代码。</p>
-<p>打开<code>LibraryAPI.swift</code>文件添加如下常量属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> persistencyManager: <span class="type">PersistencyManager</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> httpClient: <span class="type">HTTPClient</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> isOnline: <span class="type">Bool</span></span><br></pre></td></tr></table></figure>
-<p><code>isOnline</code>属性决定了是否向远程服务器上更新专辑数据的变化，比如添加或删除专辑。</p>
-<p>然后需要添加<code>init</code>初始化方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">  persistencyManager = <span class="type">PersistencyManager</span>()</span><br><span class="line">  httpClient = <span class="type">HTTPClient</span>()</span><br><span class="line">  isOnline = <span class="literal">false</span></span><br><span class="line"> </span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>因为本篇教程中的示例应用只是为了向大家介绍如何运用各种设计模式，所以没有远程服务器的需求，<code>HTTPClient</code>自然不会用到。所以这里<code>isOnline</code>属性总是设置为<code>false</code>。</p>
-<p>下一步，向<code>LibraryAPI.swift</code>文件中添加如下三个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAlbums</span><span class="params">()</span></span> -&gt; [<span class="type">Album</span>] &#123;</span><br><span class="line">  <span class="keyword">return</span> persistencyManager.getAlbums()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">addAlbum</span><span class="params">(album: Album, index: Int)</span></span> &#123;</span><br><span class="line">  persistencyManager.addAlbum(album, index: index)</span><br><span class="line">  <span class="keyword">if</span> isOnline &#123;</span><br><span class="line">    httpClient.postRequest(<span class="string">"/api/addAlbum"</span>, body: album.description())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">deleteAlbum</span><span class="params">(index: Int)</span></span> &#123;</span><br><span class="line">  persistencyManager.deleteAlbumAtIndex(index)</span><br><span class="line">  <span class="keyword">if</span> isOnline &#123;</span><br><span class="line">    httpClient.postRequest(<span class="string">"/api/deleteAlbum"</span>, body: <span class="string">"<span class="subst">\(index)</span>"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>大家看一下<code>addAlbum(_:index:)</code>方法，该方法顾名思义是添加专辑的方法，在实现时会先更新本地的数据，如果网络连通且需要使用远程服务的时候，再调用远程服务接口更新数据状态。当该模块以外的类调用了<code>LibraryAPI</code>接口的<code>addAlbum</code>方法时，它并不知道添加专辑的具体实现逻辑，并且也不需要知道，这就是Facade设计模式的魅力所在。</p>
-<p>现在编译运行你们的应用。你们会看到两个空的视图，和一个Toolbar。顶部的视图用于显示专辑的封面，下面的视图会以列表的形式显示该专辑的相关信息。</p>
-<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-10.png" alt="pic"></p>
-<p>接下来的工作就是将专辑的数据或图片等显示在屏幕上，这就给我们带来了学习另一个设计模式的机会 – <strong>Decorator设计模式</strong>。</p>
-<h2 id="Decorator_u8BBE_u8BA1_u6A21_u5F0F"><a href="#Decorator_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="Decorator设计模式"></a>Decorator设计模式</h2><p>Decorator模式可以自动的为对象添加某些行为或响应能力，并且不需要对该对象做任何修改。</p>
-<p>该模式可以通过将希望添加的行为或响应能力打包到另一个对象中，然后通过该对象获得添加的行为或响应能力。</p>
-<p>在Swift中，有两种最为常用的实现该模式的方案： <strong>Extensions</strong> 和 <strong>Delegation</strong>。</p>
-<h3 id="Extensions"><a href="#Extensions" class="headerlink" title="Extensions"></a>Extensions</h3><p>你们可以对class、struct或者enum添加Extension，用于添加新的行为或响应能力，最关键的是不需要让它们继承乱七八糟的父类。更厉害的是通过Extension你们甚至不需要去访问目标class、struct或enum，就可以给它们添加新的能力。这意味着，你们可以让Cocoa框架中的对象元素更加符合你们自己的口味，比如给UIView或UIImage添加你们想要的能力。这就是Extension机制的强大之处。</p>
-<p>这里要注意，通过Extension新添加的方法在编译阶段被加载，然后你们可以像使用某类的原生方法一样使用扩展的方法。但是与传统的Decorator模式有些许不同的是，扩展体不会持有被扩展对象的实例，说白了就是你不能实例化一个扩展体，只能通过实例化被扩展的对象，才能使用其扩展的方法。</p>
-<h3 id="u5982_u4F55_u4F7F_u7528Extensions"><a href="#u5982_u4F55_u4F7F_u7528Extensions" class="headerlink" title="如何使用Extensions"></a>如何使用Extensions</h3><p>下图中展示了一种情况，你现在有了<code>Albun</code>对象，然后你想把该对象中的数据展示在一个UITableView中：</p>
-<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-11.png" alt="pic"></p>
-<p>在该情况下，专辑的这些数据从哪来呢？很明显是从<code>Album</code>对象中获取，因为它是一个Model对象，而且它根本不关心它持有的数据要如何展现，展现在哪里。那么这时，你就要使用额外的代码让<code>Album</code>具备将数据按需归位的能力，并且不能直接修改该类。</p>
-<p>这就需要使用Extension机制了，你们将通过Extension机制扩展<code>Album</code>类，目的是给<code>Album</code>添加一个方法，并返回一个<code>UITableView</code>便于使用的数据结构。</p>
-<p>该数据结构图如下：</p>
-<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-12.png" alt="pic"></p>
-<p>接下来我们新建一个Swift文件，名为 <strong>AlbumExtensions</strong> ，然后打开 <strong>AlbumExtensions.swift</strong> 文件，添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Album</span> </span>&#123;</span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">ae_tableRepresentation</span><span class="params">()</span></span> -&gt; (titles:[<span class="type">String</span>], values:[<span class="type">String</span>]) &#123;</span><br><span class="line">    <span class="keyword">return</span> ([<span class="string">"Artist"</span>, <span class="string">"Album"</span>, <span class="string">"Genre"</span>, <span class="string">"Year"</span>], [artist, title, genre, year])</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里注意该方法名的开头<code>ae_</code>，它是<code>AlbumExtensions</code>的缩写。这是一个约定俗成的扩展方法名的写法，目的在于防止扩展方法与原生方法名产生冲突。</p>
-<blockquote>
-<p><strong>注意：</strong>通常类可以重写父类的方法或属性，但是在Extension中不可以。Extension中的方法名、属性名也不能和原生方法名、原生属性名相同。</p>
-</blockquote>
-<p>我们再来总结一下Extension机制：</p>
-<ul>
-<li>当<code>Album</code>被扩展后，直接使用<code>Album</code>访问扩展方法。</li>
-<li>你们通过扩展的方式已经给<code>Album</code>添加了新的能力，如果你们还想通过子类的方式，那么依然可以这么做。</li>
-<li>上面这个简单的扩展可以看出，你们不用对<code>Album</code>做任何改动，它就具备了可以返回适用于<code>UITableView</code>数据格式的能力。</li>
-</ul>
-<h3 id="Delegation"><a href="#Delegation" class="headerlink" title="Delegation"></a>Delegation</h3><p>另一个Decorator设计模式是Delegation，它是一种代表其他对象或协调其他对象的机制。</p>
-<p>比如当你使用<code>UITableView</code>时，你必须要实现<code>tableView(_:numberOfRowsInSection:)</code>方法，你不要期望<code>UITableView</code>会知道你希望每个Section里有多少行。因此，计算每个Section有多少行的任务就交给了<code>UITableView</code>的代理。这样就可以使<code>UITableView</code>显示与数据松耦合，独立开来。</p>
-<p>下图是<code>UITableView</code>和它的代理之间的运行关系示意图：</p>
-<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-13.png" alt="pic"></p>
-<p><code>UITableView</code>的工作是将一些信息展示在一个列表视图中。但是它只关注于展示，并不会持有需要展示的数据。那么这时就需要向它的代理询问获取相关的信息了。在Objective-C的代理模式中，代理或协议可以申明两种类型的方法，一种是必须类型，另一种是可选类型。前者是遵循该协议的类必须要实现的方法，后者是可以实现，也可以不实现的方法。你们在该教程中会实践到这些内容。</p>
-<p>这时大伙可能会有疑问了，为何我们要使用协议而不直接继承一个对象，然后重写需要的方法呢？这样不是更省事么？但是你们考虑一下，如果这样做，你们只能基于一个单独的父类去实现其子类，也就是说，该父类只能作为某一个对象的代理。如果想让一个对象成为多个对象的代理，那么用继承父类这种形式就行不通了。</p>
-<blockquote>
-<p><strong>注意：</strong>代理机制是一个很重要的模式。Apple在UIKit框架中大量应用了该模式，比如<code>UITableView</code>、<code>UITextView</code>、<code>UITextField</code>、<code>UIWebView</code>、<code>UIAlert</code>、<code>UIActionSheet</code>、<code>UICollectionView</code>、<code>UIPickerView</code>、<code>UIGestrueRecognizer</code>、<code>UIScrollView</code>等等。</p>
-</blockquote>
-<h2 id="u5982_u4F55_u4F7F_u7528Delegate_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528Delegate_u6A21_u5F0F" class="headerlink" title="如何使用Delegate模式"></a>如何使用Delegate模式</h2><p>打开<code>ViewController.swift</code>文件，然后添加以下私有属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> allAlbums = [<span class="type">Album</span>]()</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> currentAlbumData : (titles:[<span class="type">String</span>], values:[<span class="type">String</span>])?</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> currentAlbumIndex = <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p>然后重写<code>viewDidLoad</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">  <span class="comment">//1</span></span><br><span class="line">  <span class="keyword">self</span>.navigationController?.navigationBar.translucent = <span class="literal">false</span></span><br><span class="line">  currentAlbumIndex = <span class="number">0</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment">//2</span></span><br><span class="line">  allAlbums = <span class="type">LibraryAPI</span>.sharedInstance.getAlbums()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3</span></span><br><span class="line">  <span class="comment">// the uitableview that presents the album data</span></span><br><span class="line">  dataTable.delegate = <span class="keyword">self</span></span><br><span class="line">  dataTable.dataSource = <span class="keyword">self</span></span><br><span class="line">  dataTable.backgroundView = <span class="literal">nil</span></span><br><span class="line">  view.addSubview(dataTable!)		</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们对上述的代码来进行一一讲解：</p>
-<ol>
-<li>关闭导航栏的透明效果。</li>
-<li>通过API获取所有专辑的列表。这里要记住，要使用符合Facade模式的<code>LibraryAPI</code>而不是直接使用<code>PersisencyManager</code>。</li>
-<li>对<code>UITableView</code>进行相关设置，将它的delegate和datasource设置为当前的ViewController。这样一来<code>UITableView</code>所有对数据的请求都会由当前的ViewController响应并提供了。这里需要注意的是如果你们在Storeboard中创建<code>UIViewController</code>和<code>UITableView</code>，那么也可以在Storeboard中通过拖拽来设置delegate和datasource。</li>
-</ol>
-<p>接下来，在<code>ViewController.swift</code>中添加如下方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">showDataForAlbum</span><span class="params">(albumIndex: Int)</span></span> &#123;</span><br><span class="line">  <span class="comment">// 保证代码健壮性，确保专辑数至少大于0，避免数组下标越界的错误</span></span><br><span class="line">  <span class="keyword">if</span> (albumIndex &lt; allAlbums.<span class="built_in">count</span> &amp;&amp; albumIndex &gt; -<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="comment">//获取专辑对象</span></span><br><span class="line">    <span class="keyword">let</span> album = allAlbums[albumIndex]</span><br><span class="line">    <span class="comment">// 保存专辑的数据，用于一会在tableview中展现</span></span><br><span class="line">    currentAlbumData = album.ae_tableRepresentation()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    currentAlbumData = <span class="literal">nil</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 我们已经获取到了需要的数据，可以刷新tableview来显示数据了</span></span><br><span class="line">  dataTable!.reloadData()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>showDataForAlbum()</code>方法的作用是从专辑数组中获取到专辑的对象，然后请求并保存专辑的数据。当你想显示新的数据或有改变的数据时，你只需要调用<code>reloadData</code>方法即可。这样<code>UItableView</code>会重新请求它的代理获取相关数据，比如一共要显示多少个Section、每个Section里显示多少行、每行看起来是什么样的等等。</p>
-<p>我们在<code>viewDidLoad</code>方法中再加入一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">self</span>.showDataForAlbum(currentAlbumIndex)</span><br></pre></td></tr></table></figure>
-<p>该行代码让应用启动时就开始加载专辑数据。因为之前已经将<code>currentAlbumIndex</code>的值设为了0，所以从专辑数组中的第一个专辑开始显示。</p>
-<p>现在，是时候实现DataSource协议的方法了，你们可以将DataSource的方法直接写在ViewController里。也可以通过使用扩展的方式使代码保持整洁。</p>
-<p>如果使用扩展的方式，那么一定要确保它们是写在文件的最下面，并且要在ViewController类定义的大括号之外！</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">ViewController</span>: <span class="title">UITableViewDataSource</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">ViewController</span>: <span class="title">UITableViewDelegate</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面这两行代码的含义就是ViewController通过扩展的方式遵循了Delegate和DataSource协议 – 你可以把协议想象成是与委托之间的约定，只要你实现了约定的方法，就算是实现了委托。在我们的代码中，ViewController需要遵守<code>UITableViewDataSource</code>和<code>UITableViewDelegate</code>这两个协议。这样 UITableView 才能明确的知道，需要用到的代理中的方法是由这个ViewController实现的。</p>
-<p>在遵循<code>UITableViewDataSource</code>协议的扩展中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, numberOfRowsInSection section: Int)</span></span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> albumData = currentAlbumData &#123;</span><br><span class="line">    <span class="keyword">return</span> albumData.titles.<span class="built_in">count</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> cell:<span class="type">UITableViewCell</span> = tableView.dequeueReusableCellWithIdentifier(<span class="string">"Cell"</span>, forIndexPath: indexPath) <span class="keyword">as</span> <span class="type">UITableViewCell</span></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> albumData = currentAlbumData &#123;</span><br><span class="line">    cell.textLabel?.text = albumData.titles[indexPath.row]</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> detailTextLabel = cell.detailTextLabel &#123;</span><br><span class="line">        detailTextLabel.text = albumData.values[indexPath.row]</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> cell</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>tableView(_:numberOfRowsInSection:)</code>方法返回每个Section中显示多少行内容，这里对应着专辑数据结构中的标题。</p>
-<p><code>tableView(_:cellForRowAtIndexPath:)</code>方法会逐个创建每行的内容，包括专辑标题和它的值。</p>
-<blockquote>
-<p><strong>注意：</strong>你们可以把这些协议的方法直接加在类声明里面，也可以放在扩展里，编译器不会去管DataSource的方法是放在扩展里还是类申明里，只要实现了必须的方法即可。而我们之所以这样写，是为了保证代码的整洁性和可读性。</p>
-</blockquote>
-<p>编译并运行你们的项目，你们的应用应该已经可以显示出专辑的基本信息了：</p>
-<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-14.png" alt="pic"></p>
-<p>未完待续……</p>
-<p>原文地址：<a href="http://www.raywenderlich.com/86477/introducing-ios-design-patterns-in-swift-part-1" target="_blank" rel="external">Introducing iOS Design Patterns in Swift</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="Facade_u8BBE_u8BA1_u6A21_u5F0F"><a href="#Facade_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="Facade设计模式"></a>Facade设计模式</h2><]]>
-    </summary>
-    
-      <category term="Design Pattern" scheme="http://www.devtalking.com/tags/Design-Pattern/"/>
     
       <category term="Swift" scheme="http://www.devtalking.com/tags/Swift/"/>
     
