@@ -54,7 +54,7 @@ https://highlightjs.org/
   // Object map that is used to escape some common HTML characters.
   var escapeRegexMap = {
     '&': '&amp;',
-    '<': '&lt;',="" '="">': '&gt;'
+    //'<': '&lt;',="" '="">': '&gt;'
   };
 
   /* Utility functions */
