@@ -255,7 +255,14 @@
 <p>不过你可以通过数据共享来实现这个愿望。比如，你希望应用扩展和它的载体应用共享一个单一的大数据集。比如<code>prerendered assets</code>。</p>
 <p>要实现数据共享，我们要使用Xcode或者开发者门户网站允许应用扩展和它的载体应用成为一个应用组，然后在开发者门户网站中注册应用组，并指明在载体应用中使用该应用组。关于应用组的知识请查阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/AboutEntitlements.html#//apple_ref/doc/uid/TP40011195" target="_blank" rel="external">Entitlement Key Reference</a>文档的<a href="https://developer.apple.com/library/prerelease/ios/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/EnablingAppSandbox.html#//apple_ref/doc/uid/TP40011195-CH4-SW19" target="_blank" rel="external">Adding an App to an App Group</a>章节。</p>
 <p>当你设置好应用组后，应用扩展和它的载体应用就可以通过<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSUserDefaults_Class/index.html#//apple_ref/occ/cl/NSUserDefaults" target="_blank" rel="external">NSUserDefaults</a>API共享访问用户的信息。我们可以使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSUserDefaults_Class/index.html#//apple_ref/occ/instm/NSUserDefaults/initWithSuiteName:" target="_blank" rel="external">initWithSuiteName:</a>方法实例化一个<code>NSUserDefaults</code>对象，然后传入共享组的标示符。比如一个共享扩展，它或许会更新用户最近经常使用的共享账号，那么我们可以这样来写：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Create and share access to an NSUserDefaults object.</span></span><br><span class="line"><span class="type">NSUserDefaults</span> *mySharedDefaults = [[<span class="type">NSUserDefaults</span> alloc] initWithSuiteName:@<span class="string">"com.example.domain.MyShareExtension"</span>];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">// Use the shared user defaults object to update the user's account.</span></span><br><span class="line">[mySharedDefaults setObject:theAccountName forKey:@<span class="string">"lastAccountName"</span>];</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// Create and share access to an NSUserDefaults object.
+NSUserDefaults *mySharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:@&quot;com.example.domain.MyShareExtension&quot;];
+
+
+// Use the shared user defaults object to update the user&#39;s account.
+[mySharedDefaults setObject:theAccountName forKey:@&quot;lastAccountName&quot;];
+</code></pre>
 <p>下图向我们展示了应用扩展和它的载体应用是如何通过共享容器实现数据共享的：  </p>
 <p><img src="http://www.devtalking.com/postImages/handling-common-scenarios1.png" alt="结构"></p>
 <blockquote>
@@ -280,11 +287,39 @@
 </code></pre><p>在iOS和OS X平台中，在你自定义的JavaScript类中可以定义一个<code>run()</code>函数，该函数就是Safari加载JavaScript文件的入口。在<code>run()</code>函数中，Safari提供了一个名为<code>completionFunction</code>的参数，你可以使用键值对象的形式将结果传给应用扩展。</p>
 <p>在iOS平台中，你还可以定义一个<code>finalize()</code>函数，当应用扩展在任务结束阶段调用<code>completeRequestReturningItems:expirationHandler:completion:</code>方法时Safari会调用<code>finalize()</code>函数。在该函数中，可以通过向<code>completeRequestReturningItems:expirationHandler:completion:</code>方法传值，来改变网页内容。</p>
 <p>比如，你的iOS应用扩展需要基于一个网页URI启动，并且当它结束运行时改变网页的背景色，那么你需要这样写JavaScript代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">MyExtensionJavaScriptClass</span> = function() &#123;&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="type">MyExtensionJavaScriptClass</span>.prototype = &#123;</span><br><span class="line">    run: function(arguments) &#123;</span><br><span class="line">    <span class="comment">// Pass the baseURI of the webpage to the extension.</span></span><br><span class="line">        arguments.completionFunction(&#123;<span class="string">"baseURI"</span>: document.baseURI&#125;);</span><br><span class="line">    &#125;,</span><br><span class="line"> </span><br><span class="line">```swift<span class="comment">// Note that the finalize function is only available in iOS.</span></span><br><span class="line">    finalize: function(arguments) &#123;</span><br><span class="line">    <span class="comment">// arguments contains the value the extension provides in [NSExtensionContext completeRequestReturningItems:expirationHandler:completion:].</span></span><br><span class="line">    <span class="comment">// In this example, the extension provides a color as a returning item.</span></span><br><span class="line">    document.body.style.backgroundColor = arguments[<span class="string">"bgColor"</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// The JavaScript file must contain a global object named "ExtensionPreprocessingJS".</span></span><br><span class="line"><span class="keyword">var</span> <span class="type">ExtensionPreprocessingJS</span> = new <span class="type">MyExtensionJavaScriptClass</span>;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+var MyExtensionJavaScriptClass = function() {};
+
+MyExtensionJavaScriptClass.prototype = {
+    run: function(arguments) {
+    // Pass the baseURI of the webpage to the extension.
+        arguments.completionFunction({&quot;baseURI&quot;: document.baseURI});
+    },
+
+    // Note that the finalize function is only available in iOS.
+    finalize: function(arguments) {
+    // arguments contains the value the extension provides in [NSExtensionContext completeRequestReturningItems:expirationHandler:completion:].
+    // In this example, the extension provides a color as a returning item.
+    document.body.style.backgroundColor = arguments[&quot;bgColor&quot;];
+    }
+};
+
+// The JavaScript file must contain a global object named &quot;ExtensionPreprocessingJS&quot;.
+var ExtensionPreprocessingJS = new MyExtensionJavaScriptClass;
+</code></pre>
 <p>在iOS和OS X平台中，你需要编写代码来处理<code>fun()</code>函数返回的值，为获取到字典中的值，我们需要指定<code>kUTTypePropertyList</code>类型作为标示符传入<code>NSItemProvider</code>类的<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSItemProvider_Class/index.html#//apple_ref/occ/instm/NSItemProvider/loadItemForTypeIdentifier:options:completionHandler:" target="_blank" rel="external"> loadItemForTypeIdentifier:options:completionHandler:</a>方法。在该字典中使用<code>NSExtensionJavaScriptPreprocessingResultsKey</code>作为<code>key</code>来取值。比如下面例子中我们想要获取将URI传入<code>run()</code>的返回值：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">[imageProvider loadItemForTypeIdentifier:kUTTypePropertyList options:<span class="literal">nil</span> completionHandler:^(<span class="type">NSDictionary</span> *item, <span class="type">NSError</span> *error) &#123;</span><br><span class="line">    <span class="type">NSDictionary</span> *results = (<span class="type">NSDictionary</span> *)item;</span><br><span class="line">        <span class="type">NSString</span> *baseURI = [[results objectForKey:<span class="type">NSExtensionJavaScriptPreprocessingResultsKey</span>] objectForKey:@<span class="string">"baseURI"</span>];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+[imageProvider loadItemForTypeIdentifier:kUTTypePropertyList options:nil completionHandler:^(NSDictionary *item, NSError *error) {
+    NSDictionary *results = (NSDictionary *)item;
+        NSString *baseURI = [[results objectForKey:NSExtensionJavaScriptPreprocessingResultsKey] objectForKey:@&quot;baseURI&quot;];
+}];
+</code></pre>
 <p><code>finalize()</code>函数是在当应用扩展执行完任务后传参并调用的，创建一个含有我们需要处理的值的字典，然后用<code>NSItemProvider</code>的<code>initWithItem:typeIdentifier:</code>方法来封装该字典。比如当扩展执行完任务后我们想让网页变为红色，我们可以这样写：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSExtensionItem</span> *extensionItem = [[<span class="type">NSExtensionItem</span> alloc] <span class="keyword">init</span>];</span><br><span class="line">extensionItem.attachments = @[[[<span class="type">NSItemProvider</span> alloc] initWithItem: @&#123;<span class="type">NSExtensionJavaScriptFinalizeArgumentKey</span>: @&#123;@<span class="string">"bgColor"</span>:@<span class="string">"red"</span>&#125;&#125; typeIdentifier:(<span class="type">NSString</span> *)kUTTypePropertyList]];</span><br><span class="line">[[<span class="keyword">self</span> extensionContext] completeRequestReturningItems:@[extensionItem] expirationHandler:<span class="literal">nil</span> completion:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+NSExtensionItem *extensionItem = [[NSExtensionItem alloc] init];
+extensionItem.attachments = @[[[NSItemProvider alloc] initWithItem: @{NSExtensionJavaScriptFinalizeArgumentKey: @{@&quot;bgColor&quot;:@&quot;red&quot;}} typeIdentifier:(NSString *)kUTTypePropertyList]];
+[[self extensionContext] completeRequestReturningItems:@[extensionItem] expirationHandler:nil completion:nil];
+</code></pre>
 <h2 id="u6267_u884C_u4E0A_u4F20_u4E0B_u8F7D_u4EFB_u52A1"><a href="#u6267_u884C_u4E0A_u4F20_u4E0B_u8F7D_u4EFB_u52A1" class="headerlink" title="执行上传下载任务"></a>执行上传下载任务</h2><p>用户一般的操作习惯都倾向于当使用你的应用扩展完成某个任务后，可以将结果立即反馈在使用扩展的应用中。如果一个扩展要处理的任务包含较长时间的上传下载操作时，你要确保当你的应用扩展关闭后能继续完成该任务。为实现这个功能，我们需要使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSession_class/index.html#//apple_ref/occ/cl/NSURLSession" target="_blank" rel="external">NSURLSession</a>类创建一个URL会话并创建后台的上传下载任务。</p>
 <blockquote>
 <p>提示：你可以回想一下其他类型的后台任务，比如后台支持VoIP、后台播放音乐，这些是不能用应用扩展去实现的。更多信息请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionCreation.html#//apple_ref/doc/uid/TP40014214-CH5-SW3" target="_blank" rel="external">Respond to the Host App’s Request</a>。</p>
@@ -294,7 +329,23 @@
 <p>重要提示：如果你的应用扩展在后台创建了<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSession_class/index.html#//apple_ref/occ/cl/NSURLSession" target="_blank" rel="external">NSURLSession</a>任务，那么你必须要设置一个共享容器，以确保扩展和载体应用实现数据共享。我们可以在<code>NSURLSessionConfiguration</code>类中使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSessionConfiguration_class/index.html#//apple_ref/occ/instp/NSURLSessionConfiguration/sharedContainerIdentifier" target="_blank" rel="external">sharedContainerIdentifier</a>属性来指定一个共享容器的标示符，然后我们就可以通过该标示符获取到共享容器。<br>请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW6" target="_blank" rel="external">Sharing Data with Your Containing App</a>文档来设置共享容器。</p>
 </blockquote>
 <p>下面的例子展示了如何配置一个URL会话，并创建一个下载任务：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSURLSession</span> *mySession = [<span class="keyword">self</span> configureMySession];</span><br><span class="line"><span class="type">NSURL</span> *url = [<span class="type">NSURL</span> <span class="type">URLWithString</span>:@<span class="string">"http://www.example.com/LargeFile.zip"</span>];</span><br><span class="line"><span class="type">NSURLSessionTask</span> *myTask = [mySession downloadTaskWithURL:url];</span><br><span class="line">[myTask resume];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">- (<span class="type">NSURLSession</span> *) configureMySession &#123;</span><br><span class="line">    <span class="keyword">if</span> (!mySession) &#123;</span><br><span class="line">        <span class="type">NSURLSessionConfiguration</span>* config = [<span class="type">NSURLSessionConfiguration</span> backgroundSessionConfigurationWithIdentifier:@“com.mycompany.myapp.backgroundsession”];</span><br><span class="line">```swift```swift<span class="comment">// To access the shared container you set up, use the sharedContainerIdentifier property on your configuration object.</span></span><br><span class="line">```swift```swiftconfig.sharedContainerIdentifier = @“com.mycompany.myappgroupidentifier”;</span><br><span class="line">        mySession = [<span class="type">NSURLSession</span> sessionWithConfiguration:config delegate:<span class="keyword">self</span> delegateQueue:<span class="literal">nil</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> mySession;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+NSURLSession *mySession = [self configureMySession];
+NSURL *url = [NSURL URLWithString:@&quot;http://www.example.com/LargeFile.zip&quot;];
+NSURLSessionTask *myTask = [mySession downloadTaskWithURL:url];
+[myTask resume];
+
+
+- (NSURLSession *) configureMySession {
+    if (!mySession) {
+        NSURLSessionConfiguration* config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@“com.mycompany.myapp.backgroundsession”];
+        // To access the shared container you set up, use the sharedContainerIdentifier property on your configuration object.
+        config.sharedContainerIdentifier = @“com.mycompany.myappgroupidentifier”;
+        mySession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+    }
+    return mySession;
+}
+</code></pre>
 <p>因为在单位时间内只能由一个进程使用后台会话，所以你需要为载体应用中的所有扩展创建不同的后台会话（每个后台会话都要有一个唯一的标示符）。在这里我们建议当载体应用在后台处理扩展的任务时，只使用一个该扩展创建的后台会话。如果你要执行其他的网络相关的任务，那么就要创建相应的URL会话。</p>
 <p>如果你需要在后台创建URL会话之前完成主叫应用的请求，那么要确保创建和使用会话的代码是有效可执行的。当你的扩展调用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionContext_Class/index.html#//apple_ref/occ/instm/NSExtensionContext/completeRequestReturningItems:completionHandler:" target="_blank" rel="external">completeRequestReturningItems:completionHandler:</a>方法告知主叫应用已经完成相关请求后，系统就可以随时终止你的应用扩展。</p>
 <h2 id="u4E3A_u5206_u4EAB_u548CAction_u6269_u5C55_u7533_u660E_u652F_u6301_u7684_u6570_u636E_u7C7B_u578B"><a href="#u4E3A_u5206_u4EAB_u548CAction_u6269_u5C55_u7533_u660E_u652F_u6301_u7684_u6570_u636E_u7C7B_u578B" class="headerlink" title="为分享和Action扩展申明支持的数据类型"></a>为分享和Action扩展申明支持的数据类型</h2><p>在你的分享或Action扩展中，在它们的工作中可能会使用到一些数据，并且这些数据的类型各不相同。为了确保只有当用户在主叫应用中选择了你的扩展支持的数据类型时，才会展示你的扩展功能。你需要在扩展的属性列表文件中添加<code>NSExtensionActivationRule</code>关键字。你也可以使用该关键字指定扩展处理每种类型的最大数目。当你的应用扩展运行时，系统会用改关键字的值与扩展数据项的<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionItem_Class/index.html#//apple_ref/occ/instp/NSExtensionItem/attachments" target="_blank" rel="external">attachments</a>属性值作比较。关于<code>NSExtensionActivationRule</code>关键字的详细信息可以参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/SystemExtensionKeys.html#//apple_ref/doc/uid/TP40014212-SW2" target="_blank" rel="external">Action Extension Keys</a>文档中的<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009247" target="_blank" rel="external">Information Property List Key Reference</a>章节。</p>
@@ -440,7 +491,11 @@
           <span itemprop="articleBody">
             
               <h2 id="u78B0_u649E_u80CC_u540E_u7684_u6545_u4E8B"><a href="#u78B0_u649E_u80CC_u540E_u7684_u6545_u4E8B" class="headerlink" title="碰撞背后的故事"></a>碰撞背后的故事</h2><p>在UIKit的动态引擎中，每个行为都有一个<code>action</code>属性，它的类型是一个函数（() -&gt; Void），我们可以使用一个闭包来打印一下每一步行为的信息。我们在<code>viewDidLoad</code>方法加入下面这行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision.action = &#123;</span><br><span class="line">```swift<span class="built_in">println</span>(<span class="string">"<span class="subst">\(NSStringFromCGAffineTransform(square.transform)</span>) <span class="subst">\(NSStringFromCGPoint(square.center)</span>)"</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+collision.action = {
+    println(&quot;\(NSStringFromCGAffineTransform(square.transform)) \(NSStringFromCGPoint(square.center))&quot;);
+};
+</code></pre>
 <p>上面的代码记录了蓝绿色方块坠落、碰撞时的<code>center</code>和<code>transform</code>属性。当编译运行时，在方块下坠的前一秒我们可以在控制台看到如下信息：</p>
 <pre><code>[1, 0, 0, 1, 0, 0] {150, 150}
 [1, 0, 0, 1, 0, 0] {150, 150}
@@ -458,11 +513,19 @@
 <p>因为<code>UIDynamicItem</code>是一个协议，所以这就说明了它与<code>UIView</code>是松耦合的关系。在<code>UIKit</code>中还有一个类遵循这个协议，就是<code>UICollectionViewLayoutAttributes</code>，这意味着动作引擎不但可以作用于一个View，还可以作用于一个集合中的View。</p>
 <h2 id="u78B0_u649E_u901A_u77E5"><a href="#u78B0_u649E_u901A_u77E5" class="headerlink" title="碰撞通知"></a>碰撞通知</h2><p>到目前为止，我们的程序中已经添加了两个View和两个行为，并让他们产生碰撞行为，那么下面我们将看看当他们互相发生碰撞时我们如何捕获这个行为呢。</p>
 <p>我们回到<code>ViewController.swift</code>文件，让<code>ViewController</code>类遵循<code>UICollisionBehaviorDelegate</code>协议：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ViewController</span>: <span class="title">UIViewController</span>, <span class="title">UICollisionBehaviorDelegate</span> </span>&#123;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+class ViewController: UIViewController, UICollisionBehaviorDelegate {
+</code></pre>
 <p>在<code>viewDidLoad</code>方法中，设置碰撞行为<code>collision</code>的碰撞代理：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision.collisionDelegate = <span class="keyword">self</span>;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+collision.collisionDelegate = self;
+</code></pre>
 <p>然后我们实现<code>UICollisionBehaviorDelegate</code>协议的一个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">collisionBehavior</span><span class="params">(behavior: UICollisionBehavior!, beganContactForItem item: UIDynamicItem!, withBoundaryIdentifier identifier: NSCopying!, atPoint p: CGPoint)</span></span> &#123;</span><br><span class="line">  <span class="built_in">println</span>(<span class="string">"Boundary contact occurred - <span class="subst">\(identifier)</span>"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func collisionBehavior(behavior: UICollisionBehavior!, beganContactForItem item: UIDynamicItem!, withBoundaryIdentifier identifier: NSCopying!, atPoint p: CGPoint) {
+  println(&quot;Boundary contact occurred - \(identifier)&quot;);
+}
+</code></pre>
 <p>这个方法在View每次发生碰撞时调用。我们让它在控制台打印一些信息。为了能更好的查看该方法中打印的信息，我们将之前设置的<code>collision.action</code>打印信息先去掉。</p>
 <p>我们编译运行一下，可以看到当View之间发生交互，也就是碰撞时，我们在控制台看到了打印信息：</p>
 <pre><code>Boundary contact occurred - barrier
@@ -473,18 +536,45 @@ Boundary contact occurred - nil
 Boundary contact occurred - nil
 </code></pre><p>从上面的打印信息中可以看出，坠落的方块与标示符为<code>barrier</code>的View发生了两次碰撞，这就是我们之前添加的那个隐性的红色障碍物。标示符为<code>nil</code>的几次碰撞就是方块与引用的屏幕边界发生的碰撞。</p>
 <p>我们接着在该方法中添加代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> collidingView = item <span class="keyword">as</span> <span class="type">UIView</span>;</span><br><span class="line">collidingView.backgroundColor = <span class="type">UIColor</span>.yellowColor();</span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.3</span>) &#123;</span><br><span class="line">  collidingView.backgroundColor = <span class="type">UIColor</span>.grayColor();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+let collidingView = item as UIView;
+collidingView.backgroundColor = UIColor.yellowColor();
+UIView.animateWithDuration(0.3) {
+  collidingView.backgroundColor = UIColor.grayColor();
+}
+</code></pre>
 <p>通过上面的代码可以看出，我们定义了一个<code>collidingView</code>常量，用<code>item</code>参数将其赋值，实际上这就是发生碰撞的View，就是那个小方块。然后我们将它的背景色改为黄色，然后经过0.3秒将其背景色从黄色改为了灰色。我们编译运行一下看看：</p>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics21.gif" alt="luping"></p>
 <p>我们可以看到当方块每次发生碰撞行为时，它都会闪着黄色。</p>
 <p>到目前为止，我们所看到的一切都是由动作引擎帮我们实现的，比如说碰撞质量、弹力等，那么接下来，你会看到如何通过<code>UIDynamicItemBehavior</code>类由我们自己控制这些行为属性。</p>
 <h2 id="u914D_u7F6E_u884C_u4E3A_u5C5E_u6027"><a href="#u914D_u7F6E_u884C_u4E3A_u5C5E_u6027" class="headerlink" title="配置行为属性"></a>配置行为属性</h2><p>在<code>viewDidLoad</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> itemBehaviour = <span class="type">UIDynamicItemBehavior</span>(items: [square]);</span><br><span class="line">itemBehaviour.elasticity = <span class="number">0.6</span>;</span><br><span class="line">animator.addBehavior(itemBehaviour);</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+let itemBehaviour = UIDynamicItemBehavior(items: [square]);
+itemBehaviour.elasticity = 0.6;
+animator.addBehavior(itemBehaviour);
+</code></pre>
 <p>上面的代码中，我们创建了一个行为项，它与方块View相关联，修改它的弹力为0.6，然后将其添加到行为中。<code>elasticity</code>的最大值为1，这意味着当方块与障碍物发生碰撞时，所以不会损失碰撞能量和速度，所以方块会一直弹。</p>
 <p>我们编译运行一下，看看现在当方块发生碰撞时会有什么反应：</p>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics22.gif" alt="luping"></p>
 <p>我们也可以通过<code>collision.action</code>来记录方块的运行轨迹：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> updateCount = <span class="number">0</span>;</span><br><span class="line">collision.action = &#123;</span><br><span class="line">  <span class="keyword">if</span> (updateCount % <span class="number">3</span> == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> outline = <span class="type">UIView</span>(frame: square.bounds);</span><br><span class="line">    outline.transform = square.transform;</span><br><span class="line">    outline.center = square.center;</span><br><span class="line"> </span><br><span class="line">    outline.alpha = <span class="number">0.5</span>;</span><br><span class="line">    outline.backgroundColor = <span class="type">UIColor</span>.clearColor();</span><br><span class="line">    outline.layer.borderColor = square.layer.presentationLayer().backgroundColor;</span><br><span class="line">    outline.layer.borderWidth = <span class="number">1.0</span>;</span><br><span class="line">    <span class="keyword">self</span>.view.addSubview(outline);</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">    ++updateCount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+var updateCount = 0;
+collision.action = {
+  if (updateCount % 3 == 0) {
+    let outline = UIView(frame: square.bounds);
+    outline.transform = square.transform;
+    outline.center = square.center;
+
+    outline.alpha = 0.5;
+    outline.backgroundColor = UIColor.clearColor();
+    outline.layer.borderColor = square.layer.presentationLayer().backgroundColor;
+    outline.layer.borderWidth = 1.0;
+    self.view.addSubview(outline);
+  }
+
+    ++updateCount;
+}
+</code></pre>
 <p>上面代码的意思是，每当<code>collision.action</code>执行三次时，我们添加一个View，大小与<code>square</code>相同，<code>transform</code>和<code>center</code>也相同，透明度设为5，背景色设为空，边框色设为当前<code>square</code>的颜色。这样就可以记录下<code>square</code>运行轨迹了。</p>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics23.gif" alt="luping"></p>
 <p>在上面的代码中，我们只修改了弹力属性<code>elasticity</code>，其实还有其他的属性，我们来看一下：</p>
@@ -498,23 +588,68 @@ Boundary contact occurred - nil
 </ul>
 <h2 id="u52A8_u6001_u6DFB_u52A0_u884C_u4E3A"><a href="#u52A8_u6001_u6DFB_u52A0_u884C_u4E3A" class="headerlink" title="动态添加行为"></a>动态添加行为</h2><p>在目前的程序中，我们都是预先设置好了View的各种行为和行为属性，那么这一节我们会展现如何动态的添加或移除行为。</p>
 <p>我们打开<code>ViewController.swift</code>文件，在<code>viewDidLoad</code>方法中添加一个属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> firstContact = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+var firstContact = false;
+</code></pre>
 <p>然后在碰撞代理的方法<code>collisionBehavior(behavior:beganContactForItem:withBoundaryIdentifier:atPoint:)</code>中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!firstContact) &#123;</span><br><span class="line">  firstContact = <span class="literal">true</span>;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> square = <span class="type">UIView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">30</span>, y: <span class="number">0</span>, width: <span class="number">100</span>, height: <span class="number">100</span>));</span><br><span class="line">  square.backgroundColor = <span class="type">UIColor</span>.grayColor();</span><br><span class="line">  view.addSubview(square);</span><br><span class="line"> </span><br><span class="line">  collision.addItem(square);</span><br><span class="line">  gravity.addItem(square);</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> attach = <span class="type">UIAttachmentBehavior</span>(item: collidingView, attachedToItem:square);</span><br><span class="line">  animator.addBehavior(attach);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+if (!firstContact) {
+  firstContact = true;
+
+  let square = UIView(frame: CGRect(x: 30, y: 0, width: 100, height: 100));
+  square.backgroundColor = UIColor.grayColor();
+  view.addSubview(square);
+
+  collision.addItem(square);
+  gravity.addItem(square);
+
+  let attach = UIAttachmentBehavior(item: collidingView, attachedToItem:square);
+  animator.addBehavior(attach);
+}
+</code></pre>
 <p>我们又创建了一个正方形View，背景色设置为灰色，将它添加至碰撞和重力行为中，然后我们创建了一个关联行为，将这个正方形和我们之前创建的正方形关联起来。</p>
 <p>编译运行一下，我们可以看到当之前创建的方块与障碍物发生碰撞后，会出现另一个方块：</p>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics24.gif" alt="luping"></p>
 <p>虽然你看到了两个方块似乎被连接起来了，但是之间没有连线，因为我们只是动态的添加了一个行为，然后由该行为达到了这种效果。</p>
 <h2 id="u7528_u6237_u4EA4_u4E92"><a href="#u7528_u6237_u4EA4_u4E92" class="headerlink" title="用户交互"></a>用户交互</h2><p>现在你看到了，我们可以在系统运行时动态的添加或删除行为。在最后呢，我们再介绍一个行为，那就是<code>UISnapBehavior</code>。当你点击屏幕时，<code>UISnapBehavior</code>行为会让对象像弹簧一样跳到你点击的那个位置。</p>
 <p>为了能更好的看清楚效果，我们将刚才添加的那段用于显示方块运行轨迹的代码注释掉，也就是下面这段代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!firstContact) &#123;</span><br><span class="line">  firstContact = <span class="literal">true</span>;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> square = <span class="type">UIView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">30</span>, y: <span class="number">0</span>, width: <span class="number">100</span>, height: <span class="number">100</span>));</span><br><span class="line">  square.backgroundColor = <span class="type">UIColor</span>.grayColor();</span><br><span class="line">  view.addSubview(square);</span><br><span class="line"> </span><br><span class="line">  collision.addItem(square);</span><br><span class="line">  gravity.addItem(square);</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> attach = <span class="type">UIAttachmentBehavior</span>(item: collidingView, attachedToItem:square);</span><br><span class="line">  animator.addBehavior(attach);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+if (!firstContact) {
+  firstContact = true;
+
+  let square = UIView(frame: CGRect(x: 30, y: 0, width: 100, height: 100));
+  square.backgroundColor = UIColor.grayColor();
+  view.addSubview(square);
+
+  collision.addItem(square);
+  gravity.addItem(square);
+
+  let attach = UIAttachmentBehavior(item: collidingView, attachedToItem:square);
+  animator.addBehavior(attach);
+}
+</code></pre>
 <p>然后我们在<code>ViewController.swift</code>文件中添加两个属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> square: <span class="type">UIView</span>!;</span><br><span class="line"><span class="keyword">var</span> snap: <span class="type">UISnapBehavior</span>!;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+var square: UIView!;
+var snap: UISnapBehavior!;
+</code></pre>
 <p>在<code>viewDidLoad</code>方法中，我们去掉申明<code>square</code>的<code>let</code>关键字：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">square = <span class="type">UIView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">100</span>, y: <span class="number">100</span>, width: <span class="number">100</span>, height: <span class="number">100</span>));</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+square = UIView(frame: CGRect(x: 100, y: 100, width: 100, height: 100));
+</code></pre>
 <p>将<code>square</code>申明为类的属性，而不是方法的常量，是因为我们需要追踪<code>square</code>的轨迹，这样我们就可以在<code>ViewController</code>类的任何方法和地方访问到<code>square</code>。</p>
 <p>然后我们重写<code>touchesEnded</code>方法，在该方法中创建Snap行为，也就是当用户点击屏幕时，会触发Snap行为：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">touchesEnded</span><span class="params">(touches: NSSet!, withEvent event: UIEvent!)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (snap != <span class="literal">nil</span>) &#123;</span><br><span class="line">    animator.removeBehavior(snap);</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> touch = touches.anyObject() <span class="keyword">as</span> <span class="type">UITouch</span>;</span><br><span class="line">  snap = <span class="type">UISnapBehavior</span>(item: square, snapToPoint: touch.locationInView(view));</span><br><span class="line">  animator.addBehavior(snap);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+override func touchesEnded(touches: NSSet!, withEvent event: UIEvent!) {
+  if (snap != nil) {
+    animator.removeBehavior(snap);
+  }
+
+  let touch = touches.anyObject() as UITouch;
+  snap = UISnapBehavior(item: square, snapToPoint: touch.locationInView(view));
+  animator.addBehavior(snap);
+}
+</code></pre>
 <p>上述代码的作用非常清晰，首先判断Snap行为是否存在，如果存在就从引擎中移除。然后实例化Snap行为，作用项是<code>square</code>，弹跳的位置是我们点击屏幕的位置。编译运行看看，会发生什么呢？</p>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics25.gif" alt="luping"></p>
 <p>参考原文：<a href="http://www.raywenderlich.com/76147/uikit-dynamics-tutorial-swift" target="_blank" rel="external">UIKit Dynamics Tutorial in Swift</a></p>
@@ -613,16 +748,36 @@ Boundary contact occurred - nil
 </blockquote>
 <p>打开Xcode6新建项目，选择<code>iOS Application/Single View Application</code>，名称随便取，我这里命名为<code>UIKitDynamicsDemo</code>，我们可以看到<code>Single View Application</code>的目录结构：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics1.png" alt="目录结构"> </p>
 <p>打开<code>ViewController.swift</code>文件，在<code>viewDidLoad</code>方法中添加如下代码：  </p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 创建一个正方形View，颜色设置为蓝绿色，加入当前的View中</span></span><br><span class="line"><span class="keyword">let</span> square = <span class="type">UIView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">100</span>, y: <span class="number">100</span>, width: <span class="number">100</span>, height: <span class="number">100</span>));</span><br><span class="line">square.backgroundColor = <span class="type">UIColor</span>.cyanColor();</span><br><span class="line"><span class="keyword">self</span>.view.addSubview(square);</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// 创建一个正方形View，颜色设置为蓝绿色，加入当前的View中
+let square = UIView(frame: CGRect(x: 100, y: 100, width: 100, height: 100));
+square.backgroundColor = UIColor.cyanColor();
+self.view.addSubview(square);
+</code></pre>
 <p>上面的代码在我们的屏幕上添加了一个蓝绿色的正方形<code>UIView</code>。运行一下，我们能看到一个木讷的蓝绿色正方形静静的待在屏幕中：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics2.png" alt="屏幕"></p>
 <p>如果你用真机运行，你可以摇晃一下手机、倾斜手机、拿着手机手舞足蹈一下，看看那个木讷的方块有什么反应和变化么？答案是要有反应你就见鬼了。因为我们写的这几行代码只能让它杵在那一动不动，那怎么能让它动起来呢？接下来让我们见证奇迹的时刻！</p>
 <h2 id="u6DFB_u52A0_u91CD_u529B_u884C_u4E3A"><a href="#u6DFB_u52A0_u91CD_u529B_u884C_u4E3A" class="headerlink" title="添加重力行为"></a>添加重力行为</h2><p>在<code>ViewController.swift</code>文件中添加两个属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// UIKit物理引擎</span></span><br><span class="line"><span class="keyword">var</span> animator: <span class="type">UIDynamicAnimator</span>!;</span><br><span class="line">```swift</span><br><span class="line"><span class="comment">// 重力行为</span></span><br><span class="line"><span class="keyword">var</span> gravity: <span class="type">UIGravityBehavior</span>!;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// UIKit物理引擎
+var animator: UIDynamicAnimator!;
+
+// 重力行为
+var gravity: UIGravityBehavior!;
+</code></pre>
 <blockquote>
 <p>注：代码中感叹号的作用这里不做过多介绍，请自行查阅官方文档。</p>
 </blockquote>
 <p>然后在<code>viewDidLoad</code>方法中再加入以下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化UIKit物理引擎类，作用于ViewController的View</span></span><br><span class="line">animator = <span class="type">UIDynamicAnimator</span>(referenceView: <span class="keyword">self</span>.view);</span><br><span class="line">```swift</span><br><span class="line"><span class="comment">// 实例化重力行为类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">gravity = <span class="type">UIGravityBehavior</span>(items: [square]);</span><br><span class="line">```swift</span><br><span class="line"><span class="comment">// 将重力行为添加到UIKit物理引擎类中</span></span><br><span class="line">animator.addBehavior(gravity);</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// 实例化UIKit物理引擎类，作用于ViewController的View
+animator = UIDynamicAnimator(referenceView: self.view);
+
+// 实例化重力行为类，目前只作用于刚才创建的正方形View
+gravity = UIGravityBehavior(items: [square]);
+
+// 将重力行为添加到UIKit物理引擎类中
+animator.addBehavior(gravity);
+</code></pre>
 <p>现在再编译运行一下，这时我们可以看到这个蓝绿色正方形开始做自由落体运动了，一直跌落出屏幕下边缘然后消失。  </p>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics61.gif" alt="屏幕">   </p>
 <p>我们来看看刚才我们添加的两个属性的类型：</p>
@@ -631,27 +786,62 @@ Boundary contact occurred - nil
 <li><code>UIGravityBehavior</code>是一个模拟重力的模型，可作用于一个或多个元素。它的构造函数需要传入一个数组，该数组的内容就是我们希望有重力表现的一个元素或多个元素。  </li>
 </ul>
 <p>大多数的行为都有一些配置属性，比如重力行为就有可以改变角度和速率的属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化UIKit物理引擎类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">animator = <span class="type">UIDynamicAnimator</span>(referenceView: <span class="keyword">self</span>.view);	</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实例化重力行为类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">gravity = <span class="type">UIGravityBehavior</span>(items: [square]);</span><br><span class="line">```swift</span><br><span class="line"><span class="comment">// 角度</span></span><br><span class="line">gravigy.angle = <span class="number">1.6</span>;</span><br><span class="line">```swift</span><br><span class="line"><span class="comment">// 速率</span></span><br><span class="line">gravigy.magnitude = <span class="number">0.1</span>;</span><br><span class="line">    </span><br><span class="line"><span class="comment">// 将重力行为添加到UIKit物理引擎类中</span></span><br><span class="line">animator.addBehavior(gravity);</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// 实例化UIKit物理引擎类，目前只作用于刚才创建的正方形View
+animator = UIDynamicAnimator(referenceView: self.view);    
+
+// 实例化重力行为类，目前只作用于刚才创建的正方形View
+gravity = UIGravityBehavior(items: [square]);
+
+// 角度
+gravigy.angle = 1.6;
+
+// 速率
+gravigy.magnitude = 0.1;
+
+// 将重力行为添加到UIKit物理引擎类中
+animator.addBehavior(gravity);
+</code></pre>
 <p>上述代码中的<code>angle</code>是重力行为的角度属性，<code>angle</code>的值为0时，方块会水平向右移动，随着值的增大，方块会顺时针改变角度。不过我们要模拟现实中的重力，所以该属性一般不设置，不设置时默认是垂直向下移动。<code>magnitude</code>是重力行为的速率属性，值越大下降的速度越快，当<code>magnitude</code>属性的值为0时，方块就不会下降了，所以最小的速率是0.1。</p>
 <blockquote>
 <p>注意：在现实世界中，重力加速度大约是<code>g = 9.80665m/s^2</code>，就是9.8米每平方秒。根据牛顿第二定律，我们可以使用<code>0.5 * g * Time^2</code>公式来计算下坠距离。<br>在UIKit的重力世界中，计算重力加速度的公式是一样的，但是单位有所不同。不是米而是像素，即<code>g = 1000pixels/s^2</code>，我们同样可以使用牛顿第二定律来计算我们的方块在单位时间内下降的距离。我们只需要知道重力加速度<code>g</code>越大，坠落速度越快，所以上述代码中的<code>magnitude</code>属性就差不多是这意思。</p>
 </blockquote>
 <h2 id="u4E0D_u80FD_u8BA9_u6211_u4EEC_u7684_u65B9_u5757_u4E00_u5760_u5343_u91CC"><a href="#u4E0D_u80FD_u8BA9_u6211_u4EEC_u7684_u65B9_u5757_u4E00_u5760_u5343_u91CC" class="headerlink" title="不能让我们的方块一坠千里"></a>不能让我们的方块一坠千里</h2><p>从目前代码的运行状况知道，我们的方块下降到屏幕底部时丝毫没有停止的意思，直接坠崖而下，看都看不见。我们希望我们的屏幕类似一个盒子一样，方块在盒子中，当下降到底部时就停止，那么我们就需要设置一个边界。  </p>
 <p>在<code>ViewController.swift</code>文件中再添加一个属性：  </p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">```swift</span><br><span class="line"><span class="comment">// 碰撞行为</span></span><br><span class="line"><span class="keyword">var</span> collision: <span class="type">UICollisionBehavior</span>!;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// 碰撞行为
+var collision: UICollisionBehavior!;
+</code></pre>
 <p>然后在<code>viewDidLoad</code>方法中加入以下几行代码：  </p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化碰撞行为类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square]);</span><br><span class="line">```swift</span><br><span class="line"><span class="comment">// 将参考视图的边界作为碰撞边界</span></span><br><span class="line">collision.translatesReferenceBoundsIntoBoundary = <span class="literal">true</span>;</span><br><span class="line">```swift</span><br><span class="line"><span class="comment">// 将碰撞行为添加到UIKit物理引擎类中</span></span><br><span class="line">animator.addBehavior(collision);</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// 实例化碰撞行为类，目前只作用于刚才创建的正方形View
+collision = UICollisionBehavior(items: [square]);
+
+// 将参考视图的边界作为碰撞边界
+collision.translatesReferenceBoundsIntoBoundary = true;
+
+// 将碰撞行为添加到UIKit物理引擎类中
+animator.addBehavior(collision);
+</code></pre>
 <p>上面的代码创建了边界行为，它会将一个或多个边界与指定的View联系起来，并使两者有具有交互行为。</p>
 <p>从上面代码我可以注意到<code>collision.translatesReferenceBoundsIntoBoundary = true;</code>这行代码，它的意思是将<code>UIDynamicAnimator</code>引用的View的边界作为碰撞行为的触发边界，这样就不用我们再去设置边界的坐标了，非常好用。</p>
 <p>接着我们编译运行看看，此时小方块坠落到屏幕底部时会产生碰撞效果，并且还会反弹几下，是不是很逼真呢。</p>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics71.gif" alt="屏幕">  </p>
 <h2 id="u78B0_u649E_u884C_u4E3A_u8FDB_u9636_u5E94_u7528"><a href="#u78B0_u649E_u884C_u4E3A_u8FDB_u9636_u5E94_u7528" class="headerlink" title="碰撞行为进阶应用"></a>碰撞行为进阶应用</h2><p>接下来我们在屏幕中再添加一个View，长方形并横在屏幕中间，在<code>viewDidLoad</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 创建一个长方形View，颜色设置为红色，加入当前的View中</span></span><br><span class="line"><span class="keyword">let</span> barrier = <span class="type">UIView</span>(frame:<span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">300</span>, width: <span class="number">140</span>, height: <span class="number">20</span>));</span><br><span class="line">barrier.backgroundColor = <span class="type">UIColor</span>.redColor();</span><br><span class="line"><span class="keyword">self</span>.view.addSubview(barrier);</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// 创建一个长方形View，颜色设置为红色，加入当前的View中
+let barrier = UIView(frame:CGRect(x: 0, y: 300, width: 140, height: 20));
+barrier.backgroundColor = UIColor.redColor();
+self.view.addSubview(barrier);
+</code></pre>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics3.png" alt="屏幕"></p>
 <p>但是我们发现这个红色的障碍物和方块并没有任何交互行为，这里有一点很重要：只有被行为关联起来的Views才会具有交互行为。我们来看看下面这张关系图：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics4.png" alt="屏幕"></p>
 <p><code>UIDynamicAnimator</code>引擎引用了当前屏幕的view，该view给引擎提供了整个坐标系统。每个行为可以关联多个元素，每个元素都可以被多个行为关联，上面的关系图可以很清晰的表现出当前app中各个行为与元素的关联关系。由于所有行为都没有与长方形view关联，所以<code>barrier</code>基本可以被忽略。</p>
 <h2 id="u5524_u9192Barrier"><a href="#u5524_u9192Barrier" class="headerlink" title="唤醒Barrier"></a>唤醒Barrier</h2><p>如果我们想让<code>barrier</code>活起来，我们得让碰撞行为将它关联起来：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化碰撞行为类，目前作用于刚才创建的正方形View和长方形View</span></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square,barrier]);</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// 实例化碰撞行为类，目前作用于刚才创建的正方形View和长方形View
+collision = UICollisionBehavior(items: [square,barrier]);
+</code></pre>
 <p>将<code>barrier</code>添加到碰撞行为关联元素的数组中。这样的话，<code>square</code>和<code>barrier</code>这两个view都会有碰撞行为，所以当他们相撞时就会产生碰撞效果。</p>
 <p>编译并运行，让我们来看看睡醒的<code>barrier</code>会产生什么效果：</p>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics81.gif" alt="屏幕">  </p>
@@ -660,11 +850,18 @@ Boundary contact occurred - nil
 <p>等等，为什么<code>barrier</code>坠落到屏幕底部后不像<code>square</code>会有蹦跶一下然后停止，反而在缓慢旋转，感觉向失重一样。嗯哼，这是因为我们并没有将重力行为与<code>barrier</code>关联起来，所以它会向失重一样开始旋转。</p>
 <p>这显然不是我想要的结果，我希望<code>square</code>坠落碰到<code>barrier</code>后，<code>barrier</code>纹丝不动，然后<code>square</code>被撞的七荤八素。我们要拦住那个<code>square</code>！</p>
 <h2 id="u9690_u5F62_u7684_u8FB9_u754C_u4E0E_u78B0_u649E_u6548_u679C"><a href="#u9690_u5F62_u7684_u8FB9_u754C_u4E0E_u78B0_u649E_u6548_u679C" class="headerlink" title="隐形的边界与碰撞效果"></a>隐形的边界与碰撞效果</h2><p>我们先去掉<code>barrier</code>的碰撞效果，将：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square,barrier]);</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+collision = UICollisionBehavior(items: [square,barrier]);
+</code></pre>
 <p>改为：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square]);</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+collision = UICollisionBehavior(items: [square]);
+</code></pre>
 <p>然后在这行下面添加另外一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square]);</span><br><span class="line">collision.addBoundaryWithIdentifier(<span class="string">"barrier"</span>, forPath: <span class="type">UIBezierPath</span>(rect: barrier.frame));</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+collision = UICollisionBehavior(items: [square]);
+collision.addBoundaryWithIdentifier(&quot;barrier&quot;, forPath: UIBezierPath(rect: barrier.frame));
+</code></pre>
 <p>这行代码的意思是在碰撞效果中添加一个隐形的边界，它的位置和形状和<code>barrier</code>的一样。这样就会让人产生一种错觉，认为红色的<code>barrier</code>成为了边界，其实真正的边界隐藏在它之后。编译运行一下，我们来看看会发生什么：</p>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics91.gif" alt="屏幕"> </p>
 <p>我们看到了当蓝绿色方块下降碰到红色障碍物时产生了碰撞行为，蓝绿色方块弹开并翻转落下。</p>
@@ -848,15 +1045,77 @@ Boundary contact occurred - nil
           <span itemprop="articleBody">
             
               <p>一个函数A的参数是返回值为<code>Optional</code>类型的函数，如果你传入了一个返回值不是<code>Optional</code>的函数，那么函数A会自动将传入函数的返回值转换为<code>Optional</code>类型，来看代码示例：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 函数B的返回值为Int类型</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">()</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数A的参数是返回值为Optional(Int)类型</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把函数B作为参数传入函数A，输出结果为Optional(1)</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// 函数B的返回值为Int类型
+func B()-&gt;Int {
+    return 1;
+}
+
+// 函数A的参数是返回值为Optional(Int)类型
+func A(fun: ()-&gt;Int?) {
+    println(fun());
+}
+
+// 把函数B作为参数传入函数A，输出结果为Optional(1)
+A(B);
+</code></pre>
 <p>更棒的是你还可以使用经过转换后的函数，比如：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 让函数A返回作为参数的函数</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?)-&gt;()-&gt;<span class="type">Int</span>? &#123;</span><br><span class="line">    <span class="keyword">return</span> fun;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line"><span class="keyword">let</span> j = &#123; ++i &#125;</span><br><span class="line"> </span><br><span class="line">j() <span class="comment">// returns 1</span></span><br><span class="line">j() <span class="comment">// returns 2</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> h = <span class="type">A</span>(j)</span><br><span class="line"> </span><br><span class="line">h() <span class="comment">// returns &#123;Some 3&#125;</span></span><br><span class="line">h() <span class="comment">// returns &#123;Some 4&#125;</span></span><br><span class="line">j() <span class="comment">// returns 5</span></span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// 让函数A返回作为参数的函数
+func A(fun: ()-&gt;Int?)-&gt;()-&gt;Int? {
+    return fun;
+}
+
+var i = 0
+let j = { ++i }
+
+j() // returns 1
+j() // returns 2
+
+let h = A(j)
+
+h() // returns {Some 3}
+h() // returns {Some 4}
+j() // returns 5
+</code></pre>
 <p>这种特性只能作用于函数的返回值，如果是下面这种情况，就不好使了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">(i: Int)</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">(Int?)</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 编译失败，不能将B函数参数的Int类型隐式转换为Int?类型</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func B(i: Int)-&gt;Int {
+    return i;
+}
+
+func A(fun: (Int?)-&gt;Int?) {
+    println(fun(1));
+}
+
+// 编译失败，不能将B函数参数的Int类型隐式转换为Int?类型
+A(B);
+</code></pre>
 <p>这是因为函数B希望它的参数永远不能为nil，当接收到值为nil的参数后它就不知道该怎么办了。但如果函数B的参数为<code>Optional</code>类型，而函数A希望传入的函数参数为非<code>Optional</code>呢？我们来看看：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">(i: Int?)</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i ?? <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">(Int?)</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 编译成功，并做了隐式转换，</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func B(i: Int?)-&gt;Int {
+    return i ?? 0
+}
+
+func A(fun: (Int?)-&gt;Int?) {
+    println(fun(1));
+}
+
+// 编译成功，并做了隐式转换，
+A(B);
+</code></pre>
 <p>上面的特新其实可以理解为，编译器使用了一个闭包，调用了你传入的函数并进行了封包操作：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">()</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun());</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="type">A</span>( &#123; <span class="type">Optional</span>(<span class="type">B</span>()) &#125; );</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func B()-&gt;Int {
+    return 1;
+}
+
+func A(fun: ()-&gt;Int?) {
+    println(fun());
+}
+
+A( { Optional(B()) } );
+</code></pre>
 <p>这是Swift很有意思也很有用的一个特性。</p>
 
             

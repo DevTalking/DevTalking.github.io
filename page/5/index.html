@@ -248,13 +248,43 @@
 <p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-9.png" alt="pic"></p>
 <p><code>LibraryAPI</code>就是作为暴露给其他类的标准接口，它能有效的向接口使用者规避掉<code>HTTPClient</code>和<code>PersistencyManager</code>复杂的逻辑代码。</p>
 <p>打开<code>LibraryAPI.swift</code>文件添加如下常量属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> persistencyManager: <span class="type">PersistencyManager</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> httpClient: <span class="type">HTTPClient</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> isOnline: <span class="type">Bool</span></span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+private let persistencyManager: PersistencyManager
+private let httpClient: HTTPClient
+private let isOnline: Bool
+</code></pre>
 <p><code>isOnline</code>属性决定了是否向远程服务器上更新专辑数据的变化，比如添加或删除专辑。</p>
 <p>然后需要添加<code>init</code>初始化方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">  persistencyManager = <span class="type">PersistencyManager</span>()</span><br><span class="line">  httpClient = <span class="type">HTTPClient</span>()</span><br><span class="line">  isOnline = <span class="literal">false</span></span><br><span class="line"> </span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+override init() {
+  persistencyManager = PersistencyManager()
+  httpClient = HTTPClient()
+  isOnline = false
+
+  super.init()
+}
+</code></pre>
 <p>因为本篇教程中的示例应用只是为了向大家介绍如何运用各种设计模式，所以没有远程服务器的需求，<code>HTTPClient</code>自然不会用到。所以这里<code>isOnline</code>属性总是设置为<code>false</code>。</p>
 <p>下一步，向<code>LibraryAPI.swift</code>文件中添加如下三个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAlbums</span><span class="params">()</span></span> -&gt; [<span class="type">Album</span>] &#123;</span><br><span class="line">  <span class="keyword">return</span> persistencyManager.getAlbums()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">addAlbum</span><span class="params">(album: Album, index: Int)</span></span> &#123;</span><br><span class="line">  persistencyManager.addAlbum(album, index: index)</span><br><span class="line">  <span class="keyword">if</span> isOnline &#123;</span><br><span class="line">    httpClient.postRequest(<span class="string">"/api/addAlbum"</span>, body: album.description())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">deleteAlbum</span><span class="params">(index: Int)</span></span> &#123;</span><br><span class="line">  persistencyManager.deleteAlbumAtIndex(index)</span><br><span class="line">  <span class="keyword">if</span> isOnline &#123;</span><br><span class="line">    httpClient.postRequest(<span class="string">"/api/deleteAlbum"</span>, body: <span class="string">"<span class="subst">\(index)</span>"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func getAlbums() -&gt; [Album] {
+  return persistencyManager.getAlbums()
+}
+
+func addAlbum(album: Album, index: Int) {
+  persistencyManager.addAlbum(album, index: index)
+  if isOnline {
+    httpClient.postRequest(&quot;/api/addAlbum&quot;, body: album.description())
+  }
+}
+
+func deleteAlbum(index: Int) {
+  persistencyManager.deleteAlbumAtIndex(index)
+  if isOnline {
+    httpClient.postRequest(&quot;/api/deleteAlbum&quot;, body: &quot;\(index)&quot;)
+  }
+}
+</code></pre>
 <p>大家看一下<code>addAlbum(_:index:)</code>方法，该方法顾名思义是添加专辑的方法，在实现时会先更新本地的数据，如果网络连通且需要使用远程服务的时候，再调用远程服务接口更新数据状态。当该模块以外的类调用了<code>LibraryAPI</code>接口的<code>addAlbum</code>方法时，它并不知道添加专辑的具体实现逻辑，并且也不需要知道，这就是Facade设计模式的魅力所在。</p>
 <p>现在编译运行你们的应用。你们会看到两个空的视图，和一个Toolbar。顶部的视图用于显示专辑的封面，下面的视图会以列表的形式显示该专辑的相关信息。</p>
 <p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-10.png" alt="pic"></p>
@@ -271,7 +301,13 @@
 <p>该数据结构图如下：</p>
 <p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-12.png" alt="pic"></p>
 <p>接下来我们新建一个Swift文件，名为 <strong>AlbumExtensions</strong> ，然后打开 <strong>AlbumExtensions.swift</strong> 文件，添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Album</span> </span>&#123;</span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">ae_tableRepresentation</span><span class="params">()</span></span> -&gt; (titles:[<span class="type">String</span>], values:[<span class="type">String</span>]) &#123;</span><br><span class="line">    <span class="keyword">return</span> ([<span class="string">"Artist"</span>, <span class="string">"Album"</span>, <span class="string">"Genre"</span>, <span class="string">"Year"</span>], [artist, title, genre, year])</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+extension Album {
+  func ae_tableRepresentation() -&gt; (titles:[String], values:[String]) {
+    return ([&quot;Artist&quot;, &quot;Album&quot;, &quot;Genre&quot;, &quot;Year&quot;], [artist, title, genre, year])
+  }
+}
+</code></pre>
 <p>这里注意该方法名的开头<code>ae_</code>，它是<code>AlbumExtensions</code>的缩写。这是一个约定俗成的扩展方法名的写法，目的在于防止扩展方法与原生方法名产生冲突。</p>
 <blockquote>
 <p><strong>注意：</strong>通常类可以重写父类的方法或属性，但是在Extension中不可以。Extension中的方法名、属性名也不能和原生方法名、原生属性名相同。</p>
@@ -292,9 +328,30 @@
 <p><strong>注意：</strong>代理机制是一个很重要的模式。Apple在UIKit框架中大量应用了该模式，比如<code>UITableView</code>、<code>UITextView</code>、<code>UITextField</code>、<code>UIWebView</code>、<code>UIAlert</code>、<code>UIActionSheet</code>、<code>UICollectionView</code>、<code>UIPickerView</code>、<code>UIGestrueRecognizer</code>、<code>UIScrollView</code>等等。</p>
 </blockquote>
 <h2 id="u5982_u4F55_u4F7F_u7528Delegate_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528Delegate_u6A21_u5F0F" class="headerlink" title="如何使用Delegate模式"></a>如何使用Delegate模式</h2><p>打开<code>ViewController.swift</code>文件，然后添加以下私有属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> allAlbums = [<span class="type">Album</span>]()</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> currentAlbumData : (titles:[<span class="type">String</span>], values:[<span class="type">String</span>])?</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> currentAlbumIndex = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+private var allAlbums = [Album]()
+private var currentAlbumData : (titles:[String], values:[String])?
+private var currentAlbumIndex = 0
+</code></pre>
 <p>然后重写<code>viewDidLoad</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">  <span class="comment">//1</span></span><br><span class="line">  <span class="keyword">self</span>.navigationController?.navigationBar.translucent = <span class="literal">false</span></span><br><span class="line">  currentAlbumIndex = <span class="number">0</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment">//2</span></span><br><span class="line">  allAlbums = <span class="type">LibraryAPI</span>.sharedInstance.getAlbums()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3</span></span><br><span class="line">  <span class="comment">// the uitableview that presents the album data</span></span><br><span class="line">  dataTable.delegate = <span class="keyword">self</span></span><br><span class="line">  dataTable.dataSource = <span class="keyword">self</span></span><br><span class="line">  dataTable.backgroundView = <span class="literal">nil</span></span><br><span class="line">  view.addSubview(dataTable!)		</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+override func viewDidLoad() {
+  super.viewDidLoad()
+  //1
+  self.navigationController?.navigationBar.translucent = false
+  currentAlbumIndex = 0
+
+  //2
+  allAlbums = LibraryAPI.sharedInstance.getAlbums()
+
+  // 3
+  // the uitableview that presents the album data
+  dataTable.delegate = self
+  dataTable.dataSource = self
+  dataTable.backgroundView = nil
+  view.addSubview(dataTable!)        
+}
+</code></pre>
 <p>我们对上述的代码来进行一一讲解：</p>
 <ol>
 <li>关闭导航栏的透明效果。</li>
@@ -302,17 +359,58 @@
 <li>对<code>UITableView</code>进行相关设置，将它的delegate和datasource设置为当前的ViewController。这样一来<code>UITableView</code>所有对数据的请求都会由当前的ViewController响应并提供了。这里需要注意的是如果你们在Storeboard中创建<code>UIViewController</code>和<code>UITableView</code>，那么也可以在Storeboard中通过拖拽来设置delegate和datasource。</li>
 </ol>
 <p>接下来，在<code>ViewController.swift</code>中添加如下方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">showDataForAlbum</span><span class="params">(albumIndex: Int)</span></span> &#123;</span><br><span class="line">  <span class="comment">// 保证代码健壮性，确保专辑数至少大于0，避免数组下标越界的错误</span></span><br><span class="line">  <span class="keyword">if</span> (albumIndex &lt; allAlbums.<span class="built_in">count</span> &amp;&amp; albumIndex &gt; -<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="comment">//获取专辑对象</span></span><br><span class="line">    <span class="keyword">let</span> album = allAlbums[albumIndex]</span><br><span class="line">    <span class="comment">// 保存专辑的数据，用于一会在tableview中展现</span></span><br><span class="line">    currentAlbumData = album.ae_tableRepresentation()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    currentAlbumData = <span class="literal">nil</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 我们已经获取到了需要的数据，可以刷新tableview来显示数据了</span></span><br><span class="line">  dataTable!.reloadData()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func showDataForAlbum(albumIndex: Int) {
+  // 保证代码健壮性，确保专辑数至少大于0，避免数组下标越界的错误
+  if (albumIndex &lt; allAlbums.count &amp;&amp; albumIndex &gt; -1) {
+    //获取专辑对象
+    let album = allAlbums[albumIndex]
+    // 保存专辑的数据，用于一会在tableview中展现
+    currentAlbumData = album.ae_tableRepresentation()
+  } else {
+    currentAlbumData = nil
+  }
+  // 我们已经获取到了需要的数据，可以刷新tableview来显示数据了
+  dataTable!.reloadData()
+}
+</code></pre>
 <p><code>showDataForAlbum()</code>方法的作用是从专辑数组中获取到专辑的对象，然后请求并保存专辑的数据。当你想显示新的数据或有改变的数据时，你只需要调用<code>reloadData</code>方法即可。这样<code>UItableView</code>会重新请求它的代理获取相关数据，比如一共要显示多少个Section、每个Section里显示多少行、每行看起来是什么样的等等。</p>
 <p>我们在<code>viewDidLoad</code>方法中再加入一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">self</span>.showDataForAlbum(currentAlbumIndex)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+self.showDataForAlbum(currentAlbumIndex)
+</code></pre>
 <p>该行代码让应用启动时就开始加载专辑数据。因为之前已经将<code>currentAlbumIndex</code>的值设为了0，所以从专辑数组中的第一个专辑开始显示。</p>
 <p>现在，是时候实现DataSource协议的方法了，你们可以将DataSource的方法直接写在ViewController里。也可以通过使用扩展的方式使代码保持整洁。</p>
 <p>如果使用扩展的方式，那么一定要确保它们是写在文件的最下面，并且要在ViewController类定义的大括号之外！</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">ViewController</span>: <span class="title">UITableViewDataSource</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">ViewController</span>: <span class="title">UITableViewDelegate</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+extension ViewController: UITableViewDataSource {
+}
+
+extension ViewController: UITableViewDelegate {
+}
+</code></pre>
 <p>上面这两行代码的含义就是ViewController通过扩展的方式遵循了Delegate和DataSource协议 – 你可以把协议想象成是与委托之间的约定，只要你实现了约定的方法，就算是实现了委托。在我们的代码中，ViewController需要遵守<code>UITableViewDataSource</code>和<code>UITableViewDelegate</code>这两个协议。这样 UITableView 才能明确的知道，需要用到的代理中的方法是由这个ViewController实现的。</p>
 <p>在遵循<code>UITableViewDataSource</code>协议的扩展中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, numberOfRowsInSection section: Int)</span></span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> albumData = currentAlbumData &#123;</span><br><span class="line">    <span class="keyword">return</span> albumData.titles.<span class="built_in">count</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> cell:<span class="type">UITableViewCell</span> = tableView.dequeueReusableCellWithIdentifier(<span class="string">"Cell"</span>, forIndexPath: indexPath) <span class="keyword">as</span> <span class="type">UITableViewCell</span></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> albumData = currentAlbumData &#123;</span><br><span class="line">    cell.textLabel?.text = albumData.titles[indexPath.row]</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> detailTextLabel = cell.detailTextLabel &#123;</span><br><span class="line">        detailTextLabel.text = albumData.values[indexPath.row]</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> cell</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -&gt; Int {
+  if let albumData = currentAlbumData {
+    return albumData.titles.count
+  } else {
+    return 0
+  }
+}
+
+func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -&gt; UITableViewCell {
+  var cell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier(&quot;Cell&quot;, forIndexPath: indexPath) as UITableViewCell
+  if let albumData = currentAlbumData {
+    cell.textLabel?.text = albumData.titles[indexPath.row]
+      if let detailTextLabel = cell.detailTextLabel {
+        detailTextLabel.text = albumData.values[indexPath.row]
+      }
+  }
+  return cell
+}
+</code></pre>
 <p><code>tableView(_:numberOfRowsInSection:)</code>方法返回每个Section中显示多少行内容，这里对应着专辑数据结构中的标题。</p>
 <p><code>tableView(_:cellForRowAtIndexPath:)</code>方法会逐个创建每行的内容，包括专辑标题和它的值。</p>
 <blockquote>
@@ -431,24 +529,75 @@
 <p>在带你们深入了解第一个设计模式之前，你们需要创建两个类，用于存储和展示音乐专辑的数据。</p>
 <p>点击菜单 <strong>File\New\File…</strong> （或者按下 <strong>Command+N</strong> 快捷键）。选择 <strong>iOS &gt; Cocoa Touch Class</strong> ，点击 <strong>Next</strong>。设置该类的名称为 <strong>Album</strong> ，并让它继承 <strong>NSObject</strong>。最后选择语言为 <strong>Swift</strong> 然后点击 <strong>Next</strong>，最后点击 <strong>Create</strong>。</p>
 <p>打开<strong>Album.swift</strong>文件，在<strong>Album</strong>类中定义如下属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> title : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> artist : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> genre : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> coverUrl : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> year : <span class="type">String</span>!</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+var title : String!
+var artist : String!
+var genre : String!
+var coverUrl : String!
+var year : String!
+</code></pre>
 <p>然后添加一个初始化方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">init</span>(title: <span class="type">String</span>, artist: <span class="type">String</span>, genre: <span class="type">String</span>, coverUrl: <span class="type">String</span>, year: <span class="type">String</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">self</span>.title = title</span><br><span class="line">  <span class="keyword">self</span>.artist = artist</span><br><span class="line">  <span class="keyword">self</span>.genre = genre</span><br><span class="line">  <span class="keyword">self</span>.coverUrl = coverUrl</span><br><span class="line">  <span class="keyword">self</span>.year = year</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+init(title: String, artist: String, genre: String, coverUrl: String, year: String) {
+  super.init()
+
+  self.title = title
+  self.artist = artist
+  self.genre = genre
+  self.coverUrl = coverUrl
+  self.year = year
+}
+</code></pre>
 <p>这段代码为<strong>Album</strong>类创建了一个初始化方法，当你要创建一个新的专辑时你要通过这个初始化方法，传入专辑名称、演唱者、风格、专辑封面图片的URL以及年份这些属性。</p>
 <p>接下来需要再添加一个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">description</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"title: <span class="subst">\(title)</span>"</span> +</span><br><span class="line">   <span class="string">"artist: <span class="subst">\(artist)</span>"</span> +</span><br><span class="line">   <span class="string">"genre: <span class="subst">\(genre)</span>"</span> +</span><br><span class="line">   <span class="string">"coverUrl: <span class="subst">\(coverUrl)</span>"</span> +</span><br><span class="line">   <span class="string">"year: <span class="subst">\(year)</span>"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func description() -&gt; String {
+  return &quot;title: \(title)&quot; +
+   &quot;artist: \(artist)&quot; +
+   &quot;genre: \(genre)&quot; +
+   &quot;coverUrl: \(coverUrl)&quot; +
+   &quot;year: \(year)&quot;
+}
+</code></pre>
 <p><code>description()</code>方法将专辑的这些属性拼成一个字符串，并返回。</p>
 <p>我们再次通过刚才创建类的步骤创建一个名为<strong>AlibumView</strong>的类，注意该类要继承<strong>UIView</strong>。</p>
 <p>打开<strong>AlbumView.swift</strong>文件，在该类中添加两个属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> coverImage: <span class="type">UIImageView</span>! </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> indicator: <span class="type">UIActivityIndicatorView</span>!</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+private let coverImage: UIImageView! 
+private let indicator: UIActivityIndicatorView!
+</code></pre>
 <p><code>coverImage</code>属性用来展示专辑封面，<code>indicator</code>是当正在下载封面图片时转动的菊花。</p>
 <p>大伙注意，这里的两个属性分配了<code>private</code>访问级别，也就是说这两个属性只能在<strong>AlbumView.swift</strong>文件中使用，因为其他的类压根没有必要知道这两个属性的存在。（译者：其实这里用不用private都无所谓，因为咱们写的又不是library或者framework。）</p>
 <p>接下来为<code>AlbumView</code>类添加初始化方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">required</span> <span class="keyword">init</span>(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>(coder: aDecoder)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">init</span>(frame: <span class="type">CGRect</span>, albumCover: <span class="type">String</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>(frame: frame)</span><br><span class="line">  backgroundColor = <span class="type">UIColor</span>.blackColor()</span><br><span class="line">  coverImage = <span class="type">UIImageView</span>(frame: <span class="type">CGRectMake</span>(<span class="number">5</span>, <span class="number">5</span>, frame.size.width - <span class="number">10</span>, frame.size.height - <span class="number">10</span>))</span><br><span class="line">  addSubview(coverImage)</span><br><span class="line">  indicator = <span class="type">UIActivityIndicatorView</span>()</span><br><span class="line">  indicator.center = center</span><br><span class="line">  indicator.activityIndicatorViewStyle = .<span class="type">WhiteLarge</span></span><br><span class="line">  indicator.startAnimating()</span><br><span class="line">  addSubview(indicator)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+required init(coder aDecoder: NSCoder) {
+  super.init(coder: aDecoder)
+}
+
+init(frame: CGRect, albumCover: String) {
+  super.init(frame: frame)
+  backgroundColor = UIColor.blackColor()
+  coverImage = UIImageView(frame: CGRectMake(5, 5, frame.size.width - 10, frame.size.height - 10))
+  addSubview(coverImage)
+  indicator = UIActivityIndicatorView()
+  indicator.center = center
+  indicator.activityIndicatorViewStyle = .WhiteLarge
+  indicator.startAnimating()
+  addSubview(indicator)
+}
+</code></pre>
 <p>由于<code>UIView</code>遵循了<code>NSCoding</code>，而<code>AlbumView</code>又继承了<code>UIView</code>，所以这里需要写一个<code>NSCoder</code>的初始化方法，但我们不会在这个方法中处理什么逻辑，所以调用<code>super.init</code>即可。</p>
 <p><code>AlbumView</code>真正的初始化方法是另外一个<code>init</code>方法，在这个方法中设置了一些默认的属性，比如将背景色设置为黑色、实例化了<code>coverImage</code>属性，并让它与父容器有5px的四周间距、实例化<code>indicator</code>并设置位置及风格。</p>
 <p>最后再添加一个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">highlightAlbum</span><span class="params">(#didHighlightView: Bool)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> didHighlightView == <span class="literal">true</span> &#123;</span><br><span class="line">    backgroundColor = <span class="type">UIColor</span>.whiteColor()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    backgroundColor = <span class="type">UIColor</span>.blackColor()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func highlightAlbum(#didHighlightView: Bool) {
+  if didHighlightView == true {
+    backgroundColor = UIColor.whiteColor()
+  } else {
+    backgroundColor = UIColor.blackColor()
+  }
+}
+</code></pre>
 <p>这个方法是专辑封面高亮开关，高亮时专辑封面背景色为白色，否则为黑色。</p>
 <p>现在编译你们的工程，确保一切都没有问题，然后准备开始第一个设计模式的学习。</p>
 <h2 id="u8BBE_u8BA1_u6A21_u5F0F_u7684_u738B_u8005_-_MVC_u6A21_u5F0F"><a href="#u8BBE_u8BA1_u6A21_u5F0F_u7684_u738B_u8005_-_MVC_u6A21_u5F0F" class="headerlink" title="设计模式的王者 - MVC模式"></a>设计模式的王者 - MVC模式</h2><p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-3.png" alt="pic"></p>
@@ -487,7 +636,18 @@
 <p>你们将要通过Singleton设计模式，创建一个单例的类用于管理所有专辑的数据。</p>
 <p>你们应该注意到了，在项目的目录结构中，有一个文件组叫做API，这个文件组里存放的类基本都是为应用提供服务的类。我们在这个文件组中创建一个名为 <strong>LibraryAPI</strong> 的类。</p>
 <p>打开 <strong>LibraryAPI.swift</strong> 文件，添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//1</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">var</span> <span class="title">sharedInstance</span>: <span class="title">LibraryAPI</span> </span>&#123;</span><br><span class="line">  <span class="comment">//2</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="comment">//3</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">let</span> instance = <span class="type">LibraryAPI</span>()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//4</span></span><br><span class="line">  <span class="keyword">return</span> <span class="type">Singleton</span>.instance</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+//1
+class var sharedInstance: LibraryAPI {
+  //2
+  struct Singleton {
+    //3
+    static let instance = LibraryAPI()
+  }
+  //4
+  return Singleton.instance
+}
+</code></pre>
 <ol>
 <li>创建一个类变量的计算属性。类变量类似Objective-C中的类方法，也就是说在任何时候你访问<code>sharedInstance</code>属性时，都不需要对<code>LibraryAPI</code>进行实例化，关于属性类型更多的知识请参阅Swift文档 – <a href="https://developer.apple.com/library/ios/documentation/swift/conceptual/swift_programming_language/Properties.html" target="_blank" rel="external">properties</a>。</li>
 <li>在类变量中内嵌一个结构体，名为<code>Singleton</code>。</li>
@@ -500,13 +660,66 @@
 <p>你们现在已经有一个单例模式的对象，作为管理专辑数据的入口。接下来要更进一步，创建一个类，用于处理你们数据的持久性。</p>
 <p>继续在 <strong>API</strong> 这个文件组中创建一个类，名为<code>PersistencyManager</code>，并让它继承<code>NSObject</code>类。</p>
 <p>打开 <strong>PersistencyManager.swift</strong> 文件，申明一个属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> albums = [<span class="type">Album</span>]()</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+private var albums = [Album]()
+</code></pre>
 <p>这里申明了一个private访问权限的变量属性，用于储存专辑数据。这个数组是可变数组，所以你们可以很轻松的增删专辑。</p>
 <p>接下来我们在该类中添加如下初始化方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">  <span class="comment">//Dummy list of albums</span></span><br><span class="line">  <span class="keyword">let</span> album1 = <span class="type">Album</span>(title: <span class="string">"Best of Bowie"</span>,</span><br><span class="line">         artist: <span class="string">"David Bowie"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_david%20bowie_best%20of%20bowie.png"</span>,</span><br><span class="line">         year: <span class="string">"1992"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album2 = <span class="type">Album</span>(title: <span class="string">"It's My Life"</span>,</span><br><span class="line">         artist: <span class="string">"No Doubt"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_no%20doubt_its%20my%20life%20%20bathwater.png"</span>,</span><br><span class="line">         year: <span class="string">"2003"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album3 = <span class="type">Album</span>(title: <span class="string">"Nothing Like The Sun"</span>,</span><br><span class="line">         artist: <span class="string">"Sting"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_sting_nothing%20like%20the%20sun.png"</span>,</span><br><span class="line">         year: <span class="string">"1999"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album4 = <span class="type">Album</span>(title: <span class="string">"Staring at the Sun"</span>,</span><br><span class="line">         artist: <span class="string">"U2"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_u2_staring%20at%20the%20sun.png"</span>,</span><br><span class="line">         year: <span class="string">"2000"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album5 = <span class="type">Album</span>(title: <span class="string">"American Pie"</span>,</span><br><span class="line">         artist: <span class="string">"Madonna"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_madonna_american%20pie.png"</span>,</span><br><span class="line">         year: <span class="string">"2000"</span>)</span><br><span class="line"> </span><br><span class="line">  albums = [album1, album2, album3, album4, album5]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+override init() {
+  //Dummy list of albums
+  let album1 = Album(title: &quot;Best of Bowie&quot;,
+         artist: &quot;David Bowie&quot;,
+         genre: &quot;Pop&quot;,
+         coverUrl: &quot;http://www.coversproject.com/static/thumbs/album/album_david%20bowie_best%20of%20bowie.png&quot;,
+         year: &quot;1992&quot;)
+
+  let album2 = Album(title: &quot;It&#39;s My Life&quot;,
+         artist: &quot;No Doubt&quot;,
+         genre: &quot;Pop&quot;,
+         coverUrl: &quot;http://www.coversproject.com/static/thumbs/album/album_no%20doubt_its%20my%20life%20%20bathwater.png&quot;,
+         year: &quot;2003&quot;)
+
+  let album3 = Album(title: &quot;Nothing Like The Sun&quot;,
+         artist: &quot;Sting&quot;,
+         genre: &quot;Pop&quot;,
+         coverUrl: &quot;http://www.coversproject.com/static/thumbs/album/album_sting_nothing%20like%20the%20sun.png&quot;,
+         year: &quot;1999&quot;)
+
+  let album4 = Album(title: &quot;Staring at the Sun&quot;,
+         artist: &quot;U2&quot;,
+         genre: &quot;Pop&quot;,
+         coverUrl: &quot;http://www.coversproject.com/static/thumbs/album/album_u2_staring%20at%20the%20sun.png&quot;,
+         year: &quot;2000&quot;)
+
+  let album5 = Album(title: &quot;American Pie&quot;,
+         artist: &quot;Madonna&quot;,
+         genre: &quot;Pop&quot;,
+         coverUrl: &quot;http://www.coversproject.com/static/thumbs/album/album_madonna_american%20pie.png&quot;,
+         year: &quot;2000&quot;)
+
+  albums = [album1, album2, album3, album4, album5]
+}
+</code></pre>
 <p>在初始化方法中，你们可以构建一些专辑添加到<code>albums</code>数组中，这里我构建了5个专辑。</p>
 <p>然后再添加几个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAlbums</span><span class="params">()</span></span> -&gt; [<span class="type">Album</span>] &#123;</span><br><span class="line">  <span class="keyword">return</span> albums</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">addAlbum</span><span class="params">(album: Album, index: Int)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (albums.<span class="built_in">count</span> &gt;= index) &#123; </span><br><span class="line">    albums.insert(album, atIndex: index)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    albums.append(album)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">deleteAlbumAtIndex</span><span class="params">(index: Int)</span></span> &#123;</span><br><span class="line">  albums.removeAtIndex(index)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func getAlbums() -&gt; [Album] {
+  return albums
+}
+
+func addAlbum(album: Album, index: Int) {
+  if (albums.count &gt;= index) { 
+    albums.insert(album, atIndex: index)
+  } else {
+    albums.append(album)
+  }
+}
+
+func deleteAlbumAtIndex(index: Int) {
+  albums.removeAtIndex(index)
+}
+</code></pre>
 <p>这些方法可以让你们方便的存、取、删除<code>album</code>数组中的专辑。</p>
 <p>然后编译你们的项目，确保编译通过。此时大伙也许又有了疑问，我们应该如何使用<code>PersistencyManager</code>类呢？别着急，在下一节里，会向大家介绍 <strong>Facade</strong> 设计模式，届时你们就会明白<code>LibraryAPI</code>与<code>PersistencyManager</code>之间的关系，以及如何使用<code>PersistencyManager</code>了。</p>
 <p>未完待续……</p>
@@ -616,13 +829,41 @@
 <h2 id="UITextStorage_u7684_u5B50_u7C7B"><a href="#UITextStorage_u7684_u5B50_u7C7B" class="headerlink" title="UITextStorage的子类"></a>UITextStorage的子类</h2><p>我们选中左侧项目结构目录中的<strong>SwiftTextKitNotepad</strong>，然后选择菜单栏中的<strong>New File…</strong> ，接着选择<strong>iOS/Source/Cocoa Touch Class</strong> ，点击<strong>Next</strong>。</p>
 <p>我们给该类起名为<strong>SyntaxHighlightTextStorage</strong>，让它继承<code>NSTextStorage</code>，确认<strong>Language</strong>选项为 <strong>Swift</strong>，然后点击 <strong>Next</strong> ，最后点击<strong>Create</strong>。 </p>
 <p>打开<strong>SyntaxHighlightTextStorage.swift</strong>文件，申明一个新的属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> backingStore = <span class="type">NSMutableAttributedString</span>()</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+let backingStore = NSMutableAttributedString()
+</code></pre>
 <p>文本存储的子类必须要保证自己的持久性，因此使用<code>NSMutableAttributedString</code>作为<code>backingStore</code>的类型。后面我们会经常用到。</p>
 <p>然后在该类中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">var</span> string: <span class="type">String</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> backingStore.string</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">attributesAtIndex</span><span class="params">(index: Int, effectiveRange range: NSRangePointer)</span></span> -&gt; [<span class="type">NSObject</span> : <span class="type">AnyObject</span>] &#123;</span><br><span class="line">  <span class="keyword">return</span> backingStore.attributesAtIndex(index, effectiveRange: range)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+override var string: String {
+  return backingStore.string
+}
+
+override func attributesAtIndex(index: Int, effectiveRange range: NSRangePointer) -&gt; [NSObject : AnyObject] {
+  return backingStore.attributesAtIndex(index, effectiveRange: range)
+}
+</code></pre>
 <p>首先我们重写了计算属性<code>string</code>的<code>get</code>方法，让它返回咱们定义的<code>backingStore</code>中字符串的值，同样重写了<code>attributesAtIndex</code>方法，并返回<code>backingStore</code>的<code>attributesAtIndex</code>方法的返回值。</p>
 <p>最后重写这些必须要重写的方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">replaceCharactersInRange</span><span class="params">(range: NSRange, withString str: String)</span></span> &#123;</span><br><span class="line">  <span class="built_in">println</span>(<span class="string">"replaceCharactersInRange:<span class="subst">\(range)</span> withString:<span class="subst">\(str)</span>"</span>)</span><br><span class="line"> </span><br><span class="line">  beginEditing()</span><br><span class="line">  backingStore.replaceCharactersInRange(range, withString:str)</span><br><span class="line">  edited(.<span class="type">EditedCharacters</span> | .<span class="type">EditedAttributes</span>, range: range, changeInLength: (str <span class="keyword">as</span> <span class="type">NSString</span>).length - range.length)</span><br><span class="line">  endEditing()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">setAttributes</span><span class="params">(attrs: [NSObject : AnyObject]!, range: NSRange)</span></span> &#123;</span><br><span class="line">  <span class="built_in">println</span>(<span class="string">"setAttributes:<span class="subst">\(attrs)</span> range:<span class="subst">\(range)</span>"</span>)</span><br><span class="line"> </span><br><span class="line">  beginEditing()</span><br><span class="line">  backingStore.setAttributes(attrs, range: range)</span><br><span class="line">  edited(.<span class="type">EditedAttributes</span>, range: range, changeInLength: <span class="number">0</span>)</span><br><span class="line">  endEditing()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+override func replaceCharactersInRange(range: NSRange, withString str: String) {
+  println(&quot;replaceCharactersInRange:\(range) withString:\(str)&quot;)
+
+  beginEditing()
+  backingStore.replaceCharactersInRange(range, withString:str)
+  edited(.EditedCharacters | .EditedAttributes, range: range, changeInLength: (str as NSString).length - range.length)
+  endEditing()
+}
+
+override func setAttributes(attrs: [NSObject : AnyObject]!, range: NSRange) {
+  println(&quot;setAttributes:\(attrs) range:\(range)&quot;)
+
+  beginEditing()
+  backingStore.setAttributes(attrs, range: range)
+  edited(.EditedAttributes, range: range, changeInLength: 0)
+  endEditing()
+}
+</code></pre>
 <p>和上面一样，这些方法的实现都使用我们自己定义的<code>backingStore</code>属性的相同方法代替。然而，从上面的示例代码中可以看到使用<code>backingStore</code>的相关方法时，它是被包围在<code>beginEditing</code>、<code>edited</code>和<code>endEditing</code>三个方法中的。这三个方法是必须要写的，它们的作用是当文本准备被编辑时通知与之相关联的布局管理器（Layout Manager）。</p>
 <p>通过上面的示例代码你们可能已经注意到了要实现一个<code>NSTextStorage</code>的子类要重写这么多的方法（写这么多的代码）。因为<code>NSTextStorage</code>是一个<strong>类集群</strong>的公共接口，所以在实现它的子类时只重写一两个方法是没法真正扩展其功能的，上面这几个主要的方法是我们必须要重写的。</p>
 <blockquote>
@@ -634,12 +875,43 @@
 <h2 id="u8BA9UITextView_u4F7F_u7528_u6211_u4EEC_u81EA_u5B9A_u4E49_u7684Text_Kit_Stack"><a href="#u8BA9UITextView_u4F7F_u7528_u6211_u4EEC_u81EA_u5B9A_u4E49_u7684Text_Kit_Stack" class="headerlink" title="让UITextView使用我们自定义的Text Kit Stack"></a>让UITextView使用我们自定义的Text Kit Stack</h2><p>如果我们在Storyboard中创建一个<code>UITextView</code>，那么就同时会自动创建<code>NSTextStorage</code>、<code>NSLayoutManager</code>和<code>NSTextContainer</code>这三个类的实例（也就是<strong>Text Kit Stack</strong>），并且这三个实例是只读状态的。也就意味着在Storyboard中，我们没法让<code>UITextView</code>使用我们自己定义的Text Kit Stack。真的没招了吗？非也，我们可以在代码中创建<code>UITextView</code>，然后让它使用自定义的Text Kit Stack。</p>
 <p>打开<code>Main.storyboard</code>，找到<code>NoteEditorViewController</code>，展开它，在<strong>Detail Scene/Detail/View</strong>中找到 <strong>Text View</strong>，然后删掉<code>UITextView</code>实例。</p>
 <p>然后打开<code>NoteEditorViewController.swift</code>文件，移除<code>UITextView</code>的<code>outlet</code>。添加如下代码重新申明<code>UITextView</code>和<code>SyntaxHighlightTextStorage</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> textView: <span class="type">UITextView</span>!</span><br><span class="line"><span class="keyword">var</span> textStorage: <span class="type">SyntaxHighlightTextStorage</span>!</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+var textView: UITextView!
+var textStorage: SyntaxHighlightTextStorage!
+</code></pre>
 <p>接下来移除<code>viewDidLoad</code>方法中的这两行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">textView.text = note.contents</span><br><span class="line">textView.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+textView.text = note.contents
+textView.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+</code></pre>
 <p>因为我们已经移除了<code>UITextView</code>的<code>outlet</code>，并且手动申明了新的<code>UITextView</code>，所以这两行就不需要了，因为我们先要对新的<code>UITextView</code>进行初始化和相关设置。</p>
 <p>继续在<code>NoteEditorViewController.swift</code>中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">createTextView</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// 1. 初始化用于备份编辑器中文本的存储器</span></span><br><span class="line">  <span class="keyword">let</span> attrs = [<span class="type">NSFontAttributeName</span> : <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)]</span><br><span class="line">  <span class="keyword">let</span> attrString = <span class="type">NSAttributedString</span>(string: note.contents, attributes: attrs)</span><br><span class="line">  textStorage = <span class="type">SyntaxHighlightTextStorage</span>()</span><br><span class="line">  textStorage.appendAttributedString(attrString)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> newTextViewRect = view.bounds</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 2. 创建layoutManager</span></span><br><span class="line">  <span class="keyword">let</span> layoutManager = <span class="type">NSLayoutManager</span>()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3. 创建text container</span></span><br><span class="line">  <span class="keyword">let</span> containerSize = <span class="type">CGSize</span>(width: newTextViewRect.width, height: <span class="type">CGFloat</span>.<span class="built_in">max</span>)</span><br><span class="line">  <span class="keyword">let</span> container = <span class="type">NSTextContainer</span>(size: containerSize)</span><br><span class="line">  container.widthTracksTextView = <span class="literal">true</span></span><br><span class="line">  layoutManager.addTextContainer(container)</span><br><span class="line">  textStorage.addLayoutManager(layoutManager)</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 4. 初始化并设置UITextView</span></span><br><span class="line">  textView = <span class="type">UITextView</span>(frame: newTextViewRect, textContainer: container)</span><br><span class="line">  textView.delegate = <span class="keyword">self</span></span><br><span class="line">  view.addSubview(textView)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func createTextView() {
+  // 1. 初始化用于备份编辑器中文本的存储器
+  let attrs = [NSFontAttributeName : UIFont.preferredFontForTextStyle(UIFontTextStyleBody)]
+  let attrString = NSAttributedString(string: note.contents, attributes: attrs)
+  textStorage = SyntaxHighlightTextStorage()
+  textStorage.appendAttributedString(attrString)
+
+  let newTextViewRect = view.bounds
+
+  // 2. 创建layoutManager
+  let layoutManager = NSLayoutManager()
+
+  // 3. 创建text container
+  let containerSize = CGSize(width: newTextViewRect.width, height: CGFloat.max)
+  let container = NSTextContainer(size: containerSize)
+  container.widthTracksTextView = true
+  layoutManager.addTextContainer(container)
+  textStorage.addLayoutManager(layoutManager)
+
+  // 4. 初始化并设置UITextView
+  textView = UITextView(frame: newTextViewRect, textContainer: container)
+  textView.delegate = self
+  view.addSubview(textView)
+}
+</code></pre>
 <p>这次加的代码有点多，不过没关系，我们一一来分析：</p>
 <ol>
 <li>初始化我们之前自定义的文本存储类，并定义了文本的属性。</li>
@@ -651,17 +923,49 @@
 <p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-14.png" alt="pic"></p>
 <p>这里要注意的是，在上面添加的代码中文本容器的宽度为屏幕的宽度，但是高度是无限大的，这样设置的目的是为了当<code>UITextView</code>中的文本很长的时候可以上下滚动。</p>
 <p>现在我们就可以在<code>viewDidLoad</code>方法中调用<code>createTextView()</code>方法了，不过要记得加在<code>super.viewDidLoad()</code>方法的后面：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">createTextView()</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+super.viewDidLoad()
+createTextView()
+</code></pre>
 <p>最后还有一点需要注意的是：在代码中创建的自定义的视图不能沿用storyboard中添加的布局约束，这就意味着当改变设备的横竖屏方向时，代码中创建的视图是不能根据布局约束改变大小和位置的。你需要在代码中添加布局约束。</p>
 <p>此时我们还需要在<code>viewDidLayoutSubviews</code>方法中加一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">textView.frame = view.bounds</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+textView.frame = view.bounds
+</code></pre>
 <p>编译并运行应用，在应用中打开一条笔记，然后去编辑它，此时注意观察Xcode的控制台，你可以看到在控制台中像瀑布一般的刷出好多日志信息：</p>
 <p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-15.png" alt="pic"></p>
 <p>产生这些日志信息的来源是<code>SyntaxHighlightTextStorage</code>类，该类中输出的日志信息可以让你们知道你们自定义的类是否在正常的工作。</p>
 <p>现在文本解析器的基本框架看似已经可以稳定的运行了，接下来实现动态文本格式吧！</p>
 <h2 id="u52A8_u6001_u6587_u672C_u683C_u5F0F"><a href="#u52A8_u6001_u6587_u672C_u683C_u5F0F" class="headerlink" title="动态文本格式"></a>动态文本格式</h2><p>在接下来的步骤中，你们要对自定义的文本存储类进行修改，让它实现被星号包围起来的文本加粗的功能。</p>
 <p>打开<code>SyntaxHighlightTextStorage.swift</code>文件，添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">applyStylesToRange</span><span class="params">(searchRange: NSRange)</span></span> &#123;</span><br><span class="line">  <span class="comment">// 1. 创建一些字体</span></span><br><span class="line">  <span class="keyword">let</span> fontDescriptor = <span class="type">UIFontDescriptor</span>.preferredFontDescriptorWithTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">  <span class="keyword">let</span> boldFontDescriptor = fontDescriptor.fontDescriptorWithSymbolicTraits(.<span class="type">TraitBold</span>)</span><br><span class="line">  <span class="keyword">let</span> boldFont = <span class="type">UIFont</span>(descriptor: boldFontDescriptor, size: <span class="number">0</span>)</span><br><span class="line">  <span class="keyword">let</span> normalFont = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 2. 匹配由星号包围的文本</span></span><br><span class="line">  <span class="keyword">let</span> regexStr = <span class="string">"(\\*\\w+(\\s\\w+)*\\*)"</span></span><br><span class="line">  <span class="keyword">let</span> regex = <span class="type">NSRegularExpression</span>(pattern: regexStr, options: <span class="literal">nil</span>, error: <span class="literal">nil</span>)</span><br><span class="line">  <span class="keyword">let</span> boldAttributes = [<span class="type">NSFontAttributeName</span> : boldFont]</span><br><span class="line">  <span class="keyword">let</span> normalAttributes = [<span class="type">NSFontAttributeName</span> : normalFont]</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3. 遍历所有匹配上的文本，设置加粗字体属性</span></span><br><span class="line">  regex.enumerateMatchesInString(backingStore.string, options: <span class="literal">nil</span>, range: searchRange) &#123;</span><br><span class="line">    match, flags, stop <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">let</span> matchRange = match.rangeAtIndex(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">self</span>.addAttributes(boldAttributes, range: matchRange)</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 4. 还原字体格式</span></span><br><span class="line">    <span class="keyword">let</span> maxRange = matchRange.location + matchRange.length</span><br><span class="line">    <span class="keyword">if</span> maxRange + <span class="number">1</span> &lt; <span class="keyword">self</span>.length &#123;</span><br><span class="line">      <span class="keyword">self</span>.addAttributes(normalAttributes, range: <span class="type">NSMakeRange</span>(maxRange, <span class="number">1</span>))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func applyStylesToRange(searchRange: NSRange) {
+  // 1. 创建一些字体
+  let fontDescriptor = UIFontDescriptor.preferredFontDescriptorWithTextStyle(UIFontTextStyleBody)
+  let boldFontDescriptor = fontDescriptor.fontDescriptorWithSymbolicTraits(.TraitBold)
+  let boldFont = UIFont(descriptor: boldFontDescriptor, size: 0)
+  let normalFont = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+
+  // 2. 匹配由星号包围的文本
+  let regexStr = &quot;(\\*\\w+(\\s\\w+)*\\*)&quot;
+  let regex = NSRegularExpression(pattern: regexStr, options: nil, error: nil)
+  let boldAttributes = [NSFontAttributeName : boldFont]
+  let normalAttributes = [NSFontAttributeName : normalFont]
+
+  // 3. 遍历所有匹配上的文本，设置加粗字体属性
+  regex.enumerateMatchesInString(backingStore.string, options: nil, range: searchRange) {
+    match, flags, stop in
+    let matchRange = match.rangeAtIndex(1)
+    self.addAttributes(boldAttributes, range: matchRange)
+
+    // 4. 还原字体格式
+    let maxRange = matchRange.location + matchRange.length
+    if maxRange + 1 &lt; self.length {
+      self.addAttributes(normalAttributes, range: NSMakeRange(maxRange, 1))
+    }
+  }
+}
+</code></pre>
 <p>上面的代码主要功能是：</p>
 <ol>
 <li>通过<code>UIFontDescriptor</code>创建一个加粗的字体格式和一个正常的字体格式。<code>UIFontDescriptor</code>可帮助你们避免使用硬编码来设置字体的类型和格式。</li>
@@ -670,20 +974,66 @@
 <li>重置跟在最后一个星号后的文本的属性为正常，确保只在闭合星号内的文本才显示为粗体。</li>
 </ol>
 <p>在上面的方法后面添加如下方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performReplacementsForRange</span><span class="params">(changedRange: NSRange)</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> extendedRange = <span class="type">NSUnionRange</span>(changedRange, <span class="type">NSString</span>(string: backingStore.string).lineRangeForRange(<span class="type">NSMakeRange</span>(changedRange.location, <span class="number">0</span>)))</span><br><span class="line">  extendedRange = <span class="type">NSUnionRange</span>(changedRange, <span class="type">NSString</span>(string: backingStore.string).lineRangeForRange(<span class="type">NSMakeRange</span>(<span class="type">NSMaxRange</span>(changedRange), <span class="number">0</span>)))</span><br><span class="line">  applyStylesToRange(extendedRange)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func performReplacementsForRange(changedRange: NSRange) {
+  var extendedRange = NSUnionRange(changedRange, NSString(string: backingStore.string).lineRangeForRange(NSMakeRange(changedRange.location, 0)))
+  extendedRange = NSUnionRange(changedRange, NSString(string: backingStore.string).lineRangeForRange(NSMakeRange(NSMaxRange(changedRange), 0)))
+  applyStylesToRange(extendedRange)
+}
+</code></pre>
 <p>上面这个方法的作用是设置检查被星号包围文本的范围。这个方法是很重要的，因为<code>changedRange</code>通常代表一个字符，而<code>lineRangeForRange</code>将其扩展到一行的范围。</p>
 <p>最后在<code>performReplacementsForRange()</code>方法后再添加一个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">processEditing</span><span class="params">()</span></span> &#123;</span><br><span class="line">  performReplacementsForRange(<span class="keyword">self</span>.editedRange)</span><br><span class="line">  <span class="keyword">super</span>.processEditing()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+override func processEditing() {
+  performReplacementsForRange(self.editedRange)
+  super.processEditing()
+}
+</code></pre>
 <p>当文本发生改变时，<code>processEditing</code>方法会向布局管理器发送通知，告知布局管理器文本发生了变化。</p>
 <p>编译运行应用，打开一条笔记，输入一些文本信息，然后用星号包围几段文本，你会看到被星号包围的文本变成了粗体：</p>
 <p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-16.png" alt="pic"></p>
 <p>是不是很方便呢，你还可以依法炮制，举一反三，比如两个下划线包围的文本显示为斜体等等。</p>
 <h2 id="u6DF1_u5165_u5B8C_u5584"><a href="#u6DF1_u5165_u5B8C_u5584" class="headerlink" title="深入完善"></a>深入完善</h2><p>实现该功能的基本方法其实很简单：在<code>applyStylesToRange</code>方法中通过正则表达式过滤出你想要的文本信息，然后给过滤出的文本设置新的文本属性。</p>
 <p>打开<code>SyntaxHighlightTextStorage.swift</code>文件，添加如下方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">createAttributesForFontStyle</span><span class="params">(style: String, withTrait trait: UIFontDescriptorSymbolicTraits)</span></span> -&gt; [<span class="type">NSObject</span> : <span class="type">AnyObject</span>] &#123;</span><br><span class="line">  <span class="keyword">let</span> fontDescriptor = <span class="type">UIFontDescriptor</span>.preferredFontDescriptorWithTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">  <span class="keyword">let</span> descriptorWithTrait = fontDescriptor.fontDescriptorWithSymbolicTraits(trait)</span><br><span class="line">  <span class="keyword">let</span> font = <span class="type">UIFont</span>(descriptor: descriptorWithTrait, size: <span class="number">0</span>)</span><br><span class="line">  <span class="keyword">return</span> [<span class="type">NSFontAttributeName</span> : font]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func createAttributesForFontStyle(style: String, withTrait trait: UIFontDescriptorSymbolicTraits) -&gt; [NSObject : AnyObject] {
+  let fontDescriptor = UIFontDescriptor.preferredFontDescriptorWithTextStyle(UIFontTextStyleBody)
+  let descriptorWithTrait = fontDescriptor.fontDescriptorWithSymbolicTraits(trait)
+  let font = UIFont(descriptor: descriptorWithTrait, size: 0)
+  return [NSFontAttributeName : font]
+}
+</code></pre>
 <p>该方法可以创建正文文本字体的样式。在该方法中，构建<code>UIFont</code>时，其构造函数中的<code>size</code>属性设置为0，这是为了让字体的大小使用用户当前设置的字体大小。</p>
 <p>接下来，在该类中添加一个属性和一个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> replacements: [<span class="type">String</span> : [<span class="type">NSObject</span> : <span class="type">AnyObject</span>]]!</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">createHighlightPatterns</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> scriptFontDescriptor = <span class="type">UIFontDescriptor</span>(fontAttributes: [<span class="type">UIFontDescriptorFamilyAttribute</span> : <span class="string">"Zapfino"</span>])</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 1. 让我们的手写字体的大小基于首选设置中正文字体的大小</span></span><br><span class="line">  <span class="keyword">let</span> bodyFontDescriptor = <span class="type">UIFontDescriptor</span>.preferredFontDescriptorWithTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">  <span class="keyword">let</span> bodyFontSize = bodyFontDescriptor.fontAttributes()[<span class="type">UIFontDescriptorSizeAttribute</span>] <span class="keyword">as</span> <span class="type">NSNumber</span></span><br><span class="line">  <span class="keyword">let</span> scriptFont = <span class="type">UIFont</span>(descriptor: scriptFontDescriptor, size: <span class="type">CGFloat</span>(bodyFontSize.floatValue))</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 2. 创建一些字体属性</span></span><br><span class="line">  <span class="keyword">let</span> boldAttributes = createAttributesForFontStyle(<span class="type">UIFontTextStyleBody</span>, withTrait:.<span class="type">TraitBold</span>)</span><br><span class="line">  <span class="keyword">let</span> italicAttributes = createAttributesForFontStyle(<span class="type">UIFontTextStyleBody</span>, withTrait:.<span class="type">TraitItalic</span>)</span><br><span class="line">  <span class="keyword">let</span> strikeThroughAttributes = [<span class="type">NSStrikethroughStyleAttributeName</span> : <span class="number">1</span>]</span><br><span class="line">  <span class="keyword">let</span> scriptAttributes = [<span class="type">NSFontAttributeName</span> : scriptFont]</span><br><span class="line">  <span class="keyword">let</span> redTextAttributes = [<span class="type">NSForegroundColorAttributeName</span> : <span class="type">UIColor</span>.redColor()]</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 创建一个正则表达式的字典</span></span><br><span class="line">  replacements = [</span><br><span class="line">    <span class="string">"(\\*\\w+(\\s\\w+)*\\*)"</span> : boldAttributes,</span><br><span class="line">    <span class="string">"(_\\w+(\\s\\w+)*_)"</span> : italicAttributes,</span><br><span class="line">    <span class="string">"([0-9]+\\.)\\s"</span> : boldAttributes,</span><br><span class="line">    <span class="string">"(-\\w+(\\s\\w+)*-)"</span> : strikeThroughAttributes,</span><br><span class="line">    <span class="string">"(~\\w+(\\s\\w+)*~)"</span> : scriptAttributes,</span><br><span class="line">    <span class="string">"\\s([A-Z]&#123;2,&#125;)\\s"</span> : redTextAttributes</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+var replacements: [String : [NSObject : AnyObject]]!
+
+func createHighlightPatterns() {
+  let scriptFontDescriptor = UIFontDescriptor(fontAttributes: [UIFontDescriptorFamilyAttribute : &quot;Zapfino&quot;])
+
+  // 1. 让我们的手写字体的大小基于首选设置中正文字体的大小
+  let bodyFontDescriptor = UIFontDescriptor.preferredFontDescriptorWithTextStyle(UIFontTextStyleBody)
+  let bodyFontSize = bodyFontDescriptor.fontAttributes()[UIFontDescriptorSizeAttribute] as NSNumber
+  let scriptFont = UIFont(descriptor: scriptFontDescriptor, size: CGFloat(bodyFontSize.floatValue))
+
+  // 2. 创建一些字体属性
+  let boldAttributes = createAttributesForFontStyle(UIFontTextStyleBody, withTrait:.TraitBold)
+  let italicAttributes = createAttributesForFontStyle(UIFontTextStyleBody, withTrait:.TraitItalic)
+  let strikeThroughAttributes = [NSStrikethroughStyleAttributeName : 1]
+  let scriptAttributes = [NSFontAttributeName : scriptFont]
+  let redTextAttributes = [NSForegroundColorAttributeName : UIColor.redColor()]
+
+  // 创建一个正则表达式的字典
+  replacements = [
+    &quot;(\\*\\w+(\\s\\w+)*\\*)&quot; : boldAttributes,
+    &quot;(_\\w+(\\s\\w+)*_)&quot; : italicAttributes,
+    &quot;([0-9]+\\.)\\s&quot; : boldAttributes,
+    &quot;(-\\w+(\\s\\w+)*-)&quot; : strikeThroughAttributes,
+    &quot;(~\\w+(\\s\\w+)*~)&quot; : scriptAttributes,
+    &quot;\\s([A-Z]{2,})\\s&quot; : redTextAttributes
+  ]
+}
+</code></pre>
 <p>这个方法主要有以下几个功能：</p>
 <ul>
 <li>首先，使用Zapfino字体创建一个手写风格的字体。然后让它的字体大小基于正文文本设置的字体大小。</li>
@@ -706,9 +1056,39 @@
 <p><strong>注意</strong>：如果你想了解更多关于正则表达式的知识，请查阅这篇文章<a href="http://www.raywenderlich.com/?p=30288" target="_blank" rel="external">NSRegularExpression tutorial and cheat sheet</a></p>
 </blockquote>
 <p>接下来我们在<code>SyntaxHighlightTextStorage</code>类的初始化方法中调用<code>createHighlightPatterns()</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">```swift<span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">```swiftcreateHighlightPatterns()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">required</span> <span class="keyword">init</span>(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">```swift<span class="keyword">super</span>.<span class="keyword">init</span>(coder: aDecoder)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+override init() {
+    super.init()
+    createHighlightPatterns()
+}
+
+required init(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+}
+</code></pre>
 <p>最后，我们来修改<code>applyStylesToRange()</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">applyStylesToRange</span><span class="params">(searchRange: NSRange)</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> normalAttrs = [<span class="type">NSFontAttributeName</span> : <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)]</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 遍历每个需要替换字体属性的文本</span></span><br><span class="line">  <span class="keyword">for</span> (pattern, attributes) <span class="keyword">in</span> replacements &#123;</span><br><span class="line">    <span class="keyword">let</span> regex = <span class="type">NSRegularExpression</span>(pattern: pattern, options: <span class="literal">nil</span>, error: <span class="literal">nil</span>)</span><br><span class="line">    regex.enumerateMatchesInString(backingStore.string, options: <span class="literal">nil</span>, range: searchRange) &#123;</span><br><span class="line">      match, flags, stop <span class="keyword">in</span></span><br><span class="line">      <span class="comment">// 设置字体属性</span></span><br><span class="line">      <span class="keyword">let</span> matchRange = match.rangeAtIndex(<span class="number">1</span>)</span><br><span class="line">      <span class="keyword">self</span>.addAttributes(attributes, range: matchRange)</span><br><span class="line"> </span><br><span class="line">      <span class="comment">// 还原字体样式</span></span><br><span class="line">      <span class="keyword">let</span> maxRange = matchRange.location + matchRange.length</span><br><span class="line">      <span class="keyword">if</span> maxRange + <span class="number">1</span> &lt; <span class="keyword">self</span>.length &#123;</span><br><span class="line">        <span class="keyword">self</span>.addAttributes(normalAttrs, range: <span class="type">NSMakeRange</span>(maxRange, <span class="number">1</span>))</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func applyStylesToRange(searchRange: NSRange) {
+  let normalAttrs = [NSFontAttributeName : UIFont.preferredFontForTextStyle(UIFontTextStyleBody)]
+
+  // 遍历每个需要替换字体属性的文本
+  for (pattern, attributes) in replacements {
+    let regex = NSRegularExpression(pattern: pattern, options: nil, error: nil)
+    regex.enumerateMatchesInString(backingStore.string, options: nil, range: searchRange) {
+      match, flags, stop in
+      // 设置字体属性
+      let matchRange = match.rangeAtIndex(1)
+      self.addAttributes(attributes, range: matchRange)
+
+      // 还原字体样式
+      let maxRange = matchRange.location + matchRange.length
+      if maxRange + 1 &lt; self.length {
+        self.addAttributes(normalAttrs, range: NSMakeRange(maxRange, 1))
+      }
+    }
+  }
+}
+</code></pre>
 <p>在之前，该方法只使用一个正则表达式过滤出被星号围绕的文本，并将其设置为粗体，现在，虽然该方法所做的事情没有变，但是却不只使用一个正则表达式，而是遍历正则表达式字典中的所有表达式，过滤出文本中所有被符号围绕的文本，然后设置相应的字体样式。</p>
 <p>现在再次编译运行应用，你看到了什么？</p>
 <p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-17.png" alt="pic"></p>
@@ -718,25 +1098,62 @@
 <p>也是时候解决这两个问题了。</p>
 <h2 id="u56DE_u987E_u52A8_u6001_u7C7B_u578B"><a href="#u56DE_u987E_u52A8_u6001_u7C7B_u578B" class="headerlink" title="回顾动态类型"></a>回顾动态类型</h2><p>要想通过动态类型正确的解决该问题，你们得修改代码，当文本显示区域大小发生改变的通知发生时，要通过字体属性来改变字体。</p>
 <p>在<code>SyntaxHighlightTextStorage</code>类中添加如下方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">update</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// update the highlight patterns</span></span><br><span class="line">  createHighlightPatterns()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// change the 'global' font</span></span><br><span class="line">  <span class="keyword">let</span> bodyFont = [<span class="type">NSFontAttributeName</span> : <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)]</span><br><span class="line">  addAttributes(bodyFont, range: <span class="type">NSMakeRange</span>(<span class="number">0</span>, length))</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// re-apply the regex matches</span></span><br><span class="line">  applyStylesToRange(<span class="type">NSMakeRange</span>(<span class="number">0</span>, length))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func update() {
+  // update the highlight patterns
+  createHighlightPatterns()
+
+  // change the &#39;global&#39; font
+  let bodyFont = [NSFontAttributeName : UIFont.preferredFontForTextStyle(UIFontTextStyleBody)]
+  addAttributes(bodyFont, range: NSMakeRange(0, length))
+
+  // re-apply the regex matches
+  applyStylesToRange(NSMakeRange(0, length))
+}
+</code></pre>
 <p>上面的方法更新了所有与各种正则表达式相关联的字体，让所有字符串都基于正文文本的属性，然后重新过滤文本。</p>
 <p>最后，打开<code>NoteEditorViewController.swift</code>文件，更新<code>preferredContentSizeChanged()</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">preferredContentSizeChanged</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  textStorage.update()</span><br><span class="line">  updateTimeIndicatorFrame()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func preferredContentSizeChanged(notification: NSNotification) {
+  textStorage.update()
+  updateTimeIndicatorFrame()
+}
+</code></pre>
 <p>编译运行应用，在设置中修改文本大小，看看会发生什么：</p>
 <p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-18.png" alt="pic"></p>
 <h2 id="u6539_u53D8_u6587_u672C_u89C6_u56FE_u7684_u5927_u5C0F"><a href="#u6539_u53D8_u6587_u672C_u89C6_u56FE_u7684_u5927_u5C0F" class="headerlink" title="改变文本视图的大小"></a>改变文本视图的大小</h2><p>剩下的另一个问题就是编辑长文本时，键盘会遮住一半文本的问题。</p>
 <p>解决这个问题的核心就是当键盘弹出时减小文本视图的高度。</p>
 <p>打开<code>NoteEditorViewController.swift</code>文件，在<code>viewDidLoad()</code>方法中的<code>createTextView()</code>后面加一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">textView.scrollEnabled = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+textView.scrollEnabled = true
+</code></pre>
 <p>这行代码允许文本视图开启滚动条。</p>
 <p>然后在<code>viewDidLoad()</code>的最后面添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSNotificationCenter</span>.defaultCenter().addObserver(<span class="keyword">self</span>, selector: <span class="string">"keyboardDidShow:"</span>, name: <span class="type">UIKeyboardDidShowNotification</span>, object: <span class="literal">nil</span>)</span><br><span class="line"><span class="type">NSNotificationCenter</span>.defaultCenter().addObserver(<span class="keyword">self</span>, selector: <span class="string">"keyboardDidHide:"</span>, name: <span class="type">UIKeyboardDidHideNotification</span>, object: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+NSNotificationCenter.defaultCenter().addObserver(self, selector: &quot;keyboardDidShow:&quot;, name: UIKeyboardDidShowNotification, object: nil)
+NSNotificationCenter.defaultCenter().addObserver(self, selector: &quot;keyboardDidHide:&quot;, name: UIKeyboardDidHideNotification, object: nil)
+</code></pre>
 <p>这两个通知可以让你捕捉到键盘弹出和收起的事件，好让你修改文本视图的相应大小。</p>
 <p>再在该类中添加如下方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">updateTextViewSizeForKeyboardHeight</span><span class="params">(keyboardHeight: CGFloat)</span></span> &#123;</span><br><span class="line">  textView.frame = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: view.frame.width, height: view.frame.height - keyboardHeight)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func updateTextViewSizeForKeyboardHeight(keyboardHeight: CGFloat) {
+  textView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - keyboardHeight)
+}
+</code></pre>
 <p>该方法让文本视图的高度减去键盘的高度，保证合适的文本视图高度。</p>
 <p>最后就是实现<code>keyboardDidShow</code>和<code>keyboardDidHide</code>方法了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">keyboardDidShow</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> rectValue = notification.userInfo?[<span class="type">UIKeyboardFrameBeginUserInfoKey</span>] <span class="keyword">as</span>? <span class="type">NSValue</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> keyboardSize = rectValue.<span class="type">CGRectValue</span>().size</span><br><span class="line">    updateTextViewSizeForKeyboardHeight(keyboardSize.height)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">keyboardDidHide</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  updateTextViewSizeForKeyboardHeight(<span class="number">0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func keyboardDidShow(notification: NSNotification) {
+  if let rectValue = notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue {
+    let keyboardSize = rectValue.CGRectValue().size
+    updateTextViewSizeForKeyboardHeight(keyboardSize.height)
+  }
+}
+
+func keyboardDidHide(notification: NSNotification) {
+  updateTextViewSizeForKeyboardHeight(0)
+}
+</code></pre>
 <p>当键盘弹出时，你需要从通知中获取到键盘的高度，然后让文本视图减去这个高度，当键盘收回时，要复原文本视图的高度。</p>
 <blockquote>
 <p><strong>注意：</strong>在iOS8之前的版本中，当设备的方向发生变化时，也就是从竖屏变为横屏时，我们要计算新的文本视图的大小（因为<code>UIView的高和宽会交换，但是键盘的高和宽不会交换</code>），但是在iOS8中已经没这个必要了。</p>

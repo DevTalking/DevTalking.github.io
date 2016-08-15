@@ -233,9 +233,23 @@
       
         <span itemprop="articleBody"><p>在Swift中，类型分为两类：第一种是<strong>值类型</strong>，该类型的每个实例持有数据的副本，并且该副本对于每个实例来说是独一无二的一份，比如结构体（struct）、枚举（enum）、元组（tuple）都是值类型。第二种是<strong>参照类型</strong>，该类型的实例共享数据唯一的一份副本（在native层面说的话，就是该类型的每个实例都指向内存中的同一个地址），比如类（class）就是参照类型。在这篇文章中，我们将深入探讨值类型和参照类型的使用价值，以及如何在某种场景下选择正确的类型。</p>
 <h2 id="u5B83_u4EEC_u6709_u4EC0_u4E48_u4E0D_u540C_uFF1F"><a href="#u5B83_u4EEC_u6709_u4EC0_u4E48_u4E0D_u540C_uFF1F" class="headerlink" title="它们有什么不同？"></a>它们有什么不同？</h2><p>值类型最基本的特点就是复制，这影响到它的赋值、初始化、传参等操作。来看看下面的代码示例：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 值类型示例</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">S</span> </span>&#123; <span class="keyword">var</span> data: <span class="type">Int</span> = -<span class="number">1</span> &#125;</span><br><span class="line"><span class="keyword">var</span> a = <span class="type">S</span>()</span><br><span class="line"><span class="keyword">var</span> b = a						<span class="comment">// a复制一份，并将副本赋值给了b</span></span><br><span class="line">a.data = <span class="number">42</span>						<span class="comment">// a的数据改变了，但是b的并没有改变</span></span><br><span class="line"><span class="built_in">println</span>(<span class="string">"<span class="subst">\(a.data)</span>, <span class="subst">\(b.data)</span>"</span>)	<span class="comment">// prints "42, -1"</span></span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// 值类型示例
+struct S { var data: Int = -1 }
+var a = S()
+var b = a                        // a复制一份，并将副本赋值给了b
+a.data = 42                        // a的数据改变了，但是b的并没有改变
+println(&quot;\(a.data), \(b.data)&quot;)    // prints &quot;42, -1&quot;
+</code></pre>
 <p>参照类型的复制行为其实是隐式的创建了一个共享的实例，作为原始类型的参照。下面的例子中，两个变量都会参照唯一的那个共享实例的数据，所当改变这两个变量中任何一个的数据，都会同样作用于原始类型的数据：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 参照类型示例</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123; <span class="keyword">var</span> data: <span class="type">Int</span> = -<span class="number">1</span> &#125;</span><br><span class="line"><span class="keyword">var</span> x = <span class="type">C</span>()</span><br><span class="line"><span class="keyword">var</span> y = x		<span class="comment">// 将x赋值给y</span></span><br><span class="line">x.data = <span class="number">42</span>		<span class="comment">// 修改了x的数据，其实是修改了参照数据，那么y的数据也会改变 </span></span><br><span class="line"><span class="built_in">println</span>(<span class="string">"<span class="subst">\(x.data)</span>, <span class="subst">\(y.data)</span>"</span>)	<span class="comment">// prints "42, 42"</span></span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// 参照类型示例
+class C { var data: Int = -1 }
+var x = C()
+var y = x        // 将x赋值给y
+x.data = 42        // 修改了x的数据，其实是修改了参照数据，那么y的数据也会改变 
+println(&quot;\(x.data), \(y.data)&quot;)    // prints &quot;42, 42&quot;
+</code></pre>
 <h2 id="Mutation_u5728_u5B89_u5168_u6027_u4E2D_u7684_u89D2_u8272"><a href="#Mutation_u5728_u5B89_u5168_u6027_u4E2D_u7684_u89D2_u8272" class="headerlink" title="Mutation在安全性中的角色"></a>Mutation在安全性中的角色</h2><p>选择值类型的一个很重要的原因是可以让你比较容易的理解和掌控你的代码。如果你使用值类型，那么都是唯一的数据值、类型的副本在和你打交道，你对数据的修改只作用于数据所属的类型实例，所以你可以不用担心因为你在某个地方对数据的修改而影响到其他地方的数据。这在多线程环境中非常有用，因为在多线程下，不同的线程有可能会在你不知情的情况下改变数据。发生这种Bug后，调试起来就非常困难。</p>
 <p>因为值类型和参照类型的表象区别就在于当你修改类型实例的数据时，它们对原始类型数据的处理方式不同。但是有一种情况，值类型和参照类型的处理方式却又相似，那就是当类型实例的数据为只读的时候。在不存在修改的情况下，值类型和参照类型就没什么区别了。</p>
 <p>你可能会觉得这一点很有用，假如说一个<code>class</code>是完全不能被重定义的，那么就比较符合使用Cocoa的<code>NSObject</code>对象的一些习惯，并能很好的保持原本的语义。今天，在Swift你可以通过定义不可改变的存储属性来创建一个不可重定义的类，这样可以避免暴露出的API被修改。事实上，许多普通的Cocoa框架里的类，比如<code>NSURL</code>，都被定义成了不可重定义的类。尽管如此，Swift目前还不提供任何机制像结构体（struct）和枚举（enum）一样去强制使一个<code>class</code>成为不可重定义的类（比如像子类）。</p>

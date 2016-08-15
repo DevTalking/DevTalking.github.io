@@ -484,16 +484,41 @@ struct Block_layout {
 <ul>
 <li><code>_NSConcreteGlobalBlock</code>：全局的静态block，不会访问任何外部变量，不会涉及到任何拷贝，比如一个空的block。例如： </li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">```swift^&#123; <span class="built_in">printf</span>(<span class="string">"Hello, World!\n"</span>); &#125; ();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
+<pre><code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    ^{ printf(&quot;Hello, World!\n&quot;); } ();
+    return 0;
+}
+</code></pre><ul>
 <li><code>_NSConcreteStackBlock</code>：保存在栈中的block，当函数返回时被销毁。例如：</li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">```swift<span class="keyword">char</span> a = <span class="string">'A'</span>;</span><br><span class="line">    ^&#123; <span class="built_in">printf</span>(<span class="string">"%c\n"</span>,a); &#125; ();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
+<pre><code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    char a = &#39;A&#39;;
+    ^{ printf(&quot;%c\n&quot;,a); } ();
+    return 0;
+}
+</code></pre><ul>
 <li><code>_NSConcreteMallocBlock</code>：保存在堆中的block，当引用计数为0时被销毁。该类型的block都是由<code>_NSConcreteStackBlock</code>类型的block从栈中复制到堆中形成的。例如下面代码中，在<code>exampleB_addBlockToArray</code>方法中的block还是<code>_NSConcreteStackBlock</code>类型的，在<code>exampleB</code>方法中就被复制到了堆中，成为<code>_NSConcreteMallocBlock</code>类型的block：</li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">exampleB_addBlockToArray</span><span class="params">(NSMutableArray *<span class="built_in">array</span>)</span> </span>&#123;</span><br><span class="line">```swift<span class="keyword">char</span> b = <span class="string">'B'</span>;</span><br><span class="line">  	[<span class="built_in">array</span> addObject:^&#123;</span><br><span class="line">    		<span class="built_in">printf</span>(<span class="string">"%c\n"</span>, b);</span><br><span class="line">  	&#125;];</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">exampleB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  	NSMutableArray *<span class="built_in">array</span> = [NSMutableArray <span class="built_in">array</span>];</span><br><span class="line">  	exampleB_addBlockToArray(<span class="built_in">array</span>);</span><br><span class="line">  	<span class="keyword">void</span> (^block)() = [<span class="built_in">array</span> objectAtIndex:<span class="number">0</span>];</span><br><span class="line">  	block();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>总结一下：</p>
+<pre><code>void exampleB_addBlockToArray(NSMutableArray *array) {
+    char b = &#39;B&#39;;
+      [array addObject:^{
+            printf(&quot;%c\n&quot;, b);
+      }];
+}
+
+void exampleB() {
+      NSMutableArray *array = [NSMutableArray array];
+      exampleB_addBlockToArray(array);
+      void (^block)() = [array objectAtIndex:0];
+      block();
+}
+</code></pre><p>总结一下：</p>
 <ul>
 <li><code>_NSConcreteGlobalBlock</code>类型的block要么是空block，要么是不访问任何外部变量的block。它既不在栈中，也不在堆中，我理解为它可能在内存的全局区。</li>
 <li><code>_NSConcreteStackBlock</code>类型的block有闭包行为，也就是有访问外部变量，并且该block只且只有有一次执行，因为栈中的空间是可重复使用的，所以当栈中的block执行一次之后就被清除出栈了，所以无法多次使用。</li>

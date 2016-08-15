@@ -237,26 +237,90 @@
         <span itemprop="articleBody"><p>这篇文章将带我们探索在Swift中如何使用<code>Optional</code>类型保证强类型的安全性。我们将创建一个Swift版本的Objective-C的API。虽然在Swift中这个API存在的意义不是很大，但是这将会是一个很有趣的例子。</p>
 <p>在Objective-C中，<code>NSDictionary</code>类有一个方法，名为<code>-objectsForKeys:notFoundMarker:</code>，它的作用是根据第一个<code>NSArray</code>类型参数中的值作为该字典的key，查找这些key对应的字典中的值，并放到一个新的<code>NSArray</code>中返回，如果找不到对应的值，那么就返回第二个参数指定的对象。在官方文档中对该方法有这么一句描述“返回的数组中的第N个对象，对应着第一个数组参数中的第N个值”。假如说以第一个数组参数中的第三个值作为key在字典中查不到值怎么办呢？这时候就需要<code>notFoundMarker</code>参数登场了。这种情况下就会返回<code>notFoundMarker</code>参数指定的对象了。在<code>Foundation</code>框架中还有专门针对该情况适用的一个类，那就是<code>NSNull</code>，就是当你也没有备选返回对象的时候，就可以返回<code>NSNull</code>对象。</p>
 <p>在Swift中，<code>Dictionary</code>类型并没有类似<code>objectsForKeys</code>的方法。所以接下来的练习中，我们将使用类型的扩展机制为<code>Dictionary</code>类型添加一个类似<code>objectsForKeys</code>的方法，为保持Swift的风格我们起名为<code>valuesForKeys:notFoundMarker:</code>。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">```swift<span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [K], notFoundMarker: V)</span></span> -&gt; [<span class="type">V</span>] &#123;</span><br><span class="line">```swift```swift<span class="comment">// To be implemented</span></span><br><span class="line">```swift&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+extension Dictionary {
+    func valuesForKeys(keys: [K], notFoundMarker: V) -&gt; [V] {
+        // To be implemented
+    }
+}
+</code></pre>
 <p>在Swift中实现该方法与Objective-C有点不同，因为Swift中强类型的特性使返回的数组中只能包含某一种类型的元素，也就是说我们不能在一个字符串数组中添加一个<code>NSNull</code>类型的元素，这就使<code>notFoundMarker</code>的参数类型显得非常尴尬。这怎么解决呢？别着急，在Swift中我们有更好的选择：我们可以返回一个<code>Optional</code>类型的数组。从<code>Dictionary</code>中查出的值全部被包在<code>Optional</code>类型中，这样当使用的key没有对应值的时候，我们就可以使用<code>nil</code>来替代<code>NSNull</code>类型了。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">```swift<span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key])</span></span> -&gt; [<span class="type">Value</span>?] &#123;</span><br><span class="line">```swift```swift<span class="keyword">var</span> result = [<span class="type">Value</span>?]()</span><br><span class="line">```swift```swiftresult.reserveCapacity(keys.<span class="built_in">count</span>)</span><br><span class="line">```swift```swift<span class="keyword">for</span> key <span class="keyword">in</span> keys &#123;</span><br><span class="line">```swift```swift```swiftresult.append(<span class="keyword">self</span>[key])</span><br><span class="line">```swift```swift&#125;</span><br><span class="line">```swift```swift<span class="keyword">return</span> result</span><br><span class="line">```swift&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+extension Dictionary {
+    func valuesForKeys(keys: [Key]) -&gt; [Value?] {
+        var result = [Value?]()
+        result.reserveCapacity(keys.count)
+        for key in keys {
+            result.append(self[key])
+        }
+        return result
+    }
+}
+</code></pre>
 <p>注意：此时可能已经有人认为<code>Dictionary</code>类型中的这个方法可能没必要写的这么繁琐，你们可能已经想到了这种情形：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">```swift<span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key])</span></span> -&gt; [<span class="type">Value</span>?] &#123;</span><br><span class="line">```swift```swift<span class="keyword">return</span> keys.<span class="built_in">map</span> &#123; <span class="keyword">self</span>[$<span class="number">0</span>] &#125;</span><br><span class="line">```swift&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+extension Dictionary {
+    func valuesForKeys(keys: [Key]) -&gt; [Value?] {
+        return keys.map { self[$0] }
+    }
+}
+</code></pre>
 <p>这段代码和上面那段代码的作用和结果是完全一样的，当<code>keys</code>调用<code>map</code>方法时，其实已经将查出的所有值都包在了<code>Optional</code>类型中了。这就足以说明了为什么Swift中类型的API都那么短小精干，因为实现复杂逻辑就像上述代码中直接调用<code>map</code>方法一样简单。</p>
 <p>现在我们可以试着用我们扩展的方法做一些例子：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> dict = [<span class="string">"A"</span>: <span class="string">"Amir"</span>, <span class="string">"B"</span>: <span class="string">"Bertha"</span>, <span class="string">"C"</span>: <span class="string">"Ching"</span>]</span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"A"</span>, <span class="string">"C"</span>])</span><br><span class="line"><span class="comment">// [Optional("Amir"), Optional("Ching")]</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>])</span><br><span class="line"><span class="comment">// [Optional("Bertha"), nil]</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([])</span><br><span class="line"><span class="comment">// []</span></span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+let dict = [&quot;A&quot;: &quot;Amir&quot;, &quot;B&quot;: &quot;Bertha&quot;, &quot;C&quot;: &quot;Ching&quot;]
+
+dict.valuesForKeys([&quot;A&quot;, &quot;C&quot;])
+// [Optional(&quot;Amir&quot;), Optional(&quot;Ching&quot;)]
+
+dict.valuesForKeys([&quot;B&quot;, &quot;D&quot;])
+// [Optional(&quot;Bertha&quot;), nil]
+
+dict.valuesForKeys([])
+// []
+</code></pre>
 <h2 id="u5185_u5D4COptional_u7C7B_u578B"><a href="#u5185_u5D4COptional_u7C7B_u578B" class="headerlink" title="内嵌Optional类型"></a>内嵌Optional类型</h2><p>现在我们来看看使用<code>last</code>属性返回数组的最后一个元素会发生什么？</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"A"</span>, <span class="string">"C"</span>]).last</span><br><span class="line"><span class="comment">// Optional(Optional("Ching"))</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>]).last</span><br><span class="line"><span class="comment">// Optional(nil)</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([]).last</span><br><span class="line"><span class="comment">// nil</span></span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+dict.valuesForKeys([&quot;A&quot;, &quot;C&quot;]).last
+// Optional(Optional(&quot;Ching&quot;))
+
+dict.valuesForKeys([&quot;B&quot;, &quot;D&quot;]).last
+// Optional(nil)
+
+dict.valuesForKeys([]).last
+// nil
+</code></pre>
 <p>看着结果我们是不是觉得很奇怪呢？我们在上述代码的第一种情况下得到了嵌套的<code>Optional</code>类型，而在第二种情况下缺得到了包含<code>nil</code>的<code>Optional</code>类型，为什么得到的不是<code>Optional(&quot;Ching&quot;)</code>和<code>nil</code>呢？</p>
 <p>冷静下来，我们回忆一下<code>last</code>属性的是如何申明的：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> last: <span class="type">T</span>? &#123; <span class="keyword">get</span> &#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+var last: T? { get }
+</code></pre>
 <p>恍然大悟，原来<code>last</code>属性的类型是<code>Optional</code>类型，这也就是说如果<code>T</code>是<code>Optional</code>类型的话，那么<code>T?</code>自然就是<code>Optional(Optional)</code>了，也就是<code>T??</code>。所以上面的情况就很容易解释了，因为<code>T</code>的类型是<code>Optional(String)</code>，所以我们得到的结果就是<code>Optional(Optional(String))</code>。</p>
 <p>那么<code>Optional(nil)</code>这种情况如何解释呢？为什么不是<code>Optional(Optional(nil))</code>呢？</p>
 <p>我们现在Objective-C中执行一下上面那三种情况看一看：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">[dict valuesForKeys:@[@<span class="string">"A"</span>, @<span class="string">"C"</span>] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// @"Ching"</span></span><br><span class="line"></span><br><span class="line">[dict valuesForKeys:@[@<span class="string">"B"</span>, @<span class="string">"D"</span>] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// NSNull</span></span><br><span class="line"></span><br><span class="line">[dict valuesForKeys:@[] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// nil</span></span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+[dict valuesForKeys:@[@&quot;A&quot;, @&quot;C&quot;] notFoundMarker:[NSNull null]].lastObject
+// @&quot;Ching&quot;
+
+[dict valuesForKeys:@[@&quot;B&quot;, @&quot;D&quot;] notFoundMarker:[NSNull null]].lastObject
+// NSNull
+
+[dict valuesForKeys:@[] notFoundMarker:[NSNull null]].lastObject
+// nil
+</code></pre>
 <p>我们看到，不论在Swift中还是在Objective-C中，当第一个参数的数组是空数组的时候，取最后一个元素的返回结果都是<code>nil</code>，意思就是“数组是空数组，那么最后一个元素肯定不存在啦”。那么在Swift中返回<code>Optional(nil)</code>和在Objective-C中返回<code>NSNull</code>的情况表明这个所谓的最后一个元素在数组中其实是存在的，只不过它就代表没有。当这种情况发生时，Objective-C只能用一个占位符对象来表示，而在Swift中就可以用一个系统类型来表示。</p>
 <h2 id="u63D0_u4F9B_u9ED8_u8BA4_u503C"><a href="#u63D0_u4F9B_u9ED8_u8BA4_u503C" class="headerlink" title="提供默认值"></a>提供默认值</h2><p>如果我们想当在<code>Dictionary</code>中查不到对应值的时候返回一个我们指定的默认值要怎么做呢？其实这也很简单：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">```swift<span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key], notFoundMarker: Value)</span></span> -&gt; [<span class="type">Value</span>] &#123;</span><br><span class="line">```swift```swift<span class="keyword">return</span> <span class="keyword">self</span>.valuesForKeys(keys).<span class="built_in">map</span> &#123; $<span class="number">0</span> ?? notFoundMarker &#125;</span><br><span class="line">```swift&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>], notFoundMarker: <span class="string">"Anonymous"</span>)</span><br><span class="line"><span class="comment">// ["Bertha", "Anonymous"]</span></span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+extension Dictionary {
+    func valuesForKeys(keys: [Key], notFoundMarker: Value) -&gt; [Value] {
+        return self.valuesForKeys(keys).map { $0 ?? notFoundMarker }
+    }
+}
+
+
+dict.valuesForKeys([&quot;B&quot;, &quot;D&quot;], notFoundMarker: &quot;Anonymous&quot;)
+// [&quot;Bertha&quot;, &quot;Anonymous&quot;]
+</code></pre>
 <p>当Objective-C只能用占位符对象来做到这一点的时候，Swift却可以使用系统类型来呈现，并且提供了丰富的语法支持多样化的返回结果。</p>
 <p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=12" target="_blank" rel="external">Optionals Case Study: valuesForKeys</a></p>
 </span>

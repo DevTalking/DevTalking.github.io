@@ -265,13 +265,43 @@ Fac">
 <p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-9.png" alt="pic"></p>
 <p><code>LibraryAPI</code>就是作为暴露给其他类的标准接口，它能有效的向接口使用者规避掉<code>HTTPClient</code>和<code>PersistencyManager</code>复杂的逻辑代码。</p>
 <p>打开<code>LibraryAPI.swift</code>文件添加如下常量属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> persistencyManager: <span class="type">PersistencyManager</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> httpClient: <span class="type">HTTPClient</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> isOnline: <span class="type">Bool</span></span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+private let persistencyManager: PersistencyManager
+private let httpClient: HTTPClient
+private let isOnline: Bool
+</code></pre>
 <p><code>isOnline</code>属性决定了是否向远程服务器上更新专辑数据的变化，比如添加或删除专辑。</p>
 <p>然后需要添加<code>init</code>初始化方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">  persistencyManager = <span class="type">PersistencyManager</span>()</span><br><span class="line">  httpClient = <span class="type">HTTPClient</span>()</span><br><span class="line">  isOnline = <span class="literal">false</span></span><br><span class="line"> </span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+override init() {
+  persistencyManager = PersistencyManager()
+  httpClient = HTTPClient()
+  isOnline = false
+
+  super.init()
+}
+</code></pre>
 <p>因为本篇教程中的示例应用只是为了向大家介绍如何运用各种设计模式，所以没有远程服务器的需求，<code>HTTPClient</code>自然不会用到。所以这里<code>isOnline</code>属性总是设置为<code>false</code>。</p>
 <p>下一步，向<code>LibraryAPI.swift</code>文件中添加如下三个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAlbums</span><span class="params">()</span></span> -&gt; [<span class="type">Album</span>] &#123;</span><br><span class="line">  <span class="keyword">return</span> persistencyManager.getAlbums()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">addAlbum</span><span class="params">(album: Album, index: Int)</span></span> &#123;</span><br><span class="line">  persistencyManager.addAlbum(album, index: index)</span><br><span class="line">  <span class="keyword">if</span> isOnline &#123;</span><br><span class="line">    httpClient.postRequest(<span class="string">"/api/addAlbum"</span>, body: album.description())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">deleteAlbum</span><span class="params">(index: Int)</span></span> &#123;</span><br><span class="line">  persistencyManager.deleteAlbumAtIndex(index)</span><br><span class="line">  <span class="keyword">if</span> isOnline &#123;</span><br><span class="line">    httpClient.postRequest(<span class="string">"/api/deleteAlbum"</span>, body: <span class="string">"<span class="subst">\(index)</span>"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func getAlbums() -&gt; [Album] {
+  return persistencyManager.getAlbums()
+}
+
+func addAlbum(album: Album, index: Int) {
+  persistencyManager.addAlbum(album, index: index)
+  if isOnline {
+    httpClient.postRequest(&quot;/api/addAlbum&quot;, body: album.description())
+  }
+}
+
+func deleteAlbum(index: Int) {
+  persistencyManager.deleteAlbumAtIndex(index)
+  if isOnline {
+    httpClient.postRequest(&quot;/api/deleteAlbum&quot;, body: &quot;\(index)&quot;)
+  }
+}
+</code></pre>
 <p>大家看一下<code>addAlbum(_:index:)</code>方法，该方法顾名思义是添加专辑的方法，在实现时会先更新本地的数据，如果网络连通且需要使用远程服务的时候，再调用远程服务接口更新数据状态。当该模块以外的类调用了<code>LibraryAPI</code>接口的<code>addAlbum</code>方法时，它并不知道添加专辑的具体实现逻辑，并且也不需要知道，这就是Facade设计模式的魅力所在。</p>
 <p>现在编译运行你们的应用。你们会看到两个空的视图，和一个Toolbar。顶部的视图用于显示专辑的封面，下面的视图会以列表的形式显示该专辑的相关信息。</p>
 <p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-10.png" alt="pic"></p>
@@ -288,7 +318,13 @@ Fac">
 <p>该数据结构图如下：</p>
 <p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-12.png" alt="pic"></p>
 <p>接下来我们新建一个Swift文件，名为 <strong>AlbumExtensions</strong> ，然后打开 <strong>AlbumExtensions.swift</strong> 文件，添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Album</span> </span>&#123;</span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">ae_tableRepresentation</span><span class="params">()</span></span> -&gt; (titles:[<span class="type">String</span>], values:[<span class="type">String</span>]) &#123;</span><br><span class="line">    <span class="keyword">return</span> ([<span class="string">"Artist"</span>, <span class="string">"Album"</span>, <span class="string">"Genre"</span>, <span class="string">"Year"</span>], [artist, title, genre, year])</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+extension Album {
+  func ae_tableRepresentation() -&gt; (titles:[String], values:[String]) {
+    return ([&quot;Artist&quot;, &quot;Album&quot;, &quot;Genre&quot;, &quot;Year&quot;], [artist, title, genre, year])
+  }
+}
+</code></pre>
 <p>这里注意该方法名的开头<code>ae_</code>，它是<code>AlbumExtensions</code>的缩写。这是一个约定俗成的扩展方法名的写法，目的在于防止扩展方法与原生方法名产生冲突。</p>
 <blockquote>
 <p><strong>注意：</strong>通常类可以重写父类的方法或属性，但是在Extension中不可以。Extension中的方法名、属性名也不能和原生方法名、原生属性名相同。</p>
@@ -309,9 +345,30 @@ Fac">
 <p><strong>注意：</strong>代理机制是一个很重要的模式。Apple在UIKit框架中大量应用了该模式，比如<code>UITableView</code>、<code>UITextView</code>、<code>UITextField</code>、<code>UIWebView</code>、<code>UIAlert</code>、<code>UIActionSheet</code>、<code>UICollectionView</code>、<code>UIPickerView</code>、<code>UIGestrueRecognizer</code>、<code>UIScrollView</code>等等。</p>
 </blockquote>
 <h2 id="u5982_u4F55_u4F7F_u7528Delegate_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528Delegate_u6A21_u5F0F" class="headerlink" title="如何使用Delegate模式"></a>如何使用Delegate模式</h2><p>打开<code>ViewController.swift</code>文件，然后添加以下私有属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> allAlbums = [<span class="type">Album</span>]()</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> currentAlbumData : (titles:[<span class="type">String</span>], values:[<span class="type">String</span>])?</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> currentAlbumIndex = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+private var allAlbums = [Album]()
+private var currentAlbumData : (titles:[String], values:[String])?
+private var currentAlbumIndex = 0
+</code></pre>
 <p>然后重写<code>viewDidLoad</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">  <span class="comment">//1</span></span><br><span class="line">  <span class="keyword">self</span>.navigationController?.navigationBar.translucent = <span class="literal">false</span></span><br><span class="line">  currentAlbumIndex = <span class="number">0</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment">//2</span></span><br><span class="line">  allAlbums = <span class="type">LibraryAPI</span>.sharedInstance.getAlbums()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3</span></span><br><span class="line">  <span class="comment">// the uitableview that presents the album data</span></span><br><span class="line">  dataTable.delegate = <span class="keyword">self</span></span><br><span class="line">  dataTable.dataSource = <span class="keyword">self</span></span><br><span class="line">  dataTable.backgroundView = <span class="literal">nil</span></span><br><span class="line">  view.addSubview(dataTable!)		</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+override func viewDidLoad() {
+  super.viewDidLoad()
+  //1
+  self.navigationController?.navigationBar.translucent = false
+  currentAlbumIndex = 0
+
+  //2
+  allAlbums = LibraryAPI.sharedInstance.getAlbums()
+
+  // 3
+  // the uitableview that presents the album data
+  dataTable.delegate = self
+  dataTable.dataSource = self
+  dataTable.backgroundView = nil
+  view.addSubview(dataTable!)        
+}
+</code></pre>
 <p>我们对上述的代码来进行一一讲解：</p>
 <ol>
 <li>关闭导航栏的透明效果。</li>
@@ -319,17 +376,58 @@ Fac">
 <li>对<code>UITableView</code>进行相关设置，将它的delegate和datasource设置为当前的ViewController。这样一来<code>UITableView</code>所有对数据的请求都会由当前的ViewController响应并提供了。这里需要注意的是如果你们在Storeboard中创建<code>UIViewController</code>和<code>UITableView</code>，那么也可以在Storeboard中通过拖拽来设置delegate和datasource。</li>
 </ol>
 <p>接下来，在<code>ViewController.swift</code>中添加如下方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">showDataForAlbum</span><span class="params">(albumIndex: Int)</span></span> &#123;</span><br><span class="line">  <span class="comment">// 保证代码健壮性，确保专辑数至少大于0，避免数组下标越界的错误</span></span><br><span class="line">  <span class="keyword">if</span> (albumIndex &lt; allAlbums.<span class="built_in">count</span> &amp;&amp; albumIndex &gt; -<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="comment">//获取专辑对象</span></span><br><span class="line">    <span class="keyword">let</span> album = allAlbums[albumIndex]</span><br><span class="line">    <span class="comment">// 保存专辑的数据，用于一会在tableview中展现</span></span><br><span class="line">    currentAlbumData = album.ae_tableRepresentation()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    currentAlbumData = <span class="literal">nil</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 我们已经获取到了需要的数据，可以刷新tableview来显示数据了</span></span><br><span class="line">  dataTable!.reloadData()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func showDataForAlbum(albumIndex: Int) {
+  // 保证代码健壮性，确保专辑数至少大于0，避免数组下标越界的错误
+  if (albumIndex &lt; allAlbums.count &amp;&amp; albumIndex &gt; -1) {
+    //获取专辑对象
+    let album = allAlbums[albumIndex]
+    // 保存专辑的数据，用于一会在tableview中展现
+    currentAlbumData = album.ae_tableRepresentation()
+  } else {
+    currentAlbumData = nil
+  }
+  // 我们已经获取到了需要的数据，可以刷新tableview来显示数据了
+  dataTable!.reloadData()
+}
+</code></pre>
 <p><code>showDataForAlbum()</code>方法的作用是从专辑数组中获取到专辑的对象，然后请求并保存专辑的数据。当你想显示新的数据或有改变的数据时，你只需要调用<code>reloadData</code>方法即可。这样<code>UItableView</code>会重新请求它的代理获取相关数据，比如一共要显示多少个Section、每个Section里显示多少行、每行看起来是什么样的等等。</p>
 <p>我们在<code>viewDidLoad</code>方法中再加入一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">self</span>.showDataForAlbum(currentAlbumIndex)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+self.showDataForAlbum(currentAlbumIndex)
+</code></pre>
 <p>该行代码让应用启动时就开始加载专辑数据。因为之前已经将<code>currentAlbumIndex</code>的值设为了0，所以从专辑数组中的第一个专辑开始显示。</p>
 <p>现在，是时候实现DataSource协议的方法了，你们可以将DataSource的方法直接写在ViewController里。也可以通过使用扩展的方式使代码保持整洁。</p>
 <p>如果使用扩展的方式，那么一定要确保它们是写在文件的最下面，并且要在ViewController类定义的大括号之外！</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">ViewController</span>: <span class="title">UITableViewDataSource</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">ViewController</span>: <span class="title">UITableViewDelegate</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+extension ViewController: UITableViewDataSource {
+}
+
+extension ViewController: UITableViewDelegate {
+}
+</code></pre>
 <p>上面这两行代码的含义就是ViewController通过扩展的方式遵循了Delegate和DataSource协议 – 你可以把协议想象成是与委托之间的约定，只要你实现了约定的方法，就算是实现了委托。在我们的代码中，ViewController需要遵守<code>UITableViewDataSource</code>和<code>UITableViewDelegate</code>这两个协议。这样 UITableView 才能明确的知道，需要用到的代理中的方法是由这个ViewController实现的。</p>
 <p>在遵循<code>UITableViewDataSource</code>协议的扩展中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, numberOfRowsInSection section: Int)</span></span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> albumData = currentAlbumData &#123;</span><br><span class="line">    <span class="keyword">return</span> albumData.titles.<span class="built_in">count</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> cell:<span class="type">UITableViewCell</span> = tableView.dequeueReusableCellWithIdentifier(<span class="string">"Cell"</span>, forIndexPath: indexPath) <span class="keyword">as</span> <span class="type">UITableViewCell</span></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> albumData = currentAlbumData &#123;</span><br><span class="line">    cell.textLabel?.text = albumData.titles[indexPath.row]</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> detailTextLabel = cell.detailTextLabel &#123;</span><br><span class="line">        detailTextLabel.text = albumData.values[indexPath.row]</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> cell</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -&gt; Int {
+  if let albumData = currentAlbumData {
+    return albumData.titles.count
+  } else {
+    return 0
+  }
+}
+
+func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -&gt; UITableViewCell {
+  var cell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier(&quot;Cell&quot;, forIndexPath: indexPath) as UITableViewCell
+  if let albumData = currentAlbumData {
+    cell.textLabel?.text = albumData.titles[indexPath.row]
+      if let detailTextLabel = cell.detailTextLabel {
+        detailTextLabel.text = albumData.values[indexPath.row]
+      }
+  }
+  return cell
+}
+</code></pre>
 <p><code>tableView(_:numberOfRowsInSection:)</code>方法返回每个Section中显示多少行内容，这里对应着专辑数据结构中的标题。</p>
 <p><code>tableView(_:cellForRowAtIndexPath:)</code>方法会逐个创建每行的内容，包括专辑标题和它的值。</p>
 <blockquote>

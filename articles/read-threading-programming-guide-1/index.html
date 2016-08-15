@@ -318,31 +318,224 @@
 <li>object：传给target对象的参数，也就是传入selector中的参数。</li>
 </ul>
 <p>下面来看一个简单示例：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"First event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="type">NSThread</span>.detachNewThreadSelector(<span class="string">"methodInSecondaryThread:"</span>, toTarget: <span class="keyword">self</span>, withObject: <span class="string">"I am a argument"</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Second event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">methodInSecondaryThread</span><span class="params">(arg: String)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(arg)</span> of event in Secondary Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testThread = <span class="type">TestThread</span>()</span><br><span class="line">testThread.launch()</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">import Foundation
+
+class TestThread {
+
+    func launch() {
+
+        print(&quot;First event in Main Thread.&quot;)
+
+        NSThread.detachNewThreadSelector(&quot;methodInSecondaryThread:&quot;, toTarget: self, withObject: &quot;I am a argument&quot;)
+
+        print(&quot;Second event in Main Thread.&quot;)
+
+    }
+
+    func methodInSecondaryThread(arg: String) {
+
+        print(&quot;\(arg) of event in Secondary Thread.&quot;)
+
+    }
+
+}
+
+let testThread = TestThread()
+testThread.launch()
+</code></pre>
 <p>上述代码定义了一个类<code>TestThread</code>，包含两个方法<code>launch()</code>和<code>methodInSecondaryThread()</code>，<code>lanch()</code>方法中用<code>print()</code>函数模拟事件，在两个事件中创建一个二级线程，用于执行<code>methodInSecondaryThread()</code>方法，在该方法中执行其他事件。执行看看结果如何：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">Terminating</span> app due to uncaught exception '<span class="type">NSInvalidArgumentException'</span>, reason: '*** -[<span class="type">NSThread</span> initWithTarget:selector:object:]: target does not implement selector (*** -[<span class="type">LearnThread</span>.<span class="type">TestThread</span> methodInSecondaryThread])'</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">Terminating app due to uncaught exception &#39;NSInvalidArgumentException&#39;, reason: &#39;*** -[NSThread initWithTarget:selector:object:]: target does not implement selector (*** -[LearnThread.TestThread methodInSecondaryThread])&#39;
+</code></pre>
 <p>结果很不幸，报错了，原因很简单，因为我们的代码是Swift，而<code>NSThread</code>继承了<code>NSObject</code>是Objective-C世界的东西，所以需要对代码进行修改，有两种方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1. 让NSTread继承NSObject</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 在methodInSecondaryThread()方法前添加@objc</span></span><br><span class="line"><span class="preprocessor">@objc</span> <span class="func"><span class="keyword">func</span> <span class="title">methodInSecondaryThread</span><span class="params">(arg: String)</span></span> &#123;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">// 1. 让NSTread继承NSObject
+class TestThread: NSObject {
+
+// 2. 在methodInSecondaryThread()方法前添加@objc
+@objc func methodInSecondaryThread(arg: String) {
+</code></pre>
 <p>我习惯让类继承<code>NSObject</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"First event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="type">NSThread</span>.detachNewThreadSelector(<span class="string">"methodInSecondaryThread:"</span>, toTarget: <span class="keyword">self</span>, withObject: <span class="string">"I am a argument"</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Second event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">methodInSecondaryThread</span><span class="params">(arg: String)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(arg)</span> of event in Secondary Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testThread = <span class="type">TestThread</span>()</span><br><span class="line">testThread.launch()</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">import Foundation
+
+class TestThread: NSObject {
+
+    func launch() {
+
+        print(&quot;First event in Main Thread.&quot;)
+
+        NSThread.detachNewThreadSelector(&quot;methodInSecondaryThread:&quot;, toTarget: self, withObject: &quot;I am a argument&quot;)
+
+        print(&quot;Second event in Main Thread.&quot;)
+
+    }
+
+    func methodInSecondaryThread(arg: String) {
+
+        print(&quot;\(arg) of event in Secondary Thread.&quot;)
+
+    }
+
+}
+
+let testThread = TestThread()
+testThread.launch()
+</code></pre>
 <p>继续运行看看效果：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">First</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">Second</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">First event in Main Thread.
+Second event in Main Thread.
+</code></pre>
 <p>运行成功了，但似乎少点什么东西，<code>methodInSecondaryThread()</code>方法中的内容并没有打印出来，难道线程没有执行吗？我们通过Instruments可以看到，在运行过程中二级线程是创建过的：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-1.png" alt="LearnThread-1"></p>
 <p>导致这个问题的原因和上文介绍的线程类型有关系。因为主线程运行很快，快到当主线程结束时我们创建的二级线程还没来得及执行<code>methodInSecondaryThread()</code>方法，而通过<code>detachNewThreadSelector:toTarget:withObject:</code>创建的二级线程是Detach类型的，没有与主线程结合，所以主线程也不会等待，当主线程结束，进程结束，二级线程自然也结束了。解决这个问题的办法就是让二级线程有执行任务的时间，所以我们可以让主线程停顿几秒，让二级线程完成它的任务：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"First event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="type">NSThread</span>.detachNewThreadSelector(<span class="string">"methodInSecondaryThread:"</span>, toTarget: <span class="keyword">self</span>, withObject: <span class="string">"I am a argument"</span>)</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Second event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">methodInSecondaryThread</span><span class="params">(arg: String)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(arg)</span> of event in Secondary Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testThread = <span class="type">TestThread</span>()</span><br><span class="line">testThread.launch()</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">import Foundation
+
+class TestThread: NSObject {
+
+    func launch() {
+
+        print(&quot;First event in Main Thread.&quot;)
+
+        NSThread.detachNewThreadSelector(&quot;methodInSecondaryThread:&quot;, toTarget: self, withObject: &quot;I am a argument&quot;)
+
+        sleep(3)
+
+        print(&quot;Second event in Main Thread.&quot;)
+
+    }
+
+    func methodInSecondaryThread(arg: String) {
+
+        print(&quot;\(arg) of event in Secondary Thread.&quot;)
+
+    }
+
+}
+
+let testThread = TestThread()
+testThread.launch()
+</code></pre>
 <p>再运行就可以看到正确地结果了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">First</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">I</span> am a argument of event <span class="keyword">in</span> <span class="type">Secondary</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">Second</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">First event in Main Thread.
+I am a argument of event in Secondary Thread.
+Second event in Main Thread.
+</code></pre>
 <h4 id="u521B_u5EFANSThread_u5BF9_u8C61"><a href="#u521B_u5EFANSThread_u5BF9_u8C61" class="headerlink" title="创建NSThread对象"></a>创建NSThread对象</h4><p>我们可以通过<code>initWithTarget:selector:object:</code>方法实例化一个<code>NSThread</code>对象，该方法的三个参数其实与<code>detachNewThreadSelector:toTarget:withObject:</code>方法的参数一样，只是顺序不一样而已：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"First event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> secondaryThread = <span class="type">NSThread</span>(target: <span class="keyword">self</span>, selector: <span class="string">"methodInSecondaryThread:"</span>, object: <span class="string">"I am a argument"</span>)</span><br><span class="line">        </span><br><span class="line">        secondaryThread.start()</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Second event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">methodInSecondaryThread</span><span class="params">(arg: String)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(arg)</span> of event in Secondary Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testThread = <span class="type">TestThread</span>()</span><br><span class="line">testThread.launch()</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">import Foundation
+
+class TestThread: NSObject {
+
+    func launch() {
+
+        print(&quot;First event in Main Thread.&quot;)
+
+        let secondaryThread = NSThread(target: self, selector: &quot;methodInSecondaryThread:&quot;, object: &quot;I am a argument&quot;)
+
+        secondaryThread.start()
+
+        sleep(3)
+
+        print(&quot;Second event in Main Thread.&quot;)
+
+    }
+
+    func methodInSecondaryThread(arg: String) {
+
+        print(&quot;\(arg) of event in Secondary Thread.&quot;)
+
+    }
+
+}
+
+let testThread = TestThread()
+testThread.launch()
+</code></pre>
 <p>上述的代码的运行结果自然也是一样的：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">First</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">I</span> am a argument of event <span class="keyword">in</span> <span class="type">Secondary</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">Second</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">First event in Main Thread.
+I am a argument of event in Secondary Thread.
+Second event in Main Thread.
+</code></pre>
 <p>这种方法依然只能在二级线程中执行最多只有一个参数的函数或方法，如果想要执行多参数的任务，可以将参数放入集合中传递，当然被执行的任务得能正确接收到参数集合。或者可以通过另外一种方法，那就是通过创建继承<code>NSThread</code>的类，然后重写<code>main()</code>方法来实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CustomThread</span>: <span class="title">NSThread</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> arg1: <span class="type">String</span>!</span><br><span class="line">    <span class="keyword">var</span> arg2: <span class="type">String</span>!</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(arg1: <span class="type">String</span>, arg2: <span class="type">String</span>) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">self</span>.arg1 = arg1</span><br><span class="line">        <span class="keyword">self</span>.arg2 = arg2</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(<span class="keyword">self</span>.arg1)</span>, <span class="subst">\(<span class="keyword">self</span>.arg2)</span>, we are the arguments in Secondary Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"First event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> customThread = <span class="type">CustomThread</span>(arg1: <span class="string">"I am arg1"</span>, arg2: <span class="string">"I am arg2"</span>)</span><br><span class="line">        </span><br><span class="line">        customThread.start()</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Second event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">methodInSecondaryThread</span><span class="params">(arg: String)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(arg)</span> of event in Secondary Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testThread = <span class="type">TestThread</span>()</span><br><span class="line">testThread.launch()</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">import Foundation
+
+class CustomThread: NSThread {
+
+    var arg1: String!
+    var arg2: String!
+
+    init(arg1: String, arg2: String) {
+
+        self.arg1 = arg1
+        self.arg2 = arg2
+
+    }
+
+    override func main() {
+
+        print(&quot;\(self.arg1), \(self.arg2), we are the arguments in Secondary Thread.&quot;)
+
+    }
+
+}
+
+class TestThread: NSObject {
+
+    func launch() {
+
+        print(&quot;First event in Main Thread.&quot;)
+
+        let customThread = CustomThread(arg1: &quot;I am arg1&quot;, arg2: &quot;I am arg2&quot;)
+
+        customThread.start()
+
+        sleep(3)
+
+        print(&quot;Second event in Main Thread.&quot;)
+
+    }
+
+    func methodInSecondaryThread(arg: String) {
+
+        print(&quot;\(arg) of event in Secondary Thread.&quot;)
+
+    }
+
+}
+
+let testThread = TestThread()
+testThread.launch()
+</code></pre>
 <p>如上述代码所示，我们创建了<code>CustomThread</code>类，并继承了<code>NSThread</code>，然后通过初始化方法传参，再重写<code>main()</code>方法处理相关任务。执行结果如下：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">First</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">I</span> am arg1, <span class="type">I</span> am arg2, we are the arguments <span class="keyword">in</span> <span class="type">Secondary</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">Second</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">First event in Main Thread.
+I am arg1, I am arg2, we are the arguments in Secondary Thread.
+Second event in Main Thread.
+</code></pre>
 <h3 id="u4F7F_u7528NSObject_u521B_u5EFA_u7EBF_u7A0B"><a href="#u4F7F_u7528NSObject_u521B_u5EFA_u7EBF_u7A0B" class="headerlink" title="使用NSObject创建线程"></a>使用NSObject创建线程</h3><p>在OS X和iOS中，<code>NSObject</code>对象本身就具有创建线程的能力，所以只要是继承了<code>NSObject</code>的类自然也具备这个能力：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"First event in Main Thread."</span>)</span><br><span class="line"></span><br><span class="line">        performSelectorInBackground(<span class="string">"performInBackground"</span>, withObject: <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Second event in Main Thread."</span>)</span><br><span class="line">  </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">performInBackground</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"I am a event, perform in Background Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testThread = <span class="type">TestThread</span>()</span><br><span class="line">testThread.launch()</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">import Foundation
+
+class TestThread: NSObject {
+
+    func launch() {
+
+        print(&quot;First event in Main Thread.&quot;)
+
+        performSelectorInBackground(&quot;performInBackground&quot;, withObject: nil)
+
+        sleep(3)
+
+        print(&quot;Second event in Main Thread.&quot;)
+
+    }
+
+    func performInBackground() {
+
+        print(&quot;I am a event, perform in Background Thread.&quot;)
+
+    }
+
+}
+
+let testThread = TestThread()
+testThread.launch()
+</code></pre>
 <p>上述代码中的<code>TestThread</code>类继承了<code>NSObject</code>类，那么就可以通过<code>performSelectorInBackground:withObject:</code>方法创建二级线程，该方法只有两个参数：</p>
 <ul>
 <li>selector：发送给线程的消息，或者说是让线程执行的任务。这里需要注意的是该任务最多只能有一个参数，并且不能有返回值。</li>

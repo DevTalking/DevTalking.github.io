@@ -260,36 +260,126 @@
 <h2 id="u4F2A3D_u52A8_u753B_u6548_u679C"><a href="#u4F2A3D_u52A8_u753B_u6548_u679C" class="headerlink" title="伪3D动画效果"></a>伪3D动画效果</h2><p>这个伪3D的效果模拟的是一个立体长方形由一面翻转到另一面。因为这不是真正的3D效果，所以我们可以分析一下它是如何模拟的，以上面动画中从下往上翻的效果为例。首先显示的是一个<code>UILabel</code>，当开始进行翻转时，当前显示的<code>UILabel</code>的高度开始慢慢变矮：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-1.png" alt="Practice-1"></p>
 <p>我们看看用代码怎么实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.transform = <span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.5</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+UIView.animateWithDuration(1, animations: {
+    self.devtalkingLabel.transform = CGAffineTransformMakeScale(1.0, 0.5)
+})
+</code></pre>
 <p>我们可以使用一个转换动画，使用<code>CGAffineTransformMakeScale</code>，它的第一个参数是x坐标的比例，第二个参数是y坐标的比例，这两个值的范围是1.0到0之间。上面的代码用白话文翻译出来就是在1秒内，<code>devtalkingLabel</code>的宽度不变，高度减少一半，减少的过程会自动生成补间动画。</p>
 <p>我们接着来分析，在<code>UILabel</code>高度减少的同时，它的位置也会向上移动，我们可以用另外一个转换的动画：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.transform = <span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.5</span>)</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.transform = <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, -<span class="keyword">self</span>.devtalkingLabel.frame.height / <span class="number">2</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+UIView.animateWithDuration(1, animations: {
+    self.devtalkingLabel.transform = CGAffineTransformMakeScale(1.0, 0.5)
+    self.devtalkingLabel.transform = CGAffineTransformMakeTranslation(1.0, -self.devtalkingLabel.frame.height / 2)
+})
+</code></pre>
 <p><code>CGFffineTransformMakeTranslation</code>这个转换动画可以移动UIView的位置，这里需要注意它是以初始位置为基础进行移动的，所以上述代码在字面上的意思是<code>devtalkingLabel</code>在高度变小的同时向上移动它初始宽度一半的距离：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-2.png" alt="Practice-2"></p>
 <p>但是当我们编译运行后发现事与愿违，转换动画不像动画属性动画那样可以在<code>animations</code>闭包中写多个进行组合，而是由另一个组合转换动画来实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.transform = <span class="type">CGAffineTransformConcat</span>(<span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.5</span>), <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, -<span class="keyword">self</span>.devtalkingLabel.frame.height / <span class="number">2</span>))</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.alpha = <span class="number">0</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+UIView.animateWithDuration(1, animations: {
+    self.devtalkingLabel.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(1.0, 0.5), CGAffineTransformMakeTranslation(1.0, -self.devtalkingLabel.frame.height / 2))
+    self.devtalkingLabel.alpha = 0
+})
+</code></pre>
 <p>来看看效果：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-4.png" alt="Practice-4"></p>
 <p>此时，3D翻转效果的一个面已经成型了，也就是当前显示的这一面被向上翻转到顶部去了。接下来我们要实现底部的面翻转到当前显示的这一面。很明显这需要两个面，但我们只有一个<code>UILabel</code>，所以在执行整个翻转效果前需要先复制一个当前<code>UILabel</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> devtalkingLabelCopy = <span class="type">UILabel</span>(frame: <span class="keyword">self</span>.devtalkingLabel.frame)</span><br><span class="line">devtalkingLabelCopy.alpha = <span class="number">0</span></span><br><span class="line">devtalkingLabelCopy.text = <span class="keyword">self</span>.devtalkingLabel.text</span><br><span class="line">devtalkingLabelCopy.font = <span class="keyword">self</span>.devtalkingLabel.font</span><br><span class="line">devtalkingLabelCopy.textAlignment = <span class="keyword">self</span>.devtalkingLabel.textAlignment</span><br><span class="line">devtalkingLabelCopy.textColor = <span class="keyword">self</span>.devtalkingLabel.textColor</span><br><span class="line">devtalkingLabelCopy.backgroundColor = <span class="type">UIColor</span>.clearColor()</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+let devtalkingLabelCopy = UILabel(frame: self.devtalkingLabel.frame)
+devtalkingLabelCopy.alpha = 0
+devtalkingLabelCopy.text = self.devtalkingLabel.text
+devtalkingLabelCopy.font = self.devtalkingLabel.font
+devtalkingLabelCopy.textAlignment = self.devtalkingLabel.textAlignment
+devtalkingLabelCopy.textColor = self.devtalkingLabel.textColor
+devtalkingLabelCopy.backgroundColor = UIColor.clearColor()
+</code></pre>
 <p>这样我们就复制了一个<code>devtalkingLabel</code>，这个复制品将作为底部的那一面，而且在一开始它的透明度是零，因为底面是看不到的。我们可以想象一下底面向上翻转的效果，其实就是底面的高度从很小慢慢变大，位置从下慢慢向上移动，然后有一个淡入的效果，所以我们在复制出<code>devtalkingLabelCopy</code>后，要调整它的高度和位置，然后添加到父视图中：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">devtalkingLabelCopy.transform = <span class="type">CGAffineTransformConcat</span>(<span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.1</span>), <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, <span class="keyword">self</span>.devtalkingLabel.frame.height / <span class="number">2</span>))</span><br><span class="line"><span class="keyword">self</span>.view.addSubview(devtalkingLabelCopy)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+devtalkingLabelCopy.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(1.0, 0.1), CGAffineTransformMakeTranslation(1.0, self.devtalkingLabel.frame.height / 2))
+self.view.addSubview(devtalkingLabelCopy)
+</code></pre>
 <p>上述代码将<code>devtalkingLabelCopy</code>的高度减小到原本的十分之一，位置向下移动半个高度的位置，然后在之前的<code>animateWithDuration</code>方法的<code>animations</code>闭包中添加如下两行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">devtalkingLabelCopy.alpha = <span class="number">1</span></span><br><span class="line">devtalkingLabelCopy.transform = <span class="type">CGAffineTransformIdentity</span></span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+devtalkingLabelCopy.alpha = 1
+devtalkingLabelCopy.transform = CGAffineTransformIdentity
+</code></pre>
 <p><code>CGAffineTransformIdentity</code>的作用是将<code>UIView</code>的<code>transform</code>恢复到初始状态，然后将透明度设为1。编译运行代码我们会看到<code>devtalkingLabel</code>的高度会慢慢变小，位置慢慢上移，最后淡出，<code>devtalkingLabelCopy</code>的高度慢慢变大，位置慢慢上移，最后淡入，整个效果看上去就像一个长方体在向上翻转，达到3D的效果：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-5.png" alt="Practice-5"></p>
 <h2 id="u66FF_u6362UIView_u8FC7_u6E21_u52A8_u753B"><a href="#u66FF_u6362UIView_u8FC7_u6E21_u52A8_u753B" class="headerlink" title="替换UIView过渡动画"></a>替换UIView过渡动画</h2><p>在要实现的动画示例中，背景图做了淡入淡出的图片替换过渡动画，这个动画很简单，我们来看看这段伪代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(backgroundImageView, duration: <span class="number">2</span>, options: .<span class="type">TransitionCrossDissolve</span>, animations: &#123;</span><br><span class="line">    backgroundImageView.image = <span class="type">UIImage</span>(named: <span class="string">"imageName"</span>)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+UIView.transitionWithView(backgroundImageView, duration: 2, options: .TransitionCrossDissolve, animations: {
+    backgroundImageView.image = UIImage(named: &quot;imageName&quot;)
+}, completion: nil)
+</code></pre>
 <p>这个方法在上一篇文章中已经介绍过，我们只需要设置动画选项为<code>.TransitionCrossDissolve</code>，在<code>animations</code>闭包中给目标<code>UIImageView</code>设置要过渡的图片即可。</p>
 <h2 id="u793A_u4F8B_u52A8_u753B"><a href="#u793A_u4F8B_u52A8_u753B" class="headerlink" title="示例动画"></a>示例动画</h2><p>至此，示例动画中用到的动画知识点都向大家介绍过了，在这一节我会将示例动画中主要的效果的伪代码贴出来给大家说说。关于左右滑动的手势以及<code>PageControl</code>在这里就不在累赘了。</p>
 <h3 id="u6570_u636E_u6E90"><a href="#u6570_u636E_u6E90" class="headerlink" title="数据源"></a>数据源</h3><p>为了方便，我们创建一个<code>Flight.plist</code>文件作为数据源：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-6.png" alt="Practice-6"></p>
 <p>我们定义一个延迟加载的属性<code>flight</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">lazy</span> <span class="keyword">var</span> flight: <span class="type">NSArray</span> = &#123;</span><br><span class="line">    <span class="keyword">let</span> path = <span class="type">NSBundle</span>.mainBundle().pathForResource(<span class="string">"Flight"</span>, ofType: <span class="string">"plist"</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="type">NSArray</span>(contentsOfFile: path!)!</span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure>
-<h3 id="u80CC_u666F_u56FE_u7247_u8FC7_u6E21"><a href="#u80CC_u666F_u56FE_u7247_u8FC7_u6E21" class="headerlink" title="背景图片过渡"></a>背景图片过渡</h3><figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.backgroundImageView, duration: <span class="number">2</span>, options: .<span class="type">TransitionCrossDissolve</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.backgroundImageView.image = <span class="type">UIImage</span>(named: flightItem[<span class="string">"bg"</span>] <span class="keyword">as</span>! <span class="type">String</span>)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+lazy var flight: NSArray = {
+    let path = NSBundle.mainBundle().pathForResource(&quot;Flight&quot;, ofType: &quot;plist&quot;)
+    return NSArray(contentsOfFile: path!)!
+}()
+</code></pre>
+<h3 id="u80CC_u666F_u56FE_u7247_u8FC7_u6E21"><a href="#u80CC_u666F_u56FE_u7247_u8FC7_u6E21" class="headerlink" title="背景图片过渡"></a>背景图片过渡</h3><pre><code class="swift">
+UIView.transitionWithView(self.backgroundImageView, duration: 2, options: .TransitionCrossDissolve, animations: {
+    self.backgroundImageView.image = UIImage(named: flightItem[&quot;bg&quot;] as! String)
+}, completion: nil)
+</code></pre>
 <p>上一节刚介绍过，只是这里图片名称是从数据源中获取的。</p>
 <h3 id="3D_u7FFB_u8F6C"><a href="#3D_u7FFB_u8F6C" class="headerlink" title="3D翻转"></a>3D翻转</h3><p>因为有3D翻转动画效果的<code>UIView</code>比较多，而且有<code>UILabel</code>也有<code>UIImageView</code>，所以我们可以提炼成一个方法，将目标<code>UIView</code>和数据源作为参数：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">cubeAnimate</span><span class="params">(targetView: UIView, flightInfo: String)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 判断UIView的具体实现类</span></span><br><span class="line">    <span class="keyword">if</span> targetView.isKindOfClass(<span class="type">UILabel</span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> virtualTargetView = targetView <span class="keyword">as</span>! <span class="type">UILabel</span></span><br><span class="line">        <span class="comment">// 复制UIView，作为底面</span></span><br><span class="line">        <span class="keyword">let</span> viewCopy = <span class="type">UILabel</span>(frame: virtualTargetView.frame)</span><br><span class="line">        viewCopy.alpha = <span class="number">0</span></span><br><span class="line">        viewCopy.text = flightInfo</span><br><span class="line">        viewCopy.font = virtualTargetView.font</span><br><span class="line">        viewCopy.textAlignment = virtualTargetView.textAlignment</span><br><span class="line">        viewCopy.textColor = virtualTargetView.textColor</span><br><span class="line">        viewCopy.backgroundColor = <span class="type">UIColor</span>.clearColor()</span><br><span class="line">        <span class="comment">// 设置底面UIView的初始位置和高度</span></span><br><span class="line">        viewCopy.transform = <span class="type">CGAffineTransformConcat</span>(<span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.1</span>), <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, viewCopy.frame.height / <span class="number">2</span>))</span><br><span class="line">        <span class="keyword">self</span>.topView.addSubview(viewCopy)</span><br><span class="line">        <span class="type">UIView</span>.animateWithDuration(<span class="number">2</span>, animations: &#123;</span><br><span class="line">            <span class="comment">// 执行UIView和UIViewCopy的动画</span></span><br><span class="line">            virtualTargetView.transform = <span class="type">CGAffineTransformConcat</span>(<span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.1</span>), <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, -virtualTargetView.frame.height / <span class="number">2</span>))</span><br><span class="line">            virtualTargetView.alpha = <span class="number">0</span></span><br><span class="line">            viewCopy.alpha = <span class="number">1</span></span><br><span class="line">            viewCopy.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">        &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">            <span class="comment">// 当动画执行完毕后，将UIViewCopy的信息赋值给UIView，并还原UIView的状态，即与UIViewCopy相同的状态，然后移除UIViewCopy</span></span><br><span class="line">            virtualTargetView.alpha = <span class="number">1</span></span><br><span class="line">            virtualTargetView.text = viewCopy.text</span><br><span class="line">            virtualTargetView.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">            viewCopy.removeFromSuperview()</span><br><span class="line">        &#125;)</span><br><span class="line">     &#125; <span class="keyword">else</span> <span class="keyword">if</span> targetView.isKindOfClass(<span class="type">UIImageView</span>) &#123;</span><br><span class="line">         <span class="keyword">let</span> virtualTargetView = targetView <span class="keyword">as</span>! <span class="type">UIImageView</span></span><br><span class="line">         <span class="keyword">let</span> viewCopy = <span class="type">UIImageView</span>(frame: virtualTargetView.frame)</span><br><span class="line">         viewCopy.alpha = <span class="number">0</span></span><br><span class="line">         viewCopy.image = <span class="type">UIImage</span>(named: flightInfo)</span><br><span class="line">         viewCopy.transform = <span class="type">CGAffineTransformConcat</span>(<span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.1</span>), <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, viewCopy.frame.height / <span class="number">2</span>))</span><br><span class="line">         <span class="keyword">self</span>.topView.addSubview(viewCopy)</span><br><span class="line">         <span class="type">UIView</span>.animateWithDuration(<span class="number">2</span>, animations: &#123;</span><br><span class="line">             virtualTargetView.transform = <span class="type">CGAffineTransformConcat</span>(<span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.1</span>), <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, -virtualTargetView.frame.height / <span class="number">2</span>))</span><br><span class="line">             virtualTargetView.alpha = <span class="number">0</span></span><br><span class="line">             viewCopy.alpha = <span class="number">1</span></span><br><span class="line">             viewCopy.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">         &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">             virtualTargetView.alpha = <span class="number">1</span></span><br><span class="line">             virtualTargetView.image = viewCopy.image</span><br><span class="line">             virtualTargetView.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">             viewCopy.removeFromSuperview()</span><br><span class="line">         &#125;)</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func cubeAnimate(targetView: UIView, flightInfo: String) {
+    // 判断UIView的具体实现类
+    if targetView.isKindOfClass(UILabel) {
+        let virtualTargetView = targetView as! UILabel
+        // 复制UIView，作为底面
+        let viewCopy = UILabel(frame: virtualTargetView.frame)
+        viewCopy.alpha = 0
+        viewCopy.text = flightInfo
+        viewCopy.font = virtualTargetView.font
+        viewCopy.textAlignment = virtualTargetView.textAlignment
+        viewCopy.textColor = virtualTargetView.textColor
+        viewCopy.backgroundColor = UIColor.clearColor()
+        // 设置底面UIView的初始位置和高度
+        viewCopy.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(1.0, 0.1), CGAffineTransformMakeTranslation(1.0, viewCopy.frame.height / 2))
+        self.topView.addSubview(viewCopy)
+        UIView.animateWithDuration(2, animations: {
+            // 执行UIView和UIViewCopy的动画
+            virtualTargetView.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(1.0, 0.1), CGAffineTransformMakeTranslation(1.0, -virtualTargetView.frame.height / 2))
+            virtualTargetView.alpha = 0
+            viewCopy.alpha = 1
+            viewCopy.transform = CGAffineTransformIdentity
+        }, completion: { _ in
+            // 当动画执行完毕后，将UIViewCopy的信息赋值给UIView，并还原UIView的状态，即与UIViewCopy相同的状态，然后移除UIViewCopy
+            virtualTargetView.alpha = 1
+            virtualTargetView.text = viewCopy.text
+            virtualTargetView.transform = CGAffineTransformIdentity
+            viewCopy.removeFromSuperview()
+        })
+     } else if targetView.isKindOfClass(UIImageView) {
+         let virtualTargetView = targetView as! UIImageView
+         let viewCopy = UIImageView(frame: virtualTargetView.frame)
+         viewCopy.alpha = 0
+         viewCopy.image = UIImage(named: flightInfo)
+         viewCopy.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(1.0, 0.1), CGAffineTransformMakeTranslation(1.0, viewCopy.frame.height / 2))
+         self.topView.addSubview(viewCopy)
+         UIView.animateWithDuration(2, animations: {
+             virtualTargetView.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(1.0, 0.1), CGAffineTransformMakeTranslation(1.0, -virtualTargetView.frame.height / 2))
+             virtualTargetView.alpha = 0
+             viewCopy.alpha = 1
+             viewCopy.transform = CGAffineTransformIdentity
+         }, completion: { _ in
+             virtualTargetView.alpha = 1
+             virtualTargetView.image = viewCopy.image
+             virtualTargetView.transform = CGAffineTransformIdentity
+             viewCopy.removeFromSuperview()
+         })
+     }
+}
+</code></pre>
 <p>具体有这么几个步骤：</p>
 <ul>
 <li>判断<code>UIView</code>的具体实现类，判断是<code>UILabel</code>还是<code>UIImageView</code>。</li>
@@ -299,9 +389,28 @@
 <li>当动画执行完毕后，将<code>UIViewCopy</code>的信息赋值给<code>UIView</code>，并还原<code>UIView</code>的状态，即与<code>UIViewCopy</code>相同的状态，然后移除<code>UIViewCopy</code>。</li>
 </ul>
 <h3 id="u5C0F_u7BAD_u5934_u65CB_u8F6C_u52A8_u753B"><a href="#u5C0F_u7BAD_u5934_u65CB_u8F6C_u52A8_u753B" class="headerlink" title="小箭头旋转动画"></a>小箭头旋转动画</h3><p>因为航班信息有已降落和即将起飞两种状态，所以小箭头旋转涉及到一个方向问题，我们可以先定义一个枚举类型：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">RotateDirection</span>: <span class="title">Int</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Positive</span> = <span class="number">1</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Negative</span> = -<span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+enum RotateDirection: Int {
+    case Positive = 1
+    case Negative = -1
+}
+</code></pre>
 <p>然后写一个箭头旋转的方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">rotateAnimate</span><span class="params">(direction: Int)</span></span> &#123;</span><br><span class="line">   <span class="type">UIView</span>.animateWithDuration(<span class="number">2</span>, animations: &#123;</span><br><span class="line">       <span class="comment">// 判断向上还是向下旋转</span></span><br><span class="line">       <span class="keyword">if</span> <span class="type">RotateDirection</span>.<span class="type">Positive</span>.rawValue == direction &#123;</span><br><span class="line">           <span class="comment">// 在这个示例中小箭头的初始状态是飞机已降落状态，所以想要箭头从起飞状态旋转到降落状态，只要恢复初始状态即可</span></span><br><span class="line">           <span class="keyword">self</span>.landedOrDepatureSmallArrowImageView.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="comment">// 向上旋转</span></span><br><span class="line">           <span class="keyword">let</span> rotation = <span class="type">CGAffineTransformMakeRotation</span>(<span class="type">CGFloat</span>(<span class="type">RotateDirection</span>.<span class="type">Negative</span>.rawValue) * <span class="type">CGFloat</span>(<span class="type">M_PI_2</span>))</span><br><span class="line">           <span class="keyword">self</span>.landedOrDepatureSmallArrowImageView.transform = rotation</span><br><span class="line">       &#125;</span><br><span class="line">    &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func rotateAnimate(direction: Int) {
+   UIView.animateWithDuration(2, animations: {
+       // 判断向上还是向下旋转
+       if RotateDirection.Positive.rawValue == direction {
+           // 在这个示例中小箭头的初始状态是飞机已降落状态，所以想要箭头从起飞状态旋转到降落状态，只要恢复初始状态即可
+           self.landedOrDepatureSmallArrowImageView.transform = CGAffineTransformIdentity
+       } else {
+           // 向上旋转
+           let rotation = CGAffineTransformMakeRotation(CGFloat(RotateDirection.Negative.rawValue) * CGFloat(M_PI_2))
+           self.landedOrDepatureSmallArrowImageView.transform = rotation
+       }
+    }, completion: nil)
+}
+</code></pre>
 <p>给大家解释一下上述方法的几个步骤：</p>
 <ul>
 <li>首先判断旋转的方向，通过传入的<code>direction</code>参数。</li>
@@ -312,7 +421,42 @@
 <p> 注：<code>CGAffineTransformMakeRotation</code>转换每次都是以初始位置为准，<code>CGAffineTransformRotation</code>转换是以每次的旋转位置为准。</p>
 </blockquote>
 <h3 id="u5730_u70B9_u548C_u98DE_u673A_u52A8_u753B"><a href="#u5730_u70B9_u548C_u98DE_u673A_u52A8_u753B" class="headerlink" title="地点和飞机动画"></a>地点和飞机动画</h3><p>起飞地、目的地、飞机的动画是一个组合动画，因为这里面存在飞机出现和消失，以及旋转的时机问题，我们来看看这个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">placeAndAirplaneAnimate</span><span class="params">(flightItem: NSDictionary)</span></span> &#123;</span><br><span class="line">    <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">        <span class="comment">// 将起飞地向上移动，同时淡出</span></span><br><span class="line">        <span class="keyword">self</span>.targetPlace.center.y += <span class="number">100</span></span><br><span class="line">        <span class="keyword">self</span>.targetPlace.alpha = <span class="number">0</span></span><br><span class="line">        <span class="comment">// 将目的地向下移动，同时淡出</span></span><br><span class="line">        <span class="keyword">self</span>.sourcePlace.center.y -= <span class="number">100</span></span><br><span class="line">        <span class="keyword">self</span>.sourcePlace.alpha = <span class="number">0</span></span><br><span class="line">        <span class="comment">// 将飞机向右移出屏幕</span></span><br><span class="line">        <span class="keyword">self</span>.airplaneImageView.center.x += <span class="keyword">self</span>.view.bounds.width / <span class="number">1.5</span></span><br><span class="line">        &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">            <span class="comment">// 根据传入的数据源更改起飞地和目的地</span></span><br><span class="line">            <span class="keyword">self</span>.targetPlace.text = flightItem[<span class="string">"targetPlace"</span>] <span class="keyword">as</span>? <span class="type">String</span></span><br><span class="line">            <span class="keyword">self</span>.sourcePlace.text = flightItem[<span class="string">"sourcePlace"</span>] <span class="keyword">as</span>? <span class="type">String</span></span><br><span class="line">            <span class="comment">// 将飞机移到屏幕左侧外，这里没有补间动画</span></span><br><span class="line">            <span class="keyword">self</span>.airplaneImageView.center.x -= <span class="keyword">self</span>.view.bounds.width * <span class="number">1.5</span></span><br><span class="line">            <span class="comment">// 将飞机向上旋转一个角度，这里没有补间动画</span></span><br><span class="line">            <span class="keyword">self</span>.airplaneImageView.transform = <span class="type">CGAffineTransformMakeRotation</span>(-<span class="number">3.14</span>/<span class="number">10</span>)</span><br><span class="line">            <span class="type">UIView</span>.animateWithDuration(<span class="number">1.0</span>, animations: &#123;</span><br><span class="line">                <span class="comment">// 将起飞地向下移动，也就是恢复到初始位值，同时淡入</span></span><br><span class="line">                <span class="keyword">self</span>.targetPlace.center.y -= <span class="number">100</span></span><br><span class="line">                <span class="keyword">self</span>.targetPlace.alpha = <span class="number">1</span></span><br><span class="line">                <span class="comment">// 将目的地向上移动，也就是恢复到初始位值，同时淡入</span></span><br><span class="line">                <span class="keyword">self</span>.sourcePlace.center.y += <span class="number">100</span></span><br><span class="line">                <span class="keyword">self</span>.sourcePlace.alpha = <span class="number">1</span></span><br><span class="line">                <span class="comment">// 将飞机移动到初始位置</span></span><br><span class="line">                <span class="keyword">self</span>.airplaneImageView.center = <span class="keyword">self</span>.airplaneImageViewOriginalCenter</span><br><span class="line">            &#125;)</span><br><span class="line">            <span class="type">UIView</span>.animateWithDuration(<span class="number">0.7</span>, delay: <span class="number">0.5</span>, options: [], animations: &#123;</span><br><span class="line">                <span class="comment">// 将飞机的角度恢复到初始状态</span></span><br><span class="line">                <span class="keyword">self</span>.airplaneImageView.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">            &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func placeAndAirplaneAnimate(flightItem: NSDictionary) {
+    UIView.animateWithDuration(1, delay: 0, options: [], animations: {
+        // 将起飞地向上移动，同时淡出
+        self.targetPlace.center.y += 100
+        self.targetPlace.alpha = 0
+        // 将目的地向下移动，同时淡出
+        self.sourcePlace.center.y -= 100
+        self.sourcePlace.alpha = 0
+        // 将飞机向右移出屏幕
+        self.airplaneImageView.center.x += self.view.bounds.width / 1.5
+        }, completion: { _ in
+            // 根据传入的数据源更改起飞地和目的地
+            self.targetPlace.text = flightItem[&quot;targetPlace&quot;] as? String
+            self.sourcePlace.text = flightItem[&quot;sourcePlace&quot;] as? String
+            // 将飞机移到屏幕左侧外，这里没有补间动画
+            self.airplaneImageView.center.x -= self.view.bounds.width * 1.5
+            // 将飞机向上旋转一个角度，这里没有补间动画
+            self.airplaneImageView.transform = CGAffineTransformMakeRotation(-3.14/10)
+            UIView.animateWithDuration(1.0, animations: {
+                // 将起飞地向下移动，也就是恢复到初始位值，同时淡入
+                self.targetPlace.center.y -= 100
+                self.targetPlace.alpha = 1
+                // 将目的地向上移动，也就是恢复到初始位值，同时淡入
+                self.sourcePlace.center.y += 100
+                self.sourcePlace.alpha = 1
+                // 将飞机移动到初始位置
+                self.airplaneImageView.center = self.airplaneImageViewOriginalCenter
+            })
+            UIView.animateWithDuration(0.7, delay: 0.5, options: [], animations: {
+                // 将飞机的角度恢复到初始状态
+                self.airplaneImageView.transform = CGAffineTransformIdentity
+            }, completion: nil)
+    })
+}
+</code></pre>
 <p>刨析一下这个方法：</p>
 <ul>
 <li>首先是起飞地向上移动同时淡出、目的地向下移动同时淡出、将飞机向右移出屏幕，这些动画属性的改变会产生补间动画。</li>

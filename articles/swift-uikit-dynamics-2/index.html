@@ -46,13 +46,17 @@
 
 
 <meta name="description" content="碰撞背后的故事在UIKit的动态引擎中，每个行为都有一个action属性，它的类型是一个函数（() -&amp;gt; Void），我们可以使用一个闭包来打印一下每一步行为的信息。我们在viewDidLoad方法加入下面这行代码：
-collision.action = &amp;#123;```swiftprintln(&quot;\(NSStringFromCGAffineTransform(square.transfo">
+
+collision.action = {
+    println(&amp;quot;\(NSStringFromCGAffineTransform(square.transform">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Swift中的UIKit动力学（二）">
 <meta property="og:url" content="http://www.devtalking.com/articles/swift-uikit-dynamics-2/index.html">
 <meta property="og:site_name" content="程序员说">
 <meta property="og:description" content="碰撞背后的故事在UIKit的动态引擎中，每个行为都有一个action属性，它的类型是一个函数（() -&amp;gt; Void），我们可以使用一个闭包来打印一下每一步行为的信息。我们在viewDidLoad方法加入下面这行代码：
-collision.action = &amp;#123;```swiftprintln(&quot;\(NSStringFromCGAffineTransform(square.transfo">
+
+collision.action = {
+    println(&amp;quot;\(NSStringFromCGAffineTransform(square.transform">
 <meta property="og:image" content="http://www.devtalking.com/postImages/swift-uikit-dynamics21.gif">
 <meta property="og:image" content="http://www.devtalking.com/postImages/swift-uikit-dynamics22.gif">
 <meta property="og:image" content="http://www.devtalking.com/postImages/swift-uikit-dynamics23.gif">
@@ -62,7 +66,9 @@ collision.action = &amp;#123;```swiftprintln(&quot;\(NSStringFromCGAffineTransfo
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Swift中的UIKit动力学（二）">
 <meta name="twitter:description" content="碰撞背后的故事在UIKit的动态引擎中，每个行为都有一个action属性，它的类型是一个函数（() -&amp;gt; Void），我们可以使用一个闭包来打印一下每一步行为的信息。我们在viewDidLoad方法加入下面这行代码：
-collision.action = &amp;#123;```swiftprintln(&quot;\(NSStringFromCGAffineTransform(square.transfo">
+
+collision.action = {
+    println(&amp;quot;\(NSStringFromCGAffineTransform(square.transform">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -240,7 +246,11 @@ collision.action = &amp;#123;```swiftprintln(&quot;\(NSStringFromCGAffineTransfo
 
       
         <span itemprop="articleBody"><h2 id="u78B0_u649E_u80CC_u540E_u7684_u6545_u4E8B"><a href="#u78B0_u649E_u80CC_u540E_u7684_u6545_u4E8B" class="headerlink" title="碰撞背后的故事"></a>碰撞背后的故事</h2><p>在UIKit的动态引擎中，每个行为都有一个<code>action</code>属性，它的类型是一个函数（() -&gt; Void），我们可以使用一个闭包来打印一下每一步行为的信息。我们在<code>viewDidLoad</code>方法加入下面这行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision.action = &#123;</span><br><span class="line">```swift<span class="built_in">println</span>(<span class="string">"<span class="subst">\(NSStringFromCGAffineTransform(square.transform)</span>) <span class="subst">\(NSStringFromCGPoint(square.center)</span>)"</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+collision.action = {
+    println(&quot;\(NSStringFromCGAffineTransform(square.transform)) \(NSStringFromCGPoint(square.center))&quot;);
+};
+</code></pre>
 <p>上面的代码记录了蓝绿色方块坠落、碰撞时的<code>center</code>和<code>transform</code>属性。当编译运行时，在方块下坠的前一秒我们可以在控制台看到如下信息：</p>
 <pre><code>[1, 0, 0, 1, 0, 0] {150, 150}
 [1, 0, 0, 1, 0, 0] {150, 150}
@@ -258,11 +268,19 @@ collision.action = &amp;#123;```swiftprintln(&quot;\(NSStringFromCGAffineTransfo
 <p>因为<code>UIDynamicItem</code>是一个协议，所以这就说明了它与<code>UIView</code>是松耦合的关系。在<code>UIKit</code>中还有一个类遵循这个协议，就是<code>UICollectionViewLayoutAttributes</code>，这意味着动作引擎不但可以作用于一个View，还可以作用于一个集合中的View。</p>
 <h2 id="u78B0_u649E_u901A_u77E5"><a href="#u78B0_u649E_u901A_u77E5" class="headerlink" title="碰撞通知"></a>碰撞通知</h2><p>到目前为止，我们的程序中已经添加了两个View和两个行为，并让他们产生碰撞行为，那么下面我们将看看当他们互相发生碰撞时我们如何捕获这个行为呢。</p>
 <p>我们回到<code>ViewController.swift</code>文件，让<code>ViewController</code>类遵循<code>UICollisionBehaviorDelegate</code>协议：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ViewController</span>: <span class="title">UIViewController</span>, <span class="title">UICollisionBehaviorDelegate</span> </span>&#123;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+class ViewController: UIViewController, UICollisionBehaviorDelegate {
+</code></pre>
 <p>在<code>viewDidLoad</code>方法中，设置碰撞行为<code>collision</code>的碰撞代理：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision.collisionDelegate = <span class="keyword">self</span>;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+collision.collisionDelegate = self;
+</code></pre>
 <p>然后我们实现<code>UICollisionBehaviorDelegate</code>协议的一个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">collisionBehavior</span><span class="params">(behavior: UICollisionBehavior!, beganContactForItem item: UIDynamicItem!, withBoundaryIdentifier identifier: NSCopying!, atPoint p: CGPoint)</span></span> &#123;</span><br><span class="line">  <span class="built_in">println</span>(<span class="string">"Boundary contact occurred - <span class="subst">\(identifier)</span>"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func collisionBehavior(behavior: UICollisionBehavior!, beganContactForItem item: UIDynamicItem!, withBoundaryIdentifier identifier: NSCopying!, atPoint p: CGPoint) {
+  println(&quot;Boundary contact occurred - \(identifier)&quot;);
+}
+</code></pre>
 <p>这个方法在View每次发生碰撞时调用。我们让它在控制台打印一些信息。为了能更好的查看该方法中打印的信息，我们将之前设置的<code>collision.action</code>打印信息先去掉。</p>
 <p>我们编译运行一下，可以看到当View之间发生交互，也就是碰撞时，我们在控制台看到了打印信息：</p>
 <pre><code>Boundary contact occurred - barrier
@@ -273,18 +291,45 @@ Boundary contact occurred - nil
 Boundary contact occurred - nil
 </code></pre><p>从上面的打印信息中可以看出，坠落的方块与标示符为<code>barrier</code>的View发生了两次碰撞，这就是我们之前添加的那个隐性的红色障碍物。标示符为<code>nil</code>的几次碰撞就是方块与引用的屏幕边界发生的碰撞。</p>
 <p>我们接着在该方法中添加代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> collidingView = item <span class="keyword">as</span> <span class="type">UIView</span>;</span><br><span class="line">collidingView.backgroundColor = <span class="type">UIColor</span>.yellowColor();</span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.3</span>) &#123;</span><br><span class="line">  collidingView.backgroundColor = <span class="type">UIColor</span>.grayColor();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+let collidingView = item as UIView;
+collidingView.backgroundColor = UIColor.yellowColor();
+UIView.animateWithDuration(0.3) {
+  collidingView.backgroundColor = UIColor.grayColor();
+}
+</code></pre>
 <p>通过上面的代码可以看出，我们定义了一个<code>collidingView</code>常量，用<code>item</code>参数将其赋值，实际上这就是发生碰撞的View，就是那个小方块。然后我们将它的背景色改为黄色，然后经过0.3秒将其背景色从黄色改为了灰色。我们编译运行一下看看：</p>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics21.gif" alt="luping"></p>
 <p>我们可以看到当方块每次发生碰撞行为时，它都会闪着黄色。</p>
 <p>到目前为止，我们所看到的一切都是由动作引擎帮我们实现的，比如说碰撞质量、弹力等，那么接下来，你会看到如何通过<code>UIDynamicItemBehavior</code>类由我们自己控制这些行为属性。</p>
 <h2 id="u914D_u7F6E_u884C_u4E3A_u5C5E_u6027"><a href="#u914D_u7F6E_u884C_u4E3A_u5C5E_u6027" class="headerlink" title="配置行为属性"></a>配置行为属性</h2><p>在<code>viewDidLoad</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> itemBehaviour = <span class="type">UIDynamicItemBehavior</span>(items: [square]);</span><br><span class="line">itemBehaviour.elasticity = <span class="number">0.6</span>;</span><br><span class="line">animator.addBehavior(itemBehaviour);</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+let itemBehaviour = UIDynamicItemBehavior(items: [square]);
+itemBehaviour.elasticity = 0.6;
+animator.addBehavior(itemBehaviour);
+</code></pre>
 <p>上面的代码中，我们创建了一个行为项，它与方块View相关联，修改它的弹力为0.6，然后将其添加到行为中。<code>elasticity</code>的最大值为1，这意味着当方块与障碍物发生碰撞时，所以不会损失碰撞能量和速度，所以方块会一直弹。</p>
 <p>我们编译运行一下，看看现在当方块发生碰撞时会有什么反应：</p>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics22.gif" alt="luping"></p>
 <p>我们也可以通过<code>collision.action</code>来记录方块的运行轨迹：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> updateCount = <span class="number">0</span>;</span><br><span class="line">collision.action = &#123;</span><br><span class="line">  <span class="keyword">if</span> (updateCount % <span class="number">3</span> == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> outline = <span class="type">UIView</span>(frame: square.bounds);</span><br><span class="line">    outline.transform = square.transform;</span><br><span class="line">    outline.center = square.center;</span><br><span class="line"> </span><br><span class="line">    outline.alpha = <span class="number">0.5</span>;</span><br><span class="line">    outline.backgroundColor = <span class="type">UIColor</span>.clearColor();</span><br><span class="line">    outline.layer.borderColor = square.layer.presentationLayer().backgroundColor;</span><br><span class="line">    outline.layer.borderWidth = <span class="number">1.0</span>;</span><br><span class="line">    <span class="keyword">self</span>.view.addSubview(outline);</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">    ++updateCount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+var updateCount = 0;
+collision.action = {
+  if (updateCount % 3 == 0) {
+    let outline = UIView(frame: square.bounds);
+    outline.transform = square.transform;
+    outline.center = square.center;
+
+    outline.alpha = 0.5;
+    outline.backgroundColor = UIColor.clearColor();
+    outline.layer.borderColor = square.layer.presentationLayer().backgroundColor;
+    outline.layer.borderWidth = 1.0;
+    self.view.addSubview(outline);
+  }
+
+    ++updateCount;
+}
+</code></pre>
 <p>上面代码的意思是，每当<code>collision.action</code>执行三次时，我们添加一个View，大小与<code>square</code>相同，<code>transform</code>和<code>center</code>也相同，透明度设为5，背景色设为空，边框色设为当前<code>square</code>的颜色。这样就可以记录下<code>square</code>运行轨迹了。</p>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics23.gif" alt="luping"></p>
 <p>在上面的代码中，我们只修改了弹力属性<code>elasticity</code>，其实还有其他的属性，我们来看一下：</p>
@@ -298,23 +343,68 @@ Boundary contact occurred - nil
 </ul>
 <h2 id="u52A8_u6001_u6DFB_u52A0_u884C_u4E3A"><a href="#u52A8_u6001_u6DFB_u52A0_u884C_u4E3A" class="headerlink" title="动态添加行为"></a>动态添加行为</h2><p>在目前的程序中，我们都是预先设置好了View的各种行为和行为属性，那么这一节我们会展现如何动态的添加或移除行为。</p>
 <p>我们打开<code>ViewController.swift</code>文件，在<code>viewDidLoad</code>方法中添加一个属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> firstContact = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+var firstContact = false;
+</code></pre>
 <p>然后在碰撞代理的方法<code>collisionBehavior(behavior:beganContactForItem:withBoundaryIdentifier:atPoint:)</code>中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!firstContact) &#123;</span><br><span class="line">  firstContact = <span class="literal">true</span>;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> square = <span class="type">UIView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">30</span>, y: <span class="number">0</span>, width: <span class="number">100</span>, height: <span class="number">100</span>));</span><br><span class="line">  square.backgroundColor = <span class="type">UIColor</span>.grayColor();</span><br><span class="line">  view.addSubview(square);</span><br><span class="line"> </span><br><span class="line">  collision.addItem(square);</span><br><span class="line">  gravity.addItem(square);</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> attach = <span class="type">UIAttachmentBehavior</span>(item: collidingView, attachedToItem:square);</span><br><span class="line">  animator.addBehavior(attach);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+if (!firstContact) {
+  firstContact = true;
+
+  let square = UIView(frame: CGRect(x: 30, y: 0, width: 100, height: 100));
+  square.backgroundColor = UIColor.grayColor();
+  view.addSubview(square);
+
+  collision.addItem(square);
+  gravity.addItem(square);
+
+  let attach = UIAttachmentBehavior(item: collidingView, attachedToItem:square);
+  animator.addBehavior(attach);
+}
+</code></pre>
 <p>我们又创建了一个正方形View，背景色设置为灰色，将它添加至碰撞和重力行为中，然后我们创建了一个关联行为，将这个正方形和我们之前创建的正方形关联起来。</p>
 <p>编译运行一下，我们可以看到当之前创建的方块与障碍物发生碰撞后，会出现另一个方块：</p>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics24.gif" alt="luping"></p>
 <p>虽然你看到了两个方块似乎被连接起来了，但是之间没有连线，因为我们只是动态的添加了一个行为，然后由该行为达到了这种效果。</p>
 <h2 id="u7528_u6237_u4EA4_u4E92"><a href="#u7528_u6237_u4EA4_u4E92" class="headerlink" title="用户交互"></a>用户交互</h2><p>现在你看到了，我们可以在系统运行时动态的添加或删除行为。在最后呢，我们再介绍一个行为，那就是<code>UISnapBehavior</code>。当你点击屏幕时，<code>UISnapBehavior</code>行为会让对象像弹簧一样跳到你点击的那个位置。</p>
 <p>为了能更好的看清楚效果，我们将刚才添加的那段用于显示方块运行轨迹的代码注释掉，也就是下面这段代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!firstContact) &#123;</span><br><span class="line">  firstContact = <span class="literal">true</span>;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> square = <span class="type">UIView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">30</span>, y: <span class="number">0</span>, width: <span class="number">100</span>, height: <span class="number">100</span>));</span><br><span class="line">  square.backgroundColor = <span class="type">UIColor</span>.grayColor();</span><br><span class="line">  view.addSubview(square);</span><br><span class="line"> </span><br><span class="line">  collision.addItem(square);</span><br><span class="line">  gravity.addItem(square);</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> attach = <span class="type">UIAttachmentBehavior</span>(item: collidingView, attachedToItem:square);</span><br><span class="line">  animator.addBehavior(attach);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+if (!firstContact) {
+  firstContact = true;
+
+  let square = UIView(frame: CGRect(x: 30, y: 0, width: 100, height: 100));
+  square.backgroundColor = UIColor.grayColor();
+  view.addSubview(square);
+
+  collision.addItem(square);
+  gravity.addItem(square);
+
+  let attach = UIAttachmentBehavior(item: collidingView, attachedToItem:square);
+  animator.addBehavior(attach);
+}
+</code></pre>
 <p>然后我们在<code>ViewController.swift</code>文件中添加两个属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> square: <span class="type">UIView</span>!;</span><br><span class="line"><span class="keyword">var</span> snap: <span class="type">UISnapBehavior</span>!;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+var square: UIView!;
+var snap: UISnapBehavior!;
+</code></pre>
 <p>在<code>viewDidLoad</code>方法中，我们去掉申明<code>square</code>的<code>let</code>关键字：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">square = <span class="type">UIView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">100</span>, y: <span class="number">100</span>, width: <span class="number">100</span>, height: <span class="number">100</span>));</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+square = UIView(frame: CGRect(x: 100, y: 100, width: 100, height: 100));
+</code></pre>
 <p>将<code>square</code>申明为类的属性，而不是方法的常量，是因为我们需要追踪<code>square</code>的轨迹，这样我们就可以在<code>ViewController</code>类的任何方法和地方访问到<code>square</code>。</p>
 <p>然后我们重写<code>touchesEnded</code>方法，在该方法中创建Snap行为，也就是当用户点击屏幕时，会触发Snap行为：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">touchesEnded</span><span class="params">(touches: NSSet!, withEvent event: UIEvent!)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (snap != <span class="literal">nil</span>) &#123;</span><br><span class="line">    animator.removeBehavior(snap);</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> touch = touches.anyObject() <span class="keyword">as</span> <span class="type">UITouch</span>;</span><br><span class="line">  snap = <span class="type">UISnapBehavior</span>(item: square, snapToPoint: touch.locationInView(view));</span><br><span class="line">  animator.addBehavior(snap);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+override func touchesEnded(touches: NSSet!, withEvent event: UIEvent!) {
+  if (snap != nil) {
+    animator.removeBehavior(snap);
+  }
+
+  let touch = touches.anyObject() as UITouch;
+  snap = UISnapBehavior(item: square, snapToPoint: touch.locationInView(view));
+  animator.addBehavior(snap);
+}
+</code></pre>
 <p>上述代码的作用非常清晰，首先判断Snap行为是否存在，如果存在就从引擎中移除。然后实例化Snap行为，作用项是<code>square</code>，弹跳的位置是我们点击屏幕的位置。编译运行看看，会发生什么呢？</p>
 <p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics25.gif" alt="luping"></p>
 <p>参考原文：<a href="http://www.raywenderlich.com/76147/uikit-dynamics-tutorial-swift" target="_blank" rel="external">UIKit Dynamics Tutorial in Swift</a></p>

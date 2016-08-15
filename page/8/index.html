@@ -267,7 +267,29 @@
 <ul>
 <li>不管是选择一个扩展的Host应用还是使用扩展的载体应用充当Host应用，它们都应该有比较容易能分享的内容。在示例项目中，<strong>ShareAlike</strong>扩展使用它的载体应用充当Host应用，载体应用包含一张图片和一个分享按钮，点击分享按钮时会弹出标准的分享内容界面：</li>
 </ul>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">handleShareSampleTapped</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">  shareContent(sharingText: <span class="string">"Highland Cow"</span>,</span><br><span class="line">                       sharingImage: sharingContentImageView.image)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Utility methods</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">shareContent</span><span class="params">(#sharingText: String?, sharingImage: UIImage?)</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> itemsToShare = [<span class="type">AnyObject</span>]()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> text = sharingText &#123;</span><br><span class="line">    itemsToShare.append(text)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> image = sharingImage &#123;</span><br><span class="line">    itemsToShare.append(image)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> activityViewController = <span class="type">UIActivityViewController</span>(activityItems: itemsToShare, applicationActivities: <span class="literal">nil</span>)</span><br><span class="line">  presentViewController(activityViewController, animated: <span class="literal">true</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+@IBAction func handleShareSampleTapped(sender: AnyObject) {
+  shareContent(sharingText: &quot;Highland Cow&quot;,
+                       sharingImage: sharingContentImageView.image)
+}
+
+// Utility methods
+func shareContent(#sharingText: String?, sharingImage: UIImage?) {
+  var itemsToShare = [AnyObject]()
+
+
+  if let text = sharingText {
+    itemsToShare.append(text)
+  }
+  if let image = sharingImage {
+    itemsToShare.append(image)
+  }
+
+
+  let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
+  presentViewController(activityViewController, animated: true, completion: nil)
+}
+</code></pre>
 <p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension1.png" alt="图片">  </p>
 <ul>
 <li>在扩展中编写相关代码。</li>
@@ -285,19 +307,45 @@
 <p>从上图中可以看到，当我们选择了一张照片时，在分享应用列表中有我们的ShareAlike，如果选择了两张照片，分享应用列表中就没有我们的扩展了。</p>
 <h2 id="u9A8C_u8BC1_u7528_u6237_u8F93_u5165_u7684_u5185_u5BB9"><a href="#u9A8C_u8BC1_u7528_u6237_u8F93_u5165_u7684_u5185_u5BB9" class="headerlink" title="验证用户输入的内容"></a>验证用户输入的内容</h2><p>到目前为止，你大概已经知道如何创建一个扩展并设置它的相关属性了，现在让我们看看如何实现一些自定义的扩展行为。首先，我们要知道如何验证用户的输入内容。比如我们通常情况下都需要的一个验证，就是限制用户输入的文字数量，我们可以通过<code>SLComposeServiceViewController</code>来实现它。</p>
 <p>在之前我们提到过<code>SLComposeServiceViewController</code>类的一些属性方法，其中有一个方法叫<code>isContentValid() -&gt; Bool</code>。该方法的作用时随时监听着分享界面文本域的变化，也就是说一旦用户输入或删除文字，都会触发该方法。该方法如果返回<code>true</code>，那说明用户输入的内容合法，并可以使用<strong>Post</strong>按钮完成分享，如果返回<code>false</code>，那说明输入内容不合法，并且不能使用<strong>Post</strong>按钮。下面的代码片段展示了如何实现文字数量限制功能：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> sc_maxCharactersAllowed = <span class="number">25</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">isContentValid</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> currentMessage = contentText &#123;</span><br><span class="line">    <span class="keyword">let</span> currentMessageLength = <span class="built_in">countElements</span>(currentMessage)</span><br><span class="line">    charactersRemaining = sc_maxCharactersAllowed - currentMessageLength</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="type">Int</span>(charactersRemaining) &lt; <span class="number">0</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+let sc_maxCharactersAllowed = 25
+
+override func isContentValid() -&gt; Bool {
+  if let currentMessage = contentText {
+    let currentMessageLength = countElements(currentMessage)
+    charactersRemaining = sc_maxCharactersAllowed - currentMessageLength
+
+    if Int(charactersRemaining) &lt; 0 {
+      return false
+    }
+  }
+  return true
+}
+</code></pre>
 <p>上面代码中的<code>contentText</code>是<code>SLComposeServiceViewController</code>中的属性，类型为<code>String!</code>，它存储着分享界面中<code>TextView</code>中的文本信息。<code>charactersRemaining</code>也是<code>SLComposeServiceViewController</code>中的属性，类型为<code>NSNumber</code>，他表示还有多少合法的字数以及超出的字数，并显示在分享界面的左下角。你可以用<code>countElements()</code>方法获取输入文本的字数，用于计算<code>charactersRemaining</code>的值并判断是否超出了限定的最大字数。至于<strong>Post</strong>按钮的可用和禁用由<code>charactersRemaining</code>决定，不需要我们额外设置。</p>
 <p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension6.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension7.png" alt="图片"></p>
 <h2 id="u4E0A_u4F20_u5206_u4EAB_u5185_u5BB9"><a href="#u4E0A_u4F20_u5206_u4EAB_u5185_u5BB9" class="headerlink" title="上传分享内容"></a>上传分享内容</h2><p>到目前为止，我们已经知道了如何创建一个应用扩展、如何对应用扩展进行配置、如何控制用户的操作行为等。但是作为分享扩展，它的遵旨应该是将文本、图片、视频等资源上传至某个网络客户端（比如FaceBook、Twitter、新浪微博等）。下面就让我们看看应该如何做吧。</p>
 <p>应用扩展相比载体应用或者Host应用来说，它是一个轻量级的、处理单一功能任务的组件，所以用户一般不会因为使用扩展而停止当前使用的应用或关闭正在看的内容。你可以试想一下，如果一个Host应用使用某个应用扩展让它处理一个简单的任务时，该扩展因为同时占用了Host应用的运行内存从而使Host应用不可用、退出以至于崩溃，这是多么令人发指的事情。因此，所有的上传操作都应该在后台执行（iOS7中<code>NSURLSession</code>类对实现该功能很有帮助）。你可能会认为跟着去年<a href="https://leanpub.com/ios7daybyday" target="_blank" rel="external">iOS7 Day-by-Day</a>系列文章就能很容易的实现该功能，但事实并非如此。</p>
 <p>事情往往不是你想象的那么简单。首先提取分享的内容就不是一件容易的事（比如图片），而且你还要将它们分享出去，其次应用扩展没有任何写硬盘的权限。关于第二点，有人可能会有疑问：为什么应用扩展需要写硬盘的权限呢？因为所有后台上传的网络程序，在上传时都会先将上传内容缓存在硬盘中，然后从硬盘获取缓存的内容开始上传。为了能模拟硬盘缓存，我们需要在Host应用中创建一个存放分享内容的容器，并且要允许应用扩展使用该容器缓存分享内容。我们会在下面的内容中讲解如何实现该功能，但首先，我们先来看看如何提出分享内容中的图片。</p>
 <h2 id="u63D0_u53D6_u8981_u5206_u4EAB_u7684_u56FE_u7247"><a href="#u63D0_u53D6_u8981_u5206_u4EAB_u7684_u56FE_u7247" class="headerlink" title="提取要分享的图片"></a>提取要分享的图片</h2><p>在<code>SLComposeServiceViewController</code>类中有一个属性叫<code>extensionContext</code>，它存储着与当前应用扩展有关联的所有数据，其中包含一个<code>NSInputItem</code>类型的数组，名叫<code>inputItems</code>。每个<code>NSInputItem</code>都含有一个<code>attachments</code>集合，它们的类型都为<code>NSItemProvider</code>。这些<code>attachments</code>存储的就是分享内容中的媒体资源，比如图片、视频、文件或链接。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">imageFromExtensionItem</span><span class="params">(extensionItem: NSExtensionItem, callback: <span class="params">(image: UIImage?)</span></span></span>-&gt;<span class="type">Void</span>) &#123;</span><br><span class="line">  <span class="keyword">for</span> attachment <span class="keyword">in</span> extensionItem.attachments <span class="keyword">as</span> [<span class="type">NSItemProvider</span>] &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func imageFromExtensionItem(extensionItem: NSExtensionItem, callback: (image: UIImage?)-&gt;Void) {
+  for attachment in extensionItem.attachments as [NSItemProvider] {
+    ...
+  }
+}
+</code></pre>
 <p>上面这个方法的作用是从分享内容中提取图片（<code>UIImage</code>），注意这个方法没有返回值，而是用一个闭包回调函数来替代。</p>
 <p>为了确定<code>attachments</code>中是否包含了图片类型的资源，我们需要用到<code>hasItemConformingToTypeIdentifier()</code>方法。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span>(attachment.hasItemConformingToTypeIdentifier(kUTTypeImage <span class="keyword">as</span> <span class="type">NSString</span>)) &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+if(attachment.hasItemConformingToTypeIdentifier(kUTTypeImage as NSString)) {
+  ...
+}
+</code></pre>
 <p>该方法的参数类型是<code>NSString</code>，并且类型标示符<code>kUTTypeImage</code>属于<strong>MobileCoreServices</strong>框架中的属性，所以我们要引入<strong>MobileCoreServices</strong>框架：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> MobileCoreServices</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+import MobileCoreServices
+</code></pre>
 <p>该框架中还包含几种类型标示符：</p>
 <ul>
 <li><code>kUTTypeImage</code></li>
@@ -306,21 +354,70 @@
 <li><code>kUTTypeSpreadsheet</code></li>
 </ul>
 <p>现在你可以确定<code>attachments</code>中至少包含了一个图片资源，并且需要将该图片资源提取出来。因为执行该任务会消耗很高的内存资源，所以为了确保在执行时UI界面不会出现无响应的情况，它应该在后台队列中执行。我们可以使用<code>loadItemForTypeIdentifier()</code>方法，与刚才的方法类似，该方法也有类型标示符参数，并且用闭包实现对图片的操作：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Marshal on to a background thread</span></span><br><span class="line">dispatch_async(dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="type">UInt</span>(<span class="number">0</span>))) &#123;</span><br><span class="line">  attachment.loadItemForTypeIdentifier(kUTTypeImage <span class="keyword">as</span> <span class="type">NSString</span>, options: <span class="literal">nil</span>) &#123;</span><br><span class="line">      (imageProvider, error) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">      ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// Marshal on to a background thread
+dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, UInt(0))) {
+  attachment.loadItemForTypeIdentifier(kUTTypeImage as NSString, options: nil) {
+      (imageProvider, error) -&gt; Void in
+      ...
+  }
+}
+</code></pre>
 <p>如果你使用Objective-C，那么你可以用block将返回结果强制转换为你期望的类型（比如<code>UIImage</code>），然后实现回调。但是在Swift中就行不通了，所以上面代码中的<code>imageProvider</code>变量的类型应该是<code>NSSecureCoding</code>，然后你可以将它强转为<code>UIImage</code>类型：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> image: <span class="type">UIImage</span>? = <span class="literal">nil</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> e = error &#123;</span><br><span class="line">  <span class="built_in">println</span>(<span class="string">"Item loading error: <span class="subst">\(e.localizedDescription)</span>"</span>)</span><br><span class="line">&#125;</span><br><span class="line">image = imageProvider <span class="keyword">as</span>? <span class="type">UIImage</span></span><br><span class="line">dispatch_async(dispatch_get_main_queue()) &#123;</span><br><span class="line">  callback(image: image)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+var image: UIImage? = nil
+if let e = error {
+  println(&quot;Item loading error: \(e.localizedDescription)&quot;)
+}
+image = imageProvider as? UIImage
+dispatch_async(dispatch_get_main_queue()) {
+  callback(image: image)
+}
+</code></pre>
 <p>大家注意，在<code>dispatch_async</code>中我使用了<code>callback()</code>函数，也就是<code>imageFromExtensionItem</code>方法的第二个参数，并将刚才强转为<code>UIImage</code>类型的<code>image</code>对象作为其参数。</p>
 <p>这段代码可以让用户在输入分享文本信息的同时将<code>attachments</code>中的图片提取出来。看起来非常完美：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> attachedImage: <span class="type">UIImage</span>?</span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">presentationAnimationDidFinish</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// Only interested in the first item</span></span><br><span class="line">  <span class="keyword">let</span> extensionItem = extensionContext.inputItems[<span class="number">0</span>] <span class="keyword">as</span> <span class="type">NSExtensionItem</span></span><br><span class="line">  <span class="comment">// Extract an image (if one exists)</span></span><br><span class="line">  imageFromExtensionItem(extensionItem) &#123;</span><br><span class="line">    image <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">if</span> image &#123;</span><br><span class="line">      dispatch_async(dispatch_get_main_queue()) &#123;</span><br><span class="line">        <span class="keyword">self</span>.attachedImage = image</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+var attachedImage: UIImage?
+
+override func presentationAnimationDidFinish() {
+  // Only interested in the first item
+  let extensionItem = extensionContext.inputItems[0] as NSExtensionItem
+  // Extract an image (if one exists)
+  imageFromExtensionItem(extensionItem) {
+    image in
+    if image {
+      dispatch_async(dispatch_get_main_queue()) {
+        self.attachedImage = image
+      }
+    }
+  }
+}
+</code></pre>
 <p>该方法的作用就是提取出图片，并将提取出的图片赋值给我们定义的<code>attachedImage</code>变量。</p>
 <h2 id="u6267_u884C_u540E_u53F0_u4E0A_u4F20_u7684_u4EFB_u52A1"><a href="#u6267_u884C_u540E_u53F0_u4E0A_u4F20_u7684_u4EFB_u52A1" class="headerlink" title="执行后台上传的任务"></a>执行后台上传的任务</h2><p>一旦用户输入完要分享的文本信息，按下<strong>Post</strong>按钮后，分享扩展就应该将所有内容通过Web服务上传到某个地方。本文的示例为了达到这个目的，我们在视图控制器中定义了一个常量属性<code>sc_uploadURL</code>，值为一个URL，也就是一个服务地址：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> sc_uploadURL = <span class="string">"http://requestb.in/oha28noh"</span></span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+let sc_uploadURL = &quot;http://requestb.in/oha28noh&quot;
+</code></pre>
 <p>这个URL是Request Bin的服务，Request Bin可以给你提供一个临时的URL，用于测试一些网络操作。上面代码中的这个URL对你们来说没有什么用，因为这是我申请的，你们可以去<a href="http://requestb.in/" target="_blank" rel="external">requestb.in</a>申请一个自己的URL用于测试。</p>
 <p>在前面我们提到过，应用扩展不应该和Host应用抢占内存资源，它应该在后台执行相关任务。因此，当<strong>Post</strong>按钮被按下时，在当前的Host应用中我们不会看到任何有关应用扩展的执行痕迹，像同步、网络操作等。此时，我们就需要使用<code>NSURLSession</code>给我们提供的API来实现后台的网络操作。</p>
 <p>当用户点击<strong>Post</strong>按钮后会调用<code>didSelectPost()</code>方法，它的代码片段应该是这样的：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">didSelectPost</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// Perform upload</span></span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Inform the host that we're done, so it un-blocks its UI.</span></span><br><span class="line">  extensionContext.completeRequestReturningItems(<span class="literal">nil</span>, completionHandler: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+override func didSelectPost() {
+  // Perform upload
+  ...
+
+  // Inform the host that we&#39;re done, so it un-blocks its UI.
+  extensionContext.completeRequestReturningItems(nil, completionHandler: nil)
+}
+</code></pre>
 <p>设置<code>NSURLSession</code>很简单，有规范的设置流程：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> configName = <span class="string">"com.shinobicontrols.ShareAlike.BackgroundSessionConfig"</span></span><br><span class="line"><span class="keyword">let</span> sessionConfig = <span class="type">NSURLSessionConfiguration</span>.backgroundSessionConfigurationWithIdentifier(configName)</span><br><span class="line"><span class="comment">// Extensions aren't allowed their own cache disk space. Need to share with application</span></span><br><span class="line">sessionConfig.sharedContainerIdentifier = <span class="string">"group.ShareAlike"</span></span><br><span class="line"><span class="keyword">let</span> session = <span class="type">NSURLSession</span>(configuration: sessionConfig)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+let configName = &quot;com.shinobicontrols.ShareAlike.BackgroundSessionConfig&quot;
+let sessionConfig = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier(configName)
+// Extensions aren&#39;t allowed their own cache disk space. Need to share with application
+sessionConfig.sharedContainerIdentifier = &quot;group.ShareAlike&quot;
+let session = NSURLSession(configuration: sessionConfig)
+</code></pre>
 <p>我们要特别注意上面代码片段中<code>sharedContainerIdentifier</code>的设置，它给<code>NSURLSession</code>使用的共享容器（用于缓存分享内容）指定了一个名称，这个容器也是扩展载体应用的一部分（在这个例子中，载体应用就是ShareAlike），所以我们要通过Xcode对载体应用进行设置：</p>
 <ol>
 <li>在工程设置面板中选择<strong>Capabilities</strong>页签，然后在左侧<strong>Targets</strong>栏中选中载体应用。</li>
@@ -334,13 +431,57 @@
 <p>这些App Group都是登记在你的开发者账号下的，这样才能确保只有你的应用可以使用这些共享容器。</p>
 <p>Xcode会为每个工程创建一个<code>.entitlements</code>授权文件，里面就包含有共享容器的访问名称。</p>
 <p>现在<code>NSURLSession</code>就已经设置成功了，你还需要创建一个URL request对象来发送请求：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Prepare the URL Request</span></span><br><span class="line"><span class="keyword">let</span> request = urlRequestWithImage(attachedImage, text: contentText)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// Prepare the URL Request
+let request = urlRequestWithImage(attachedImage, text: contentText)
+</code></pre>
 <p><code>urlRequestWithImage</code>函数的作用是构造一个URL请求结构，通过HTTP Post方式发送一些JSON格式的数据。这其中就包含了文本内容和图片的元数据信息：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">urlRequestWithImage</span><span class="params">(image: UIImage?, text: String)</span></span> -&gt; <span class="type">NSURLRequest</span>? &#123;</span><br><span class="line">  <span class="keyword">let</span> url = <span class="type">NSURL</span>.<span class="type">URLWithString</span>(sc_uploadURL)</span><br><span class="line">  <span class="keyword">let</span> request = <span class="type">NSMutableURLRequest</span>(<span class="type">URL</span>: url)</span><br><span class="line">  request.addValue(<span class="string">"application/json"</span>, forHTTPHeaderField: <span class="string">"Content-Type"</span>)</span><br><span class="line">  request.addValue(<span class="string">"application/json"</span>, forHTTPHeaderField: <span class="string">"Accept"</span>)</span><br><span class="line">  request.<span class="type">HTTPMethod</span> = <span class="string">"POST"</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> jsonObject = <span class="type">NSMutableDictionary</span>()</span><br><span class="line">  jsonObject[<span class="string">"text"</span>] = text</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> image = image &#123;</span><br><span class="line">    jsonObject[<span class="string">"image_details"</span>] = extractDetailsFromImage(image)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Create the JSON payload</span></span><br><span class="line">  <span class="keyword">var</span> jsonError: <span class="type">NSError</span>?</span><br><span class="line">  <span class="keyword">let</span> jsonData = <span class="type">NSJSONSerialization</span>.dataWithJSONObject(jsonObject, options: <span class="literal">nil</span>, error: &amp;jsonError)</span><br><span class="line">  <span class="keyword">if</span> jsonData &#123;</span><br><span class="line">    request.<span class="type">HTTPBody</span> = jsonData</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> error = jsonError &#123;</span><br><span class="line">      <span class="built_in">println</span>(<span class="string">"JSON Error: <span class="subst">\(error.localizedDescription)</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> request</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func urlRequestWithImage(image: UIImage?, text: String) -&gt; NSURLRequest? {
+  let url = NSURL.URLWithString(sc_uploadURL)
+  let request = NSMutableURLRequest(URL: url)
+  request.addValue(&quot;application/json&quot;, forHTTPHeaderField: &quot;Content-Type&quot;)
+  request.addValue(&quot;application/json&quot;, forHTTPHeaderField: &quot;Accept&quot;)
+  request.HTTPMethod = &quot;POST&quot;
+
+  var jsonObject = NSMutableDictionary()
+  jsonObject[&quot;text&quot;] = text
+  if let image = image {
+    jsonObject[&quot;image_details&quot;] = extractDetailsFromImage(image)
+  }
+
+  // Create the JSON payload
+  var jsonError: NSError?
+  let jsonData = NSJSONSerialization.dataWithJSONObject(jsonObject, options: nil, error: &amp;jsonError)
+  if jsonData {
+    request.HTTPBody = jsonData
+  } else {
+    if let error = jsonError {
+      println(&quot;JSON Error: \(error.localizedDescription)&quot;)
+    }
+  }
+
+  return request
+}
+</code></pre>
 <p>这个方法实际上并不是创建一个上传图片的请求，虽然也可以这样做，但这里我们将图片的详细信息（元数据）提取出来进行上传，下面代码是提取图片详细信息的方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">extractDetailsFromImage</span><span class="params">(image: UIImage)</span></span> -&gt; <span class="type">NSDictionary</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> resultDict = <span class="type">NSMutableDictionary</span>()</span><br><span class="line">  resultDict[<span class="string">"height"</span>] = image.size.height</span><br><span class="line">  resultDict[<span class="string">"width"</span>] = image.size.width</span><br><span class="line">  resultDict[<span class="string">"orientation"</span>] = image.imageOrientation.toRaw()</span><br><span class="line">  resultDict[<span class="string">"scale"</span>] = image.scale</span><br><span class="line">  resultDict[<span class="string">"description"</span>] = image.description</span><br><span class="line">  <span class="keyword">return</span> resultDict.copy() <span class="keyword">as</span> <span class="type">NSDictionary</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func extractDetailsFromImage(image: UIImage) -&gt; NSDictionary {
+  var resultDict = NSMutableDictionary()
+  resultDict[&quot;height&quot;] = image.size.height
+  resultDict[&quot;width&quot;] = image.size.width
+  resultDict[&quot;orientation&quot;] = image.imageOrientation.toRaw()
+  resultDict[&quot;scale&quot;] = image.scale
+  resultDict[&quot;description&quot;] = image.description
+  return resultDict.copy() as NSDictionary
+}
+</code></pre>
 <p>最后你就可以通过<code>resume()</code>在后台发起上传请求了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Create the task, and kick it off</span></span><br><span class="line"><span class="keyword">let</span> task = session.dataTaskWithRequest(request)</span><br><span class="line">task.resume()</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+// Create the task, and kick it off
+let task = session.dataTaskWithRequest(request)
+task.resume()
+</code></pre>
 <p>如果你按下<strong>Post</strong>按钮完成分享后，在requestb.in中，你应该可以看到如下的结果：</p>
 <p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension10.png" alt="图片"></p>
 <p>原文地址：<a href="http://www.shinobicontrols.com/blog/posts/2014/07/21/ios8-day-by-day-day-2-sharing-extension" target="_blank" rel="external">iOS8 Day-by-Day :: Day 2 :: Sharing Extension</a></p>
@@ -446,7 +587,9 @@
 <ul>
 <li>打开Playground文件包内的contents.xcplayground文件，在<code>&lt;sections&gt;</code>标签中加入下面这行：</li>
 </ul>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">&lt;documentation relative-path='playgroundDocumentation.html'&gt;&lt;/documentation&gt;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+&lt;documentation relative-path=&#39;playgroundDocumentation.html&#39;&gt;&lt;/documentation&gt;
+</code></pre>
 <p>也就是将我们刚才拷贝到“Documentation”文件夹中的HTML文件添加到Playground文件的xml文件中，使用<code>&lt;documentation&gt;</code>标签，将<code>relative-path</code>的值设置为HTML文件的名称：</p>
 <p><img src="http://www.devtalking.com/postImages/2014-09-15-create-documentation-in-playground4.png" alt="图片"> </p>
 <p>现在再打开刚才创建的Playground文件看看，是不是很酷呢！</p>
@@ -534,22 +677,126 @@
           <span itemprop="articleBody">
             
               <h2 id="u666E_u901A_u5B50_u7C7B"><a href="#u666E_u901A_u5B50_u7C7B" class="headerlink" title="普通子类"></a>普通子类</h2><p>通常情况下，一说到<code>required</code>修饰符，我们最先想到的应该就是普通类（class）的<code>init()</code>方法了。比如下面这个类：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+class MyClass {
+    var str:String
+    init(str:String) {
+        self.str = str
+    }
+}
+</code></pre>
 <p>当我们定义一个<code>MyClass</code>的子类（subclass）并实例化这个子类时，我们一般会如何做呢？没错，通常情况下都会是这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">MySubClass</span>(str:<span class="string">"Hello Swift"</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+class MyClass {
+    var str:String
+    init(str:String) {
+        self.str = str
+    }
+}
+
+class MySubClass:MyClass {
+
+}
+
+var MySubClass(str:&quot;Hello Swift&quot;)
+</code></pre>
 <p>大伙应该已经注意到了，在实例化<code>MySubClass</code>时，其实是继承了它父类<code>MyClass</code>的<code>init()</code>方法。那我们再来看看子类的初始化方法。</p>
 <h2 id="u5B50_u7C7B_u7684_u521D_u59CB_u5316_u65B9_u6CD5"><a href="#u5B50_u7C7B_u7684_u521D_u59CB_u5316_u65B9_u6CD5" class="headerlink" title="子类的初始化方法"></a>子类的初始化方法</h2><p>如果我们在子类中添加一个<code>init()</code>方法，像这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str:str)</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">MySubClass</span>(str:<span class="string">"Hello Swift"</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+class MyClass {
+    var str:String
+    init(str:String) {
+        self.str = str
+    }
+}
+
+class MySubClass:MyClass {
+    override init(str:String) {
+        super.init(str:str)
+    }   
+}
+
+var MySubClass(str:&quot;Hello Swift&quot;)
+</code></pre>
 <p>那么我们首先要在<code>init()</code>方法前加上<code>override</code>修饰符，表示<code>MySubClass</code>重写了其父类的<code>init()</code>方法，然后还要调用父类的<code>init()</code>方法，并将参数一并传给父类的方法。</p>
 <p>在实际运用中，也有另外一种情况，当子类的初始化方法参数类型与父类的初始化方法参数类型不同时，我们就不必在子类的初始化方法前加<code>override</code>修饰符了，但是要把子类初始化方法的参数类型转换为符合父类初始化方法的参数类型，然后传给父类的初始化方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">init</span>(i:<span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str:<span class="type">String</span>(i))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">MySubClass</span>(i: <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+class MyClass {
+    var str:String
+    init(str:String) {
+        self.str = str
+    }
+}
+
+class MySubClass:MyClass
+{
+    init(i:Int) {
+        super.init(str:String(i))
+    }
+}
+
+MySubClass(i: 10)
+</code></pre>
 <h2 id="required_u4FEE_u9970_u7B26"><a href="#required_u4FEE_u9970_u7B26" class="headerlink" title="required修饰符"></a>required修饰符</h2><p>我们给父类的<code>init()</code>方法加上<code>required</code>修饰符后会发生什么呢，我们来看看：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">init</span>(i:<span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str:<span class="type">String</span>(i))</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="comment">// 编译错误</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">MySubClass</span>(i: <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+class MyClass {
+    var str:String
+    required init(str:String) {
+        self.str = str
+    }
+}
+
+class MySubClass:MyClass
+{
+    init(i:Int) {
+        super.init(str:String(i))
+    }
+     // 编译错误
+}
+
+MySubClass(i: 10)
+</code></pre>
 <p>我们可以看到上面的代码在编译会发生错误，因为我们没有实现父类中要去必须要实现的方法。我们应该这样写：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str: str)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span>(i:<span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str:<span class="type">String</span>(i))</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">MySubClass</span>(i: <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+class MyClass {
+    var str:String
+    required init(str:String) {
+        self.str = str
+    }
+}
+
+class MySubClass:MyClass
+{
+    required init(str:String) {
+        super.init(str: str)
+    }
+
+    init(i:Int) {
+        super.init(str:String(i))
+    }
+
+}
+
+MySubClass(i: 10)
+</code></pre>
 <p>从上面的代码示例中不难看出，如果子类需要添加异于父类的初始化方法时，必须先要实现父类中使用<code>required</code>修饰符修饰过的初始化方法，并且也要使用<code>required</code>修饰符而不是<code>override</code>。</p>
 <p>如果子类中不需要添加任何初始化方法，我们则可以忽略父类的<code>required</code>初始化方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span></span><br><span class="line"></span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">MySubClass</span>(str: <span class="string">"hello swift"</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+class MyClass {
+    var str:String
+    required init(str:String) {
+        self.str = str
+    }
+}
+
+class MySubClass:MyClass
+{
+
+
+}
+
+MySubClass(str: &quot;hello swift&quot;)
+</code></pre>
 <p>在这种情况下，编译器不会报错，因为如果子类没有任何初始化方法时，Swift会默认使用父类的初始化方法。在<a href="https://developer.apple.com/library/prerelease/mac/documentation/Swift/Conceptual/Swift_Programming_Language/Initialization.html#//apple_ref/doc/uid/TP40014097-CH18-XID_339" target="_blank" rel="external">Apple的文档</a>中也有相关描述：</p>
 <blockquote>
 <p>You do not have to provide an explicit implementation of a required initializer if you can satisfy the requirement with an inherited initialiser.</p>
@@ -647,9 +894,29 @@
 <li><code>final</code>修饰符也可以修饰类中的属性、方法和下标，但前提是该类并没有被<code>final</code>修饰过。</li>
 <li><code>final</code>不能修饰结构体和枚举。</li>
 </ul>
-<h2 id="u4EE3_u7801_u793A_u4F8B"><a href="#u4EE3_u7801_u793A_u4F8B" class="headerlink" title="代码示例"></a>代码示例</h2><figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">```swift<span class="comment">//Todo...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaglevTrain</span>: <span class="title">Train</span> </span>&#123;  <span class="comment">// 编译失败</span></span><br><span class="line">```swift<span class="comment">//Todo...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="u4EE3_u7801_u793A_u4F8B"><a href="#u4EE3_u7801_u793A_u4F8B" class="headerlink" title="代码示例"></a>代码示例</h2><pre><code class="swift">
+final class Train {
+    //Todo...
+}
+
+class MaglevTrain: Train {  // 编译失败
+    //Todo...
+}
+</code></pre>
 <p>上面代码中，因为<code>Train</code>类被<code>final</code>修饰过，所以当<code>MaglevTrain</code>类继承了<code>Train</code>后，编译器会提示错误。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">```swift<span class="keyword">final</span> <span class="func"><span class="keyword">func</span> <span class="title">method</span><span class="params">()</span></span> &#123;</span><br><span class="line">```swift```swift<span class="comment">//Todo...	</span></span><br><span class="line">```swift&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaglevTrain</span>: <span class="title">Train</span> </span>&#123;  </span><br><span class="line">```swift<span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">method</span><span class="params">()</span></span> &#123;  <span class="comment">// 编译失败</span></span><br><span class="line">```swift```swift<span class="comment">//Todo...</span></span><br><span class="line">```swift&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+class Train {
+    final func method() {
+        //Todo...    
+    }
+}
+
+class MaglevTrain: Train {  
+    override func method() {  // 编译失败
+        //Todo...
+    }
+}
+</code></pre>
 <p>上面的代码中，因为<code>Train</code>类中的<code>method</code>方法被<code>final</code>修饰过，所以当子类<code>MaglevTrain</code>重写父类的<code>method</code>方法时，编译器会提示错误。</p>
 
             
@@ -745,48 +1012,159 @@
 <p>注意：<br>如果你看不到控制台输出界面，你可以通过View &gt; Assistant Editor &gt; Show Assistant Editor选项或使用Option-Command-Return快捷键打开Timeline区域。</p>
 </blockquote>
 <h3 id="u5339_u914D_u5143_u7EC4_u4E2D_u7684_u503C"><a href="#u5339_u914D_u5143_u7EC4_u4E2D_u7684_u503C" class="headerlink" title="匹配元组中的值"></a>匹配元组中的值</h3><p>下面这个例子向你展示了如何使用匹配模式写出简明、优雅的<code>switch</code>语句。在这个例子中使用了FizzBuzz游戏作为场景进行说明。我们先来简单介绍一下这个游戏，在FizzBuzz游戏中，你从1开始数数，如果你数到的数字能被3整除，那么你就不能说出该数字而要说“Fizz”。如果你数到的数字能被5整除，那么你就要说“Buzz”。如果你数到的数字既能被3整除又能被5整除，那么你就要说“FizzBuzz”。所以一般情况下数数的情形像这样：“1，2，Fizz，4，Buzz…”。那么在这个例子中我们用一个名为<code>fizzBuzz</code>的函数代表该游戏，这个函数有一个参数，代表我们要数的数字，因为我们需要说出“Fizz”、“Buzz”以及“FizzBuzz”，所以返回值为<code>String</code>类型。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">fizzBuzz</span><span class="params">(number: Int)</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> (number % <span class="number">3</span>, number % <span class="number">5</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> (<span class="number">0</span>, <span class="number">0</span>):</span><br><span class="line">        <span class="comment">// number既能被3整除又能被5整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"FizzBuzz!"</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">0</span>, <span class="number">_</span>):</span><br><span class="line">        <span class="comment">// number能被3整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Fizz!"</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">_</span>, <span class="number">0</span>):</span><br><span class="line">        <span class="comment">// number能被5整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Buzz!"</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">_</span>, <span class="number">_</span>):</span><br><span class="line">        <span class="comment">// number既不能被3整除也不能被5整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"<span class="subst">\(number)</span>"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func fizzBuzz(number: Int) -&gt; String {
+    switch (number % 3, number % 5) {
+    case (0, 0):
+        // number既能被3整除又能被5整除
+        return &quot;FizzBuzz!&quot;
+    case (0, _):
+        // number能被3整除
+        return &quot;Fizz!&quot;
+    case (_, 0):
+        // number能被5整除
+        return &quot;Buzz!&quot;
+    case (_, _):
+        // number既不能被3整除也不能被5整除
+        return &quot;\(number)&quot;
+    }
+}
+</code></pre>
 <p>我们通过<code>for</code>循环语句，让<code>fizzBuzz</code>函数参数从1到100执行100次，模拟我们在游戏中从1数到100。然后看看控制台输出的结果。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span>...<span class="number">100</span> &#123;</span><br><span class="line">    <span class="built_in">println</span>(fizzBuzz(i))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+for i in 1...100 {
+    println(fizzBuzz(i))
+}
+</code></pre>
 <p>在<code>fizzBuzz</code>函数中的<code>switch</code>语句中，判断表达式是一个元组，它包含两个成员，这两个成员也是表达式。第一个表达式<code>number % 3</code>，意思是<code>number</code>取3的余数，第二个表达式<code>number % 5</code>，意思是<code>number</code>取5的余数。每一个<code>case</code>语句都对该元组中这两个表达式计算出的值进行匹配判断。</p>
 <p>比如，如果<code>number</code>等于15，那么<code>(number % 3, number % 5)</code>的结果就是<code>(0, 0)</code>，这代表15既能被3整除又能5整除。这符合<code>switch</code>语句中的第一个<code>case</code>判断，所以返回“FizzBuzz!”。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">fizzBuzz(<span class="number">15</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+fizzBuzz(15)
+</code></pre>
 <p>如果<code>number</code>等于6，那么元组的结果为<code>(0, 1)</code>，这将符合<code>switch</code>语句中的第二个<code>case</code>判断<code>(0, _)</code>，因为下划线在Swift中约定是通配符，它代表任何值。所以将返回“Fizz!”。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">fizzBuzz(<span class="number">6</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+fizzBuzz(6)
+</code></pre>
 <p>如果<code>number</code>等于11，那么元组的结果为<code>(2, 1)</code>，这将符合<code>switch</code>语句中的第四个<code>case</code>判断<code>(_, _)</code>，因为第四个<code>case</code>判断的是既不能被3整除又不能被5整除的情况，所以用两个下划线表示元组中的两个成员。返回结果为“11”。</p>
 <blockquote>
 <p>练习：<br>让<code>fizzBuzz</code>函数根据其他数字返回不同的消息。<br>再加一种数字的特殊情况，让该函数返回“Bang!”。使用返回“Fizz!”和“Buzz!”相同的模式，比如如果<code>number</code>能被7整除，就返回“Bang!”。别忘了还有“FizzBuzzBang!”这种情况，尽可能将<code>case</code>情况列举全。<br>如果最后一个<code>case</code>你用<code>default</code>代替<code>case (_ ,_)</code>会发生什么呢？这两种方式都能正确的返回不满足其他<code>case</code>的值么？</p>
 </blockquote>
 <h3 id="u679A_u4E3E_u548C_u5173_u8054_u503C"><a href="#u679A_u4E3E_u548C_u5173_u8054_u503C" class="headerlink" title="枚举和关联值"></a>枚举和关联值</h3><p>使用枚举和它的关联值匹配枚举中特定的<code>case</code>场景也是一种匹配模式。下面的例子使用枚举展示了火车的到站时间状态。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Status</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">OnTime</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Delayed</span>(minutes: <span class="type">Int</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+enum Status {
+    case OnTime
+    case Delayed(minutes: Int)
+}
+</code></pre>
 <p>如果火车正点到站，那么它的状态为<code>Status.OnTime</code>，并且没有关联值。当火车晚点，那么它的状态为<code>Status.Delayed(Int)</code>，并需要传入一个关联值用于表示火车到底晚了多久。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> goodNews = <span class="type">Status</span>.<span class="type">OnTime</span></span><br><span class="line"><span class="keyword">let</span> badNews = <span class="type">Status</span>.<span class="type">Delayed</span>(minutes: <span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+let goodNews = Status.OnTime
+let badNews = Status.Delayed(minutes: 90)
+</code></pre>
 <p>这里有一个名为<code>Train</code>的类，包含一个<code>status</code>属性，默认值为<code>Status.OnTime</code>。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> status = <span class="type">Status</span>.<span class="type">OnTime</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+class Train {
+    var status = Status.OnTime
+}
+</code></pre>
 <p>你可以使用匹配模式，将<code>Status.Delayed(Int)</code>这种情况的关联值提出来进行判断。下面的代码将<code>Train</code>类进行了扩展，使之遵循<code>Printable</code>协议，添加了一个只读属性<code>description</code>。这个扩展可以很容易的检索出包含火车晚点分钟数的<code>String</code>字符串，并返回。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Train</span>: <span class="title">Printable</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> description: <span class="type">String</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">switch</span> status &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> .<span class="type">OnTime</span>:</span><br><span class="line">            <span class="comment">// 满足正点到达的情况，返回“On time”</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">"On time"</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Delayed</span>(<span class="keyword">let</span> minutes) <span class="keyword">where</span> <span class="number">0</span>...<span class="number">5</span> ~= minutes:</span><br><span class="line">            <span class="comment">// 将传入的关联值通过“~=”操作符在一定范围内匹配</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Slight delay of <span class="subst">\(minutes)</span> min"</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Delayed</span>(<span class="number">_</span>):</span><br><span class="line">            <span class="comment">// 用下划线通配符匹配不在晚点分钟数范围内的情况</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Delayed"</span></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+extension Train: Printable {
+
+    var description: String {
+
+        switch status {
+
+        case .OnTime:
+            // 满足正点到达的情况，返回“On time”
+            return &quot;On time&quot;
+
+        case .Delayed(let minutes) where 0...5 ~= minutes:
+            // 将传入的关联值通过“~=”操作符在一定范围内匹配
+            return &quot;Slight delay of \(minutes) min&quot;
+
+        case .Delayed(_):
+            // 用下划线通配符匹配不在晚点分钟数范围内的情况
+            return &quot;Delayed&quot;
+
+        }
+
+    }
+
+}
+</code></pre>
 <p><code>switch</code>语句中的第一个<code>case</code>用于匹配当火车状态为<code>OnTime</code>时的情况，并返回简单的字符串。</p>
 <p>第二个<code>case</code>要稍复杂一些，它创建了一个临时常量<code>minutes</code>来表示传入的关联值，并用<code>where</code>关键字申明一个0到5的范围，判断<code>minutes</code>是否在该范围内，如果在该范围内，那么将这个关联值嵌入字符串返回。</p>
 <p>第三个<code>case</code>用于匹配不在晚点范围内的情况。</p>
 <p>你现在可以创建一些<code>Train</code>类的实例验证一下。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> trainOne = <span class="type">Train</span>()</span><br><span class="line"><span class="keyword">let</span> trainTwo = <span class="type">Train</span>()</span><br><span class="line"><span class="keyword">let</span> trainThree = <span class="type">Train</span>()</span><br><span class="line"></span><br><span class="line">trainTwo.status = .<span class="type">Delayed</span>(minutes: <span class="number">2</span>)</span><br><span class="line">trainThree.status = .<span class="type">Delayed</span>(minutes: <span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+let trainOne = Train()
+let trainTwo = Train()
+let trainThree = Train()
+
+trainTwo.status = .Delayed(minutes: 2)
+trainThree.status = .Delayed(minutes: 8)
+</code></pre>
 <p>然后使用<code>description</code>属性查看每个<code>Train</code>实例的状态值。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">trainOne.description</span><br><span class="line">trainTwo.description</span><br><span class="line">trainThree.description</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+trainOne.description
+trainTwo.description
+trainThree.description
+</code></pre>
 <blockquote>
 <p>练习：<br>改变<code>trainTwo</code>和<code>trainThree</code>的<code>status</code>属性，看看它们的<code>description</code>属性有何变化。<br>改变<code>Train</code>扩展中<code>switch</code>的最后一个<code>case</code>语句，让它返回包含关联值的字符串，比如“Delayed by 17 min”。<br>加分项，再增加一种<code>case</code>情况，当关联值大于60时，返回列车晚点几小时几分的字符串。<br>提示：可以使用<code>&gt;=</code>操作符。</p>
 </blockquote>
 <h3 id="u68C0_u67E5_u548C_u8F6C_u6362_u5B50_u7C7B_u578B"><a href="#u68C0_u67E5_u548C_u8F6C_u6362_u5B50_u7C7B_u578B" class="headerlink" title="检查和转换子类型"></a>检查和转换子类型</h3><p>还有一种模式可以让你动态的匹配类的实例。考虑一下下面代码中类的所属关系：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">cleanPassengerCars</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Clean the passenger cars"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaglevTrain</span>: <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">referToSpecialist</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Refer the maglev to a specialist"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> maglev = <span class="type">MaglevTrain</span>()</span><br><span class="line"><span class="keyword">let</span> train = <span class="type">Train</span>()</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+extension Train {
+    func cleanPassengerCars() -&gt; String {
+        return &quot;Clean the passenger cars&quot;
+    }
+}
+
+class MaglevTrain: Train {
+    func referToSpecialist() -&gt; String {
+        return &quot;Refer the maglev to a specialist&quot;
+    }
+}
+
+let maglev = MaglevTrain()
+let train = Train()
+</code></pre>
 <p>有一种简单的类型匹配模式，使用<code>is</code>关键字就可以进行父类与子类之间的匹配和判断。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">trainDescription</span><span class="params">(train: Train)</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> train &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="keyword">is</span> <span class="type">MaglevTrain</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"The fastest train on earth."</span></span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Some other kind of train."</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func trainDescription(train: Train) -&gt; String {
+    switch train {
+    case is MaglevTrain:
+        return &quot;The fastest train on earth.&quot;
+    default:
+        return &quot;Some other kind of train.&quot;
+    }
+}
+</code></pre>
 <p>你可以将刚才创建的<code>Train</code>类和<code>MaglevTrain</code>类实例传入<code>trainDescription</code>函数，看看会有什么结果。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">trainDescription(maglev)</span><br><span class="line">trainDescription(train)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+trainDescription(maglev)
+trainDescription(train)
+</code></pre>
 <blockquote>
 <p>练习：<br>在<code>trainDescription</code>函数中的<code>switch语句中</code>再添加一个<code>case</code>，用于匹配判断<code>train</code>是不是<code>Train</code>类型的，然后看看会提示什么错误？为什么呢？<br>再定义一个<code>Train</code>类的子类<code>SteamTrain</code>，然后在<code>trainDescription</code>函数的<code>switch</code>语句中添加一个<code>case</code>，用于匹配判断<code>train</code>的类型是不是<code>SteamTrain</code>，然后返回适当的字符串描述。将<code>SteamTrain</code>实例传入<code>trainDescription</code>函数，看看是否返回正确的描述。</p>
 </blockquote>
 <p>不过使用<code>is</code>关键字匹配类型只适用于检查子类。如果你想检查对象类型是不是某个类的子类，并且想使用父类的属性或方法时，可以使用<code>as</code>关键字（作用类似类型强制转换中的<code>as</code>）将判断的对象类型转换为父类型，这样在<code>switch</code>语句中就可以同时进行类型检查和类型转换了。使用<code>as</code>关键字时，需要先创建一个临时常量，用于表示需要判断或转换的对象。</p>
 <p>下面的代码中有一个名为<code>determineMaintenanceRequirements</code>的函数，在<code>switch</code>语句中判断对象的类型是不是<code>MaglevTrain</code>的子类，如果是<code>MaglevTrain</code>的子类，那么将该对象的类型转换为<code>MaglevTrain</code>。如果转换成功，就可以使用转换后类型的方法。如果失败则返回<code>default</code>的返回值。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">determineMaintenanceRequirements</span><span class="params">(train: Train)</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> train &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="keyword">let</span> maglev <span class="keyword">as</span> <span class="type">MaglevTrain</span>:</span><br><span class="line">        <span class="keyword">return</span> maglev.referToSpecialist()</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">return</span> train.cleanPassengerCars()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">determineMaintenanceRequirements(train)</span><br><span class="line">determineMaintenanceRequirements(maglev)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func determineMaintenanceRequirements(train: Train) -&gt; String {
+    switch train {
+    case let maglev as MaglevTrain:
+        return maglev.referToSpecialist()
+    default:
+        return train.cleanPassengerCars()
+    }
+}
+
+determineMaintenanceRequirements(train)
+determineMaintenanceRequirements(maglev)
+</code></pre>
 <blockquote>
 <p>练习：<br>在<code>SteamTrain</code>类中添加一个名为<code>cleanFirebox</code>的函数，在<code>determineMaintenanceRequirements</code>函数中的<code>switch</code>语句里添加一个<code>case</code>语句，用于判断对象的类型是不是<code>SteamTrain</code>的子类，如果是，将对象的类型转换为<code>SteamTrain</code>类型，并调用<code>SteamTrain</code>类的<code>cleanFirebox</code>函数。然后将<code>SteamTrain</code>类的实例传入<code>determineMaintenanceRequirements</code>函数看看是否能返回正确的描述信息。</p>
 </blockquote>

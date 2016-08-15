@@ -254,16 +254,42 @@
 <h2 id="u4F7F_u7528_u573A_u666F"><a href="#u4F7F_u7528_u573A_u666F" class="headerlink" title="使用场景"></a>使用场景</h2><p>我们先来认识一下，在什么样的场景下需要使用Keyframe动画。如图下所示，这是一个由四段动画组成的一个复杂动画，让UIView沿着长方形的轨迹运动：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Keyframe-2.png" alt="Keyframe-1"></p>
 <p>我们来看看用代码如何实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    view.center.x += <span class="number">200.0</span></span><br><span class="line">&#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">    <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">        view.center.y += <span class="number">100.0</span></span><br><span class="line">    &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">        <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">            view.center.x -= <span class="number">200.0</span></span><br><span class="line">        &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">            <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">                view.center.y -= <span class="number">100.0</span></span><br><span class="line">            &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+UIView.animateWithDuration(1, animations: {
+    view.center.x += 200.0
+}, completion: { _ in
+    UIView.animateWithDuration(1, animations: {
+        view.center.y += 100.0
+    }, completion: { _ in
+        UIView.animateWithDuration(1, animations: {
+            view.center.x -= 200.0
+        }, completion: { _ in
+            UIView.animateWithDuration(1, animations: {
+                view.center.y -= 100.0
+            }, completion: nil)
+        })
+    })
+})
+</code></pre>
 <p>通过上面的伪代码可以看到，我们使用了<code>completion</code>闭包的方式连接每一段的动画，代码看起来尚且算清晰，可读性也马马虎虎。但是大家想象一下，如果我们使UIView按照一个复杂的路线运行，这一段动画可能有十几、几十段动画组成的，那么如果再使用<code>completion</code>闭包这种方式连接，那代码是多么的惨不忍睹。幸好我们有Keyframe动画，下面就让我们来看看如何使用Keyframe动画。</p>
 <h2 id="Keyframe_u52A8_u753B"><a href="#Keyframe_u52A8_u753B" class="headerlink" title="Keyframe动画"></a>Keyframe动画</h2><p>首先我们会使用到UIView的另一个动画方法<code>animateKeyframesWithDuration(_: delay: options: animations: completion: )</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="comment">// add keyframes</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+UIView.animateKeyframesWithDuration(2, delay: 0, options: [], animations: {
+    // add keyframes
+}, completion: nil)
+</code></pre>
 <p>这个方法的几个参数与前几个使用过的动画方法参数一样。上面代码片段的意思是整个关键帧动画的持续时间为2秒、无延迟、无动画选项、执行完毕后无后续执行的代码。</p>
 <blockquote>
 <p>注：该方法的动画选项不再是<code>UIViewAnimationOptions</code>，而是<code>UIViewKeyframeAnimationOptions</code>。具体的内容大家可以去查阅Apple的文档。</p>
 </blockquote>
 <p>接下来我们要在<code>animations</code>闭包中添加关键帧了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x += <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+UIView.animateKeyframesWithDuration(2, delay: 0, options: [], animations: {
+    UIView.addKeyframeWithRelativeStartTime(0, relativeDuration: 0.25, animations: {
+        view.center.x += 200.0
+    })
+}, completion: nil)
+</code></pre>
 <p><code>addKeyframeWithRelativeStartTime(_: relativeDuration: animations: )</code>是UIView添加关键帧的方法，该方法有三个参数：</p>
 <ul>
 <li>startTime：关键帧开始时间，该时间是相对整个关键帧动画持续时间的相对时间，一般值在0到1之间。如果为0，则表明这一关键帧从整个动画的第0秒开始执行，如果设为0.5，则表明从整个动画的中间开始执行。</li>
@@ -271,7 +297,22 @@
 <li>animations：设置视图动画属性的动画闭包。</li>
 </ul>
 <p>我们解释一下上面这段代码。整个关键帧动画的持续时间为2秒，第一个关键帧从第0秒开始，运行0.5秒结束。下面我们完成其他三个关键帧：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x += <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.25</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.y += <span class="number">100.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.5</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x -= <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.75</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.y -= <span class="number">100.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+UIView.animateKeyframesWithDuration(2, delay: 0, options: [], animations: {
+    UIView.addKeyframeWithRelativeStartTime(0, relativeDuration: 0.25, animations: {
+        view.center.x += 200.0
+    })
+    UIView.addKeyframeWithRelativeStartTime(0.25, relativeDuration: 0.25, animations: {
+        view.center.y += 100.0
+    })
+    UIView.addKeyframeWithRelativeStartTime(0.5, relativeDuration: 0.25, animations: {
+        view.center.x -= 200.0
+    })
+    UIView.addKeyframeWithRelativeStartTime(0.75, relativeDuration: 0.25, animations: {
+        view.center.y -= 100.0
+    })
+}, completion: nil)
+</code></pre>
 <p>第二个关键帧的开始时间为0.25，也就是从整个动画时间的第0.5时开始执行，同样持续0.5秒。后两个关键帧的参数就不难理解了。</p>
 <p>现在整个代码看起来非常整洁，条理清晰，可读性非常好，而且可以有更精确的控制。即使再多几个关键帧也同样可以从容应对。</p>
 <p>关键帧动画不仅仅用于同一个视图的分段动画，也可使使用于不同视图的组合动画，由于我们还没讲到图层动画，所以，开篇的示例动画中就使用了关键帧动画实现了多个视图的组合动画。</p>
@@ -281,7 +322,33 @@
 <p>整个动画是由这三个纸飞机视图通过关键帧动画组合而成：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Keyframe-4.png" alt="Keyframe-3"></p>
 <p>图中标示出了三个飞机视图的运行轨迹、视图大小、视图透明度的状态，我们来看看代码如何实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> zoomInScaleTransform = <span class="type">CGAffineTransformMakeScale</span>(<span class="number">0.2</span>, <span class="number">0.2</span>)</span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">3</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.2</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.center.x += <span class="keyword">self</span>.view.frame.width</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.center.y += -<span class="number">180</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.transform = zoomInScaleTransform</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.3</span>, relativeDuration: <span class="number">0.01</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.alpha = <span class="number">1</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.transform = zoomInScaleTransform</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.3</span>, relativeDuration: <span class="number">0.5</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.center.x -= <span class="keyword">self</span>.view.frame.width</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.center.y += <span class="number">90</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.9</span>, relativeDuration: <span class="number">0.01</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneComeBack.alpha = <span class="number">1</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.9</span>, relativeDuration: <span class="number">0.2</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneComeBack.center.x += <span class="number">33</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">self</span>.restorePaperAirplaneStatus()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+let zoomInScaleTransform = CGAffineTransformMakeScale(0.2, 0.2)
+UIView.animateKeyframesWithDuration(3, delay: 0, options: [], animations: {
+    UIView.addKeyframeWithRelativeStartTime(0, relativeDuration: 0.2, animations: {
+        self.customHeaderView.paperAirplane.center.x += self.view.frame.width
+        self.customHeaderView.paperAirplane.center.y += -180
+        self.customHeaderView.paperAirplane.transform = zoomInScaleTransform
+    })
+    UIView.addKeyframeWithRelativeStartTime(0.3, relativeDuration: 0.01, animations: {
+        self.customHeaderView.paperAirplaneOpposite.alpha = 1
+        self.customHeaderView.paperAirplaneOpposite.transform = zoomInScaleTransform
+    })
+    UIView.addKeyframeWithRelativeStartTime(0.3, relativeDuration: 0.5, animations: {
+        self.customHeaderView.paperAirplaneOpposite.transform = CGAffineTransformIdentity
+        self.customHeaderView.paperAirplaneOpposite.center.x -= self.view.frame.width
+        self.customHeaderView.paperAirplaneOpposite.center.y += 90
+    })
+    UIView.addKeyframeWithRelativeStartTime(0.9, relativeDuration: 0.01, animations: {
+        self.customHeaderView.paperAirplaneComeBack.alpha = 1
+    })
+    UIView.addKeyframeWithRelativeStartTime(0.9, relativeDuration: 0.2, animations: {
+        self.customHeaderView.paperAirplaneComeBack.center.x += 33
+    })
+}, completion: { _ in
+    self.restorePaperAirplaneStatus()
+})
+</code></pre>
 <p>大家看到这大家可能会有疑问了，三段动画怎么会有五个关键帧呢，我们来刨析一下：</p>
 <ul>
 <li>第一个关键帧：完成1号纸飞机视图运动到右上角并移出屏幕，视图逐渐变小的动画。该关键帧从整个动画的第0秒开始执行，持续时间为0.6秒。</li>

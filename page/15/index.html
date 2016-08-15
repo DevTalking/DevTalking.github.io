@@ -460,16 +460,41 @@ struct Block_layout {
 <ul>
 <li><code>_NSConcreteGlobalBlock</code>：全局的静态block，不会访问任何外部变量，不会涉及到任何拷贝，比如一个空的block。例如： </li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">```swift^&#123; <span class="built_in">printf</span>(<span class="string">"Hello, World!\n"</span>); &#125; ();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
+<pre><code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    ^{ printf(&quot;Hello, World!\n&quot;); } ();
+    return 0;
+}
+</code></pre><ul>
 <li><code>_NSConcreteStackBlock</code>：保存在栈中的block，当函数返回时被销毁。例如：</li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">```swift<span class="keyword">char</span> a = <span class="string">'A'</span>;</span><br><span class="line">    ^&#123; <span class="built_in">printf</span>(<span class="string">"%c\n"</span>,a); &#125; ();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
+<pre><code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    char a = &#39;A&#39;;
+    ^{ printf(&quot;%c\n&quot;,a); } ();
+    return 0;
+}
+</code></pre><ul>
 <li><code>_NSConcreteMallocBlock</code>：保存在堆中的block，当引用计数为0时被销毁。该类型的block都是由<code>_NSConcreteStackBlock</code>类型的block从栈中复制到堆中形成的。例如下面代码中，在<code>exampleB_addBlockToArray</code>方法中的block还是<code>_NSConcreteStackBlock</code>类型的，在<code>exampleB</code>方法中就被复制到了堆中，成为<code>_NSConcreteMallocBlock</code>类型的block：</li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">exampleB_addBlockToArray</span><span class="params">(NSMutableArray *<span class="built_in">array</span>)</span> </span>&#123;</span><br><span class="line">```swift<span class="keyword">char</span> b = <span class="string">'B'</span>;</span><br><span class="line">  	[<span class="built_in">array</span> addObject:^&#123;</span><br><span class="line">    		<span class="built_in">printf</span>(<span class="string">"%c\n"</span>, b);</span><br><span class="line">  	&#125;];</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">exampleB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  	NSMutableArray *<span class="built_in">array</span> = [NSMutableArray <span class="built_in">array</span>];</span><br><span class="line">  	exampleB_addBlockToArray(<span class="built_in">array</span>);</span><br><span class="line">  	<span class="keyword">void</span> (^block)() = [<span class="built_in">array</span> objectAtIndex:<span class="number">0</span>];</span><br><span class="line">  	block();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>总结一下：</p>
+<pre><code>void exampleB_addBlockToArray(NSMutableArray *array) {
+    char b = &#39;B&#39;;
+      [array addObject:^{
+            printf(&quot;%c\n&quot;, b);
+      }];
+}
+
+void exampleB() {
+      NSMutableArray *array = [NSMutableArray array];
+      exampleB_addBlockToArray(array);
+      void (^block)() = [array objectAtIndex:0];
+      block();
+}
+</code></pre><p>总结一下：</p>
 <ul>
 <li><code>_NSConcreteGlobalBlock</code>类型的block要么是空block，要么是不访问任何外部变量的block。它既不在栈中，也不在堆中，我理解为它可能在内存的全局区。</li>
 <li><code>_NSConcreteStackBlock</code>类型的block有闭包行为，也就是有访问外部变量，并且该block只且只有有一次执行，因为栈中的空间是可重复使用的，所以当栈中的block执行一次之后就被清除出栈了，所以无法多次使用。</li>
@@ -680,27 +705,29 @@ void doBlockA() {
 <ul>
 <li>安装jekyll：</li>
 </ul>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">$ sudo gem <span class="operator"><span class="keyword">update</span> —<span class="keyword">system</span></span><br><span class="line">$ sudo gem <span class="keyword">install</span> jekyll</span></span><br></pre></td></tr></table></figure>
-<ul>
+<pre><code>$ sudo gem update —system
+$ sudo gem install jekyll
+</code></pre><ul>
 <li>安装模板，默认的模板是Maruku，我们替换为RDiscount。</li>
 </ul>
-<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line">$ sudo gem <span class="keyword">install</span> rdiscount</span><br></pre></td></tr></table></figure>
-<blockquote>
+<pre><code>$ sudo gem install rdiscount
+</code></pre><blockquote>
 <p>Maruku是纯ruby写的Markdown模板解释器。<br>RDiscount是C写的模板解释器。</p>
 </blockquote>
 <p>为什么要替换为RDiscount呢，有心人对两者做了比较，优劣可见一斑。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">Maruku: <span class="number">08.424132</span>s total time, <span class="number">00.084241</span>s average  </span><br><span class="line">RDiscount: <span class="number">00.082019</span>s total time, <span class="number">00.000820</span>s average</span><br></pre></td></tr></table></figure>
-<ul>
+<pre><code>Maruku: 08.424132s total time, 00.084241s average  
+RDiscount: 00.082019s total time, 00.000820s average
+</code></pre><ul>
 <li>新建一个jekyll目录：  </li>
 </ul>
-<figure class="highlight actionscript"><table><tr><td class="code"><pre><span class="line">$ jekyll <span class="keyword">new</span> blog</span><br></pre></td></tr></table></figure>
-<ul>
+<pre><code>$ jekyll new blog
+</code></pre><ul>
 <li>进入到该目录下，你就能看到上述的目录结构：</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> blog</span><br></pre></td></tr></table></figure>
-<p>jekyll集成了一个开发用的服务器，可以让你使用浏览器在本地进行预览。启动server，访问地址为<a href="http://localhost:4000/：" target="_blank" rel="external">http://localhost:4000/：</a></p>
-<figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line"><span class="variable">$ </span>jekyll serve</span><br></pre></td></tr></table></figure>
-<p>至此，一个简单的基于本机服务器的jekyll框架的个人网站就算搭建完毕，在浏览器中访问<a href="http://localhost:4000/，就可以看到index.html中的内容，一般在制作模板时多采在本地安装的方式，便于调试。更多配置信息请参见[Jekyll文档](http://jekyllcn.com/docs/home/)。" target="_blank" rel="external">http://localhost:4000/，就可以看到index.html中的内容，一般在制作模板时多采在本地安装的方式，便于调试。更多配置信息请参见[Jekyll文档](http://jekyllcn.com/docs/home/)。</a></p>
+<pre><code>$ cd blog
+</code></pre><p>jekyll集成了一个开发用的服务器，可以让你使用浏览器在本地进行预览。启动server，访问地址为<a href="http://localhost:4000/：" target="_blank" rel="external">http://localhost:4000/：</a></p>
+<pre><code>$ jekyll serve
+</code></pre><p>至此，一个简单的基于本机服务器的jekyll框架的个人网站就算搭建完毕，在浏览器中访问<a href="http://localhost:4000/，就可以看到index.html中的内容，一般在制作模板时多采在本地安装的方式，便于调试。更多配置信息请参见[Jekyll文档](http://jekyllcn.com/docs/home/)。" target="_blank" rel="external">http://localhost:4000/，就可以看到index.html中的内容，一般在制作模板时多采在本地安装的方式，便于调试。更多配置信息请参见[Jekyll文档](http://jekyllcn.com/docs/home/)。</a></p>
 <h3 id="u7ED3_u5408Github_Pages_u4F7F_u7528Jekyll"><a href="#u7ED3_u5408Github_Pages_u4F7F_u7528Jekyll" class="headerlink" title="结合Github Pages使用Jekyll"></a>结合Github Pages使用Jekyll</h3><p>这篇笔记的主题不是如何在本机搭建个人网站，所以这种使用方式是重点。</p>
 <p>由于Github Pages完美支持Jekyll，所以你只需要安照Jekyll的文件目录结构，托管在Github中即可，不需要在本机安装Jekyll，只需要关注于github，可以借鉴大师们设计的Jekyll模板，然后push或pull你的文章即可。</p>
 <ul>
@@ -714,21 +741,26 @@ void doBlockA() {
 <li>不管用命令行还是用Finder，总之新建一个目录，我这里起名为GitRepo。</li>
 <li>进入GitRepo目录，键入git init命令，初始化一个git库。</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /Users/JaceFu/GitRepo</span><br></pre></td></tr></table></figure>
-<ul>
+<pre><code>cd /Users/JaceFu/GitRepo
+</code></pre><ul>
 <li>将刚才在Github中创建的Repo克隆到你本地的Git库中，即刚在本地创建的GitRepo目录中。</li>
 </ul>
-<figure class="highlight crmsh"><table><tr><td class="code"><pre><span class="line">cd /Users/JaceFu/GitRepo</span><br><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/username/username.github.io</span><br></pre></td></tr></table></figure>
-<p>在GitRepo文件中会看到名为username.github.io的文件，这就是你从Github中克隆的Repo文件。</p>
+<pre><code>cd /Users/JaceFu/GitRepo
+git clone https://github.com/username/username.github.io
+</code></pre><p>在GitRepo文件中会看到名为username.github.io的文件，这就是你从Github中克隆的Repo文件。</p>
 <ul>
 <li>Hello World，进入Repo目录中，创建一个HTML文件，名为index，内容为“Hello World”。</li>
 </ul>
-<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">cd /Users/JaceFu/GitRepo/username<span class="class">.github</span><span class="class">.io</span></span><br><span class="line">echo “Hello World” &gt; index.html</span><br></pre></td></tr></table></figure>
-<ul>
+<pre><code>cd /Users/JaceFu/GitRepo/username.github.io
+echo “Hello World” &gt; index.html
+</code></pre><ul>
 <li>将创建的index.html文件push到github中</li>
 </ul>
-<figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">cd <span class="regexp">/Users/</span>JaceFu<span class="regexp">/GitRepo/u</span>sername.github.io</span><br><span class="line">git add .</span><br><span class="line">git commit -m “Hello World update”</span><br><span class="line">git <span class="keyword">push</span></span><br></pre></td></tr></table></figure>
-<ul>
+<pre><code>cd /Users/JaceFu/GitRepo/username.github.io
+git add .
+git commit -m “Hello World update”
+git push
+</code></pre><ul>
 <li><p>在浏览器中访问<code>http://username.github.io</code>，你将会看到index.html文件中的内容，我们这里会显示“Hello World”。至此，基于Github Pages功能的个人站点就算搭建好了。</p>
 </li>
 <li><p>在克隆到本地的Repo文件中，按照上述的Jekyll文件目录结构手动创建所需的文件资源，并上传。由于Github本身完美支持Jekyll，所以只要符合Jekyll的文件目录，Github就自动使用Jekyll解析形成页面。</p>
@@ -753,8 +785,35 @@ void doBlockA() {
 <li>timezone：时区。</li>
 </ul>
 <h3 id="u7F16_u5199_u535A_u6587"><a href="#u7F16_u5199_u535A_u6587" class="headerlink" title="编写博文"></a>编写博文</h3><p>可以看一下_posts下的jekyll给的例子：</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="horizontal_rule">---</span></span><br><span class="line">layout: post</span><br><span class="line">title:  "Welcome to Jekyll!"</span><br><span class="line">date:   2014-01-27 21:57:11</span><br><span class="line">categories: jekyll update</span><br><span class="line"></span><br><span class="line"><span class="horizontal_rule">---</span></span><br><span class="line"></span><br><span class="line">You'll find this post in your <span class="code">`_posts`</span> directory - edit this post and re-build (or run with the <span class="code">`-w`</span> switch) to see your changes!</span><br><span class="line">To add new posts, simply add a file in the <span class="code">`_posts`</span> directory that follows the convention: YYYY-MM-DD-name-of-post.ext.</span><br><span class="line"></span><br><span class="line">Jekyll also offers powerful support for code snippets:</span><br><span class="line"></span><br><span class="line">&#123; % highlight ruby % &#125; </span><br><span class="line">def print_hi(name)</span><br><span class="line">  puts "Hi, #&#123;name&#125;"</span><br><span class="line">end</span><br><span class="line">print_hi('Tom')</span><br><span class="line"></span><br><span class="line"><span class="header">#=&gt; prints 'Hi, Tom' to STDOUT.</span></span><br><span class="line"></span><br><span class="line">&#123; % endhighlight % &#125;</span><br><span class="line"></span><br><span class="line">Check out the [<span class="link_label">Jekyll docs</span>][<span class="link_reference">jekyll</span>] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [<span class="link_label">Jekyll's GitHub repo</span>][<span class="link_reference">jekyll-gh</span>].</span><br><span class="line"></span><br><span class="line">[<span class="link_reference">jekyll-gh</span>]:<span class="link_url"> https://github.com/mojombo/jekyll</span></span><br><span class="line">[<span class="link_reference">jekyll</span>]:<span class="link_url">    http://jekyllrb.com</span></span><br></pre></td></tr></table></figure>
-<p>可以看到在博文的最上方有被两个—包裹起来的一段，这里就定义了文章的一些参数，更多参数在FrontMatter和Variables获取，简单的只需要关注几个就好：</p>
+<pre><code>
+---
+layout: post
+title:  &quot;Welcome to Jekyll!&quot;
+date:   2014-01-27 21:57:11
+categories: jekyll update
+
+---
+
+You&#39;ll find this post in your `_posts` directory - edit this post and re-build (or run with the `-w` switch) to see your changes!
+To add new posts, simply add a file in the `_posts` directory that follows the convention: YYYY-MM-DD-name-of-post.ext.
+
+Jekyll also offers powerful support for code snippets:
+
+{ % highlight ruby % } 
+def print_hi(name)
+  puts &quot;Hi, #{name}&quot;
+end
+print_hi(&#39;Tom&#39;)
+
+#=&gt; prints &#39;Hi, Tom&#39; to STDOUT.
+
+{ % endhighlight % }
+
+Check out the [Jekyll docs][jekyll] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll&#39;s GitHub repo][jekyll-gh].
+
+[jekyll-gh]: https://github.com/mojombo/jekyll
+[jekyll]:    http://jekyllrb.com
+</code></pre><p>可以看到在博文的最上方有被两个—包裹起来的一段，这里就定义了文章的一些参数，更多参数在FrontMatter和Variables获取，简单的只需要关注几个就好：</p>
 <ul>
 <li>title：文章的标题。</li>
 <li>date：文章的日期。</li>
@@ -763,8 +822,15 @@ void doBlockA() {
 <li>tags：文章标签。</li>
 </ul>
 <p>这里就写一个最简单的文章，只是用其中的两个参数：layout，title，如下：</p>
-<figure class="highlight haml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">-<span class="ruby">--</span><br><span class="line"></span>layout: mylayout</span><br><span class="line">title: hello-jekyll</span><br><span class="line"></span><br><span class="line">-<span class="ruby">--</span><br><span class="line"></span></span><br><span class="line">Hello jekyll!</span><br></pre></td></tr></table></figure>
-<p>将这个写完的文章保存为 “年-月-日-标题.markdown”的名字形式，上传至Github中的_posts文件中，Jekyll会自动解析生成该文章的html页面。</p>
+<pre><code>
+---
+layout: mylayout
+title: hello-jekyll
+
+---
+
+Hello jekyll!
+</code></pre><p>将这个写完的文章保存为 “年-月-日-标题.markdown”的名字形式，上传至Github中的_posts文件中，Jekyll会自动解析生成该文章的html页面。</p>
 <blockquote>
 <p>注：文章的文件名不要使用中文，否则会出现Bug。</p>
 </blockquote>

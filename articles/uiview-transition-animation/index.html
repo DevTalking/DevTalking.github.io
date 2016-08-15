@@ -256,11 +256,20 @@
 <p>先看看一个简单的视图结构：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/TransitionAnimation-1.png" alt="视图结构"></p>
 <p>很明显，我们添加了一个视图作为容器视图，并且尺寸等于屏幕尺寸。在<code>ViewController.swift</code>中有该容器视图的Outlet以及一个图片视图：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">weak</span> <span class="keyword">var</span> containerView: <span class="type">UIView</span>!</span><br><span class="line"><span class="keyword">let</span> ipadView = <span class="type">UIImageView</span>(frame: <span class="type">CGRectMake</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">151.5</span>))</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+@IBOutlet weak var containerView: UIView!
+let ipadView = UIImageView(frame: CGRectMake(100, 100, 200, 151.5))
+</code></pre>
 <p>在<code>viewDidLoad()</code>方法中给<code>ipadView</code>指定图片：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ipadView.image = <span class="type">UIImage</span>(named: <span class="string">"ipad"</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+ipadView.image = UIImage(named: &quot;ipad&quot;)
+</code></pre>
 <p>然后在<code>viewDidAppear()</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.containerView, duration: <span class="number">1.5</span>, options: .<span class="type">TransitionFlipFromBottom</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.containerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+UIView.transitionWithView(self.containerView, duration: 1.5, options: .TransitionFlipFromBottom, animations: {
+    self.containerView.addSubview(self.ipadView)
+}, completion: nil)
+</code></pre>
 <p>上述代码就是我们今天的主角，过渡转变方法之一，它同样是<code>UIView</code>的类方法，共有五个参数：</p>
 <ul>
 <li><code>view</code>：第一个参数，也就是作用视图，一般都是容器视图。</li>
@@ -273,7 +282,12 @@
 <iframe src="https://player.vimeo.com/video/132628194?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
 
 <p>我们再来添加一个子视图（该子视图的初始化代码不再累赘）：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.containerView, duration: <span class="number">1.5</span>, options: .<span class="type">TransitionFlipFromBottom</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.containerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">    <span class="keyword">self</span>.containerView.addSubview(<span class="keyword">self</span>.iphoneView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+UIView.transitionWithView(self.containerView, duration: 1.5, options: .TransitionFlipFromBottom, animations: {
+    self.containerView.addSubview(self.ipadView)
+    self.containerView.addSubview(self.iphoneView)
+}, completion: nil)
+</code></pre>
 <p>编译运行看看效果：</p>
 <iframe src="https://player.vimeo.com/video/132628304?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
 
@@ -291,25 +305,106 @@
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/TransitionAnimation-2.png" alt="视图结构"></p>
 <p>从上图中可以看出，我们在屏幕上放置了四个容器视图，显而易见，我们要分别对这四个容器视图添加过渡转变动画。当然容器视图里要添加什么样的视图随个人喜好。</p>
 <p>在<code>viewDidLoad()</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.ipadContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromBottom</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.ipadContainerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.iphoneContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromLeft</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.iphoneContainerView.addSubview(<span class="keyword">self</span>.iphoneView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.webContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromRight</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.webContainerView.addSubview(<span class="keyword">self</span>.webView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(textContainerView, duration: <span class="number">2</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionCrossDissolve</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.textContainerView.addSubview(<span class="keyword">self</span>.textView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+UIView.transitionWithView(self.ipadContainerView, duration: 1.5, options: [.CurveEaseOut, .TransitionFlipFromBottom], animations: {
+    self.ipadContainerView.addSubview(self.ipadView)
+}, completion: nil)
+
+UIView.transitionWithView(self.iphoneContainerView, duration: 1.5, options: [.CurveEaseOut, .TransitionFlipFromLeft], animations: {
+    self.iphoneContainerView.addSubview(self.iphoneView)
+}, completion: nil)
+
+UIView.transitionWithView(self.webContainerView, duration: 1.5, options: [.CurveEaseOut, .TransitionFlipFromRight], animations: {
+    self.webContainerView.addSubview(self.webView)
+}, completion: nil)
+
+UIView.transitionWithView(textContainerView, duration: 2, options: [.CurveEaseOut, .TransitionCrossDissolve], animations: {
+    self.textContainerView.addSubview(self.textView)
+}, completion: nil)
+</code></pre>
 <p>通过上述代码可以看出，我们对四个容器视图分别添加了过渡转变动画，并且<code>options</code>参数使用了<code>.CurveEaseOut</code>和不同的过渡转变动画选项。编译运行看看效果：</p>
 <iframe src="https://player.vimeo.com/video/132628896?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
 
 <p>是不是有点儿意思！不过细心的朋友应该发现了，过渡转变动画的方法没有<code>delay</code>这个很有用的属性，这就导致过渡转变动画都是同时发生，不能设置延迟时间。不过我们可以曲线救国，自己写一个<code>delay</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">delay</span><span class="params">(seconds: Double, completion:<span class="params">()</span></span></span>-&gt;()) &#123;</span><br><span class="line">    <span class="keyword">let</span> popTime = dispatch_time(<span class="type">DISPATCH_TIME_NOW</span>, <span class="type">Int64</span>( <span class="type">Double</span>(<span class="type">NSEC_PER_SEC</span>) * seconds ))</span><br><span class="line">    dispatch_after(popTime, dispatch_get_main_queue()) &#123;</span><br><span class="line">        completion()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+func delay(seconds: Double, completion:()-&gt;()) {
+    let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64( Double(NSEC_PER_SEC) * seconds ))
+    dispatch_after(popTime, dispatch_get_main_queue()) {
+        completion()
+    }
+}
+</code></pre>
 <p>然后我们修改<code>viewDidLoad()</code>方法中的代码如下：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">delay(<span class="number">0</span>, completion: &#123;</span><br><span class="line">   <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.ipadContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromBottom</span>], animations: &#123;</span><br><span class="line">       <span class="keyword">self</span>.ipadContainerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">   &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">delay(<span class="number">1</span>, completion: &#123;</span><br><span class="line">    <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.iphoneContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromLeft</span>], animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.iphoneContainerView.addSubview(<span class="keyword">self</span>.iphoneView)</span><br><span class="line">    &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"> &#125;)</span><br><span class="line">        </span><br><span class="line">delay(<span class="number">2</span>, completion: &#123;</span><br><span class="line">    <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.webContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromRight</span>], animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.webContainerView.addSubview(<span class="keyword">self</span>.webView)</span><br><span class="line">     &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">delay(<span class="number">3</span>, completion: &#123;</span><br><span class="line">    <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.textContainerView, duration: <span class="number">2</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionCrossDissolve</span>], animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.textContainerView.addSubview(<span class="keyword">self</span>.textView)</span><br><span class="line">    &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+delay(0, completion: {
+   UIView.transitionWithView(self.ipadContainerView, duration: 1.5, options: [.CurveEaseOut, .TransitionFlipFromBottom], animations: {
+       self.ipadContainerView.addSubview(self.ipadView)
+   }, completion: nil)
+})
+
+delay(1, completion: {
+    UIView.transitionWithView(self.iphoneContainerView, duration: 1.5, options: [.CurveEaseOut, .TransitionFlipFromLeft], animations: {
+        self.iphoneContainerView.addSubview(self.iphoneView)
+    }, completion: nil)
+ })
+
+delay(2, completion: {
+    UIView.transitionWithView(self.webContainerView, duration: 1.5, options: [.CurveEaseOut, .TransitionFlipFromRight], animations: {
+        self.webContainerView.addSubview(self.webView)
+     }, completion: nil)
+})
+
+delay(3, completion: {
+    UIView.transitionWithView(self.textContainerView, duration: 2, options: [.CurveEaseOut, .TransitionCrossDissolve], animations: {
+        self.textContainerView.addSubview(self.textView)
+    }, completion: nil)
+ })
+</code></pre>
 <p>我们将每个过渡转变动画延迟1秒进行，编译运行看看效果：</p>
 <iframe src="https://player.vimeo.com/video/132629174?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
 
 <p>现在的效果是不是更好了呢！ : ]</p>
 <h2 id="u79FB_u9664_u89C6_u56FE"><a href="#u79FB_u9664_u89C6_u56FE" class="headerlink" title="移除视图"></a>移除视图</h2><p>过渡转变动画同样可以用来移除视图。我们在屏幕底部添加一个<code>UIButton</code>，当点击这个按钮的时候，通过过渡转变动画移除按钮上方的那两排字，并且改变屏幕背景色。<code>go()</code>方法是按钮连接在代码中的<strong>Touch Up Inside</strong>方法，在该方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.view.backgroundColor = <span class="type">UIColor</span>(red: <span class="number">252.0</span>/<span class="number">255.0</span>, green: <span class="number">155.0</span>/<span class="number">255.0</span>, blue: <span class="number">65.0</span>/<span class="number">255.0</span>, alpha: <span class="number">1</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+UIView.animateWithDuration(0.5, animations: {
+    self.view.backgroundColor = UIColor(red: 252.0/255.0, green: 155.0/255.0, blue: 65.0/255.0, alpha: 1)
+})
+</code></pre>
 <p> 编译运行看看效果：</p>
  <iframe src="https://player.vimeo.com/video/132629842?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
 
 <h2 id="u66FF_u6362_u89C6_u56FE"><a href="#u66FF_u6362_u89C6_u56FE" class="headerlink" title="替换视图"></a>替换视图</h2><p> 在这一节我们将要学习过渡转变动画的另一个方法，替换视图方法。我设计的场景是当点击<strong>Go</strong>按钮后，除了上一节中的动画效果以外，iPad、iPhone、Web视图也会移位并且替换为别的视图，我们继续在<code>go()</code>方法中的添加如下代码：</p>
- <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"> </span><br><span class="line"> <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">     <span class="keyword">self</span>.iphoneView.frame = <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">     <span class="keyword">self</span>.iphoneContainerView.frame = <span class="type">CGRectMake</span>(<span class="number">26</span>, <span class="number">130</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">  &#125;, completion: &#123;</span><br><span class="line">  		(flag: <span class="type">Bool</span>) <span class="keyword">in</span></span><br><span class="line">        		<span class="keyword">if</span> flag &#123;</span><br><span class="line">                		<span class="type">UIView</span>.transitionFromView(<span class="keyword">self</span>.iphoneContainerView, toView: <span class="keyword">self</span>.supportIphone, duration: <span class="number">0.33</span>, options: .<span class="type">TransitionCrossDissolve</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">               	&#125;</span><br><span class="line"> &#125;)</span><br><span class="line">        </span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">1</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.ipadView.frame = <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">    <span class="keyword">self</span>.ipadContainerView.frame = <span class="type">CGRectMake</span>(<span class="number">26</span>, <span class="number">242</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">  &#125;, completion: &#123;</span><br><span class="line">  		(flag: <span class="type">Bool</span>) <span class="keyword">in</span></span><br><span class="line">        		<span class="keyword">if</span> flag &#123;</span><br><span class="line">                		<span class="type">UIView</span>.transitionFromView(<span class="keyword">self</span>.ipadContainerView, toView: <span class="keyword">self</span>.supportIpad, duration: <span class="number">0.33</span>, options: .<span class="type">TransitionCrossDissolve</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">                &#125;</span><br><span class="line">&#125;)</span><br><span class="line">        </span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">2</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.webView.frame = <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">    <span class="keyword">self</span>.webContainerView.frame = <span class="type">CGRectMake</span>(<span class="number">26</span>, <span class="number">354</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">&#125;, completion: &#123;</span><br><span class="line">```swift```swift(flag: <span class="type">Bool</span>) <span class="keyword">in</span></span><br><span class="line">        		<span class="keyword">if</span> flag &#123;</span><br><span class="line">                		<span class="type">UIView</span>.transitionFromView(<span class="keyword">self</span>.webContainerView, toView: <span class="keyword">self</span>.supportWeb, duration: <span class="number">0.33</span>, options: .<span class="type">TransitionCrossDissolve</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">        		&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+ UIView.animateWithDuration(1, delay: 0, options: [], animations: {
+     self.iphoneView.frame = CGRectMake(0, 0, 334, 72)
+     self.iphoneContainerView.frame = CGRectMake(26, 130, 334, 72)
+  }, completion: {
+          (flag: Bool) in
+                if flag {
+                        UIView.transitionFromView(self.iphoneContainerView, toView: self.supportIphone, duration: 0.33, options: .TransitionCrossDissolve, completion: nil)
+                   }
+ })
+
+UIView.animateWithDuration(1, delay: 1, options: [], animations: {
+    self.ipadView.frame = CGRectMake(0, 0, 334, 72)
+    self.ipadContainerView.frame = CGRectMake(26, 242, 334, 72)
+  }, completion: {
+          (flag: Bool) in
+                if flag {
+                        UIView.transitionFromView(self.ipadContainerView, toView: self.supportIpad, duration: 0.33, options: .TransitionCrossDissolve, completion: nil)
+                }
+})
+
+UIView.animateWithDuration(1, delay: 2, options: [], animations: {
+    self.webView.frame = CGRectMake(0, 0, 334, 72)
+    self.webContainerView.frame = CGRectMake(26, 354, 334, 72)
+}, completion: {
+        (flag: Bool) in
+                if flag {
+                        UIView.transitionFromView(self.webContainerView, toView: self.supportWeb, duration: 0.33, options: .TransitionCrossDissolve, completion: nil)
+                }
+})
+</code></pre>
 <p> 我们来解释一下上述的代码，拿iPhone视图为例，首先通过动画属性动画改变它的尺寸大小和位置。然后在<code>completion</code>闭包中添加替换视图方法，该方法有五个参数：</p>
 <ul>
 <li><code>fromView</code>：被替换的视图。</li>
@@ -322,7 +417,12 @@
 <iframe src="https://player.vimeo.com/video/132631364?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
 
 <h2 id="u663E_u793A/_u9690_u85CF_u89C6_u56FE"><a href="#u663E_u793A/_u9690_u85CF_u89C6_u56FE" class="headerlink" title="显示/隐藏视图"></a>显示/隐藏视图</h2><p>过渡转变动画也可以用于显示或隐藏视图，这里给出伪代码供参考：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.someContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromBottom</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.someView.hidden = <span class="literal">true</span></span><br><span class="line">    <span class="comment">// self.someView.hidden = false</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="swift">
+UIView.transitionWithView(self.someContainerView, duration: 1.5, options: [.CurveEaseOut, .TransitionFlipFromBottom], animations: {
+    self.someView.hidden = true
+    // self.someView.hidden = false
+}, completion: nil)
+</code></pre>
 <h2 id="u7ED3_u675F_u8BED"><a href="#u7ED3_u675F_u8BED" class="headerlink" title="结束语"></a>结束语</h2><p>过渡转变动画有很多动画选项，大家可以自行试试，找出自己喜欢的或最合适的过渡转变动画选项，并且可以尝试过渡转变动画和属性动画的组合，可以使你们的App更加有趣。好了今天就到这里。</p>
 <p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
 </span>
