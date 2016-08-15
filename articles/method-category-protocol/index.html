@@ -465,12 +465,12 @@ int main(int argc, char * argv[])
 <li>根据约定，框架中后缀为Delegate的都是Protocol，例如<code>UIApplicationDelegate</code>，<code>UIWebViewDelegate</code>等。</li>
 <li>Protocol本身是可以继承的，比如：</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@protocol A&#10;    -(void)methodA;&#10;@end&#10;&#10;@protocol B &#60;A&#62;&#10;    -(void)methodB;&#10;@end</span><br></pre></td></tr></table></figure>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="variable">@protocol</span> A</span><br><span class="line">    <span class="function">-</span>(void)methodA;</span><br><span class="line"><span class="variable">@end</span></span><br><span class="line"></span><br><span class="line"><span class="variable">@protocol</span> B &lt;A&gt;</span><br><span class="line">    <span class="function">-</span>(void)methodB;</span><br><span class="line"><span class="variable">@end</span></span><br></pre></td></tr></table></figure>
 <p>如果你要实现B，那么methodA和methodB都需要实现。</p>
 <ul>
 <li>Protocol是与任何类都无关的，任何类都可以实现定义好的Protocol，如果我们想知道某个类是否实现了某个Protocol，那么我们可以用<code>conformsToProtocol</code>方法进行判断：</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[obj conformsToProtocol:@protocol(ProcessDataDelegate)]</span><br></pre></td></tr></table></figure>
+<figure class="highlight clojure"><table><tr><td class="code"><pre><span class="line"><span class="collection">[obj conformsToProtocol:@protocol<span class="list">(<span class="keyword">ProcessDataDelegate</span>)</span>]</span></span><br></pre></td></tr></table></figure>
 <h2 id="u603B_u7ED3-2"><a href="#u603B_u7ED3-2" class="headerlink" title="总结"></a>总结</h2><p>Protocol最常用的就是委托代理模式，Cocoa框架中大量采用了这种模式实现数据和UI的分离。例如UIView产生的所有事件，都是通过委托的方式交给Controller完成。</p>
 </span>
       
@@ -574,7 +574,7 @@ int main(int argc, char * argv[])
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">72</span>
+              <span class="site-state-item-count">73</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -588,7 +588,7 @@ int main(int argc, char * argv[])
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-count">34</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
