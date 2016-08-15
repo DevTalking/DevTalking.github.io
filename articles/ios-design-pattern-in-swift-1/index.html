@@ -267,75 +267,24 @@
 <p>在带你们深入了解第一个设计模式之前，你们需要创建两个类，用于存储和展示音乐专辑的数据。</p>
 <p>点击菜单 <strong>File\New\File…</strong> （或者按下 <strong>Command+N</strong> 快捷键）。选择 <strong>iOS &gt; Cocoa Touch Class</strong> ，点击 <strong>Next</strong>。设置该类的名称为 <strong>Album</strong> ，并让它继承 <strong>NSObject</strong>。最后选择语言为 <strong>Swift</strong> 然后点击 <strong>Next</strong>，最后点击 <strong>Create</strong>。</p>
 <p>打开<strong>Album.swift</strong>文件，在<strong>Album</strong>类中定义如下属性：</p>
-<pre><code class="swift">
-var title : String!
-var artist : String!
-var genre : String!
-var coverUrl : String!
-var year : String!
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> title : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> artist : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> genre : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> coverUrl : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> year : <span class="type">String</span>!</span><br></pre></td></tr></table></figure>
 <p>然后添加一个初始化方法：</p>
-<pre><code class="swift">
-init(title: String, artist: String, genre: String, coverUrl: String, year: String) {
-  super.init()
-
-  self.title = title
-  self.artist = artist
-  self.genre = genre
-  self.coverUrl = coverUrl
-  self.year = year
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">init</span>(title: <span class="type">String</span>, artist: <span class="type">String</span>, genre: <span class="type">String</span>, coverUrl: <span class="type">String</span>, year: <span class="type">String</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">self</span>.title = title</span><br><span class="line">  <span class="keyword">self</span>.artist = artist</span><br><span class="line">  <span class="keyword">self</span>.genre = genre</span><br><span class="line">  <span class="keyword">self</span>.coverUrl = coverUrl</span><br><span class="line">  <span class="keyword">self</span>.year = year</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这段代码为<strong>Album</strong>类创建了一个初始化方法，当你要创建一个新的专辑时你要通过这个初始化方法，传入专辑名称、演唱者、风格、专辑封面图片的URL以及年份这些属性。</p>
 <p>接下来需要再添加一个方法：</p>
-<pre><code class="swift">
-func description() -&gt; String {
-  return &quot;title: \(title)&quot; +
-   &quot;artist: \(artist)&quot; +
-   &quot;genre: \(genre)&quot; +
-   &quot;coverUrl: \(coverUrl)&quot; +
-   &quot;year: \(year)&quot;
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">description</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"title: <span class="subst">\(title)</span>"</span> +</span><br><span class="line">   <span class="string">"artist: <span class="subst">\(artist)</span>"</span> +</span><br><span class="line">   <span class="string">"genre: <span class="subst">\(genre)</span>"</span> +</span><br><span class="line">   <span class="string">"coverUrl: <span class="subst">\(coverUrl)</span>"</span> +</span><br><span class="line">   <span class="string">"year: <span class="subst">\(year)</span>"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>description()</code>方法将专辑的这些属性拼成一个字符串，并返回。</p>
 <p>我们再次通过刚才创建类的步骤创建一个名为<strong>AlibumView</strong>的类，注意该类要继承<strong>UIView</strong>。</p>
 <p>打开<strong>AlbumView.swift</strong>文件，在该类中添加两个属性：</p>
-<pre><code class="swift">
-private let coverImage: UIImageView! 
-private let indicator: UIActivityIndicatorView!
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> coverImage: <span class="type">UIImageView</span>! </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> indicator: <span class="type">UIActivityIndicatorView</span>!</span><br></pre></td></tr></table></figure>
 <p><code>coverImage</code>属性用来展示专辑封面，<code>indicator</code>是当正在下载封面图片时转动的菊花。</p>
 <p>大伙注意，这里的两个属性分配了<code>private</code>访问级别，也就是说这两个属性只能在<strong>AlbumView.swift</strong>文件中使用，因为其他的类压根没有必要知道这两个属性的存在。（译者：其实这里用不用private都无所谓，因为咱们写的又不是library或者framework。）</p>
 <p>接下来为<code>AlbumView</code>类添加初始化方法：</p>
-<pre><code class="swift">
-required init(coder aDecoder: NSCoder) {
-  super.init(coder: aDecoder)
-}
-
-init(frame: CGRect, albumCover: String) {
-  super.init(frame: frame)
-  backgroundColor = UIColor.blackColor()
-  coverImage = UIImageView(frame: CGRectMake(5, 5, frame.size.width - 10, frame.size.height - 10))
-  addSubview(coverImage)
-  indicator = UIActivityIndicatorView()
-  indicator.center = center
-  indicator.activityIndicatorViewStyle = .WhiteLarge
-  indicator.startAnimating()
-  addSubview(indicator)
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">required</span> <span class="keyword">init</span>(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>(coder: aDecoder)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">init</span>(frame: <span class="type">CGRect</span>, albumCover: <span class="type">String</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>(frame: frame)</span><br><span class="line">  backgroundColor = <span class="type">UIColor</span>.blackColor()</span><br><span class="line">  coverImage = <span class="type">UIImageView</span>(frame: <span class="type">CGRectMake</span>(<span class="number">5</span>, <span class="number">5</span>, frame.size.width - <span class="number">10</span>, frame.size.height - <span class="number">10</span>))</span><br><span class="line">  addSubview(coverImage)</span><br><span class="line">  indicator = <span class="type">UIActivityIndicatorView</span>()</span><br><span class="line">  indicator.center = center</span><br><span class="line">  indicator.activityIndicatorViewStyle = .<span class="type">WhiteLarge</span></span><br><span class="line">  indicator.startAnimating()</span><br><span class="line">  addSubview(indicator)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>由于<code>UIView</code>遵循了<code>NSCoding</code>，而<code>AlbumView</code>又继承了<code>UIView</code>，所以这里需要写一个<code>NSCoder</code>的初始化方法，但我们不会在这个方法中处理什么逻辑，所以调用<code>super.init</code>即可。</p>
 <p><code>AlbumView</code>真正的初始化方法是另外一个<code>init</code>方法，在这个方法中设置了一些默认的属性，比如将背景色设置为黑色、实例化了<code>coverImage</code>属性，并让它与父容器有5px的四周间距、实例化<code>indicator</code>并设置位置及风格。</p>
 <p>最后再添加一个方法：</p>
-<pre><code class="swift">
-func highlightAlbum(#didHighlightView: Bool) {
-  if didHighlightView == true {
-    backgroundColor = UIColor.whiteColor()
-  } else {
-    backgroundColor = UIColor.blackColor()
-  }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">highlightAlbum</span><span class="params">(#didHighlightView: Bool)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> didHighlightView == <span class="literal">true</span> &#123;</span><br><span class="line">    backgroundColor = <span class="type">UIColor</span>.whiteColor()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    backgroundColor = <span class="type">UIColor</span>.blackColor()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这个方法是专辑封面高亮开关，高亮时专辑封面背景色为白色，否则为黑色。</p>
 <p>现在编译你们的工程，确保一切都没有问题，然后准备开始第一个设计模式的学习。</p>
 <h2 id="u8BBE_u8BA1_u6A21_u5F0F_u7684_u738B_u8005_-_MVC_u6A21_u5F0F"><a href="#u8BBE_u8BA1_u6A21_u5F0F_u7684_u738B_u8005_-_MVC_u6A21_u5F0F" class="headerlink" title="设计模式的王者 - MVC模式"></a>设计模式的王者 - MVC模式</h2><p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-3.png" alt="pic"></p>
@@ -374,18 +323,7 @@ func highlightAlbum(#didHighlightView: Bool) {
 <p>你们将要通过Singleton设计模式，创建一个单例的类用于管理所有专辑的数据。</p>
 <p>你们应该注意到了，在项目的目录结构中，有一个文件组叫做API，这个文件组里存放的类基本都是为应用提供服务的类。我们在这个文件组中创建一个名为 <strong>LibraryAPI</strong> 的类。</p>
 <p>打开 <strong>LibraryAPI.swift</strong> 文件，添加如下代码：</p>
-<pre><code class="swift">
-//1
-class var sharedInstance: LibraryAPI {
-  //2
-  struct Singleton {
-    //3
-    static let instance = LibraryAPI()
-  }
-  //4
-  return Singleton.instance
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//1</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">var</span> <span class="title">sharedInstance</span>: <span class="title">LibraryAPI</span> </span>&#123;</span><br><span class="line">  <span class="comment">//2</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="comment">//3</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">let</span> instance = <span class="type">LibraryAPI</span>()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//4</span></span><br><span class="line">  <span class="keyword">return</span> <span class="type">Singleton</span>.instance</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ol>
 <li>创建一个类变量的计算属性。类变量类似Objective-C中的类方法，也就是说在任何时候你访问<code>sharedInstance</code>属性时，都不需要对<code>LibraryAPI</code>进行实例化，关于属性类型更多的知识请参阅Swift文档 – <a href="https://developer.apple.com/library/ios/documentation/swift/conceptual/swift_programming_language/Properties.html" target="_blank" rel="external">properties</a>。</li>
 <li>在类变量中内嵌一个结构体，名为<code>Singleton</code>。</li>
@@ -398,66 +336,13 @@ class var sharedInstance: LibraryAPI {
 <p>你们现在已经有一个单例模式的对象，作为管理专辑数据的入口。接下来要更进一步，创建一个类，用于处理你们数据的持久性。</p>
 <p>继续在 <strong>API</strong> 这个文件组中创建一个类，名为<code>PersistencyManager</code>，并让它继承<code>NSObject</code>类。</p>
 <p>打开 <strong>PersistencyManager.swift</strong> 文件，申明一个属性：</p>
-<pre><code class="swift">
-private var albums = [Album]()
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> albums = [<span class="type">Album</span>]()</span><br></pre></td></tr></table></figure>
 <p>这里申明了一个private访问权限的变量属性，用于储存专辑数据。这个数组是可变数组，所以你们可以很轻松的增删专辑。</p>
 <p>接下来我们在该类中添加如下初始化方法：</p>
-<pre><code class="swift">
-override init() {
-  //Dummy list of albums
-  let album1 = Album(title: &quot;Best of Bowie&quot;,
-         artist: &quot;David Bowie&quot;,
-         genre: &quot;Pop&quot;,
-         coverUrl: &quot;http://www.coversproject.com/static/thumbs/album/album_david%20bowie_best%20of%20bowie.png&quot;,
-         year: &quot;1992&quot;)
-
-  let album2 = Album(title: &quot;It&#39;s My Life&quot;,
-         artist: &quot;No Doubt&quot;,
-         genre: &quot;Pop&quot;,
-         coverUrl: &quot;http://www.coversproject.com/static/thumbs/album/album_no%20doubt_its%20my%20life%20%20bathwater.png&quot;,
-         year: &quot;2003&quot;)
-
-  let album3 = Album(title: &quot;Nothing Like The Sun&quot;,
-         artist: &quot;Sting&quot;,
-         genre: &quot;Pop&quot;,
-         coverUrl: &quot;http://www.coversproject.com/static/thumbs/album/album_sting_nothing%20like%20the%20sun.png&quot;,
-         year: &quot;1999&quot;)
-
-  let album4 = Album(title: &quot;Staring at the Sun&quot;,
-         artist: &quot;U2&quot;,
-         genre: &quot;Pop&quot;,
-         coverUrl: &quot;http://www.coversproject.com/static/thumbs/album/album_u2_staring%20at%20the%20sun.png&quot;,
-         year: &quot;2000&quot;)
-
-  let album5 = Album(title: &quot;American Pie&quot;,
-         artist: &quot;Madonna&quot;,
-         genre: &quot;Pop&quot;,
-         coverUrl: &quot;http://www.coversproject.com/static/thumbs/album/album_madonna_american%20pie.png&quot;,
-         year: &quot;2000&quot;)
-
-  albums = [album1, album2, album3, album4, album5]
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">  <span class="comment">//Dummy list of albums</span></span><br><span class="line">  <span class="keyword">let</span> album1 = <span class="type">Album</span>(title: <span class="string">"Best of Bowie"</span>,</span><br><span class="line">         artist: <span class="string">"David Bowie"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_david%20bowie_best%20of%20bowie.png"</span>,</span><br><span class="line">         year: <span class="string">"1992"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album2 = <span class="type">Album</span>(title: <span class="string">"It's My Life"</span>,</span><br><span class="line">         artist: <span class="string">"No Doubt"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_no%20doubt_its%20my%20life%20%20bathwater.png"</span>,</span><br><span class="line">         year: <span class="string">"2003"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album3 = <span class="type">Album</span>(title: <span class="string">"Nothing Like The Sun"</span>,</span><br><span class="line">         artist: <span class="string">"Sting"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_sting_nothing%20like%20the%20sun.png"</span>,</span><br><span class="line">         year: <span class="string">"1999"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album4 = <span class="type">Album</span>(title: <span class="string">"Staring at the Sun"</span>,</span><br><span class="line">         artist: <span class="string">"U2"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_u2_staring%20at%20the%20sun.png"</span>,</span><br><span class="line">         year: <span class="string">"2000"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album5 = <span class="type">Album</span>(title: <span class="string">"American Pie"</span>,</span><br><span class="line">         artist: <span class="string">"Madonna"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_madonna_american%20pie.png"</span>,</span><br><span class="line">         year: <span class="string">"2000"</span>)</span><br><span class="line"> </span><br><span class="line">  albums = [album1, album2, album3, album4, album5]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在初始化方法中，你们可以构建一些专辑添加到<code>albums</code>数组中，这里我构建了5个专辑。</p>
 <p>然后再添加几个方法：</p>
-<pre><code class="swift">
-func getAlbums() -&gt; [Album] {
-  return albums
-}
-
-func addAlbum(album: Album, index: Int) {
-  if (albums.count &gt;= index) { 
-    albums.insert(album, atIndex: index)
-  } else {
-    albums.append(album)
-  }
-}
-
-func deleteAlbumAtIndex(index: Int) {
-  albums.removeAtIndex(index)
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAlbums</span><span class="params">()</span></span> -&gt; [<span class="type">Album</span>] &#123;</span><br><span class="line">  <span class="keyword">return</span> albums</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">addAlbum</span><span class="params">(album: Album, index: Int)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (albums.<span class="built_in">count</span> &gt;= index) &#123; </span><br><span class="line">    albums.insert(album, atIndex: index)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    albums.append(album)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">deleteAlbumAtIndex</span><span class="params">(index: Int)</span></span> &#123;</span><br><span class="line">  albums.removeAtIndex(index)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这些方法可以让你们方便的存、取、删除<code>album</code>数组中的专辑。</p>
 <p>然后编译你们的项目，确保编译通过。此时大伙也许又有了疑问，我们应该如何使用<code>PersistencyManager</code>类呢？别着急，在下一节里，会向大家介绍 <strong>Facade</strong> 设计模式，届时你们就会明白<code>LibraryAPI</code>与<code>PersistencyManager</code>之间的关系，以及如何使用<code>PersistencyManager</code>了。</p>
 <p>未完待续……</p>

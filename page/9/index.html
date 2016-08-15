@@ -422,153 +422,27 @@
             
               <p>通常情况下，我们在使用数组（Array）或字典（Dictionary）时会使用到下标。其实在Swift中，我们还可以给类（class）自定义下标，下面就让我们来看看Swift中是如何自定义下标的。</p>
 <h2 id="u901A_u8FC7Subscript_u8D4B_u503C_u548C_u83B7_u53D6_u503C"><a href="#u901A_u8FC7Subscript_u8D4B_u503C_u548C_u83B7_u53D6_u503C" class="headerlink" title="通过Subscript赋值和获取值"></a>通过Subscript赋值和获取值</h2><p>我们先看看下面这个类：</p>
-<pre><code class="swift">
-class DailyMeal
-{
-    enum MealTime
-    {
-        case Breakfast
-        case Lunch
-        case Dinner
-    }
-
-    var meals: [MealTime : String] = [:]
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DailyMeal</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">MealTime</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Breakfast</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Lunch</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Dinner</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> meals: [<span class="type">MealTime</span> : <span class="type">String</span>] = [:]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们使用该类时可以直接用<code>meals</code>字典，以枚举作为key来查询，像这样：</p>
-<pre><code class="swift">
-var monday = DailyMeal()
-
-monday.meals[.Breakfast] = &quot;Toast&quot;
-
-if let someMeal = monday.meals[.Breakfast]
-{
-    println(someMeal)
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday.meals[.<span class="type">Breakfast</span>] = <span class="string">"Toast"</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> someMeal = monday.meals[.<span class="type">Breakfast</span>]</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">println</span>(someMeal)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>到目前呢，我们创建了<code>DailyMeal</code>类的实例变量<code>monday</code>，并可以使用<code>DailyMeal</code>类中的<code>meals</code>字典进行查询。但是大家有没有感觉<code>monday.meals[]</code>这种写法很累赘呢？至少我看<code>meals</code>就很不顺眼，有没有更简单快捷的方法让我们直接使用<code>monday</code>变量就能赋值或获取<code>Breakfast</code>的值呢？别着急，今天的主角要登场了，让我们先在<code>DailyMeal</code>类中添加如下代码：</p>
-<pre><code class="swift">
-subscript(requestedMeal : MealTime) -&gt; String?
-{
-    get
-    {
-        return meals[requestedMeal]
-    }
-    set(newMealName)
-    {
-        meals[requestedMeal] = newMealName
-    }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span>?</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">get</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> meals[requestedMeal]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">set</span>(newMealName)</span><br><span class="line">    &#123;</span><br><span class="line">        meals[requestedMeal] = newMealName</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面的代码就是一个自定义下标，看起来是不是有点像计算类属性的<code>getter</code>、<code>setter</code>方法的写法呢？但是它们还是有区别的，首先下标使用<code>subscript</code>关键字，然后跟一个圆括号，里面是该下标的参数和参数类型（在实际使用中该参数就相当于数组的index和字典的key一样），最后有该下标的返回值类型。</p>
 <p>从上面代码可以看到，在下标的<code>getter</code>和<code>setter</code>方法中，其实还是在对<code>meals</code>数组进行操作，但是我们通过下标就可以将对<code>meals</code>数组的操作屏蔽掉。现在来看看我们应该怎样使用：</p>
-<pre><code class="swift">
-var monday = DailyMeal()
-
-monday[.Breakfast] = &quot;Toast&quot;
-
-if let someMeal = monday[.Breakfast]
-{
-    println(someMeal) // Toast
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday[.<span class="type">Breakfast</span>] = <span class="string">"Toast"</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> someMeal = monday[.<span class="type">Breakfast</span>]</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">println</span>(someMeal) <span class="comment">// Toast</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>现在是不是已经没有碍眼的<code>meals</code>了呢，使用起来更加简洁，语义也更加明确了呢，这就是下标最简单的一个用法。</p>
 <p>如果上面的代码中我们不给<code>monday[.Breakfast]</code>赋值，直接输出值会得到什么结果呢？细心的同学可能会注意到，在定义下标时它的返回值是Optional类型的，所以不赋值直接输出的结果是<code>nil</code>，这样就显得太没礼貌了，所以我们再来改造一下下标的代码：</p>
-<pre><code class="swift">
-subscript(requestedMeal : MealTime) -&gt; String
-{
-    get
-    {
-        if let thisMeal = meals[requestedMeal]
-        {
-            return thisMeal
-        }
-        else
-        {
-            return &quot;Ramen&quot;
-        }
-    }
-    set(newMealName)
-    {
-        meals[requestedMeal] = newMealName
-    }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">get</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> thisMeal = meals[requestedMeal]</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> thisMeal</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Ramen"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">set</span>(newMealName)</span><br><span class="line">    &#123;</span><br><span class="line">        meals[requestedMeal] = newMealName</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们看到下标的返回值从<code>String?</code>改为了<code>String</code>，那么相应的我们要在<code>getter</code>方法中对<code>meals[requestedMeal]</code>的值进行判断，如果没有赋值的话，我们将返回一个默认值<code>Ramen</code>（兰州拉面让人欲罢不能）。现在我们就可以这样用啦：</p>
-<pre><code class="swift">
-var monday = DailyMeal()
-
-monday[.Lunch] = &quot;Pizza&quot;
-
-println(monday[.Lunch])         //Output:  &quot;Pizza&quot;
-
-println(monday[.Dinner])        //Output:  &quot;Ramen&quot;
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday[.<span class="type">Lunch</span>] = <span class="string">"Pizza"</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(monday[.<span class="type">Lunch</span>])         <span class="comment">//Output:  "Pizza"</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(monday[.<span class="type">Dinner</span>])        <span class="comment">//Output:  "Ramen"</span></span><br></pre></td></tr></table></figure>
 <p>现在使用<code>DailyMeal</code>类是不是感觉到很简介，语义很明确也很健壮呢，答案是肯定的。我们通过下标避免向用户暴露不必要的API，同时也达到了高维护性的目的。</p>
 <p><code>DailyMeal</code>类的完整代码如下：</p>
-<pre><code class="swift">
-class DailyMeal
-{
-    enum MealTime
-    {
-        case Breakfast
-        case Lunch
-        case Dinner
-    }
-
-    var meals: [MealTime : String] = [:]    
-
-    subscript(requestedMeal : MealTime) -&gt; String
-    {
-        get
-        {
-            if let thisMeal = meals[requestedMeal]
-            {
-                return thisMeal
-            }
-            else
-            {
-                return &quot;Ramen&quot;
-            }
-        }
-        set(newMealName)
-        {
-            meals[requestedMeal] = newMealName
-        }
-    }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DailyMeal</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">MealTime</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Breakfast</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Lunch</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Dinner</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">var</span> meals: [<span class="type">MealTime</span> : <span class="type">String</span>] = [:]    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> thisMeal = meals[requestedMeal]</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> thisMeal</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">"Ramen"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">set</span>(newMealName)</span><br><span class="line">        &#123;</span><br><span class="line">            meals[requestedMeal] = newMealName</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="u53EA_u8BFB_u4E0B_u6807"><a href="#u53EA_u8BFB_u4E0B_u6807" class="headerlink" title="只读下标"></a>只读下标</h2><p>何为只读下标，顾名思义就是不能通过下标赋值，只能通过下标查询。这种下标的应用场景一般是实现一些数据公式、数据函数，它们一般都是只需要你指定一个数字，然后返回该公式对该数字的计算结果。下面我们用一个阶乘的例子来说明只读下标：</p>
-<pre><code class="swift">
-struct FactorialGenerator
-{
-    subscript(n: Int) -&gt; Int
-    {
-        var result = 1
-
-        if n &gt; 0
-        {
-            for value in 1...n
-            {
-                result *= value
-            }
-        }
-
-        return result
-    }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">FactorialGenerator</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">subscript</span>(n: <span class="type">Int</span>) -&gt; <span class="type">Int</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> result = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> n &gt; <span class="number">0</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span> value <span class="keyword">in</span> <span class="number">1</span>...n</span><br><span class="line">            &#123;</span><br><span class="line">                result *= value</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>同学们可能已经注意到了，上面的下标并没有<code>getter</code>和<code>setter</code>方法。这是因为，如果你想定义一个只读的下标，那么可以不实现<code>setter</code>方法，并且可以省略<code>getter</code>方法的<code>get</code>关键字。Swfit的编译器会判断出这是一个只读的下标，如果你强行通过下标赋值，那么编译器会报错。</p>
 <p>让我们来使用以下这个阶乘结构体：</p>
-<pre><code class="swift">
-let factorial = FactorialGenerator()
-
-println(&quot;Five factorial is equal to \(factorial[5]).&quot;)
-//Output:  &quot;Five factorial is equal to 120.&quot;
-
-println(&quot;Ten Factorial is equal to \(factorial[10]).&quot;)
-//Output:  &quot;Ten Factorial is equal to 3628800.&quot;
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> factorial = <span class="type">FactorialGenerator</span>()</span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(<span class="string">"Five factorial is equal to <span class="subst">\(factorial[<span class="number">5</span>])</span>."</span>)</span><br><span class="line"><span class="comment">//Output:  "Five factorial is equal to 120."</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(<span class="string">"Ten Factorial is equal to <span class="subst">\(factorial[<span class="number">10</span>])</span>."</span>)</span><br><span class="line"><span class="comment">//Output:  "Ten Factorial is equal to 3628800."</span></span><br></pre></td></tr></table></figure>
 <p>当然上面这个示例只是展示了只读下标的语法和应用场景，阶乘的实现逻辑在这就不累赘了。总的来说，我们可以通过下标简化暴露给用户的API，你可以在用户毫不知情的情况下更改某个API的功能。不仅使代码更易读，同时也大大提高了代码的可维护性，是不是很酷呢！</p>
 <p>参考原文：<a href="http://www.codingexplorer.com/custom-subscripts-swift/?utm_source=feedly&amp;utm_reader=feedly&amp;utm_medium=rss&amp;utm_campaign=custom-subscripts-swift" target="_blank" rel="external">Custom Subscripts in Swift</a></p>
 
@@ -668,54 +542,29 @@ println(&quot;Ten Factorial is equal to \(factorial[10]).&quot;)
 <p>今天，我们要讨论的是第三种形式，尤其讨论它是如何将繁复的、可读性比较差的业务逻辑代码压缩成高可读性、简明明了的形式。</p>
 <p>大家还记得数组的<code>map</code>方法么？它的参数就是一个闭包，它会将数组里的每一个元素放在闭包中进行处理，然后返回一个新的数组，甚至是与原数组不同元素类型的新数组。</p>
 <p><code>map</code>函数的原型如下：</p>
-<pre><code class="swift">
-func map&lt;U&gt;(transform: (T) -&gt; U) -&gt; [U]
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">map</span><span class="generics">&lt;U&gt;</span><span class="params">(transform: <span class="params">(T)</span></span></span> -&gt; <span class="type">U</span>) -&gt; [<span class="type">U</span>]</span><br></pre></td></tr></table></figure>
 <p>我们可以看到该函数使用了泛型。<code>(T) -&gt; U</code>是一个泛型闭包，它的意思就是类型<code>T</code>将会在闭包中进行逻辑处理，然后返回<code>U</code>类型。最后<code>map</code>函数会返回一个<code>U</code>类型的数组。</p>
 <p>用一个例子来说明。今天我办生日聚会，要迎接很多人，并且为每个人都准备了一句欢迎词。我们要怎么做呢？首先我们将迎接的人放进一个数组名叫<code>guestList</code>，然后用一个名叫<code>greetPeople</code>的函数为每个人生成欢迎词：</p>
-<pre><code class="swift">
-func greetPeople(person: String) -&gt; String
-{
-    return &quot;Hello, \(person)!&quot;
-}
-
-
-let guestList = [&quot;Chris&quot;, &quot;Jill&quot;, &quot;Tim&quot;]
-let fullGreetings = guestList.map(greetPeople)
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">greetPeople</span><span class="params">(person: String)</span></span> -&gt; <span class="type">String</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> guestList = [<span class="string">"Chris"</span>, <span class="string">"Jill"</span>, <span class="string">"Tim"</span>]</span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(greetPeople)</span><br></pre></td></tr></table></figure>
 <p>然后将<code>greetPeople</code>函数作为<code>guestList</code>数组的<code>map</code>函数的参数传入，并返回一个新的数组<code>fullGreetings</code>，这个数组就包含了每个人的欢迎词。</p>
 <p>如果我们想展示一下每个人的欢迎词，我们甚至可以这样写：</p>
-<pre><code class="swift">
-fullGreetings.map(println)
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">fullGreetings.<span class="built_in">map</span>(<span class="built_in">println</span>)</span><br></pre></td></tr></table></figure>
 <p>这时也许有人要质疑了，<code>println</code>函数不是没有返回值么？那么<code>map</code>函数会返回什么呢？其实每一个没有返回值的函数，都会返回一个空的元组（<code>tuple</code>），所以说上述代码的返回值其实是<code>Array&lt;()&gt;</code>。</p>
 <p>上面的例子中我们就是将一个全局函数<code>greetPeople</code>作为一个闭包来使用的。</p>
 <h2 id="u7B80_u660E_u627C_u8981_u7684_u95ED_u5305_u8868_u8FBE_u5F0F"><a href="#u7B80_u660E_u627C_u8981_u7684_u95ED_u5305_u8868_u8FBE_u5F0F" class="headerlink" title="简明扼要的闭包表达式"></a>简明扼要的闭包表达式</h2><p>其实Swift已经为我们提供了很多简化的语法，可以让我们保证代码的高可读性和维护性。还用上面的例子来说明，对于<code>greetPeople</code>这个全局函数来说，其实只需要使用一次，所以我们没必要单独定义这个函数。我们可以直接使用闭包表达式来处理：</p>
-<pre><code class="swift">
-let fullGreetings = guestList.map({(person: String) -&gt; String in return &quot;Hello, \(person)!&quot;})
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123;(person: <span class="type">String</span>) -&gt; <span class="type">String</span> <span class="keyword">in</span> <span class="keyword">return</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span>&#125;)</span><br></pre></td></tr></table></figure>
 <p>闭包表达式其实是函数的字面值，官方一般称之为匿名函数。一般当我们需要使用函数快速的实现一个简短的处理逻辑并且只使用一次的时候，我们可以省去函数名，使用简化的语法。上面的代码中可以看到关键字<code>in</code>之前是闭包表达式的参数和返回值，<code>in</code>之后是闭包表达式实际处理逻辑的代码区域。</p>
 <p>下面我们将使用Swift更多的特性来进一步简化闭包表达式。</p>
 <p>我们知道Swift中有类型推断的特性，所以我们可以取掉参数类型：</p>
-<pre><code class="swift">
-let fullGreetings = guestList.map({(person) -&gt; String in return &quot;Hello, \(person)!&quot; })
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123;(person) -&gt; <span class="type">String</span> <span class="keyword">in</span> <span class="keyword">return</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span> &#125;)</span><br></pre></td></tr></table></figure>
 <p>像我们示例中的这种单一闭包表达式，编译器可以根据<code>in</code>之前的返回值类型和<code>return</code>之后的返回数据类型自动判断，所以我们可以省略返回值和<code>return</code>关键字：</p>
-<pre><code class="swift">
-let fullGreetings = guestList.map({person in &quot;Hello, \(person)!&quot; })
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123;person <span class="keyword">in</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span> &#125;)</span><br></pre></td></tr></table></figure>
 <p>其实在Swift中还提供了参数的简写方式：<code>$0</code>代表第一个参数、<code>$1</code>代表第二个参数以此类推。所以我们又可以将参数名称省略：</p>
-<pre><code class="swift">
-let fullGreetings = guestList.map({ &quot;Hello, \($0)!&quot; })
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123; <span class="string">"Hello, <span class="subst">\($<span class="number">0</span>)</span>!"</span> &#125;)</span><br></pre></td></tr></table></figure>
 <p>当函数的最后一个参数是闭包时，可以将闭包写在<code>()</code>之外，这也是Swift的一个特性，所以我们还可以继续简化：</p>
-<pre><code class="swift">
-let fullGreetings = guestList.map(){ &quot;Hello, \($0)!&quot; }
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>()&#123; <span class="string">"Hello, <span class="subst">\($<span class="number">0</span>)</span>!"</span> &#125;</span><br></pre></td></tr></table></figure>
 <p>当函数有且仅有一个参数，并该参数是闭包时，不但可以将闭包写在<code>()</code>外，还可以省略<code>()</code>：</p>
-<pre><code class="swift">
-let fullGreetings = guestList.map{ &quot;Hello, \($0)!&quot; }
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>&#123; <span class="string">"Hello, <span class="subst">\($<span class="number">0</span>)</span>!"</span> &#125;</span><br></pre></td></tr></table></figure>
 <p>到目前为止，示例中的闭包表达式已经被我们根据Swift的特性，简化为简明扼要、高可读性的闭包表达式了，是不是很酷呢！</p>
 <p>参考原文：<a href="http://www.codingexplorer.com/closure-expressions-swift/?utm_source=feedly&amp;utm_reader=feedly&amp;utm_medium=rss&amp;utm_campaign=closure-expressions-swift" target="_blank" rel="external">Closure Expressions in Swift</a></p>
 
@@ -803,90 +652,26 @@ let fullGreetings = guestList.map{ &quot;Hello, \($0)!&quot; }
               <p>这篇文章将带我们探索在Swift中如何使用<code>Optional</code>类型保证强类型的安全性。我们将创建一个Swift版本的Objective-C的API。虽然在Swift中这个API存在的意义不是很大，但是这将会是一个很有趣的例子。</p>
 <p>在Objective-C中，<code>NSDictionary</code>类有一个方法，名为<code>-objectsForKeys:notFoundMarker:</code>，它的作用是根据第一个<code>NSArray</code>类型参数中的值作为该字典的key，查找这些key对应的字典中的值，并放到一个新的<code>NSArray</code>中返回，如果找不到对应的值，那么就返回第二个参数指定的对象。在官方文档中对该方法有这么一句描述“返回的数组中的第N个对象，对应着第一个数组参数中的第N个值”。假如说以第一个数组参数中的第三个值作为key在字典中查不到值怎么办呢？这时候就需要<code>notFoundMarker</code>参数登场了。这种情况下就会返回<code>notFoundMarker</code>参数指定的对象了。在<code>Foundation</code>框架中还有专门针对该情况适用的一个类，那就是<code>NSNull</code>，就是当你也没有备选返回对象的时候，就可以返回<code>NSNull</code>对象。</p>
 <p>在Swift中，<code>Dictionary</code>类型并没有类似<code>objectsForKeys</code>的方法。所以接下来的练习中，我们将使用类型的扩展机制为<code>Dictionary</code>类型添加一个类似<code>objectsForKeys</code>的方法，为保持Swift的风格我们起名为<code>valuesForKeys:notFoundMarker:</code>。</p>
-<pre><code class="swift">
-extension Dictionary {
-    func valuesForKeys(keys: [K], notFoundMarker: V) -&gt; [V] {
-        // To be implemented
-    }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">	<span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [K], notFoundMarker: V)</span></span> -&gt; [<span class="type">V</span>] &#123;</span><br><span class="line">		<span class="comment">// To be implemented</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在Swift中实现该方法与Objective-C有点不同，因为Swift中强类型的特性使返回的数组中只能包含某一种类型的元素，也就是说我们不能在一个字符串数组中添加一个<code>NSNull</code>类型的元素，这就使<code>notFoundMarker</code>的参数类型显得非常尴尬。这怎么解决呢？别着急，在Swift中我们有更好的选择：我们可以返回一个<code>Optional</code>类型的数组。从<code>Dictionary</code>中查出的值全部被包在<code>Optional</code>类型中，这样当使用的key没有对应值的时候，我们就可以使用<code>nil</code>来替代<code>NSNull</code>类型了。</p>
-<pre><code class="swift">
-extension Dictionary {
-    func valuesForKeys(keys: [Key]) -&gt; [Value?] {
-        var result = [Value?]()
-        result.reserveCapacity(keys.count)
-        for key in keys {
-            result.append(self[key])
-        }
-        return result
-    }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">	<span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key])</span></span> -&gt; [<span class="type">Value</span>?] &#123;</span><br><span class="line">		<span class="keyword">var</span> result = [<span class="type">Value</span>?]()</span><br><span class="line">		result.reserveCapacity(keys.<span class="built_in">count</span>)</span><br><span class="line">		<span class="keyword">for</span> key <span class="keyword">in</span> keys &#123;</span><br><span class="line">			result.append(<span class="keyword">self</span>[key])</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> result</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>注意：此时可能已经有人认为<code>Dictionary</code>类型中的这个方法可能没必要写的这么繁琐，你们可能已经想到了这种情形：</p>
-<pre><code class="swift">
-extension Dictionary {
-    func valuesForKeys(keys: [Key]) -&gt; [Value?] {
-        return keys.map { self[$0] }
-    }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">	<span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key])</span></span> -&gt; [<span class="type">Value</span>?] &#123;</span><br><span class="line">		<span class="keyword">return</span> keys.<span class="built_in">map</span> &#123; <span class="keyword">self</span>[$<span class="number">0</span>] &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这段代码和上面那段代码的作用和结果是完全一样的，当<code>keys</code>调用<code>map</code>方法时，其实已经将查出的所有值都包在了<code>Optional</code>类型中了。这就足以说明了为什么Swift中类型的API都那么短小精干，因为实现复杂逻辑就像上述代码中直接调用<code>map</code>方法一样简单。</p>
 <p>现在我们可以试着用我们扩展的方法做一些例子：</p>
-<pre><code class="swift">
-let dict = [&quot;A&quot;: &quot;Amir&quot;, &quot;B&quot;: &quot;Bertha&quot;, &quot;C&quot;: &quot;Ching&quot;]
-
-dict.valuesForKeys([&quot;A&quot;, &quot;C&quot;])
-// [Optional(&quot;Amir&quot;), Optional(&quot;Ching&quot;)]
-
-dict.valuesForKeys([&quot;B&quot;, &quot;D&quot;])
-// [Optional(&quot;Bertha&quot;), nil]
-
-dict.valuesForKeys([])
-// []
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> dict = [<span class="string">"A"</span>: <span class="string">"Amir"</span>, <span class="string">"B"</span>: <span class="string">"Bertha"</span>, <span class="string">"C"</span>: <span class="string">"Ching"</span>]</span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"A"</span>, <span class="string">"C"</span>])</span><br><span class="line"><span class="comment">// [Optional("Amir"), Optional("Ching")]</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>])</span><br><span class="line"><span class="comment">// [Optional("Bertha"), nil]</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([])</span><br><span class="line"><span class="comment">// []</span></span><br></pre></td></tr></table></figure>
 <h2 id="u5185_u5D4COptional_u7C7B_u578B"><a href="#u5185_u5D4COptional_u7C7B_u578B" class="headerlink" title="内嵌Optional类型"></a>内嵌Optional类型</h2><p>现在我们来看看使用<code>last</code>属性返回数组的最后一个元素会发生什么？</p>
-<pre><code class="swift">
-dict.valuesForKeys([&quot;A&quot;, &quot;C&quot;]).last
-// Optional(Optional(&quot;Ching&quot;))
-
-dict.valuesForKeys([&quot;B&quot;, &quot;D&quot;]).last
-// Optional(nil)
-
-dict.valuesForKeys([]).last
-// nil
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"A"</span>, <span class="string">"C"</span>]).last</span><br><span class="line"><span class="comment">// Optional(Optional("Ching"))</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>]).last</span><br><span class="line"><span class="comment">// Optional(nil)</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([]).last</span><br><span class="line"><span class="comment">// nil</span></span><br></pre></td></tr></table></figure>
 <p>看着结果我们是不是觉得很奇怪呢？我们在上述代码的第一种情况下得到了嵌套的<code>Optional</code>类型，而在第二种情况下缺得到了包含<code>nil</code>的<code>Optional</code>类型，为什么得到的不是<code>Optional(&quot;Ching&quot;)</code>和<code>nil</code>呢？</p>
 <p>冷静下来，我们回忆一下<code>last</code>属性的是如何申明的：</p>
-<pre><code class="swift">
-var last: T? { get }
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> last: <span class="type">T</span>? &#123; <span class="keyword">get</span> &#125;</span><br></pre></td></tr></table></figure>
 <p>恍然大悟，原来<code>last</code>属性的类型是<code>Optional</code>类型，这也就是说如果<code>T</code>是<code>Optional</code>类型的话，那么<code>T?</code>自然就是<code>Optional(Optional)</code>了，也就是<code>T??</code>。所以上面的情况就很容易解释了，因为<code>T</code>的类型是<code>Optional(String)</code>，所以我们得到的结果就是<code>Optional(Optional(String))</code>。</p>
 <p>那么<code>Optional(nil)</code>这种情况如何解释呢？为什么不是<code>Optional(Optional(nil))</code>呢？</p>
 <p>我们现在Objective-C中执行一下上面那三种情况看一看：</p>
-<pre><code class="swift">
-[dict valuesForKeys:@[@&quot;A&quot;, @&quot;C&quot;] notFoundMarker:[NSNull null]].lastObject
-// @&quot;Ching&quot;
-
-[dict valuesForKeys:@[@&quot;B&quot;, @&quot;D&quot;] notFoundMarker:[NSNull null]].lastObject
-// NSNull
-
-[dict valuesForKeys:@[] notFoundMarker:[NSNull null]].lastObject
-// nil
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[dict valuesForKeys:@[@<span class="string">"A"</span>, @<span class="string">"C"</span>] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// @"Ching"</span></span><br><span class="line"></span><br><span class="line">[dict valuesForKeys:@[@<span class="string">"B"</span>, @<span class="string">"D"</span>] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// NSNull</span></span><br><span class="line"></span><br><span class="line">[dict valuesForKeys:@[] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// nil</span></span><br></pre></td></tr></table></figure>
 <p>我们看到，不论在Swift中还是在Objective-C中，当第一个参数的数组是空数组的时候，取最后一个元素的返回结果都是<code>nil</code>，意思就是“数组是空数组，那么最后一个元素肯定不存在啦”。那么在Swift中返回<code>Optional(nil)</code>和在Objective-C中返回<code>NSNull</code>的情况表明这个所谓的最后一个元素在数组中其实是存在的，只不过它就代表没有。当这种情况发生时，Objective-C只能用一个占位符对象来表示，而在Swift中就可以用一个系统类型来表示。</p>
 <h2 id="u63D0_u4F9B_u9ED8_u8BA4_u503C"><a href="#u63D0_u4F9B_u9ED8_u8BA4_u503C" class="headerlink" title="提供默认值"></a>提供默认值</h2><p>如果我们想当在<code>Dictionary</code>中查不到对应值的时候返回一个我们指定的默认值要怎么做呢？其实这也很简单：</p>
-<pre><code class="swift">
-extension Dictionary {
-    func valuesForKeys(keys: [Key], notFoundMarker: Value) -&gt; [Value] {
-        return self.valuesForKeys(keys).map { $0 ?? notFoundMarker }
-    }
-}
-
-
-dict.valuesForKeys([&quot;B&quot;, &quot;D&quot;], notFoundMarker: &quot;Anonymous&quot;)
-// [&quot;Bertha&quot;, &quot;Anonymous&quot;]
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">	<span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key], notFoundMarker: Value)</span></span> -&gt; [<span class="type">Value</span>] &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">self</span>.valuesForKeys(keys).<span class="built_in">map</span> &#123; $<span class="number">0</span> ?? notFoundMarker &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>], notFoundMarker: <span class="string">"Anonymous"</span>)</span><br><span class="line"><span class="comment">// ["Bertha", "Anonymous"]</span></span><br></pre></td></tr></table></figure>
 <p>当Objective-C只能用占位符对象来做到这一点的时候，Swift却可以使用系统类型来呈现，并且提供了丰富的语法支持多样化的返回结果。</p>
 <p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=12" target="_blank" rel="external">Optionals Case Study: valuesForKeys</a></p>
 

@@ -284,11 +284,11 @@ $(go.Part, &quot;Vertical&quot;,
 $(go.Part, &quot;Horizontal&quot;,
   $(go.Panel, &quot;Vertical&quot;,
     { width: 150, defaultStretch: go.GraphObject.Horizontal },
-    $(go.TextBlock, { text: &quot;textAlign: &#39;left&#39;&quot;, background: &quot;lightgreen&quot;, margin: 2,
+    $(go.TextBlock, { text: &quot;textAlign: &apos;left&apos;&quot;, background: &quot;lightgreen&quot;, margin: 2,
                       textAlign: &quot;left&quot; }),
-    $(go.TextBlock, { text: &quot;textAlign: &#39;center&#39;&quot;, background: &quot;lightgreen&quot;, margin: 2,
+    $(go.TextBlock, { text: &quot;textAlign: &apos;center&apos;&quot;, background: &quot;lightgreen&quot;, margin: 2,
                       textAlign: &quot;center&quot; }),
-    $(go.TextBlock, { text: &quot;textAlign: &#39;right&#39;&quot;, background: &quot;lightgreen&quot;, margin: 2,
+    $(go.TextBlock, { text: &quot;textAlign: &apos;right&apos;&quot;, background: &quot;lightgreen&quot;, margin: 2,
                       textAlign: &quot;right&quot; })
   ),
   $(go.Panel, &quot;Vertical&quot;,
@@ -484,7 +484,7 @@ $(go.Diagram, &quot;myDiagramDiv&quot;,  // must name or refer to the DIV HTML e
     // any initial diagram is centered in the viewport
     initialContentAlignment: go.Spot.Center,
 
-    // don&#39;t initialize some properties until after a new model has been loaded
+    // don&apos;t initialize some properties until after a new model has been loaded
     &quot;InitialLayoutCompleted&quot;: loadDiagramProperties,  // this DiagramEvent listener is defined below
 
     // have mouse wheel events zoom in and out instead of scroll up and down
@@ -659,7 +659,7 @@ diagram.undoManager.isEnabled = true;
 <li>选中<code>Link</code>，可以重新选择目标<code>Node</code>，即可以重新连线。</li>
 </ul>
 <h2 id="u521B_u5EFA_u4E00_u4E2ADiagram"><a href="#u521B_u5EFA_u4E00_u4E2ADiagram" class="headerlink" title="创建一个Diagram"></a>创建一个Diagram</h2><p>每个<code>Diagram</code>都需要依托与一个HTML的<code>DIV</code>元素，虽然由gojs接管了这个<code>DIV</code>，但是<code>DIV</code>本身的属性依然可以由我们通过CSS设置，比如位置、高宽等。gojs实际上是在<code>DIV</code>中创建了一个<code>Canvas</code>元素，<code>Canvas</code>的高宽自动适配<code>DIV</code>的高宽。</p>
-<pre><code>&lt;!-- The DIV for a Diagram needs an explicit size or else we won&#39;t see anything.
+<pre><code>&lt;!-- The DIV for a Diagram needs an explicit size or else we won&apos;t see anything.
  In this case we also add a border to help see the edges. --&gt;
 &lt;div id=&quot;myDiagramDiv&quot; style=&quot;border: solid 1px blue; width:400px; height:150px&quot;&gt;&lt;/div&gt;
 </code></pre><p>当然，当你准备开始创建<code>Diagram</code>前，首先要导入gojs的文件。gojs的文件分为Develop（<code>gojs-debug.js</code>）和Product（<code>gojs.js</code>）两种，前者是供开发人员使用的，因为它包含了一些用于调试的代码，后者用于正式发布，速度较快。gojs不依赖与任何JavaScript框架，所以它可以与任何JavaScript框架一起使用，而不会产生冲突。</p>
@@ -966,19 +966,13 @@ int main(int argc, char * argv[])
 <li>根据约定，框架中后缀为Delegate的都是Protocol，例如<code>UIApplicationDelegate</code>，<code>UIWebViewDelegate</code>等。</li>
 <li>Protocol本身是可以继承的，比如：</li>
 </ul>
-<pre><code>@protocol A
-    -(void)methodA;
-@end
-
-@protocol B &lt;A&gt;
-    -(void)methodB;
-@end
-</code></pre><p>如果你要实现B，那么methodA和methodB都需要实现。</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@protocol</span> A</span><br><span class="line">    <span class="function">-</span>(void)methodA;</span><br><span class="line"><span class="variable">@end</span></span><br><span class="line"></span><br><span class="line"><span class="variable">@protocol</span> B &lt;A&gt;</span><br><span class="line">    <span class="function">-</span>(void)methodB;</span><br><span class="line"><span class="variable">@end</span></span><br></pre></td></tr></table></figure>
+<p>如果你要实现B，那么methodA和methodB都需要实现。</p>
 <ul>
 <li>Protocol是与任何类都无关的，任何类都可以实现定义好的Protocol，如果我们想知道某个类是否实现了某个Protocol，那么我们可以用<code>conformsToProtocol</code>方法进行判断：</li>
 </ul>
-<pre><code>[obj conformsToProtocol:@protocol(ProcessDataDelegate)]
-</code></pre><h2 id="u603B_u7ED3-2"><a href="#u603B_u7ED3-2" class="headerlink" title="总结"></a>总结</h2><p>Protocol最常用的就是委托代理模式，Cocoa框架中大量采用了这种模式实现数据和UI的分离。例如UIView产生的所有事件，都是通过委托的方式交给Controller完成。</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="collection">[obj conformsToProtocol:@protocol<span class="list">(<span class="keyword">ProcessDataDelegate</span>)</span>]</span></span><br></pre></td></tr></table></figure>
+<h2 id="u603B_u7ED3-2"><a href="#u603B_u7ED3-2" class="headerlink" title="总结"></a>总结</h2><p>Protocol最常用的就是委托代理模式，Cocoa框架中大量采用了这种模式实现数据和UI的分离。例如UIView产生的所有事件，都是通过委托的方式交给Controller完成。</p>
 
             
           </span>
@@ -1272,9 +1266,9 @@ int main(int argc, char * argv[])
 <ul>
 <li><code>assign</code>（默认）：<code>assign</code>用于值类型，如<code>int</code>、<code>float</code>、<code>double</code>和<code>NSInteger</code>，<code>CGFloat</code>等表示单纯的复制。还包括不存在所有权关系的对象，比如常见的delegate。  </li>
 </ul>
-<pre><code>@property(nonatomic) int running;
-</code></pre><pre><code>@property(nonatomic,assign) int running;
-</code></pre><p>以上两段代码是相同的。</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@<span class="keyword">property</span><span class="title"></span>(nonatomic) int running;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">assign</span>) <span class="keyword">int</span> running;</span><br></pre></td></tr></table></figure>
+<p>以上两段代码是相同的。</p>
 <p>在<code>setter</code>方法中，采用直接赋值来实现设值操作：</p>
 <pre><code>-(void)setRunning:(int)newRunning{  
     _running = newRunning;  

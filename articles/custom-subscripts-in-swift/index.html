@@ -47,35 +47,20 @@
 
 <meta name="description" content="通常情况下，我们在使用数组（Array）或字典（Dictionary）时会使用到下标。其实在Swift中，我们还可以给类（class）自定义下标，下面就让我们来看看Swift中是如何自定义下标的。
 通过Subscript赋值和获取值我们先看看下面这个类：
-
-class DailyMeal
-{
-    enum MealTime
-    {
-        case Breakfast">
+123456789101112class DailyMeal&amp;#123;    enum MealTime    &amp;#123;        c">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在Swift中自定义下标（Subscripts）">
 <meta property="og:url" content="http://www.devtalking.com/articles/custom-subscripts-in-swift/index.html">
 <meta property="og:site_name" content="程序员说">
 <meta property="og:description" content="通常情况下，我们在使用数组（Array）或字典（Dictionary）时会使用到下标。其实在Swift中，我们还可以给类（class）自定义下标，下面就让我们来看看Swift中是如何自定义下标的。
 通过Subscript赋值和获取值我们先看看下面这个类：
-
-class DailyMeal
-{
-    enum MealTime
-    {
-        case Breakfast">
+123456789101112class DailyMeal&amp;#123;    enum MealTime    &amp;#123;        c">
 <meta property="og:updated_time" content="2016-01-01T13:39:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在Swift中自定义下标（Subscripts）">
 <meta name="twitter:description" content="通常情况下，我们在使用数组（Array）或字典（Dictionary）时会使用到下标。其实在Swift中，我们还可以给类（class）自定义下标，下面就让我们来看看Swift中是如何自定义下标的。
 通过Subscript赋值和获取值我们先看看下面这个类：
-
-class DailyMeal
-{
-    enum MealTime
-    {
-        case Breakfast">
+123456789101112class DailyMeal&amp;#123;    enum MealTime    &amp;#123;        c">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -254,153 +239,27 @@ class DailyMeal
       
         <span itemprop="articleBody"><p>通常情况下，我们在使用数组（Array）或字典（Dictionary）时会使用到下标。其实在Swift中，我们还可以给类（class）自定义下标，下面就让我们来看看Swift中是如何自定义下标的。</p>
 <h2 id="u901A_u8FC7Subscript_u8D4B_u503C_u548C_u83B7_u53D6_u503C"><a href="#u901A_u8FC7Subscript_u8D4B_u503C_u548C_u83B7_u53D6_u503C" class="headerlink" title="通过Subscript赋值和获取值"></a>通过Subscript赋值和获取值</h2><p>我们先看看下面这个类：</p>
-<pre><code class="swift">
-class DailyMeal
-{
-    enum MealTime
-    {
-        case Breakfast
-        case Lunch
-        case Dinner
-    }
-
-    var meals: [MealTime : String] = [:]
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DailyMeal</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">MealTime</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Breakfast</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Lunch</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Dinner</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> meals: [<span class="type">MealTime</span> : <span class="type">String</span>] = [:]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们使用该类时可以直接用<code>meals</code>字典，以枚举作为key来查询，像这样：</p>
-<pre><code class="swift">
-var monday = DailyMeal()
-
-monday.meals[.Breakfast] = &quot;Toast&quot;
-
-if let someMeal = monday.meals[.Breakfast]
-{
-    println(someMeal)
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday.meals[.<span class="type">Breakfast</span>] = <span class="string">"Toast"</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> someMeal = monday.meals[.<span class="type">Breakfast</span>]</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">println</span>(someMeal)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>到目前呢，我们创建了<code>DailyMeal</code>类的实例变量<code>monday</code>，并可以使用<code>DailyMeal</code>类中的<code>meals</code>字典进行查询。但是大家有没有感觉<code>monday.meals[]</code>这种写法很累赘呢？至少我看<code>meals</code>就很不顺眼，有没有更简单快捷的方法让我们直接使用<code>monday</code>变量就能赋值或获取<code>Breakfast</code>的值呢？别着急，今天的主角要登场了，让我们先在<code>DailyMeal</code>类中添加如下代码：</p>
-<pre><code class="swift">
-subscript(requestedMeal : MealTime) -&gt; String?
-{
-    get
-    {
-        return meals[requestedMeal]
-    }
-    set(newMealName)
-    {
-        meals[requestedMeal] = newMealName
-    }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span>?</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">get</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> meals[requestedMeal]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">set</span>(newMealName)</span><br><span class="line">    &#123;</span><br><span class="line">        meals[requestedMeal] = newMealName</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面的代码就是一个自定义下标，看起来是不是有点像计算类属性的<code>getter</code>、<code>setter</code>方法的写法呢？但是它们还是有区别的，首先下标使用<code>subscript</code>关键字，然后跟一个圆括号，里面是该下标的参数和参数类型（在实际使用中该参数就相当于数组的index和字典的key一样），最后有该下标的返回值类型。</p>
 <p>从上面代码可以看到，在下标的<code>getter</code>和<code>setter</code>方法中，其实还是在对<code>meals</code>数组进行操作，但是我们通过下标就可以将对<code>meals</code>数组的操作屏蔽掉。现在来看看我们应该怎样使用：</p>
-<pre><code class="swift">
-var monday = DailyMeal()
-
-monday[.Breakfast] = &quot;Toast&quot;
-
-if let someMeal = monday[.Breakfast]
-{
-    println(someMeal) // Toast
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday[.<span class="type">Breakfast</span>] = <span class="string">"Toast"</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> someMeal = monday[.<span class="type">Breakfast</span>]</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">println</span>(someMeal) <span class="comment">// Toast</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>现在是不是已经没有碍眼的<code>meals</code>了呢，使用起来更加简洁，语义也更加明确了呢，这就是下标最简单的一个用法。</p>
 <p>如果上面的代码中我们不给<code>monday[.Breakfast]</code>赋值，直接输出值会得到什么结果呢？细心的同学可能会注意到，在定义下标时它的返回值是Optional类型的，所以不赋值直接输出的结果是<code>nil</code>，这样就显得太没礼貌了，所以我们再来改造一下下标的代码：</p>
-<pre><code class="swift">
-subscript(requestedMeal : MealTime) -&gt; String
-{
-    get
-    {
-        if let thisMeal = meals[requestedMeal]
-        {
-            return thisMeal
-        }
-        else
-        {
-            return &quot;Ramen&quot;
-        }
-    }
-    set(newMealName)
-    {
-        meals[requestedMeal] = newMealName
-    }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">get</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> thisMeal = meals[requestedMeal]</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> thisMeal</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Ramen"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">set</span>(newMealName)</span><br><span class="line">    &#123;</span><br><span class="line">        meals[requestedMeal] = newMealName</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们看到下标的返回值从<code>String?</code>改为了<code>String</code>，那么相应的我们要在<code>getter</code>方法中对<code>meals[requestedMeal]</code>的值进行判断，如果没有赋值的话，我们将返回一个默认值<code>Ramen</code>（兰州拉面让人欲罢不能）。现在我们就可以这样用啦：</p>
-<pre><code class="swift">
-var monday = DailyMeal()
-
-monday[.Lunch] = &quot;Pizza&quot;
-
-println(monday[.Lunch])         //Output:  &quot;Pizza&quot;
-
-println(monday[.Dinner])        //Output:  &quot;Ramen&quot;
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday[.<span class="type">Lunch</span>] = <span class="string">"Pizza"</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(monday[.<span class="type">Lunch</span>])         <span class="comment">//Output:  "Pizza"</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(monday[.<span class="type">Dinner</span>])        <span class="comment">//Output:  "Ramen"</span></span><br></pre></td></tr></table></figure>
 <p>现在使用<code>DailyMeal</code>类是不是感觉到很简介，语义很明确也很健壮呢，答案是肯定的。我们通过下标避免向用户暴露不必要的API，同时也达到了高维护性的目的。</p>
 <p><code>DailyMeal</code>类的完整代码如下：</p>
-<pre><code class="swift">
-class DailyMeal
-{
-    enum MealTime
-    {
-        case Breakfast
-        case Lunch
-        case Dinner
-    }
-
-    var meals: [MealTime : String] = [:]    
-
-    subscript(requestedMeal : MealTime) -&gt; String
-    {
-        get
-        {
-            if let thisMeal = meals[requestedMeal]
-            {
-                return thisMeal
-            }
-            else
-            {
-                return &quot;Ramen&quot;
-            }
-        }
-        set(newMealName)
-        {
-            meals[requestedMeal] = newMealName
-        }
-    }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DailyMeal</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">MealTime</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Breakfast</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Lunch</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Dinner</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">var</span> meals: [<span class="type">MealTime</span> : <span class="type">String</span>] = [:]    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> thisMeal = meals[requestedMeal]</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> thisMeal</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">"Ramen"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">set</span>(newMealName)</span><br><span class="line">        &#123;</span><br><span class="line">            meals[requestedMeal] = newMealName</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="u53EA_u8BFB_u4E0B_u6807"><a href="#u53EA_u8BFB_u4E0B_u6807" class="headerlink" title="只读下标"></a>只读下标</h2><p>何为只读下标，顾名思义就是不能通过下标赋值，只能通过下标查询。这种下标的应用场景一般是实现一些数据公式、数据函数，它们一般都是只需要你指定一个数字，然后返回该公式对该数字的计算结果。下面我们用一个阶乘的例子来说明只读下标：</p>
-<pre><code class="swift">
-struct FactorialGenerator
-{
-    subscript(n: Int) -&gt; Int
-    {
-        var result = 1
-
-        if n &gt; 0
-        {
-            for value in 1...n
-            {
-                result *= value
-            }
-        }
-
-        return result
-    }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">FactorialGenerator</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">subscript</span>(n: <span class="type">Int</span>) -&gt; <span class="type">Int</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> result = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> n &gt; <span class="number">0</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span> value <span class="keyword">in</span> <span class="number">1</span>...n</span><br><span class="line">            &#123;</span><br><span class="line">                result *= value</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>同学们可能已经注意到了，上面的下标并没有<code>getter</code>和<code>setter</code>方法。这是因为，如果你想定义一个只读的下标，那么可以不实现<code>setter</code>方法，并且可以省略<code>getter</code>方法的<code>get</code>关键字。Swfit的编译器会判断出这是一个只读的下标，如果你强行通过下标赋值，那么编译器会报错。</p>
 <p>让我们来使用以下这个阶乘结构体：</p>
-<pre><code class="swift">
-let factorial = FactorialGenerator()
-
-println(&quot;Five factorial is equal to \(factorial[5]).&quot;)
-//Output:  &quot;Five factorial is equal to 120.&quot;
-
-println(&quot;Ten Factorial is equal to \(factorial[10]).&quot;)
-//Output:  &quot;Ten Factorial is equal to 3628800.&quot;
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> factorial = <span class="type">FactorialGenerator</span>()</span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(<span class="string">"Five factorial is equal to <span class="subst">\(factorial[<span class="number">5</span>])</span>."</span>)</span><br><span class="line"><span class="comment">//Output:  "Five factorial is equal to 120."</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(<span class="string">"Ten Factorial is equal to <span class="subst">\(factorial[<span class="number">10</span>])</span>."</span>)</span><br><span class="line"><span class="comment">//Output:  "Ten Factorial is equal to 3628800."</span></span><br></pre></td></tr></table></figure>
 <p>当然上面这个示例只是展示了只读下标的语法和应用场景，阶乘的实现逻辑在这就不累赘了。总的来说，我们可以通过下标简化暴露给用户的API，你可以在用户毫不知情的情况下更改某个API的功能。不仅使代码更易读，同时也大大提高了代码的可维护性，是不是很酷呢！</p>
 <p>参考原文：<a href="http://www.codingexplorer.com/custom-subscripts-swift/?utm_source=feedly&amp;utm_reader=feedly&amp;utm_medium=rss&amp;utm_campaign=custom-subscripts-swift" target="_blank" rel="external">Custom Subscripts in Swift</a></p>
 </span>

@@ -298,29 +298,7 @@ Action
 <ul>
 <li>不管是选择一个扩展的Host应用还是使用扩展的载体应用充当Host应用，它们都应该有比较容易能分享的内容。在示例项目中，<strong>ShareAlike</strong>扩展使用它的载体应用充当Host应用，载体应用包含一张图片和一个分享按钮，点击分享按钮时会弹出标准的分享内容界面：</li>
 </ul>
-<pre><code class="swift">
-@IBAction func handleShareSampleTapped(sender: AnyObject) {
-  shareContent(sharingText: &quot;Highland Cow&quot;,
-                       sharingImage: sharingContentImageView.image)
-}
-
-// Utility methods
-func shareContent(#sharingText: String?, sharingImage: UIImage?) {
-  var itemsToShare = [AnyObject]()
-
-
-  if let text = sharingText {
-    itemsToShare.append(text)
-  }
-  if let image = sharingImage {
-    itemsToShare.append(image)
-  }
-
-
-  let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
-  presentViewController(activityViewController, animated: true, completion: nil)
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">handleShareSampleTapped</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">  shareContent(sharingText: <span class="string">"Highland Cow"</span>,</span><br><span class="line">                       sharingImage: sharingContentImageView.image)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Utility methods</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">shareContent</span><span class="params">(#sharingText: String?, sharingImage: UIImage?)</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> itemsToShare = [<span class="type">AnyObject</span>]()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> text = sharingText &#123;</span><br><span class="line">    itemsToShare.append(text)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> image = sharingImage &#123;</span><br><span class="line">    itemsToShare.append(image)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> activityViewController = <span class="type">UIActivityViewController</span>(activityItems: itemsToShare, applicationActivities: <span class="literal">nil</span>)</span><br><span class="line">  presentViewController(activityViewController, animated: <span class="literal">true</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension1.png" alt="图片">  </p>
 <ul>
 <li>在扩展中编写相关代码。</li>
@@ -338,45 +316,19 @@ func shareContent(#sharingText: String?, sharingImage: UIImage?) {
 <p>从上图中可以看到，当我们选择了一张照片时，在分享应用列表中有我们的ShareAlike，如果选择了两张照片，分享应用列表中就没有我们的扩展了。</p>
 <h2 id="u9A8C_u8BC1_u7528_u6237_u8F93_u5165_u7684_u5185_u5BB9"><a href="#u9A8C_u8BC1_u7528_u6237_u8F93_u5165_u7684_u5185_u5BB9" class="headerlink" title="验证用户输入的内容"></a>验证用户输入的内容</h2><p>到目前为止，你大概已经知道如何创建一个扩展并设置它的相关属性了，现在让我们看看如何实现一些自定义的扩展行为。首先，我们要知道如何验证用户的输入内容。比如我们通常情况下都需要的一个验证，就是限制用户输入的文字数量，我们可以通过<code>SLComposeServiceViewController</code>来实现它。</p>
 <p>在之前我们提到过<code>SLComposeServiceViewController</code>类的一些属性方法，其中有一个方法叫<code>isContentValid() -&gt; Bool</code>。该方法的作用时随时监听着分享界面文本域的变化，也就是说一旦用户输入或删除文字，都会触发该方法。该方法如果返回<code>true</code>，那说明用户输入的内容合法，并可以使用<strong>Post</strong>按钮完成分享，如果返回<code>false</code>，那说明输入内容不合法，并且不能使用<strong>Post</strong>按钮。下面的代码片段展示了如何实现文字数量限制功能：</p>
-<pre><code class="swift">
-let sc_maxCharactersAllowed = 25
-
-override func isContentValid() -&gt; Bool {
-  if let currentMessage = contentText {
-    let currentMessageLength = countElements(currentMessage)
-    charactersRemaining = sc_maxCharactersAllowed - currentMessageLength
-
-    if Int(charactersRemaining) &lt; 0 {
-      return false
-    }
-  }
-  return true
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> sc_maxCharactersAllowed = <span class="number">25</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">isContentValid</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> currentMessage = contentText &#123;</span><br><span class="line">    <span class="keyword">let</span> currentMessageLength = <span class="built_in">countElements</span>(currentMessage)</span><br><span class="line">    charactersRemaining = sc_maxCharactersAllowed - currentMessageLength</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="type">Int</span>(charactersRemaining) &lt; <span class="number">0</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面代码中的<code>contentText</code>是<code>SLComposeServiceViewController</code>中的属性，类型为<code>String!</code>，它存储着分享界面中<code>TextView</code>中的文本信息。<code>charactersRemaining</code>也是<code>SLComposeServiceViewController</code>中的属性，类型为<code>NSNumber</code>，他表示还有多少合法的字数以及超出的字数，并显示在分享界面的左下角。你可以用<code>countElements()</code>方法获取输入文本的字数，用于计算<code>charactersRemaining</code>的值并判断是否超出了限定的最大字数。至于<strong>Post</strong>按钮的可用和禁用由<code>charactersRemaining</code>决定，不需要我们额外设置。</p>
 <p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension6.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension7.png" alt="图片"></p>
 <h2 id="u4E0A_u4F20_u5206_u4EAB_u5185_u5BB9"><a href="#u4E0A_u4F20_u5206_u4EAB_u5185_u5BB9" class="headerlink" title="上传分享内容"></a>上传分享内容</h2><p>到目前为止，我们已经知道了如何创建一个应用扩展、如何对应用扩展进行配置、如何控制用户的操作行为等。但是作为分享扩展，它的遵旨应该是将文本、图片、视频等资源上传至某个网络客户端（比如FaceBook、Twitter、新浪微博等）。下面就让我们看看应该如何做吧。</p>
 <p>应用扩展相比载体应用或者Host应用来说，它是一个轻量级的、处理单一功能任务的组件，所以用户一般不会因为使用扩展而停止当前使用的应用或关闭正在看的内容。你可以试想一下，如果一个Host应用使用某个应用扩展让它处理一个简单的任务时，该扩展因为同时占用了Host应用的运行内存从而使Host应用不可用、退出以至于崩溃，这是多么令人发指的事情。因此，所有的上传操作都应该在后台执行（iOS7中<code>NSURLSession</code>类对实现该功能很有帮助）。你可能会认为跟着去年<a href="https://leanpub.com/ios7daybyday" target="_blank" rel="external">iOS7 Day-by-Day</a>系列文章就能很容易的实现该功能，但事实并非如此。</p>
 <p>事情往往不是你想象的那么简单。首先提取分享的内容就不是一件容易的事（比如图片），而且你还要将它们分享出去，其次应用扩展没有任何写硬盘的权限。关于第二点，有人可能会有疑问：为什么应用扩展需要写硬盘的权限呢？因为所有后台上传的网络程序，在上传时都会先将上传内容缓存在硬盘中，然后从硬盘获取缓存的内容开始上传。为了能模拟硬盘缓存，我们需要在Host应用中创建一个存放分享内容的容器，并且要允许应用扩展使用该容器缓存分享内容。我们会在下面的内容中讲解如何实现该功能，但首先，我们先来看看如何提出分享内容中的图片。</p>
 <h2 id="u63D0_u53D6_u8981_u5206_u4EAB_u7684_u56FE_u7247"><a href="#u63D0_u53D6_u8981_u5206_u4EAB_u7684_u56FE_u7247" class="headerlink" title="提取要分享的图片"></a>提取要分享的图片</h2><p>在<code>SLComposeServiceViewController</code>类中有一个属性叫<code>extensionContext</code>，它存储着与当前应用扩展有关联的所有数据，其中包含一个<code>NSInputItem</code>类型的数组，名叫<code>inputItems</code>。每个<code>NSInputItem</code>都含有一个<code>attachments</code>集合，它们的类型都为<code>NSItemProvider</code>。这些<code>attachments</code>存储的就是分享内容中的媒体资源，比如图片、视频、文件或链接。</p>
-<pre><code class="swift">
-func imageFromExtensionItem(extensionItem: NSExtensionItem, callback: (image: UIImage?)-&gt;Void) {
-  for attachment in extensionItem.attachments as [NSItemProvider] {
-    ...
-  }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">imageFromExtensionItem</span><span class="params">(extensionItem: NSExtensionItem, callback: <span class="params">(image: UIImage?)</span></span></span>-&gt;<span class="type">Void</span>) &#123;</span><br><span class="line">  <span class="keyword">for</span> attachment <span class="keyword">in</span> extensionItem.attachments <span class="keyword">as</span> [<span class="type">NSItemProvider</span>] &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面这个方法的作用是从分享内容中提取图片（<code>UIImage</code>），注意这个方法没有返回值，而是用一个闭包回调函数来替代。</p>
 <p>为了确定<code>attachments</code>中是否包含了图片类型的资源，我们需要用到<code>hasItemConformingToTypeIdentifier()</code>方法。</p>
-<pre><code class="swift">
-if(attachment.hasItemConformingToTypeIdentifier(kUTTypeImage as NSString)) {
-  ...
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span>(attachment.hasItemConformingToTypeIdentifier(kUTTypeImage <span class="keyword">as</span> <span class="type">NSString</span>)) &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>该方法的参数类型是<code>NSString</code>，并且类型标示符<code>kUTTypeImage</code>属于<strong>MobileCoreServices</strong>框架中的属性，所以我们要引入<strong>MobileCoreServices</strong>框架：</p>
-<pre><code class="swift">
-import MobileCoreServices
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> MobileCoreServices</span><br></pre></td></tr></table></figure>
 <p>该框架中还包含几种类型标示符：</p>
 <ul>
 <li><code>kUTTypeImage</code></li>
@@ -385,70 +337,21 @@ import MobileCoreServices
 <li><code>kUTTypeSpreadsheet</code></li>
 </ul>
 <p>现在你可以确定<code>attachments</code>中至少包含了一个图片资源，并且需要将该图片资源提取出来。因为执行该任务会消耗很高的内存资源，所以为了确保在执行时UI界面不会出现无响应的情况，它应该在后台队列中执行。我们可以使用<code>loadItemForTypeIdentifier()</code>方法，与刚才的方法类似，该方法也有类型标示符参数，并且用闭包实现对图片的操作：</p>
-<pre><code class="swift">
-// Marshal on to a background thread
-dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, UInt(0))) {
-  attachment.loadItemForTypeIdentifier(kUTTypeImage as NSString, options: nil) {
-      (imageProvider, error) -&gt; Void in
-      ...
-  }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Marshal on to a background thread</span></span><br><span class="line">dispatch_async(dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="type">UInt</span>(<span class="number">0</span>))) &#123;</span><br><span class="line">  attachment.loadItemForTypeIdentifier(kUTTypeImage <span class="keyword">as</span> <span class="type">NSString</span>, options: <span class="literal">nil</span>) &#123;</span><br><span class="line">      (imageProvider, error) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">      ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果你使用Objective-C，那么你可以用block将返回结果强制转换为你期望的类型（比如<code>UIImage</code>），然后实现回调。但是在Swift中就行不通了，所以上面代码中的<code>imageProvider</code>变量的类型应该是<code>NSSecureCoding</code>，然后你可以将它强转为<code>UIImage</code>类型：</p>
-<pre><code class="swift">
-var image: UIImage? = nil
-if let e = error {
-  println(&quot;Item loading error: \(e.localizedDescription)&quot;)
-}
-image = imageProvider as? UIImage
-dispatch_async(dispatch_get_main_queue()) {
-  callback(image: image)
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> image: <span class="type">UIImage</span>? = <span class="literal">nil</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> e = error &#123;</span><br><span class="line">  <span class="built_in">println</span>(<span class="string">"Item loading error: <span class="subst">\(e.localizedDescription)</span>"</span>)</span><br><span class="line">&#125;</span><br><span class="line">image = imageProvider <span class="keyword">as</span>? <span class="type">UIImage</span></span><br><span class="line">dispatch_async(dispatch_get_main_queue()) &#123;</span><br><span class="line">  callback(image: image)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>大家注意，在<code>dispatch_async</code>中我使用了<code>callback()</code>函数，也就是<code>imageFromExtensionItem</code>方法的第二个参数，并将刚才强转为<code>UIImage</code>类型的<code>image</code>对象作为其参数。</p>
 <p>这段代码可以让用户在输入分享文本信息的同时将<code>attachments</code>中的图片提取出来。看起来非常完美：</p>
-<pre><code class="swift">
-var attachedImage: UIImage?
-
-override func presentationAnimationDidFinish() {
-  // Only interested in the first item
-  let extensionItem = extensionContext.inputItems[0] as NSExtensionItem
-  // Extract an image (if one exists)
-  imageFromExtensionItem(extensionItem) {
-    image in
-    if image {
-      dispatch_async(dispatch_get_main_queue()) {
-        self.attachedImage = image
-      }
-    }
-  }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> attachedImage: <span class="type">UIImage</span>?</span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">presentationAnimationDidFinish</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// Only interested in the first item</span></span><br><span class="line">  <span class="keyword">let</span> extensionItem = extensionContext.inputItems[<span class="number">0</span>] <span class="keyword">as</span> <span class="type">NSExtensionItem</span></span><br><span class="line">  <span class="comment">// Extract an image (if one exists)</span></span><br><span class="line">  imageFromExtensionItem(extensionItem) &#123;</span><br><span class="line">    image <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">if</span> image &#123;</span><br><span class="line">      dispatch_async(dispatch_get_main_queue()) &#123;</span><br><span class="line">        <span class="keyword">self</span>.attachedImage = image</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>该方法的作用就是提取出图片，并将提取出的图片赋值给我们定义的<code>attachedImage</code>变量。</p>
 <h2 id="u6267_u884C_u540E_u53F0_u4E0A_u4F20_u7684_u4EFB_u52A1"><a href="#u6267_u884C_u540E_u53F0_u4E0A_u4F20_u7684_u4EFB_u52A1" class="headerlink" title="执行后台上传的任务"></a>执行后台上传的任务</h2><p>一旦用户输入完要分享的文本信息，按下<strong>Post</strong>按钮后，分享扩展就应该将所有内容通过Web服务上传到某个地方。本文的示例为了达到这个目的，我们在视图控制器中定义了一个常量属性<code>sc_uploadURL</code>，值为一个URL，也就是一个服务地址：</p>
-<pre><code class="swift">
-let sc_uploadURL = &quot;http://requestb.in/oha28noh&quot;
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> sc_uploadURL = <span class="string">"http://requestb.in/oha28noh"</span></span><br></pre></td></tr></table></figure>
 <p>这个URL是Request Bin的服务，Request Bin可以给你提供一个临时的URL，用于测试一些网络操作。上面代码中的这个URL对你们来说没有什么用，因为这是我申请的，你们可以去<a href="http://requestb.in/" target="_blank" rel="external">requestb.in</a>申请一个自己的URL用于测试。</p>
 <p>在前面我们提到过，应用扩展不应该和Host应用抢占内存资源，它应该在后台执行相关任务。因此，当<strong>Post</strong>按钮被按下时，在当前的Host应用中我们不会看到任何有关应用扩展的执行痕迹，像同步、网络操作等。此时，我们就需要使用<code>NSURLSession</code>给我们提供的API来实现后台的网络操作。</p>
 <p>当用户点击<strong>Post</strong>按钮后会调用<code>didSelectPost()</code>方法，它的代码片段应该是这样的：</p>
-<pre><code class="swift">
-override func didSelectPost() {
-  // Perform upload
-  ...
-
-  // Inform the host that we&#39;re done, so it un-blocks its UI.
-  extensionContext.completeRequestReturningItems(nil, completionHandler: nil)
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">didSelectPost</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// Perform upload</span></span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Inform the host that we're done, so it un-blocks its UI.</span></span><br><span class="line">  extensionContext.completeRequestReturningItems(<span class="literal">nil</span>, completionHandler: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>设置<code>NSURLSession</code>很简单，有规范的设置流程：</p>
-<pre><code class="swift">
-let configName = &quot;com.shinobicontrols.ShareAlike.BackgroundSessionConfig&quot;
-let sessionConfig = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier(configName)
-// Extensions aren&#39;t allowed their own cache disk space. Need to share with application
-sessionConfig.sharedContainerIdentifier = &quot;group.ShareAlike&quot;
-let session = NSURLSession(configuration: sessionConfig)
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> configName = <span class="string">"com.shinobicontrols.ShareAlike.BackgroundSessionConfig"</span></span><br><span class="line"><span class="keyword">let</span> sessionConfig = <span class="type">NSURLSessionConfiguration</span>.backgroundSessionConfigurationWithIdentifier(configName)</span><br><span class="line"><span class="comment">// Extensions aren't allowed their own cache disk space. Need to share with application</span></span><br><span class="line">sessionConfig.sharedContainerIdentifier = <span class="string">"group.ShareAlike"</span></span><br><span class="line"><span class="keyword">let</span> session = <span class="type">NSURLSession</span>(configuration: sessionConfig)</span><br></pre></td></tr></table></figure>
 <p>我们要特别注意上面代码片段中<code>sharedContainerIdentifier</code>的设置，它给<code>NSURLSession</code>使用的共享容器（用于缓存分享内容）指定了一个名称，这个容器也是扩展载体应用的一部分（在这个例子中，载体应用就是ShareAlike），所以我们要通过Xcode对载体应用进行设置：</p>
 <ol>
 <li>在工程设置面板中选择<strong>Capabilities</strong>页签，然后在左侧<strong>Targets</strong>栏中选中载体应用。</li>
@@ -462,57 +365,13 @@ let session = NSURLSession(configuration: sessionConfig)
 <p>这些App Group都是登记在你的开发者账号下的，这样才能确保只有你的应用可以使用这些共享容器。</p>
 <p>Xcode会为每个工程创建一个<code>.entitlements</code>授权文件，里面就包含有共享容器的访问名称。</p>
 <p>现在<code>NSURLSession</code>就已经设置成功了，你还需要创建一个URL request对象来发送请求：</p>
-<pre><code class="swift">
-// Prepare the URL Request
-let request = urlRequestWithImage(attachedImage, text: contentText)
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Prepare the URL Request</span></span><br><span class="line"><span class="keyword">let</span> request = urlRequestWithImage(attachedImage, text: contentText)</span><br></pre></td></tr></table></figure>
 <p><code>urlRequestWithImage</code>函数的作用是构造一个URL请求结构，通过HTTP Post方式发送一些JSON格式的数据。这其中就包含了文本内容和图片的元数据信息：</p>
-<pre><code class="swift">
-func urlRequestWithImage(image: UIImage?, text: String) -&gt; NSURLRequest? {
-  let url = NSURL.URLWithString(sc_uploadURL)
-  let request = NSMutableURLRequest(URL: url)
-  request.addValue(&quot;application/json&quot;, forHTTPHeaderField: &quot;Content-Type&quot;)
-  request.addValue(&quot;application/json&quot;, forHTTPHeaderField: &quot;Accept&quot;)
-  request.HTTPMethod = &quot;POST&quot;
-
-  var jsonObject = NSMutableDictionary()
-  jsonObject[&quot;text&quot;] = text
-  if let image = image {
-    jsonObject[&quot;image_details&quot;] = extractDetailsFromImage(image)
-  }
-
-  // Create the JSON payload
-  var jsonError: NSError?
-  let jsonData = NSJSONSerialization.dataWithJSONObject(jsonObject, options: nil, error: &amp;jsonError)
-  if jsonData {
-    request.HTTPBody = jsonData
-  } else {
-    if let error = jsonError {
-      println(&quot;JSON Error: \(error.localizedDescription)&quot;)
-    }
-  }
-
-  return request
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">urlRequestWithImage</span><span class="params">(image: UIImage?, text: String)</span></span> -&gt; <span class="type">NSURLRequest</span>? &#123;</span><br><span class="line">  <span class="keyword">let</span> url = <span class="type">NSURL</span>.<span class="type">URLWithString</span>(sc_uploadURL)</span><br><span class="line">  <span class="keyword">let</span> request = <span class="type">NSMutableURLRequest</span>(<span class="type">URL</span>: url)</span><br><span class="line">  request.addValue(<span class="string">"application/json"</span>, forHTTPHeaderField: <span class="string">"Content-Type"</span>)</span><br><span class="line">  request.addValue(<span class="string">"application/json"</span>, forHTTPHeaderField: <span class="string">"Accept"</span>)</span><br><span class="line">  request.<span class="type">HTTPMethod</span> = <span class="string">"POST"</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> jsonObject = <span class="type">NSMutableDictionary</span>()</span><br><span class="line">  jsonObject[<span class="string">"text"</span>] = text</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> image = image &#123;</span><br><span class="line">    jsonObject[<span class="string">"image_details"</span>] = extractDetailsFromImage(image)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Create the JSON payload</span></span><br><span class="line">  <span class="keyword">var</span> jsonError: <span class="type">NSError</span>?</span><br><span class="line">  <span class="keyword">let</span> jsonData = <span class="type">NSJSONSerialization</span>.dataWithJSONObject(jsonObject, options: <span class="literal">nil</span>, error: &amp;jsonError)</span><br><span class="line">  <span class="keyword">if</span> jsonData &#123;</span><br><span class="line">    request.<span class="type">HTTPBody</span> = jsonData</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> error = jsonError &#123;</span><br><span class="line">      <span class="built_in">println</span>(<span class="string">"JSON Error: <span class="subst">\(error.localizedDescription)</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> request</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这个方法实际上并不是创建一个上传图片的请求，虽然也可以这样做，但这里我们将图片的详细信息（元数据）提取出来进行上传，下面代码是提取图片详细信息的方法：</p>
-<pre><code class="swift">
-func extractDetailsFromImage(image: UIImage) -&gt; NSDictionary {
-  var resultDict = NSMutableDictionary()
-  resultDict[&quot;height&quot;] = image.size.height
-  resultDict[&quot;width&quot;] = image.size.width
-  resultDict[&quot;orientation&quot;] = image.imageOrientation.toRaw()
-  resultDict[&quot;scale&quot;] = image.scale
-  resultDict[&quot;description&quot;] = image.description
-  return resultDict.copy() as NSDictionary
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">extractDetailsFromImage</span><span class="params">(image: UIImage)</span></span> -&gt; <span class="type">NSDictionary</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> resultDict = <span class="type">NSMutableDictionary</span>()</span><br><span class="line">  resultDict[<span class="string">"height"</span>] = image.size.height</span><br><span class="line">  resultDict[<span class="string">"width"</span>] = image.size.width</span><br><span class="line">  resultDict[<span class="string">"orientation"</span>] = image.imageOrientation.toRaw()</span><br><span class="line">  resultDict[<span class="string">"scale"</span>] = image.scale</span><br><span class="line">  resultDict[<span class="string">"description"</span>] = image.description</span><br><span class="line">  <span class="keyword">return</span> resultDict.copy() <span class="keyword">as</span> <span class="type">NSDictionary</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>最后你就可以通过<code>resume()</code>在后台发起上传请求了：</p>
-<pre><code class="swift">
-// Create the task, and kick it off
-let task = session.dataTaskWithRequest(request)
-task.resume()
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Create the task, and kick it off</span></span><br><span class="line"><span class="keyword">let</span> task = session.dataTaskWithRequest(request)</span><br><span class="line">task.resume()</span><br></pre></td></tr></table></figure>
 <p>如果你按下<strong>Post</strong>按钮完成分享后，在requestb.in中，你应该可以看到如下的结果：</p>
 <p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension10.png" alt="图片"></p>
 <p>原文地址：<a href="http://www.shinobicontrols.com/blog/posts/2014/07/21/ios8-day-by-day-day-2-sharing-extension" target="_blank" rel="external">iOS8 Day-by-Day :: Day 2 :: Sharing Extension</a></p>

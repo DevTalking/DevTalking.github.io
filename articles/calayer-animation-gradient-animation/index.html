@@ -260,52 +260,27 @@ CAGradi">
 <p>之后，我们在<code>ViewController</code>中添加UIView和UILabel的Outlet：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GradientAnimation-5.png" alt="GradientAnimation - 5"></p>
 <p>接下来回到<code>ViewController.swift</code>，我们添加一个常量属性<code>gradientLayer</code>：</p>
-<pre><code class="swift">
-let gradientLayer = CAGradientLayer()
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> gradientLayer = <span class="type">CAGradientLayer</span>()</span><br></pre></td></tr></table></figure>
 <p>这里出现了CALayer的另一个子类CAGradientLayer，这个类的作用就是能在Layer上绘制出渐变颜色的效果，然后在<code>viewDidLoad()</code>中添加如下代码：</p>
-<pre><code class="swift">
-gradientLayer.bounds = CGRect(x: 0, y: 0, width: backgroundView.frame.size.width, height: backgroundView.frame.size.height)
-gradientLayer.position = CGPoint(x: backgroundView.frame.size.width/2, y: backgroundView.frame.size.height/2)
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">gradientLayer.bounds = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: backgroundView.frame.size.width, height: backgroundView.frame.size.height)</span><br><span class="line">gradientLayer.position = <span class="type">CGPoint</span>(x: backgroundView.frame.size.width/<span class="number">2</span>, y: backgroundView.frame.size.height/<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
 <p>上述两行的代码是设置Layer的大小及位置，这在上两篇文章中已经讲过，这里就不再累赘了。接着我们继续添加两行代码：</p>
-<pre><code class="swift">
-gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
-gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">gradientLayer.startPoint = <span class="type">CGPoint</span>(x: <span class="number">0</span>, y: <span class="number">0.5</span>)</span><br><span class="line">gradientLayer.endPoint = <span class="type">CGPoint</span>(x: <span class="number">1</span>, y: <span class="number">0.5</span>)</span><br></pre></td></tr></table></figure>
 <p>既然CAGradientLayer可以绘制出渐变颜色的效果，那自然有颜色渐变的方向，所以这两行代码的作用就是设置颜色渐变的起始点和结束点，这两个属性共同决定了颜色渐变的方向：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GradientAnimation-3.png" alt="GradientAnimation - 3"></p>
 <p>从上面的示意图中可以看出，CAGradientLayer是通过起始点和结束点的坐标位置来决定颜色渐变的方向的，起始点的默认值是(0.5, 0)，结束点的默认值是(0.5, 1)，也就是说默认的颜色渐变方向是沿垂直中线从上往下渐变的，我们在这里将它改成了沿水平中线从左往右渐变。</p>
 <p>接下来我们设置CAGradientLayer的渐变颜色，接着添加如下代码：</p>
-<pre><code class="swift">
-gradientLayer.colors = [
-    UIColor.blackColor().CGColor,
-    UIColor.whiteColor().CGColor,
-    UIColor.blackColor().CGColor
-]
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">gradientLayer.colors = [</span><br><span class="line">    <span class="type">UIColor</span>.blackColor().<span class="type">CGColor</span>,</span><br><span class="line">    <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span>,</span><br><span class="line">    <span class="type">UIColor</span>.blackColor().<span class="type">CGColor</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 <p>CAGradientLayer的<code>colors</code>属性类型是一个数组<code>[AnyObject]</code>，这就意味着我们可以实现多个颜色的渐变效果，并且可以规定各个颜色的顺序。不过在我们这个示例中我们只需要两种颜色，不过需要注意的是虽然颜色只有两种，但是整个颜色渐变的过程中有三个原色点，那就是黑、白、黑，所以我们在这个数组中也需要按照原色点的数量和顺序添加相应的颜色，哪怕颜色都是一样的。</p>
 <p>我们既然设置了渐变的三个原色，那么就要对这原色出现的位置进行设置，接着添加如下代码：</p>
-<pre><code class="swift">
-gradientLayer.locations = [0.2, 0.5, 0.8]
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">gradientLayer.locations = [<span class="number">0.2</span>, <span class="number">0.5</span>, <span class="number">0.8</span>]</span><br></pre></td></tr></table></figure>
 <p>从上述代码中不难看出，我们将第一个黑色原色出现的位置设置在了整个Layer长度的十分之二的位置，第二个白色原色在中间，第三个黑色原色在十分之八的位置：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GradientAnimation-6.png" alt="GradientAnimation - 6"></p>
 <p>设置完CAGradientLayer的相关属性后，我们将<code>gradientLayer</code>添加到<code>backgroundView</code>的Layer中：</p>
-<pre><code class="swift">
-backgroundView.layer.addSublayer(gradientLayer)
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">backgroundView.layer.addSublayer(gradientLayer)</span><br></pre></td></tr></table></figure>
 <p>现在我们编译运行一下代码看看效果：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GradientAnimation-7.png" alt="GradientAnimation - 7"></p>
 <p>接下来我们需要让颜色渐变动起来，先创建一个方法<code>gradinetAnimate()</code>，在方法中添加如下代码：</p>
-<pre><code class="swift">
-let gradient = CABasicAnimation(keyPath: &quot;locations&quot;)
-gradient.fromValue = [0, 0, 0.25]
-gradient.toValue = [0.75, 1, 1]
-gradient.duration = 2.5
-gradient.repeatCount = HUGE
-gradientLayer.addAnimation(gradient, forKey: nil)
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> gradient = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"locations"</span>)</span><br><span class="line">gradient.fromValue = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0.25</span>]</span><br><span class="line">gradient.toValue = [<span class="number">0.75</span>, <span class="number">1</span>, <span class="number">1</span>]</span><br><span class="line">gradient.duration = <span class="number">2.5</span></span><br><span class="line">gradient.repeatCount = <span class="type">HUGE</span></span><br><span class="line">gradientLayer.addAnimation(gradient, forKey: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
 <p>首先，创建了一个<code>locations</code>类型的动画实例<code>gradient</code>，将<code>fromValue</code>属性，也就是起始位置的属性设置为<code>[0, 0, 0.25]</code>，它的意思是动画开始前，黑色、白色这两个原色的位置在整个Layer的最前端，第二个黑色原色在0.25的位置：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GradientAnimation-8.png" alt="GradientAnimation - 8"></p>
 <p>而结束位置<code>toValue</code>，将白色和第二个黑色原色位置设置在整个Layer的末端，第一个黑色原色在0.75的位置：</p>
@@ -313,40 +288,18 @@ gradientLayer.addAnimation(gradient, forKey: nil)
 <p>从图中可以看出，此时整个Layer都变成了黑色。也就是说，在整个动画中，第一个黑色原色从0移动到0.75的位置，白色原色从0移动到1的位置，第二个黑色原色从0.25移动到1的位置。然后设置动画时间为2.5秒，无线重复次数，最后将<code>gradient</code>动画添加到<code>gradientLayer</code>中。我们在<code>viewDidAppear()</code>方法中调用该动画方法<code>gradientAnimate()</code>，编译运行看看效果：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GradientAnimation-10.gif" alt="GradientAnimation - 10"></p>
 <p>动画效果还不赖，但是如何将颜色渐变的动画作用在UILabel的文字上呢？其实非常简单，就是让UILabel上的文字称为CAGradientLayer的遮罩即可，我们先在<code>ViewController</code>中定义一个常量：</p>
-<pre><code class="swift">
-var text = &quot;DevTalking&quot;
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> text = <span class="string">"DevTalking"</span></span><br></pre></td></tr></table></figure>
 <p>然后在<code>viewDidAppear()</code>中的<code>gradientAnimate()</code>方法之前添加如下代码：</p>
-<pre><code class="swift">
-textLabel.text = text
-gradientLayer.mask = textLabel.layer
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">textLabel.text = text</span><br><span class="line">gradientLayer.mask = textLabel.layer</span><br></pre></td></tr></table></figure>
 <p>我们再编译运行代码看看效果：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GradientAnimation-11.gif" alt="GradientAnimation - 11"></p>
 <p>到目前为止，锁屏中<strong>滑动来解锁</strong>的动画效果就完成了，这个动画效果在Facebook的Paper应用中也有使用。下一节，我们在该动画的基础上对文字再加点小动画。</p>
 <h2 id="Text_Animation"><a href="#Text_Animation" class="headerlink" title="Text Animation"></a>Text Animation</h2><p>首先我们打开<code>AppDelegate.swift</code>，在<code>import UIKit</code>下面添加一个方法：</p>
-<pre><code class="swift">
-func delay(seconds seconds: Double, completion:()-&gt;()) {
-    let intervalTime = dispatch_time(DISPATCH_TIME_NOW, Int64( Double(NSEC_PER_SEC) * seconds ))
-
-    dispatch_after(intervalTime, dispatch_get_main_queue(), {
-        completion()
-    })
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">delay</span><span class="params">(seconds seconds: Double, completion:<span class="params">()</span></span></span>-&gt;()) &#123;</span><br><span class="line">    <span class="keyword">let</span> intervalTime = dispatch_time(<span class="type">DISPATCH_TIME_NOW</span>, <span class="type">Int64</span>( <span class="type">Double</span>(<span class="type">NSEC_PER_SEC</span>) * seconds ))</span><br><span class="line">    </span><br><span class="line">    dispatch_after(intervalTime, dispatch_get_main_queue(), &#123;</span><br><span class="line">        completion()</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这个方法的作用如其名称一样，是一个延迟方法，该方法的第一个参数是想要延迟的时间，第二个参数是一个闭包，也就是延迟的主体。这个方法用到了GCD的知识，<code>dispatch_time</code>主要是用于创建一个类型为<code>dispatch_time_t</code>的相对时间，它的第一个参数指的是起始时间，一般都是用预定义的<code>DISPATCH_TIME_NOW</code>作为第一个参数的值，代表当前的时间。第二个参数代表时间间隔，注意这个参数需要的时间单位是纳秒，所以我们使用预定义的<code>NSEC_PER_SEC</code>纳秒单位乘以希望间隔的秒数。</p>
 <p><code>dispatch_after</code>用于在队列中定时执行任务，当你想在一段时间后执行一个任务，那么就可以用这个函数。该函数的第一个参数指定延迟的时间，第二个参数指定一个队列，用于添加任务，第三个参数是一个闭包，也就是要执行的任务。</p>
 <p>然后回到<code>ViewController.swift</code>，添加如下方法：</p>
-<pre><code class="swift">
-func textAnimate(text: String) {
-    if text.characters.count &gt; 0 {
-        textLabel.text = &quot;\(textLabel.text!)\(text.substringToIndex(text.startIndex.successor()))&quot;
-        delay(seconds: 0.4, completion: {
-            self.textAnimate(text.substringFromIndex(text.startIndex.successor()))
-        })
-    }
-}
-</code></pre>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">textAnimate</span><span class="params">(text: String)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> text.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">        textLabel.text = <span class="string">"<span class="subst">\(textLabel.text!)</span><span class="subst">\(text.substringToIndex(text.startIndex.successor()</span>))"</span></span><br><span class="line">        delay(seconds: <span class="number">0.4</span>, completion: &#123;</span><br><span class="line">            <span class="keyword">self</span>.textAnimate(text.substringFromIndex(text.startIndex.successor()))</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>该方法的参数<code>text</code>就是UILabel中要显示的文字内容。<code>substringToIndex(_ to: Int)</code>方法的作用是从字符串的开头一直截取到指定的位置，但不包括该指定位置的字符。<code>text.startIndex.successor()</code>这句意思是从<code>text</code>的起始位置开始取后面的一个字符。<code>substringFromIndex(_ from: Int)</code>方法的作用是以指定位置并包括指定位置的字符开始，一直截取之后的全部字符。所以整个方法的作用是每隔0.4秒显示一个字符，直到将整个字符串显示完。最后在<code>viewDidAppear()</code>中注释掉<code>textLabel.text = text</code>这行代码，并在方法最后调用<code>textAnimate(text)</code>方法。编译运行代码看看最终效果：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GradientAnimation-12.gif" alt="GradientAnimation - 12"></p>
 <p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>

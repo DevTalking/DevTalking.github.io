@@ -584,11 +584,7 @@ Plus, a few smalle">
 <p>Here’s what did change in an incompatible way:</p>
 <ul>
 <li><p>We’re now prefixing all classes located in <a href="http://highlightjs.readthedocs.org/en/latest/css-classes-reference.html" target="_blank" rel="external">CSS classes reference</a> with<br><code>hljs-</code>, by default, because some class names would collide with other<br>people’s stylesheets. If you were using an older version, you might still want<br>the previous behavior, but still want to upgrade. To suppress this new<br>behavior, you would initialize like so:</p>
-<pre><code class="html">&lt;script type=&quot;text/javascript&quot;&gt;
-  hljs.configure({classPrefix: &#39;&#39;});
-  hljs.initHighlightingOnLoad();
-&lt;/script&gt;
-</code></pre>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="actionscript"></span><br><span class="line">  hljs.configure(&#123;classPrefix: <span class="string">''</span>&#125;);</span><br><span class="line">  hljs.initHighlightingOnLoad();</span><br><span class="line"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p><code>tabReplace</code> and <code>useBR</code> that were used in different places are also unified<br>into the global options object and are to be set using <code>configure(options)</code>.<br>This function is documented in our <a href="http://highlightjs.readthedocs.org/en/latest/api.html" target="_blank" rel="external">API docs</a>. Also note that these<br>parameters are gone from <code>highlightBlock</code> and <code>fixMarkup</code> which are now also<br>rely on <code>configure</code>.</p>
 </li>
@@ -648,7 +644,7 @@ Plus, a few smalle">
 <p>P.S. The historical commit is <a href="http://roudakov.ru/" target="_blank" rel="external">here</a> for the record.</p>
 <h2 id="Version_7-4"><a href="#Version_7-4" class="headerlink" title="Version 7.4"></a>Version 7.4</h2><p>This long overdue version is a snapshot of the current source tree with all the<br>changes that happened during the past year. Sorry for taking so long!</p>
 <p>Along with the changes in code highlight.js has finally got its new home at<br><a href="http://highlightjs.org/" target="_blank" rel="external">http://highlightjs.org/</a>, moving from its cradle on Software Maniacs which it<br>outgrew a long time ago. Be sure to report any bugs about the site to</p>
-<p><a href="/&#109;&#x61;&#105;&#x6c;&#116;&#x6f;&#58;&#x69;&#x6e;&#x66;&#111;&#x40;&#x68;&#x69;&#x67;&#104;&#x6c;&#105;&#x67;&#x68;&#x74;&#106;&#x73;&#46;&#x6f;&#x72;&#103;">&#x69;&#x6e;&#x66;&#111;&#x40;&#x68;&#x69;&#x67;&#104;&#x6c;&#105;&#x67;&#x68;&#x74;&#106;&#x73;&#46;&#x6f;&#x72;&#103;</a>.</p>
+<p><a href="/&#x6d;&#x61;&#105;&#x6c;&#x74;&#x6f;&#58;&#x69;&#x6e;&#x66;&#111;&#x40;&#x68;&#x69;&#103;&#x68;&#108;&#105;&#x67;&#x68;&#116;&#106;&#115;&#x2e;&#x6f;&#x72;&#103;">&#x69;&#x6e;&#x66;&#111;&#x40;&#x68;&#x69;&#103;&#x68;&#108;&#105;&#x67;&#x68;&#116;&#106;&#115;&#x2e;&#x6f;&#x72;&#103;</a>.</p>
 <p>On to what’s new…</p>
 <p>New languages:</p>
 <ul>
@@ -767,9 +763,9 @@ Plus, a few smalle">
 </ul>
 <h3 id="For_developers"><a href="#For_developers" class="headerlink" title="For developers"></a>For developers</h3><p>The most significant change is the ability to include language submodes right<br>under <code>contains</code> instead of defining explicit named submodes in the main array:</p>
 <pre><code>contains: [
-  &#39;string&#39;,
-  &#39;number&#39;,
-  {begin: &#39;\\n&#39;, end: hljs.IMMEDIATE_RE}
+  &apos;string&apos;,
+  &apos;number&apos;,
+  {begin: &apos;\\n&apos;, end: hljs.IMMEDIATE_RE}
 ]
 </code></pre><p>This is useful for auxiliary modes needed only in one place to define parsing.<br>Note that such modes often don’t have <code>className</code> and hence won’t generate a<br>separate <code>&lt;span&gt;</code> in the resulting markup. This is similar in effect to<br><code>noMarkup: true</code>. All existing languages have been refactored accordingly.</p>
 <p>Test file test.html has at last become a real test. Now it not only puts the<br>detected language name under the code snippet but also tests if it matches the<br>expected one. Test summary is displayed right above all language snippets.</p>
