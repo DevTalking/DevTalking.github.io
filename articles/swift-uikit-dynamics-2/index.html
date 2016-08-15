@@ -46,13 +46,13 @@
 
 
 <meta name="description" content="碰撞背后的故事在UIKit的动态引擎中，每个行为都有一个action属性，它的类型是一个函数（() -&amp;gt; Void），我们可以使用一个闭包来打印一下每一步行为的信息。我们在viewDidLoad方法加入下面这行代码：
-collision.action = &amp;#123;	println(&quot;\(NSStringFromCGAffineTransform(square.transform)) \(">
+collision.action = &amp;#123;```swiftprintln(&quot;\(NSStringFromCGAffineTransform(square.transfo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Swift中的UIKit动力学（二）">
 <meta property="og:url" content="http://www.devtalking.com/articles/swift-uikit-dynamics-2/index.html">
 <meta property="og:site_name" content="程序员说">
 <meta property="og:description" content="碰撞背后的故事在UIKit的动态引擎中，每个行为都有一个action属性，它的类型是一个函数（() -&amp;gt; Void），我们可以使用一个闭包来打印一下每一步行为的信息。我们在viewDidLoad方法加入下面这行代码：
-collision.action = &amp;#123;	println(&quot;\(NSStringFromCGAffineTransform(square.transform)) \(">
+collision.action = &amp;#123;```swiftprintln(&quot;\(NSStringFromCGAffineTransform(square.transfo">
 <meta property="og:image" content="http://www.devtalking.com/postImages/swift-uikit-dynamics21.gif">
 <meta property="og:image" content="http://www.devtalking.com/postImages/swift-uikit-dynamics22.gif">
 <meta property="og:image" content="http://www.devtalking.com/postImages/swift-uikit-dynamics23.gif">
@@ -62,7 +62,7 @@ collision.action = &amp;#123;	println(&quot;\(NSStringFromCGAffineTransform(squa
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Swift中的UIKit动力学（二）">
 <meta name="twitter:description" content="碰撞背后的故事在UIKit的动态引擎中，每个行为都有一个action属性，它的类型是一个函数（() -&amp;gt; Void），我们可以使用一个闭包来打印一下每一步行为的信息。我们在viewDidLoad方法加入下面这行代码：
-collision.action = &amp;#123;	println(&quot;\(NSStringFromCGAffineTransform(square.transform)) \(">
+collision.action = &amp;#123;```swiftprintln(&quot;\(NSStringFromCGAffineTransform(square.transfo">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -240,7 +240,7 @@ collision.action = &amp;#123;	println(&quot;\(NSStringFromCGAffineTransform(squa
 
       
         <span itemprop="articleBody"><h2 id="u78B0_u649E_u80CC_u540E_u7684_u6545_u4E8B"><a href="#u78B0_u649E_u80CC_u540E_u7684_u6545_u4E8B" class="headerlink" title="碰撞背后的故事"></a>碰撞背后的故事</h2><p>在UIKit的动态引擎中，每个行为都有一个<code>action</code>属性，它的类型是一个函数（() -&gt; Void），我们可以使用一个闭包来打印一下每一步行为的信息。我们在<code>viewDidLoad</code>方法加入下面这行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision.action = &#123;</span><br><span class="line">	<span class="built_in">println</span>(<span class="string">"<span class="subst">\(NSStringFromCGAffineTransform(square.transform)</span>) <span class="subst">\(NSStringFromCGPoint(square.center)</span>)"</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision.action = &#123;</span><br><span class="line">```swift<span class="built_in">println</span>(<span class="string">"<span class="subst">\(NSStringFromCGAffineTransform(square.transform)</span>) <span class="subst">\(NSStringFromCGPoint(square.center)</span>)"</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>上面的代码记录了蓝绿色方块坠落、碰撞时的<code>center</code>和<code>transform</code>属性。当编译运行时，在方块下坠的前一秒我们可以在控制台看到如下信息：</p>
 <pre><code>[1, 0, 0, 1, 0, 0] {150, 150}
 [1, 0, 0, 1, 0, 0] {150, 150}
