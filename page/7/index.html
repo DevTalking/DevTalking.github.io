@@ -237,13 +237,20 @@
         
           <span itemprop="articleBody">
             
-              <h2 id="u7ED9TextContainer_u4E2D_u6DFB_u52A0_u5185_u5BB9"><a href="#u7ED9TextContainer_u4E2D_u6DFB_u52A0_u5185_u5BB9" class="headerlink" title="给TextContainer中添加内容"></a>给TextContainer中添加内容</h2><p>打开 <strong>Main.storyboard</strong> ，从组件库（Object Library）中拖拽两个 <strong>Label</strong> 组件到TextContainer中，位置可以随意摆放：</p>
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2 id="u7ED9TextContainer_u4E2D_u6DFB_u52A0_u5185_u5BB9"><a href="#u7ED9TextContainer_u4E2D_u6DFB_u52A0_u5185_u5BB9" class="headerlink" title="给TextContainer中添加内容"></a>给TextContainer中添加内容</h2><p>打开 <strong>Main.storyboard</strong> ，从组件库（Object Library）中拖拽两个 <strong>Label</strong> 组件到TextContainer中，位置可以随意摆放：</p>
 <p><img src="http://www.devtalking.com/postImages/adaptive-layout-35.png" alt="图片"></p>
 <p>先选择靠上的Label，然后点击底部的 <strong>Align</strong> 按钮，添加一个 <strong>Horizontal Center in Container</strong> 约束，再点击 <strong>Pin</strong> 按钮，添加一个 <strong>Top Spacing to nearest neighbor</strong> 约束，设置其值为10：</p>
 <p><img src="http://www.devtalking.com/postImages/adaptive-layout-36.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/adaptive-layout-37.png" alt="图片"></p>
 <p>然后选择右侧工具栏中的 <strong>Attribute Inspector</strong> 页签，将该Label的 <strong>Text</strong> 属性设置为 <strong>Cupertino</strong> ，<strong>Color</strong> 属性设置为 <strong>White</strong> ，<strong>Font</strong> 属性设置为 <strong>Helvetica Neue, Thin</strong> ， <strong>Size</strong> 属性设置为 <strong>150</strong>。</p>
 <p>这时同学们可能会发现基本看不到刚才设置的文字的全貌，这是因为Label大小的原因。别着急，我们很快就会解决这个问题。</p>
-<p>现在选择另一个Label，按照上述的方法给它也添加一个 <strong>Horizontal Center in Container</strong> 约束以及一个 <strong>Bottom Spacing<br>to nearest neighbor</strong> 约束，将其值设置为10。打开右侧工具栏中的 <strong>Size Inspector</strong> 看看：</p>
+<p>现在选择另一个Label，按照上述的方法给它也添加一个 <strong>Horizontal Center in Container</strong> 约束以及一个 **Bottom Spacing<br>to nearest neighbor** 约束，将其值设置为10。打开右侧工具栏中的 <strong>Size Inspector</strong> 看看：</p>
 <p><img src="http://www.devtalking.com/postImages/adaptive-layout-38.png" alt="图片"></p>
 <p>然后选择 <strong>Attribute Inspector</strong> 将该Label的 <strong>Text</strong> 属性设置为 <strong>28C</strong> ， <strong>Color</strong> 属性设置为 <strong>White</strong>， 将 <strong>Font</strong> 属性设置为 <strong>Helvetica Neue, Thin</strong>， 将 <strong>Size</strong> 属性设置为 <strong>250</strong>。</p>
 <p>现在是时候解决Label大小的问题了。选中view controller的view，点击底部的 <strong>Resolve Auto Layout Issues</strong> 按钮，在弹出菜单中选择 <strong>All Views\Update Frames</strong> ，现在看看<code>storyboard</code>中发生了什么：</p>
@@ -286,6 +293,13 @@
 <blockquote>
 <p>注意：你可以在Size Inspector中点击 <strong>All</strong> 来查看当前size class卸载掉的约束。</p>
 </blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 <p>鼠标双击刚才卸载的那条约束，我们可以看到在约束编辑界面的底部出现了额外的2个选项：</p>
 <p><img src="http://www.devtalking.com/postImages/adaptive-layout-49.png" alt="图片"></p>
 <p>这两个选项的意思就是这条约束在基础布局中是可用的，但在当前的 <strong>Any Width | Compact Height</strong> 布局中是不可用的。  </p>
@@ -308,7 +322,7 @@
 <p><img src="http://www.devtalking.com/postImages/adaptive-layout-56.png" alt="图片"></p>
 <p>然后选中TextContainer，在 <strong>Size Inspector</strong> 中设置刚刚添加的两个约束：</p>
 <ul>
-<li>将 <strong>Top Space to: Top Layout Guide </strong> 约束的值设置为0。</li>
+<li>将 **Top Space to: Top Layout Guide ** 约束的值设置为0。</li>
 <li>将 <strong>Equal Width</strong> 约束的 <strong>Multiplier</strong> 的值设置为0.5。这里要注意 <strong>First Item</strong> 和 <strong>Second Item</strong> 这两个属性的值。前者应为TextContainer view，后者为view controller view。如果不一致，那么点击任意一个输入框，选择 <strong>Reverse First and Second Item</strong>。</li>
 </ul>
 <p>现在点击<code>storyboard</code>界面底部的 <strong>Resolve Auto Layout Issues</strong> 按钮，然后选择 <strong>All Views\Update frames</strong> 。看看发生了什么变化呢：</p>
@@ -321,11 +335,11 @@
 <p>回到<code>storyboard</code>文件中，将目前的size class改为最基础的 <strong>Any Width | Any Height</strong> 。</p>
 <p>选择显示Cupertino的Label，打开 <strong>Attribute Inspector</strong> 。点击 <strong>Font</strong> 属性前面的 <strong>+</strong> 号：</p>
 <p><img src="http://www.devtalking.com/postImages/adaptive-layout-58.png" alt="图片"></p>
-<p>弹出的菜单内容是让我们选择一种size class的组合来重写该组合下的文字属性。我们选择 <strong>Compact Width &gt; Any Height</strong>：</p>
+<p>弹出的菜单内容是让我们选择一种size class的组合来重写该组合下的文字属性。我们选择 <strong>Compact Width > Any Height</strong>：</p>
 <p><img src="http://www.devtalking.com/postImages/adaptive-layout-59.png" alt="图片"></p>
 <p>这时就会出现另外一个文字属性下拉框，针对于我们刚才选择的 <strong>Compact Width | Any Height</strong> size class，我们将字体大小改为90：</p>
 <p><img src="http://www.devtalking.com/postImages/adaptive-layout-60.png" alt="图片"></p>
-<p>再选择显示温度的Label，重复刚才的操作，选择size class组合时选择 <strong>Compact Width &gt; Any Height</strong>。设置字体大小为150。</p>
+<p>再选择显示温度的Label，重复刚才的操作，选择size class组合时选择 <strong>Compact Width > Any Height</strong>。设置字体大小为150。</p>
 <p>在预览区域会自动更新我们刚才的设置：</p>
 <p><img src="http://www.devtalking.com/postImages/adaptive-layout-61.png" alt="图片"></p>
 <p>现在看起来稍微好一些了，但是显示 <strong>Cupertino</strong> 的Label被截掉了两头。同学们可能会继续调整字体大小使Cupertino显示完全，虽然目前看起来完美了，但是当换一个城市名称后或许又会出现刚才的问题。比如Washington, D.C这么长的名称，又比如Kleinfeltersville, PA这个更长的名称。那么我们应该如何设计呢？</p>
@@ -341,6 +355,13 @@
 <p><img src="http://www.devtalking.com/postImages/adaptive-layout-65.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/adaptive-layout-66.png" alt="图片"></p>
 <p>同学们，至此你们已经学习到了自适应布局最基本的技能。恭喜你们！</p>
 <p>原文地址：<a href="http://www.raywenderlich.com/83276/beginning-adaptive-layout-tutorial" target="_blank" rel="external">Beginning Adaptive Layout Tutorial</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 
             
           </span>
