@@ -237,7 +237,15 @@
         
           <span itemprop="articleBody">
             
-              <h2 id="u5F00_u573A_u767D"><a href="#u5F00_u573A_u767D" class="headerlink" title="开场白"></a>开场白</h2><p>在今年的WWDC大会上绝对不容忽视的一点就是苹果除了宣布iOS8的发布，还介绍了一门新的编程语言Swift。是与Objective-C大不相同的一门语言，它不但是强类型的语言，而且吸收了当前多种优秀编程语言的特点。  </p>
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u5F00_u573A_u767D"><a href="#u5F00_u573A_u767D" class="headerlink" title="开场白"></a>开场白</h2><p>在今年的WWDC大会上绝对不容忽视的一点就是苹果除了宣布iOS8的发布，还介绍了一门新的编程语言Swift。是与Objective-C大不相同的一门语言，它不但是强类型的语言，而且吸收了当前多种优秀编程语言的特点。  </p>
 <p>为了能够涵盖到Swift语言所有的新特性，该博客系列将只使用Swift语言来进行讲解。我认为，学习如何使用Swift语言、如何与Cocoa框架交互最有价值的资料应该官方提供的两个文档。我相信如果你一开始就跟着这两个文档学习，你能避免不少弯路。</p>
 <ul>
 <li><a href="https://itunes.apple.com/us/book/the-swift-programming-language/id881256329?mt=11&amp;ls=1" target="_blank" rel="external">The Swift Programming Language</a></li>
@@ -249,12 +257,12 @@
 <p>如果你对这篇文章里的知识点有什么问题或者其他建议，你可以联系我。我会在最新一期的博客中进行说明。你可以在底部进行评论或者给我发Twitter-<a href="https://twitter.com/iwantmyrealname" target="_blank" rel="external">@iwantmyrealname</a>。</p>
 <h2 id="u6784_u9020_u51FD_u6570"><a href="#u6784_u9020_u51FD_u6570" class="headerlink" title="构造函数"></a>构造函数</h2><p>Swift围绕着对象构造过程形成了一个概念，包括命名、方便的构造器以及在对象的构造阶段指定了严格的调用顺序等。在未来几周内，该博客系列将会有一篇文章深入详细地介绍Swift中对象的构造过程，以及对你写的Objective-C有何影响。</p>
 <p>Swift与Objective-C另外一个最大的不同之处就是构造函数的返回值和构造失败的处理。在Objective-C中的构造器大多数都是这样： </p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- (instancetype)<span class="keyword">init</span> &#123;</span><br><span class="line">	<span class="keyword">self</span> = [<span class="keyword">super</span> <span class="keyword">init</span>];</span><br><span class="line">  	<span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">    	<span class="comment">// Do some stuff</span></span><br><span class="line">  	&#125;</span><br><span class="line">  	<span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- (instancetype)<span class="keyword">init</span> &#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> <span class="keyword">init</span>];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="comment">// Do some stuff</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>然而在Swift中是这样：  </p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">init</span> &#123;</span><br><span class="line">  	variableA = <span class="number">10</span></span><br><span class="line">  	...</span><br><span class="line">  	<span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">init</span> &#123;</span><br><span class="line">    variableA = <span class="number">10</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里要注意的是，Objective-C中的构造器负责<strong>创建</strong>并返回<code>self</code>，但是Swift中的构造函数却没有返回值。这意味着在Swift的构造函数中不可能也没有机会返回一个<code>nil</code>的返回值，而这在Objective-C中恰恰是表明构造失败的通用模式。</p>
 <p>这显然是Swift语言新的Beta版中需要修改的问题。那么现在我们唯一的解决办法是通过类方法返回一个Optional类型用于表明是否构造成功：  </p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">  	<span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">myFactoryMethod</span>() -&gt; <span class="title">MyClass</span>? </span>&#123;</span><br><span class="line">    	...</span><br><span class="line">  	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">myFactoryMethod</span>() -&gt; <span class="title">MyClass</span>? </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>有趣的是Objective-C中的工厂方法被转换成了Swift中的构造方法，这一点显然是不可取的。但是，到目前为止，我们只能选择Swift提供的有潜在隐患的构造方法。</p>
 <h2 id="u53EF_u53D8_u6027"><a href="#u53EF_u53D8_u6027" class="headerlink" title="可变性"></a>可变性</h2><p>在Cocoa开发者中，可变性这个概念已然不是什么新鲜的东西了，比如在合适的情景下，我们会使用<code>NSArray</code>的可变类型<code>NSMutableArray</code>。Swift将这个概念进行了升华，并且它将不可变性升级为一个基本概念。</p>
 <p>Swift中用<code>let</code>关键字定义一个不可变的变量，也就是常量。比如说：</p>
@@ -283,6 +291,14 @@
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> array2 = [<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>]</span><br><span class="line">array2.append(<span class="number">0</span>) <span class="comment">// 编译错误，array2是不可变数组</span></span><br><span class="line">array2[<span class="number">2</span>] = <span class="number">36</span>   <span class="comment">// 编译错误，array2是不可变数组</span></span><br><span class="line">array2 = [<span class="number">5</span>,<span class="number">6</span>]   <span class="comment">// 编译错误，不能对array2重新赋值</span></span><br></pre></td></tr></table></figure>
 <p>在这一点，Swift与Objective-C有巨大的差异，所以会给我们在实际开发中造成一些概念上混淆。也许在Swift之后的版本中对此会有所改变，所以要时刻关注Swift的文档。</p>
 <p>通过上面的示例代码我们可以得出一个结论，因为在Swift中数组是一个值类型，所以当你创建一个数组时，实际上是将数组的副本赋值给了变量或常量。但在Objective-C中，创建一个数组时，是将一个指针赋值给变量，也就是引用了该数组在内存中的地址。所以在Objective-C中将它作为方法的参数传递时，始终传递的是数组在内存中的那块相同的地址。而在Swift中，传递的是数组的副本。同时根据数组中存储的对象的类型你可以对数组进行完全复制或者部分复制。在开发过程中要时刻注意这点。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <h2 id="u5F3A_u7C7B_u578B_u548CAnyObject"><a href="#u5F3A_u7C7B_u578B_u548CAnyObject" class="headerlink" title="强类型和AnyObject"></a>强类型和AnyObject</h2><p>强类型是Swift语言最大的一个特点。它可以提高我们代码的安全性，因此，以前在Objective-C中会在运行时才能发现的异常，现在在编译时就可以发现了。</p>
 <p>这一点非常棒。但是当你在Swift中使用Objective-C框架进行开发时，你要特别注意<code>AnyObject</code>这个类型。它相当于Objective-C中的<code>id</code>。在有些时候，<code>AnyObject</code>给我们的感觉好像又不太符合Swift的特性。因为你可以将<code>AnyObject</code>作为任何的类型去使用，但是这会导致程序在运行时发生异常。实际上，<code>AnyObject</code>的使用方式大多时候都和Objective-C中的<code>id</code>一样。不同的一点是，当你用<code>AnyObject</code>代表一个类型，但是你使用了该类型中并不存在的方法或属性时，它会返回<code>nil</code>：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> myString: <span class="type">AnyObject</span> = <span class="string">"hello"</span></span><br><span class="line">myString.cornerRadius <span class="comment">// 返回 nil</span></span><br></pre></td></tr></table></figure>
@@ -300,13 +316,20 @@
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@objc</span> <span class="class"><span class="keyword">protocol</span> <span class="title">MyNewProtocol</span> </span>&#123;</span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">myProtocolMethod</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> class1AsMyNewProtocol = class1 <span class="keyword">as</span>? <span class="type">MyNewProtocol</span> &#123;</span><br><span class="line">  <span class="comment">// We're in</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>虽然看起来只是加了<code>@objc</code>标签，但实际上不仅如此，因为在协议前加上了<code>@objc</code>标签，所以协议里的所有属性和方法返回值类型都被解析成Objective-C中的类型了。</p>
 <h2 id="u679A_u4E3E"><a href="#u679A_u4E3E" class="headerlink" title="枚举"></a>枚举</h2><p>枚举在Swift中变得更加实用。现在不仅可以在枚举中关联值（它们可以是不同类型的），也可以包含函数。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">MyEnum</span> </span>&#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="type">FirstType</span></span><br><span class="line">  <span class="keyword">case</span> <span class="type">IntType</span> (<span class="type">Int</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="type">StringType</span> (<span class="type">String</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="type">TupleType</span> (<span class="type">Int</span>, <span class="type">String</span>)</span><br><span class="line"></span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">prettyFormat</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> .<span class="type">FirstType</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"No params"</span></span><br><span class="line">    <span class="keyword">case</span> .<span class="type">IntType</span>(<span class="keyword">let</span> value):      </span><br><span class="line">	  <span class="keyword">return</span> <span class="string">"One param: <span class="subst">\(value)</span>"</span>    </span><br><span class="line">	<span class="keyword">case</span> .<span class="type">StringType</span>(<span class="keyword">let</span> value):</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"One param: <span class="subst">\(value)</span>"</span></span><br><span class="line">    <span class="keyword">case</span> .<span class="type">TupleType</span>(<span class="keyword">let</span> v1, <span class="keyword">let</span> v2):</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"Some params: <span class="subst">\(v1)</span>, <span class="subst">\(v2)</span>"</span></span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"Nothing to see here"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">MyEnum</span> </span>&#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="type">FirstType</span></span><br><span class="line">  <span class="keyword">case</span> <span class="type">IntType</span> (<span class="type">Int</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="type">StringType</span> (<span class="type">String</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="type">TupleType</span> (<span class="type">Int</span>, <span class="type">String</span>)</span><br><span class="line"></span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">prettyFormat</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> .<span class="type">FirstType</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"No params"</span></span><br><span class="line">    <span class="keyword">case</span> .<span class="type">IntType</span>(<span class="keyword">let</span> value):      </span><br><span class="line">      <span class="keyword">return</span> <span class="string">"One param: <span class="subst">\(value)</span>"</span>    </span><br><span class="line">    <span class="keyword">case</span> .<span class="type">StringType</span>(<span class="keyword">let</span> value):</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"One param: <span class="subst">\(value)</span>"</span></span><br><span class="line">    <span class="keyword">case</span> .<span class="type">TupleType</span>(<span class="keyword">let</span> v1, <span class="keyword">let</span> v2):</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"Some params: <span class="subst">\(v1)</span>, <span class="subst">\(v2)</span>"</span></span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"Nothing to see here"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这非常有用：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> enum1 = <span class="type">MyEnum</span>.<span class="type">FirstType</span></span><br><span class="line">enum1.prettyFormat() <span class="comment">// "No params"</span></span><br><span class="line">enum1 = .<span class="type">TupleType</span>(<span class="number">12</span>, <span class="string">"Hello"</span>)</span><br><span class="line">enum1.prettyFormat() <span class="comment">// "Some params: 12, Hello"</span></span><br></pre></td></tr></table></figure>
 <p>只需要做一些小练习，你就能体会出它的强大之处。</p>
 <h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>Swift的确很强大，它还需要我们通过实践去摸索新的开发模式，而不必局限在Objective-C的模式中。这篇文章列举了一些从Objective-C转到Swift中可能遇到的潜在的问题和疑惑，但希望不要让你对Swift却步。所有与本博客系列相关的项目和代码示例都是用Swift写的，并且都很通俗易懂。</p>
 <p>本文中的代码示例都是在<code>Playground</code>中完成的，你可以在<a href="https://github.com/ShinobiControl/iOS8-day-by-day" target="_blank" rel="external">github.com/ShinobiControl/iOS8-day-by-day</a>下载这些示例。</p>
 <p>原文地址：<a href="http://www.shinobicontrols.com/blog/posts/2014/07/17/ios8-day-by-day-day-1-blaggers-guide-to-swift" target="_blank" rel="external">iOS8 Day-by-Day :: Day 1 :: Blagger’s Guide to Swift</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 
             
           </span>
@@ -531,7 +554,15 @@ let y: Int = a ?? b;
         
           <span itemprop="articleBody">
             
-              <p>当你准备好开发一个应用扩展时，要选择一个合适的扩展点来呈现你的应用扩展的功能。然后使用Xcode提供的各个扩展点的模板来创建<code>Target</code>，以便使默认文件与你自定义的代码和界面更好的结合。最后，在你调试并优化你的应用扩展之后，就可以打包进你的应用程序给用户使用了。</p>
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>当你准备好开发一个应用扩展时，要选择一个合适的扩展点来呈现你的应用扩展的功能。然后使用Xcode提供的各个扩展点的模板来创建<code>Target</code>，以便使默认文件与你自定义的代码和界面更好的结合。最后，在你调试并优化你的应用扩展之后，就可以打包进你的应用程序给用户使用了。</p>
 <h2 id="u5F00_u53D1_u4E4B_u524D_u8981_u9009_u62E9_u6B63_u786E_u7684_u6269_u5C55_u70B9"><a href="#u5F00_u53D1_u4E4B_u524D_u8981_u9009_u62E9_u6B63_u786E_u7684_u6269_u5C55_u70B9" class="headerlink" title="开发之前要选择正确的扩展点"></a>开发之前要选择正确的扩展点</h2><p>因为每一个扩展点，它的功能定义都非常明确，对用户的使用习惯针对性很强，所以你首先应该考虑清楚的是，我要开发的这个应用扩展给用户提供什么样的功能，并且用户最习惯在哪个扩展点使用它。这是非常关键的，因为每个扩展点都有不同的API，为你提供不同的功能开发，所以如果你选错了扩展点，那么很有可能你就无法实现你想要的功能。<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/index.html#//apple_ref/doc/uid/TP40014214-CH20-SW3" target="_blank" rel="external">表1-1</a>列出了iOS和OS X中支持的所有扩展点。</p>
 <p>当你选定了一个扩展点并创建后，在你准备包含扩展的应用程序工程中就会有一个新的<code>Target</code>出现。创建一个应用扩展<code>Target</code>最简单的方式就是使用Xcode提供的模板，因为它已经帮你将基本的配置信息都配置好了，你只需要进行功能的开发即可。</p>
 <p>你可以通过菜单<code>choose File &gt; New &gt; Target</code>在你的Xcode工程中创建一个新<code>Target</code>。在打开的窗口中，选择iOS或OS X的<code>Application Extension</code>选项，然后选择你想要创建的应用扩展模板，如下图所示：<br><img src="http://www.devtalking.com/postImages/addNewTarget.png" alt="图片">  </p>
@@ -561,6 +592,14 @@ let y: Int = a ?? b;
 </code></pre><p>每个<code>NSExtensionItem</code>对象都包含若干个描述工作项的属性，比如标题、文本内容、附件信息、用户信息。</p>
 <p>注意<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionItem_Class/index.html#//apple_ref/occ/instp/NSExtensionItem/attachments" target="_blank" rel="external">attachments</a>属性，它包含一个与工作项相关联的媒体数据数组。比如说一个分享请求的工作项，那么<code>attachments</code>属性可能就包含用户想要分享网页中的信息。</p>
 <p>当用户希望的工作项处理完后，应用扩展通常会给用户两个选择，完成任务或取消任务。根据用户的选择，扩展会调用<code>completeRequestReturningItems:expirationHandler:completion:</code>方法，选择返回给主体程序的工作项，或者会调用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionContext_Class/index.html#//apple_ref/occ/instm/NSExtensionContext/cancelRequestWithError:" target="_blank" rel="external">cancelRequestWithError:</a>方法，返回一个错误编码。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <p>在iOS中，你的应用程序扩展可能需要更多的时间去处理潜在的需要长时间处理的任务，比如说往网上上传数据。这种情况下，你就要使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSession_class/index.html#//apple_ref/occ/cl/NSURLSession" target="_blank" rel="external">NSURLSession</a>类将该任务转为后台处理的任务。因为转换到后台处理任务需要用一个单独的线程，所以在扩展完成主应用请求并关闭后仍然可以处理。想了解更多关于扩展中<code>NSURLSession</code>类的使用，请参阅：<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW2" target="_blank" rel="external">Performing Uploads and Downloads</a>。</p>
 <blockquote>
 <p>注意：<br>虽然你可以设置一个在后台通过URL上传下载的任务，但是有一些类型的后台任务，比如提供<code>VoIp</code>或者在后台播放音乐的任务，是不能通过扩展来实现的。<br>如果你应用扩展的<code>Info.plist</code>文件中含有<code>UIBackgroundModes</code>关键字，那么在上传App Store时会被拒绝。（想了解更多关于<code>UIBackgroundModes</code>关键字的内容，请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009247" target="_blank" rel="external">Information Property List Key Reference</a>中的<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW22" target="_blank" rel="external">UIBackgroundModes</a>）</p>
@@ -607,6 +646,13 @@ let y: Int = a ?? b;
 <p>注意：如果你不使用通过上传主体应用程序到App Store这种方式交付应用扩展，那么在主体应用程序被用户认可或批准前，<code>Gatekeeper</code>是不会允许应用扩展生效的。同时，如果你不将主体应用程序上传至App Store，那么该主体应用程序也不能签署你的开发者ID名称，所以用户需要在设置用手动将你的主体应用设置为可信任的应用程序，才可以使用你的应用扩展。</p>
 </blockquote>
 <p>原文地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionCreation.html#//apple_ref/doc/uid/TP40014214-CH5-SW1" target="_blank" rel="external">Creating an App Extension</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 
             
           </span>

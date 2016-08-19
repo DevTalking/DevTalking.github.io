@@ -45,19 +45,40 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
 
 
-<meta name="description" content="一个函数A的参数是返回值为Optional类型的函数，如果你传入了一个返回值不是Optional的函数，那么函数A会自动将传入函数的返回值转换为Optional类型，来看代码示例：
-// 函数B的返回值为Int类型func B()-&amp;gt;Int &amp;#123;    return 1;&amp;#125;// 函数A的参数是返回值为Optional(Int)类型func A(fun: ()-&amp;gt;Int">
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+一个函数A的参数是返回值为Optional类型的函数，如果你传入了一个返回值不是Optional的函数，那么函数A会自动将传入函数的返回值转换为Optional类型，来看代码示例：
+// 函数B的返回值为Int类型func B()-">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Swift中将函数的返回值隐式转换为Optional类型的特性">
 <meta property="og:url" content="http://www.devtalking.com/articles/implicitly-converting-functions-return-optionals/index.html">
 <meta property="og:site_name" content="程序员说">
-<meta property="og:description" content="一个函数A的参数是返回值为Optional类型的函数，如果你传入了一个返回值不是Optional的函数，那么函数A会自动将传入函数的返回值转换为Optional类型，来看代码示例：
-// 函数B的返回值为Int类型func B()-&amp;gt;Int &amp;#123;    return 1;&amp;#125;// 函数A的参数是返回值为Optional(Int)类型func A(fun: ()-&amp;gt;Int">
-<meta property="og:updated_time" content="2016-01-01T13:28:26.000Z">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+一个函数A的参数是返回值为Optional类型的函数，如果你传入了一个返回值不是Optional的函数，那么函数A会自动将传入函数的返回值转换为Optional类型，来看代码示例：
+// 函数B的返回值为Int类型func B()-">
+<meta property="og:updated_time" content="2016-08-19T00:56:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Swift中将函数的返回值隐式转换为Optional类型的特性">
-<meta name="twitter:description" content="一个函数A的参数是返回值为Optional类型的函数，如果你传入了一个返回值不是Optional的函数，那么函数A会自动将传入函数的返回值转换为Optional类型，来看代码示例：
-// 函数B的返回值为Int类型func B()-&amp;gt;Int &amp;#123;    return 1;&amp;#125;// 函数A的参数是返回值为Optional(Int)类型func A(fun: ()-&amp;gt;Int">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+一个函数A的参数是返回值为Optional类型的函数，如果你传入了一个返回值不是Optional的函数，那么函数A会自动将传入函数的返回值转换为Optional类型，来看代码示例：
+// 函数B的返回值为Int类型func B()-">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -234,7 +255,15 @@
       
 
       
-        <span itemprop="articleBody"><p>一个函数A的参数是返回值为<code>Optional</code>类型的函数，如果你传入了一个返回值不是<code>Optional</code>的函数，那么函数A会自动将传入函数的返回值转换为<code>Optional</code>类型，来看代码示例：</p>
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>一个函数A的参数是返回值为<code>Optional</code>类型的函数，如果你传入了一个返回值不是<code>Optional</code>的函数，那么函数A会自动将传入函数的返回值转换为<code>Optional</code>类型，来看代码示例：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 函数B的返回值为Int类型</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">()</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数A的参数是返回值为Optional(Int)类型</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把函数B作为参数传入函数A，输出结果为Optional(1)</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
 <p>更棒的是你还可以使用经过转换后的函数，比如：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 让函数A返回作为参数的函数</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?)-&gt;()-&gt;<span class="type">Int</span>? &#123;</span><br><span class="line">    <span class="keyword">return</span> fun;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line"><span class="keyword">let</span> j = &#123; ++i &#125;</span><br><span class="line"> </span><br><span class="line">j() <span class="comment">// returns 1</span></span><br><span class="line">j() <span class="comment">// returns 2</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> h = <span class="type">A</span>(j)</span><br><span class="line"> </span><br><span class="line">h() <span class="comment">// returns &#123;Some 3&#125;</span></span><br><span class="line">h() <span class="comment">// returns &#123;Some 4&#125;</span></span><br><span class="line">j() <span class="comment">// returns 5</span></span><br></pre></td></tr></table></figure>
@@ -245,6 +274,12 @@
 <p>上面的特新其实可以理解为，编译器使用了一个闭包，调用了你传入的函数并进行了封包操作：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">()</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun());</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="type">A</span>( &#123; <span class="type">Optional</span>(<span class="type">B</span>()) &#125; );</span><br></pre></td></tr></table></figure>
 <p>这是Swift很有意思也很有用的一个特性。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
 </span>
       
     </div>

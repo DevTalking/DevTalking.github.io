@@ -45,24 +45,40 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
 
 
-<meta name="description" content="本文首发CSDN，如需转载请与CSDN联系。
-通过Dispatch Queue执行任务如果想让Dispatch Queue执行任务，首先就是得将任务放入队列中，我们可以异步的将任务加入队列，也可以同步的将任务加入队列，可以一个任务一个任务的加，也可以一组一组的加。这节我们就来看看将任务加入队列的那些事。
-向队列添加任务我们可以使用dispatch_async或者dispatch_async_f函数">
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+本文首发CSDN，如需转载请与CSDN联系。
+通过Dispatch Queue执行任务如果想让Dispatch Queue执行任务，首先就是得将任务放入队列中，我们可以异步的将任务加入队列，也可以同步的将任务加入队列，可以一个任务一">
 <meta property="og:type" content="article">
 <meta property="og:title" content="读 Concurrency Programming Guide 笔记（三）">
 <meta property="og:url" content="http://www.devtalking.com/articles/read-concurrency-programming-guide-3/index.html">
 <meta property="og:site_name" content="程序员说">
-<meta property="og:description" content="本文首发CSDN，如需转载请与CSDN联系。
-通过Dispatch Queue执行任务如果想让Dispatch Queue执行任务，首先就是得将任务放入队列中，我们可以异步的将任务加入队列，也可以同步的将任务加入队列，可以一个任务一个任务的加，也可以一组一组的加。这节我们就来看看将任务加入队列的那些事。
-向队列添加任务我们可以使用dispatch_async或者dispatch_async_f函数">
-<meta property="og:image" content="http://www.devtalking.com/donate.png">
-<meta property="og:image" content="http://www.devtalking.com/guanzhugongzhonghao.png">
-<meta property="og:updated_time" content="2016-04-21T08:32:58.000Z">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+本文首发CSDN，如需转载请与CSDN联系。
+通过Dispatch Queue执行任务如果想让Dispatch Queue执行任务，首先就是得将任务放入队列中，我们可以异步的将任务加入队列，也可以同步的将任务加入队列，可以一个任务一">
+<meta property="og:updated_time" content="2016-08-19T01:00:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="读 Concurrency Programming Guide 笔记（三）">
-<meta name="twitter:description" content="本文首发CSDN，如需转载请与CSDN联系。
-通过Dispatch Queue执行任务如果想让Dispatch Queue执行任务，首先就是得将任务放入队列中，我们可以异步的将任务加入队列，也可以同步的将任务加入队列，可以一个任务一个任务的加，也可以一组一组的加。这节我们就来看看将任务加入队列的那些事。
-向队列添加任务我们可以使用dispatch_async或者dispatch_async_f函数">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+本文首发CSDN，如需转载请与CSDN联系。
+通过Dispatch Queue执行任务如果想让Dispatch Queue执行任务，首先就是得将任务放入队列中，我们可以异步的将任务加入队列，也可以同步的将任务加入队列，可以一个任务一">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -239,7 +255,15 @@
       
 
       
-        <span itemprop="articleBody"><p>本文首发<a href="http://geek.csdn.net/news/detail/69122" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://geek.csdn.net/news/detail/69122" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 <h2 id="u901A_u8FC7Dispatch_Queue_u6267_u884C_u4EFB_u52A1"><a href="#u901A_u8FC7Dispatch_Queue_u6267_u884C_u4EFB_u52A1" class="headerlink" title="通过Dispatch Queue执行任务"></a>通过Dispatch Queue执行任务</h2><p>如果想让Dispatch Queue执行任务，首先就是得将任务放入队列中，我们可以异步的将任务加入队列，也可以同步的将任务加入队列，可以一个任务一个任务的加，也可以一组一组的加。这节我们就来看看将任务加入队列的那些事。</p>
 <h3 id="u5411_u961F_u5217_u6DFB_u52A0_u4EFB_u52A1"><a href="#u5411_u961F_u5217_u6DFB_u52A0_u4EFB_u52A1" class="headerlink" title="向队列添加任务"></a>向队列添加任务</h3><p>我们可以使用<code>dispatch_async</code>或者<code>dispatch_async_f</code>函数异步的向队列中添加任务，也就是说当我们添加完任务后该函数会立即返回，我们不需要等待任务执行完成，而且我们也不会知道队列到底何时开始执行任务。<code>dispatch_async</code>函数有两个参数，一个是目标队列，类型为<code>dispatch_queue_t</code>，另一个是闭包，类型为<code>dispatch_block_t</code>：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> serialQueue = dispatch_queue_create(<span class="string">"com.example.MySerialQueue"</span>, <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">dispatch_async(serialQueue, &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Task in the queue..."</span>)</span><br><span class="line">        </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
@@ -274,6 +298,14 @@
 <p>这一节就来看看如何使用Dispatch Source。</p>
 <p>用通俗一点的话说就是用GCD的函数指定一个希望监听的系统事件类型，再指定一个捕获到事件后进行逻辑处理的闭包或者函数作为回调函数，然后再指定一个该回调函数执行的Dispatch Queue即可，当监听到指定的系统事件发生时会调用回调函数，将该回调函数作为一个任务放入指定的队列中执行。也就是说当监听到系统事件后就会触发一个任务，并自动将其加入队列执行，这里与之前手动添加任务的模式不同，一旦将Diaptach Source与Dispatch Queue关联后，只要监听到系统事件，Dispatch Source就会自动将任务（回调函数）添加到关联的队列中。</p>
 <p>有些时候回调函数执行的时间较长，在这段时间内Dispatch Source又监听到多个系统事件，理论上就会形成事件积压，但好在Dispatch Source有很好的机制解决这个问题，当有多个事件积压时会根据事件类型，将它们进行关联和结合，形成一个新的事件。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <h3 id="u76D1_u542C_u4E8B_u4EF6_u7C7B_u578B"><a href="#u76D1_u542C_u4E8B_u4EF6_u7C7B_u578B" class="headerlink" title="监听事件类型"></a>监听事件类型</h3><p>Dispatch Source一共可以监听六类事件，分为11个类型，我们来看看都是什么：</p>
 <ul>
 <li><code>DISPATCH_SOURCE_TYPE_DATA_ADD</code>：属于自定义事件，可以通过<code>dispatch_source_get_data</code>函数获取事件变量数据，在我们自定义的方法中可以调用<code>dispatch_source_merge_data</code>函数向Dispatch Source设置数据，下文中会有详细的演示。</li>
@@ -343,7 +375,13 @@
 <p>我们来看看<code>generateCustomEvent(dispatchSource: dispatch_source_t)</code>方法，该方法的作用的是模拟自定义事件，首先创建一个全局并发队列，然后循环让其执行任务，在执行的任务里调用<code>dispatch_source_merge_data</code>函数，就可以触发监听类型为<code>DISPATCH_SOURCE_TYPE_DATA_ADD</code>或者<code>DISPATCH_SOURCE_TYPE_DATA_OR</code>的Dispatch Source。该函数有两个参数，第一个参数是目标Dispatch Source，第二个参数的类型是无符号长整型，用于向目标Dispatch Source中的对应变量追加指定的数。</p>
 <p>我们再来看看如何监听自定义时间，首先创建类型为<code>DISPATCH_SOURCE_TYPE_DATA_ADD</code>的Dispatch Source，然后设置回调闭包，在闭包中使用<code>dispatch_source_get_data</code>获取追加的变量值，该函数只有一个参数，就是目标Dispatch Source，这里需要注意的是通过<code>dispatch_source_get_data</code>函数获取的变量值并不是累加值，而是每次调用<code>dispatch_source_merge_data</code>函数时设置的值，所以在上面的示例中用<code>totalProcess</code>变量累加每次获取到的值。</p>
 <p>上面的示例可以用来模拟后台进行下载，根据下载的数据量使用<code>dispatch_source_merge_data</code>函数给目标Dispatch Source设置相应的变量值，然后在主线程中监听到Dispatch Source的自定义事件，通过<code>dispatch_source_get_data</code>函数获取到变量，用于更新显示进度条的UI。</p>
-<p><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/donate.png"><br></a><br><a href="http://www.devtalking.com/gongzhonghao.html"><br>    <img border="0" src="http://www.devtalking.com/guanzhugongzhonghao.png"><br></a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 </span>
       
     </div>

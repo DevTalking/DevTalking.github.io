@@ -45,24 +45,40 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
 
 
-<meta name="description" content="本文首发CSDN，如需转载请与CSDN联系。
-并发任务是指多个任务在某一时刻同时运行。在过去，一提到并发执行任务，首当其冲的解决方案就是在程序中创建多个线程来实现，但是线程本身较为底层，而且管理的难度比较大，如果想做倒最优的线程数量、最恰当的线程创建销毁时机是很难的，以至于虽然达到了并发执行任务的目的，但却以降低程序性能为代价，所以往往得不偿失。
-鉴于上述的原因，于是一些实现并发任务的其他方案出现">
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+本文首发CSDN，如需转载请与CSDN联系。
+并发任务是指多个任务在某一时刻同时运行。在过去，一提到并发执行任务，首当其冲的解决方案就是在程序中创建多个线程来实现，但是线程本身较为底层，而且管理的难度比较大，如果想做倒最优的线程数量">
 <meta property="og:type" content="article">
 <meta property="og:title" content="读 Concurrency Programming Guide 笔记（一）">
 <meta property="og:url" content="http://www.devtalking.com/articles/read-concurrency-programming-guide-1/index.html">
 <meta property="og:site_name" content="程序员说">
-<meta property="og:description" content="本文首发CSDN，如需转载请与CSDN联系。
-并发任务是指多个任务在某一时刻同时运行。在过去，一提到并发执行任务，首当其冲的解决方案就是在程序中创建多个线程来实现，但是线程本身较为底层，而且管理的难度比较大，如果想做倒最优的线程数量、最恰当的线程创建销毁时机是很难的，以至于虽然达到了并发执行任务的目的，但却以降低程序性能为代价，所以往往得不偿失。
-鉴于上述的原因，于是一些实现并发任务的其他方案出现">
-<meta property="og:image" content="http://www.devtalking.com/donate.png">
-<meta property="og:image" content="http://www.devtalking.com/guanzhugongzhonghao.png">
-<meta property="og:updated_time" content="2016-03-23T13:31:50.000Z">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+本文首发CSDN，如需转载请与CSDN联系。
+并发任务是指多个任务在某一时刻同时运行。在过去，一提到并发执行任务，首当其冲的解决方案就是在程序中创建多个线程来实现，但是线程本身较为底层，而且管理的难度比较大，如果想做倒最优的线程数量">
+<meta property="og:updated_time" content="2016-08-19T01:00:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="读 Concurrency Programming Guide 笔记（一）">
-<meta name="twitter:description" content="本文首发CSDN，如需转载请与CSDN联系。
-并发任务是指多个任务在某一时刻同时运行。在过去，一提到并发执行任务，首当其冲的解决方案就是在程序中创建多个线程来实现，但是线程本身较为底层，而且管理的难度比较大，如果想做倒最优的线程数量、最恰当的线程创建销毁时机是很难的，以至于虽然达到了并发执行任务的目的，但却以降低程序性能为代价，所以往往得不偿失。
-鉴于上述的原因，于是一些实现并发任务的其他方案出现">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+本文首发CSDN，如需转载请与CSDN联系。
+并发任务是指多个任务在某一时刻同时运行。在过去，一提到并发执行任务，首当其冲的解决方案就是在程序中创建多个线程来实现，但是线程本身较为底层，而且管理的难度比较大，如果想做倒最优的线程数量">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -239,7 +255,15 @@
       
 
       
-        <span itemprop="articleBody"><p>本文首发<a href="http://geek.csdn.net/news/detail/60236" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://geek.csdn.net/news/detail/60236" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 <p>并发任务是指多个任务在某一时刻同时运行。在过去，一提到并发执行任务，首当其冲的解决方案就是在程序中创建多个线程来实现，但是线程本身较为底层，而且管理的难度比较大，如果想做倒最优的线程数量、最恰当的线程创建销毁时机是很难的，以至于虽然达到了并发执行任务的目的，但却以降低程序性能为代价，所以往往得不偿失。</p>
 <p>鉴于上述的原因，于是一些实现并发任务的其他方案出现了。在OS X和iOS系统中采用了多种实现并发执行任务的方法，与直接创建线程不同，这些方法让开发者只需要关注要执行的任务，然后让系统执行它们即可，不需要关心线程管理的问题，为开发者提供了一个简单而高效的并发任务编程模式。</p>
 <p>其中一种实现任务异步执行的技术就是Grand Central Dispatch（GCD），该技术封提供了系统级别的线程管理功能，我们在使用它时只需要定义我们希望执行的任务，然后将任务添加到对应的分派执行队列中即可。另外一个技术是Operation queues，具体的实现是Objective-C中的<code>NSOperationQueue</code>对象，它的作用和GCD很相似，同样只需要我们定义好任务，然后添加到对应的操作队列中即可，其他与线程管理相关的事都由<code>NSOperationQueue</code>帮我们完成。</p>
@@ -325,6 +349,14 @@
 <blockquote>
 <p>注：如果在二级线程中使用非并发自定义Operation对象，那么<code>main</code>方法中的内容应该使用<code>autoreleasepool{}</code>包起来。因为如果在二级线程中，没有主线程的自动释放池，一些资源没法被回收，所以需要加一个自动释放池，如果在主线程中就不需要了。</p>
 </blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <h4 id="u54CD_u5E94_u53D6_u6D88_u4E8B_u4EF6"><a href="#u54CD_u5E94_u53D6_u6D88_u4E8B_u4EF6" class="headerlink" title="响应取消事件"></a>响应取消事件</h4><p>一般情况下，当Operation对象开始执行时，就会一直执行任务，不会中断执行，但是有时需要在任务执行一半时终止任务，这时就需要Operation对象有响应任务终止命令的能力。理论上，在Operation对象执行任务的任何时间点都可以调用<code>NSOperation</code>类的<code>cancel</code>方法终止任务，那么在我们自定义的Operation对象中如何实现响应任务终止呢？我们看看下面的代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyNonconcurrentOperation</span>: <span class="title">NSOperation</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> url: <span class="type">String</span>?</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(withURL url: <span class="type">String</span>) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">self</span>.url = url</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 1.</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">self</span>.cancelled &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> strURL = <span class="keyword">self</span>.url <span class="keyword">else</span> &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> nsurl = <span class="type">NSURL</span>(string: strURL)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> session: <span class="type">NSURLSession</span>? = <span class="type">NSURLSession</span>.sharedSession()</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 2.</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">self</span>.cancelled &#123;</span><br><span class="line">            </span><br><span class="line">            nsurl = <span class="literal">nil</span></span><br><span class="line">            </span><br><span class="line">            session = <span class="literal">nil</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> dataTask: <span class="type">NSURLSessionDataTask</span>? = session!.dataTaskWithURL(nsurl!, completionHandler: &#123; (nsdata, nsurlrespond, nserror) <span class="keyword">in</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> error = nserror &#123;</span><br><span class="line">                </span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"出现异常：<span class="subst">\(error.localizedDescription)</span>"</span>)</span><br><span class="line">                </span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 4.</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">self</span>.cancelled &#123;</span><br><span class="line">                    </span><br><span class="line">                    nsurl = <span class="literal">nil</span></span><br><span class="line">                    </span><br><span class="line">                    session = <span class="literal">nil</span></span><br><span class="line">                    </span><br><span class="line">                    <span class="keyword">return</span></span><br><span class="line">                    </span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">do</span> &#123;</span><br><span class="line">                    </span><br><span class="line">                    <span class="keyword">let</span> dict = <span class="keyword">try</span> <span class="type">NSJSONSerialization</span>.<span class="type">JSONObjectWithData</span>(nsdata!, options: <span class="type">NSJSONReadingOptions</span>.<span class="type">MutableContainers</span>)</span><br><span class="line">                    </span><br><span class="line">                    <span class="built_in">print</span>(dict)</span><br><span class="line">                    </span><br><span class="line">                &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">                    </span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">"出现异常"</span>)</span><br><span class="line">                    </span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 3.</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">self</span>.cancelled &#123;</span><br><span class="line">            </span><br><span class="line">            nsurl = <span class="literal">nil</span></span><br><span class="line">            </span><br><span class="line">            session = <span class="literal">nil</span></span><br><span class="line">            </span><br><span class="line">            dataTask = <span class="literal">nil</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        dataTask!.resume()</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">10</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> myNonconcurrentOperation = <span class="type">MyNonconcurrentOperation</span>(withURL: <span class="string">"http://www.baidu.com/s?wd=ios"</span>)</span><br><span class="line">myNonconcurrentOperation.start()</span><br><span class="line">myNonconcurrentOperation.cancel()</span><br></pre></td></tr></table></figure>
 <p>从上述代码中可以看到，在<code>main</code>方法里加了很多对<code>self.cancelled</code>值的判断，没错，这就是响应终止执行任务的关键，因为当调用了<code>NSOperation</code>的<code>cancel</code>方法后，<code>cancelled</code>属性就会被置为<code>flase</code>，当判断到该属性的值为<code>false</code>时，代表当前任务已经被取消，我们只需释放资源返回即可。我们只有在整个任务逻辑代码中尽可以细的去判断<code>cancelled</code>属性，才可以达到较为实时的终止效果。上面代码中我分别在四个地方判断了<code>cancelled</code>属性：</p>
@@ -351,7 +383,13 @@
 </ul>
 <p>我们可以测试一下这个自定义的Operation对象：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> myContext = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> myConcurrentOperation = <span class="type">MyConcurrentOperation</span>(withURL: <span class="string">"http://www.baidu.com/s?wd=ios"</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        myConcurrentOperation.addObserver(<span class="keyword">self</span>, forKeyPath: <span class="string">"finished"</span>, options: .<span class="type">New</span>, context: &amp;myContext)</span><br><span class="line">        myConcurrentOperation.addObserver(<span class="keyword">self</span>, forKeyPath: <span class="string">"executing"</span>, options: .<span class="type">New</span>, context: &amp;myContext)</span><br><span class="line">        </span><br><span class="line">        myConcurrentOperation.start()</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">        <span class="built_in">print</span>(myConcurrentOperation.executing)</span><br><span class="line">        <span class="built_in">print</span>(myConcurrentOperation.finished)</span><br><span class="line">        <span class="built_in">print</span>(myConcurrentOperation.concurrent)</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">10</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">observeValueForKeyPath</span><span class="params">(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer&lt;Void&gt;)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> change = change <span class="keyword">where</span> context == &amp;myContext &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> keyPath == <span class="string">"finished"</span> &#123;</span><br><span class="line">                </span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Finish status has been changed, The new value is <span class="subst">\(change[NSKeyValueChangeNewKey]!)</span>"</span>)</span><br><span class="line">                </span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> keyPath == <span class="string">"executing"</span> &#123;</span><br><span class="line">                </span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Executing status has been changed, The new value is <span class="subst">\(change[NSKeyValueChangeNewKey]!)</span>"</span>)</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">deinit</span> &#123;</span><br><span class="line">        </span><br><span class="line">        myConcurrentOperation.removeObserver(<span class="keyword">self</span>, forKeyPath: <span class="string">"finished"</span>, context: &amp;myContext)</span><br><span class="line">        </span><br><span class="line">        myConcurrentOperation.removeObserver(<span class="keyword">self</span>, forKeyPath: <span class="string">"executing"</span>, context: &amp;myContext)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> test = <span class="type">Test</span>()</span><br><span class="line">test.launch()</span><br></pre></td></tr></table></figure>
-<p><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/donate.png"><br></a><br><a href="http://www.devtalking.com/gongzhonghao.html"><br>    <img border="0" src="http://www.devtalking.com/guanzhugongzhonghao.png"><br></a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 </span>
       
     </div>

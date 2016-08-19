@@ -45,34 +45,37 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
 
 
-<meta name="description" content="当Swift提供了访问控制特性后大家对该特性的响应非常积极和强烈。同时也有很多开发者朋友会问，“为什么Swift中没有提供protected访问级别呢？” 然而在很多其他语言中有这种访问控制级别，就是只能由子类可以访问某些方法或属性的访问级别。
-当定义Swift的访问级别时，我们主要考虑了以下两个使用情况：
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
 
-在App中隐藏class的私人信息。
-在App客户端中隐藏框架中的实现细节。
 
-这两种情">
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+当Swift提供了访问控制特性后大家对该特性的响应非常积极和强烈。同时也有很多开发者朋友会问，“为什么Swift中没有提供protected访问级别呢？” 然而在很多其他语言中有这种访问控制级别，就是只能由子类可以访问某些方法或属性">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Swift中的访问控制与protected">
 <meta property="og:url" content="http://www.devtalking.com/articles/access-control-and-protected/index.html">
 <meta property="og:site_name" content="程序员说">
-<meta property="og:description" content="当Swift提供了访问控制特性后大家对该特性的响应非常积极和强烈。同时也有很多开发者朋友会问，“为什么Swift中没有提供protected访问级别呢？” 然而在很多其他语言中有这种访问控制级别，就是只能由子类可以访问某些方法或属性的访问级别。
-当定义Swift的访问级别时，我们主要考虑了以下两个使用情况：
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
 
-在App中隐藏class的私人信息。
-在App客户端中隐藏框架中的实现细节。
 
-这两种情">
-<meta property="og:updated_time" content="2016-01-01T13:29:56.000Z">
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+当Swift提供了访问控制特性后大家对该特性的响应非常积极和强烈。同时也有很多开发者朋友会问，“为什么Swift中没有提供protected访问级别呢？” 然而在很多其他语言中有这种访问控制级别，就是只能由子类可以访问某些方法或属性">
+<meta property="og:updated_time" content="2016-08-19T00:50:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Swift中的访问控制与protected">
-<meta name="twitter:description" content="当Swift提供了访问控制特性后大家对该特性的响应非常积极和强烈。同时也有很多开发者朋友会问，“为什么Swift中没有提供protected访问级别呢？” 然而在很多其他语言中有这种访问控制级别，就是只能由子类可以访问某些方法或属性的访问级别。
-当定义Swift的访问级别时，我们主要考虑了以下两个使用情况：
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
 
-在App中隐藏class的私人信息。
-在App客户端中隐藏框架中的实现细节。
 
-这两种情">
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+当Swift提供了访问控制特性后大家对该特性的响应非常积极和强烈。同时也有很多开发者朋友会问，“为什么Swift中没有提供protected访问级别呢？” 然而在很多其他语言中有这种访问控制级别，就是只能由子类可以访问某些方法或属性">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -249,7 +252,15 @@
       
 
       
-        <span itemprop="articleBody"><p>当Swift提供了访问控制特性后大家对该特性的响应非常积极和强烈。同时也有很多开发者朋友会问，“为什么Swift中没有提供<code>protected</code>访问级别呢？” 然而在很多其他语言中有这种访问控制级别，就是只能由子类可以访问某些方法或属性的访问级别。</p>
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>当Swift提供了访问控制特性后大家对该特性的响应非常积极和强烈。同时也有很多开发者朋友会问，“为什么Swift中没有提供<code>protected</code>访问级别呢？” 然而在很多其他语言中有这种访问控制级别，就是只能由子类可以访问某些方法或属性的访问级别。</p>
 <p>当定义Swift的访问级别时，我们主要考虑了以下两个使用情况：</p>
 <ul>
 <li>在App中隐藏<code>class</code>的私人信息。</li>
@@ -257,11 +268,26 @@
 </ul>
 <p>这两种情况就分别对应了<code>private</code>和<code>internal</code>访问级别。</p>
 <p>相比之下，<code>protected</code>级别保护了继承者的访问权限，这个新的访问控制级别给我们带来全新的思考方式和设计模式。但实际上，该级别并没有提供真正意义上的保护，因为子类总是能通过<code>public</code>级别的方法和属性去暴露<code>protected</code>级别的API。它也没有提供额外的优化解决机制，因为一个父类的方法或属性可以被很多个子类重写，很难控制。所以也没有必要在这方面进行限制，也就是说在现有机制下，子类可以访问父类的一些成员，但是在子类中使用的，或帮助子类实现某些功能的类并不一定能访问到该子类父类的成员。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <p>正如一些开发者指出的，Apple的框架里有些API被分离出来，专门供子类使用。那么为什么不使用<code>protected</code>级别控制一下呢？我们查看了相关代码后，发现这些API大体符合这么两点情况。第一，一些方法在子类外没有用，所以没有必要将其保护为只能由子类使用。第二，一些方法可以被重写，但不能被调用。比如<code>drawRect(_:)</code>方法，在<code>UIKit</code>框架代码库中肯定可以使用，但是在<code>UIKit</code>框架之外就没法使用了。</p>
 <p>在扩展类的时候，如何与<code>protected</code>级别的成员交互也思考的不是很明确。比如一个类的扩展是否可以访问该类的<code>protected</code>成员呢？或者一个子类的扩展是否能访问其父类的<code>protected</code>成员呢？在相同模块中申明类的扩展会有什么影响呢？</p>
 <p>还有一个影响我们设计的原因是：现在已有的应用大多数都使用了Apple提供的或第三方提供的框架。Objective-C的方法和属性通常都是在<code>.h</code>公共头文件中申明的，但同样可以加在类扩展的<code>.m</code>实现文件中。当公共类的某些部分在框架的其他地方使用，但没有超出框架外时，开发者就要创建第二个头文件用于内部使用。这些种情况就对应着Swift中的<code>public</code>、<code>private</code>、<code>internal</code>三种访问级别。</p>
 <p>Swift提供的访问控制特性本着单一、易于理解、与继承无关的原则。我们认为现在这种模式很简单也很容易理解，并且大多数的应用场景是想隐藏类或框架中一些功能实现细节。这种访问控制机制可能和你以前使用的其他语言不太一样，但是我们鼓励你们大胆的去尝试。</p>
 <p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=11" target="_blank" rel="external">Access Control and protected</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 </span>
       
     </div>

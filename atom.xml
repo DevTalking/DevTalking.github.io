@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.devtalking.com/"/>
-  <updated>2016-04-21T08:32:58.000Z</updated>
+  <updated>2016-08-19T01:00:45.000Z</updated>
   <id>http://www.devtalking.com/</id>
   
   <author>
@@ -19,8 +19,16 @@
     <link href="http://www.devtalking.com//articles/read-concurrency-programming-guide-3/"/>
     <id>http://www.devtalking.com//articles/read-concurrency-programming-guide-3/</id>
     <published>2016-04-20T16:00:00.000Z</published>
-    <updated>2016-04-21T08:32:58.000Z</updated>
-    <content type="html"><![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/69122" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+    <updated>2016-08-19T01:00:45.000Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://geek.csdn.net/news/detail/69122" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 <h2 id="u901A_u8FC7Dispatch_Queue_u6267_u884C_u4EFB_u52A1"><a href="#u901A_u8FC7Dispatch_Queue_u6267_u884C_u4EFB_u52A1" class="headerlink" title="通过Dispatch Queue执行任务"></a>通过Dispatch Queue执行任务</h2><p>如果想让Dispatch Queue执行任务，首先就是得将任务放入队列中，我们可以异步的将任务加入队列，也可以同步的将任务加入队列，可以一个任务一个任务的加，也可以一组一组的加。这节我们就来看看将任务加入队列的那些事。</p>
 <h3 id="u5411_u961F_u5217_u6DFB_u52A0_u4EFB_u52A1"><a href="#u5411_u961F_u5217_u6DFB_u52A0_u4EFB_u52A1" class="headerlink" title="向队列添加任务"></a>向队列添加任务</h3><p>我们可以使用<code>dispatch_async</code>或者<code>dispatch_async_f</code>函数异步的向队列中添加任务，也就是说当我们添加完任务后该函数会立即返回，我们不需要等待任务执行完成，而且我们也不会知道队列到底何时开始执行任务。<code>dispatch_async</code>函数有两个参数，一个是目标队列，类型为<code>dispatch_queue_t</code>，另一个是闭包，类型为<code>dispatch_block_t</code>：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> serialQueue = dispatch_queue_create(<span class="string">"com.example.MySerialQueue"</span>, <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">dispatch_async(serialQueue, &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Task in the queue..."</span>)</span><br><span class="line">        </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
@@ -55,6 +63,14 @@
 <p>这一节就来看看如何使用Dispatch Source。</p>
 <p>用通俗一点的话说就是用GCD的函数指定一个希望监听的系统事件类型，再指定一个捕获到事件后进行逻辑处理的闭包或者函数作为回调函数，然后再指定一个该回调函数执行的Dispatch Queue即可，当监听到指定的系统事件发生时会调用回调函数，将该回调函数作为一个任务放入指定的队列中执行。也就是说当监听到系统事件后就会触发一个任务，并自动将其加入队列执行，这里与之前手动添加任务的模式不同，一旦将Diaptach Source与Dispatch Queue关联后，只要监听到系统事件，Dispatch Source就会自动将任务（回调函数）添加到关联的队列中。</p>
 <p>有些时候回调函数执行的时间较长，在这段时间内Dispatch Source又监听到多个系统事件，理论上就会形成事件积压，但好在Dispatch Source有很好的机制解决这个问题，当有多个事件积压时会根据事件类型，将它们进行关联和结合，形成一个新的事件。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <h3 id="u76D1_u542C_u4E8B_u4EF6_u7C7B_u578B"><a href="#u76D1_u542C_u4E8B_u4EF6_u7C7B_u578B" class="headerlink" title="监听事件类型"></a>监听事件类型</h3><p>Dispatch Source一共可以监听六类事件，分为11个类型，我们来看看都是什么：</p>
 <ul>
 <li><code>DISPATCH_SOURCE_TYPE_DATA_ADD</code>：属于自定义事件，可以通过<code>dispatch_source_get_data</code>函数获取事件变量数据，在我们自定义的方法中可以调用<code>dispatch_source_merge_data</code>函数向Dispatch Source设置数据，下文中会有详细的演示。</li>
@@ -124,11 +140,18 @@
 <p>我们来看看<code>generateCustomEvent(dispatchSource: dispatch_source_t)</code>方法，该方法的作用的是模拟自定义事件，首先创建一个全局并发队列，然后循环让其执行任务，在执行的任务里调用<code>dispatch_source_merge_data</code>函数，就可以触发监听类型为<code>DISPATCH_SOURCE_TYPE_DATA_ADD</code>或者<code>DISPATCH_SOURCE_TYPE_DATA_OR</code>的Dispatch Source。该函数有两个参数，第一个参数是目标Dispatch Source，第二个参数的类型是无符号长整型，用于向目标Dispatch Source中的对应变量追加指定的数。</p>
 <p>我们再来看看如何监听自定义时间，首先创建类型为<code>DISPATCH_SOURCE_TYPE_DATA_ADD</code>的Dispatch Source，然后设置回调闭包，在闭包中使用<code>dispatch_source_get_data</code>获取追加的变量值，该函数只有一个参数，就是目标Dispatch Source，这里需要注意的是通过<code>dispatch_source_get_data</code>函数获取的变量值并不是累加值，而是每次调用<code>dispatch_source_merge_data</code>函数时设置的值，所以在上面的示例中用<code>totalProcess</code>变量累加每次获取到的值。</p>
 <p>上面的示例可以用来模拟后台进行下载，根据下载的数据量使用<code>dispatch_source_merge_data</code>函数给目标Dispatch Source设置相应的变量值，然后在主线程中监听到Dispatch Source的自定义事件，通过<code>dispatch_source_get_data</code>函数获取到变量，用于更新显示进度条的UI。</p>
-<p><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/donate.png"><br></a><br><a href="http://www.devtalking.com/gongzhonghao.html"><br>    <img border="0" src="http://www.devtalking.com/guanzhugongzhonghao.png"><br></a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/69122" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<h2 id="u901A_u8FC7Dispatc]]>
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" ]]>
     </summary>
     
       <category term="Concurrency" scheme="http://www.devtalking.com/tags/Concurrency/"/>
@@ -142,8 +165,16 @@
     <link href="http://www.devtalking.com//articles/read-concurrency-programming-guide-2/"/>
     <id>http://www.devtalking.com//articles/read-concurrency-programming-guide-2/</id>
     <published>2016-03-22T16:00:00.000Z</published>
-    <updated>2016-03-23T13:31:58.000Z</updated>
-    <content type="html"><![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/63001" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+    <updated>2016-08-19T00:59:42.000Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://geek.csdn.net/news/detail/63001" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 <h2 id="Operation_u5BF9_u8C61_u7684_u76F8_u5173_u8BBE_u7F6E"><a href="#Operation_u5BF9_u8C61_u7684_u76F8_u5173_u8BBE_u7F6E" class="headerlink" title="Operation对象的相关设置"></a>Operation对象的相关设置</h2><p>Operation对象除了上文中讲到到基本使用方法外还有一些其他的特性，这些特性需要根据我们的应用场景去设置，设置的时机在创建Operation对象之后和运行它或者将其放入操作队列之前，下面让我们来看看Operation对象还有哪些特性。</p>
 <h3 id="Operation_u5BF9_u8C61_u4E4B_u95F4_u7684_u4F9D_u8D56"><a href="#Operation_u5BF9_u8C61_u4E4B_u95F4_u7684_u4F9D_u8D56" class="headerlink" title="Operation对象之间的依赖"></a>Operation对象之间的依赖</h3><p>与GCD不同，Operation Queue不遵循先进先出的原则，而且Operation Queue始终是并发执行Operation对象的，所以想让Operation对象串行执行就需要用它的Operation对象依赖特性，该特性可以让Operation对象将自己与另外一个Operation对象进行关联，并且当关联的Operation对象执行完成后才可以执行，这样就达到了串行执行Operation对象的目的。</p>
 <p>我们可以用<code>NSOperation</code>的<code>addDependency</code>方法添加依赖的Operation对象，而且产生依赖的这两个Operation对象并不要求必须在相同的操作队列中，但是这种依赖只能是单向的，不能相互依赖。</p>
@@ -195,6 +226,14 @@
 <li>主Dispatch Queue：该类队列实质上也是一个串行队列，但是该队列是一个全局队列，在该队列中执行的任务都是在当前应用的主线程中执行的。通常情况下我们不需要自己创建此类队列。</li>
 </ul>
 <p>Dispatch Queue与Operation Queue相似，都能让我们更方便的实现并发任务的编程工作，并且能提供更优的性能，因为我们不再需要编写关于线程管理相关的一大堆代码，这些完全都有系统接管，我们只需要将注意力放在要执行的任务即可。举个简单的例子，如果有两个任务需要在不同的线程中执行，但是他们之间存在资源竞争的情况，所以需要保证执行的先后顺序，如果我们自己创建线程实现该场景，那么就务必要用的线程锁机制，确保任务有正确的执行顺序，这势必对系统资源的开销会非常大，如果使用Dispatch Queue，我们只需要将任务安正确的顺序添加到串行队列中即可，省时省力省资源。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <h3 id="u4EFB_u52A1_u7684_u8F7D_u4F53_u662F_u95ED_u5305"><a href="#u4EFB_u52A1_u7684_u8F7D_u4F53_u662F_u95ED_u5305" class="headerlink" title="任务的载体是闭包"></a>任务的载体是闭包</h3><p>在使用Dispatch Queue时，需要将任务封装为闭包。闭包就是一个函数，或者一个指向函数的指针，加上这个函数执行的非局部变量，闭包最大的一个特性就是可以访问父作用域中的局部变量。我们在将任务封装为闭包进行使用时要注意以下这几点：</p>
 <ul>
 <li>虽然在闭包中可以使用父作用域中的变量，但是尽可能少的使用父作用域中比较大的变量以及不要在闭包中做类似删除清空父作用域中变量的行为。</li>
@@ -234,11 +273,19 @@
 <h3 id="u961F_u5217_u7684_u6536_u5C3E_u5DE5_u4F5C"><a href="#u961F_u5217_u7684_u6536_u5C3E_u5DE5_u4F5C" class="headerlink" title="队列的收尾工作"></a>队列的收尾工作</h3><p>虽然在ARC时代，资源释放的工作已经基本不需要我们手动去做了，但有些时候因为系统释放资源并不是很及时，也会造成内存移除等问题，所以在一些情况下我们还是需要进行手动释放资源的工作，必入添加<code>autoreleasepool</code>保证资源及时释放等。Dispatch Queue也给我们提供了这样的机会（机会针对于ARC时代，在MRC时代是必须要做的），那就是Clean Up  Function清理扫尾函数，当队列被释放时，或者说引用计数为0时会调用该函数，并且将上下文指针也传到了该函数，以便进行清理工作：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Contact</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> name = <span class="string">"DevTalking"</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> mobile = <span class="string">"10010"</span></span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestDispatchQueue</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> contact = <span class="type">Contact</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">testCleanUpFunction</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        launch()</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">15</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> serialQueue = dispatch_queue_create(<span class="string">"com.example.MySerialQueue"</span>, <span class="type">DISPATCH_QUEUE_SERIAL</span>)</span><br><span class="line"></span><br><span class="line">        dispatch_set_context(serialQueue, <span class="built_in">unsafeBitCast</span>(contact, <span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;.<span class="keyword">self</span>))</span><br><span class="line">        </span><br><span class="line">        dispatch_set_finalizer_f(serialQueue, myFinalizerFunction())</span><br><span class="line">        </span><br><span class="line">        dispatch_async(serialQueue, &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">let</span> contact = <span class="built_in">unsafeBitCast</span>(dispatch_get_context(serialQueue), <span class="type">Contact</span>.<span class="keyword">self</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"The name is <span class="subst">\(contact.name)</span>"</span>)</span><br><span class="line">            </span><br><span class="line">            sleep(<span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">        dispatch_async(serialQueue, &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">let</span> contact = <span class="built_in">unsafeBitCast</span>(dispatch_get_context(serialQueue), <span class="type">Contact</span>.<span class="keyword">self</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"The name is <span class="subst">\(contact.mobile)</span>"</span>)</span><br><span class="line">        </span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">myFinalizerFunction</span><span class="params">()</span></span> -&gt; dispatch_function_t &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123; context <span class="keyword">in</span></span><br><span class="line">        </span><br><span class="line">            <span class="keyword">let</span> contact = <span class="built_in">unsafeBitCast</span>(context, <span class="type">Contact</span>.<span class="keyword">self</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"The name is <span class="subst">\(contact.name)</span> and the mobile is <span class="subst">\(contact.mobile)</span>, The serialQueue has been released and we need clean up context data."</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// TODO...</span></span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testDispatchQueue = <span class="type">TestDispatchQueue</span>()</span><br><span class="line">testDispatchQueue.testCleanUpFunction()</span><br></pre></td></tr></table></figure>
 <p>从上面的代码示例中可以看到当给队列设置完上下文时，我们使用了<code>dispatch_set_finalizer_f</code>函数给队列设置清理函数，<code>dispatch_set_finalizer_f</code>函数有两个参数，第一个是目标队列，第二个参数是类型为<code>dispatch_function_t</code>的函数指针，也就是清理函数，上下文数据指针是该函数唯一的参数。在上面代码中，我们添加了<code>myFinalizerFunction</code>函数作为清理函数，在该函数中获得上下文数据，然后进行后续的清理工作。</p>
-<p><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/donate.png"><br></a><br><a href="http://www.devtalking.com/gongzhonghao.html"><br>    <img border="0" src="http://www.devtalking.com/guanzhugongzhonghao.png"><br></a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/63001" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<h2 id="Operation_u5BF9_u8]]>
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" ]]>
     </summary>
     
       <category term="Concurrency" scheme="http://www.devtalking.com/tags/Concurrency/"/>
@@ -252,8 +299,16 @@
     <link href="http://www.devtalking.com//articles/read-concurrency-programming-guide-1/"/>
     <id>http://www.devtalking.com//articles/read-concurrency-programming-guide-1/</id>
     <published>2016-03-10T16:00:00.000Z</published>
-    <updated>2016-03-23T13:31:50.000Z</updated>
-    <content type="html"><![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/60236" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+    <updated>2016-08-19T01:00:24.000Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://geek.csdn.net/news/detail/60236" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 <p>并发任务是指多个任务在某一时刻同时运行。在过去，一提到并发执行任务，首当其冲的解决方案就是在程序中创建多个线程来实现，但是线程本身较为底层，而且管理的难度比较大，如果想做倒最优的线程数量、最恰当的线程创建销毁时机是很难的，以至于虽然达到了并发执行任务的目的，但却以降低程序性能为代价，所以往往得不偿失。</p>
 <p>鉴于上述的原因，于是一些实现并发任务的其他方案出现了。在OS X和iOS系统中采用了多种实现并发执行任务的方法，与直接创建线程不同，这些方法让开发者只需要关注要执行的任务，然后让系统执行它们即可，不需要关心线程管理的问题，为开发者提供了一个简单而高效的并发任务编程模式。</p>
 <p>其中一种实现任务异步执行的技术就是Grand Central Dispatch（GCD），该技术封提供了系统级别的线程管理功能，我们在使用它时只需要定义我们希望执行的任务，然后将任务添加到对应的分派执行队列中即可。另外一个技术是Operation queues，具体的实现是Objective-C中的<code>NSOperationQueue</code>对象，它的作用和GCD很相似，同样只需要我们定义好任务，然后添加到对应的操作队列中即可，其他与线程管理相关的事都由<code>NSOperationQueue</code>帮我们完成。</p>
@@ -339,6 +394,14 @@
 <blockquote>
 <p>注：如果在二级线程中使用非并发自定义Operation对象，那么<code>main</code>方法中的内容应该使用<code>autoreleasepool{}</code>包起来。因为如果在二级线程中，没有主线程的自动释放池，一些资源没法被回收，所以需要加一个自动释放池，如果在主线程中就不需要了。</p>
 </blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <h4 id="u54CD_u5E94_u53D6_u6D88_u4E8B_u4EF6"><a href="#u54CD_u5E94_u53D6_u6D88_u4E8B_u4EF6" class="headerlink" title="响应取消事件"></a>响应取消事件</h4><p>一般情况下，当Operation对象开始执行时，就会一直执行任务，不会中断执行，但是有时需要在任务执行一半时终止任务，这时就需要Operation对象有响应任务终止命令的能力。理论上，在Operation对象执行任务的任何时间点都可以调用<code>NSOperation</code>类的<code>cancel</code>方法终止任务，那么在我们自定义的Operation对象中如何实现响应任务终止呢？我们看看下面的代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyNonconcurrentOperation</span>: <span class="title">NSOperation</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> url: <span class="type">String</span>?</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(withURL url: <span class="type">String</span>) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">self</span>.url = url</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 1.</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">self</span>.cancelled &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> strURL = <span class="keyword">self</span>.url <span class="keyword">else</span> &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> nsurl = <span class="type">NSURL</span>(string: strURL)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> session: <span class="type">NSURLSession</span>? = <span class="type">NSURLSession</span>.sharedSession()</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 2.</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">self</span>.cancelled &#123;</span><br><span class="line">            </span><br><span class="line">            nsurl = <span class="literal">nil</span></span><br><span class="line">            </span><br><span class="line">            session = <span class="literal">nil</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> dataTask: <span class="type">NSURLSessionDataTask</span>? = session!.dataTaskWithURL(nsurl!, completionHandler: &#123; (nsdata, nsurlrespond, nserror) <span class="keyword">in</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> error = nserror &#123;</span><br><span class="line">                </span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"出现异常：<span class="subst">\(error.localizedDescription)</span>"</span>)</span><br><span class="line">                </span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 4.</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">self</span>.cancelled &#123;</span><br><span class="line">                    </span><br><span class="line">                    nsurl = <span class="literal">nil</span></span><br><span class="line">                    </span><br><span class="line">                    session = <span class="literal">nil</span></span><br><span class="line">                    </span><br><span class="line">                    <span class="keyword">return</span></span><br><span class="line">                    </span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">do</span> &#123;</span><br><span class="line">                    </span><br><span class="line">                    <span class="keyword">let</span> dict = <span class="keyword">try</span> <span class="type">NSJSONSerialization</span>.<span class="type">JSONObjectWithData</span>(nsdata!, options: <span class="type">NSJSONReadingOptions</span>.<span class="type">MutableContainers</span>)</span><br><span class="line">                    </span><br><span class="line">                    <span class="built_in">print</span>(dict)</span><br><span class="line">                    </span><br><span class="line">                &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">                    </span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">"出现异常"</span>)</span><br><span class="line">                    </span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 3.</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">self</span>.cancelled &#123;</span><br><span class="line">            </span><br><span class="line">            nsurl = <span class="literal">nil</span></span><br><span class="line">            </span><br><span class="line">            session = <span class="literal">nil</span></span><br><span class="line">            </span><br><span class="line">            dataTask = <span class="literal">nil</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        dataTask!.resume()</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">10</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> myNonconcurrentOperation = <span class="type">MyNonconcurrentOperation</span>(withURL: <span class="string">"http://www.baidu.com/s?wd=ios"</span>)</span><br><span class="line">myNonconcurrentOperation.start()</span><br><span class="line">myNonconcurrentOperation.cancel()</span><br></pre></td></tr></table></figure>
 <p>从上述代码中可以看到，在<code>main</code>方法里加了很多对<code>self.cancelled</code>值的判断，没错，这就是响应终止执行任务的关键，因为当调用了<code>NSOperation</code>的<code>cancel</code>方法后，<code>cancelled</code>属性就会被置为<code>flase</code>，当判断到该属性的值为<code>false</code>时，代表当前任务已经被取消，我们只需释放资源返回即可。我们只有在整个任务逻辑代码中尽可以细的去判断<code>cancelled</code>属性，才可以达到较为实时的终止效果。上面代码中我分别在四个地方判断了<code>cancelled</code>属性：</p>
@@ -365,11 +428,18 @@
 </ul>
 <p>我们可以测试一下这个自定义的Operation对象：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> myContext = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> myConcurrentOperation = <span class="type">MyConcurrentOperation</span>(withURL: <span class="string">"http://www.baidu.com/s?wd=ios"</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        myConcurrentOperation.addObserver(<span class="keyword">self</span>, forKeyPath: <span class="string">"finished"</span>, options: .<span class="type">New</span>, context: &amp;myContext)</span><br><span class="line">        myConcurrentOperation.addObserver(<span class="keyword">self</span>, forKeyPath: <span class="string">"executing"</span>, options: .<span class="type">New</span>, context: &amp;myContext)</span><br><span class="line">        </span><br><span class="line">        myConcurrentOperation.start()</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">        <span class="built_in">print</span>(myConcurrentOperation.executing)</span><br><span class="line">        <span class="built_in">print</span>(myConcurrentOperation.finished)</span><br><span class="line">        <span class="built_in">print</span>(myConcurrentOperation.concurrent)</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">10</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">observeValueForKeyPath</span><span class="params">(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer&lt;Void&gt;)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> change = change <span class="keyword">where</span> context == &amp;myContext &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> keyPath == <span class="string">"finished"</span> &#123;</span><br><span class="line">                </span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Finish status has been changed, The new value is <span class="subst">\(change[NSKeyValueChangeNewKey]!)</span>"</span>)</span><br><span class="line">                </span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> keyPath == <span class="string">"executing"</span> &#123;</span><br><span class="line">                </span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Executing status has been changed, The new value is <span class="subst">\(change[NSKeyValueChangeNewKey]!)</span>"</span>)</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">deinit</span> &#123;</span><br><span class="line">        </span><br><span class="line">        myConcurrentOperation.removeObserver(<span class="keyword">self</span>, forKeyPath: <span class="string">"finished"</span>, context: &amp;myContext)</span><br><span class="line">        </span><br><span class="line">        myConcurrentOperation.removeObserver(<span class="keyword">self</span>, forKeyPath: <span class="string">"executing"</span>, context: &amp;myContext)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> test = <span class="type">Test</span>()</span><br><span class="line">test.launch()</span><br></pre></td></tr></table></figure>
-<p><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/donate.png"><br></a><br><a href="http://www.devtalking.com/gongzhonghao.html"><br>    <img border="0" src="http://www.devtalking.com/guanzhugongzhonghao.png"><br></a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/60236" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<p>并发任务是指多个任务在某一时刻同时运行。在过去]]>
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" ]]>
     </summary>
     
       <category term="Concurrency" scheme="http://www.devtalking.com/tags/Concurrency/"/>
@@ -383,8 +453,16 @@
     <link href="http://www.devtalking.com//articles/read-threading-programming-guide-4/"/>
     <id>http://www.devtalking.com//articles/read-threading-programming-guide-4/</id>
     <published>2016-02-21T16:00:00.000Z</published>
-    <updated>2016-02-21T23:44:33.000Z</updated>
-    <content type="html"><![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/56726" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+    <updated>2016-08-19T01:01:57.000Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://geek.csdn.net/news/detail/56726" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 <blockquote>
 <p>记得第一次读这个文档还是3年前，那时也只是泛读。如今关于iOS多线程的文章层出不穷，但我觉得若想更好的领会各个实践者的文章，应该先仔细读读官方的相关文档，打好基础，定会有更好的效果。文章中有对官方文档的翻译，也有自己的理解，官方文档中代码片段的示例在这篇文章中都进行了完整的重写，还有一些文档中没有的代码示例，并且都使用Swift完成，给大家一些Objc与Swift转换的参考。<br>官方文档地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Conceptual/Multithreading/Introduction/Introduction.html" target="_blank" rel="external">Threading Programming Guide</a></p>
 </blockquote>
@@ -444,6 +522,14 @@
 <h3 id="u9632_u6B62_u6B7B_u9501_u548C_u6D3B_u9501_u7684_u53D1_u751F"><a href="#u9632_u6B62_u6B7B_u9501_u548C_u6D3B_u9501_u7684_u53D1_u751F" class="headerlink" title="防止死锁和活锁的发生"></a>防止死锁和活锁的发生</h3><p>死锁的意思就是线程A和线程B各持有一把锁，现在线程A在等待线程B释放锁，而线程B又在等待线程A释放锁，所以这两个线程谁也拿不到锁，也不是释放自己持有的锁，就会永远被阻塞在进程中。</p>
 <p>活锁的意思是线程A可以使用资源，但它很礼貌，让其他线程先使用资源，线程B也可以使用资源，但它很绅士，也让其他线程先使用资源。这样你让我，我让你，最后两个线程都无法使用资源，导致活锁，活锁与死锁的区别在于前者的线程并没有被阻塞，而是在不停的做一些与任务无关的事。</p>
 <p>产生死锁和活锁的根本原因是线程中持有多把锁，所以避免这两种情况发生的最好办法就是尽量让线程只持有一把锁，如果实在有需求要持有多把锁，那么也应该尽量避免其他线程来请求锁。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <h3 id="u6B63_u786E_u4F7F_u7528volatile_u5173_u952E_u5B57"><a href="#u6B63_u786E_u4F7F_u7528volatile_u5173_u952E_u5B57" class="headerlink" title="正确使用volatile关键字"></a>正确使用volatile关键字</h3><p>如果你已经使用的锁机制来保护一段代码逻辑，那么就不要使用<code>volatile</code>关键字来保护这段代码中使用的变量。上文中说过，可见变量机制会让代码每次从主存中加载读取变量而非缓存，本身就比较影响性能，如果再与锁机制结合，不但没有起到额外的保护作用，反而会严重影响程序的性能。所以如果使用了锁机制，那么可以完全省去使用可见变量机制，因为锁机制就已经可以很好的保护变量的线程安全性了，不需要多此一举。</p>
 <h2 id="u4F7F_u7528_u539F_u5B50_u64CD_u4F5C"><a href="#u4F7F_u7528_u539F_u5B50_u64CD_u4F5C" class="headerlink" title="使用原子操作"></a>使用原子操作</h2><p>有些时候我们只希望一些数学运算或者简单的逻辑能够保证线程安全，如果使用锁机制或者条件机制虽然可以实现，但是会耗费较大的资源开销，并且锁机制还会使线程阻塞，造成性能损失，非常不划算，所以当遇到这种情况时，我们可以尝试使用原子操作来达到目的。</p>
 <p>我们一般使用原子操作对32位和64位的值执行一些数学运算或简单的逻辑运算，主要依靠底层的硬件指令或者使用内存屏障确保正在执行的操作是线程安全的，下面我们来看看Apple给我们提供了哪些原子操作的方法：</p>
@@ -513,19 +599,25 @@
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">- (void)myMethod:(id)anObj &#123; </span><br><span class="line"></span><br><span class="line">    @synchronized(anObj) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在该作用域中，anObj不会被其他线程改变 </span></span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>从上面的代码片段中可以看到<code>myMethod:</code>方法的<code>anObj</code>参数在被<code>@synchronized</code>关键字修饰的作用域中是线程安全的。而且使用该关键字还有一个好处，那就是当有多个线程要同时执行一个带参数的方法，但不同线程中传递的参数不同，如果用<code>NSLock</code>将该方法中的逻辑代码上锁，那么就只能有一个线程获得锁，而其他线程就会被阻塞，如果使用<code>@synchronized</code>关键字就可以避免其他线程被阻塞的情况。</p>
 <p>但在Swift中，Apple不知出于什么考虑，这个关键字已经不存在了，也就是我们不能在Swift中使用这个关键字对变量加锁了，但关键字都是语法糖，虽然不能使用语法糖，但还是可以使用其背后的机制的，我们来看看objc_sync的源码，看看这个关键字都干了些什么：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Begin synchronizing on 'obj'. </span></span><br><span class="line"><span class="comment">// Allocates recursive mutex associated with 'obj' if needed.</span></span><br><span class="line"><span class="comment">// Returns OBJC_SYNC_SUCCESS once lock is acquired.  </span></span><br><span class="line">int objc_sync_enter(id obj)</span><br><span class="line">&#123;</span><br><span class="line">    int result = <span class="type">OBJC_SYNC_SUCCESS</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (obj) &#123;</span><br><span class="line">        <span class="type">SyncData</span>* data = id2data(obj, <span class="type">ACQUIRE</span>);</span><br><span class="line">        <span class="built_in">assert</span>(data);</span><br><span class="line">        data-&gt;mutex.lock();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// @synchronized(nil) does nothing</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="type">DebugNilSync</span>) &#123;</span><br><span class="line">            _objc_inform(<span class="string">"NIL SYNC DEBUG: @synchronized(nil); set a breakpoint on objc_sync_nil to debug"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        objc_sync_nil();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// End synchronizing on 'obj'. </span></span><br><span class="line"><span class="comment">// Returns OBJC_SYNC_SUCCESS or OBJC_SYNC_NOT_OWNING_THREAD_ERROR</span></span><br><span class="line">int objc_sync_exit(id obj)</span><br><span class="line">&#123;</span><br><span class="line">    int result = <span class="type">OBJC_SYNC_SUCCESS</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (obj) &#123;</span><br><span class="line">        <span class="type">SyncData</span>* data = id2data(obj, <span class="type">RELEASE</span>); </span><br><span class="line">        <span class="keyword">if</span> (!data) &#123;</span><br><span class="line">            result = <span class="type">OBJC_SYNC_NOT_OWNING_THREAD_ERROR</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            bool okay = data-&gt;mutex.tryUnlock();</span><br><span class="line">            <span class="keyword">if</span> (!okay) &#123;</span><br><span class="line">                result = <span class="type">OBJC_SYNC_NOT_OWNING_THREAD_ERROR</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// @synchronized(nil) does nothing</span></span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Begin synchronizing on 'obj'. </span></span><br><span class="line"><span class="comment">// Allocates recursive mutex associated with 'obj' if needed.</span></span><br><span class="line"><span class="comment">// Returns OBJC_SYNC_SUCCESS once lock is acquired.  </span></span><br><span class="line">int objc_sync_enter(id obj)</span><br><span class="line">&#123;</span><br><span class="line">    int result = <span class="type">OBJC_SYNC_SUCCESS</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (obj) &#123;</span><br><span class="line">        <span class="type">SyncData</span>* data = id2data(obj, <span class="type">ACQUIRE</span>);</span><br><span class="line">        <span class="built_in">assert</span>(data);</span><br><span class="line">        data-&gt;mutex.lock();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// @synchronized(nil) does nothing</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="type">DebugNilSync</span>) &#123;</span><br><span class="line">            _objc_inform(<span class="string">"NIL SYNC DEBUG: @synchronized(nil); set a breakpoint on objc_sync_nil to debug"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        objc_sync_nil();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// End synchronizing on 'obj'. </span></span><br><span class="line"><span class="comment">// Returns OBJC_SYNC_SUCCESS or OBJC_SYNC_NOT_OWNING_THREAD_ERROR</span></span><br><span class="line">int objc_sync_exit(id obj)</span><br><span class="line">&#123;</span><br><span class="line">    int result = <span class="type">OBJC_SYNC_SUCCESS</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (obj) &#123;</span><br><span class="line">        <span class="type">SyncData</span>* data = id2data(obj, <span class="type">RELEASE</span>); </span><br><span class="line">        <span class="keyword">if</span> (!data) &#123;</span><br><span class="line">            result = <span class="type">OBJC_SYNC_NOT_OWNING_THREAD_ERROR</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            bool okay = data-&gt;mutex.tryUnlock();</span><br><span class="line">            <span class="keyword">if</span> (!okay) &#123;</span><br><span class="line">                result = <span class="type">OBJC_SYNC_NOT_OWNING_THREAD_ERROR</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// @synchronized(nil) does nothing</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>可见<code>@synchronized</code>关键字其实是调用了<code>objc_sync_enter</code>和<code>objc_sync_exit</code>这两个方法，所以在Swift中使用时可以这样给变量加锁：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">myMethod</span><span class="params">(anObj: AnyObject!)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">    objc_sync_enter(anObj)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// anObj参数在这两个方法之间具有线程安全特性，不会被其他线程改变</span></span><br><span class="line"></span><br><span class="line">    objc_sync_exit(anObj)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="u4F7F_u7528Condition_u673A_u5236"><a href="#u4F7F_u7528Condition_u673A_u5236" class="headerlink" title="使用Condition机制"></a>使用Condition机制</h2><p>Condition机制和锁机制很类似，区别也不大，同样都会使线程阻塞，这一节我们来看看如何使用该机制。</p>
 <h3 id="u4F7F_u7528NSCondition_u7C7B"><a href="#u4F7F_u7528NSCondition_u7C7B" class="headerlink" title="使用NSCondition类"></a>使用NSCondition类</h3><p>这里举个生产者和消费者的例子，消费者从队列中获取产品进行消费，当队列中没有产品时消费者等待生产者生产，当生产者生产出产品放入队列后再通知消费者继续进行消费：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestLock</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> products: [<span class="type">AnyObject</span>]</span><br><span class="line">    <span class="keyword">let</span> nscondition: <span class="type">NSCondition</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>() &#123;</span><br><span class="line">        </span><br><span class="line">        products = [<span class="type">AnyObject</span>]()</span><br><span class="line">        </span><br><span class="line">        nscondition = <span class="type">NSCondition</span>()</span><br><span class="line">        </span><br><span class="line">        <span class="type">NSThread</span>.detachNewThreadSelector(<span class="string">"consumeProduct"</span>, toTarget: <span class="keyword">self</span>, withObject: <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="type">NSThread</span>.detachNewThreadSelector(<span class="string">"generateProduct"</span>, toTarget: <span class="keyword">self</span>, withObject: <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">consumeProduct</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        nscondition.lock()</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">guard</span> products.<span class="built_in">count</span> == <span class="number">0</span> <span class="keyword">else</span> &#123;</span><br><span class="line">            </span><br><span class="line">            nscondition.wait()</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> product = products[<span class="number">0</span>]</span><br><span class="line">        </span><br><span class="line">        products.removeAtIndex(<span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"消费产品"</span>)</span><br><span class="line">        </span><br><span class="line">        nscondition.unlock()</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">generateProduct</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        nscondition.lock()</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> product = <span class="type">NSObject</span>()</span><br><span class="line">        </span><br><span class="line">        products.append(product)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"生产产品"</span>)</span><br><span class="line">        </span><br><span class="line">        nscondition.signal()</span><br><span class="line">        </span><br><span class="line">        nscondition.unlock()</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>从上面代码中可以看到，<code>NSCondition</code>类同样是用<code>lock</code>和<code>unlock</code>方法进行上锁和释放锁，然后通过<code>wait</code>方法阻塞线程，通过<code>signal</code>方法唤醒阻塞的线程，该方法唤醒的时最近一次使用<code>wait</code>方法等待的线程。如果想一次性唤醒所有在等待的线程，可以使用<code>broadcast</code>方法。<code>NSCondition</code>还有另外一个阻塞线程的方法<code>waitUntilDate(_ limit: NSDate)</code>，该方法设置一个线程阻塞时间并返回一个布尔值，如果在指定的时间内没有信号量的通知，那么就唤醒线程继续进行，此时该方法返回<code>false</code>，如果在指定时间内接收到信号量的通知，此时该方法返回<code>true</code>。</p>
-<p><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/donate.png"><br></a><br><a href="http://www.devtalking.com/gongzhonghao.html"><br>    <img border="0" src="http://www.devtalking.com/guanzhugongzhonghao.png"><br></a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/56726" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<blockquote>
-<p>记得第一次读这个文档]]>
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" ]]>
     </summary>
     
       <category term="Swift" scheme="http://www.devtalking.com/tags/Swift/"/>
@@ -539,8 +631,16 @@
     <link href="http://www.devtalking.com//articles/read-threading-programming-guide-3/"/>
     <id>http://www.devtalking.com//articles/read-threading-programming-guide-3/</id>
     <published>2016-02-17T16:00:00.000Z</published>
-    <updated>2016-02-18T00:01:53.000Z</updated>
-    <content type="html"><![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/56056" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+    <updated>2016-08-19T01:01:35.000Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://geek.csdn.net/news/detail/56056" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 <blockquote>
 <p>记得第一次读这个文档还是3年前，那时也只是泛读。如今关于iOS多线程的文章层出不穷，但我觉得若想更好的领会各个实践者的文章，应该先仔细读读官方的相关文档，打好基础，定会有更好的效果。文章中有对官方文档的翻译，也有自己的理解，官方文档中代码片段的示例在这篇文章中都进行了完整的重写，还有一些文档中没有的代码示例，并且都使用Swift完成，给大家一些Objc与Swift转换的参考。<br>官方文档地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Conceptual/Multithreading/Introduction/Introduction.html" target="_blank" rel="external">Threading Programming Guide</a></p>
 </blockquote>
@@ -556,10 +656,7 @@
 <h2 id="Run_Loop_u5BF9_u8C61"><a href="#Run_Loop_u5BF9_u8C61" class="headerlink" title="Run Loop对象"></a>Run Loop对象</h2><p>要想操作配置Run Loop，那自然需要通过Run Loop对象来完成，它提供了一系列接口，可帮助我们便捷的添加Input sources、timers以及观察者。较高级别的Cocoa框架提供了<code>NSRunLoop</code>类，较底层级别的Core Foundation框架提供了指向<code>CFRunloopRef</code>的指针。</p>
 <h3 id="u83B7_u53D6Run_Loop_u5BF9_u8C61"><a href="#u83B7_u53D6Run_Loop_u5BF9_u8C61" class="headerlink" title="获取Run Loop对象"></a>获取Run Loop对象</h3><p>前文中提到过，在Cocoa和Core Foundation框架中都没有提供创建Run Loop的方法，只有从当前线程获取Run Loop的方法：</p>
 <ul>
-<li>在Cocoa框架中，<code>NSRunLoop</code>类提供了类方法<code>currentRunLoop()</code>获取<code>NSRunLoop</code>对象。<blockquote>
-<p>该方法是获取当前线程中已存在的Run Loop，如果不存在，那其实还是会创建一个Run Loop对象返回，只是Cocoa框架没有向我们暴露该接口。</p>
-</blockquote>
-</li>
+<li>在Cocoa框架中，<code>NSRunLoop</code>类提供了类方法<code>currentRunLoop()</code>获取<code>NSRunLoop</code>对象。<br>> 该方法是获取当前线程中已存在的Run Loop，如果不存在，那其实还是会创建一个Run Loop对象返回，只是Cocoa框架没有向我们暴露该接口。</li>
 <li>在Core Foundation框架中提供了<code>CFRunLoopGetCurrent()</code>函数获取<code>CFRunLoop</code>对象。</li>
 </ul>
 <p>虽然这两个Run Loop对象并不完全等价，它们之间还是可以转换的，我们可以通过<code>NSRunLoop</code>对象提供的<code>getCFRunLoop()</code>方法获取<code>CFRunLoop</code>对象。因为<code>NSRunLoop</code>和<code>CFRunLoop</code>指向的都是当前线程中同一个Run Loop，所以在使用时它们可以混用，比如说要给Run Loop添加观察者时就必须得用<code>CFRunLoop</code>了。</p>
@@ -647,6 +744,14 @@
 <li><code>cancel</code>：该回调函数的作用是使该事件源失效。</li>
 <li><code>perform</code>：该回调函数的作用是执行其他线程或当前线程给该事件源发来的事件消息。</li>
 </ol>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <h3 id="u5C06_u4E8B_u4EF6_u6E90_u6DFB_u52A0_u81F3Run_Loop"><a href="#u5C06_u4E8B_u4EF6_u6E90_u6DFB_u52A0_u81F3Run_Loop" class="headerlink" title="将事件源添加至Run Loop"></a>将事件源添加至Run Loop</h3><p>事件源创建好之后，接下来就是将其添加到指定某个模式的Run Loop中，我们来看看这个方法：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">CFRunLoopAddSource</span><span class="params">(<span class="number">_</span> rl: CFRunLoop!, <span class="number">_</span> source: CFRunLoopSource!, <span class="number">_</span> mode: CFString!)</span></span></span><br></pre></td></tr></table></figure>
 <ol>
@@ -655,7 +760,7 @@
 <li><code>mode</code>：Run Loop的模式。（可以回顾之前文章）</li>
 </ol>
 <p>我们再来看看这个方法都干了些什么：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">void <span class="type">CFRunLoopAddSource</span>(<span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFStringRef</span> modeName) &#123;</span><br><span class="line">  </span><br><span class="line">    .....</span><br><span class="line">  </span><br><span class="line">    __CFRunLoopSourceSchedule(rls, rl, rlm);</span><br><span class="line">  </span><br><span class="line">    .....</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> void __CFRunLoopSourceSchedule(<span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopModeRef</span> rlm) &#123;	</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> == rls-&gt;_context.version0.version) &#123;</span><br><span class="line">	     <span class="keyword">if</span> (<span class="type">NULL</span> != rls-&gt;_context.version0.schedule) &#123;</span><br><span class="line">	         rls-&gt;_context.version0.schedule(rls-&gt;_context.version0.info, rl, rlm-&gt;_name);</span><br><span class="line">	     &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">void <span class="type">CFRunLoopAddSource</span>(<span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFStringRef</span> modeName) &#123;</span><br><span class="line">  </span><br><span class="line">    .....</span><br><span class="line">  </span><br><span class="line">    __CFRunLoopSourceSchedule(rls, rl, rlm);</span><br><span class="line">  </span><br><span class="line">    .....</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> void __CFRunLoopSourceSchedule(<span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopModeRef</span> rlm) &#123;  </span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> == rls-&gt;_context.version0.version) &#123;</span><br><span class="line">         <span class="keyword">if</span> (<span class="type">NULL</span> != rls-&gt;_context.version0.schedule) &#123;</span><br><span class="line">             rls-&gt;_context.version0.schedule(rls-&gt;_context.version0.info, rl, rlm-&gt;_name);</span><br><span class="line">         &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>从上述的代码片段可以看出，在<code>CFRunLoopAddSource</code>中调用了<code>__CFRunLoopSourceSchedule</code>内部函数，而该函数中正是执行了Run Loop事件源上下文中的<code>schedule</code>回调函数。也就是说当把事件源添加到Run Loop中后就会将事件源与给它发送事件消息的线程进行关联。</p>
 <h3 id="u6807_u8BB0_u4E8B_u4EF6_u6E90_u53CA_u5524_u9192Run_Loop"><a href="#u6807_u8BB0_u4E8B_u4EF6_u6E90_u53CA_u5524_u9192Run_Loop" class="headerlink" title="标记事件源及唤醒Run Loop"></a>标记事件源及唤醒Run Loop</h3><p>前面的文章中说过，srouce0类型，也就是非port类型的事件源都需要进行手动标记，标记完还需要手动唤醒Run Loop，下面我们来看看这两个方法：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">CFRunLoopSourceSignal</span><span class="params">(<span class="number">_</span> source: CFRunLoopSource!)</span></span></span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">CFRunLoopWakeUp</span><span class="params">(<span class="number">_</span> rl: CFRunLoop!)</span></span></span><br></pre></td></tr></table></figure>
@@ -664,7 +769,7 @@
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">NSRunLoop</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    .....</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">runUntilDate</span><span class="params">(limitDate: NSDate)</span></span> &#123;</span><br><span class="line">        <span class="keyword">while</span> runMode(<span class="type">NSDefaultRunLoopMode</span>, beforeDate: limitDate) &amp;&amp; limitDate.timeIntervalSinceReferenceDate &gt; <span class="type">CFAbsoluteTimeGetCurrent</span>() &#123; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">runMode</span><span class="params">(mode: String, beforeDate limitDate: NSDate)</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">        </span><br><span class="line">        .....</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> limitTime = limitDate.timeIntervalSinceReferenceDate</span><br><span class="line">        <span class="keyword">let</span> ti = limitTime - <span class="type">CFAbsoluteTimeGetCurrent</span>()</span><br><span class="line">        <span class="type">CFRunLoopRunInMode</span>(modeArg, ti, <span class="literal">true</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">SInt32</span> <span class="type">CFRunLoopRunInMode</span>(<span class="type">CFStringRef</span> modeName, <span class="type">CFTimeInterval</span> seconds, <span class="type">Boolean</span> returnAfterSourceHandled) &#123;     </span><br><span class="line">    <span class="type">CHECK_FOR_FORK</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="type">CFRunLoopRunSpecific</span>(<span class="type">CFRunLoopGetCurrent</span>(), modeName, seconds, returnAfterSourceHandled);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">SInt32</span> <span class="type">CFRunLoopRunSpecific</span>(<span class="type">CFRunLoopRef</span> rl, <span class="type">CFStringRef</span> modeName, <span class="type">CFTimeInterval</span> seconds, <span class="type">Boolean</span> returnAfterSourceHandled) &#123;     </span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    result = __CFRunLoopRun(rl, currentMode, seconds, returnAfterSourceHandled, <span class="literal">false</span>);</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> int32_t __CFRunLoopRun(<span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopModeRef</span> rlm, <span class="type">CFTimeInterval</span> seconds, <span class="type">Boolean</span> stopAfterHandle, <span class="type">Boolean</span> waitIfEmpty) &#123;</span><br><span class="line"></span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    __CFRunLoopDoSources0(rl, rlm, stopAfterHandle);</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="type">Boolean</span> __CFRunLoopDoSources0(<span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopModeRef</span> rlm, <span class="type">Boolean</span> stopAfterHandle) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">CFTypeRef</span> sources = <span class="type">NULL</span>;</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (__CFRunLoopSourceIsSignaled(rls)) &#123;</span><br><span class="line">    </span><br><span class="line">        .....</span><br><span class="line">    </span><br><span class="line">        rls-&gt;_context.version0.perform(rls-&gt;_context.version0.info);</span><br><span class="line">        </span><br><span class="line">        .....</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>从上述代码片段中可以看出，当Run Loop运行后会调用内部函数<code>__CFRunLoopDoSources0</code>执行自定义事件源的任务，在执行之前会通过内部函数<code>__CFRunLoopSourceIsSignaled(rls)</code>判断事件源是否已被标记为待执行，然后执行Run Loop事件上下文中的<code>perform</code>回调函数。</p>
 <h3 id="u79FB_u9664Run_Loop_u4E8B_u4EF6_u6E90"><a href="#u79FB_u9664Run_Loop_u4E8B_u4EF6_u6E90" class="headerlink" title="移除Run Loop事件源"></a>移除Run Loop事件源</h3><p>当我们自定义的事件源完成使命后就可以将其从Run Loop中移除，我们来看看对应的方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">CFRunLoopRemoveSource</span><span class="params">(<span class="number">_</span> rl: CFRunLoop!, <span class="number">_</span> source: CFRunLoopSource!, <span class="number">_</span> mode: CFString!)</span></span></span><br><span class="line"></span><br><span class="line">void <span class="type">CFRunLoopRemoveSource</span>(<span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFStringRef</span> modeName) &#123;</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    __CFRunLoopSourceCancel(rls, rl, rlm);</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> void __CFRunLoopSourceCancel(<span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopModeRef</span> rlm) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> == rls-&gt;_context.version0.version) &#123;</span><br><span class="line">	      <span class="keyword">if</span> (<span class="type">NULL</span> != rls-&gt;_context.version0.cancel) &#123;</span><br><span class="line">	          rls-&gt;_context.version0.cancel(rls-&gt;_context.version0.info, rl, rlm-&gt;_name);</span><br><span class="line">	      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">CFRunLoopRemoveSource</span><span class="params">(<span class="number">_</span> rl: CFRunLoop!, <span class="number">_</span> source: CFRunLoopSource!, <span class="number">_</span> mode: CFString!)</span></span></span><br><span class="line"></span><br><span class="line">void <span class="type">CFRunLoopRemoveSource</span>(<span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFStringRef</span> modeName) &#123;</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    __CFRunLoopSourceCancel(rls, rl, rlm);</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> void __CFRunLoopSourceCancel(<span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopModeRef</span> rlm) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> == rls-&gt;_context.version0.version) &#123;</span><br><span class="line">          <span class="keyword">if</span> (<span class="type">NULL</span> != rls-&gt;_context.version0.cancel) &#123;</span><br><span class="line">              rls-&gt;_context.version0.cancel(rls-&gt;_context.version0.info, rl, rlm-&gt;_name);</span><br><span class="line">          &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>从上述代码片段可以看出，当我们调用了<code>CFRunLoopRemoveSource</code>方法后，其实是执行了Run Loop事件源上下文中的<code>cancel</code>回调函数。</p>
 <h3 id="u81EA_u5B9A_u4E49Run_Loop_u4E8B_u4EF6_u6E90_u7684_u5B9E_u9645_u8FD0_u7528"><a href="#u81EA_u5B9A_u4E49Run_Loop_u4E8B_u4EF6_u6E90_u7684_u5B9E_u9645_u8FD0_u7528" class="headerlink" title="自定义Run Loop事件源的实际运用"></a>自定义Run Loop事件源的实际运用</h3><p>在讲解示例之前，我们先来看看示例Demo的效果：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-5.gif" alt="LearnThread-5"></p>
@@ -712,12 +817,18 @@
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">runloopSourcePerformRoutine</span><span class="params">()</span></span> -&gt; <span class="preprocessor">@convention</span>(<span class="built_in">c</span>) (<span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">Void</span> &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> &#123; info -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">let</span> appDelegate = <span class="type">UIApplication</span>.sharedApplication().delegate <span class="keyword">as</span>! <span class="type">AppDelegate</span></span><br><span class="line">            </span><br><span class="line">        appDelegate.performSelector(<span class="string">"performMainThreadRunLoopSourceTask"</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performMainThreadRunLoopSourceTask</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">if</span> mainThreadRunloopSourceContext!.runloopSource!.commandBuffer!.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">        </span><br><span class="line">        mainThreadRunloopSourceContext!.runloopSource!.commandBuffer!.removeAll()</span><br><span class="line">            </span><br><span class="line">        mainCollectionViewController!.collectionView.reloadData()</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">let</span> timer = <span class="type">NSTimer</span>(timeInterval: <span class="number">1</span>, target: <span class="keyword">self</span>, selector: <span class="string">"sendCommandToSecondaryThread"</span>, userInfo: <span class="literal">nil</span>, repeats: <span class="literal">false</span>)</span><br><span class="line">            </span><br><span class="line">        <span class="type">NSRunLoop</span>.mainRunLoop().addTimer(timer, forMode: <span class="type">NSDefaultRunLoopMode</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在<code>performMainThreadRunLoopSourceTask()</code>方法中同样会先判断主线程事件源的指令池是否有内容，然后执行<code>MainCollectionViewController</code>中的刷新UI的方法，最后再次给二级线程发送事件消息，以此循环。大家可以去Github下载该示例的<a href="https://github.com/DevTalking/CustomRunloopInputSourceSample.git" target="_blank" rel="external">源码</a>，编译环境是Xcode7.2，然后可以自己试着在界面中添加一个<strong>Stop</strong>按钮，让事件源执行<code>cancel</code>回调函数。</p>
-<p><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/donate.png"><br></a><br><a href="http://www.devtalking.com/gongzhonghao.html"><br>    <img border="0" src="http://www.devtalking.com/guanzhugongzhonghao.png"><br></a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/56056" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<blockquote>
-<p>记得第一次读这个文档]]>
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" ]]>
     </summary>
     
       <category term="Swift" scheme="http://www.devtalking.com/tags/Swift/"/>
@@ -731,8 +842,16 @@
     <link href="http://www.devtalking.com//articles/read-threading-programming-guide-2/"/>
     <id>http://www.devtalking.com//articles/read-threading-programming-guide-2/</id>
     <published>2016-02-09T16:00:00.000Z</published>
-    <updated>2016-02-15T12:43:58.000Z</updated>
-    <content type="html"><![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/55617" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+    <updated>2016-08-19T01:01:20.000Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://geek.csdn.net/news/detail/55617" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 <blockquote>
 <p>记得第一次读这个文档还是3年前，那时也只是泛读。如今关于iOS多线程的文章层出不穷，但我觉得若想更好的领会各个实践者的文章，应该先仔细读读官方的相关文档，打好基础，定会有更好的效果。文章中有对官方文档的翻译，也有自己的理解，官方文档中代码片段的示例在这篇文章中都进行了完整的重写，还有一些文档中没有的代码示例，并且都使用Swift完成，给大家一些Objc与Swift转换的参考。<br>官方文档地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Conceptual/Multithreading/Introduction/Introduction.html" target="_blank" rel="external">Threading Programming Guide</a></p>
 </blockquote>
@@ -776,6 +895,14 @@
 <p>简单的来说，RunLoop用于管理和监听异步添加到线程中的事件，当有事件输入时，系统唤醒线程并将事件分派给RunLoop，当没有需要处理的事件时，RunLoop会让线程进入休眠状态。这样就能让线程常驻在进程中，而不会过多的消耗系统资源，达到有事做事，没事睡觉的效果。</p>
 </blockquote>
 <p>如果想要线程不结束，那就要被执行的任务不结束，让被执行的任务不结束显然不靠谱，那么就需要一个机制，能占着线程。该机制就是事件循环机制（Eventloop），体现在代码中就是一个<code>do-while</code>循环，不断的接收事件消息、处理事件、等待新事件消息，除非接收到一个让其退出的事件消息，否则它将一直这么循环着，线程自然就不会结束。Runloop就是管理消息和事件，并提供Eventloop函数的对象，线程执行的任务其实就是在Runloop对象的Eventloop函数里运行。关于Runloop更详细的知识及配置<br>操作在后文中会有讲述。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <h3 id="u7EC8_u6B62_u7EBF_u7A0B"><a href="#u7EC8_u6B62_u7EBF_u7A0B" class="headerlink" title="终止线程"></a>终止线程</h3><p>打个不恰当的比方，人终有一死，或正常生老病死，或非正常出事故意外而亡，前者尚合情合理后者悲痛欲绝。线程也一样，有正常终止结束，也有非正常的强制结束，不管是线程本身还是应用程序都希望线程能正常结束，因为正常结束也就意味着被执行的任务正常执行完成，从而让线程处理完后事随即结束，如果在任务执行途中强制终止线程，会导致线程没有机会处理后事，也就是正常释放资源对象等，这样会给应用程序带来例如内存溢出这类潜在的问题，所以强烈不推荐强制终止线程的做法。</p>
 <p>如果确实有在任务执行途中终止线程的需求，那么可以使用Runloop，在任务执行过程中定期查看是否有收到终止任务的事件消息，这样一来可以在任务执行途中判断出终止任务的信号，然后进行终止任务的相关处理，比如保存数据等，二来可以让线程有充分的时间释放资源。</p>
 <h2 id="Run_Loop"><a href="#Run_Loop" class="headerlink" title="Run Loop"></a>Run Loop</h2><p>Run Loops是线程中的基础结构，在上文中也提到过，Run Loops其实是一个事件循环机制，用来分配、分派线程接受到的事件任务，同时可以让线程成为一个常驻线程，即有任务时处理任务，没任务时休眠，且不消耗资源。在实际应用时，Run Loop的生命周期并不全是自动完成的，还是需要人工进行配置，不论是Cocoa框架还是Core Foundation框架都提供了Run Loop的相关对象对其进行配置和管理。</p>
@@ -854,30 +981,36 @@
 <li>开始执行自定义事件源任务。</li>
 <li>如果有基于端口事件源的任务准备待执行，那么立即执行该任务。然后跳到步骤9继续运转。</li>
 <li>通知对应观察者线程进入休眠。</li>
-<li>如果有下面的事件发生，则唤醒线程：<ul>
+<li>如果有下面的事件发生，则唤醒线程：<ol>
 <li>接收到基于端口事件源的任务。</li>
 <li>定时任务到了该执行的时间点。</li>
 <li>Run Loop的超时时间到期。</li>
 <li>Run Loop被手动唤醒。</li>
-</ul>
+</ol>
 </li>
 <li>通知对应观察者线程被唤醒。</li>
-<li>执行等待执行的任务。<ul>
+<li>执行等待执行的任务。<ol>
 <li>如果有定时任务已启动，执行定时任务并重启Run Loop。然后跳到步骤2继续运转。</li>
 <li>如果有非定时器事件源的任务待执行，那么分派执行该任务。</li>
 <li>如果Run Loop被手动唤醒，重启Run Loop。然后跳转到步骤2继续运转。</li>
-</ul>
+</ol>
 </li>
 <li>通知对应观察者已退出Run Loop。</li>
 </ol>
-<p>以上这些Run Loop中的步骤也不是每一步都会触发，举一个例子：<br>1.对应观察者接收到通知Run Loop准备开始运行 -&gt; 3.对应观察者接收到通知Run Loop准备执行自定义事件源任务 -&gt; 4.开始执行自定义事件源任务 -&gt; 任务执行完毕且没有其他任务待执行 -&gt; 6.线程进入休眠状态，并通知对应观察者 -&gt; 7.接收到定时任务并唤醒线程 -&gt; 8.通知对应观察者线程被唤醒 -&gt; 9.执行定时任务并重启Run Loop -&gt; 2.通知对应观察者准备执行定时任务 －&gt; Run Loop执行定时任务，并在等待下次执行任务的间隔中线程休眠 -&gt; 6.线程进入休眠状态，并通知对应观察者…</p>
+<p>以上这些Run Loop中的步骤也不是每一步都会触发，举一个例子：<br>1.对应观察者接收到通知Run Loop准备开始运行 -> 3.对应观察者接收到通知Run Loop准备执行自定义事件源任务 -> 4.开始执行自定义事件源任务 -> 任务执行完毕且没有其他任务待执行 -> 6.线程进入休眠状态，并通知对应观察者 -> 7.接收到定时任务并唤醒线程 -> 8.通知对应观察者线程被唤醒 -> 9.执行定时任务并重启Run Loop -> 2.通知对应观察者准备执行定时任务 －> Run Loop执行定时任务，并在等待下次执行任务的间隔中线程休眠 -> 6.线程进入休眠状态，并通知对应观察者…</p>
 <p>这里需要注意的一点是从上面的运行逻辑中可以看出，当观察者接收到执行任务的通知时，Run Loop并没有真正开始执行任务，所以观察者接收到通知的时间与Run Loop真正执行任务的时间有时间差，一般情况下这点时间差影响不大，但如果你需要通过观察者知道Run Loop执行任务的确切时间，并根据这个时间要进行后续操作的话，那么就需要通过结合多个观察者接收到的通知共同确定了。一般通过监听准备执行任务的观察者、监听线程进入休眠的观察者、监听线程被唤醒的观察者共同确定执行任务的确切时间。</p>
-<p><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/donate.png"><br></a><br><a href="http://www.devtalking.com/gongzhonghao.html"><br>    <img border="0" src="http://www.devtalking.com/guanzhugongzhonghao.png"><br></a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/55617" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<blockquote>
-<p>记得第一次读这个文档]]>
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" ]]>
     </summary>
     
       <category term="Swift" scheme="http://www.devtalking.com/tags/Swift/"/>
@@ -891,8 +1024,16 @@
     <link href="http://www.devtalking.com//articles/read-threading-programming-guide-1/"/>
     <id>http://www.devtalking.com//articles/read-threading-programming-guide-1/</id>
     <published>2016-01-31T16:00:00.000Z</published>
-    <updated>2016-02-03T10:13:13.000Z</updated>
-    <content type="html"><![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/54092" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+    <updated>2016-08-19T01:01:01.000Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://geek.csdn.net/news/detail/54092" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 <blockquote>
 <p>记得第一次读这个文档还是3年前，那时也只是泛读。如今关于iOS多线程的文章层出不穷，但我觉得若想更好的领会各个实践者的文章，应该先仔细读读官方的相关文档，打好基础，定会有更好的效果。文章中有对官方文档的翻译，也有自己的理解，官方文档中代码片段的示例在这篇文章中都进行了完整的重写，还有一些文档中没有的代码示例，并且都使用Swift完成，给大家一些Objc与Swift转换的参考。<br>官方文档地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Conceptual/Multithreading/Introduction/Introduction.html" target="_blank" rel="external">Threading Programming Guide</a></p>
 </blockquote>
@@ -958,6 +1099,14 @@
 <p>前文中提到过设计和开发多线程的应用较单线程要复杂的多，要注意的事项在上文中就提出了八条，针对每条注意事项，都要花费不少时间去设计代码和测试。所以总体来说如果涉及到多线程，务必会增加开发人员的开发测试时间，但是换来的是应用程序具有更好的健壮性和高性能，所谓慢工出细活。</p>
 <h2 id="u521B_u5EFA_u7EBF_u7A0B"><a href="#u521B_u5EFA_u7EBF_u7A0B" class="headerlink" title="创建线程"></a>创建线程</h2><p>说到创建线程，就得说说线程的两种类型，<strong>Joinable</strong>和<strong>Detach</strong>。Joinable类型的线程可以被其他线程回收其资源和终止。举个例子，如果一个Joinable的线程与主线程结合，那么当主线程准备结束而该二级线程还没有结束的时候，主线程会被阻塞等待该二级线程，当二级线程结束后由主线程回收其占用资源并将其关闭。如果在主线程还没有结束时，该二级线程结束了，那么它不但不会关闭，而且资源也不会被系统收回，只是等待主线程处理。而Detach的线程则相反，会自行结束关闭线程并且有系统回收其资源。</p>
 <p>在OS X和iOS系统中有多种创建线程的方法，不同方法创建出的线程可能会有不同的线程属性，但就线程本身来说并没有什么差异。下面来看看创建线程的不同方法。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <h3 id="u4F7F_u7528NSThread_u521B_u5EFA_u7EBF_u7A0B"><a href="#u4F7F_u7528NSThread_u521B_u5EFA_u7EBF_u7A0B" class="headerlink" title="使用NSThread创建线程"></a>使用NSThread创建线程</h3><p>使用<code>NSThread</code>创建线程有两种方式：</p>
 <ul>
 <li><code>detachNewThreadSelector:toTarget:withObject:</code>：该方法是一个类方法，适用于OS X所有的版本和iOS2.0之后的版本。该方法其实完成了两个动作，先是创建线程，然后启动线程。通过方法名称就可以得知，该方法创建的线程为Detach类型的线程。</li>
@@ -1012,12 +1161,18 @@
 </ul>
 <p>大体的参数其实和使用<code>NSThread</code>创建线程基本一致，不过需要注意的是通过<code>pthread_create()</code>创建的线程是Joinable类型的，如果要将新线程设置为Detach类型，需要在创建前使用<code>pthread_attr_setdetachstate(&amp;attr, PTHREAD_CREATE_DETACHED);</code>函数设置其线程属性。</p>
 <p>在Cocoa框架中，上文提到的那些同步机制，比如线程锁，当二级线程创建后才就会自动生成。如果在程序中使用POSIX API创建线程，那么Cocoa框架是无法得知当前程序已处于多线程状态的，所以就不会自动开启相关的同步机制，而当我们又没有通过POSIX API手动控制的话，就有可能导致应用程序崩溃的情况。另外要注意的一点是Cocoa框架中的线程锁是不能操作通过POSIX API创建的线程的，反之亦然。所以当Cocoa框架与POSIX API混用的时候，在同步机制方面一定要配套使用。</p>
-<p><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/donate.png"><br></a><br><a href="http://www.devtalking.com/gongzhonghao.html"><br>    <img border="0" src="http://www.devtalking.com/guanzhugongzhonghao.png"><br></a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>本文首发<a href="http://geek.csdn.net/news/detail/54092" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<blockquote>
-<p>记得第一次读这个文档]]>
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" ]]>
     </summary>
     
       <category term="Swift" scheme="http://www.devtalking.com/tags/Swift/"/>
@@ -1031,8 +1186,16 @@
     <link href="http://www.devtalking.com//articles/develop-tvos-app-with-tvml/"/>
     <id>http://www.devtalking.com//articles/develop-tvos-app-with-tvml/</id>
     <published>2015-12-30T16:00:00.000Z</published>
-    <updated>2016-01-02T11:31:51.000Z</updated>
-    <content type="html"><![CDATA[<p>作者：<a href="http://www.raywenderlich.com/u/Kelvin%20Lau" target="_blank" rel="external">Kelvin Lau</a> 原文地址：<a href="http://www.raywenderlich.com/114886/beginning-tvos-development-with-tvml-tutorial" target="_blank" rel="external">Beginning tvOS Development with TVML Tutorial</a></p>
+    <updated>2016-08-19T00:53:23.000Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>作者：<a href="http://www.raywenderlich.com/u/Kelvin%20Lau" target="_blank" rel="external">Kelvin Lau</a> 原文地址：<a href="http://www.raywenderlich.com/114886/beginning-tvos-development-with-tvml-tutorial" target="_blank" rel="external">Beginning tvOS Development with TVML Tutorial</a></p>
 <p>在2015年9月9日的产品发布会中，Apple宣布了新一代的Apple TV以及tvOS，并且在tvOS中集成了App Store。这使得我们多年以来想在Apple TV上开发专属应用的梦想成真了。</p>
 <p>我和其他教程团队的成员已经开始深入研究tvOS SDK，并且正在努力为你们准备一些有价值的tvOS教程。在你开这篇文章之前，Chris Wagner已经写了一篇关于tvOS初步印象的<a href="http://www.raywenderlich.com/114313/tvos-initial-impressions" target="_blank" rel="external">文章</a>，我也基于这篇文章，设计了第一个tvOS的教程。</p>
 <blockquote>
@@ -1164,6 +1327,14 @@
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//将这两行代码插入evaluateScripts的else代码块中. </span></span><br><span class="line"><span class="keyword">var</span> errorDoc = createAlert(<span class="string">"Evaluate Scripts Error"</span>, <span class="string">"Error attempting to evaluate external JavaScript files."</span>);</span><br><span class="line">navigationDocument.presentModal(errorDoc);</span><br></pre></td></tr></table></figure>
 <p>想要测试错误信息，你们可以修改一下JavaScript文件的路径，比如把<code>Presenter.js</code>改为<code>Presentr.js</code>：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">$&#123;options.<span class="type">BASEURL</span>&#125;js/<span class="type">Presentr</span>.js</span><br></pre></td></tr></table></figure>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <h2 id="u4F7F_u7528CatalogTemplate"><a href="#u4F7F_u7528CatalogTemplate" class="headerlink" title="使用CatalogTemplate"></a>使用CatalogTemplate</h2><p><strong>catalogTemplate</strong>模板同样也是Apple提供的18个模板中的一个。它的作用是以分组的形式展现内容，用它来展示你们最喜欢的RWDevCon视频最好不过了！ <strong>catalogTemplate</strong>有许多有意思的元素：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-11.jpg" alt="tvOS-11"></p>
 <h3 id="u590D_u5408_u5143_u7D20_u548C_u7B80_u5355_u5143_u7D20"><a href="#u590D_u5408_u5143_u7D20_u548C_u7B80_u5355_u5143_u7D20" class="headerlink" title="复合元素和简单元素"></a>复合元素和简单元素</h3><p>该模板中的<code>banner</code>元素在应用顶部，用于展示应用基本信息，比如名称、标题等。它本身是一个 <strong>复合元素</strong> ，也就是说它是由多个 <strong>简单元素</strong> 组合而成。比如，在<code>banner</code>中很显然有标题，那么该标题就是一个简单的<code>title</code>元素，并且在<code>title</code>背后还有背景图片，这又是另外一个简单元素<code>background</code>。所以<code>banner</code>是由两个简单元素组合而成。</p>
@@ -1190,7 +1361,7 @@
 <p>恭喜你们，现在你们已经可以通过更好的方式从JavaScript文件中加载TVML模板信息了，而不再使用硬编码写死在代码里！</p>
 <h3 id="u5B8C_u5584catalogTemplate"><a href="#u5B8C_u5584catalogTemplate" class="headerlink" title="完善catalogTemplate"></a>完善catalogTemplate</h3><p>你管你们信不信，我们要做的tvOS应用马上要接近尾声了。通过TVML开发tvOS应用最优雅的一件事就是添加界面元素非常之简单。</p>
 <p>打开 <strong>RWDevConTemplate.xml.js</strong> 文件，按照如下代码更新之前代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Template</span> = function() &#123; <span class="keyword">return</span> `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">  &lt;document&gt;</span><br><span class="line">    &lt;catalogTemplate&gt; </span><br><span class="line">      &lt;banner&gt; </span><br><span class="line">        &lt;title&gt;<span class="type">RWDevConHighlights</span>&lt;/title&gt;</span><br><span class="line">      &lt;/banner&gt;</span><br><span class="line">      <span class="comment">//add stuff here</span></span><br><span class="line">      <span class="comment">//1.</span></span><br><span class="line">      &lt;list&gt; </span><br><span class="line">        &lt;section&gt; </span><br><span class="line">          <span class="comment">//2.</span></span><br><span class="line">	  &lt;listItemLockup&gt; </span><br><span class="line">	    &lt;title&gt;<span class="type">Inspiration</span> <span class="type">Videos</span>&lt;/title&gt;</span><br><span class="line">	    &lt;decorationLabel&gt;<span class="number">13</span>&lt;/decorationLabel&gt;</span><br><span class="line">	  &lt;/listItemLockup&gt;</span><br><span class="line">        &lt;/section&gt;</span><br><span class="line">      &lt;/list&gt;</span><br><span class="line">    &lt;/catalogTemplate&gt;</span><br><span class="line">  &lt;/document&gt;`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Template</span> = function() &#123; <span class="keyword">return</span> `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">  &lt;document&gt;</span><br><span class="line">    &lt;catalogTemplate&gt; </span><br><span class="line">      &lt;banner&gt; </span><br><span class="line">        &lt;title&gt;<span class="type">RWDevConHighlights</span>&lt;/title&gt;</span><br><span class="line">      &lt;/banner&gt;</span><br><span class="line">      <span class="comment">//add stuff here</span></span><br><span class="line">      <span class="comment">//1.</span></span><br><span class="line">      &lt;list&gt; </span><br><span class="line">        &lt;section&gt; </span><br><span class="line">          <span class="comment">//2.</span></span><br><span class="line">      &lt;listItemLockup&gt; </span><br><span class="line">        &lt;title&gt;<span class="type">Inspiration</span> <span class="type">Videos</span>&lt;/title&gt;</span><br><span class="line">        &lt;decorationLabel&gt;<span class="number">13</span>&lt;/decorationLabel&gt;</span><br><span class="line">      &lt;/listItemLockup&gt;</span><br><span class="line">        &lt;/section&gt;</span><br><span class="line">      &lt;/list&gt;</span><br><span class="line">    &lt;/catalogTemplate&gt;</span><br><span class="line">  &lt;/document&gt;`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ol>
 <li>在上面的代码中，新定义了一个list标签，该标签中的内容就是显示在屏幕上除了Banner以外的全部内容。</li>
 <li><code>listItemLockup</code>代表一个组，它以<code>listItemLockup</code>标签开头。在该标签中，通过<code>title</code>标签定义了它的名称“Inspiration Videos”，然后通过<code>decorationLabel</code>标签定义了该组中包含内容的数量。</li>
@@ -1199,7 +1370,7 @@
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-14.png" alt="tvOS-14"></p>
 <p>看着还不赖吧！</p>
 <h3 id="u5B8C_u6210catalogTemplate"><a href="#u5B8C_u6210catalogTemplate" class="headerlink" title="完成catalogTemplate"></a>完成catalogTemplate</h3><p>最后，我们准备在模板中添加cell，用于展示每一个视频。打开 <strong>RWDevConTemplate.xml.js</strong> 添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Template</span> = function() &#123; <span class="keyword">return</span> `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">  &lt;document&gt;</span><br><span class="line">    &lt;catalogTemplate&gt; </span><br><span class="line">      &lt;banner&gt; </span><br><span class="line">        &lt;title&gt;<span class="type">RWDevConHighlights</span>&lt;/title&gt;</span><br><span class="line">      &lt;/banner&gt;</span><br><span class="line">      &lt;list&gt; </span><br><span class="line">        &lt;section&gt; </span><br><span class="line">	  &lt;listItemLockup&gt; </span><br><span class="line">	    &lt;title&gt;<span class="type">Inspiration</span> <span class="type">Videos</span>&lt;/title&gt;</span><br><span class="line">	    &lt;decorationLabel&gt;<span class="number">13</span>&lt;/decorationLabel&gt;</span><br><span class="line">            <span class="comment">//1. add from here</span></span><br><span class="line">	    &lt;relatedContent&gt; </span><br><span class="line">	      &lt;grid&gt;</span><br><span class="line">	        &lt;section&gt; </span><br><span class="line">                  <span class="comment">//2</span></span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ray-Wenderlich-Teamwork.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ray.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ryan-Nystrom-Contributing.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ryan.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">	          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Matthijs-Hollemans-Math-Isnt-Scary.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/matthijs.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Vicki-Wenderlich-Identity.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/vicki.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">	          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Alexis-Gallagher-Identity.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/alexis.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">	          &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Marin-Todorov-RW-Folklore.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/marin.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Chris-Wagner-Craftsmanship.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/chris.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">	          &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Cesare-Rocchi-Cognition.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/cesare.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ellen-Shapiro-Starting-Over.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ellen.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Jake-Gundersen-Opportunity.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/jake.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Kim-Pedersen-Finishing.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/kim.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">	          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Tammy-Coron-Possible.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/tammy.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;									</span><br><span class="line">		  &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Saul-Mora-NSBrief.mp4"</span>&gt;</span><br><span class="line">		    &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/saul.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">		  &lt;/lockup&gt;		</span><br><span class="line">		&lt;/section&gt;</span><br><span class="line">	      &lt;/grid&gt;</span><br><span class="line">	    &lt;/relatedContent&gt;</span><br><span class="line">	  &lt;/listItemLockup&gt;</span><br><span class="line">        &lt;/section&gt;</span><br><span class="line">      &lt;/list&gt;</span><br><span class="line">    &lt;/catalogTemplate&gt;</span><br><span class="line">  &lt;/document&gt;`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Template</span> = function() &#123; <span class="keyword">return</span> `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">  &lt;document&gt;</span><br><span class="line">    &lt;catalogTemplate&gt; </span><br><span class="line">      &lt;banner&gt; </span><br><span class="line">        &lt;title&gt;<span class="type">RWDevConHighlights</span>&lt;/title&gt;</span><br><span class="line">      &lt;/banner&gt;</span><br><span class="line">      &lt;list&gt; </span><br><span class="line">        &lt;section&gt; </span><br><span class="line">      &lt;listItemLockup&gt; </span><br><span class="line">        &lt;title&gt;<span class="type">Inspiration</span> <span class="type">Videos</span>&lt;/title&gt;</span><br><span class="line">        &lt;decorationLabel&gt;<span class="number">13</span>&lt;/decorationLabel&gt;</span><br><span class="line">            <span class="comment">//1. add from here</span></span><br><span class="line">        &lt;relatedContent&gt; </span><br><span class="line">          &lt;grid&gt;</span><br><span class="line">            &lt;section&gt; </span><br><span class="line">                  <span class="comment">//2</span></span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ray-Wenderlich-Teamwork.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ray.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;</span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ryan-Nystrom-Contributing.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ryan.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">              &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Matthijs-Hollemans-Math-Isnt-Scary.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/matthijs.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Vicki-Wenderlich-Identity.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/vicki.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">              &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Alexis-Gallagher-Identity.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/alexis.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">              &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Marin-Todorov-RW-Folklore.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/marin.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Chris-Wagner-Craftsmanship.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/chris.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">              &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Cesare-Rocchi-Cognition.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/cesare.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ellen-Shapiro-Starting-Over.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ellen.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Jake-Gundersen-Opportunity.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/jake.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Kim-Pedersen-Finishing.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/kim.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">              &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Tammy-Coron-Possible.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/tammy.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Saul-Mora-NSBrief.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/saul.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;     </span><br><span class="line">        &lt;/section&gt;</span><br><span class="line">          &lt;/grid&gt;</span><br><span class="line">        &lt;/relatedContent&gt;</span><br><span class="line">      &lt;/listItemLockup&gt;</span><br><span class="line">        &lt;/section&gt;</span><br><span class="line">      &lt;/list&gt;</span><br><span class="line">    &lt;/catalogTemplate&gt;</span><br><span class="line">  &lt;/document&gt;`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ol>
 <li>从上述代码中可以看到，在<code>listItemLockup</code>标签中添加了<code>relatedContent</code>，该标签是的作用是显示图中红色圆圈区域的：</li>
 </ol>
@@ -1224,9 +1395,18 @@
 <p>上述代码中的<code>addEventListener</code>方法相当于iOS中按钮的<code>@IBAction</code>。编译运行程序，选择一个视频播放，你会看到一个完美的视频播放应用：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS-app-development-17.gif" alt="tvOS-17"></p>
 <p>大家可以在这里下载教程中的完整项目：<a href="http://cdn5.raywenderlich.com/wp-content/uploads/2015/09/client.zip" target="_blank" rel="external">client</a>和<a href="http://cdn5.raywenderlich.com/wp-content/uploads/2015/09/RWDevCon.zip" target="_blank" rel="external">RWDevCon</a>。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>作者：<a href="http://www.raywenderlich.com/u/Kelvin%20Lau" target="_blank" rel="external">Kelvin Lau</a> 原文地址：<a href="http://www.raywender]]>
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" ]]>
     </summary>
     
       <category term="Apple TV" scheme="http://www.devtalking.com/tags/Apple-TV/"/>
@@ -1240,8 +1420,16 @@
     <link href="http://www.devtalking.com//articles/calayer-animation-gradient-animation/"/>
     <id>http://www.devtalking.com//articles/calayer-animation-gradient-animation/</id>
     <published>2015-09-21T16:00:00.000Z</published>
-    <updated>2016-01-02T15:42:11.000Z</updated>
-    <content type="html"><![CDATA[<p>本文首发<a href="http://www.csdn.net/article/2015-09-22/2825765" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+    <updated>2016-08-19T00:51:36.000Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://www.csdn.net/article/2015-09-22/2825765" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 <p>在很多人的心目中iPhone的经典机型应该是iPhone4，精湛的工艺、完美的屏幕配上暗色的锁屏壁纸，看着屏幕底部闪烁的<strong>slide to unlock</strong>字样，高逼格彰显无遗。时至今日无论iPhone机身样式如何改变，屏幕尺寸如何改变，iOS系统如何改变，唯有锁屏底部闪烁的<strong>滑动来解锁</strong>不变。它的动画效果是如何实现的呢，这篇文章会告诉你们答案。</p>
 <h2 id="CAGradientLayer"><a href="#CAGradientLayer" class="headerlink" title="CAGradientLayer"></a>CAGradientLayer</h2><p>新建一个应用名为<strong>GradientAnimation</strong>，打开<code>Main.storyboard</code>，将ViewController的View背景色设置为灰黑色，拖一个UIView到ViewController中，将其颜色设置为无色并设置好布局约束：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GradientAnimation-1.png" alt="GradientAnimation - 1"></p>
@@ -1263,6 +1451,14 @@
 <p>接下来我们设置CAGradientLayer的渐变颜色，接着添加如下代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">gradientLayer.colors = [</span><br><span class="line">    <span class="type">UIColor</span>.blackColor().<span class="type">CGColor</span>,</span><br><span class="line">    <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span>,</span><br><span class="line">    <span class="type">UIColor</span>.blackColor().<span class="type">CGColor</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 <p>CAGradientLayer的<code>colors</code>属性类型是一个数组<code>[AnyObject]</code>，这就意味着我们可以实现多个颜色的渐变效果，并且可以规定各个颜色的顺序。不过在我们这个示例中我们只需要两种颜色，不过需要注意的是虽然颜色只有两种，但是整个颜色渐变的过程中有三个原色点，那就是黑、白、黑，所以我们在这个数组中也需要按照原色点的数量和顺序添加相应的颜色，哪怕颜色都是一样的。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <p>我们既然设置了渐变的三个原色，那么就要对这原色出现的位置进行设置，接着添加如下代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">gradientLayer.locations = [<span class="number">0.2</span>, <span class="number">0.5</span>, <span class="number">0.8</span>]</span><br></pre></td></tr></table></figure>
 <p>从上述代码中不难看出，我们将第一个黑色原色出现的位置设置在了整个Layer长度的十分之二的位置，第二个白色原色在中间，第三个黑色原色在十分之八的位置：</p>
@@ -1295,10 +1491,19 @@
 <p>该方法的参数<code>text</code>就是UILabel中要显示的文字内容。<code>substringToIndex(_ to: Int)</code>方法的作用是从字符串的开头一直截取到指定的位置，但不包括该指定位置的字符。<code>text.startIndex.successor()</code>这句意思是从<code>text</code>的起始位置开始取后面的一个字符。<code>substringFromIndex(_ from: Int)</code>方法的作用是以指定位置并包括指定位置的字符开始，一直截取之后的全部字符。所以整个方法的作用是每隔0.4秒显示一个字符，直到将整个字符串显示完。最后在<code>viewDidAppear()</code>中注释掉<code>textLabel.text = text</code>这行代码，并在方法最后调用<code>textAnimate(text)</code>方法。编译运行代码看看最终效果：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GradientAnimation-12.gif" alt="GradientAnimation - 12"></p>
 <p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>本文首发<a href="http://www.csdn.net/article/2015-09-22/2825765" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<p>在很多人的心目中iPhone的]]>
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" ]]>
     </summary>
     
       <category term="Animation" scheme="http://www.devtalking.com/tags/Animation/"/>
@@ -1410,8 +1615,16 @@
     <link href="http://www.devtalking.com//articles/calayer-animation-replicator-animation/"/>
     <id>http://www.devtalking.com//articles/calayer-animation-replicator-animation/</id>
     <published>2015-09-08T16:00:00.000Z</published>
-    <updated>2016-01-21T09:34:19.000Z</updated>
-    <content type="html"><![CDATA[<p>本文首发<a href="http://www.csdn.net/article/2015-09-09/2825659" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+    <updated>2016-08-19T00:52:16.000Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://www.csdn.net/article/2015-09-09/2825659" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 <p>上一篇文章通过两个动画示例带大家了解和认识了CALayer动画，包括如何使用CAShapeLayer、CABasicAnimation、CAAnimationGroup等。在这篇文章中，依然会通过两个示例向大家讲解更多CALayer动画的知识。</p>
 <p>老规矩，先让我们看看最终要实现的动画效果：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-17.gif" alt="ReplicatorAnimation-17"></p>
@@ -1450,6 +1663,14 @@
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.masksToBounds = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 <p><code>masksToBounds</code>是CALayer的属性，作用是将Layer视为一个遮罩，只显示遮罩区域内的内容。最后我们回到初始化<code>replicatorLayer</code>的地方，找到这行代码<code>replicatorLayer.backgroundColor = UIColor.lightGrayColor().CGColor</code>，将<code>replicatorLayer</code>的背景色改为无色<code>replicatorLayer.backgroundColor = UIColor.clearColor().CGColor</code>。再次编译运行看看最终效果：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-9.gif" alt="ReplicatorAnimation-9"></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <h2 id="Replicator_Indicator_Animation"><a href="#Replicator_Indicator_Animation" class="headerlink" title="Replicator Indicator Animation"></a>Replicator Indicator Animation</h2><p>CAReplicatorLayer的功能是很强大的，这一节将通过另一个加载动画的实例向大家介绍它的其他特性。</p>
 <p>首先打开<code>Main.storyboard</code>，拖进一个新的UIView，位置颜色随大家喜好：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-10.png" alt="ReplicatorAnimation-10"></p>
@@ -1479,10 +1700,18 @@
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-16.gif" alt="ReplicatorAnimation-16"></p>
 <p>展现在我们眼前的是一个完美的加载动画。</p>
 <h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>今天主要给大家介绍了CAReplicatorLayer的用法，大家领悟其核心功能复制、延迟后也可以尝试实现其他有趣的动画效果。下篇文章我会向大家介绍CALayer另一个子类的用法，敬请期待吧。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>本文首发<a href="http://www.csdn.net/article/2015-09-09/2825659" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<p>上一篇文章通过两个动画示例带大]]>
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" ]]>
     </summary>
     
       <category term="Animation" scheme="http://www.devtalking.com/tags/Animation/"/>
@@ -1496,8 +1725,16 @@
     <link href="http://www.devtalking.com//articles/calayer-animation-loading-lndicator/"/>
     <id>http://www.devtalking.com//articles/calayer-animation-loading-lndicator/</id>
     <published>2015-09-06T16:00:00.000Z</published>
-    <updated>2016-06-05T01:25:04.000Z</updated>
-    <content type="html"><![CDATA[<p>本文首发<a href="http://www.csdn.net/article/2015-09-07/2825633" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+    <updated>2016-08-19T00:51:58.000Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://www.csdn.net/article/2015-09-07/2825633" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 <h2 id="View_vs-_Layer"><a href="#View_vs-_Layer" class="headerlink" title="View vs. Layer"></a>View vs. Layer</h2><p>这篇文章通过两个加载动画向大家介绍CALayer的动画。按照面向对象的思想说，Layer其实就是一个模型类，像Java里的POJO类一样，它包含若干属性，并没有任何处理逻辑的方法，这些属性影响着显示在Layer中的内容。我们先来看看UIView和CALayer之间有什么区别和联系。</p>
 <ul>
 <li>联系：Layer是View背后的那个女人。每一个UIView后面都有对应的CALayer，大家看到的在UIView中显示的内容其实是在CALayer中。</li>
@@ -1550,6 +1787,14 @@
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-5.png" alt="GoogleLoadingAnimation-5"></p>
 <p>到目前为止，我们通过CALayer绘制出了动画的主体，接下来要让它动起来。在<code>ViewController.swift</code>中添加<code>beginSimpleAnimate()</code>方法：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">beginSimpleAnimation</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">let</span> rotate = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"transform.rotation"</span>)</span><br><span class="line">    rotate.duration = <span class="number">1.5</span></span><br><span class="line">    rotate.fromValue = <span class="number">0</span></span><br><span class="line">    rotate.toValue = <span class="number">2</span> * <span class="type">M_PI</span></span><br><span class="line">    rotate.repeatCount = <span class="type">HUGE</span></span><br><span class="line">    loadingView.layer.addAnimation(rotate, forKey: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <p>在这个方法中，我们又看到了新面孔<code>CABasicAnimation</code>，该类提供了基本的、单关键帧的Layer属性动画，通过<code>animationWithKeyPath:</code>初始化方法，根据<code>keyPath</code>创建不同的<code>CAPropertyAnimation</code>实例。常用的<code>keyPath</code>有如下一些：</p>
 <ul>
 <li><code>transform.rotation</code>：旋转动画。</li>
@@ -1594,10 +1839,18 @@
 <p>编译运行看看效果：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-10.gif" alt="GoogleLoadingAnimation-10"></p>
 <h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>CALayer动画可以实现比UIView动画更丰富、更底层、效率更高的动画。但是在实际的应用开发中，我们应该按需所用，能用UIView动画实现的我们就可以不用CALayer动画，它俩没有谁优谁劣之分。这篇文章只是CALayer动画的引子，让大家对CALayer动画有初步的了解和认识，之后我在文章中会通过更多的实例帮大家更深入的认识CALayer动画，从而提升自己应用的用户体验。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>本文首发<a href="http://www.csdn.net/article/2015-09-07/2825633" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<h2 id="View_vs-_L]]>
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" ]]>
     </summary>
     
       <category term="Animation" scheme="http://www.devtalking.com/tags/Animation/"/>
@@ -2246,8 +2499,16 @@
     <link href="http://www.devtalking.com//articles/ios-design-pattern-in-swift-2/"/>
     <id>http://www.devtalking.com//articles/ios-design-pattern-in-swift-2/</id>
     <published>2015-01-13T16:00:00.000Z</published>
-    <updated>2016-01-01T14:05:49.000Z</updated>
-    <content type="html"><![CDATA[<h2 id="Facade_u8BBE_u8BA1_u6A21_u5F0F"><a href="#Facade_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="Facade设计模式"></a>Facade设计模式</h2><p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-7.png" alt="pic"></p>
+    <updated>2016-08-19T00:56:57.000Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="Facade_u8BBE_u8BA1_u6A21_u5F0F"><a href="#Facade_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="Facade设计模式"></a>Facade设计模式</h2><p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-7.png" alt="pic"></p>
 <p>Facade设计模式为多个子模块或子系统提供统一的、单独的API接口。也就是说，不用给用户暴露一堆乱七八糟的接口，只需要暴露一个简单的、标准的接口即可。</p>
 <p>下面这张图能更好的描述这个概念：</p>
 <p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-8.png" alt="pic"></p>
@@ -2292,6 +2553,14 @@
 <li>你们通过扩展的方式已经给<code>Album</code>添加了新的能力，如果你们还想通过子类的方式，那么依然可以这么做。</li>
 <li>上面这个简单的扩展可以看出，你们不用对<code>Album</code>做任何改动，它就具备了可以返回适用于<code>UITableView</code>数据格式的能力。</li>
 </ul>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <h3 id="Delegation"><a href="#Delegation" class="headerlink" title="Delegation"></a>Delegation</h3><p>另一个Decorator设计模式是Delegation，它是一种代表其他对象或协调其他对象的机制。</p>
 <p>比如当你使用<code>UITableView</code>时，你必须要实现<code>tableView(_:numberOfRowsInSection:)</code>方法，你不要期望<code>UITableView</code>会知道你希望每个Section里有多少行。因此，计算每个Section有多少行的任务就交给了<code>UITableView</code>的代理。这样就可以使<code>UITableView</code>显示与数据松耦合，独立开来。</p>
 <p>下图是<code>UITableView</code>和它的代理之间的运行关系示意图：</p>
@@ -2304,7 +2573,7 @@
 <h2 id="u5982_u4F55_u4F7F_u7528Delegate_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528Delegate_u6A21_u5F0F" class="headerlink" title="如何使用Delegate模式"></a>如何使用Delegate模式</h2><p>打开<code>ViewController.swift</code>文件，然后添加以下私有属性：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> allAlbums = [<span class="type">Album</span>]()</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> currentAlbumData : (titles:[<span class="type">String</span>], values:[<span class="type">String</span>])?</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> currentAlbumIndex = <span class="number">0</span></span><br></pre></td></tr></table></figure>
 <p>然后重写<code>viewDidLoad</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">  <span class="comment">//1</span></span><br><span class="line">  <span class="keyword">self</span>.navigationController?.navigationBar.translucent = <span class="literal">false</span></span><br><span class="line">  currentAlbumIndex = <span class="number">0</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment">//2</span></span><br><span class="line">  allAlbums = <span class="type">LibraryAPI</span>.sharedInstance.getAlbums()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3</span></span><br><span class="line">  <span class="comment">// the uitableview that presents the album data</span></span><br><span class="line">  dataTable.delegate = <span class="keyword">self</span></span><br><span class="line">  dataTable.dataSource = <span class="keyword">self</span></span><br><span class="line">  dataTable.backgroundView = <span class="literal">nil</span></span><br><span class="line">  view.addSubview(dataTable!)		</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">  <span class="comment">//1</span></span><br><span class="line">  <span class="keyword">self</span>.navigationController?.navigationBar.translucent = <span class="literal">false</span></span><br><span class="line">  currentAlbumIndex = <span class="number">0</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment">//2</span></span><br><span class="line">  allAlbums = <span class="type">LibraryAPI</span>.sharedInstance.getAlbums()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3</span></span><br><span class="line">  <span class="comment">// the uitableview that presents the album data</span></span><br><span class="line">  dataTable.delegate = <span class="keyword">self</span></span><br><span class="line">  dataTable.dataSource = <span class="keyword">self</span></span><br><span class="line">  dataTable.backgroundView = <span class="literal">nil</span></span><br><span class="line">  view.addSubview(dataTable!)       </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们对上述的代码来进行一一讲解：</p>
 <ol>
 <li>关闭导航栏的透明效果。</li>
@@ -2332,9 +2601,18 @@
 <p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-14.png" alt="pic"></p>
 <p>未完待续……</p>
 <p>原文地址：<a href="http://www.raywenderlich.com/86477/introducing-ios-design-patterns-in-swift-part-1" target="_blank" rel="external">Introducing iOS Design Patterns in Swift</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 ]]></content>
     <summary type="html">
-    <![CDATA[<h2 id="Facade_u8BBE_u8BA1_u6A21_u5F0F"><a href="#Facade_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="Facade设计模式"></a>Facade设计模式</h2><]]>
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" ]]>
     </summary>
     
       <category term="Design Pattern" scheme="http://www.devtalking.com/tags/Design-Pattern/"/>

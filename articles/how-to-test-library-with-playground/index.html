@@ -45,19 +45,37 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
 
 
-<meta name="description" content="距离Swift发布已经过去快2个月了，各路前辈和大神写教程、写出、录教学视频忙的不亦乐乎，我们也从中学习到了很多关于Swift有用的知识。在学习的过程中也见证了Apple一次次对Swift修正的历程，在正式版来临之际，我想说说被很多前辈和大神视为玩物的东西–Playground。
-我觉得Swift提供的Playground非常有趣，至少对初学者来说是一个能抓住眼球的重要因素。并且我认为Playgr">
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+距离Swift发布已经过去快2个月了，各路前辈和大神写教程、写出、录教学视频忙的不亦乐乎，我们也从中学习到了很多关于Swift有用的知识。在学习的过程中也见证了Apple一次次对Swift修正的历程，在正式版来临之际，我想说说被很多">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何用Playground测试自己开发的库或第三方库">
 <meta property="og:url" content="http://www.devtalking.com/articles/how-to-test-library-with-playground/index.html">
 <meta property="og:site_name" content="程序员说">
-<meta property="og:description" content="距离Swift发布已经过去快2个月了，各路前辈和大神写教程、写出、录教学视频忙的不亦乐乎，我们也从中学习到了很多关于Swift有用的知识。在学习的过程中也见证了Apple一次次对Swift修正的历程，在正式版来临之际，我想说说被很多前辈和大神视为玩物的东西–Playground。
-我觉得Swift提供的Playground非常有趣，至少对初学者来说是一个能抓住眼球的重要因素。并且我认为Playgr">
-<meta property="og:updated_time" content="2016-01-01T13:40:35.000Z">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+距离Swift发布已经过去快2个月了，各路前辈和大神写教程、写出、录教学视频忙的不亦乐乎，我们也从中学习到了很多关于Swift有用的知识。在学习的过程中也见证了Apple一次次对Swift修正的历程，在正式版来临之际，我想说说被很多">
+<meta property="og:updated_time" content="2016-08-19T00:56:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何用Playground测试自己开发的库或第三方库">
-<meta name="twitter:description" content="距离Swift发布已经过去快2个月了，各路前辈和大神写教程、写出、录教学视频忙的不亦乐乎，我们也从中学习到了很多关于Swift有用的知识。在学习的过程中也见证了Apple一次次对Swift修正的历程，在正式版来临之际，我想说说被很多前辈和大神视为玩物的东西–Playground。
-我觉得Swift提供的Playground非常有趣，至少对初学者来说是一个能抓住眼球的重要因素。并且我认为Playgr">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+距离Swift发布已经过去快2个月了，各路前辈和大神写教程、写出、录教学视频忙的不亦乐乎，我们也从中学习到了很多关于Swift有用的知识。在学习的过程中也见证了Apple一次次对Swift修正的历程，在正式版来临之际，我想说说被很多">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -234,7 +252,15 @@
       
 
       
-        <span itemprop="articleBody"><p>距离Swift发布已经过去快2个月了，各路前辈和大神写教程、写出、录教学视频忙的不亦乐乎，我们也从中学习到了很多关于Swift有用的知识。在学习的过程中也见证了Apple一次次对Swift修正的历程，在正式版来临之际，我想说说被很多前辈和大神视为玩物的东西–Playground。</p>
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>距离Swift发布已经过去快2个月了，各路前辈和大神写教程、写出、录教学视频忙的不亦乐乎，我们也从中学习到了很多关于Swift有用的知识。在学习的过程中也见证了Apple一次次对Swift修正的历程，在正式版来临之际，我想说说被很多前辈和大神视为玩物的东西–Playground。</p>
 <p>我觉得Swift提供的Playground非常有趣，至少对初学者来说是一个能抓住眼球的重要因素。并且我认为Playground其实挺有用的，比如学习Swift的各种新特性、写一些有趣的代码片段、验证一些算法、甚至可以用它写一个小游戏等等，包括TopCoder的Swift Challange都要求使用Playground。但是很关键的一点是以上这些Playground的应用场景与真实的项目、产品开发之间没有太多的交际，换句话说就是Playground在实际开发中基本帮不上什么忙，这也正式很多人觉得目前的Playground没什么大用的原因。</p>
 <p>但事实真的是如此吗？是，好像又不是，今天我在这里就介绍一个Playground在实际开发中的用途 – 使用Playground在开发中测试自己的库或第三方的库。在80%的第三方常用库还是Objective-C的情况下，我们可以用Playground来测试在Swift中的使用健康程度，从而能更从容的选择继续使用还是更换方案。</p>
 <ul>
@@ -245,6 +271,12 @@
 <li>第五步：在Playground中导入库并编写测试代码。</li>
 </ul>
 <p>这样你就可以在Playground中看到每一行代码的运行情况，是不是很酷呢！</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
 </span>
       
     </div>

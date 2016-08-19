@@ -45,24 +45,40 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
 
 
-<meta name="description" content="本文首发CSDN，如需转载请与CSDN联系。
-Operation对象的相关设置Operation对象除了上文中讲到到基本使用方法外还有一些其他的特性，这些特性需要根据我们的应用场景去设置，设置的时机在创建Operation对象之后和运行它或者将其放入操作队列之前，下面让我们来看看Operation对象还有哪些特性。
-Operation对象之间的依赖与GCD不同，Operation Queue不遵循">
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+本文首发CSDN，如需转载请与CSDN联系。
+Operation对象的相关设置Operation对象除了上文中讲到到基本使用方法外还有一些其他的特性，这些特性需要根据我们的应用场景去设置，设置的时机在创建Operation对象之后和">
 <meta property="og:type" content="article">
 <meta property="og:title" content="读 Concurrency Programming Guide 笔记（二）">
 <meta property="og:url" content="http://www.devtalking.com/articles/read-concurrency-programming-guide-2/index.html">
 <meta property="og:site_name" content="程序员说">
-<meta property="og:description" content="本文首发CSDN，如需转载请与CSDN联系。
-Operation对象的相关设置Operation对象除了上文中讲到到基本使用方法外还有一些其他的特性，这些特性需要根据我们的应用场景去设置，设置的时机在创建Operation对象之后和运行它或者将其放入操作队列之前，下面让我们来看看Operation对象还有哪些特性。
-Operation对象之间的依赖与GCD不同，Operation Queue不遵循">
-<meta property="og:image" content="http://www.devtalking.com/donate.png">
-<meta property="og:image" content="http://www.devtalking.com/guanzhugongzhonghao.png">
-<meta property="og:updated_time" content="2016-03-23T13:31:58.000Z">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+本文首发CSDN，如需转载请与CSDN联系。
+Operation对象的相关设置Operation对象除了上文中讲到到基本使用方法外还有一些其他的特性，这些特性需要根据我们的应用场景去设置，设置的时机在创建Operation对象之后和">
+<meta property="og:updated_time" content="2016-08-19T00:59:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="读 Concurrency Programming Guide 笔记（二）">
-<meta name="twitter:description" content="本文首发CSDN，如需转载请与CSDN联系。
-Operation对象的相关设置Operation对象除了上文中讲到到基本使用方法外还有一些其他的特性，这些特性需要根据我们的应用场景去设置，设置的时机在创建Operation对象之后和运行它或者将其放入操作队列之前，下面让我们来看看Operation对象还有哪些特性。
-Operation对象之间的依赖与GCD不同，Operation Queue不遵循">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+本文首发CSDN，如需转载请与CSDN联系。
+Operation对象的相关设置Operation对象除了上文中讲到到基本使用方法外还有一些其他的特性，这些特性需要根据我们的应用场景去设置，设置的时机在创建Operation对象之后和">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -239,7 +255,15 @@ Operation对象之间的依赖与GCD不同，Operation Queue不遵循">
       
 
       
-        <span itemprop="articleBody"><p>本文首发<a href="http://geek.csdn.net/news/detail/63001" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://geek.csdn.net/news/detail/63001" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 <h2 id="Operation_u5BF9_u8C61_u7684_u76F8_u5173_u8BBE_u7F6E"><a href="#Operation_u5BF9_u8C61_u7684_u76F8_u5173_u8BBE_u7F6E" class="headerlink" title="Operation对象的相关设置"></a>Operation对象的相关设置</h2><p>Operation对象除了上文中讲到到基本使用方法外还有一些其他的特性，这些特性需要根据我们的应用场景去设置，设置的时机在创建Operation对象之后和运行它或者将其放入操作队列之前，下面让我们来看看Operation对象还有哪些特性。</p>
 <h3 id="Operation_u5BF9_u8C61_u4E4B_u95F4_u7684_u4F9D_u8D56"><a href="#Operation_u5BF9_u8C61_u4E4B_u95F4_u7684_u4F9D_u8D56" class="headerlink" title="Operation对象之间的依赖"></a>Operation对象之间的依赖</h3><p>与GCD不同，Operation Queue不遵循先进先出的原则，而且Operation Queue始终是并发执行Operation对象的，所以想让Operation对象串行执行就需要用它的Operation对象依赖特性，该特性可以让Operation对象将自己与另外一个Operation对象进行关联，并且当关联的Operation对象执行完成后才可以执行，这样就达到了串行执行Operation对象的目的。</p>
 <p>我们可以用<code>NSOperation</code>的<code>addDependency</code>方法添加依赖的Operation对象，而且产生依赖的这两个Operation对象并不要求必须在相同的操作队列中，但是这种依赖只能是单向的，不能相互依赖。</p>
@@ -291,6 +315,14 @@ Operation对象之间的依赖与GCD不同，Operation Queue不遵循">
 <li>主Dispatch Queue：该类队列实质上也是一个串行队列，但是该队列是一个全局队列，在该队列中执行的任务都是在当前应用的主线程中执行的。通常情况下我们不需要自己创建此类队列。</li>
 </ul>
 <p>Dispatch Queue与Operation Queue相似，都能让我们更方便的实现并发任务的编程工作，并且能提供更优的性能，因为我们不再需要编写关于线程管理相关的一大堆代码，这些完全都有系统接管，我们只需要将注意力放在要执行的任务即可。举个简单的例子，如果有两个任务需要在不同的线程中执行，但是他们之间存在资源竞争的情况，所以需要保证执行的先后顺序，如果我们自己创建线程实现该场景，那么就务必要用的线程锁机制，确保任务有正确的执行顺序，这势必对系统资源的开销会非常大，如果使用Dispatch Queue，我们只需要将任务安正确的顺序添加到串行队列中即可，省时省力省资源。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <h3 id="u4EFB_u52A1_u7684_u8F7D_u4F53_u662F_u95ED_u5305"><a href="#u4EFB_u52A1_u7684_u8F7D_u4F53_u662F_u95ED_u5305" class="headerlink" title="任务的载体是闭包"></a>任务的载体是闭包</h3><p>在使用Dispatch Queue时，需要将任务封装为闭包。闭包就是一个函数，或者一个指向函数的指针，加上这个函数执行的非局部变量，闭包最大的一个特性就是可以访问父作用域中的局部变量。我们在将任务封装为闭包进行使用时要注意以下这几点：</p>
 <ul>
 <li>虽然在闭包中可以使用父作用域中的变量，但是尽可能少的使用父作用域中比较大的变量以及不要在闭包中做类似删除清空父作用域中变量的行为。</li>
@@ -330,7 +362,14 @@ Operation对象之间的依赖与GCD不同，Operation Queue不遵循">
 <h3 id="u961F_u5217_u7684_u6536_u5C3E_u5DE5_u4F5C"><a href="#u961F_u5217_u7684_u6536_u5C3E_u5DE5_u4F5C" class="headerlink" title="队列的收尾工作"></a>队列的收尾工作</h3><p>虽然在ARC时代，资源释放的工作已经基本不需要我们手动去做了，但有些时候因为系统释放资源并不是很及时，也会造成内存移除等问题，所以在一些情况下我们还是需要进行手动释放资源的工作，必入添加<code>autoreleasepool</code>保证资源及时释放等。Dispatch Queue也给我们提供了这样的机会（机会针对于ARC时代，在MRC时代是必须要做的），那就是Clean Up  Function清理扫尾函数，当队列被释放时，或者说引用计数为0时会调用该函数，并且将上下文指针也传到了该函数，以便进行清理工作：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Contact</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> name = <span class="string">"DevTalking"</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> mobile = <span class="string">"10010"</span></span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestDispatchQueue</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> contact = <span class="type">Contact</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">testCleanUpFunction</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        launch()</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">15</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> serialQueue = dispatch_queue_create(<span class="string">"com.example.MySerialQueue"</span>, <span class="type">DISPATCH_QUEUE_SERIAL</span>)</span><br><span class="line"></span><br><span class="line">        dispatch_set_context(serialQueue, <span class="built_in">unsafeBitCast</span>(contact, <span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;.<span class="keyword">self</span>))</span><br><span class="line">        </span><br><span class="line">        dispatch_set_finalizer_f(serialQueue, myFinalizerFunction())</span><br><span class="line">        </span><br><span class="line">        dispatch_async(serialQueue, &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">let</span> contact = <span class="built_in">unsafeBitCast</span>(dispatch_get_context(serialQueue), <span class="type">Contact</span>.<span class="keyword">self</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"The name is <span class="subst">\(contact.name)</span>"</span>)</span><br><span class="line">            </span><br><span class="line">            sleep(<span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">        dispatch_async(serialQueue, &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">let</span> contact = <span class="built_in">unsafeBitCast</span>(dispatch_get_context(serialQueue), <span class="type">Contact</span>.<span class="keyword">self</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"The name is <span class="subst">\(contact.mobile)</span>"</span>)</span><br><span class="line">        </span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">myFinalizerFunction</span><span class="params">()</span></span> -&gt; dispatch_function_t &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123; context <span class="keyword">in</span></span><br><span class="line">        </span><br><span class="line">            <span class="keyword">let</span> contact = <span class="built_in">unsafeBitCast</span>(context, <span class="type">Contact</span>.<span class="keyword">self</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"The name is <span class="subst">\(contact.name)</span> and the mobile is <span class="subst">\(contact.mobile)</span>, The serialQueue has been released and we need clean up context data."</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// TODO...</span></span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testDispatchQueue = <span class="type">TestDispatchQueue</span>()</span><br><span class="line">testDispatchQueue.testCleanUpFunction()</span><br></pre></td></tr></table></figure>
 <p>从上面的代码示例中可以看到当给队列设置完上下文时，我们使用了<code>dispatch_set_finalizer_f</code>函数给队列设置清理函数，<code>dispatch_set_finalizer_f</code>函数有两个参数，第一个是目标队列，第二个参数是类型为<code>dispatch_function_t</code>的函数指针，也就是清理函数，上下文数据指针是该函数唯一的参数。在上面代码中，我们添加了<code>myFinalizerFunction</code>函数作为清理函数，在该函数中获得上下文数据，然后进行后续的清理工作。</p>
-<p><a href="http://www.devtalking.com/donate.html"><br>    <img border="0" src="http://www.devtalking.com/donate.png"><br></a><br><a href="http://www.devtalking.com/gongzhonghao.html"><br>    <img border="0" src="http://www.devtalking.com/guanzhugongzhonghao.png"><br></a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 </span>
       
     </div>
