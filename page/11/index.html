@@ -192,6 +192,125 @@
             
             
               
+                <a class="post-title-link" href="/articles/swift-value-and-reference-types/" itemprop="url">
+                  Swift中的值类型和参照类型
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-17T00:00:00+08:00" content="2014-08-17">
+              2014-08-17
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/swift-value-and-reference-types/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-value-and-reference-types/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>在Swift中，类型分为两类：第一种是<strong>值类型</strong>，该类型的每个实例持有数据的副本，并且该副本对于每个实例来说是独一无二的一份，比如结构体（struct）、枚举（enum）、元组（tuple）都是值类型。第二种是<strong>参照类型</strong>，该类型的实例共享数据唯一的一份副本（在native层面说的话，就是该类型的每个实例都指向内存中的同一个地址），比如类（class）就是参照类型。在这篇文章中，我们将深入探讨值类型和参照类型的使用价值，以及如何在某种场景下选择正确的类型。</p>
+<h2 id="u5B83_u4EEC_u6709_u4EC0_u4E48_u4E0D_u540C_uFF1F"><a href="#u5B83_u4EEC_u6709_u4EC0_u4E48_u4E0D_u540C_uFF1F" class="headerlink" title="它们有什么不同？"></a>它们有什么不同？</h2><p>值类型最基本的特点就是复制，这影响到它的赋值、初始化、传参等操作。来看看下面的代码示例：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 值类型示例</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">S</span> </span>&#123; <span class="keyword">var</span> data: <span class="type">Int</span> = -<span class="number">1</span> &#125;</span><br><span class="line"><span class="keyword">var</span> a = <span class="type">S</span>()</span><br><span class="line"><span class="keyword">var</span> b = a                       <span class="comment">// a复制一份，并将副本赋值给了b</span></span><br><span class="line">a.data = <span class="number">42</span>                     <span class="comment">// a的数据改变了，但是b的并没有改变</span></span><br><span class="line"><span class="built_in">println</span>(<span class="string">"<span class="subst">\(a.data)</span>, <span class="subst">\(b.data)</span>"</span>) <span class="comment">// prints "42, -1"</span></span><br></pre></td></tr></table></figure>
+<p>参照类型的复制行为其实是隐式的创建了一个共享的实例，作为原始类型的参照。下面的例子中，两个变量都会参照唯一的那个共享实例的数据，所当改变这两个变量中任何一个的数据，都会同样作用于原始类型的数据：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 参照类型示例</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123; <span class="keyword">var</span> data: <span class="type">Int</span> = -<span class="number">1</span> &#125;</span><br><span class="line"><span class="keyword">var</span> x = <span class="type">C</span>()</span><br><span class="line"><span class="keyword">var</span> y = x       <span class="comment">// 将x赋值给y</span></span><br><span class="line">x.data = <span class="number">42</span>     <span class="comment">// 修改了x的数据，其实是修改了参照数据，那么y的数据也会改变 </span></span><br><span class="line"><span class="built_in">println</span>(<span class="string">"<span class="subst">\(x.data)</span>, <span class="subst">\(y.data)</span>"</span>) <span class="comment">// prints "42, 42"</span></span><br></pre></td></tr></table></figure>
+<h2 id="Mutation_u5728_u5B89_u5168_u6027_u4E2D_u7684_u89D2_u8272"><a href="#Mutation_u5728_u5B89_u5168_u6027_u4E2D_u7684_u89D2_u8272" class="headerlink" title="Mutation在安全性中的角色"></a>Mutation在安全性中的角色</h2><p>选择值类型的一个很重要的原因是可以让你比较容易的理解和掌控你的代码。如果你使用值类型，那么都是唯一的数据值、类型的副本在和你打交道，你对数据的修改只作用于数据所属的类型实例，所以你可以不用担心因为你在某个地方对数据的修改而影响到其他地方的数据。这在多线程环境中非常有用，因为在多线程下，不同的线程有可能会在你不知情的情况下改变数据。发生这种Bug后，调试起来就非常困难。</p>
+<p>因为值类型和参照类型的表象区别就在于当你修改类型实例的数据时，它们对原始类型数据的处理方式不同。但是有一种情况，值类型和参照类型的处理方式却又相似，那就是当类型实例的数据为只读的时候。在不存在修改的情况下，值类型和参照类型就没什么区别了。</p>
+<p>你可能会觉得这一点很有用，假如说一个<code>class</code>是完全不能被重定义的，那么就比较符合使用Cocoa的<code>NSObject</code>对象的一些习惯，并能很好的保持原本的语义。今天，在Swift你可以通过定义不可改变的存储属性来创建一个不可重定义的类，这样可以避免暴露出的API被修改。事实上，许多普通的Cocoa框架里的类，比如<code>NSURL</code>，都被定义成了不可重定义的类。尽管如此，Swift目前还不提供任何机制像结构体（struct）和枚举（enum）一样去强制使一个<code>class</code>成为不可重定义的类（比如像子类）。</p>
+<h2 id="u5982_u4F55_u9009_u62E9_u6B63_u786E_u7684_u7C7B_u578B_uFF1F"><a href="#u5982_u4F55_u9009_u62E9_u6B63_u786E_u7684_u7C7B_u578B_uFF1F" class="headerlink" title="如何选择正确的类型？"></a>如何选择正确的类型？</h2><p>如果你想创建一个新类型，那么你应该选择值类型还是参照类型呢？当你使用Cocoa框架时，很多API都是<code>NSObject</code>的子类，那么你就必须要使用参照类型，也就是<code>class</code>。在其他情况下，这里有一些指导建议你可以参考：</p>
+<p>使用值类型的情形：</p>
+<ul>
+<li>使用<code>==</code>运算符比较实例数据的时候。</li>
+<li>你想单独复制一份实例数据的时候。</li>
+<li>当在多线程环境下操作数据的时候。</li>
+</ul>
+<p>使用参照类型（比如<code>class</code>）的情形：</p>
+<ul>
+<li>当使用<code>===</code>运算符判断两个对象是否引用同一个对象实例的时候。</li>
+<li>当上下文需要创建一个共享的、可变的对象时。</li>
+</ul>
+<p>在Swift中，<code>Array</code>、<code>String</code>、<code>Dictionary</code>都是值类型。它们的使用方式类似C语言中得<code>int</code>，每一个实例都有一份数据。你不需要进行显示的复制操作去防止数据在你不知情的情况下被修改。更重要的是，你可以跨线程进行传参而不需要考虑同步的问题，因为传递值类型很安全。秉着高安全性的精神，这种类型划分模式能帮助你在Swift中写出更加有可预测性的代码。</p>
+<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=10" target="_blank" rel="external">Value and Reference Types</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/ios8-day-by-day-day1-swift-guide/" itemprop="url">
                   iOS8 Day-by-Day -- Day1 -- Swift引子
                 </a>
@@ -937,115 +1056,6 @@ scene.physicsWorld.contactDelegate = contactDelegate
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/understand-how-an-extension-works/" itemprop="url">
-                  应用扩展如何工作 -- iOS8/OS X v10.10应用扩展编程指南
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-08-08T00:00:00+08:00" content="2014-08-08">
-              2014-08-08
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/understand-how-an-extension-works/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/understand-how-an-extension-works/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>一个应用程序扩展不是一个应用，它在主体应用程序中单独打包并生成单独的二进制文件。应用程序扩展不同于一个应用程序，它的功能相对于应用来说更加明确、单一，并且要严格遵循扩展点的协议。</p>
-<h2 id="u5E94_u7528_u7A0B_u5E8F_u6269_u5C55_u7684_u751F_u547D_u5468_u671F"><a href="#u5E94_u7528_u7A0B_u5E8F_u6269_u5C55_u7684_u751F_u547D_u5468_u671F" class="headerlink" title="应用程序扩展的生命周期"></a>应用程序扩展的生命周期</h2><p>因为一个应用程序扩展不是一个应用，所以它的生命周期和运行环境也不同于应用。一般情况来说，应用程序扩展的生命周期开始于用户从某个应用中使用它。这个应用能够让用户选择某一种扩展来实现某个特定功能或任务，这种应用我们称为<strong>扩展载体应用</strong>。当扩展载体应用给扩展发送一个请求，让扩展代替响应用户的操作时，应用扩展就会被激活并意味着生命周期也随之开始。当应用扩展完成载体应用发送的请求任务后，该扩展的生命周期也随之结束。  </p>
-<p>比如说，有这样一个场景，用户在扩展载体应用中选中一段文字，并点击分享按钮，从分享列表中选择某一个分享扩展，将选中的内容分享至社区网站。此时，扩展载体应用就会启动该扩展，让它去响应用户的请求，即分享所选文本的内容。应用扩展基本的生命周期归纳在下图2-1中。<br><img src="http://www.devtalking.com/postImages/app_extensions_lifecycle.png" alt="生命周期">  </p>
-<p>在图2-1中的第2步中，系统实例化扩展载体应用中定义好的扩展，并建立载体应用于扩展之间的通信通道。然后扩展会根据上下文场景显示相关的界面，并使用载体应用接收到的信息执行用户的操作（在上述的例子中，分享扩展就使用用户选中的文本信息来执行相关操作）。 </p>
-<p>在图2-1的第3步中，用户在扩展中执行或取消某个任务，或者直接可以忽略该扩展。在对用户的操作做出响应的过程中，扩展会根据载体应用的请求立即开始执行任务，但如果有特殊需要时，扩展也会在系统后台去执行任务，这种情况下，扩展不会显示其相关界面，并且载体应用会显示用户操作扩展前的界面。当应用扩展执行完任务后，不管是返回还是延迟返回，但最后其执行结果都要返回给载体应用。  </p>
-<p>当扩展开始执行任务之后（或者开始在系统后台执行任务），系统就会终止扩展，比如图2-1中的第4步。  </p>
-<h2 id="u5E94_u7528_u6269_u5C55_u662F_u5982_u4F55_u8FDB_u884C_u901A_u4FE1_u7684"><a href="#u5E94_u7528_u6269_u5C55_u662F_u5982_u4F55_u8FDB_u884C_u901A_u4FE1_u7684" class="headerlink" title="应用扩展是如何进行通信的"></a>应用扩展是如何进行通信的</h2><p>当应用扩展在运行的时候，它会直接和载体应用进行通信。但是应用扩展不会和调用它的应用进行直接通信，因为有可能应用扩展在运行，但是调用它的应用程序并没有运行。另外还有一点，扩展载体应用和调用扩展应用之间是绝对不会进行通信的。图2-2中描述了应用扩展、载体应用、调用扩展应用之间的关系。<br><img src="http://www.devtalking.com/postImages/simple_communication.png" alt="关系"></p>
-<p>当一个扩展需要和调用它的应用进行通信时，只能间接的通过扩展载体应用提供的上下文进行。比如说，一个应用扩展有可能会运行调用它的应用程序。在这个例子中，应用扩展不能通过API直接和调用它的应用传递消息。但是，应用扩展和调用它的应用可以共同访问一个定义为私有的共享容器。在图2-3中描述了扩展和调用扩展应用之间通信的模式。<br><img src="http://www.devtalking.com/postImages/detailed_communication.png" alt="通信"></p>
-<blockquote>
-<p>注意：在底层，系统使用进程间通信来确保应用扩展和扩展载体应用做到无缝结合。在你的代码中，你从来不会考虑这个通用的通信机制。那是因为我们使用的扩展API是扩展点和系统已经高度封装后的。  </p>
-</blockquote>
-<p>原文地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionOverview.html#//apple_ref/doc/uid/TP40014214-CH2-SW2" target="_blank" rel="external">Understand How an Extension Works</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1088,7 +1098,7 @@ scene.physicsWorld.contactDelegate = contactDelegate
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">72</span>
+              <span class="site-state-item-count">73</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1102,7 +1112,7 @@ scene.physicsWorld.contactDelegate = contactDelegate
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-count">34</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>

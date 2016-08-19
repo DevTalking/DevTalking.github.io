@@ -1,0 +1,813 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="ShadowSocks," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+什么是ShadowSocksShadowSocks是基于Socks5协议，使用类似SSH隧道的方式收发网络请求的一款开源软件，该软件由 @clowwindy 开发，最初只有Python版本，随后出现C++、C#、Go等多语言版本。Sh">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用ShadowSocks科学上网及突破公司内网">
+<meta property="og:url" content="http://www.devtalking.com/articles/shadowsocks-guide/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+什么是ShadowSocksShadowSocks是基于Socks5协议，使用类似SSH隧道的方式收发网络请求的一款开源软件，该软件由 @clowwindy 开发，最初只有Python版本，随后出现C++、C#、Go等多语言版本。Sh">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-9.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shaodwsocksss-10.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-11.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-12.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-1.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-2.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-3.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-4.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-5.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-6.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-7.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-8.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-14.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-13.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-15.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-16.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-17.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-18.png">
+<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-19.png">
+<meta property="og:updated_time" content="2016-08-19T04:04:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用ShadowSocks科学上网及突破公司内网">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+什么是ShadowSocksShadowSocks是基于Socks5协议，使用类似SSH隧道的方式收发网络请求的一款开源软件，该软件由 @clowwindy 开发，最初只有Python版本，随后出现C++、C#、Go等多语言版本。Sh">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 使用ShadowSocks科学上网及突破公司内网 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用ShadowSocks科学上网及突破公司内网
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-08-19T00:00:00+08:00" content="2016-08-19">
+              2016-08-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/shadowsocks-guide/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/shadowsocks-guide/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h1 id="u4EC0_u4E48_u662FShadowSocks"><a href="#u4EC0_u4E48_u662FShadowSocks" class="headerlink" title="什么是ShadowSocks"></a>什么是ShadowSocks</h1><p>ShadowSocks是基于Socks5协议，使用类似SSH隧道的方式收发网络请求的一款开源软件，该软件由<a href="https://twitter.com/clowwindy" title="clowwindy" target="_blank" rel="external"> @clowwindy </a>开发，最初只有Python版本，随后出现C++、C#、Go等多语言版本。ShadowSocks最大的特点是可以保护网络流量、加密数据传输，可有效防止GFW（Great Firewall of China）封杀网络请求。</p>
+<h1 id="u7528ShadowSocks_u79D1_u5B66_u4E0A_u7F51_u7684_u6982_u5FF5"><a href="#u7528ShadowSocks_u79D1_u5B66_u4E0A_u7F51_u7684_u6982_u5FF5" class="headerlink" title="用ShadowSocks科学上网的概念"></a>用ShadowSocks科学上网的概念</h1><p>在以前，我们访问互联网的资源都是简单而直接的，用户的请求发送到资源服务方，比如Google、Facebook等，然后资源服务方直接将内容响应给用户，世界多么美好。</p>
+<p> <img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-9.png" alt=""></p>
+<p>但是，在1998年时候，中国创建了互联网边界审查系统，称之为中国国家防火墙（GFW），这堵墙横在了用户和互联网资源服务方之间，用于监控和过滤互联网国际出口上的内容，监控国际网关的通讯，对认为不匹配国家官方要求的传输内容，进行干扰、阻断、屏蔽。</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shaodwsocksss-10.png" alt=""></p>
+<p>从此之后好多有价值的网站就被堵在了墙后。</p>
+<p>但是由于对知识的渴望，人们想到了绕过GFW的办法，那就是在境外搭建一个国内用户的代理，国内用户与代理之间建立加密的通道，由境外代理请求被墙的网络资源，再通过加密通道返回给国内用户。代理的类型也有多种，像HTTP、Socks、VPN、SSH等。以SSH隧道为例：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-11.png" alt=""></p>
+<p>因为SSH本身基于RSA加密技术，所以GFW就无法对数据传输过程加密的数据进行分析，从而避免被重置链接、阻断、屏蔽等问题。</p>
+<p>但是GFW也不会懵B一世，人家也会学习，由于在创建SSH隧道的过程中有较为明显的特性，所以GFW还是可以通过分析连接的特性进行干扰。此时ShadowSocks横空出世，先看看图示：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-12.png" alt=""></p>
+<p>简单来说，ShadowSocks分为客户端和服务端，用户发出的请求基于Socks5协议与ShadowSocks客户端进行通信，一般情况下SS客户端都在本机，通过ShadowSocksX、GoAgentX等应用启动，所以这一步是不会经过GFW的，然后ShadowSocks提供了多种加密方式供客户端和服务端之间进行通信，并且在经过GFW时是普通的TCP协议数据包，没有明显的特征，而且GFW也无法解密分析，从而实现绕墙访问资源。</p>
+<h1 id="u642D_u5EFAShadowSocks_u670D_u52A1_u5668"><a href="#u642D_u5EFAShadowSocks_u670D_u52A1_u5668" class="headerlink" title="搭建ShadowSocks服务器"></a>搭建ShadowSocks服务器</h1><p>根据上文描述的ShadowSocks的实现原理，我们首先需要搭建一个境外的ShadowSocks服务器，这部分也是唯一需要我们花点小钱的地方。</p>
+<blockquote>
+<p>以下文章内容均在MacOS下实践。</p>
+</blockquote>
+<h2 id="u8D2D_u4E70VPS"><a href="#u8D2D_u4E70VPS" class="headerlink" title="购买VPS"></a>购买VPS</h2><p>我使用的是<a href="http://www.vultr.com" target="_blank" rel="external">Vultr</a>的VPS，他家的VPS可选的地域较为丰富，而且有日本东京，这对于家里是联通网络的比较亲和，速度较好：<br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-1.png" alt="" title="Server Location"><br>在系统和应用方面Vultr提供的种类也比较丰富：<br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-2.png" alt="" title="Server Type"><br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-3.png" alt="" title="Application"><br>在价格方面，Vultr提供的最低价格为每月5美元，对应的性能足够满足ShadowSocks服务端的需求：<br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-4.png" alt="" title="Server Price"><br>注册Vultr账号，绑定信用卡，选择自己中意的系统和价格后立即就会为你部署好VPS：<br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-5.png" alt=""><br>当VPS的状态为Running后，就表示VPS已经启动了，然后为该VPS配置我们的SSH公钥：<br> <img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-6.png" alt=""><br>大家可以看看北京联通ping东京VPS的速度，还是很给力的：<br> <img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-7.png" alt=""></p>
+<blockquote>
+<p>使用该<a href="http://www.vultr.com/?ref=6955175-3B" target="_blank" rel="external">链接</a>注册可获得20美元的优惠卷。</p>
+</blockquote>
+<h2 id="u5B89_u88C5ShadowSocks"><a href="#u5B89_u88C5ShadowSocks" class="headerlink" title="安装ShadowSocks"></a>安装ShadowSocks</h2><p>我们使用Python版的ShadowSocks进行安装，首先需要下载<a href="https://pypi.python.org/pypi/pip#downloads" target="_blank" rel="external">pip-8.1.2.tar.gz</a>，然后使用工具将其上传至VPS，我使用的是Commander One，通过SFTP连接VPS：<br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-8.png" alt=""><br>使用Terminal连接VPS，一步一步输入以下命令解压安装pip：</p>
+<pre><code>tar -xzvf pip-8.1.2.tar.gz
+cd pip-8.1.2
+python setup.py install
+</code></pre><p>然后通过pip安装ShadowSocks：</p>
+<pre><code>pip install shadowsocks
+</code></pre><p>成功后可以看到如下信息：</p>
+<pre><code>Collecting shadowsocks
+  Downloading shadowsocks-2.8.2.tar.gz
+Installing collected packages: shadowsocks
+  Running setup.py install for shadowsocks ... done
+Successfully installed shadowsocks-2.8.2
+</code></pre><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2 id="u914D_u7F6EShadowSocks"><a href="#u914D_u7F6EShadowSocks" class="headerlink" title="配置ShadowSocks"></a>配置ShadowSocks</h2><p>进入到etc目录下，创建shadowsocks.json文件，并添加如下内容：</p>
+<pre><code>{
+    &quot;server&quot;:&quot;你的VPS的IP&quot;,
+    &quot;server_port&quot;:8388,
+    &quot;local_port&quot;:1080,
+    &quot;password&quot;:&quot;设置一个连接密码&quot;,
+    &quot;timeout&quot;:600,
+    &quot;method&quot;:&quot;aes-256-cfb&quot;,
+    &quot;auth&quot;: true
+}
+</code></pre><p>该文件就是ShadowSocks的配置文件。<br>然后输入如下命令启动ShadowSocks服务：</p>
+<pre><code>ssserver -c /etc/shadowsocks.json -d start
+</code></pre><p>最后清空防火墙规则：</p>
+<pre><code>iptables -F
+</code></pre><p>至此ShadowSocks服务端就配置完成并可以使用了。</p>
+<h1 id="ShadowSocks_u5BA2_u6237_u7AEF"><a href="#ShadowSocks_u5BA2_u6237_u7AEF" class="headerlink" title="ShadowSocks客户端"></a>ShadowSocks客户端</h1><p>Mac上ShadowSocks客户端的选择无非就是ShadowSocksX、GoAgentX、Surge这三个，前两者配置起来都大同小异，ShadowSocksX本身就是专门开启SS客户端服务的应用：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-14.png" alt=""></p>
+<p>GoAgentX提供的服务类型更多，包括SS服务：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-13.png" alt=""></p>
+<p>配置项都是一样的，把ShadowSocks服务端的配置信息一一对应就可以了。</p>
+<p>Surge启SS服务的方式有点不同，因为应用在界面操作上没有提供创建SS服务的选项，但其实它是支持SS服务的，可能因为怕被请喝茶吧。所以需要在Surge的配置文件里添加SS服务相关的信息，如何配置网上有很多，这里就不再累赘了。</p>
+<p>至此就打通了ShadowSocks客户端与服务端的通道，可以畅游墙外的世界了。</p>
+<h1 id="u7A81_u7834_u516C_u53F8_u5185_u7F51"><a href="#u7A81_u7834_u516C_u53F8_u5185_u7F51" class="headerlink" title="突破公司内网"></a>突破公司内网</h1><p>一般情况在家我们在本机启着ShadowSocks客户端就可以了，但是如果在公司上外网需要走HTTP代理的话就不行了，因为ShadowSocks客户端需要走公司提供的代理才能连接到服务端，而上文中的客户端应用统统不支持额外代理功能，所以此时就需要用到另外一个工具<a href="https://www.proxifier.com" target="_blank" rel="external">Proxifier</a>，该工具的作用就是接管运行中的所有应用发出的所有请求，然后通过代理进行转发，这样就可以让不支持代理的应用也可以走代理了。</p>
+<p>打开Proxifier，选择Proxies选项卡设置公司的HTTP代理以及本地Socks5代理：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-15.png" alt=""><br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-16.png" alt=""></p>
+<p>然后启动ShadowSocks客户端，比如启动GoAgentX，此时选择Proxifier的Rules选项卡，就会发现Proxifier自动捕获到了名为ss-local的应用，就是由GoAgentX开启的SS客户端，将其的代理规则设置为之前创建好的公司代理：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-17.png" alt=""></p>
+<p>然后将Default的代理规则设置为之前创建好的本地Socks5代理：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-18.png" alt=""></p>
+<p>这样就可以让ShadowSocks客户端通过公司代理连接服务端了：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-19.png" alt=""></p>
+<p>你还可以设置其他的规则，让特定的应用走特定的代理，比如我让Git还是走了公司代理，这样Git服务就会从Default规则里剔除掉，相当于加了走SS服务的例外。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p><link rel="stylesheet" href="http://7xpp8a.com1.z0.glb.clouddn.com/tomorrow.css"></p>
+<script src="http://7xpp8a.com1.z0.glb.clouddn.com/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ShadowSocks/" rel="tag">#ShadowSocks</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/read-concurrency-programming-guide-3/" rel="next" title="读 Concurrency Programming Guide 笔记（三）">
+                <i class="fa fa-chevron-left"></i> 读 Concurrency Programming Guide 笔记（三）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">73</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jacefu" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.devtalking.com/qrcode.jpg" target="_blank">
+                  
+                    <i class="fa fa-qrcode"></i> 微信公众号
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u4EC0_u4E48_u662FShadowSocks"><span class="nav-number">1.</span> <span class="nav-text">什么是ShadowSocks</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7528ShadowSocks_u79D1_u5B66_u4E0A_u7F51_u7684_u6982_u5FF5"><span class="nav-number">2.</span> <span class="nav-text">用ShadowSocks科学上网的概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u642D_u5EFAShadowSocks_u670D_u52A1_u5668"><span class="nav-number">3.</span> <span class="nav-text">搭建ShadowSocks服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u8D2D_u4E70VPS"><span class="nav-number">3.1.</span> <span class="nav-text">购买VPS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5B89_u88C5ShadowSocks"><span class="nav-number">3.2.</span> <span class="nav-text">安装ShadowSocks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u914D_u7F6EShadowSocks"><span class="nav-number">3.3.</span> <span class="nav-text">配置ShadowSocks</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ShadowSocks_u5BA2_u6237_u7AEF"><span class="nav-number">4.</span> <span class="nav-text">ShadowSocks客户端</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#u7A81_u7834_u516C_u53F8_u5185_u7F51"><span class="nav-number">5.</span> <span class="nav-text">突破公司内网</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/shadowsocks-guide/';
+      var disqus_title = '使用ShadowSocks科学上网及突破公司内网';
+      var disqus_url = 'http://www.devtalking.com//articles/shadowsocks-guide/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
