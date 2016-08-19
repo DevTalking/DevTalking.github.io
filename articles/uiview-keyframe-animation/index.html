@@ -45,28 +45,52 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
 
 
-<meta name="description" content="本文首发CSDN，如需转载请与CSDN联系。
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+
+ 本文首发CSDN，如需转载请与CSDN联系。
 
 前言有些时候大家可能会遇到制作复杂、具有连贯性UIView动画的需求，这时大家可能会使用在completion闭包中衔接一段一段的动画，使之成为一段连续的动画。
-如果我们只是连接2个，或者3个动画，这种方式或许还行得通，但如果有更多的动画片段需要连接的时候，这种方式会带来灾难性的问题，你的代码会非常的冗余，不断的在completion闭包中嵌套代码，">
+如果我们只是连接2">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS UIView Animation - Keyframe">
 <meta property="og:url" content="http://www.devtalking.com/articles/uiview-keyframe-animation/index.html">
 <meta property="og:site_name" content="程序员说">
-<meta property="og:description" content="本文首发CSDN，如需转载请与CSDN联系。
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+
+ 本文首发CSDN，如需转载请与CSDN联系。
 
 前言有些时候大家可能会遇到制作复杂、具有连贯性UIView动画的需求，这时大家可能会使用在completion闭包中衔接一段一段的动画，使之成为一段连续的动画。
-如果我们只是连接2个，或者3个动画，这种方式或许还行得通，但如果有更多的动画片段需要连接的时候，这种方式会带来灾难性的问题，你的代码会非常的冗余，不断的在completion闭包中嵌套代码，">
+如果我们只是连接2">
 <meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Keyframe-2.png">
 <meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Keyframe-3.png">
 <meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Keyframe-4.png">
-<meta property="og:updated_time" content="2016-03-01T08:28:14.000Z">
+<meta property="og:updated_time" content="2016-08-19T01:17:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS UIView Animation - Keyframe">
-<meta name="twitter:description" content="本文首发CSDN，如需转载请与CSDN联系。
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+
+ 本文首发CSDN，如需转载请与CSDN联系。
 
 前言有些时候大家可能会遇到制作复杂、具有连贯性UIView动画的需求，这时大家可能会使用在completion闭包中衔接一段一段的动画，使之成为一段连续的动画。
-如果我们只是连接2个，或者3个动画，这种方式或许还行得通，但如果有更多的动画片段需要连接的时候，这种方式会带来灾难性的问题，你的代码会非常的冗余，不断的在completion闭包中嵌套代码，">
+如果我们只是连接2">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -243,7 +267,15 @@
       
 
       
-        <span itemprop="articleBody"><blockquote>
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<blockquote>
 <p> 本文首发<a href="http://www.csdn.net/article/2015-07-28/2825314-ios-uiview-animation-5" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 </blockquote>
 <h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>有些时候大家可能会遇到制作复杂、具有连贯性UIView动画的需求，这时大家可能会使用在<code>completion</code>闭包中衔接一段一段的动画，使之成为一段连续的动画。</p>
@@ -256,7 +288,7 @@
 <p>我们来看看用代码如何实现：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    view.center.x += <span class="number">200.0</span></span><br><span class="line">&#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">    <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">        view.center.y += <span class="number">100.0</span></span><br><span class="line">    &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">        <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">            view.center.x -= <span class="number">200.0</span></span><br><span class="line">        &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">            <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">                view.center.y -= <span class="number">100.0</span></span><br><span class="line">            &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 <p>通过上面的伪代码可以看到，我们使用了<code>completion</code>闭包的方式连接每一段的动画，代码看起来尚且算清晰，可读性也马马虎虎。但是大家想象一下，如果我们使UIView按照一个复杂的路线运行，这一段动画可能有十几、几十段动画组成的，那么如果再使用<code>completion</code>闭包这种方式连接，那代码是多么的惨不忍睹。幸好我们有Keyframe动画，下面就让我们来看看如何使用Keyframe动画。</p>
-<h2 id="Keyframe_u52A8_u753B"><a href="#Keyframe_u52A8_u753B" class="headerlink" title="Keyframe动画"></a>Keyframe动画</h2><p>首先我们会使用到UIView的另一个动画方法<code>animateKeyframesWithDuration(_: delay: options: animations: completion: )</code>：</p>
+<h2 id="Keyframe_u52A8_u753B"><a href="#Keyframe_u52A8_u753B" class="headerlink" title="Keyframe动画"></a>Keyframe动画</h2><p>首先我们会使用到UIView的另一个动画方法`animateKeyframesWithDuration(_: delay: options: animations: completion: )<br>`：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="comment">// add keyframes</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
 <p>这个方法的几个参数与前几个使用过的动画方法参数一样。上面代码片段的意思是整个关键帧动画的持续时间为2秒、无延迟、无动画选项、执行完毕后无后续执行的代码。</p>
 <blockquote>
@@ -270,6 +302,14 @@
 <li>relativeDuration：关键帧持续时间，该时间同样是相对整个关键帧动画持续时间的相对时间，一般值也在0到1之间。如果设为0.25，则表明这一关键帧的持续时间为整个动画持续时间的四分之一。</li>
 <li>animations：设置视图动画属性的动画闭包。</li>
 </ul>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
 <p>我们解释一下上面这段代码。整个关键帧动画的持续时间为2秒，第一个关键帧从第0秒开始，运行0.5秒结束。下面我们完成其他三个关键帧：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x += <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.25</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.y += <span class="number">100.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.5</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x -= <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.75</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.y -= <span class="number">100.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
 <p>第二个关键帧的开始时间为0.25，也就是从整个动画时间的第0.5时开始执行，同样持续0.5秒。后两个关键帧的参数就不难理解了。</p>
@@ -294,6 +334,13 @@
 <h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>大家在使用关键帧动画时，对于关键帧的开始时间和持续时间需要仔细设置，保证每个关键帧在合适的时间开始，执行恰当的持续时间。在必要时候也需要在关键帧里修改视图的一些状态，但要设置极短的持续时间，表示瞬间完成。</p>
 <p>下一篇会向大家介绍在使用Auto Layout的情况下，如何通过约束实现动画，好了今天就先到这里吧。</p>
 <p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 </span>
       
     </div>

@@ -45,22 +45,40 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
 
 
-<meta name="description" content="普通子类通常情况下，一说到required修饰符，我们最先想到的应该就是普通类（class）的init()方法了。比如下面这个类：
-class MyClass &amp;#123;    var str:String    init(str:String) &amp;#123;        self.str = str    &amp;#125;&amp;#125;
-当我们定义一个MyClass的子类（subclass）并实例">
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+普通子类通常情况下，一说到required修饰符，我们最先想到的应该就是普通类（class）的init()方法了。比如下面这个类：
+class MyClass &amp;#123;    var str:String    init(str">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Swift中的required修饰符（Xcode 6 GM）">
 <meta property="og:url" content="http://www.devtalking.com/articles/swift-required/index.html">
 <meta property="og:site_name" content="程序员说">
-<meta property="og:description" content="普通子类通常情况下，一说到required修饰符，我们最先想到的应该就是普通类（class）的init()方法了。比如下面这个类：
-class MyClass &amp;#123;    var str:String    init(str:String) &amp;#123;        self.str = str    &amp;#125;&amp;#125;
-当我们定义一个MyClass的子类（subclass）并实例">
-<meta property="og:updated_time" content="2016-01-01T17:41:38.000Z">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+普通子类通常情况下，一说到required修饰符，我们最先想到的应该就是普通类（class）的init()方法了。比如下面这个类：
+class MyClass &amp;#123;    var str:String    init(str">
+<meta property="og:updated_time" content="2016-08-19T01:14:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Swift中的required修饰符（Xcode 6 GM）">
-<meta name="twitter:description" content="普通子类通常情况下，一说到required修饰符，我们最先想到的应该就是普通类（class）的init()方法了。比如下面这个类：
-class MyClass &amp;#123;    var str:String    init(str:String) &amp;#123;        self.str = str    &amp;#125;&amp;#125;
-当我们定义一个MyClass的子类（subclass）并实例">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+普通子类通常情况下，一说到required修饰符，我们最先想到的应该就是普通类（class）的init()方法了。比如下面这个类：
+class MyClass &amp;#123;    var str:String    init(str">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -237,7 +255,15 @@ class MyClass &amp;#123;    var str:String    init(str:String) &amp;#123;       
       
 
       
-        <span itemprop="articleBody"><h2 id="u666E_u901A_u5B50_u7C7B"><a href="#u666E_u901A_u5B50_u7C7B" class="headerlink" title="普通子类"></a>普通子类</h2><p>通常情况下，一说到<code>required</code>修饰符，我们最先想到的应该就是普通类（class）的<code>init()</code>方法了。比如下面这个类：</p>
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u666E_u901A_u5B50_u7C7B"><a href="#u666E_u901A_u5B50_u7C7B" class="headerlink" title="普通子类"></a>普通子类</h2><p>通常情况下，一说到<code>required</code>修饰符，我们最先想到的应该就是普通类（class）的<code>init()</code>方法了。比如下面这个类：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>当我们定义一个<code>MyClass</code>的子类（subclass）并实例化这个子类时，我们一般会如何做呢？没错，通常情况下都会是这样：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">MySubClass</span>(str:<span class="string">"Hello Swift"</span>)</span><br></pre></td></tr></table></figure>
@@ -263,6 +289,13 @@ class MyClass &amp;#123;    var str:String    init(str:String) &amp;#123;       
 <li>当子类含有异于父类的初始化方法时（初始化方法参数类型和数量异于父类），子类必须要实现父类的<code>required</code>初始化方法，并且也要使用<code>required</code>修饰符而不是<code>override</code>。</li>
 <li>当子类没有初始化方法时，可以不用实现父类的<code>required</code>初始化方法。</li>
 </ol>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 </span>
       
     </div>

@@ -45,19 +45,37 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
 
 
-<meta name="description" content="Objective-C和C语言经常需要使用到指针。Swift中的数据类型由于良好的设计，使其可以和基于指针的C语言API无缝混用。同时Swift也可以自动处理大多数将指针作为参数的情况。在这篇文章里，我们可以看到在Swift语言中如何将变量、数组、字符串当做C语言中的指针参数来使用。
-将输入输出参数作为指针参数C和Objective-C不支持多类型的返回值。所以Cocoa API就使用指针作为函数">
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+Objective-C和C语言经常需要使用到指针。Swift中的数据类型由于良好的设计，使其可以和基于指针的C语言API无缝混用。同时Swift也可以自动处理大多数将指针作为参数的情况。在这篇文章里，我们可以看到在Swift语言中如">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在Swift中使用C语言的指针">
 <meta property="og:url" content="http://www.devtalking.com/articles/swift-c-pointer/index.html">
 <meta property="og:site_name" content="程序员说">
-<meta property="og:description" content="Objective-C和C语言经常需要使用到指针。Swift中的数据类型由于良好的设计，使其可以和基于指针的C语言API无缝混用。同时Swift也可以自动处理大多数将指针作为参数的情况。在这篇文章里，我们可以看到在Swift语言中如何将变量、数组、字符串当做C语言中的指针参数来使用。
-将输入输出参数作为指针参数C和Objective-C不支持多类型的返回值。所以Cocoa API就使用指针作为函数">
-<meta property="og:updated_time" content="2016-01-01T07:09:29.000Z">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+Objective-C和C语言经常需要使用到指针。Swift中的数据类型由于良好的设计，使其可以和基于指针的C语言API无缝混用。同时Swift也可以自动处理大多数将指针作为参数的情况。在这篇文章里，我们可以看到在Swift语言中如">
+<meta property="og:updated_time" content="2016-08-19T01:13:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在Swift中使用C语言的指针">
-<meta name="twitter:description" content="Objective-C和C语言经常需要使用到指针。Swift中的数据类型由于良好的设计，使其可以和基于指针的C语言API无缝混用。同时Swift也可以自动处理大多数将指针作为参数的情况。在这篇文章里，我们可以看到在Swift语言中如何将变量、数组、字符串当做C语言中的指针参数来使用。
-将输入输出参数作为指针参数C和Objective-C不支持多类型的返回值。所以Cocoa API就使用指针作为函数">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+Objective-C和C语言经常需要使用到指针。Swift中的数据类型由于良好的设计，使其可以和基于指针的C语言API无缝混用。同时Swift也可以自动处理大多数将指针作为参数的情况。在这篇文章里，我们可以看到在Swift语言中如">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -234,7 +252,15 @@
       
 
       
-        <span itemprop="articleBody"><p>Objective-C和C语言经常需要使用到指针。Swift中的数据类型由于良好的设计，使其可以和基于指针的C语言API无缝混用。同时Swift也可以自动处理大多数将指针作为参数的情况。在这篇文章里，我们可以看到在Swift语言中如何将变量、数组、字符串当做C语言中的指针参数来使用。</p>
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>Objective-C和C语言经常需要使用到指针。Swift中的数据类型由于良好的设计，使其可以和基于指针的C语言API无缝混用。同时Swift也可以自动处理大多数将指针作为参数的情况。在这篇文章里，我们可以看到在Swift语言中如何将变量、数组、字符串当做C语言中的指针参数来使用。</p>
 <h2 id="u5C06_u8F93_u5165_u8F93_u51FA_u53C2_u6570_u4F5C_u4E3A_u6307_u9488_u53C2_u6570"><a href="#u5C06_u8F93_u5165_u8F93_u51FA_u53C2_u6570_u4F5C_u4E3A_u6307_u9488_u53C2_u6570" class="headerlink" title="将输入输出参数作为指针参数"></a>将输入输出参数作为指针参数</h2><p>C和Objective-C不支持多类型的返回值。所以Cocoa API就使用指针作为函数的输入输出参数，以用来传递多类型的数据。Swift允许使用指针参数进行类似<code>inout</code>参数的处理，所以你可以使用<code>&amp;</code>语法将一个<code>var</code>变量的引用作为指针参数进行传递。比如说，<code>UIColor</code>的<code>getRed(_:green:blue:alpha:)</code>方法，使用4个<code>CGFloat*</code>指针用来接收颜色的组成元素。我们可以使用<code>&amp;</code>将这几个颜色组成部分装配在本地变量中。</p>
 <pre><code>var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
 color.getRed(&amp;r, green: &amp;g, blue: &amp;b, alpha: &amp;a)
@@ -275,6 +301,13 @@ if fd &lt; 0 {
 </ul>
 <p>如果你使用的基于指针的API不在这篇指导内，或者你需要重写接收指针参数的Cocoa方法，那么你可以直接使用Swift原始内存中的不安全的指针。我们会在以后的文章中介绍更多Swift的特性。</p>
 <p>本文翻译自Swift官方博客，原文地址：<a href="https://developer.apple.com/swift/blog/?id=6" target="_blank" rel="external">Interacting with C Pointers</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 </span>
       
     </div>
