@@ -192,6 +192,113 @@
             
             
               
+                <a class="post-title-link" href="/articles/implicitly-converting-functions-return-optionals/" itemprop="url">
+                  Swift中将函数的返回值隐式转换为Optional类型的特性
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-19T00:00:00+08:00" content="2014-08-19">
+              2014-08-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/implicitly-converting-functions-return-optionals/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/implicitly-converting-functions-return-optionals/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>一个函数A的参数是返回值为<code>Optional</code>类型的函数，如果你传入了一个返回值不是<code>Optional</code>的函数，那么函数A会自动将传入函数的返回值转换为<code>Optional</code>类型，来看代码示例：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 函数B的返回值为Int类型</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">()</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数A的参数是返回值为Optional(Int)类型</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把函数B作为参数传入函数A，输出结果为Optional(1)</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
+<p>更棒的是你还可以使用经过转换后的函数，比如：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 让函数A返回作为参数的函数</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?)-&gt;()-&gt;<span class="type">Int</span>? &#123;</span><br><span class="line">    <span class="keyword">return</span> fun;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line"><span class="keyword">let</span> j = &#123; ++i &#125;</span><br><span class="line"> </span><br><span class="line">j() <span class="comment">// returns 1</span></span><br><span class="line">j() <span class="comment">// returns 2</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> h = <span class="type">A</span>(j)</span><br><span class="line"> </span><br><span class="line">h() <span class="comment">// returns &#123;Some 3&#125;</span></span><br><span class="line">h() <span class="comment">// returns &#123;Some 4&#125;</span></span><br><span class="line">j() <span class="comment">// returns 5</span></span><br></pre></td></tr></table></figure>
+<p>这种特性只能作用于函数的返回值，如果是下面这种情况，就不好使了：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">(i: Int)</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">(Int?)</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 编译失败，不能将B函数参数的Int类型隐式转换为Int?类型</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
+<p>这是因为函数B希望它的参数永远不能为nil，当接收到值为nil的参数后它就不知道该怎么办了。但如果函数B的参数为<code>Optional</code>类型，而函数A希望传入的函数参数为非<code>Optional</code>呢？我们来看看：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">(i: Int?)</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i ?? <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">(Int?)</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 编译成功，并做了隐式转换，</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
+<p>上面的特新其实可以理解为，编译器使用了一个闭包，调用了你传入的函数并进行了封包操作：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">()</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun());</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="type">A</span>( &#123; <span class="type">Optional</span>(<span class="type">B</span>()) &#125; );</span><br></pre></td></tr></table></figure>
+<p>这是Swift很有意思也很有用的一个特性。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/swift-value-and-reference-types/" itemprop="url">
                   Swift中的值类型和参照类型
                 </a>
@@ -808,254 +915,6 @@ let y: Int = a ?? b;
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/swift-balloon/" itemprop="url">
-                  WWDC2014大会中的Playground大炮气球示例
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-08-09T00:00:00+08:00" content="2014-08-09">
-              2014-08-09
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/swift-balloon/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-balloon/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>在WWDC14上我们通过<code>Playground</code>展示了Swift这门语言，很多人会问关于在<code>Playground</code>中展示出的那个气球的示例是如何实现的。从气球这个示例我们可以看到我们写的代码具有很强的交互性，而且非常有趣，并且也从该示例中展示了<code>Playground</code>的许多特性。现在，你可以通过这篇文章，学习如何实现气球示例中的各种有趣的效果，在我们提供的<code>Balloons.playground</code>文件中有详细的文档说明和代码示例。  </p>
-<p>由于<code>Balloons.playground</code>文件中运用了<code>SpriteKit</code>的新特性，所以要求在最新的Xcode 6 Beta版本环境和OS X Yosemite系统下运行。</p>
-<h2 id="Balloons-playground"><a href="#Balloons-playground" class="headerlink" title="Balloons.playground"></a>Balloons.playground</h2><pre><code>// Requires Xcode 6 (beta 4) running on Yosemite (developer preview 4) or later.
-import SpriteKit
-import XCPlayground
-</code></pre><p>该<code>Playground</code>文件中包含了探索<code>SpriteKit</code>新特性的示例代码。该示例来自WWDC2014大会上演示Swift语言时使用的示例,该示例描述的是两个大炮，间隔任意一段时间就会向天上的气球开火，当两个气球相撞时，会“砰”的一下消失。在该示例中，你会了解到创建如此炫酷的场景、自定义动作和效果是多么简单。  </p>
-<p>当你更改示例中的代码时，你会在<code>Playground</code>的右侧<code>Timeline</code>区域即时的看到更改后的效果，所以你可以尝试按照你自己的想法创造出更多有趣的效果。</p>
-<blockquote>
-<p>注意：如果你看不到气球大炮的场景，那么你可以通过<code>View &gt; Assistant Editor &gt; Show Assistant Editor</code>打开<code>Timeline</code>区域，或者也可以使用<code>Option-Command-Return</code>快捷键打开。</p>
-</blockquote>
-<p>来让我们开始吧！</p>
-<h3 id="u5728Timeline_u533A_u57DF_u5448_u73B0_u6211_u4EEC_u60F3_u8981_u7684_u6548_u679C"><a href="#u5728Timeline_u533A_u57DF_u5448_u73B0_u6211_u4EEC_u60F3_u8981_u7684_u6548_u679C" class="headerlink" title="在Timeline区域呈现我们想要的效果"></a>在Timeline区域呈现我们想要的效果</h3><p><code>SpriteKit</code>的内容用<code>SKView</code>对象来表示，它负责将要显示的内容提供给模拟器。所有的效果都通过<code>SKScene</code>对象来呈现，它相当于<code>SKNode</code>对象树的根节点。在这个场景中，你将添加一些节点并且创建游戏的内容。</p>
-<p>我们在Xcode中通过<code>iOS &gt; Application &gt; SpriteKit Game</code>创建一个<code>SpriteKit Game</code>模板，模板中会提供<code>MyScene</code>文件，这就是我们游戏场景，该文件就是场景文件。所有的资源，包括场景文件、图片资源都全部绑定在<code>Playground</code>包中供我们使用，你也可以在<code>Playground</code>包种添加你自己的图片资源。你可以在<code>Balloons.playground</code>文件上点击鼠标右键，然后选择<strong>显示包内容</strong>，将资源文件添加进去即可。</p>
-<pre><code>let sceneView = SKView(frame: NSRect(x: 0, y: 0, width: 850, height: 638))
-let scene = SKScene(fileNamed: &quot;GameScene&quot;)
-scene.scaleMode = .AspectFill
-sceneView.presentScene(scene)
-
-XCPShowView(&quot;Balloons&quot;, sceneView)
-</code></pre><blockquote>
-<p>尝试实验：因为重力是在场景中由程序虚拟构建的物理世界（<code>physicsWorld</code>属性）定义的，所以在<code>SpriteKit</code>的物理世界中，我们可以不按照现实世界的定律，并且可以改变定律。<br>我们可以通过改变<code>scene.physicsWorld.gravity</code>矢量值让重力颠倒。</p>
-</blockquote>
-<p>我们要想在<code>Playground</code>的场景中真正看到希望的效果，那么我们就要调用<code>XCPlayground</code>类的<code>XCPShowView</code>函数。该函数的功能是将场景真实的显示在<code>Timeline</code>区域中，通过该函数，你对代码做的每一个改动都会实时的显示在<code>Timeline</code>区域中。</p>
-<h3 id="u8BA9_u5927_u70AE_u5F00_u706B"><a href="#u8BA9_u5927_u70AE_u5F00_u706B" class="headerlink" title="让大炮开火"></a>让大炮开火</h3><p>当大炮要开火时，让我们在场景中添加一些气球，并让它们在场景中来回穿梭。每一个气球其实就是一个<code>Sprite</code>节点或者叫<code>Sprite</code>元素，为了让气球看起来更真实、更有质感，我们会从气球图片集合中随机的取出气球图片用于显示在场景中。</p>
-<p>这里我们先创建一个Swift数组对象，内容是气球图片的名称，然后用数组的<code>map</code>函数创建一个<code>SKTexture</code>对象的数组。这样我们就可以很方便的通过该数组随机的创建<code>Sprite</code>元素。</p>
-<pre><code>let images = [
-    &quot;blue&quot;, &quot;heart-blue&quot;, &quot;star-blue&quot;,
-    &quot;green&quot;, &quot;star-green&quot;, &quot;heart-pink&quot;,
-    &quot;heart-red&quot;, &quot;orange&quot;, &quot;red&quot;,
-    &quot;star-gold&quot;, &quot;star-pink&quot;, &quot;star-red&quot;,
-    &quot;yellow&quot;
-]
-let textures: [SKTexture] = images.map { SKTexture(imageNamed: &quot;balloon-\($0)&quot;) }
-
-var configureBalloonPhysics: ((balloon: SKSpriteNode) -&gt; Void)?
-func createRandomBalloon() -&gt; SKSpriteNode {
-    let choice = Int(arc4random_uniform(UInt32(textures.count)))
-    var balloon = SKSpriteNode(texture: textures[choice])
-    configureBalloonPhysics?(balloon: balloon)
-
-    return balloon
-}
-</code></pre><blockquote>
-<p>尝试实验：你可以点击代码编辑区右侧的小圆圈将代码片段的结果显示在<code>Timeline</code>区域，这样可以便于我们检查。<br>如果将<code>SKTexture</code>添加到<code>Timeline</code>后内容显示不全，你可以拖动<code>Timeline</code>滚动条来显示全部内容。</p>
-</blockquote>
-<p>现在我们就已经创建好了气球，是时候让它们动起来了。我们首先要赋予它们真实的物理身体，因为当模拟物理形态和行为时，只会对有物理身体的元素起作用。</p>
-<p>在<code>SpriteKit</code>中，每个场景最多可包含32个类别。在众多的元素中，你可以用物理身体的类别来区分它们。这里要注意的是，我们将气球类别赋值为位移掩码，原因是为了当两个气球碰撞时能触发通知。</p>
-<pre><code>let BalloonCategory: UInt32 = 1 &lt;&lt; 1
-configureBalloonPhysics = { balloon in
-    balloon.physicsBody = SKPhysicsBody(texture: balloon.texture, size: balloon.size)
-    balloon.physicsBody.linearDamping = 0.5
-    balloon.physicsBody.mass = 0.1
-    balloon.physicsBody.categoryBitMask = BalloonCategory
-    balloon.physicsBody.contactTestBitMask = BalloonCategory
-}
-</code></pre><blockquote>
-<p>尝试实验：将把<code>BalloonCategory</code>赋值给<code>contactTestBitMask</code>这行移除掉，看看会发生什么？</p>
-</blockquote>
-<p>更新物理身体的属性是很有意思的实验，因为你的修改会即时的现实在<code>Timeline</code>区域，会给即时给你呈现反馈。并且你还可以在<code>Timeline</code>区域检查并调试当前代码段的结果是否正确。</p>
-<blockquote>
-<p>尝试实验：尝试增加或减少物理身体的<code>mass</code>和<code>linearDamping</code>属性的值。气球会有什么变化？再尝试修改其他属性，看看气球会有什么变化？</p>
-</blockquote>
-<p>我们还需要设定气球在场景中的位置。并且我们希望气球被击中时正对着大炮的炮口。</p>
-<pre><code>let displayBalloon: (SKSpriteNode, SKNode) -&gt; Void = { balloon, cannon in
-    balloon.position = cannon.childNodeWithName(&quot;mouth&quot;).convertPoint(CGPointZero, toNode: scene)
-    scene.addChild(balloon)
-}
-</code></pre><p>这里要注意一下，我们通过调用名为<code>mouth</code>子元素的<code>convertPoint:toNode</code>方法给气球设置位置。这样做是没问题的，因为我们在每个大炮中都增加了名为<code>mouth</code>的子元素，用来标示或预定位气球可能出现的位置。这样做的好处是能避免我们去计算气球的位置，并且如果我们想改变气球第一次出现的位置时，根本不用修改代码，因为气球的位置是随机取<code>mouth</code>子元素的位置的。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>在气球被击中时，我们应该让气球表现出有一股冲击力作用于它，其实就是瞬间改变了气球的速度。我们可以用<code>SpriteKit</code>提供的推力的行为，可以作用于指定的方向来做出冲击力的效果。当然我们也要根据大炮发出炮弹的旋转方向设置气球被冲击后的方向。</p>
-<p>最后，我们将创建、显示已经向气球射击的代码封装成一个单独的函数，用于后续调用。</p>
-<pre><code>let fireBalloon: (SKSpriteNode, SKNode) -&gt; Void = { balloon, cannon in
-    let impulseMagnitude: CGFloat = 70.0
-
-    let xComponent = cos(cannon.zRotation) * impulseMagnitude
-    let yComponent = sin(cannon.zRotation) * impulseMagnitude
-    let impulseVector = CGVector(dx: xComponent, dy: yComponent)
-
-    balloon.physicsBody.applyImpulse(impulseVector)
-}
-
-func fireCannon(cannon: SKNode) {
-    let balloon = createRandomBalloon()
-
-    displayBalloon(balloon, cannon)
-    fireBalloon(balloon, cannon)
-}
-</code></pre><p>为了能够方便的访问大炮元素，我们在Xcode对他们进行明确的命名。这样我们就可以不需要知道元素树的结构或者说是大炮节点的位置，我们甚至可以不需要修改代码就可以更改大炮的位置。</p>
-<pre><code>let leftBalloonCannon = scene.childNodeWithName(&quot;//left_cannon&quot;)
-let rightBalloonCannon = scene.childNodeWithName(&quot;//right_cannon&quot;)
-</code></pre><p><code>SpriteKit</code>通过<code>SKAction</code>对象改变节点的位置、旋转、缩放或因我们设置的其他情况而等待（也就是在特定的时间内什么也不做）。你可以在一系列或一组行为中单独指定执行某个行为，并且可以让该行为自动的重复执行任意次数（或者一直执行）。而这并不需要修改节点的属性，它完全可以由一个简单的<code>Block</code>来执行。</p>
-<pre><code>let wait = SKAction.waitForDuration(1.0, withRange: 0.05)
-let pause = SKAction.waitForDuration(0.55, withRange: 0.05)
-
-let left = SKAction.runBlock { fireCannon(leftBalloonCannon) }
-let right = SKAction.runBlock { fireCannon(rightBalloonCannon) }
-
-let leftFire = SKAction.sequence([wait, left, pause, left, pause, left, wait])
-let rightFire = SKAction.sequence([pause, right, pause, right, pause, right, wait])
-</code></pre><p>当大炮开火时，我们需要为它创建一系列的行为，让它在开火和停止开火之间交替执行。我们将开火/停止这一系列的行为添加到另外一个行为中，并且让他们一直重复执行。</p>
-<blockquote>
-<p>尝试实验：增加大炮开火的间隔，改变大炮的火力，并让大炮不停的开火。</p>
-</blockquote>
-<p>要想让某个元素执行相应的动作，我们只需要调用<code>runAction</code>函数，并将我们想执行的动作作为参数传入即可。每个节点可以同时执行多个行为动作，这就使得我们可以在<code>SpriteKit</code>中让节点执行自定义的，复杂的行为动作。</p>
-<pre><code>leftBalloonCannon.runAction(SKAction.repeatActionForever(leftFire))
-rightBalloonCannon.runAction(SKAction.repeatActionForever(rightFire))
-</code></pre><blockquote>
-<p>尝试实验：<code>SKAction</code>类有一个<code>rotateByAngle</code>函数，该函数可以让节点根据某个角度旋转。<br>创建一个让大炮在开火时按角度旋转的行为动作，并执行。</p>
-</blockquote>
-<h3 id="u6C14_u7403_u7684_u649E_u51FB"><a href="#u6C14_u7403_u7684_u649E_u51FB" class="headerlink" title="气球的撞击"></a>气球的撞击</h3><p>当两个气球碰撞时，我们希望让其中一个气球爆炸。爆炸的效果就是我们创建的一个行为，所以就可以使用该行为创建出一个动画效果，作用在气球相互碰撞时，并将爆炸的气球元素移除场景。当有两个行为合并为一个系列行为时，它们会按顺序一个一个执行。</p>
-<pre><code>let balloonPop = (1...4).map {
-    SKTexture(imageNamed: &quot;explode_0\($0)&quot;)
-}
-
-let removeBalloonAction: SKAction = SKAction.sequence([
-    SKAction.animateWithTextures(balloonPop, timePerFrame: 1 / 30.0),
-    SKAction.removeFromParent()
-])
-</code></pre><p>虽然两个元素在场景中碰撞的行为由<code>SpriteKit</code>自动处理，但是我们也必须要为其提供一个符合我们游戏场景的逻辑。这包括定义碰撞时触发的通知。在之前，我们将所有气球元素的物理身体类别都设定为气球类别，但是场景中的地面也是一个元素，并且它的类别是默认类别，这里我们需要知道，默认类别为所有类别。</p>
-<pre><code>let GroundCategory: UInt32 = 1 &lt;&lt; 2
-let ground = scene.childNodeWithName(&quot;//ground&quot;)
-ground.physicsBody.categoryBitMask = GroundCategory
-</code></pre><blockquote>
-<p>尝试实验：如果不给地面设置类别（也就是将上述三行代码注释掉），那么当气球碰撞或者说落到地面时会发生什么？</p>
-</blockquote>
-<p>接触通知由<code>SpriteKit</code>的物理世界中的接触代理处理，这是一个遵循<code>SKPhysicsContactDelegate</code>协议的类。每当碰撞发生时，物理世界会通知接触代理（即遵循<code>SKPhysicsContactDelegate</code>协议的类），所以我们才能做出碰撞后正确的反应。</p>
-<pre><code>class PhysicsContactDelegate: NSObject, SKPhysicsContactDelegate {
-    func didBeginContact(contact: SKPhysicsContact) {
-        let categoryA = contact.bodyA.categoryBitMask
-        let categoryB = contact.bodyB.categoryBitMask
-
-        if (categoryA &amp; BalloonCategory != 0) &amp;&amp; (categoryB &amp; BalloonCategory != 0) {
-            contact.bodyA.node.runAction(removeBalloonAction)
-        }
-    }
-}
-
-let contactDelegate = PhysicsContactDelegate()
-scene.physicsWorld.contactDelegate = contactDelegate
-</code></pre><p>在接触代理的<code>didBeginContact</code>函数中，我们通过物理身体的类别位掩码来确保这次接触或者说碰撞是两个气球发生的（也就是说确保元素的类别是<code>BalloonCategory</code>）。用按位运算来确定两个元素是否是<code>BalloonCategory</code>类别，并执行该类别正确的行为。</p>
-<blockquote>
-<p>尝试实验：允许气球和大炮碰撞。<br>提示：大炮元素没有赋予物理身体。</p>
-</blockquote>
-<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><p><code>Playground</code>为你提供了一种与代码互动的有趣的方式。使用<code>Playground</code>对你也有很大的帮助，因为你的学习过程和调试错误过程都在一个可控的环境中。更重要的一点是，<code>Playground</code>能挑起你的好奇心，鼓励你不断的来测试你的代码。  </p>
-<p>希望你们在不断的修改代码、实验中找到乐趣，并且永远不要害怕重头开始！</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1098,7 +957,7 @@ scene.physicsWorld.contactDelegate = contactDelegate
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">73</span>
+              <span class="site-state-item-count">74</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1112,7 +971,7 @@ scene.physicsWorld.contactDelegate = contactDelegate
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-count">36</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>

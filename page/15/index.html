@@ -192,6 +192,346 @@
             
             
               
+                <a class="post-title-link" href="/articles/you-should-to-know-property/" itemprop="url">
+                  Objective-C中的@property
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-07-12T00:00:00+08:00" content="2014-07-12">
+              2014-07-12
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/you-should-to-know-property/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/you-should-to-know-property/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+\<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h1 id="@property_u662F_u4EC0_u4E48"><a href="#@property_u662F_u4EC0_u4E48" class="headerlink" title="@property是什么"></a>@property是什么</h1><p><code>@Property</code>是声明属性的语法，它可以快速方便的为实例变量创建存取器，并允许我们通过点语法使用存取器。</p>
+<blockquote>
+<p>存取器（accessor）：指用于获取和设置实例变量的方法。用于获取实例变量值的存取器是<code>getter</code>，用于设置实例变量值的存取器是<code>setter</code>。</p>
+</blockquote>
+<h1 id="u521B_u5EFA_u5B58_u53D6_u5668"><a href="#u521B_u5EFA_u5B58_u53D6_u5668" class="headerlink" title="创建存取器"></a>创建存取器</h1><h2 id="u624B_u5DE5_u521B_u5EFA_u5B58_u53D6_u5668"><a href="#u624B_u5DE5_u521B_u5EFA_u5B58_u53D6_u5668" class="headerlink" title="手工创建存取器"></a>手工创建存取器</h2><p>我们先看两段代码：</p>
+<pre><code>// Car.h
+
+#import &lt;Foundation/Foundation.h&gt;
+
+@interface Car : NSObject
+{
+    // 实例变量
+    NSString *carName;
+    NSString *carType;
+}
+
+// setter                                   
+- (void)setCarName:(NSString *)newCarName; 
+
+// getter
+- (NSString *)carName;
+
+// setter
+- (void)setCarType:(NSString *)newCarType;
+
+// getter
+- (NSString *)carType;
+
+@end  
+</code></pre><p>上面的代码中<code>carName</code>和<code>carType</code>就是<code>Car</code>的实例变量，并且可以看到分别对这两个实例变量声明了get/set方法，即存取器。  </p>
+<pre><code>#import &quot;Car.h&quot;
+
+@implementation Car
+
+// setter
+- (void)setCarName:(NSString *)newCarName
+{
+    carName = newCarName;
+}
+
+// getter
+- (NSString *)carName
+{
+    return carName;
+}
+
+// setter
+- (void)setCarType:(NSString *)newCarType
+{
+    carType = newCarType;
+}
+
+// getter
+- (NSString *)carType
+{
+    return carType;
+}
+
+@end
+</code></pre><p>上面代码是对实例变量存取器的实现。我们可以看到，存取器就是对实例变量进行赋值和取值。按照约定赋值方法以set开头，取值方法以实例变量名命名。<br>我们看看如何使用：</p>
+<pre><code>// main.m
+
+#import &quot;Car.h&quot;
+
+int main(int argc, char * argv[])
+{
+    @autoreleasepool {
+        Car *car = [[Car alloc] init];
+        [car setCarName:@&quot;Jeep Cherokee&quot;];
+        [car setCarType:@&quot;SUV&quot;];
+        NSLog(@&quot;The car name is %@ and the type is %@&quot;,[car carName],[car carType]);      
+    }
+    return 0;
+}
+</code></pre><p>上面的代码中我们注意到，对象<code>Car</code>使用了消息语法，也就是使用方括号的语法给存取器发送消息。<br>返回结果为：</p>
+<pre><code>The car name is Jeep Cherokee and the type is SUV
+</code></pre><h2 id="u4F7F_u7528@Property_u521B_u5EFA_u5B58_u53D6_u5668"><a href="#u4F7F_u7528@Property_u521B_u5EFA_u5B58_u53D6_u5668" class="headerlink" title="使用@Property创建存取器"></a>使用@Property创建存取器</h2><pre><code>// Car.h
+
+#import &lt;Foundation/Foundation.h&gt;
+
+@interface Car : NSObject
+{
+    // 实例变量
+    NSString *carName;
+    NSString *carType;
+}
+
+@property(nonatomic,strong) NSString *carName;
+@property(nonatomic,strong) NSString *carType;
+
+@end
+</code></pre><p>上面代码中，我们使用<code>@property</code>声明两个属性，名称与实例变量名称相同（让我们先忽略<code>nonatomic</code>和<code>strong</code>）。</p>
+<pre><code>// Car.m
+
+#import &quot;Car.h&quot;
+
+@implementation Car
+
+@synthesize carName;
+@synthesize carType;
+
+@end
+</code></pre><p>在.m文件中我们使用<code>@synthesize</code>自动生成这两个实例变量的存取器，并且隐藏了存取器，虽然我们看不到存取器，但它们确实是存在的。</p>
+<pre><code>// main.m
+
+int main(int argc, char * argv[])
+{
+    @autoreleasepool {
+        Car *car = [[Car alloc] init];
+        car.carName = @&quot;Jeep Compass&quot;;
+        car.carType = @&quot;SUV&quot;;
+        NSLog(@&quot;The car name is %@ and the type is %@&quot;,car.carName,car.carType); 
+    }
+    return 0;
+}
+</code></pre><p>在上面的代码中我们可以注意到，<code>Car</code>对象使用点语法给存取器发送消息，并且get与set的语法是相同的，所以这里的点语法可以根据语境判断我们是要赋值还是取值。  </p>
+<p>当然我们也依然可以使用消息语法来使用：</p>
+<pre><code>// main.m
+
+int main(int argc, char * argv[])
+{
+    @autoreleasepool {
+        Car *car = [[Car alloc] init];
+
+        // 点语法
+//        car.carName = @&quot;Jeep Compass&quot;;
+//        car.carType = @&quot;SUV&quot;;
+//        NSLog(@&quot;The car name is %@ and the type is %@&quot;,car.carName,car.carType);
+
+        // 消息语法
+        [car setCarName:@&quot;Jeep Compass&quot;];
+        [car setCarType:@&quot;SUV&quot;];
+        NSLog(@&quot;The car name is %@ and the type is %@&quot;,[car carName],[car carType]);       
+    }
+    return 0;
+}
+</code></pre><p>上面两段代码的执行结果都是：  </p>
+<pre><code>The car name is Jeep Compass and the type is SUV
+</code></pre><blockquote>
+<p>总结：<code>@property</code>等同于在.h文件中声明实例变量的get/set方法，<code>@synthesize</code>等同于在.m文件中实现实例变量的get/set方法。使用<code>@property</code>和<code>synthesize</code>创建存取器要比手动声明两个存取方法（<code>getter</code>和<code>setter</code>）更简单。而且我们在使用属性时可以使用点语法赋值或取值，语法更简单，更符合面向对象编程。</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+\<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h1 id="u4E0D_u5FC5_u5355_u72EC_u58F0_u660E_u793A_u4F8B_u53D8_u91CF"><a href="#u4E0D_u5FC5_u5355_u72EC_u58F0_u660E_u793A_u4F8B_u53D8_u91CF" class="headerlink" title="不必单独声明示例变量"></a>不必单独声明示例变量</h1><p>如果使用<code>@Property</code>，就不必单独声明实例变量了。因为在没有显示提供示例变量声明的前提下，系统会自动帮你生成实例变量。我们通过以下代码来说明：</p>
+<pre><code>// Car.h
+
+#import &lt;Foundation/Foundation.h&gt;
+
+@interface Car : NSObject
+
+@property(nonatomic,strong) NSString *carName;
+@property(nonatomic,strong) NSString *carType;
+
+- (NSString *)carInfo;
+
+@end
+</code></pre><p>在.h文件中我们并没有声明实例变量，只是声明了<code>carName</code>和<code>carType</code>两个属性，以及一个<code>carInfo</code>方法，返回值为<code>NSString *</code>。</p>
+<pre><code>// Car.m
+
+#import &quot;Car.h&quot;
+
+@implementation Car
+
+- (NSString *)carInfo
+{
+    return [NSString stringWithFormat:@&quot;The car name is %@ and the type is %@&quot;,_carName,_carType];
+}
+
+@end
+</code></pre><p>在.m文件中我们可以注意到，在<code>carInfo</code>方法中我们使用了<code>_carName</code>和<code>_carType</code>实例变量，这就是当我们没有显示声明实例变量时，系统为我们自动生成的。命名规则是以<code>_</code>为前缀，加上属性名，即<code>_propertyName</code>。 </p>
+<p>其实在.m文件中实际是存在<code>@synthesize</code>声明语句的，只是系统将其隐藏了：</p>
+<pre><code>@synthesize carName = _carName;
+@synthesize carType = _carType;
+</code></pre><p>那么如果我们不喜欢默认的实例变量命名方法，或者我们希望使用更有语义的名称，应该怎么做呢。其实很简单：</p>
+<pre><code>// Car.m
+
+#import &quot;Car.h&quot;
+
+@implementation Car
+
+@synthesize carName = i_am_car_name;
+@synthesize carType = i_am_car_type;
+
+- (NSString *)carInfo
+{
+    return [NSString stringWithFormat:@&quot;The car name is %@ and the type is %@&quot;,i_am_car_name,i_am_car_type];
+}
+
+@end
+</code></pre><p>通过上述代码可以看到，我们只需要通过<code>@synthesize</code>来声明我们希望的实例变量名。</p>
+<blockquote>
+<p>总结：如果我们希望使用默认的实例变量命名方式，那么我们在.m文件中就不需要使用<code>@synthesize</code>声明，系统会帮我们自动完成。如果我们希望自己命名实例变量命，那么我们就使用<code>@synthesize</code>显示声明我们希望的实例变量名。</p>
+</blockquote>
+<h1 id="@property_u7684_u7279_u6027"><a href="#@property_u7684_u7279_u6027" class="headerlink" title="@property的特性"></a>@property的特性</h1><p><code>@property</code>还有一些关键字，它们都是有特殊作用的，比如上述代码中的<code>nonatomic</code>，<code>strong</code>：</p>
+<pre><code>@property(nonatomic,strong) NSString *carName;
+@property(nonatomic,strong) NSString *carType;
+</code></pre><p>我把它们分为三类，分别是：原子性，存取器控制，内存管理。</p>
+<h2 id="u539F_u5B50_u6027"><a href="#u539F_u5B50_u6027" class="headerlink" title="原子性"></a>原子性</h2><ul>
+<li><code>atomic</code>（默认）：<code>atomic</code>意为操作是原子的，意味着只有一个线程访问实例变量。atomic是线程安全的，至少在当前的存取器上是安全的。它是一个默认的特性，但是很少使用，因为比较影响效率，这跟ARM平台和内部锁机制有关。</li>
+<li><code>nonatomic</code>：<code>nonatomic</code>跟<code>atomic</code>刚好相反。表示非原子的，可以被多个线程访问。它的效率比atomic快。但不能保证在多线程环境下的安全性，在单线程和明确只有一个线程访问的情况下广泛使用。</li>
+</ul>
+<h2 id="u5B58_u53D6_u5668_u63A7_u5236"><a href="#u5B58_u53D6_u5668_u63A7_u5236" class="headerlink" title="存取器控制"></a>存取器控制</h2><ul>
+<li><code>readwrite</code>（默认）：<code>readwrite</code>是默认值，表示该属性同时拥有<code>setter</code>和<code>getter</code>。</li>
+<li><code>readonly</code>： <code>readonly</code>表示只有<code>getter</code>没有<code>setter</code>。</li>
+</ul>
+<p>有时候为了语意更明确可能需要自定义访问器的名字：</p>
+<pre><code>@property (nonatomic, setter = mySetter:,getter = myGetter ) NSString *name;
+</code></pre><p>最常见的是BOOL类型，比如标识View是否隐藏的属性hidden。可以这样声明：</p>
+<pre><code>@property (nonatomic,getter = isHidden ) BOOL hidden;
+</code></pre><h2 id="u5185_u5B58_u7BA1_u7406"><a href="#u5185_u5B58_u7BA1_u7406" class="headerlink" title="内存管理"></a>内存管理</h2><p><code>@property</code>有显示的内存管理策略。这使得我们只需要看一眼<code>@property</code>声明就明白它会怎样对待传入的值。</p>
+<ul>
+<li><code>assign</code>（默认）：<code>assign</code>用于值类型，如<code>int</code>、<code>float</code>、<code>double</code>和<code>NSInteger</code>，<code>CGFloat</code>等表示单纯的复制。还包括不存在所有权关系的对象，比如常见的delegate。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@property(nonatomic) int running;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@property(nonatomic,assign) int running;</span><br></pre></td></tr></table></figure>
+<p>以上两段代码是相同的。</p>
+<p>在<code>setter</code>方法中，采用直接赋值来实现设值操作：</p>
+<pre><code>-(void)setRunning:(int)newRunning{  
+    _running = newRunning;  
+} 
+</code></pre><ul>
+<li><code>retain</code>：在<code>setter</code>方法中，需要对传入的对象进行引用计数加1的操作。<br>  简单来说，就是对传入的对象拥有所有权，只要对该对象拥有所有权，该对象就不会被释放。如下代码所示：</li>
+</ul>
+<pre><code>-(void)setName:(NSString*)_name{  
+     //首先判断是否与旧对象一致，如果不一致进行赋值。  
+     //因为如果是一个对象的话，进行if内的代码会造成一个极端的情况：当此name的retain为1时，使此次的set操作让实例name提前释放，而达不到赋值目的。  
+     if ( name != _name){  
+          [name release];  
+          name = [_name retain];  
+     }  
+}
+</code></pre><ul>
+<li><code>strong</code>：<code>strong</code>是在IOS引入ARC的时候引入的关键字，是retain的一个可选的替代。表示实例变量对传入的对象要有所有权关系，即强引用。strong跟retain的意思相同并产生相同的代码，但是语意上更好更能体现对象的关系。</li>
+<li><p><code>weak</code>：在<code>setter</code>方法中，需要对传入的对象不进行引用计数加1的操作。<br>  简单来说，就是对传入的对象没有所有权，当该对象引用计数为0时，即该对象被释放后，用<code>weak</code>声明的实例变量指向<code>nil</code>，即实例变量的值为0。  </p>
+<blockquote>
+<p>注：<code>weak</code>关键字是IOS5引入的，IOS5之前是不能使用该关键字的。delegate 和 Outlet 一般用<code>weak</code>来声明。</p>
+</blockquote>
+</li>
+<li><p><code>copy</code>：与<code>strong</code>类似，但区别在于实例变量是对传入对象的副本拥有所有权，而非对象本身。</p>
+</li>
+</ul>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+\<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/you-should-know-block/" itemprop="url">
                   Objective-C中的Block
                 </a>
@@ -1003,7 +1343,7 @@ void doBlockA() {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">73</span>
+              <span class="site-state-item-count">74</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1017,7 +1357,7 @@ void doBlockA() {
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-count">36</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>

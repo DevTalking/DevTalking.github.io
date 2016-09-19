@@ -192,6 +192,162 @@
             
             
               
+                <a class="post-title-link" href="/articles/uiview-keyframe-animation/" itemprop="url">
+                  iOS UIView Animation - Keyframe
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-07-28T00:00:00+08:00" content="2015-07-28">
+              2015-07-28
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/uiview-keyframe-animation/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/uiview-keyframe-animation/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<blockquote>
+<p> 本文首发<a href="http://www.csdn.net/article/2015-07-28/2825314-ios-uiview-animation-5" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+</blockquote>
+<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>有些时候大家可能会遇到制作复杂、具有连贯性UIView动画的需求，这时大家可能会使用在<code>completion</code>闭包中衔接一段一段的动画，使之成为一段连续的动画。</p>
+<p>如果我们只是连接2个，或者3个动画，这种方式或许还行得通，但如果有更多的动画片段需要连接的时候，这种方式会带来灾难性的问题，你的代码会非常的冗余，不断的在<code>completion</code>闭包中嵌套代码，使代码维护起来相当的困难。所以今天向大家介绍能更好地实现这个需求的方法，Keyframe动画。</p>
+<p>Keyframe动画可以让我们有效的拆分由若干段动画连接而成的复杂动画，可以较为精准的定义每段动画的起始点及持续时间，并且在代码组织方面也非常清晰。先看看今天要带大家实现的动画Demo：</p>
+<iframe src="https://player.vimeo.com/video/134543973?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
+
+<h2 id="u4F7F_u7528_u573A_u666F"><a href="#u4F7F_u7528_u573A_u666F" class="headerlink" title="使用场景"></a>使用场景</h2><p>我们先来认识一下，在什么样的场景下需要使用Keyframe动画。如图下所示，这是一个由四段动画组成的一个复杂动画，让UIView沿着长方形的轨迹运动：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Keyframe-2.png" alt="Keyframe-1"></p>
+<p>我们来看看用代码如何实现：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    view.center.x += <span class="number">200.0</span></span><br><span class="line">&#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">    <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">        view.center.y += <span class="number">100.0</span></span><br><span class="line">    &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">        <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">            view.center.x -= <span class="number">200.0</span></span><br><span class="line">        &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">            <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">                view.center.y -= <span class="number">100.0</span></span><br><span class="line">            &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>通过上面的伪代码可以看到，我们使用了<code>completion</code>闭包的方式连接每一段的动画，代码看起来尚且算清晰，可读性也马马虎虎。但是大家想象一下，如果我们使UIView按照一个复杂的路线运行，这一段动画可能有十几、几十段动画组成的，那么如果再使用<code>completion</code>闭包这种方式连接，那代码是多么的惨不忍睹。幸好我们有Keyframe动画，下面就让我们来看看如何使用Keyframe动画。</p>
+<h2 id="Keyframe_u52A8_u753B"><a href="#Keyframe_u52A8_u753B" class="headerlink" title="Keyframe动画"></a>Keyframe动画</h2><p>首先我们会使用到UIView的另一个动画方法`animateKeyframesWithDuration(_: delay: options: animations: completion: )<br>`：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="comment">// add keyframes</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>这个方法的几个参数与前几个使用过的动画方法参数一样。上面代码片段的意思是整个关键帧动画的持续时间为2秒、无延迟、无动画选项、执行完毕后无后续执行的代码。</p>
+<blockquote>
+<p>注：该方法的动画选项不再是<code>UIViewAnimationOptions</code>，而是<code>UIViewKeyframeAnimationOptions</code>。具体的内容大家可以去查阅Apple的文档。</p>
+</blockquote>
+<p>接下来我们要在<code>animations</code>闭包中添加关键帧了：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x += <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p><code>addKeyframeWithRelativeStartTime(_: relativeDuration: animations: )</code>是UIView添加关键帧的方法，该方法有三个参数：</p>
+<ul>
+<li>startTime：关键帧开始时间，该时间是相对整个关键帧动画持续时间的相对时间，一般值在0到1之间。如果为0，则表明这一关键帧从整个动画的第0秒开始执行，如果设为0.5，则表明从整个动画的中间开始执行。</li>
+<li>relativeDuration：关键帧持续时间，该时间同样是相对整个关键帧动画持续时间的相对时间，一般值也在0到1之间。如果设为0.25，则表明这一关键帧的持续时间为整个动画持续时间的四分之一。</li>
+<li>animations：设置视图动画属性的动画闭包。</li>
+</ul>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>我们解释一下上面这段代码。整个关键帧动画的持续时间为2秒，第一个关键帧从第0秒开始，运行0.5秒结束。下面我们完成其他三个关键帧：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x += <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.25</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.y += <span class="number">100.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.5</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x -= <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.75</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.y -= <span class="number">100.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>第二个关键帧的开始时间为0.25，也就是从整个动画时间的第0.5时开始执行，同样持续0.5秒。后两个关键帧的参数就不难理解了。</p>
+<p>现在整个代码看起来非常整洁，条理清晰，可读性非常好，而且可以有更精确的控制。即使再多几个关键帧也同样可以从容应对。</p>
+<p>关键帧动画不仅仅用于同一个视图的分段动画，也可使使用于不同视图的组合动画，由于我们还没讲到图层动画，所以，开篇的示例动画中就使用了关键帧动画实现了多个视图的组合动画。</p>
+<h2 id="u793A_u4F8B_u52A8_u753B"><a href="#u793A_u4F8B_u52A8_u753B" class="headerlink" title="示例动画"></a>示例动画</h2><p>在这个示例中虽然看起来是一个纸飞机视图的连续动画，但其实是由三个纸飞机视图组合而成的：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Keyframe-3.png" alt="Keyframe-2"></p>
+<p>从图中可以看到其实是有三个纸飞机视图，只不过在界面加载之前2号和3号纸飞机视图的透明度都是为零。</p>
+<p>整个动画是由这三个纸飞机视图通过关键帧动画组合而成：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Keyframe-4.png" alt="Keyframe-3"></p>
+<p>图中标示出了三个飞机视图的运行轨迹、视图大小、视图透明度的状态，我们来看看代码如何实现：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> zoomInScaleTransform = <span class="type">CGAffineTransformMakeScale</span>(<span class="number">0.2</span>, <span class="number">0.2</span>)</span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">3</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.2</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.center.x += <span class="keyword">self</span>.view.frame.width</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.center.y += -<span class="number">180</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.transform = zoomInScaleTransform</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.3</span>, relativeDuration: <span class="number">0.01</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.alpha = <span class="number">1</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.transform = zoomInScaleTransform</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.3</span>, relativeDuration: <span class="number">0.5</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.center.x -= <span class="keyword">self</span>.view.frame.width</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.center.y += <span class="number">90</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.9</span>, relativeDuration: <span class="number">0.01</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneComeBack.alpha = <span class="number">1</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.9</span>, relativeDuration: <span class="number">0.2</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneComeBack.center.x += <span class="number">33</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">self</span>.restorePaperAirplaneStatus()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>大家看到这大家可能会有疑问了，三段动画怎么会有五个关键帧呢，我们来刨析一下：</p>
+<ul>
+<li>第一个关键帧：完成1号纸飞机视图运动到右上角并移出屏幕，视图逐渐变小的动画。该关键帧从整个动画的第0秒开始执行，持续时间为0.6秒。</li>
+<li>第二个关键帧：由于2号纸飞机视图的初始透明度为零，所以在第二个关键帧将透明度设为1，并且缩小视图。注意这两个动作需要在瞬间完成，所以<code>relativeDuration</code>设为0.01，一个极短的时间。开始时间为整个动画的第0.9秒开始，较第一个关键帧延迟0.3秒。</li>
+<li>第三个关键帧：与第二个关键帧同时开始执行，完成2号纸飞机视图从小变大、并且往左下角运动，一直移出屏幕。持续时间为1.5秒。</li>
+<li>第四个关键帧：与第二个关键帧作用相似，改变3号纸飞机视图的透明度，同样是在瞬间完成。</li>
+<li>第五个关键帧：与第四个关键帧同时执行， 完成向右移动的动画，持续0.6秒。</li>
+</ul>
+<p>关键帧完成之后，在<code>completion</code>闭包中调用<code>restorePaperAirplaneStatus()</code>方法，恢复3个纸飞机视图的状态及位置，以便再次执行动画。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>大家在使用关键帧动画时，对于关键帧的开始时间和持续时间需要仔细设置，保证每个关键帧在合适的时间开始，执行恰当的持续时间。在必要时候也需要在关键帧里修改视图的一些状态，但要设置极短的持续时间，表示瞬间完成。</p>
+<p>下一篇会向大家介绍在使用Auto Layout的情况下，如何通过约束实现动画，好了今天就先到这里吧。</p>
+<p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/uiview-animation-practice/" itemprop="url">
                   iOS UIView Animation - Practice
                 </a>
@@ -889,156 +1045,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/what-is-new-in-swift/" itemprop="url">
-                  Swift 2.0初探
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-06-20T00:00:00+08:00" content="2015-06-20">
-              2015-06-20
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/what-is-new-in-swift/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/what-is-new-in-swift/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>转眼间，Swift已经一岁多了，这门新鲜、语法时尚、类型安全、执行速度更快的语言已经渐渐的深入广大开发者的心。我同样也是非常喜爱这门新的编程语言。</p>
-<p>今年6月，一年一度的WWDC大会如期而至，在大会上Apple发布了Swift 2.0，引入了很多新的特性，以帮助开发者能更快，更简单的构建应用。我在这里也说道说道Swift 2.0中值得大家注意的新特性。</p>
-<h2 id="guard_u8BED_u53E5"><a href="#guard_u8BED_u53E5" class="headerlink" title="guard语句"></a><code>guard</code>语句</h2><p><code>guard</code>语句和<code>if</code>语句有点类似，都是根据其关键字之后的表达式的布尔值决定下一步执行什么。但与<code>if</code>语句不同的是，<code>guard</code>语句只会有一个代码块，不像<code>if</code>语句可以<code>if else</code>多个代码块。</p>
-<p>那么<code>guard</code>语句的作用到底是什么呢？顾名思义，就是守护。<code>guard</code>语句判断其后的表达式布尔值为<code>false</code>时，才会执行之后代码块里的代码，如果为<code>true</code>，则跳过整个<code>guard</code>语句，我们举例来看看。</p>
-<p>我们以今年高考为例，在进入考场时一般都会检查身份证和准考证，我们写这样一个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">checkup</span><span class="params">(person: [String: String!])</span></span> &#123;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 检查身份证，如果身份证没带，则不能进入考场</span></span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> id = person[<span class="string">"id"</span>] <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"没有身份证，不能进入考场!"</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 检查准考证，如果准考证没带，则不能进入考场</span></span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> examNumber = person[<span class="string">"examNumber"</span>] <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"没有准考证，不能进入考场!"</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 身份证和准考证齐全，方可进入考场</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"您的身份证号为:<span class="subst">\(id)</span>，准考证号为:<span class="subst">\(examNumber)</span>。请进入考场!"</span>)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">checkup([<span class="string">"id"</span>: <span class="string">"123456"</span>]) <span class="comment">// 没有准考证，不能进入考场!</span></span><br><span class="line">checkup([<span class="string">"examNumber"</span>: <span class="string">"654321"</span>]) <span class="comment">// 没有身份证，不能进入考场!</span></span><br><span class="line">checkup([<span class="string">"id"</span>: <span class="string">"123456"</span>, <span class="string">"examNumber"</span>: <span class="string">"654321"</span>]) <span class="comment">// 您的身份证号为:123456，准考证号为:654321。请进入考场!</span></span><br></pre></td></tr></table></figure>
-<p>上述代码中的第一个<code>guard</code>语句用于检查身份证，如果检查到身份证没带，也就是表达式为<code>false</code>时，执行大括号里的代码，并返回。第二个<code>guard</code>语句则检查准考证。</p>
-<p>如果两证齐全，则执行最后一个打印语句，上面的两个<code>guard</code>语句大括号内的代码都不会执行，因为他们表达式的布尔值都是<code>true</code>。</p>
-<p>这里值得注意的是，<code>id</code>和<code>examNumber</code>可以在<code>guard</code>语句之外使用，也就是说当<code>guard</code>对其表达式进行验证后，<code>id</code>和<code>examNumber</code>可在整个方法的作用域中使用，并且是解包后的。</p>
-<p>我们再用<code>if else</code>语句写一个类似的方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">checkupUseIf</span><span class="params">(person: [String: String!])</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> id = person[<span class="string">"id"</span>], <span class="keyword">let</span> examNumber = person[<span class="string">"examNumber"</span>] &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"您的身份证号为:<span class="subst">\(id)</span>，准考证号为:<span class="subst">\(examNumber)</span>。请进入考场！"</span>)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"证件不齐全，不能进入考场!"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"您的身份证号为:<span class="subst">\(id)</span>，准考证号为:<span class="subst">\(examNumber)</span>"</span>)  <span class="comment">// 报异常</span></span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">checkupUseIf([<span class="string">"id"</span>: <span class="string">"123456"</span>]) <span class="comment">// 证件不齐全，不能进入考场!</span></span><br><span class="line">checkupUseIf([<span class="string">"examNumber"</span>: <span class="string">"654321"</span>]) <span class="comment">// 证件不齐全，不能进入考场!</span></span><br><span class="line">checkupUseIf([<span class="string">"id"</span>: <span class="string">"123456"</span>, <span class="string">"examNumber"</span>: <span class="string">"654321"</span>]) <span class="comment">// 您的身份证号为:123456，准考证号为:654321。请进入考场!</span></span><br></pre></td></tr></table></figure>
-<p>我们可以看到用<code>if else</code>实现的方法显然不如<code>guard</code>实现的那么精准。而且<code>id</code>和<code>examNumber</code>的作用域只限在<code>if</code>的第一个大括号内，超出这个作用域编译就会报错。</p>
-<p>通过上述两个小例子不难看出，<code>guard</code>语句正如一个称职的守卫，层层把关，严防一切不允许发生的事，并且让代码具有更高的可读性，非常棒。</p>
-<h2 id="u5F02_u5E38_u5904_u7406"><a href="#u5F02_u5E38_u5904_u7406" class="headerlink" title="异常处理"></a>异常处理</h2><p>在Swift 1.0时代是没有异常处理和抛出机制的，如果要处理异常，要么使用<code>if else</code>语句或<code>switch</code>语句判断处理，要么使用闭包形式的回调函数处理，再要么就使用<code>NSError</code>处理。以上这些方法都不能像Java中的<code>try catch</code>异常控制语句那样行如流水、从容不迫的处理异常，而且也会降低代码的可读性。当Swift 2.0到来后，一切都不一样了。</p>
-<p>在Swift 2.0中Apple提供了使用<code>throws</code>、<code>throw</code>、<code>try</code>、<code>do</code>、<code>catch</code>这五个关键字组成的异常控制处理机制。下面我们来举例看看如何使用，我用使用手机刷朋友圈为例。</p>
-<p>首先我们需要定义异常枚举，在Swift 2.0中Apple提供了<code>ErrorType</code>协议需要我们自定义的异常枚举遵循：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">WechatError</span>: <span class="title">ErrorType</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">NoBattery</span> <span class="comment">// 手机没电</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">NoNetwork</span> <span class="comment">// 手机没网</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">NoDataStream</span> <span class="comment">// 手机没有流量</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们定义了导致不能刷微信的错误枚举<code>’wechatError</code>。然后定义一个检查是否可以刷微信的方法<code>checkIsWechatOk()</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">checkIsWechatOk</span><span class="params">(isPhoneHasBattery: Bool, isPhoneHasNetwork: Bool, dataStream: Int)</span></span> <span class="keyword">throws</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">guard</span> isPhoneHasBattery <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="type">WechatError</span>.<span class="type">NoBattery</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">guard</span> isPhoneHasNetwork <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="type">WechatError</span>.<span class="type">NoNetwork</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">guard</span> dataStream &gt; <span class="number">50</span> <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="type">WechatError</span>.<span class="type">NoDataStream</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里注意，在方法名后有<code>throws</code>关键字，意思为该方法产生的异常向上层抛出。在方法体内使用<code>guard</code>语句对各种状态进行判断，然后使用<code>throw</code>关键字抛出对应的异常。然后我们定义刷微信的方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">playWechat</span><span class="params">(isPhoneHasBattery: Bool, isPhoneHasNetwork: Bool, dataStream: Int)</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> checkIsWechatOk(isPhoneHasBattery, isPhoneHasNetwork: isPhoneHasNetwork, dataStream: dataStream)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"放心刷，刷到天昏地暗！"</span>)</span><br><span class="line">    &#125; <span class="keyword">catch</span> <span class="type">WechatError</span>.<span class="type">NoBattery</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"手机都没电，刷个鬼啊！"</span>)</span><br><span class="line">    &#125; <span class="keyword">catch</span> <span class="type">WechatError</span>.<span class="type">NoNetwork</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"没有网络哎，洗洗玩单机吧！"</span>)</span><br><span class="line">    &#125; <span class="keyword">catch</span> <span class="type">WechatError</span>.<span class="type">NoDataStream</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"没有流量了，去蹭Wifi吧！"</span>)</span><br><span class="line">    &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"见鬼了！"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">playWechat(<span class="literal">true</span>, isPhoneHasNetwork: <span class="literal">true</span>, dataStream: <span class="number">60</span>) <span class="comment">// 放心刷，刷到天昏地暗！</span></span><br><span class="line">playWechat(<span class="literal">true</span>, isPhoneHasNetwork: <span class="literal">false</span>, dataStream: <span class="number">60</span>) <span class="comment">// 没有网络哎，洗洗玩单机吧！</span></span><br><span class="line">playWechat(<span class="literal">false</span>, isPhoneHasNetwork: <span class="literal">true</span>, dataStream: <span class="number">60</span>) <span class="comment">// 手机都没电，刷个鬼啊！</span></span><br><span class="line">playWechat(<span class="literal">true</span>, isPhoneHasNetwork: <span class="literal">true</span>, dataStream: <span class="number">30</span>) <span class="comment">// 没有流量了，去蹭Wifi吧！</span></span><br></pre></td></tr></table></figure>
-<p>上述的代码示例中，首先检查是否可以刷微信的方法前使用<code>try</code>关键字，表示允许该方法抛出异常，然后使用了<code>do catch</code>控制语句捕获抛出的异常，进而做相关的逻辑处理。</p>
-<p>这套异常处理机制使Swift更加的全面和安全，并且提高了代码的可读性，非常棒。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u534F_u8BAE_u6269_u5C55"><a href="#u534F_u8BAE_u6269_u5C55" class="headerlink" title="协议扩展"></a>协议扩展</h2><p>在Swift 1.0 时代，协议（<code>Protocol</code>）基本上类似一个接口，定义若干属性和方法，供类、结构体、枚举遵循和实现。在Swift 2.0中，可以对协议进行属性或者方法的扩展，和扩展类与结构体类似。这让我们开启了面向协议编程的篇章。</p>
-<p>Swift中，大多数基础对象都遵循了<code>CustomStringConvertible</code>协议，比如<code>Array</code>、<code>Dictionary</code>（Swift 1.0中的<code>Printable</code>协议），该协议定义了<code>description</code>方法，用于<code>print</code>方法打印对象。现在我们对该协议扩展一个方法，让其打印出大写的内容:</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> arr = [<span class="string">"hello"</span>, <span class="string">"world"</span>]</span><br><span class="line"><span class="built_in">print</span>(arr.description) <span class="comment">// "[hello, world]"</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">CustomStringConvertible</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> upperDescription: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"<span class="subst">\(<span class="keyword">self</span>.description.uppercaseString)</span>"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(arr.upperDescription) <span class="comment">// "[HELLO, WORLD]"</span></span><br></pre></td></tr></table></figure>
-<p>如果在Swfit 1.0时代，要想达到上述示例的效果，那么我们需要分别对<code>Array</code>、<code>Dictionary</code>进行扩展，所以协议的扩展极大的提高了我们的编程效率，也同样使代码更简洁和易读。</p>
-<h2 id="u6253_u5370_u8BED_u53E5_u7684_u6539_u53D8"><a href="#u6253_u5370_u8BED_u53E5_u7684_u6539_u53D8" class="headerlink" title="打印语句的改变"></a>打印语句的改变</h2><p>在Swift1中，有’println()’和’print()’两个在控制台打印语句的方法，前者是换行打印，后者是连行打印。在Swift2中，’println()’已成为过去，取而代之的是他俩的结合体。如果你想做换行打印，现在需要这样写：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"我要换行！"</span>, appendNewline: <span class="literal">true</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="available_u68C0_u67E5"><a href="#available_u68C0_u67E5" class="headerlink" title="available检查"></a><code>available</code>检查</h2><p>作为iOS开发者，谁都希望使用最新版本iOS的Api进行开发，省事省力。但常常事与愿违，因为我们经常需要适配老版本的iOS，这就会面临一个问题，一些新特性特性或一些类无法在老版本的iOS中使用，所以在编码过程中经常会对iOS的版本做以判断，就像这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="type">NSClassFromString</span>(<span class="string">"NSURLQueryItem"</span>) != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// iOS 8或更高版本</span></span><br><span class="line">&#125; <span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="comment">// iOS8之前的版本</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>以上这只是一种方式，在Swift 2.0之前也没有一个标准的模式或机制帮助开发者判断iOS版本，而且容易出现疏漏。在Swift 2.0到来后，我们有了标准的方式来做这个工作：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> #available(iOS <span class="number">8</span>, *) &#123;</span><br><span class="line">    <span class="comment">// iOS 8或更高版本</span></span><br><span class="line">    <span class="keyword">let</span> queryItem = <span class="type">NSURLQueryItem</span>()</span><br><span class="line">    </span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// iOS8之前的版本</span></span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个特性让我们太幸福。</p>
-<h2 id="do-while_u8BED_u53E5_u91CD_u547D_u540D"><a href="#do-while_u8BED_u53E5_u91CD_u547D_u540D" class="headerlink" title="do-while语句重命名"></a><code>do-while</code>语句重命名</h2><p>经典的<code>do-while</code>语句改名了，改为了<code>repeat-while</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line"><span class="keyword">repeat</span> &#123;</span><br><span class="line">    i++</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br><span class="line">&#125; <span class="keyword">while</span> i &lt; <span class="number">10</span></span><br></pre></td></tr></table></figure>
-<p>个人感觉更加直观了。</p>
-<h2 id="defer_u5173_u952E_u5B57"><a href="#defer_u5173_u952E_u5B57" class="headerlink" title="defer关键字"></a><code>defer</code>关键字</h2><p>在一些语言中，有<code>try/finally</code>这样的控制语句，比如Java。这种语句可以让我们在<code>finally</code>代码块中执行必须要执行的代码，不管之前怎样的兴风作浪。在Swift 2.0中，Apple提供了<code>defer</code>关键字，让我们可以实现同样的效果。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">checkSomething</span><span class="params">()</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"CheckPoint 1"</span>)</span><br><span class="line">    doSomething()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"CheckPoint 4"</span>)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">doSomething</span><span class="params">()</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"CheckPoint 2"</span>)</span><br><span class="line">    <span class="keyword">defer</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Clean up here"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"CheckPoint 3"</span>)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">checkSomething() <span class="comment">// CheckPoint 1, CheckPoint 2, CheckPoint 3, Clean up here, CheckPoint 4</span></span><br></pre></td></tr></table></figure>
-<p>上述示例可以看到，在打印出“CheckPoint 2”之后并没有打印出“Clean up here”，而是“CheckPoint 3”，这就是<code>defer</code>的作用，它对进行了<code>print(&quot;Clean up here&quot;)</code>延迟。我们再来看一个I/O的示例：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 伪代码</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">writeSomething</span><span class="params">()</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> file = <span class="type">OpenFile</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> ioStatus = fetchIOStatus()</span><br><span class="line">    <span class="keyword">guard</span> ioStatus != <span class="string">"error"</span> <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    file.write()</span><br><span class="line">    </span><br><span class="line">    closeFile(file)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上述示例是一个I/O操作的伪代码，如果获取到的<code>ioStatus</code>正常，那么该方法没有问题，如果<code>ioStatus</code>取到的是<code>error</code>，那么会被<code>guard</code>语句抓到执行<code>return</code>操作，这样的话<code>closeFile(file)</code>就永远都不会执行了，一个严重的Bug就这样产生了。下面我们看看如何用<code>defer</code>来解决这个问题：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 伪代码</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">writeSomething</span><span class="params">()</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> file = <span class="type">OpenFile</span>()</span><br><span class="line">    <span class="keyword">defer</span> &#123;</span><br><span class="line">        closeFile(file)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> ioStatus = fetchIOStatus()</span><br><span class="line">    <span class="keyword">guard</span> ioStatus != <span class="string">"error"</span> <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    file.write()</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们将<code>closeFile(file)</code>放在<code>defer</code>代码块里，这样即使<code>ioStatus</code>为<code>error</code>，在执行<code>return</code>前会先执行<code>defer</code>里的代码，这样就保证了不管发生什么，最后都会将文件关闭。</p>
-<p><code>defer</code>又一个保证我们代码健壮性的特性，我非常喜欢。</p>
-<p>Swift 2.0中的新特性当然不止以上这些，但窥一斑可见全豹，Swift 2.0努力将更快、更安全做到极致，这是开发人员的福音，让我们尽情享受这门美妙的语言吧。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1081,7 +1087,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">73</span>
+              <span class="site-state-item-count">74</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1095,7 +1101,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-count">36</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
