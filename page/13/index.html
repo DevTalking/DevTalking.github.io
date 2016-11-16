@@ -192,6 +192,257 @@
             
             
               
+                <a class="post-title-link" href="/articles/swift-reusable-datasource/" itemprop="url">
+                  基于Swift构建可复用的UITableViewDataSource
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-05T00:00:00+08:00" content="2014-08-05">
+              2014-08-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/swift-reusable-datasource/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-reusable-datasource/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>在我们的ios应用中，<code>UITableViewController</code>往往是项目中最大的文件，它们包含了许多冗余的、不必要的代码。所以有很多代码的复用率非常低。这篇学习笔记可以让我们构建出轻量级的<code>UITableViewController</code>，以及可复用的<code>UITableViewDataSource</code>。</p>
+<p><a href="https://github.com/JaceFu/ReusableDataSource" target="_blank" rel="external">示例代码猛戳这里</a>。</p>
+<h1 id="u628ADataSource_u5206_u79BB_u51FA_u6765"><a href="#u628ADataSource_u5206_u79BB_u51FA_u6765" class="headerlink" title="把DataSource分离出来"></a>把DataSource分离出来</h1><p>我们的示例很简单，就是先展示一个<code>UITableViewController</code>，然后点击某行，推出第二个<code>UITableViewController</code>。<br>项目结构：<br><img src="http://www.devtalking.com/postImages/reusableDatasource2.png" alt="示例">  </p>
+<p>StoryBoard结构：<br><img src="http://www.devtalking.com/postImages/reusableDatasource3.png" alt="示例">  </p>
+<p>运行截图：<br><img src="http://www.devtalking.com/postImages/reusableDatasource1.png" alt="示例">  </p>
+<p>在<code>FirstTableViewController</code>类中有以下几个方法：  </p>
+<pre><code>override func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -&gt; Int {
+
+    return firstCellData!.datas.count;
+
+}
+
+override func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -&gt; UITableViewCell! {
+
+    var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as UITableViewCell!;
+
+    cell.textLabel.text = firstCellData?.datas[indexPath.row];
+
+    return cell;
+
+}
+
+override func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
+
+    let stvc = SecondTableViewController();
+
+    self.navigationController.pushViewController(stvc, animated: true);
+
+}
+</code></pre><p>在<code>SecondTableViewController</code>类中有以下几个方法：  </p>
+<pre><code>override func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -&gt; Int {
+
+    return secondCellData!.titleDatas.count;
+
+}
+
+override func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -&gt; UITableViewCell! {
+
+    var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as UITableViewCell!;
+
+    cell.textLabel.text = secondCellData?.titleDatas[indexPath.row];
+    cell.detailTextLabel.text = secondCellData?.subtitleDatas[indexPath.row];
+
+    return cell;
+
+}
+</code></pre><p>从上面两个类的代码片段中可以看出，它们都重写了<code>UITableViewDataSource</code>最基本的两个方法，即设定每个Section有多少行和生成Cell并装配数据。更准确的说这些方法都是针对数组做一些事情。所以我们可以尝试把处理数组相关的代码移到<a href="https://github.com/JaceFu/ReusableDataSource/blob/master/ReusableDataSource/CustomDataSource.swift" target="_blank" rel="external">单独的类</a>中。对于<code>Cell</code>的设置，我们可以通过闭包来实现。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>我们可以创建一个<code>CustomDataSource</code>类（其实命名为ArrayDataSource更好），继承<code>NSObject</code>并遵循<code>UITableViewDataSource</code>协议。  </p>
+<pre><code>import Foundation
+import UIKit
+
+class CustomDataSource: NSObject, UITableViewDataSource {
+
+    var cellData: Array&lt;AnyObject&gt;?;
+    var cellIdentifier: String?;
+    var configureCell: ((AnyObject,AnyObject) -&gt; ())?;
+
+    init(cellData: Array&lt;AnyObject&gt;, cellIdentifier: String, configureCell: (AnyObject,AnyObject) -&gt; ()) {
+
+        super.init();
+        self.cellData = cellData;
+        self.cellIdentifier = cellIdentifier;
+        self.configureCell = configureCell;
+
+    }
+
+    func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -&gt; Int {
+
+        return cellData!.count;
+
+    }
+
+    func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -&gt; UITableViewCell! {
+
+        var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as UITableViewCell!;
+
+        configureCell!(cell,cellData![indexPath.row]);
+
+        return cell;
+
+    }
+
+}
+</code></pre><p>现在，你就可以把<code>UITableViewController</code>的这两个方法去掉了。取而代之，你可以创建一个<code>CustomDataSource</code>类的实例作为<code>UITableViewController</code>的<code>DataSource</code>。</p>
+<pre><code>//FirstTableViewController
+
+ func setupTableView() {
+
+    customDataSource = CustomDataSource(cellData: items, cellIdentifier: cellIdentifier, configureCell: {(cell, firstCellData) in
+
+        var firstCell = cell as FirstCell;
+        firstCell.configureForCell(firstCellData as FirstCellData);
+
+        });
+
+    self.tableView.dataSource = customDataSource;
+
+}
+
+
+
+
+
+// SecondTableViewController
+
+ func setupTableView() {
+
+    customDataSource = CustomDataSource(cellData: items, cellIdentifier: cellIdentifier, configureCell: {(cell, secondCellData) in
+
+        var secondCell = cell as SecondCell;
+        secondCell.configureForCell(secondCellData as SecondCellData);
+
+        });
+
+    self.tableView.dataSource = customDataSource;
+
+}
+</code></pre><p>设置<code>Cell</code>的代码在对应的View层实现。</p>
+<pre><code>class FirstCell: UITableViewCell {
+
+    func configureForCell(item: FirstCellData!) {
+
+        self.textLabel.text = item.title;
+
+    }
+
+}
+
+
+
+
+
+class SecondCell: UITableViewCell {
+
+    func configureForCell(item: SecondCellData!) {
+
+        self.textLabel.text = item.title;
+        self.detailTextLabel.text = item.subtitle;
+
+    }
+
+}
+</code></pre><p>现在每次你想把数组显示在某些Table View中的时候都可以复用<code>DataSource</code>的这些代码，当然也可以举一反三，将<code>DataSource</code>中处理其他数据类型的代码也分离出来，划分为多个处理不同数据类型或业务逻辑的<code>DataSource</code>，形成Data Source Pool，以后就可以随意复用啦。</p>
+<h1 id="u603B_u7ED3_uFF1A"><a href="#u603B_u7ED3_uFF1A" class="headerlink" title="总结："></a>总结：</h1><p>在MVC设计模式中，我们应该把代码放置在合适、正确的位置，比如不要在View Controller中做网络请求的逻辑，你应该将它们封装在Model层的类中。也不应该在View Controller中构建复杂的View，而是应该将它们封装在View层的UIView子类中等等。  </p>
+<p>虽然以上技巧并不适用于所有项目的任何角落，但是我们作为程序员要本着写可维护的代码、写可让别人看懂的代码为遵旨。通过这些小技巧我们至少可以将笨重的View Controller变得小巧、整洁。  </p>
+<p>参考文献：<a href="http://www.objc.io/issue-1/lighter-view-controllers.html" target="_blank" rel="external">Lighter View Controllers</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/files-and-initialization/" itemprop="url">
                   Swift中的文件和初始化
                 </a>
@@ -955,360 +1206,6 @@ diagram.model.nodeDataArray = [
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/gojs-links/" itemprop="url">
-                  GOJS教程 -- 如何使用Links
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-07-22T00:00:00+08:00" content="2014-07-22">
-              2014-07-22
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/gojs-links/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/gojs-links/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p><code>Link</code>对象顾名思义就是连线，它可以通过连线的方式表达<code>Node</code>之间的关系。</p>
-<h2 id="u65E0_u65B9_u5411_u8FDE_u7EBF"><a href="#u65E0_u65B9_u5411_u8FDE_u7EBF" class="headerlink" title="无方向连线"></a>无方向连线</h2><p>最简单的<code>Link</code>就是没有箭头的，无方向的连线。当Diagram中的<code>Node</code>之间的关系没有方向性或者它们之间存在隐性关系的时候，我们使用这种连线。  </p>
-<p>我们在构建<code>Link</code>时，先设置创建模板（<code>linkTemplate</code>），该模板指定了连线的样式。然后创建一个指定连线关系的数组<code>linkDataArray</code>，我们通过该数组指定<code>Node</code>之间的连线关系，最后通过<code>GraphLinksModel</code>方法构建连线。 </p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,       // the whole link panel
-  $(go.Shape));  // the link shape, default black stroke
-
-var nodeDataArray = [
-{ key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
-{ key: &quot;Beta&quot;, loc: &quot;100 50&quot; }
-];
-var linkDataArray = [
-{ from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link1.jpg" alt="Link"></p>
-<h2 id="u5E26_u65B9_u5411_u8FDE_u7EBF"><a href="#u5E26_u65B9_u5411_u8FDE_u7EBF" class="headerlink" title="带方向连线"></a>带方向连线</h2><p>一般情况下我们都需要使用带方向的连线，即带箭头的连线。我们只需要修改一下<code>linkTemplate</code>即可，我们在连线模板中加入一个箭头，通过在<code>Link</code>中再添加一个<code>Shape</code>，然后设置<code>Shape.toArrow</code>属性为<code>OpenTrigangle</code>。  </p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  $(go.Shape),  // the link shape
-  $(go.Shape,   // the arrowhead
-    { toArrow: &quot;OpenTriangle&quot;, fill: null })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link2.jpg" alt="Link"></p>
-<h2 id="u8FDE_u7EBF_u8DEF_u5F84"><a href="#u8FDE_u7EBF_u8DEF_u5F84" class="headerlink" title="连线路径"></a>连线路径</h2><p>如果你想改变连线的路径，那么需要设置<code>Link.routing</code>属性，下面的例子中展示了<code>Link.Normal</code>和<code>Link.Orthogonal</code>两种连线路径。  </p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  new go.Binding(&quot;routing&quot;, &quot;routing&quot;),
-  $(go.Shape),
-  $(go.Shape, { toArrow: &quot;Standard&quot; })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;50 50&quot; },
-    { key: &quot;Gamma&quot;, loc: &quot;100 25&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot;, routing: go.Link.Normal },
-    { from: &quot;Alpha&quot;, to: &quot;Gamma&quot;, routing: go.Link.Orthogonal }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link3.jpg" alt="Link"></p>
-<p>要注意的是，这里设置连线路径的是<code>Shape</code>里的属性，在<code>GraphObject</code>中也有设置路径的属性，<code>GraphObject.fromSpot</code>和<code>GraphObject.toSpot</code>，前者是作用于<code>Shape</code>上的，后者是作用于容器上的。</p>
-<p>你还可以设置<code>Link.routing</code>属性为<code>Link.AvoidsNodes</code>，可以让连线自动避开<code>Node</code>，也就是说可以避免<code>Link</code>与<code>Node</code>相交。但是如果有一个<code>Node</code>离起始<code>Node</code>或者终点<code>Node</code>非常近的时候，连线就没有办法避让了，因为它没有足够的空间去计算避让路线。  </p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  { routing: go.Link.AvoidsNodes },  // link route should avoid nodes
-  $(go.Shape),
-  $(go.Shape, { toArrow: &quot;Standard&quot; })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;250 40&quot; },
-    { key: &quot;Gamma&quot;, loc: &quot;100 0&quot; },
-    { key: &quot;Delta&quot;, loc: &quot;75 50&quot; },
-    { key: &quot;Epsilon&quot;, loc: &quot;150 30&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link4.jpg" alt="Link"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u8FDE_u7EBF_u7684_u5F2F_u66F2_u5EA6_u548C_u89D2_u5EA6"><a href="#u8FDE_u7EBF_u7684_u5F2F_u66F2_u5EA6_u548C_u89D2_u5EA6" class="headerlink" title="连线的弯曲度和角度"></a>连线的弯曲度和角度</h2><p>在我们创建好连线关系以及路径后，就可以使用其他属性来控制连线的其他特性，比如说弯曲度。我们可以通过设置<code>Link.curve</code>属性设置连线的弯曲度，默认情况下该属性的值为<code>Link.Node</code>。</p>
-<p>下面的例子中，我们将<code>Link.curve</code>属性设置为<code>Link.bezier</code>，让连线产生弧度。</p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  { curve: go.Link.Bezier },  // Bezier curve
-  $(go.Shape),
-  $(go.Shape, { toArrow: &quot;Standard&quot; })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link5.jpg" alt="Link"></p>
-<p>我们还可以通过<code>Link.curviness</code>属性设置连线的弯曲力度。</p>
-<p>下面的例子中，两个<code>Node</code>之间有多条连线，并且我们没有设置连线的弯曲度，但是我们可以看到，每条连线都自动的产生了轻微的弯曲度的变化。</p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  { curve: go.Link.Bezier },
-  $(go.Shape),
-  $(go.Shape, { toArrow: &quot;Standard&quot; })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },  // multiple links between the same nodes
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link6.jpg" alt="Link"></p>
-<p>上面第四个例子中，连线避让<code>Node</code>时折角都是直角，我们还可以通过<code>Link.corner</code>属性，设置连线折角的弧度。</p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  { routing: go.Link.AvoidsNodes,
-    corner: 10 },                  // rounded corners
-  $(go.Shape),
-  $(go.Shape, { toArrow: &quot;Standard&quot; })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;250 40&quot; },
-    { key: &quot;Gamma&quot;, loc: &quot;100 0&quot; },
-    { key: &quot;Delta&quot;, loc: &quot;75 50&quot; },
-    { key: &quot;Epsilon&quot;, loc: &quot;150 30&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link7.jpg" alt="Link"></p>
-<p>当两条连线相交时，我们希望在视觉上能有所表示。那么我们可以设置<code>Link.curve</code>属性为<code>Link.JumpOver</code>属性，展现出的效果就是一条线越过了交叉的另一条线。 </p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  { locationSpot: go.Spot.Center },
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  { routing: go.Link.Orthogonal,  // may be either Orthogonal or AvoidsNodes
-    curve: go.Link.JumpOver },
-  $(go.Shape),
-  $(go.Shape, { toArrow: &quot;Standard&quot; })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 50&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; },
-    { key: &quot;Alpha2&quot;, loc: &quot;50 0&quot; },
-    { key: &quot;Beta2&quot;, loc: &quot;50 100&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },  // these two links will cross
-    { from: &quot;Alpha2&quot;, to: &quot;Beta2&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link8.jpg" alt="Link"></p>
-<p>或者我们也可以将<code>Link.curve</code>属性设置为<code>Link.JumpGap</code>，表现为当两条连线相交时，其中一条在相交处会断开。</p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  { locationSpot: go.Spot.Center },
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  { routing: go.Link.Orthogonal,  // may be either Orthogonal or AvoidsNodes
-    curve: go.Link.JumpGap },
-  $(go.Shape),
-  $(go.Shape, { toArrow: &quot;Standard&quot; })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 50&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; },
-    { key: &quot;Alpha2&quot;, loc: &quot;50 0&quot; },
-    { key: &quot;Beta2&quot;, loc: &quot;50 100&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },  // these two links will cross
-    { from: &quot;Alpha2&quot;, to: &quot;Beta2&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link9.jpg" alt="Link"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1351,7 +1248,7 @@ diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">74</span>
+              <span class="site-state-item-count">75</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1365,7 +1262,7 @@ diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
