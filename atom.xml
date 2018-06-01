@@ -275,7 +275,7 @@
     <link href="http://www.devtalking.com//articles/angularjs1x-guide/"/>
     <id>http://www.devtalking.com//articles/angularjs1x-guide/</id>
     <published>2016-09-18T16:00:00.000Z</published>
-    <updated>2016-09-19T14:16:54.000Z</updated>
+    <updated>2018-06-01T16:17:59.451Z</updated>
     <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -306,6 +306,7 @@
 <li>第一个参数为模块名称。</li>
 <li>第二个参数为一个数组，该参数的含义为当前定义的模块所依赖的模块，如果有依赖模块则传入包含模块名称的数组，若无依赖则传入空数组。</li>
 </ul>
+<a id="more"></a>
 <h3 id="u4F7F_u7528_u6A21_u5757"><a href="#u4F7F_u7528_u6A21_u5757" class="headerlink" title="使用模块"></a>使用模块</h3><p>在了解如何使用定义好的模块之前，需要先清楚在AngularJS中，模块与模块之间可以是相互独立，老死不相往来的关系，也可以是依赖关系，并且可以是嵌套依赖关系：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// modules.js</span></span><br><span class="line"><span class="comment">// 互相独立的模块</span></span><br><span class="line"><span class="keyword">var</span> mainModule = angular.module(<span class="string">"mainModule"</span>, []);</span><br><span class="line"><span class="keyword">var</span> anotherModule = angular.module(<span class="string">"anotherModule"</span>, []);</span><br></pre></td></tr></table></figure>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// modules.js</span></span><br><span class="line"><span class="comment">// 有依赖关系的模块</span></span><br><span class="line"><span class="keyword">var</span> mainModule = angular.module(<span class="string">"mainModule"</span>, [<span class="string">"secondModule"</span>]);</span><br><span class="line"><span class="keyword">var</span> secondModule = angular.module(<span class="string">"secondModule"</span>, [<span class="string">"thirdModule"</span>]);</span><br><span class="line"><span class="keyword">var</span> thirdModule = angular.module(<span class="string">"thirdModule"</span>, []);</span><br></pre></td></tr></table></figure>
@@ -583,11 +584,44 @@
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
+
+
 ]]></content>
     <summary type="html">
     <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" ]]>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>本文首发<a href="http://geek.csdn.net/news/detail/102405">CSDN</a>，如需转载请与CSDN联系。</p>
+<h1 id="AngularJS_u662F_u4EC0_u4E48"><a href="#AngularJS_u662F_u4EC0_u4E48" class="headerlink" title="AngularJS是什么"></a>AngularJS是什么</h1><p>我们知道HTML是一种创建网页的静态标记语言，它很基础，但不失灵活，然而它自身并不提供对灵活性的具体实现，所以我们要创建具有可用性及赏心悦目的Web应用就需要使用其他语言与之结合去操控它的DOM、标签、标签属性、标签层级结构实现样式变换、动态数据变换、动态元素变换等，比如结合CSS和JavaScript语言。</p>
+<p>但是越多的结合就意味着功能实现越复杂，我们需要写大量的代码去实现类似数据绑定、动态展现、远程服务请求等功能，所以jQuery这类的JS库、ember这类的框架应用而生。前者让我们在完成某些单一功能时调用它封装好的方法，从而减少代码量。后者让我们可以遵循它的规范去填充它设计好的代码结构，从而逐步完成完整的应用功能。</p>
+<p>而AngularJS是JS库和框架的结合，它诞生于2009年，由Misko Hevery 等人创建，后为Google所收购并发扬光大。AngularJS通过为开发者呈现一个更高层次的抽象来简化应用的开发，提供了构建一个CRUD应用可能用到的全部内容包括：自定义HTML标签、事件绑定、数据绑定、基本模板标识符、表单验证、路由、深度链接、组件重用、依赖注入等。</p>
+<blockquote>
+<p>文章中的所有示例均可在<a href="https://github.com/DevTalking/AngularJS1.x-guide.git">这里</a>下载。</p>
+</blockquote>
+<h1 id="AngularJS_u7684_u7279_u6027"><a href="#AngularJS_u7684_u7279_u6027" class="headerlink" title="AngularJS的特性"></a>AngularJS的特性</h1><p>AngularJS有着诸多的特性，但最为核心的是其Scope概念、MVC模式、路由、模块化、依赖注入、指令系统、双向数据绑定、Service、Provider等。</p>
+<h2 id="u6A21_u5757_u5316"><a href="#u6A21_u5757_u5316" class="headerlink" title="模块化"></a>模块化</h2><p>我们先从AngularJS的模块化特性说起。什么是模块？既应用程序中不同功能的容器。在AngularJS中，我们可以按业务功能的不同将实现划分为不同的模块，这些模块可以在一个JS文件中，也可以将它们放在不同的JS文件中，既一个JS文件为一个模块。</p>
+<h3 id="u6A21_u5757_u5316_u7684_u4F18_u52BF"><a href="#u6A21_u5757_u5316_u7684_u4F18_u52BF" class="headerlink" title="模块化的优势"></a>模块化的优势</h3><p>使用模块化在我们的编程阶段有着诸多的好处：</p>
+<ul>
+<li>可以使我们的代码结构非常清晰，有较好的可读性。</li>
+<li>可以使我们复用代码。</li>
+<li>在前端编程中，我们都知道JS的引用顺序是很重要的，但使用AngularJS的模块时我们不需要关系每个模块之间的顺序。</li>
+<li>可以很好的实现单元测试。</li>
+</ul>
+<h3 id="u5B9A_u4E49_u6A21_u5757"><a href="#u5B9A_u4E49_u6A21_u5757" class="headerlink" title="定义模块"></a>定义模块</h3><p>定义一个模块很简单，在JS文件中申明一个模块：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> mianModule = angular.module(<span class="string">"mianModule"</span>, []);</span><br></pre></td></tr></table></figure>
+<p>使用AngularJS的<code>module</code>方法申明一个模块，该方法有两个参数：</p>
+<ul>
+<li>第一个参数为模块名称。</li>
+<li>第二个参数为一个数组，该参数的含义为当前定义的模块所依赖的模块，如果有依赖模块则传入包含模块名称的数组，若无依赖则传入空数组。</li>
+</ul>]]>
+    
     </summary>
     
       <category term="AngularJS" scheme="http://www.devtalking.com/tags/AngularJS/"/>
@@ -601,7 +635,7 @@
     <link href="http://www.devtalking.com//articles/shadowsocks-guide/"/>
     <id>http://www.devtalking.com//articles/shadowsocks-guide/</id>
     <published>2016-08-18T16:00:00.000Z</published>
-    <updated>2016-08-19T04:04:55.000Z</updated>
+    <updated>2018-06-01T16:19:01.473Z</updated>
     <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -621,6 +655,7 @@
 <p>但是GFW也不会懵B一世，人家也会学习，由于在创建SSH隧道的过程中有较为明显的特性，所以GFW还是可以通过分析连接的特性进行干扰。此时ShadowSocks横空出世，先看看图示：</p>
 <p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-12.png" alt=""></p>
 <p>简单来说，ShadowSocks分为客户端和服务端，用户发出的请求基于Socks5协议与ShadowSocks客户端进行通信，一般情况下SS客户端都在本机，通过ShadowSocksX、GoAgentX等应用启动，所以这一步是不会经过GFW的，然后ShadowSocks提供了多种加密方式供客户端和服务端之间进行通信，并且在经过GFW时是普通的TCP协议数据包，没有明显的特征，而且GFW也无法解密分析，从而实现绕墙访问资源。</p>
+<a id="more"></a>
 <h1 id="u642D_u5EFAShadowSocks_u670D_u52A1_u5668"><a href="#u642D_u5EFAShadowSocks_u670D_u52A1_u5668" class="headerlink" title="搭建ShadowSocks服务器"></a>搭建ShadowSocks服务器</h1><p>根据上文描述的ShadowSocks的实现原理，我们首先需要搭建一个境外的ShadowSocks服务器，这部分也是唯一需要我们花点小钱的地方。</p>
 <blockquote>
 <p>以下文章内容均在MacOS下实践。</p>
@@ -695,7 +730,27 @@ Successfully installed shadowsocks-2.8.2
     <summary type="html">
     <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" ]]>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h1 id="u4EC0_u4E48_u662FShadowSocks"><a href="#u4EC0_u4E48_u662FShadowSocks" class="headerlink" title="什么是ShadowSocks"></a>什么是ShadowSocks</h1><p>ShadowSocks是基于Socks5协议，使用类似SSH隧道的方式收发网络请求的一款开源软件，该软件由<a href="https://twitter.com/clowwindy" title="clowwindy"> @clowwindy </a>开发，最初只有Python版本，随后出现C++、C#、Go等多语言版本。ShadowSocks最大的特点是可以保护网络流量、加密数据传输，可有效防止GFW（Great Firewall of China）封杀网络请求。</p>
+<h1 id="u7528ShadowSocks_u79D1_u5B66_u4E0A_u7F51_u7684_u6982_u5FF5"><a href="#u7528ShadowSocks_u79D1_u5B66_u4E0A_u7F51_u7684_u6982_u5FF5" class="headerlink" title="用ShadowSocks科学上网的概念"></a>用ShadowSocks科学上网的概念</h1><p>在以前，我们访问互联网的资源都是简单而直接的，用户的请求发送到资源服务方，比如Google、Facebook等，然后资源服务方直接将内容响应给用户，世界多么美好。</p>
+<p> <img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-9.png" alt=""></p>
+<p>但是，在1998年时候，中国创建了互联网边界审查系统，称之为中国国家防火墙（GFW），这堵墙横在了用户和互联网资源服务方之间，用于监控和过滤互联网国际出口上的内容，监控国际网关的通讯，对认为不匹配国家官方要求的传输内容，进行干扰、阻断、屏蔽。</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shaodwsocksss-10.png" alt=""></p>
+<p>从此之后好多有价值的网站就被堵在了墙后。</p>
+<p>但是由于对知识的渴望，人们想到了绕过GFW的办法，那就是在境外搭建一个国内用户的代理，国内用户与代理之间建立加密的通道，由境外代理请求被墙的网络资源，再通过加密通道返回给国内用户。代理的类型也有多种，像HTTP、Socks、VPN、SSH等。以SSH隧道为例：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-11.png" alt=""></p>
+<p>因为SSH本身基于RSA加密技术，所以GFW就无法对数据传输过程加密的数据进行分析，从而避免被重置链接、阻断、屏蔽等问题。</p>
+<p>但是GFW也不会懵B一世，人家也会学习，由于在创建SSH隧道的过程中有较为明显的特性，所以GFW还是可以通过分析连接的特性进行干扰。此时ShadowSocks横空出世，先看看图示：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-12.png" alt=""></p>
+<p>简单来说，ShadowSocks分为客户端和服务端，用户发出的请求基于Socks5协议与ShadowSocks客户端进行通信，一般情况下SS客户端都在本机，通过ShadowSocksX、GoAgentX等应用启动，所以这一步是不会经过GFW的，然后ShadowSocks提供了多种加密方式供客户端和服务端之间进行通信，并且在经过GFW时是普通的TCP协议数据包，没有明显的特征，而且GFW也无法解密分析，从而实现绕墙访问资源。</p>]]>
+    
     </summary>
     
       <category term="ShadowSocks" scheme="http://www.devtalking.com/tags/ShadowSocks/"/>
@@ -707,7 +762,7 @@ Successfully installed shadowsocks-2.8.2
     <link href="http://www.devtalking.com//articles/read-concurrency-programming-guide-3/"/>
     <id>http://www.devtalking.com//articles/read-concurrency-programming-guide-3/</id>
     <published>2016-04-20T16:00:00.000Z</published>
-    <updated>2016-08-19T01:00:45.000Z</updated>
+    <updated>2018-06-01T16:19:45.377Z</updated>
     <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -727,6 +782,7 @@ Successfully installed shadowsocks-2.8.2
 <h3 id="Dispatch_Queue_u7684Completion_Block"><a href="#Dispatch_Queue_u7684Completion_Block" class="headerlink" title="Dispatch Queue的Completion Block"></a>Dispatch Queue的Completion Block</h3><p>还记得<code>NSOperation</code>的<code>completionBlock</code>属性吗，这个回调函数在任务执行完成后调用，用于处理有些后续工作或者消息通知。在Dispatch Queue中并没有类似的属性，但是我们可以通过其他方式来实现。举一个很常见的应用场景，我们在主线程中分派一个下载图片的任务，让其在二级线程中执行，当图片下载完成后通知主线程，并由主线程将图片显示出来，我们看看简单的代码片段：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DownloadImage</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">dispatchTaskInMainThread</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        dispatch_async(dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="number">0</span>), downloadImage())</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">downloadImage</span><span class="params">()</span></span> -&gt; (() -&gt; ()) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Downloading image in <span class="subst">\(NSThread.currentThread()</span>)"</span>)</span><br><span class="line">            </span><br><span class="line">            dispatch_async(dispatch_get_main_queue()) &#123;</span><br><span class="line">            </span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Handle image and display in <span class="subst">\(NSThread.currentThread()</span>)"</span>)</span><br><span class="line">            </span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们来看看上面代码都做了些什么，首先在<code>dispatchTaskInMainThread</code>方法中，我们使用<code>dispatch_get_global_queue</code>函数获取到全局并发队列，然后将<code>downloadImage</code>下载图片的方法作为任务添加到该全局队列中。在<code>downloadImage</code>方法里，当图片下载完成后通过<code>dispatch_get_main_queue</code>函数获取到主队列，也就是在主线程中对图片进行处理，这样我们就达到了Completion Block的效果。</p>
+<a id="more"></a>
 <h3 id="u5728_u961F_u5217_u4E2D_u5FAA_u73AF_u6267_u884C_u4EFB_u52A1"><a href="#u5728_u961F_u5217_u4E2D_u5FAA_u73AF_u6267_u884C_u4EFB_u52A1" class="headerlink" title="在队列中循环执行任务"></a>在队列中循环执行任务</h3><p>在我们的日常开发中，经常会使用到for循环来处理一些任务，而且这些任务之间也并没有先后顺序的关联，每个任务相对比较独立。遇到这种情况，我们可以用<code>dispatch_apply</code>或<code>dispatch_apply_f</code>函数让任务在队列中循环执行，并且可以是并发执行，这样相比for循环的串行执行要更加效率：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// for循环</span></span><br><span class="line"><span class="keyword">let</span> arr = [<span class="string">"Swift"</span>, <span class="string">"Objective-C"</span>, <span class="string">"Java"</span>, <span class="string">"Delphi"</span>, <span class="string">"C++"</span>]</span><br><span class="line">        </span><br><span class="line"><span class="keyword">for</span> element <span class="keyword">in</span> arr &#123;</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Handle element. the element is <span class="subst">\(element)</span>"</span>)</span><br><span class="line">            </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// dispatch_apply</span></span><br><span class="line">dispatch_apply(arr.<span class="built_in">count</span>, dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="number">0</span>))&#123; index <span class="keyword">in</span></span><br><span class="line">            </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Handle element. the element is <span class="subst">\(arr[index])</span>. Current thread is <span class="subst">\(NSThread.currentThread()</span>)"</span>)</span><br><span class="line">            </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>从上面示例代码片段中可以看到，<code>dispatch_apply</code>函数有三个参数，第一个参数是循环次数，第二个参数是目标队列，第三个则是要执行的闭包任务，循环次数是该闭包的唯一参数。</p>
@@ -839,7 +895,27 @@ Successfully installed shadowsocks-2.8.2
     <summary type="html">
     <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" ]]>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://geek.csdn.net/news/detail/69122">CSDN</a>，如需转载请与CSDN联系。</p>
+<h2 id="u901A_u8FC7Dispatch_Queue_u6267_u884C_u4EFB_u52A1"><a href="#u901A_u8FC7Dispatch_Queue_u6267_u884C_u4EFB_u52A1" class="headerlink" title="通过Dispatch Queue执行任务"></a>通过Dispatch Queue执行任务</h2><p>如果想让Dispatch Queue执行任务，首先就是得将任务放入队列中，我们可以异步的将任务加入队列，也可以同步的将任务加入队列，可以一个任务一个任务的加，也可以一组一组的加。这节我们就来看看将任务加入队列的那些事。</p>
+<h3 id="u5411_u961F_u5217_u6DFB_u52A0_u4EFB_u52A1"><a href="#u5411_u961F_u5217_u6DFB_u52A0_u4EFB_u52A1" class="headerlink" title="向队列添加任务"></a>向队列添加任务</h3><p>我们可以使用<code>dispatch_async</code>或者<code>dispatch_async_f</code>函数异步的向队列中添加任务，也就是说当我们添加完任务后该函数会立即返回，我们不需要等待任务执行完成，而且我们也不会知道队列到底何时开始执行任务。<code>dispatch_async</code>函数有两个参数，一个是目标队列，类型为<code>dispatch_queue_t</code>，另一个是闭包，类型为<code>dispatch_block_t</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> serialQueue = dispatch_queue_create(<span class="string">"com.example.MySerialQueue"</span>, <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">dispatch_async(serialQueue, &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Task in the queue..."</span>)</span><br><span class="line">        </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><code>dispatch_async_f</code>函数有三个参数，第一个是类型为<code>dispatch_queue_t</code>的目标队列，第二个是队列上下文指针，第三个是类型为<code>dispatch_function_t</code>的任务函数，队列上下文指针为该函数的唯一参数：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AddTaskToQueue</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> serialQueue = dispatch_queue_create(<span class="string">"com.example.MySerialQueue"</span>, <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">        dispatch_async(serialQueue, &#123;</span><br><span class="line">        </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Task in the queue..."</span>)</span><br><span class="line">        </span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">        dispatch_async_f(serialQueue, <span class="built_in">unsafeBitCast</span>(<span class="number">0</span>, <span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Int</span>&gt;.<span class="keyword">self</span>), taskFunction())</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">taskFunction</span><span class="params">()</span></span> -&gt; dispatch_function_t &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123; context <span class="keyword">in</span></span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Do some work with context..."</span>)</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> addTaskToQueue = <span class="type">AddTaskToQueue</span>()</span><br><span class="line">addTaskToQueue.launch()</span><br></pre></td></tr></table></figure>
+<p>除了这两个函数，我们还可以使用<code>dispatch_sync</code>和<code>dispatch_sync_f</code>函数同步的向队列中添加任务，并且我们要等待直到任务执行完成。这两个函数和上面的异步添加任务函数用法完全一致。</p>
+<p>那么什么时候用异步什么时候用同步呢，大多数情况下我们都是在主线程中使用GCD分派任务，为了避免阻塞主线程，影响用户体验，所以通常情况下我们都使用异步添加任务的方式。当然为了避免任务与主线程中产生资源竞争的问题，有时候酌情也会使用同步添加任务的方式。</p>
+<h3 id="Dispatch_Queue_u7684Completion_Block"><a href="#Dispatch_Queue_u7684Completion_Block" class="headerlink" title="Dispatch Queue的Completion Block"></a>Dispatch Queue的Completion Block</h3><p>还记得<code>NSOperation</code>的<code>completionBlock</code>属性吗，这个回调函数在任务执行完成后调用，用于处理有些后续工作或者消息通知。在Dispatch Queue中并没有类似的属性，但是我们可以通过其他方式来实现。举一个很常见的应用场景，我们在主线程中分派一个下载图片的任务，让其在二级线程中执行，当图片下载完成后通知主线程，并由主线程将图片显示出来，我们看看简单的代码片段：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DownloadImage</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">dispatchTaskInMainThread</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        dispatch_async(dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="number">0</span>), downloadImage())</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">downloadImage</span><span class="params">()</span></span> -&gt; (() -&gt; ()) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Downloading image in <span class="subst">\(NSThread.currentThread()</span>)"</span>)</span><br><span class="line">            </span><br><span class="line">            dispatch_async(dispatch_get_main_queue()) &#123;</span><br><span class="line">            </span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Handle image and display in <span class="subst">\(NSThread.currentThread()</span>)"</span>)</span><br><span class="line">            </span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们来看看上面代码都做了些什么，首先在<code>dispatchTaskInMainThread</code>方法中，我们使用<code>dispatch_get_global_queue</code>函数获取到全局并发队列，然后将<code>downloadImage</code>下载图片的方法作为任务添加到该全局队列中。在<code>downloadImage</code>方法里，当图片下载完成后通过<code>dispatch_get_main_queue</code>函数获取到主队列，也就是在主线程中对图片进行处理，这样我们就达到了Completion Block的效果。</p>]]>
+    
     </summary>
     
       <category term="Concurrency" scheme="http://www.devtalking.com/tags/Concurrency/"/>
