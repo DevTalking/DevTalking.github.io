@@ -34,7 +34,7 @@
 
 
 
-  <meta name="keywords" content="Swift," />
+  <meta name="keywords" content="Technology,技术," />
 
 
 
@@ -52,10 +52,11 @@
 
 
 
-Swift中的Bool类型是许多原始函数的基础。所以基于它可以展示一个有趣的如何构建基本类型的示例。这篇文章的主旨是在Swift中创建一个类似Bool类型的新类型MyBool。我们希望通过这个简单的示例，能让你更清晰的了解Swift">
+Google是一个伟大的公司，有很多伟大的产品。从Google一直不做桌面系统和对Chrome的大力发展来看，Google对前端事业是非常热衷的。
+AngularAngular、React、Vue是目前前端框架的三驾马车。我在16年">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在Swift中构建布尔类型">
-<meta property="og:url" content="http://www.devtalking.com/articles/swift-boolean/index.html">
+<meta property="og:title" content="《Google力推的那些前端技术，最近有何进展？》笔记">
+<meta property="og:url" content="http://www.devtalking.com/articles/google-web-tech/index.html">
 <meta property="og:site_name" content="程序员说">
 <meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
 
@@ -64,10 +65,11 @@ Swift中的Bool类型是许多原始函数的基础。所以基于它可以展�
 
 
 
-Swift中的Bool类型是许多原始函数的基础。所以基于它可以展示一个有趣的如何构建基本类型的示例。这篇文章的主旨是在Swift中创建一个类似Bool类型的新类型MyBool。我们希望通过这个简单的示例，能让你更清晰的了解Swift">
-<meta property="og:updated_time" content="2016-08-19T01:13:48.000Z">
+Google是一个伟大的公司，有很多伟大的产品。从Google一直不做桌面系统和对Chrome的大力发展来看，Google对前端事业是非常热衷的。
+AngularAngular、React、Vue是目前前端框架的三驾马车。我在16年">
+<meta property="og:updated_time" content="2018-06-01T17:22:58.513Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="在Swift中构建布尔类型">
+<meta name="twitter:title" content="《Google力推的那些前端技术，最近有何进展？》笔记">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
 
 
@@ -75,7 +77,8 @@ Swift中的Bool类型是许多原始函数的基础。所以基于它可以展�
 
 
 
-Swift中的Bool类型是许多原始函数的基础。所以基于它可以展示一个有趣的如何构建基本类型的示例。这篇文章的主旨是在Swift中创建一个类似Bool类型的新类型MyBool。我们希望通过这个简单的示例，能让你更清晰的了解Swift">
+Google是一个伟大的公司，有很多伟大的产品。从Google一直不做桌面系统和对Chrome的大力发展来看，Google对前端事业是非常热衷的。
+AngularAngular、React、Vue是目前前端框架的三驾马车。我在16年">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -87,7 +90,7 @@ Swift中的Bool类型是许多原始函数的基础。所以基于它可以展�
 
 
 
-  <title> 在Swift中构建布尔类型 | 程序员说 </title>
+  <title> 《Google力推的那些前端技术，最近有何进展？》笔记 | 程序员说 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="">
@@ -212,7 +215,7 @@ Swift中的Bool类型是许多原始函数的基础。所以基于它可以展�
             
             
               
-                在Swift中构建布尔类型
+                《Google力推的那些前端技术，最近有何进展？》笔记
               
             
           </h1>
@@ -221,8 +224,8 @@ Swift中的Bool类型是许多原始函数的基础。所以基于它可以展�
         <div class="post-meta">
           <span class="post-time">
             發表於
-            <time itemprop="dateCreated" datetime="2014-08-06T00:00:00+08:00" content="2014-08-06">
-              2014-08-06
+            <time itemprop="dateCreated" datetime="2017-01-09T00:00:00+08:00" content="2017-01-09">
+              2017-01-09
             </time>
           </span>
 
@@ -232,8 +235,8 @@ Swift中的Bool类型是许多原始函数的基础。所以基于它可以展�
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/swift-boolean/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-boolean/" itemprop="commentsCount"></span>
+              <a href="/articles/google-web-tech/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/google-web-tech/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -260,98 +263,50 @@ Swift中的Bool类型是许多原始函数的基础。所以基于它可以展�
 </script>
 
 
-<p>Swift中的<code>Bool</code>类型是许多原始函数的基础。所以基于它可以展示一个有趣的如何构建基本类型的示例。这篇文章的主旨是在Swift中创建一个类似<code>Bool</code>类型的新类型<code>MyBool</code>。我们希望通过这个简单的示例，能让你更清晰的了解Swift语言的工作原理。  </p>
-<p>让我们从最基本的定义开始。我们用枚举来定义<code>MyBool</code>类型的模型，它有两个不同的<code>case</code>：</p>
-<pre><code>enum MyBool {
-    case myTrue, myFalse
-}
-</code></pre><p>为了使大家不会产生混淆，这篇文章中我们将<code>MyBool</code>的两个<code>case</code>命名为<code>myTrue</code>和<code>myFalse</code>。我们希望<code>MyBool</code>的构造函数<code>MyBool()</code>将其自身赋值为<code>false</code>，所以我们提供了如下<code>init</code>方法：</p>
-<pre><code>extension MyBool {
-    init() { self = .myFalse }
-}
-</code></pre><p>Swift中的枚举会隐式的在它们自身内申明其枚举检索器的范围，允许我们使用<code>MyBool.myFalse</code>这种语法调用其成员，如果根据上下文可以推断出类型的话，我们甚至可以使用<code>.myFalse</code>调用其成员。但是在真正使用中，我们还是希望使用原始的<code>true</code>和<code>false</code>关键字。想要做到这一点，我们的新类型<code>MyBool</code>需要遵循<code>BooleanLiteralConvertible</code>协议，像这样：</p>
-<pre><code>extension MyBool : BooleanLiteralConvertible {
-    static func convertFromBooleanLiteral(value: Bool) -&gt; MyBool {
-        return value ? myTrue : myFalse
-    }
-}
-
-// 我们现在就可以给MyBool类型的变量赋值为true或false.
-var a : MyBool = true
-</code></pre><p>通过以上设置，我们有了自己的基本类型，但是目前我们用它还做不了什么。布尔值需要通过<code>if</code>条件语句进行测试。在Swift中，我们通过<code>BooleanType</code>协议来做到这一点，该协议允许任意类型用于进行逻辑判断：</p>
-<pre><code>extension MyBool : BooleanType {
-    func getBooleanType() -&gt; Bool {
-        switch self {
-        case .myTrue: return true
-        case .myFalse: return false
-        }
-    }   
-}
-
-// 现在我们就可以将MyBool类型的变量a用于&apos;if&apos;和&apos;while&apos;语句中进行测试.
-if a {}
-</code></pre><p>我们更希望所有遵循了<code>BooleanType</code>协议的类型都要强制转换为<code>MyBool</code>类型，所以我们可以这样写：</p>
-<pre><code>extension MyBool {
-    // MyBool类型构造函数的参数设定为BooleanType类型.
-    init(_ v : BooleanType) {
-        if v.getBooleanType() {
-            self = .myTrue
-        } else {
-            self = .myFalse
-        }
-    }
-}
-
-// 现在我们就可以这样进行转换了.
-var basicBool : Bool = true
-a = MyBool(basicBool)
-</code></pre><p>注意构造函数里的<code>_</code>，它可以使我们在使用构造函数时省略参数命名。可以使用<code>MyBool(x)</code>这种语法，而不用使用<code>MyBool(v: x)</code>这种啰嗦的语法。  </p>
-<p>现在我们有了基本的功能，现在让我们来定义它的操作符，先来看看如何定义<code>==</code>操作符。没有关联数据的简单的枚举（像<code>MyBool</code>一样）是由编译器自动认为遵循<code>Equatable</code>协议进行编译的，所以没有必须要实现额外的代码。尽管如此，你也可以让任意类型遵循<code>Equatable</code>协议，并实现<code>==</code>操作符。比如我们的<code>MyBool</code>类型：</p>
-<pre><code>extension MyBool : Equatable {
-}
-
-func ==(lhs: MyBool, rhs: MyBool) -&gt; Bool {
-    switch (lhs, rhs) {
-    case (.myTrue,.myTrue), (.myFalse,.myFalse):
-        return true
-    default:
-        return false
-    }
-}
-
-// 现在我们就可以使用==和!=进行比较了.
-if a == a {}
-if a != a {}
-</code></pre><p>这里我们在<code>swich</code>语句中使用简单的匹配模式来处理。由于<code>MyBool</code>现在遵循了<code>Equatable</code>协议，所以他已经自动实现了<code>!=</code>操作符。再让我们加一些二进制运算符：</p>
-<pre><code>func &amp;(lhs: MyBool, rhs: MyBool) -&gt; MyBool {
-    if lhs {
-        return rhs
-    }
-    return false
-}
-
-func |(lhs: MyBool, rhs: MyBool) -&gt; MyBool {
-    if lhs {
-        return true
-    }
-    return rhs
-}
-
-func ^(lhs: MyBool, rhs: MyBool) -&gt; MyBool {
-    return MyBool(lhs != rhs)
-}
-</code></pre><p>有了基本的运算符后，我们就可以实现各种有用的一元和复合赋值运算符，比如：</p>
-<pre><code>prefix func !(a: MyBool) -&gt; MyBool {
-    return a ^ true
-}
-
-// 复合赋值（按位）
-func &amp;=(inout lhs: MyBool, rhs: MyBool) {
-    lhs = lhs &amp; rhs
-}
-</code></pre><p><code>&amp;=</code>运算符将左边的运算对象作为<code>inout</code>对象，因为要对它进行读写操作，并且其效果对于操作者是可见的。Swift提供的值类型，使我们可以完全掌控丰富多变的各种操作，比如<code>enum</code>和<code>struct</code>。</p>
-<p>至此，简单的<code>MyBool</code>类型已经具备了基本的运算符操作。希望这篇文章能给你一些思路，使你能够在自己的代码中构建更高级更复杂的类型。  </p>
-<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=8" target="_blank" rel="external">Boolean</a></p>
+<p>Google是一个伟大的公司，有很多伟大的产品。从Google一直不做桌面系统和对Chrome的大力发展来看，Google对前端事业是非常热衷的。</p>
+<h2 id="Angular"><a href="#Angular" class="headerlink" title="Angular"></a>Angular</h2><p>Angular、React、Vue是目前前端框架的三驾马车。我在16年9月写过一篇文章<a href="http://www.devtalking.com/articles/angularjs1x-guide/">《温故而知新-AngularJS 1.x 小记》</a>，当时还叫AngularJS，版本是1.X，那时已经很惊艳了，把前端解释性的脚本语言封装成了面向对象的编程模式，另外对HTML的元素维护提供了便利的方式方法。当时我负责的BPM产品，Process Builder的前端架构果断更新为了AngularJS。时隔两年多，Angular 6都已经发布了，如果我还有机会做前端产品的话，我应该还是会果断选择Angular。</p>
+<blockquote>
+<p>Angular 6 添加了ng update和ng add这样的新功能，让你的应用程序保持最新的状态，帮助Angular开发者加快创新的步伐。渲染器Project Ivy也有很大的改进，它能使Angular调试更容易，以更快地速度编译和运行，它还可以与现有的应用程序一起使用，Angular团队还在小型Hello World应用程序做了演示，不使用的Angular功能将自动从应用的JavaScript bundle自动删除。</p>
+</blockquote>
+<h2 id="PWA"><a href="#PWA" class="headerlink" title="PWA"></a>PWA</h2><p>在移动的世界里，Application是重中之重，是构建移动生态的核心。那么构建Mobile App的方式的问题就来了。</p>
+<ul>
+<li>Native App：既用iOS的原生语言OC、Swift或Android原生语言Java构建的App。</li>
+<li>Web App：既使用前端框架和技术（Angular、React、Vue，HTML 5，CSS 3等）构建的，在移动设备上运行展现的App。</li>
+<li>Native &amp; Web App：原生语言和Web技术混搭构建的App。这类App还孕育出了像React Native这种使用前端语言解析为原生语言的框架。</li>
+</ul>
+<p>以上三种类型各有利弊：</p>
+<ul>
+<li>Native App给用户的体验是最好的，交互动画效果平滑，可以基于硬件的性能做优化等。但是研发周期比较长，并且因为iOS和Android应用的审核机制，导致版本更新周期比较长，修复完问题或有新需求增加后无法做到及时更系用户设备上的App。</li>
+<li>Web App可以做到版本的热更新，研发周期短，Web端和移动端可共享研发资源。但是用户体验比较差，一些需要使用到硬件功能不好实现。</li>
+<li>Native &amp; Web App则致力于综合他们的优点，规避他们的缺点。</li>
+</ul>
+<p>Progressive Web App（<a href="https://lavas.baidu.com/pwa" target="_blank" rel="external">PWA</a>）就是Google推出的提升Web App体验，给用户原生应用体验的框架。主要特点包括：</p>
+<ul>
+<li>可靠 - 即使在不稳定的网络环境下，也能瞬间加载并展现。</li>
+<li>体验 - 快速响应，并且有平滑的动画响应用户的操作</li>
+<li>粘性 - 像设备上的原生应用，具有沉浸式的用户体验，用户可以添加到桌面<br>目前已支持Android，iOS 11.3以后版本，Safari，Chrome，MS Edge。</li>
+</ul>
+<a id="more"></a>
+<h2 id="Service_Worker"><a href="#Service_Worker" class="headerlink" title="Service Worker"></a>Service Worker</h2><p><a href="https://developers.google.com/web/fundamentals/primers/service-workers/?hl=zh-cn" target="_blank" rel="external">Service Worker</a>是Chrome团队力推的一个Web API，它将开发人员从页面的生命周期中解放出来，运行于浏览器后台，可以控制打开作用范围下的所有页面请求，使Web应用程序能够脱机工作，打开了通向不需要网页或用户交互的功能的大门。目前，它们已包括如推送通知和后台同步等功能。将来，还会支持如定期同步或地理围栏等其他功能。</p>
+<p>服务工作线程相关注意事项：</p>
+<ul>
+<li>它是一种 JavaScript 工作线程，无法直接访问 DOM。 服务工作线程通过响应 postMessage 接口发送的消息来与其控制的页面通信，页面可在必要时对 DOM 执行操作。</li>
+<li>服务工作线程是一种可编程网络代理，让您能够控制页面所发送网络请求的处理方式。</li>
+<li>它在不用时会被中止，并在下次有需要时重启，因此，您不能依赖于服务工作线程的 onfetch 和 onmessage 处理程序中的全局状态。如果存在您需要持续保存并在重启后加以重用的信息，服务工作线程可以访问 IndexedDB API。</li>
+<li>服务工作线程广泛地利用了 promise，因此如果您不熟悉 promise，则应停下阅读此内容，看一看 Promise 简介。</li>
+</ul>
+<h2 id="WebAssembly"><a href="#WebAssembly" class="headerlink" title="WebAssembly"></a>WebAssembly</h2><p><a href="http://webassembly.org.cn/" target="_blank" rel="external">WebAssembly</a>是由主浏览器厂商组成的W3C社区团体制定的一个新的规范。是一个字节码技术的底层编程语言，是一种编译性语言，它能使网站能够运行用C或C ++等语言编写的高性能低级代码，为Web打开了新世界，今年3月，来自Autodesk的AutoCAD就采用了35年前的代码库，并用WebAssembly编译让其直接在浏览器中运行，这意味着，无论你的设备或操作系统如何，你都可以直接在浏览器中用CAD绘图。</p>
+<p>同样是增强Web交互和承载内容的工具。</p>
+<h2 id="Polymer"><a href="#Polymer" class="headerlink" title="Polymer"></a>Polymer</h2><p><a href="https://www.ibm.com/developerworks/cn/web/wa-polymer/index.html" target="_blank" rel="external">Polymer</a> 是Google主推的一个 JavaScript 库，它可帮助你创建自定义的可重用 HTML 元素，并使用它们来构建高性能、可维护的 App。它的目的就是使用可重用的、可组合的、可视的功能组件组装现代的移动 Web 应用程序。</p>
+<h2 id="AMP"><a href="#AMP" class="headerlink" title="AMP"></a>AMP</h2><p><a href="https://www.ampproject.org/zh_cn/learn/overview/" target="_blank" rel="external">Accelerated Mobile Pages（AMP）</a>是Google带领开发的开源项目，目的是为提升移动设备对网站的访问速度。主要分为AMP HTML、AMP JS、AMP Cache三部分：</p>
+<ul>
+<li>AMP HTML是描述网页所用的标记语言，相当于普通网页使用的HTML之亚种。AMP HTML在图像显示等方面使用与HTML不同的专用标签，另外还限制了HTML部分功能的使用。</li>
+<li>AMP JS是一套JavaScript库，保证AMP HTML的正确和快速显示。除此之外，AMP JS还负责在只支持普通HTML的浏览器中担任桥梁，使其能正确支持AMP HTML的专用功能。AMP HTML中可以调用该函数库。</li>
+<li>AMP Cache是缓存并传输AMP页面的CDN，进一步提高AMP网页的性能。用户在搜索引擎中点击AMP网页时，实际上访问的是优化后的缓存页面。Google的AMP Cache名为Google AMP Cache。</li>
+</ul>
+<h2 id="Lighthouse"><a href="#Lighthouse" class="headerlink" title="Lighthouse"></a>Lighthouse</h2><p>Lighthouse是一个分析网络质量的工具，为你提供网站性能衡量指标和指导，它可以直接从Chrome DevTools内部进行访问，从命令行运行或与其他开发产品集成，仅在2018年，就有50万开发人员在他们的网站上运行Lighthouse。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>以上技术几乎是一套构建高性能高质量Web App的组合套装。Angular作为构建Web App的总框架，使用Polymer和AMP保证性能，使用PWA和Service Worker使Web App达到原生的体验，使用WebAssembly进一步增加Web App的交互和展示内容，最后使用Lighthouse对性能质量监控护航。</p>
+<p>阅读文章：<a href="http://www.infoq.com/cn/news/2018/05/Google-arch-development" target="_blank" rel="external">《Google力推的那些前端技术，最近有何进展？》</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -367,7 +322,9 @@ func &amp;=(inout lhs: MyBool, rhs: MyBool) {
       
         <div class="post-tags">
           
-            <a href="/tags/Swift/" rel="tag">#Swift</a>
+            <a href="/tags/Technology/" rel="tag">#Technology</a>
+          
+            <a href="/tags/技术/" rel="tag">#技术</a>
           
         </div>
       
@@ -376,17 +333,13 @@ func &amp;=(inout lhs: MyBool, rhs: MyBool) {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/articles/swift-reusable-datasource/" rel="next" title="基于Swift构建可复用的UITableViewDataSource">
-                <i class="fa fa-chevron-left"></i> 基于Swift构建可复用的UITableViewDataSource
+              <a href="/articles/talk-about-tech/" rel="next" title="《当我们聊技术实力的时候，我们到底在聊什么》笔记">
+                <i class="fa fa-chevron-left"></i> 《当我们聊技术实力的时候，我们到底在聊什么》笔记
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/articles/app-extensions-increase-your-impact/" rel="prev" title="APP扩展提高你的影响力 -- iOS8/OS X v10.10应用扩展编程指南">
-                APP扩展提高你的影响力 -- iOS8/OS X v10.10应用扩展编程指南 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -530,7 +483,7 @@ func &amp;=(inout lhs: MyBool, rhs: MyBool) {
           <div class="post-toc">
             
             
-              <p class="post-toc-empty">此文章未包含目錄</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Angular"><span class="nav-number">1.</span> <span class="nav-text">Angular</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PWA"><span class="nav-number">2.</span> <span class="nav-text">PWA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Service_Worker"><span class="nav-number">3.</span> <span class="nav-text">Service Worker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebAssembly"><span class="nav-number">4.</span> <span class="nav-text">WebAssembly</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Polymer"><span class="nav-number">5.</span> <span class="nav-text">Polymer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AMP"><span class="nav-number">6.</span> <span class="nav-text">AMP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lighthouse"><span class="nav-number">7.</span> <span class="nav-text">Lighthouse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u603B_u7ED3"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -585,9 +538,9 @@ func &amp;=(inout lhs: MyBool, rhs: MyBool) {
 
     <script type="text/javascript">
       var disqus_shortname = 'jacefu';
-      var disqus_identifier = '/articles/swift-boolean/';
-      var disqus_title = '在Swift中构建布尔类型';
-      var disqus_url = 'http://www.devtalking.com//articles/swift-boolean/';
+      var disqus_identifier = '/articles/google-web-tech/';
+      var disqus_title = '《Google力推的那些前端技术，最近有何进展？》笔记';
+      var disqus_url = 'http://www.devtalking.com//articles/google-web-tech/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
