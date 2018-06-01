@@ -192,6 +192,163 @@
             
             
               
+                <a class="post-title-link" href="/articles/swift-nil-coalescing/" itemprop="url">
+                  Swift中Nil Coalescing运算符的使用技巧
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-13T00:00:00+08:00" content="2014-08-13">
+              2014-08-13
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/swift-nil-coalescing/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-nil-coalescing/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>在Swift官方《The Swift Programming Language》文档的<code>Basic Operators</code>一节中添加了<code>Nil Coalescing Operator</code>小结，介绍了一个新的运算符<strong>Nil Coalescing</strong>，符号是<code>??</code>，它的表现形成如下：</p>
+<pre><code>let c = a ?? b
+</code></pre><p>这个运算符有两个条件：</p>
+<ul>
+<li><code>a</code>必须是<code>Optional</code>类型的。</li>
+<li><code>b</code>的类型必须要和<code>a</code>解包后的值类型一致。</li>
+</ul>
+<p>符合这两个条件后，我们来解释一下上述这行代码，意思就是<code>c</code>的值是<code>a</code>或<code>b</code>中一个的值，但有前提条件，就是当<code>a</code>解包后值不为<code>nil</code>时，那么就将<code>a</code>解包后的值赋值给<code>c</code>，如果<code>a</code>解包后值为<code>nil</code>，那么就将<code>b</code>的值赋值给<code>c</code>。</p>
+<p>我们还可以用三目运算来更形象的解释这个运算符：</p>
+<pre><code>let c = a != nil ? a! : b
+</code></pre><p>从上面的代码我们很容易理解，当<code>a</code>的值不等于<code>nil</code>时，将<code>a</code>解包后的值赋值给<code>c</code>，否则将<code>b</code>的值赋值给<code>c</code>。</p>
+<p>我们来看看官方给的代码示例：</p>
+<pre><code>let defaultColorName = &quot;red&quot;
+var userDefinedColorName: String?   // 默认值为nil
+
+var colorNameToUse = userDefinedColorName ?? defaultColorName
+// 因为userDefinedColorName的值是nil，所以colorNameToUse的值为&quot;red&quot;
+
+
+userDefinedColorName = &quot;green&quot;
+colorNameToUse = userDefinedColorName ?? defaultColorName
+// 因为userDefinedColorName的值不为nil，所以colorNameToUse的值为&quot;green&quot;
+</code></pre><p>大家看到这应该对<strong>Nil Coalescing</strong>这个运算符有比较清晰的理解了，但在实际运用中，我们还需要注意以下几点。</p>
+<h2 id="u7F16_u8BD1_u5668_u4E2D_u7684_u7C7B_u578B_u5339_u914D_u539F_u5219"><a href="#u7F16_u8BD1_u5668_u4E2D_u7684_u7C7B_u578B_u5339_u914D_u539F_u5219" class="headerlink" title="编译器中的类型匹配原则"></a>编译器中的类型匹配原则</h2><blockquote>
+<p>原谅我在末尾加的<code>;</code>，编码习惯而已 = =|| </p>
+</blockquote>
+<p>我们先来看一段代码：</p>
+<pre><code>let a: Int? = nil;
+let b: Int? = 7;
+
+let c = a != nil ? a! : b; // 因为a的默认值为nil，所以c的值为{Some 7}
+let d = a ?? b; // 这里d的值为nil，这是怎么回事？
+</code></pre><p>首先我们需要注意的是，在官方文档中有这么一句话：<code>“The expression b must match the type that is stored inside a”</code>。但是上面的代码示例中，我们的<code>b</code>是<code>Int?</code>类型，那么此时我们的编译器会怎么处理呢？我们通过自己实现一个Nil Coalescing运算符来说明，代码片段如下：</p>
+<pre><code>infix operator ??? {
+    associativity right;
+    precedence 110;
+}
+
+func ???&lt;T&gt;(a: T?, b: @autoclosure () -&gt; T) -&gt; T {
+    return a != nil ? a! : b();
+}
+
+let d = a ??? b; // 这里d的值仍然是nil
+</code></pre><p>从上面的代码片段中我们可以看出，<code>a</code>的类型是根据传入的<code>b</code>的类型决定的，所以当我们传入的<code>b</code>是<code>Int?</code>类型时，编译器其实将<code>a</code>的类型自动转换为<code>Int??</code>类型了，也就是<code>Optional(a)</code>，那么我们就能解释<code>let d = a ?? b;</code>这行代码。因为<code>a == nil</code>但是<code>Optional(a) != nil</code>，所以<code>d = Optional(a)!</code>，<code>d</code>的值为<code>nil</code>。</p>
+<h2 id="Nil_Coalescing_u8FD0_u7B97_u7B26_u8FD4_u56DE_u503C_u7684_u7C7B_u578B"><a href="#Nil_Coalescing_u8FD0_u7B97_u7B26_u8FD4_u56DE_u503C_u7684_u7C7B_u578B" class="headerlink" title="Nil Coalescing运算符返回值的类型"></a>Nil Coalescing运算符返回值的类型</h2><p>我们先看示例代码片段：</p>
+<pre><code>let a: Int? = nil;
+let b: Int? = 5;
+let c: Int? = 6;
+
+// 因为a的默认值为nil，所以将b的值赋值给x，x的值为{Some 5}，类型为Int?
+let x = a != nil ? a! : b;
+// 因为c的值不为nil，所以将c解包后的值赋值给y，但是y的值却是{Some 6}，而不是6，这是怎么回事？
+let y = c != nil ? c! : b;
+</code></pre><p>根据上面我们提到的编译器中类型判断的原则就可以理解了，因为<code>b</code>的类型是<code>Int?</code>，所以在编译时<code>c</code>的类型已经成了<code>Int??</code>,所以为<code>Int??</code>解包的类型就是<code>Int?</code>了。</p>
+<p>如果我们声明变量<code>y</code>的类型，编译器就要提出抗议了：</p>
+<pre><code>// 如何a为Int?类型，那么编译器就不会通过，因为会导致赋值运算符两边类型不等
+let x: Int = a != nil ? a! : b;
+
+// 这种写法和上面一样，都不会编译通过
+let y: Int = a ?? b;
+</code></pre><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/creating-an-app-extension/" itemprop="url">
                   开发应用扩展 -- iOS8/OS X v10.10应用扩展编程指南
                 </a>
@@ -847,200 +1004,11 @@ scene.physicsWorld.contactDelegate = contactDelegate
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/swift-boolean/" itemprop="url">
-                  在Swift中构建布尔类型
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-08-06T00:00:00+08:00" content="2014-08-06">
-              2014-08-06
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/swift-boolean/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-boolean/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>Swift中的<code>Bool</code>类型是许多原始函数的基础。所以基于它可以展示一个有趣的如何构建基本类型的示例。这篇文章的主旨是在Swift中创建一个类似<code>Bool</code>类型的新类型<code>MyBool</code>。我们希望通过这个简单的示例，能让你更清晰的了解Swift语言的工作原理。  </p>
-<p>让我们从最基本的定义开始。我们用枚举来定义<code>MyBool</code>类型的模型，它有两个不同的<code>case</code>：</p>
-<pre><code>enum MyBool {
-    case myTrue, myFalse
-}
-</code></pre><p>为了使大家不会产生混淆，这篇文章中我们将<code>MyBool</code>的两个<code>case</code>命名为<code>myTrue</code>和<code>myFalse</code>。我们希望<code>MyBool</code>的构造函数<code>MyBool()</code>将其自身赋值为<code>false</code>，所以我们提供了如下<code>init</code>方法：</p>
-<pre><code>extension MyBool {
-    init() { self = .myFalse }
-}
-</code></pre><p>Swift中的枚举会隐式的在它们自身内申明其枚举检索器的范围，允许我们使用<code>MyBool.myFalse</code>这种语法调用其成员，如果根据上下文可以推断出类型的话，我们甚至可以使用<code>.myFalse</code>调用其成员。但是在真正使用中，我们还是希望使用原始的<code>true</code>和<code>false</code>关键字。想要做到这一点，我们的新类型<code>MyBool</code>需要遵循<code>BooleanLiteralConvertible</code>协议，像这样：</p>
-<pre><code>extension MyBool : BooleanLiteralConvertible {
-    static func convertFromBooleanLiteral(value: Bool) -&gt; MyBool {
-        return value ? myTrue : myFalse
-    }
-}
-
-// 我们现在就可以给MyBool类型的变量赋值为true或false.
-var a : MyBool = true
-</code></pre><p>通过以上设置，我们有了自己的基本类型，但是目前我们用它还做不了什么。布尔值需要通过<code>if</code>条件语句进行测试。在Swift中，我们通过<code>BooleanType</code>协议来做到这一点，该协议允许任意类型用于进行逻辑判断：</p>
-<pre><code>extension MyBool : BooleanType {
-    func getBooleanType() -&gt; Bool {
-        switch self {
-        case .myTrue: return true
-        case .myFalse: return false
-        }
-    }   
-}
-
-// 现在我们就可以将MyBool类型的变量a用于&apos;if&apos;和&apos;while&apos;语句中进行测试.
-if a {}
-</code></pre><p>我们更希望所有遵循了<code>BooleanType</code>协议的类型都要强制转换为<code>MyBool</code>类型，所以我们可以这样写：</p>
-<pre><code>extension MyBool {
-    // MyBool类型构造函数的参数设定为BooleanType类型.
-    init(_ v : BooleanType) {
-        if v.getBooleanType() {
-            self = .myTrue
-        } else {
-            self = .myFalse
-        }
-    }
-}
-
-// 现在我们就可以这样进行转换了.
-var basicBool : Bool = true
-a = MyBool(basicBool)
-</code></pre><p>注意构造函数里的<code>_</code>，它可以使我们在使用构造函数时省略参数命名。可以使用<code>MyBool(x)</code>这种语法，而不用使用<code>MyBool(v: x)</code>这种啰嗦的语法。  </p>
-<p>现在我们有了基本的功能，现在让我们来定义它的操作符，先来看看如何定义<code>==</code>操作符。没有关联数据的简单的枚举（像<code>MyBool</code>一样）是由编译器自动认为遵循<code>Equatable</code>协议进行编译的，所以没有必须要实现额外的代码。尽管如此，你也可以让任意类型遵循<code>Equatable</code>协议，并实现<code>==</code>操作符。比如我们的<code>MyBool</code>类型：</p>
-<pre><code>extension MyBool : Equatable {
-}
-
-func ==(lhs: MyBool, rhs: MyBool) -&gt; Bool {
-    switch (lhs, rhs) {
-    case (.myTrue,.myTrue), (.myFalse,.myFalse):
-        return true
-    default:
-        return false
-    }
-}
-
-// 现在我们就可以使用==和!=进行比较了.
-if a == a {}
-if a != a {}
-</code></pre><p>这里我们在<code>swich</code>语句中使用简单的匹配模式来处理。由于<code>MyBool</code>现在遵循了<code>Equatable</code>协议，所以他已经自动实现了<code>!=</code>操作符。再让我们加一些二进制运算符：</p>
-<pre><code>func &amp;(lhs: MyBool, rhs: MyBool) -&gt; MyBool {
-    if lhs {
-        return rhs
-    }
-    return false
-}
-
-func |(lhs: MyBool, rhs: MyBool) -&gt; MyBool {
-    if lhs {
-        return true
-    }
-    return rhs
-}
-
-func ^(lhs: MyBool, rhs: MyBool) -&gt; MyBool {
-    return MyBool(lhs != rhs)
-}
-</code></pre><p>有了基本的运算符后，我们就可以实现各种有用的一元和复合赋值运算符，比如：</p>
-<pre><code>prefix func !(a: MyBool) -&gt; MyBool {
-    return a ^ true
-}
-
-// 复合赋值（按位）
-func &amp;=(inout lhs: MyBool, rhs: MyBool) {
-    lhs = lhs &amp; rhs
-}
-</code></pre><p><code>&amp;=</code>运算符将左边的运算对象作为<code>inout</code>对象，因为要对它进行读写操作，并且其效果对于操作者是可见的。Swift提供的值类型，使我们可以完全掌控丰富多变的各种操作，比如<code>enum</code>和<code>struct</code>。</p>
-<p>至此，简单的<code>MyBool</code>类型已经具备了基本的运算符操作。希望这篇文章能给你一些思路，使你能够在自己的代码中构建更高级更复杂的类型。  </p>
-<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=8" target="_blank" rel="external">Boolean</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1078,7 +1046,7 @@ func &amp;=(inout lhs: MyBool, rhs: MyBool) {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">75</span>
+              <span class="site-state-item-count">76</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1092,7 +1060,7 @@ func &amp;=(inout lhs: MyBool, rhs: MyBool) {
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-count">40</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
@@ -1160,7 +1128,7 @@ func &amp;=(inout lhs: MyBool, rhs: MyBool) {
       <div class="footer-inner"> <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>

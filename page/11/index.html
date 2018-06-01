@@ -192,6 +192,181 @@
             
             
               
+                <a class="post-title-link" href="/articles/swift-uikit-dynamics-1/" itemprop="url">
+                  Swift中的UIKit动力学（一）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-23T00:00:00+08:00" content="2014-08-23">
+              2014-08-23
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/swift-uikit-dynamics-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-uikit-dynamics-1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p><strong>动力学</strong>这个名词不论在哪个行业领域听起来似乎都很高大上。那么在Swift中的重力学是什么呢？那就是将我们移动端屏幕上毫无生命力的东西也置于万有引力中，使它们能够展现出好像真的由于引力而向下坠落以及碰到物体后自然的弹开的效果。  </p>
+<p>要想做到这一点，我们得需要两个利器：<code>UIKit Dynamics</code>和<code>Motion Effects</code>。</p>
+<ul>
+<li><code>UIKit Dynamics</code>是<code>UIKit</code>中一套完整的物理引擎。它可以让我们在程序中对界面元素添加一些行为从而达到诸如重力、弹簧等现实中的动作行为。你只需在引擎中注册界面元素，并指定好物理行为，其他的事就交给物理引擎去完成了。</li>
+<li><code>Motion Effects</code>可以创建很酷的视差效果，就像你iPhone上横竖屏切换时那样。它基于Apple提供的重力加速器提供的数据计算分析，使我们的界面元素根据移动设备的倾斜方向做出相应的反应。  </li>
+</ul>
+<p>当这两者一起使用的时候，我们就可以让程序活起来，富有生命力。</p>
+<h2 id="u8BA9_u6211_u4EEC_u5F00_u59CB_u5C4C_u4E1D_u7684_u9006_u88AD"><a href="#u8BA9_u6211_u4EEC_u5F00_u59CB_u5C4C_u4E1D_u7684_u9006_u88AD" class="headerlink" title="让我们开始屌丝的逆袭"></a>让我们开始屌丝的逆袭</h2><p>我们挑一些小例子来学习<code>UIKit Dynamics</code>。</p>
+<blockquote>
+<p>注：由于个人编码习惯，在Swift代码中我还是加了<code>;</code>，其实可加可不加，根据大家喜好。</p>
+</blockquote>
+<p>打开Xcode6新建项目，选择<code>iOS Application/Single View Application</code>，名称随便取，我这里命名为<code>UIKitDynamicsDemo</code>，我们可以看到<code>Single View Application</code>的目录结构：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics1.png" alt="目录结构"> </p>
+<p>打开<code>ViewController.swift</code>文件，在<code>viewDidLoad</code>方法中添加如下代码：  </p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 创建一个正方形View，颜色设置为蓝绿色，加入当前的View中</span></span><br><span class="line"><span class="keyword">let</span> square = <span class="type">UIView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">100</span>, y: <span class="number">100</span>, width: <span class="number">100</span>, height: <span class="number">100</span>));</span><br><span class="line">square.backgroundColor = <span class="type">UIColor</span>.cyanColor();</span><br><span class="line"><span class="keyword">self</span>.view.addSubview(square);</span><br></pre></td></tr></table></figure>
+<p>上面的代码在我们的屏幕上添加了一个蓝绿色的正方形<code>UIView</code>。运行一下，我们能看到一个木讷的蓝绿色正方形静静的待在屏幕中：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics2.png" alt="屏幕"></p>
+<p>如果你用真机运行，你可以摇晃一下手机、倾斜手机、拿着手机手舞足蹈一下，看看那个木讷的方块有什么反应和变化么？答案是要有反应你就见鬼了。因为我们写的这几行代码只能让它杵在那一动不动，那怎么能让它动起来呢？接下来让我们见证奇迹的时刻！</p>
+<h2 id="u6DFB_u52A0_u91CD_u529B_u884C_u4E3A"><a href="#u6DFB_u52A0_u91CD_u529B_u884C_u4E3A" class="headerlink" title="添加重力行为"></a>添加重力行为</h2><p>在<code>ViewController.swift</code>文件中添加两个属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// UIKit物理引擎</span></span><br><span class="line"><span class="keyword">var</span> animator: <span class="type">UIDynamicAnimator</span>!;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 重力行为</span></span><br><span class="line"><span class="keyword">var</span> gravity: <span class="type">UIGravityBehavior</span>!;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注：代码中感叹号的作用这里不做过多介绍，请自行查阅官方文档。</p>
+</blockquote>
+<p>然后在<code>viewDidLoad</code>方法中再加入以下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化UIKit物理引擎类，作用于ViewController的View</span></span><br><span class="line">animator = <span class="type">UIDynamicAnimator</span>(referenceView: <span class="keyword">self</span>.view);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 实例化重力行为类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">gravity = <span class="type">UIGravityBehavior</span>(items: [square]);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 将重力行为添加到UIKit物理引擎类中</span></span><br><span class="line">animator.addBehavior(gravity);</span><br></pre></td></tr></table></figure>
+<p>现在再编译运行一下，这时我们可以看到这个蓝绿色正方形开始做自由落体运动了，一直跌落出屏幕下边缘然后消失。  </p>
+<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics61.gif" alt="屏幕">  </p>
+<p>我们来看看刚才我们添加的两个属性的类型：</p>
+<ul>
+<li><code>UIDynamicAnimator</code>属于<code>UIKit</code>物理引擎中的类。它的作用是跟踪你添加到物理引擎中的各种行为动作，比如这里的重力行为，并且提供整个上下文。实例化<code>UIDynamicAnimator</code>时，它的构造函数需要传入一个<code>referenceView</code>参数，用于告知它要跟踪并制定坐标的<code>View</code>。</li>
+<li><code>UIGravityBehavior</code>是一个模拟重力的模型，可作用于一个或多个元素。它的构造函数需要传入一个数组，该数组的内容就是我们希望有重力表现的一个元素或多个元素。  </li>
+</ul>
+<p>大多数的行为都有一些配置属性，比如重力行为就有可以改变角度和速率的属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化UIKit物理引擎类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">animator = <span class="type">UIDynamicAnimator</span>(referenceView: <span class="keyword">self</span>.view); </span><br><span class="line"></span><br><span class="line"><span class="comment">// 实例化重力行为类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">gravity = <span class="type">UIGravityBehavior</span>(items: [square]);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 角度</span></span><br><span class="line">gravigy.angle = <span class="number">1.6</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 速率</span></span><br><span class="line">gravigy.magnitude = <span class="number">0.1</span>;</span><br><span class="line">    </span><br><span class="line"><span class="comment">// 将重力行为添加到UIKit物理引擎类中</span></span><br><span class="line">animator.addBehavior(gravity);</span><br></pre></td></tr></table></figure>
+<p>上述代码中的<code>angle</code>是重力行为的角度属性，<code>angle</code>的值为0时，方块会水平向右移动，随着值的增大，方块会顺时针改变角度。不过我们要模拟现实中的重力，所以该属性一般不设置，不设置时默认是垂直向下移动。<code>magnitude</code>是重力行为的速率属性，值越大下降的速度越快，当<code>magnitude</code>属性的值为0时，方块就不会下降了，所以最小的速率是0.1。</p>
+<blockquote>
+<p>注意：在现实世界中，重力加速度大约是<code>g = 9.80665m/s^2</code>，就是9.8米每平方秒。根据牛顿第二定律，我们可以使用<code>0.5 * g * Time^2</code>公式来计算下坠距离。<br>在UIKit的重力世界中，计算重力加速度的公式是一样的，但是单位有所不同。不是米而是像素，即<code>g = 1000pixels/s^2</code>，我们同样可以使用牛顿第二定律来计算我们的方块在单位时间内下降的距离。我们只需要知道重力加速度<code>g</code>越大，坠落速度越快，所以上述代码中的<code>magnitude</code>属性就差不多是这意思。</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u4E0D_u80FD_u8BA9_u6211_u4EEC_u7684_u65B9_u5757_u4E00_u5760_u5343_u91CC"><a href="#u4E0D_u80FD_u8BA9_u6211_u4EEC_u7684_u65B9_u5757_u4E00_u5760_u5343_u91CC" class="headerlink" title="不能让我们的方块一坠千里"></a>不能让我们的方块一坠千里</h2><p>从目前代码的运行状况知道，我们的方块下降到屏幕底部时丝毫没有停止的意思，直接坠崖而下，看都看不见。我们希望我们的屏幕类似一个盒子一样，方块在盒子中，当下降到底部时就停止，那么我们就需要设置一个边界。  </p>
+<p>在<code>ViewController.swift</code>文件中再添加一个属性：  </p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"> </span><br><span class="line"><span class="comment">// 碰撞行为</span></span><br><span class="line"><span class="keyword">var</span> collision: <span class="type">UICollisionBehavior</span>!;</span><br></pre></td></tr></table></figure>
+<p>然后在<code>viewDidLoad</code>方法中加入以下几行代码：  </p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化碰撞行为类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square]);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 将参考视图的边界作为碰撞边界</span></span><br><span class="line">collision.translatesReferenceBoundsIntoBoundary = <span class="literal">true</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 将碰撞行为添加到UIKit物理引擎类中</span></span><br><span class="line">animator.addBehavior(collision);</span><br></pre></td></tr></table></figure>
+<p>上面的代码创建了边界行为，它会将一个或多个边界与指定的View联系起来，并使两者有具有交互行为。</p>
+<p>从上面代码我可以注意到<code>collision.translatesReferenceBoundsIntoBoundary = true;</code>这行代码，它的意思是将<code>UIDynamicAnimator</code>引用的View的边界作为碰撞行为的触发边界，这样就不用我们再去设置边界的坐标了，非常好用。</p>
+<p>接着我们编译运行看看，此时小方块坠落到屏幕底部时会产生碰撞效果，并且还会反弹几下，是不是很逼真呢。</p>
+<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics71.gif" alt="屏幕">  </p>
+<h2 id="u78B0_u649E_u884C_u4E3A_u8FDB_u9636_u5E94_u7528"><a href="#u78B0_u649E_u884C_u4E3A_u8FDB_u9636_u5E94_u7528" class="headerlink" title="碰撞行为进阶应用"></a>碰撞行为进阶应用</h2><p>接下来我们在屏幕中再添加一个View，长方形并横在屏幕中间，在<code>viewDidLoad</code>方法中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 创建一个长方形View，颜色设置为红色，加入当前的View中</span></span><br><span class="line"><span class="keyword">let</span> barrier = <span class="type">UIView</span>(frame:<span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">300</span>, width: <span class="number">140</span>, height: <span class="number">20</span>));</span><br><span class="line">barrier.backgroundColor = <span class="type">UIColor</span>.redColor();</span><br><span class="line"><span class="keyword">self</span>.view.addSubview(barrier);</span><br></pre></td></tr></table></figure>
+<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics3.png" alt="屏幕"></p>
+<p>但是我们发现这个红色的障碍物和方块并没有任何交互行为，这里有一点很重要：只有被行为关联起来的Views才会具有交互行为。我们来看看下面这张关系图：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics4.png" alt="屏幕"></p>
+<p><code>UIDynamicAnimator</code>引擎引用了当前屏幕的view，该view给引擎提供了整个坐标系统。每个行为可以关联多个元素，每个元素都可以被多个行为关联，上面的关系图可以很清晰的表现出当前app中各个行为与元素的关联关系。由于所有行为都没有与长方形view关联，所以<code>barrier</code>基本可以被忽略。</p>
+<h2 id="u5524_u9192Barrier"><a href="#u5524_u9192Barrier" class="headerlink" title="唤醒Barrier"></a>唤醒Barrier</h2><p>如果我们想让<code>barrier</code>活起来，我们得让碰撞行为将它关联起来：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化碰撞行为类，目前作用于刚才创建的正方形View和长方形View</span></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square,barrier]);</span><br></pre></td></tr></table></figure>
+<p>将<code>barrier</code>添加到碰撞行为关联元素的数组中。这样的话，<code>square</code>和<code>barrier</code>这两个view都会有碰撞行为，所以当他们相撞时就会产生碰撞效果。</p>
+<p>编译并运行，让我们来看看睡醒的<code>barrier</code>会产生什么效果：</p>
+<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics81.gif" alt="屏幕">  </p>
+<p>我们再来看看现在app中行为与元素的关系图：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics5.png" alt="屏幕"></p>
+<p>来看看我给这个红色长方形view起的名字：<code>barrier</code>，没错，障碍物。但是它现在是一个称职的障碍物吗？显然不是，当它与蓝绿色正方形碰撞时，它会于正方形一起旋转坠落。</p>
+<p>等等，为什么<code>barrier</code>坠落到屏幕底部后不像<code>square</code>会有蹦跶一下然后停止，反而在缓慢旋转，感觉向失重一样。嗯哼，这是因为我们并没有将重力行为与<code>barrier</code>关联起来，所以它会向失重一样开始旋转。</p>
+<p>这显然不是我想要的结果，我希望<code>square</code>坠落碰到<code>barrier</code>后，<code>barrier</code>纹丝不动，然后<code>square</code>被撞的七荤八素。我们要拦住那个<code>square</code>！</p>
+<h2 id="u9690_u5F62_u7684_u8FB9_u754C_u4E0E_u78B0_u649E_u6548_u679C"><a href="#u9690_u5F62_u7684_u8FB9_u754C_u4E0E_u78B0_u649E_u6548_u679C" class="headerlink" title="隐形的边界与碰撞效果"></a>隐形的边界与碰撞效果</h2><p>我们先去掉<code>barrier</code>的碰撞效果，将：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square,barrier]);</span><br></pre></td></tr></table></figure>
+<p>改为：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square]);</span><br></pre></td></tr></table></figure>
+<p>然后在这行下面添加另外一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square]);</span><br><span class="line">collision.addBoundaryWithIdentifier(<span class="string">"barrier"</span>, forPath: <span class="type">UIBezierPath</span>(rect: barrier.frame));</span><br></pre></td></tr></table></figure>
+<p>这行代码的意思是在碰撞效果中添加一个隐形的边界，它的位置和形状和<code>barrier</code>的一样。这样就会让人产生一种错觉，认为红色的<code>barrier</code>成为了边界，其实真正的边界隐藏在它之后。编译运行一下，我们来看看会发生什么：</p>
+<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics91.gif" alt="屏幕"> </p>
+<p>我们看到了当蓝绿色方块下降碰到红色障碍物时产生了碰撞行为，蓝绿色方块弹开并翻转落下。</p>
+<p>从上面内容我们了解到，Swift的UIKit动力引擎非常强大，通过简短的几行代码就可以帮助我们实现惊艳的实现行为。下篇文章会向大家详细的介绍碰撞行为背后的故事。</p>
+<p>参考原文：<a href="http://www.raywenderlich.com/76147/uikit-dynamics-tutorial-swift" target="_blank" rel="external">UIKit Dynamics Tutorial in Swift</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/access-control-and-protected/" itemprop="url">
                   Swift中的访问控制与protected
                 </a>
@@ -695,168 +870,11 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/swift-nil-coalescing/" itemprop="url">
-                  Swift中Nil Coalescing运算符的使用技巧
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-08-13T00:00:00+08:00" content="2014-08-13">
-              2014-08-13
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/swift-nil-coalescing/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-nil-coalescing/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>在Swift官方《The Swift Programming Language》文档的<code>Basic Operators</code>一节中添加了<code>Nil Coalescing Operator</code>小结，介绍了一个新的运算符<strong>Nil Coalescing</strong>，符号是<code>??</code>，它的表现形成如下：</p>
-<pre><code>let c = a ?? b
-</code></pre><p>这个运算符有两个条件：</p>
-<ul>
-<li><code>a</code>必须是<code>Optional</code>类型的。</li>
-<li><code>b</code>的类型必须要和<code>a</code>解包后的值类型一致。</li>
-</ul>
-<p>符合这两个条件后，我们来解释一下上述这行代码，意思就是<code>c</code>的值是<code>a</code>或<code>b</code>中一个的值，但有前提条件，就是当<code>a</code>解包后值不为<code>nil</code>时，那么就将<code>a</code>解包后的值赋值给<code>c</code>，如果<code>a</code>解包后值为<code>nil</code>，那么就将<code>b</code>的值赋值给<code>c</code>。</p>
-<p>我们还可以用三目运算来更形象的解释这个运算符：</p>
-<pre><code>let c = a != nil ? a! : b
-</code></pre><p>从上面的代码我们很容易理解，当<code>a</code>的值不等于<code>nil</code>时，将<code>a</code>解包后的值赋值给<code>c</code>，否则将<code>b</code>的值赋值给<code>c</code>。</p>
-<p>我们来看看官方给的代码示例：</p>
-<pre><code>let defaultColorName = &quot;red&quot;
-var userDefinedColorName: String?   // 默认值为nil
-
-var colorNameToUse = userDefinedColorName ?? defaultColorName
-// 因为userDefinedColorName的值是nil，所以colorNameToUse的值为&quot;red&quot;
-
-
-userDefinedColorName = &quot;green&quot;
-colorNameToUse = userDefinedColorName ?? defaultColorName
-// 因为userDefinedColorName的值不为nil，所以colorNameToUse的值为&quot;green&quot;
-</code></pre><p>大家看到这应该对<strong>Nil Coalescing</strong>这个运算符有比较清晰的理解了，但在实际运用中，我们还需要注意以下几点。</p>
-<h2 id="u7F16_u8BD1_u5668_u4E2D_u7684_u7C7B_u578B_u5339_u914D_u539F_u5219"><a href="#u7F16_u8BD1_u5668_u4E2D_u7684_u7C7B_u578B_u5339_u914D_u539F_u5219" class="headerlink" title="编译器中的类型匹配原则"></a>编译器中的类型匹配原则</h2><blockquote>
-<p>原谅我在末尾加的<code>;</code>，编码习惯而已 = =|| </p>
-</blockquote>
-<p>我们先来看一段代码：</p>
-<pre><code>let a: Int? = nil;
-let b: Int? = 7;
-
-let c = a != nil ? a! : b; // 因为a的默认值为nil，所以c的值为{Some 7}
-let d = a ?? b; // 这里d的值为nil，这是怎么回事？
-</code></pre><p>首先我们需要注意的是，在官方文档中有这么一句话：<code>“The expression b must match the type that is stored inside a”</code>。但是上面的代码示例中，我们的<code>b</code>是<code>Int?</code>类型，那么此时我们的编译器会怎么处理呢？我们通过自己实现一个Nil Coalescing运算符来说明，代码片段如下：</p>
-<pre><code>infix operator ??? {
-    associativity right;
-    precedence 110;
-}
-
-func ???&lt;T&gt;(a: T?, b: @autoclosure () -&gt; T) -&gt; T {
-    return a != nil ? a! : b();
-}
-
-let d = a ??? b; // 这里d的值仍然是nil
-</code></pre><p>从上面的代码片段中我们可以看出，<code>a</code>的类型是根据传入的<code>b</code>的类型决定的，所以当我们传入的<code>b</code>是<code>Int?</code>类型时，编译器其实将<code>a</code>的类型自动转换为<code>Int??</code>类型了，也就是<code>Optional(a)</code>，那么我们就能解释<code>let d = a ?? b;</code>这行代码。因为<code>a == nil</code>但是<code>Optional(a) != nil</code>，所以<code>d = Optional(a)!</code>，<code>d</code>的值为<code>nil</code>。</p>
-<h2 id="Nil_Coalescing_u8FD0_u7B97_u7B26_u8FD4_u56DE_u503C_u7684_u7C7B_u578B"><a href="#Nil_Coalescing_u8FD0_u7B97_u7B26_u8FD4_u56DE_u503C_u7684_u7C7B_u578B" class="headerlink" title="Nil Coalescing运算符返回值的类型"></a>Nil Coalescing运算符返回值的类型</h2><p>我们先看示例代码片段：</p>
-<pre><code>let a: Int? = nil;
-let b: Int? = 5;
-let c: Int? = 6;
-
-// 因为a的默认值为nil，所以将b的值赋值给x，x的值为{Some 5}，类型为Int?
-let x = a != nil ? a! : b;
-// 因为c的值不为nil，所以将c解包后的值赋值给y，但是y的值却是{Some 6}，而不是6，这是怎么回事？
-let y = c != nil ? c! : b;
-</code></pre><p>根据上面我们提到的编译器中类型判断的原则就可以理解了，因为<code>b</code>的类型是<code>Int?</code>，所以在编译时<code>c</code>的类型已经成了<code>Int??</code>,所以为<code>Int??</code>解包的类型就是<code>Int?</code>了。</p>
-<p>如果我们声明变量<code>y</code>的类型，编译器就要提出抗议了：</p>
-<pre><code>// 如何a为Int?类型，那么编译器就不会通过，因为会导致赋值运算符两边类型不等
-let x: Int = a != nil ? a! : b;
-
-// 这种写法和上面一样，都不会编译通过
-let y: Int = a ?? b;
-</code></pre><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -894,7 +912,7 @@ let y: Int = a ?? b;
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">75</span>
+              <span class="site-state-item-count">76</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -908,7 +926,7 @@ let y: Int = a ?? b;
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-count">40</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
@@ -976,7 +994,7 @@ let y: Int = a ?? b;
       <div class="footer-inner"> <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>
