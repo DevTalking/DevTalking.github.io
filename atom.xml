@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.devtalking.com/"/>
-  <updated>2018-06-11T14:48:42.835Z</updated>
+  <updated>2018-06-14T16:43:16.000Z</updated>
   <id>http://www.devtalking.com/</id>
   
   <author>
@@ -13,6 +13,389 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[基于OmniFocus的任务系统]]></title>
+    <link href="http://www.devtalking.com//articles/task-manage-omnifocus/"/>
+    <id>http://www.devtalking.com//articles/task-manage-omnifocus/</id>
+    <published>2018-04-30T16:00:00.000Z</published>
+    <updated>2018-06-14T16:43:16.000Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="OmniFocus_u7684_u51E0_u4E2A_u4E3B_u8981_u6982_u5FF5"><a href="#OmniFocus_u7684_u51E0_u4E2A_u4E3B_u8981_u6982_u5FF5" class="headerlink" title="OmniFocus的几个主要概念"></a>OmniFocus的几个主要概念</h2><p>文章中所有的内容都是以OmniFocus 3为例。</p>
+<ul>
+<li>文件夹：OmniFocus中任务的组织结构最顶级一层，但只是用于分类，本身没有什么属性。</li>
+<li>项目：顾名思义，用于定义我们生活和工作中大大小小的项目，项目本身也有属性设置，可设置标签、其内任务的关系（并行、串行、单个），截止日期等。项目下可包含多个任务。</li>
+<li>任务：OmniFocus中承载事件的最小颗粒。因为OmniFocus支持任务无限嵌套，所以当多个任务在一个任务下时该任务就成为一个任务组。</li>
+<li>任务组：任务组本身也是一个任务，但是它又是其他任务的父任务，所以任务组有子任务关系（并行、串行、单个）的设置。</li>
+<li>标签：任务、项目身上都可以设置一到多个标签。标签可以嵌套，并且标签支持设置地理位置，并且有根据进入，走出两个行为和距离范围设置通知。</li>
+<li>透视：根据各种条件筛选任务的视图。比如查看有标签“办公室”，即将截至的任务。条件可以按照包含任意、全部包含和不包含进行组合。然后还可以设置筛选出来任务的排列、分组方式。</li>
+</ul>
+<h2 id="u4EFB_u52A1_u7CFB_u7EDF"><a href="#u4EFB_u52A1_u7CFB_u7EDF" class="headerlink" title="任务系统"></a>任务系统</h2><p>我参照John Z. Sonmez的看板+番茄钟的系统，将其调整为OmniFocus+番茄钟的系统。</p>
+<h3 id="u7CFB_u7EDF_u8BBE_u7F6E"><a href="#u7CFB_u7EDF_u8BBE_u7F6E" class="headerlink" title="系统设置"></a>系统设置</h3><ul>
+<li>在截止日期这一项，将即将截止日期的表示设置为今天。</li>
+<li>今天和Watch这一项，设置为自定义透视的<strong>今日</strong>（该透视下面会讲到）。</li>
+</ul>
+<h3 id="u6784_u5EFA_u7CFB_u7EDF_u7684_u4E3B_u8981_u6807_u7B7E"><a href="#u6784_u5EFA_u7CFB_u7EDF_u7684_u4E3B_u8981_u6807_u7B7E" class="headerlink" title="构建系统的主要标签"></a>构建系统的主要标签</h3><ul>
+<li>仪式：周期性重复的任务会设置该标签。</li>
+<li>地点：标明某个任务能在何种场所进行。<ul>
+<li>办公室</li>
+<li>家</li>
+<li>通勤中</li>
+</ul>
+</li>
+<li>状态：进行任务时需要投入的专注度。<ul>
+<li>集中精力</li>
+<li>放松</li>
+</ul>
+</li>
+<li>跟踪：需要跟踪的任务会设置该标签，比如安排下去的任务需要在某个时间点知道完成的结果。</li>
+<li>采购：需要购买东西的任务会设置该标签。</li>
+<li>星期：规划一周任务时设置的标签。<ul>
+<li>周一</li>
+<li>周二</li>
+<li>周三</li>
+<li>周四</li>
+<li>周五</li>
+<li>周六</li>
+<li>周日</li>
+</ul>
+</li>
+<li>二分钟：能在很短时间内完成的任务会设置该标签。</li>
+</ul>
+<a id="more"></a>
+<h3 id="u4EFB_u52A1_u6C60_u900F_u89C6"><a href="#u4EFB_u52A1_u6C60_u900F_u89C6" class="headerlink" title="任务池透视"></a>任务池透视</h3><h4 id="u529E_u516C_u5BA4-_u805A_u7126"><a href="#u529E_u516C_u5BA4-_u805A_u7126" class="headerlink" title="办公室-聚焦"></a>办公室-聚焦</h4><p>该透视能筛选出所有我需要在办公室内并且投入100%专注度要做的事情。是我在规划一周内工作的主要透视视图。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为全部以下内容：办公室、集中精力</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周五、周六、周日</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：到期 </li>
+</ul>
+<h4 id="u529E_u516C_u5BA4-_u653E_u677E"><a href="#u529E_u516C_u5BA4-_u653E_u677E" class="headerlink" title="办公室-放松"></a>办公室-放松</h4><p>该透视能筛选出所有我需要在办公室内处理，但是不需要投入很多专注度的事情。是我在规划一周内工作时补充任务的透视，还有当每天清空任务后，会从该透视中进行补充。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为全部以下内容：办公室、放松</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周五、周六、周日</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：到期 </li>
+</ul>
+<h4 id="u5BB6-_u805A_u7126"><a href="#u5BB6-_u805A_u7126" class="headerlink" title="家-聚焦"></a>家-聚焦</h4><p>该透视能筛选出所有我需要在家并且投入100%专注度要做的事情。是我在规划一周内业余时间工作的主要透视视图。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为全部以下内容：家、集中精力</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周五、周六、周日</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：到期 </li>
+</ul>
+<h4 id="u5BB6-_u653E_u677E"><a href="#u5BB6-_u653E_u677E" class="headerlink" title="家-放松"></a>家-放松</h4><p>该透视能筛选出所有我需要在家处理，但是不需要投入很多专注度的事情。是我在规划一周内业余时间工作时补充任务的透视。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为全部以下内容：家、放松</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周五、周六、周日</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：到期 </li>
+</ul>
+<h4 id="u901A_u52E4"><a href="#u901A_u52E4" class="headerlink" title="通勤"></a>通勤</h4><p>该透视能筛选出所有我需要在通勤路上处理的事情，比如回邮件、看书等。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为全部以下内容：通勤中</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周五、周六、周日</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h4 id="u8DDF_u8E2A"><a href="#u8DDF_u8E2A" class="headerlink" title="跟踪"></a>跟踪</h4><p>该透视能筛选出所有我需要跟踪处理的事情，比如我需要在两天后收到报告等。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为全部以下内容：跟踪</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h3 id="u4EFB_u52A1_u67E5_u770B_u900F_u89C6"><a href="#u4EFB_u52A1_u67E5_u770B_u900F_u89C6" class="headerlink" title="任务查看透视"></a>任务查看透视</h3><p>上面的透视其实都是我的任务池，只不过区分了不同的地点和精力状态，根据具体情况从这些任务池中挑选出任务，也就是规划工作的过程。那么任务挑选的问题就来了，如何挑选？如何处理任务算是已挑选？挑选出的任务去哪看？</p>
+<h4 id="u5982_u4F55_u5904_u7406_u4EFB_u52A1_u7B97_u662F_u5DF2_u6311_u9009_uFF1F"><a href="#u5982_u4F55_u5904_u7406_u4EFB_u52A1_u7B97_u662F_u5DF2_u6311_u9009_uFF1F" class="headerlink" title="如何处理任务算是已挑选？"></a>如何处理任务算是已挑选？</h4><p>我先从挑选任务说起，我挑选任务有三步：</p>
+<ul>
+<li>给任务设置截至日期。</li>
+<li>给任务设置对应周的标签。</li>
+<li>编辑任务标题，注明需要几个番茄钟。</li>
+</ul>
+<p>给任务设置截至日期的范围一般是本周内，比如周一规划任务，那么给任务设置的最晚截至日期是周日，也就是说，如果某个任务的到期日超过了本周，那么在本周规划时，在<strong>设置截至日期这个维度</strong>我是不会关注的。</p>
+<p>给任务设置对应周标签的方式是挑选我认为应该在本周内处理的任务，不考虑该任务的截至日期，不过有本周范围内截至日期的任务已经在上一步筛选完了，所以设置对应周标签的任务在要么没有截至日期，要么是截止日期超过本周的任务范围内。</p>
+<p>OmniFocus中，任务有一个预估时长的属性，其实变相的代表了番茄钟的数量，但是查看很不直观。所以我就会在挑选完任务后，给这些任务的标题上注明番茄钟的数量，我一般会用“🍅”表示，有一个🍅就表示该任务需要一个番茄钟，以此类推。这种方式能让我在查看今日任务时能一目了然任务所需的番茄钟数量。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h4 id="u6311_u9009_u51FA_u7684_u4EFB_u52A1_u53BB_u54EA_u770B_uFF1F"><a href="#u6311_u9009_u51FA_u7684_u4EFB_u52A1_u53BB_u54EA_u770B_uFF1F" class="headerlink" title="挑选出的任务去哪看？"></a>挑选出的任务去哪看？</h4><p>一周的任务通过上面的方式规划好后，应该怎么查看呢？这时候还是用到透视。我创建了周一至周日七个透视，每天只关注当天的透视，里面筛选出的任务必定就是我规划好应该在这天干的任务。</p>
+<h5 id="u5468_u4E00"><a href="#u5468_u4E00" class="headerlink" title="周一"></a>周一</h5><p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>无以下内容：标签为任何以下内容：周二、周三、周四、周五、周六、周日</li>
+<li>任何以下内容：<ul>
+<li>标签为全部以下内容：周一</li>
+<li>状态：即将到期</li>
+</ul>
+</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：单独操作</li>
+<li>项目分组方式：到期</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h5 id="u5468_u4E8C"><a href="#u5468_u4E8C" class="headerlink" title="周二"></a>周二</h5><p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>无以下内容：标签为任何以下内容：周一、周三、周四、周五、周六、周日</li>
+<li>任何以下内容：<ul>
+<li>标签为全部以下内容：周二</li>
+<li>状态：即将到期</li>
+</ul>
+</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：单独操作</li>
+<li>项目分组方式：到期</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h5 id="u5468_u4E09"><a href="#u5468_u4E09" class="headerlink" title="周三"></a>周三</h5><p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周四、周五、周六、周日</li>
+<li>任何以下内容：<ul>
+<li>标签为全部以下内容：周三</li>
+<li>状态：即将到期</li>
+</ul>
+</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：单独操作</li>
+<li>项目分组方式：到期</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h5 id="u5468_u56DB"><a href="#u5468_u56DB" class="headerlink" title="周四"></a>周四</h5><p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周五、周六、周日</li>
+<li>任何以下内容：<ul>
+<li>标签为全部以下内容：周四</li>
+<li>状态：即将到期</li>
+</ul>
+</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：单独操作</li>
+<li>项目分组方式：到期</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h5 id="u5468_u4E94"><a href="#u5468_u4E94" class="headerlink" title="周五"></a>周五</h5><p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周六、周日</li>
+<li>任何以下内容：<ul>
+<li>标签为全部以下内容：周五</li>
+<li>状态：即将到期</li>
+</ul>
+</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：单独操作</li>
+<li>项目分组方式：到期</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h5 id="u5468_u516D"><a href="#u5468_u516D" class="headerlink" title="周六"></a>周六</h5><p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周五、周日</li>
+<li>任何以下内容：<ul>
+<li>标签为全部以下内容：周六</li>
+<li>状态：即将到期</li>
+</ul>
+</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：单独操作</li>
+<li>项目分组方式：到期</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h5 id="u5468_u65E5"><a href="#u5468_u65E5" class="headerlink" title="周日"></a>周日</h5><p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周五、周六</li>
+<li>任何以下内容：<ul>
+<li>标签为全部以下内容：周日</li>
+<li>状态：即将到期</li>
+</ul>
+</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：单独操作</li>
+<li>项目分组方式：到期</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h4 id="u661F_u671F_u900F_u89C6_u89E3_u8BFB"><a href="#u661F_u671F_u900F_u89C6_u89E3_u8BFB" class="headerlink" title="星期透视解读"></a>星期透视解读</h4><p>以上这七个透视筛选的任务表示了在一周里，每天需要做的事情。它会根据条件筛选以下两种任务：</p>
+<ul>
+<li>可用的，并且没有其他星期的标签，并且设置了当天星期的标签的任务。</li>
+<li>可用的，并且没有其他星期的标签，并且在今天到期的任务。</li>
+</ul>
+<p>其实这两个筛选条件就是在前面小节挑选任务时，对任务做的操作。</p>
+<p>另外在排序方面，不按项目分组，只安到期日分类，并且排序顺序安是否已标注排序。也就是说，我在处理今天的任务时，不是特别关心这个任务属于哪个项目，而是关注任务在今天的到期时间，并且如果是打了标注的，表名优先级最高，排在最前面。</p>
+<h3 id="u5176_u4ED6_u900F_u89C6"><a href="#u5176_u4ED6_u900F_u89C6" class="headerlink" title="其他透视"></a>其他透视</h3><p>上面的透视是组成我任务系统的核心透视，还有几个其他的透视可以辅助我查看一些有共性的任务。</p>
+<h4 id="u4ECA_u65E5"><a href="#u4ECA_u65E5" class="headerlink" title="今日"></a>今日</h4><p>这个透视主要是用于OmniFocus的通知小组件和Apple Watch的小组件使用的。该视图主要作用的是提示我今天有多少个即将到期的任务。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>任何以下内容：即将到期</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：项目顺序</li>
+</ul>
+<h4 id="u4EEA_u5F0F"><a href="#u4EEA_u5F0F" class="headerlink" title="仪式"></a>仪式</h4><p>该视图主要显示哪些周期性重复执行的任务。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为全部以下内容：仪式</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：到期</li>
+</ul>
+<h4 id="u8D2D_u4E70_u6E05_u5355"><a href="#u8D2D_u4E70_u6E05_u5355" class="headerlink" title="购买清单"></a>购买清单</h4><p>该视图主要显示我的待购物品清单，不考虑什么时候买，但只要有想买的念头就会记下来，在这里显示。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为任何以下内容：采购</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：到期</li>
+</ul>
+<h2 id="u756A_u8304_u949F_u7CFB_u7EDF"><a href="#u756A_u8304_u949F_u7CFB_u7EDF" class="headerlink" title="番茄钟系统"></a>番茄钟系统</h2><p>番茄钟这个时间管理工具在这里不做解释。我选择番茄钟应用的原则是有较好的统计功能，能明确的看到一定范围内我的工作时间和番茄数，如果能跨多个平台当然更好，所以我最终选择了Flat Tomato这个番茄钟应用。该应用有iOS版、WatchOS版、MacOS版，在任何环境下我都可以快速的开始一个25分钟的番茄时间，并且它有比较好的统计系统。另外该应用还有一个亮点功能是自带一个轻量级的任务管理系统，也借鉴了一点GTD的概念，并且可以对每一个任务设置番茄钟数量预估，可以快速启动对应的项目的番茄钟，并且番茄时间、休息时间、再番茄时间是可以自动进行的，可以有效提供我们连续专注的效率。</p>
+<p>因为OmniFocus没有集成任何番茄系统，而Flat Tomato也没有集成OF，所以我的番茄系统目前属于半外挂形式，也就是当要执行OF中的任务时，标题上标注的🍅数量只是一个参考作用，然后再单独启动Flat Tomato的番茄时间，每个番茄钟完成后还需要手动标注这个番茄钟做了什么事。</p>
+<p>那么为什么说是半外挂呢？因为Flat Tomato集成了Todoist，它可以同步Todoist中的项目和任务，从而给每个任务设置番茄钟，所以我将Todoist作为一个任务中转站。将OmniFocus中的项目和任务同步到Todoist中，然后在Flat Tomato里就可以规划番茄数量了。这样每当我要执行OF中的任务时，我就可以直接在Flat Tomato中找到开始番茄钟。目前这种方式我只在做系统的任务分解时候才会用到。</p>
+<h3 id="u4EFB_u52A1_u5206_u89E3"><a href="#u4EFB_u52A1_u5206_u89E3" class="headerlink" title="任务分解"></a>任务分解</h3><p>首先我做任务分解时并不在OmniFocus里做，而是在Day One中，其实或者任意iOS中的文本App就可以。其次将任务同步进Todoist中使用了它提供的REST API和<a href="https://support.omnigroup.com/omnifocus-taskpaper-reference/" target="_blank" rel="external">OmniFocus支持TaskPaper规范导入</a>的功能。因为目前OmniFocus 3的Mac版还没有发布，只发布了iOS版。所以我制作了一个<a href="https://workflow.is/workflows/13a29ed7370b4b09923e8bd6ccaa672f" target="_blank" rel="external">Workflow</a>，将我在Day One中规划的任务创建进OmniFocus，同时通过REST API同步进Todoist。</p>
+<h2 id="u7EFC_u8FF0"><a href="#u7EFC_u8FF0" class="headerlink" title="综述"></a>综述</h2><p>以上就是我的任务系统的核心点。当然我还依然遵循GTD的方法，比如收集的概念，检查回顾等，这里就不再做解释了。希望大家能和我一起交流任务管理、时间管理的心得。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+]]></content>
+    <summary type="html">
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="OmniFocus_u7684_u51E0_u4E2A_u4E3B_u8981_u6982_u5FF5"><a href="#OmniFocus_u7684_u51E0_u4E2A_u4E3B_u8981_u6982_u5FF5" class="headerlink" title="OmniFocus的几个主要概念"></a>OmniFocus的几个主要概念</h2><p>文章中所有的内容都是以OmniFocus 3为例。</p>
+<ul>
+<li>文件夹：OmniFocus中任务的组织结构最顶级一层，但只是用于分类，本身没有什么属性。</li>
+<li>项目：顾名思义，用于定义我们生活和工作中大大小小的项目，项目本身也有属性设置，可设置标签、其内任务的关系（并行、串行、单个），截止日期等。项目下可包含多个任务。</li>
+<li>任务：OmniFocus中承载事件的最小颗粒。因为OmniFocus支持任务无限嵌套，所以当多个任务在一个任务下时该任务就成为一个任务组。</li>
+<li>任务组：任务组本身也是一个任务，但是它又是其他任务的父任务，所以任务组有子任务关系（并行、串行、单个）的设置。</li>
+<li>标签：任务、项目身上都可以设置一到多个标签。标签可以嵌套，并且标签支持设置地理位置，并且有根据进入，走出两个行为和距离范围设置通知。</li>
+<li>透视：根据各种条件筛选任务的视图。比如查看有标签“办公室”，即将截至的任务。条件可以按照包含任意、全部包含和不包含进行组合。然后还可以设置筛选出来任务的排列、分组方式。</li>
+</ul>
+<h2 id="u4EFB_u52A1_u7CFB_u7EDF"><a href="#u4EFB_u52A1_u7CFB_u7EDF" class="headerlink" title="任务系统"></a>任务系统</h2><p>我参照John Z. Sonmez的看板+番茄钟的系统，将其调整为OmniFocus+番茄钟的系统。</p>
+<h3 id="u7CFB_u7EDF_u8BBE_u7F6E"><a href="#u7CFB_u7EDF_u8BBE_u7F6E" class="headerlink" title="系统设置"></a>系统设置</h3><ul>
+<li>在截止日期这一项，将即将截止日期的表示设置为今天。</li>
+<li>今天和Watch这一项，设置为自定义透视的<strong>今日</strong>（该透视下面会讲到）。</li>
+</ul>
+<h3 id="u6784_u5EFA_u7CFB_u7EDF_u7684_u4E3B_u8981_u6807_u7B7E"><a href="#u6784_u5EFA_u7CFB_u7EDF_u7684_u4E3B_u8981_u6807_u7B7E" class="headerlink" title="构建系统的主要标签"></a>构建系统的主要标签</h3><ul>
+<li>仪式：周期性重复的任务会设置该标签。</li>
+<li>地点：标明某个任务能在何种场所进行。<ul>
+<li>办公室</li>
+<li>家</li>
+<li>通勤中</li>
+</ul>
+</li>
+<li>状态：进行任务时需要投入的专注度。<ul>
+<li>集中精力</li>
+<li>放松</li>
+</ul>
+</li>
+<li>跟踪：需要跟踪的任务会设置该标签，比如安排下去的任务需要在某个时间点知道完成的结果。</li>
+<li>采购：需要购买东西的任务会设置该标签。</li>
+<li>星期：规划一周任务时设置的标签。<ul>
+<li>周一</li>
+<li>周二</li>
+<li>周三</li>
+<li>周四</li>
+<li>周五</li>
+<li>周六</li>
+<li>周日</li>
+</ul>
+</li>
+<li>二分钟：能在很短时间内完成的任务会设置该标签。</li>
+</ul>]]>
+    
+    </summary>
+    
+      <category term="任务管理" scheme="http://www.devtalking.com/tags/%E4%BB%BB%E5%8A%A1%E7%AE%A1%E7%90%86/"/>
+    
+      <category term="生产力" scheme="http://www.devtalking.com/tags/%E7%94%9F%E4%BA%A7%E5%8A%9B/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[基于TestNG和PowerMock的单元测试指南]]></title>
@@ -3187,99 +3570,6 @@ Successfully installed shadowsocks-2.8.2
       <category term="Swift" scheme="http://www.devtalking.com/tags/Swift/"/>
     
       <category term="UIKit" scheme="http://www.devtalking.com/tags/UIKit/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[iOS UIView Animation - Keyframe]]></title>
-    <link href="http://www.devtalking.com//articles/uiview-keyframe-animation/"/>
-    <id>http://www.devtalking.com//articles/uiview-keyframe-animation/</id>
-    <published>2015-07-27T16:00:00.000Z</published>
-    <updated>2016-08-19T01:17:10.000Z</updated>
-    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<blockquote>
-<p> 本文首发<a href="http://www.csdn.net/article/2015-07-28/2825314-ios-uiview-animation-5" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-</blockquote>
-<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>有些时候大家可能会遇到制作复杂、具有连贯性UIView动画的需求，这时大家可能会使用在<code>completion</code>闭包中衔接一段一段的动画，使之成为一段连续的动画。</p>
-<p>如果我们只是连接2个，或者3个动画，这种方式或许还行得通，但如果有更多的动画片段需要连接的时候，这种方式会带来灾难性的问题，你的代码会非常的冗余，不断的在<code>completion</code>闭包中嵌套代码，使代码维护起来相当的困难。所以今天向大家介绍能更好地实现这个需求的方法，Keyframe动画。</p>
-<p>Keyframe动画可以让我们有效的拆分由若干段动画连接而成的复杂动画，可以较为精准的定义每段动画的起始点及持续时间，并且在代码组织方面也非常清晰。先看看今天要带大家实现的动画Demo：</p>
-<iframe src="https://player.vimeo.com/video/134543973?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<h2 id="u4F7F_u7528_u573A_u666F"><a href="#u4F7F_u7528_u573A_u666F" class="headerlink" title="使用场景"></a>使用场景</h2><p>我们先来认识一下，在什么样的场景下需要使用Keyframe动画。如图下所示，这是一个由四段动画组成的一个复杂动画，让UIView沿着长方形的轨迹运动：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Keyframe-2.png" alt="Keyframe-1"></p>
-<p>我们来看看用代码如何实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    view.center.x += <span class="number">200.0</span></span><br><span class="line">&#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">    <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">        view.center.y += <span class="number">100.0</span></span><br><span class="line">    &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">        <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">            view.center.x -= <span class="number">200.0</span></span><br><span class="line">        &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">            <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">                view.center.y -= <span class="number">100.0</span></span><br><span class="line">            &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>通过上面的伪代码可以看到，我们使用了<code>completion</code>闭包的方式连接每一段的动画，代码看起来尚且算清晰，可读性也马马虎虎。但是大家想象一下，如果我们使UIView按照一个复杂的路线运行，这一段动画可能有十几、几十段动画组成的，那么如果再使用<code>completion</code>闭包这种方式连接，那代码是多么的惨不忍睹。幸好我们有Keyframe动画，下面就让我们来看看如何使用Keyframe动画。</p>
-<h2 id="Keyframe_u52A8_u753B"><a href="#Keyframe_u52A8_u753B" class="headerlink" title="Keyframe动画"></a>Keyframe动画</h2><p>首先我们会使用到UIView的另一个动画方法`animateKeyframesWithDuration(_: delay: options: animations: completion: )<br>`：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="comment">// add keyframes</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>这个方法的几个参数与前几个使用过的动画方法参数一样。上面代码片段的意思是整个关键帧动画的持续时间为2秒、无延迟、无动画选项、执行完毕后无后续执行的代码。</p>
-<blockquote>
-<p>注：该方法的动画选项不再是<code>UIViewAnimationOptions</code>，而是<code>UIViewKeyframeAnimationOptions</code>。具体的内容大家可以去查阅Apple的文档。</p>
-</blockquote>
-<p>接下来我们要在<code>animations</code>闭包中添加关键帧了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x += <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p><code>addKeyframeWithRelativeStartTime(_: relativeDuration: animations: )</code>是UIView添加关键帧的方法，该方法有三个参数：</p>
-<ul>
-<li>startTime：关键帧开始时间，该时间是相对整个关键帧动画持续时间的相对时间，一般值在0到1之间。如果为0，则表明这一关键帧从整个动画的第0秒开始执行，如果设为0.5，则表明从整个动画的中间开始执行。</li>
-<li>relativeDuration：关键帧持续时间，该时间同样是相对整个关键帧动画持续时间的相对时间，一般值也在0到1之间。如果设为0.25，则表明这一关键帧的持续时间为整个动画持续时间的四分之一。</li>
-<li>animations：设置视图动画属性的动画闭包。</li>
-</ul>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>我们解释一下上面这段代码。整个关键帧动画的持续时间为2秒，第一个关键帧从第0秒开始，运行0.5秒结束。下面我们完成其他三个关键帧：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x += <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.25</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.y += <span class="number">100.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.5</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x -= <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.75</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.y -= <span class="number">100.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>第二个关键帧的开始时间为0.25，也就是从整个动画时间的第0.5时开始执行，同样持续0.5秒。后两个关键帧的参数就不难理解了。</p>
-<p>现在整个代码看起来非常整洁，条理清晰，可读性非常好，而且可以有更精确的控制。即使再多几个关键帧也同样可以从容应对。</p>
-<p>关键帧动画不仅仅用于同一个视图的分段动画，也可使使用于不同视图的组合动画，由于我们还没讲到图层动画，所以，开篇的示例动画中就使用了关键帧动画实现了多个视图的组合动画。</p>
-<h2 id="u793A_u4F8B_u52A8_u753B"><a href="#u793A_u4F8B_u52A8_u753B" class="headerlink" title="示例动画"></a>示例动画</h2><p>在这个示例中虽然看起来是一个纸飞机视图的连续动画，但其实是由三个纸飞机视图组合而成的：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Keyframe-3.png" alt="Keyframe-2"></p>
-<p>从图中可以看到其实是有三个纸飞机视图，只不过在界面加载之前2号和3号纸飞机视图的透明度都是为零。</p>
-<p>整个动画是由这三个纸飞机视图通过关键帧动画组合而成：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Keyframe-4.png" alt="Keyframe-3"></p>
-<p>图中标示出了三个飞机视图的运行轨迹、视图大小、视图透明度的状态，我们来看看代码如何实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> zoomInScaleTransform = <span class="type">CGAffineTransformMakeScale</span>(<span class="number">0.2</span>, <span class="number">0.2</span>)</span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">3</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.2</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.center.x += <span class="keyword">self</span>.view.frame.width</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.center.y += -<span class="number">180</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.transform = zoomInScaleTransform</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.3</span>, relativeDuration: <span class="number">0.01</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.alpha = <span class="number">1</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.transform = zoomInScaleTransform</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.3</span>, relativeDuration: <span class="number">0.5</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.center.x -= <span class="keyword">self</span>.view.frame.width</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.center.y += <span class="number">90</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.9</span>, relativeDuration: <span class="number">0.01</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneComeBack.alpha = <span class="number">1</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.9</span>, relativeDuration: <span class="number">0.2</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneComeBack.center.x += <span class="number">33</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">self</span>.restorePaperAirplaneStatus()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>大家看到这大家可能会有疑问了，三段动画怎么会有五个关键帧呢，我们来刨析一下：</p>
-<ul>
-<li>第一个关键帧：完成1号纸飞机视图运动到右上角并移出屏幕，视图逐渐变小的动画。该关键帧从整个动画的第0秒开始执行，持续时间为0.6秒。</li>
-<li>第二个关键帧：由于2号纸飞机视图的初始透明度为零，所以在第二个关键帧将透明度设为1，并且缩小视图。注意这两个动作需要在瞬间完成，所以<code>relativeDuration</code>设为0.01，一个极短的时间。开始时间为整个动画的第0.9秒开始，较第一个关键帧延迟0.3秒。</li>
-<li>第三个关键帧：与第二个关键帧同时开始执行，完成2号纸飞机视图从小变大、并且往左下角运动，一直移出屏幕。持续时间为1.5秒。</li>
-<li>第四个关键帧：与第二个关键帧作用相似，改变3号纸飞机视图的透明度，同样是在瞬间完成。</li>
-<li>第五个关键帧：与第四个关键帧同时执行， 完成向右移动的动画，持续0.6秒。</li>
-</ul>
-<p>关键帧完成之后，在<code>completion</code>闭包中调用<code>restorePaperAirplaneStatus()</code>方法，恢复3个纸飞机视图的状态及位置，以便再次执行动画。</p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>大家在使用关键帧动画时，对于关键帧的开始时间和持续时间需要仔细设置，保证每个关键帧在合适的时间开始，执行恰当的持续时间。在必要时候也需要在关键帧里修改视图的一些状态，但要设置极短的持续时间，表示瞬间完成。</p>
-<p>下一篇会向大家介绍在使用Auto Layout的情况下，如何通过约束实现动画，好了今天就先到这里吧。</p>
-<p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-]]></content>
-    <summary type="html">
-    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" ]]>
-    </summary>
-    
-      <category term="Animation" scheme="http://www.devtalking.com/tags/Animation/"/>
-    
-      <category term="Swift" scheme="http://www.devtalking.com/tags/Swift/"/>
     
   </entry>
   

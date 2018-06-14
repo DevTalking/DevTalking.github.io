@@ -1,0 +1,1082 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="任务管理,生产力," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+OmniFocus的几个主要概念文章中所有的内容都是以OmniFocus 3为例。
+
+文件夹：OmniFocus中任务的组织结构最顶级一层，但只是用于分类，本身没有什么属性。
+项目：顾名思义，用于定义我们生活和工作中大大小小的项目，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于OmniFocus的任务系统">
+<meta property="og:url" content="http://www.devtalking.com/articles/task-manage-omnifocus/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+OmniFocus的几个主要概念文章中所有的内容都是以OmniFocus 3为例。
+
+文件夹：OmniFocus中任务的组织结构最顶级一层，但只是用于分类，本身没有什么属性。
+项目：顾名思义，用于定义我们生活和工作中大大小小的项目，">
+<meta property="og:updated_time" content="2018-06-14T16:43:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于OmniFocus的任务系统">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+OmniFocus的几个主要概念文章中所有的内容都是以OmniFocus 3为例。
+
+文件夹：OmniFocus中任务的组织结构最顶级一层，但只是用于分类，本身没有什么属性。
+项目：顾名思义，用于定义我们生活和工作中大大小小的项目，">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 基于OmniFocus的任务系统 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                基于OmniFocus的任务系统
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-05-01T00:00:00+08:00" content="2018-05-01">
+              2018-05-01
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/task-manage-omnifocus/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/task-manage-omnifocus/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="OmniFocus_u7684_u51E0_u4E2A_u4E3B_u8981_u6982_u5FF5"><a href="#OmniFocus_u7684_u51E0_u4E2A_u4E3B_u8981_u6982_u5FF5" class="headerlink" title="OmniFocus的几个主要概念"></a>OmniFocus的几个主要概念</h2><p>文章中所有的内容都是以OmniFocus 3为例。</p>
+<ul>
+<li>文件夹：OmniFocus中任务的组织结构最顶级一层，但只是用于分类，本身没有什么属性。</li>
+<li>项目：顾名思义，用于定义我们生活和工作中大大小小的项目，项目本身也有属性设置，可设置标签、其内任务的关系（并行、串行、单个），截止日期等。项目下可包含多个任务。</li>
+<li>任务：OmniFocus中承载事件的最小颗粒。因为OmniFocus支持任务无限嵌套，所以当多个任务在一个任务下时该任务就成为一个任务组。</li>
+<li>任务组：任务组本身也是一个任务，但是它又是其他任务的父任务，所以任务组有子任务关系（并行、串行、单个）的设置。</li>
+<li>标签：任务、项目身上都可以设置一到多个标签。标签可以嵌套，并且标签支持设置地理位置，并且有根据进入，走出两个行为和距离范围设置通知。</li>
+<li>透视：根据各种条件筛选任务的视图。比如查看有标签“办公室”，即将截至的任务。条件可以按照包含任意、全部包含和不包含进行组合。然后还可以设置筛选出来任务的排列、分组方式。</li>
+</ul>
+<h2 id="u4EFB_u52A1_u7CFB_u7EDF"><a href="#u4EFB_u52A1_u7CFB_u7EDF" class="headerlink" title="任务系统"></a>任务系统</h2><p>我参照John Z. Sonmez的看板+番茄钟的系统，将其调整为OmniFocus+番茄钟的系统。</p>
+<h3 id="u7CFB_u7EDF_u8BBE_u7F6E"><a href="#u7CFB_u7EDF_u8BBE_u7F6E" class="headerlink" title="系统设置"></a>系统设置</h3><ul>
+<li>在截止日期这一项，将即将截止日期的表示设置为今天。</li>
+<li>今天和Watch这一项，设置为自定义透视的<strong>今日</strong>（该透视下面会讲到）。</li>
+</ul>
+<h3 id="u6784_u5EFA_u7CFB_u7EDF_u7684_u4E3B_u8981_u6807_u7B7E"><a href="#u6784_u5EFA_u7CFB_u7EDF_u7684_u4E3B_u8981_u6807_u7B7E" class="headerlink" title="构建系统的主要标签"></a>构建系统的主要标签</h3><ul>
+<li>仪式：周期性重复的任务会设置该标签。</li>
+<li>地点：标明某个任务能在何种场所进行。<ul>
+<li>办公室</li>
+<li>家</li>
+<li>通勤中</li>
+</ul>
+</li>
+<li>状态：进行任务时需要投入的专注度。<ul>
+<li>集中精力</li>
+<li>放松</li>
+</ul>
+</li>
+<li>跟踪：需要跟踪的任务会设置该标签，比如安排下去的任务需要在某个时间点知道完成的结果。</li>
+<li>采购：需要购买东西的任务会设置该标签。</li>
+<li>星期：规划一周任务时设置的标签。<ul>
+<li>周一</li>
+<li>周二</li>
+<li>周三</li>
+<li>周四</li>
+<li>周五</li>
+<li>周六</li>
+<li>周日</li>
+</ul>
+</li>
+<li>二分钟：能在很短时间内完成的任务会设置该标签。</li>
+</ul>
+<a id="more"></a>
+<h3 id="u4EFB_u52A1_u6C60_u900F_u89C6"><a href="#u4EFB_u52A1_u6C60_u900F_u89C6" class="headerlink" title="任务池透视"></a>任务池透视</h3><h4 id="u529E_u516C_u5BA4-_u805A_u7126"><a href="#u529E_u516C_u5BA4-_u805A_u7126" class="headerlink" title="办公室-聚焦"></a>办公室-聚焦</h4><p>该透视能筛选出所有我需要在办公室内并且投入100%专注度要做的事情。是我在规划一周内工作的主要透视视图。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为全部以下内容：办公室、集中精力</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周五、周六、周日</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：到期 </li>
+</ul>
+<h4 id="u529E_u516C_u5BA4-_u653E_u677E"><a href="#u529E_u516C_u5BA4-_u653E_u677E" class="headerlink" title="办公室-放松"></a>办公室-放松</h4><p>该透视能筛选出所有我需要在办公室内处理，但是不需要投入很多专注度的事情。是我在规划一周内工作时补充任务的透视，还有当每天清空任务后，会从该透视中进行补充。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为全部以下内容：办公室、放松</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周五、周六、周日</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：到期 </li>
+</ul>
+<h4 id="u5BB6-_u805A_u7126"><a href="#u5BB6-_u805A_u7126" class="headerlink" title="家-聚焦"></a>家-聚焦</h4><p>该透视能筛选出所有我需要在家并且投入100%专注度要做的事情。是我在规划一周内业余时间工作的主要透视视图。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为全部以下内容：家、集中精力</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周五、周六、周日</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：到期 </li>
+</ul>
+<h4 id="u5BB6-_u653E_u677E"><a href="#u5BB6-_u653E_u677E" class="headerlink" title="家-放松"></a>家-放松</h4><p>该透视能筛选出所有我需要在家处理，但是不需要投入很多专注度的事情。是我在规划一周内业余时间工作时补充任务的透视。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为全部以下内容：家、放松</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周五、周六、周日</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：到期 </li>
+</ul>
+<h4 id="u901A_u52E4"><a href="#u901A_u52E4" class="headerlink" title="通勤"></a>通勤</h4><p>该透视能筛选出所有我需要在通勤路上处理的事情，比如回邮件、看书等。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为全部以下内容：通勤中</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周五、周六、周日</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h4 id="u8DDF_u8E2A"><a href="#u8DDF_u8E2A" class="headerlink" title="跟踪"></a>跟踪</h4><p>该透视能筛选出所有我需要跟踪处理的事情，比如我需要在两天后收到报告等。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为全部以下内容：跟踪</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h3 id="u4EFB_u52A1_u67E5_u770B_u900F_u89C6"><a href="#u4EFB_u52A1_u67E5_u770B_u900F_u89C6" class="headerlink" title="任务查看透视"></a>任务查看透视</h3><p>上面的透视其实都是我的任务池，只不过区分了不同的地点和精力状态，根据具体情况从这些任务池中挑选出任务，也就是规划工作的过程。那么任务挑选的问题就来了，如何挑选？如何处理任务算是已挑选？挑选出的任务去哪看？</p>
+<h4 id="u5982_u4F55_u5904_u7406_u4EFB_u52A1_u7B97_u662F_u5DF2_u6311_u9009_uFF1F"><a href="#u5982_u4F55_u5904_u7406_u4EFB_u52A1_u7B97_u662F_u5DF2_u6311_u9009_uFF1F" class="headerlink" title="如何处理任务算是已挑选？"></a>如何处理任务算是已挑选？</h4><p>我先从挑选任务说起，我挑选任务有三步：</p>
+<ul>
+<li>给任务设置截至日期。</li>
+<li>给任务设置对应周的标签。</li>
+<li>编辑任务标题，注明需要几个番茄钟。</li>
+</ul>
+<p>给任务设置截至日期的范围一般是本周内，比如周一规划任务，那么给任务设置的最晚截至日期是周日，也就是说，如果某个任务的到期日超过了本周，那么在本周规划时，在<strong>设置截至日期这个维度</strong>我是不会关注的。</p>
+<p>给任务设置对应周标签的方式是挑选我认为应该在本周内处理的任务，不考虑该任务的截至日期，不过有本周范围内截至日期的任务已经在上一步筛选完了，所以设置对应周标签的任务在要么没有截至日期，要么是截止日期超过本周的任务范围内。</p>
+<p>OmniFocus中，任务有一个预估时长的属性，其实变相的代表了番茄钟的数量，但是查看很不直观。所以我就会在挑选完任务后，给这些任务的标题上注明番茄钟的数量，我一般会用“🍅”表示，有一个🍅就表示该任务需要一个番茄钟，以此类推。这种方式能让我在查看今日任务时能一目了然任务所需的番茄钟数量。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h4 id="u6311_u9009_u51FA_u7684_u4EFB_u52A1_u53BB_u54EA_u770B_uFF1F"><a href="#u6311_u9009_u51FA_u7684_u4EFB_u52A1_u53BB_u54EA_u770B_uFF1F" class="headerlink" title="挑选出的任务去哪看？"></a>挑选出的任务去哪看？</h4><p>一周的任务通过上面的方式规划好后，应该怎么查看呢？这时候还是用到透视。我创建了周一至周日七个透视，每天只关注当天的透视，里面筛选出的任务必定就是我规划好应该在这天干的任务。</p>
+<h5 id="u5468_u4E00"><a href="#u5468_u4E00" class="headerlink" title="周一"></a>周一</h5><p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>无以下内容：标签为任何以下内容：周二、周三、周四、周五、周六、周日</li>
+<li>任何以下内容：<ul>
+<li>标签为全部以下内容：周一</li>
+<li>状态：即将到期</li>
+</ul>
+</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：单独操作</li>
+<li>项目分组方式：到期</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h5 id="u5468_u4E8C"><a href="#u5468_u4E8C" class="headerlink" title="周二"></a>周二</h5><p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>无以下内容：标签为任何以下内容：周一、周三、周四、周五、周六、周日</li>
+<li>任何以下内容：<ul>
+<li>标签为全部以下内容：周二</li>
+<li>状态：即将到期</li>
+</ul>
+</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：单独操作</li>
+<li>项目分组方式：到期</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h5 id="u5468_u4E09"><a href="#u5468_u4E09" class="headerlink" title="周三"></a>周三</h5><p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周四、周五、周六、周日</li>
+<li>任何以下内容：<ul>
+<li>标签为全部以下内容：周三</li>
+<li>状态：即将到期</li>
+</ul>
+</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：单独操作</li>
+<li>项目分组方式：到期</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h5 id="u5468_u56DB"><a href="#u5468_u56DB" class="headerlink" title="周四"></a>周四</h5><p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周五、周六、周日</li>
+<li>任何以下内容：<ul>
+<li>标签为全部以下内容：周四</li>
+<li>状态：即将到期</li>
+</ul>
+</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：单独操作</li>
+<li>项目分组方式：到期</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h5 id="u5468_u4E94"><a href="#u5468_u4E94" class="headerlink" title="周五"></a>周五</h5><p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周六、周日</li>
+<li>任何以下内容：<ul>
+<li>标签为全部以下内容：周五</li>
+<li>状态：即将到期</li>
+</ul>
+</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：单独操作</li>
+<li>项目分组方式：到期</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h5 id="u5468_u516D"><a href="#u5468_u516D" class="headerlink" title="周六"></a>周六</h5><p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周五、周日</li>
+<li>任何以下内容：<ul>
+<li>标签为全部以下内容：周六</li>
+<li>状态：即将到期</li>
+</ul>
+</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：单独操作</li>
+<li>项目分组方式：到期</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h5 id="u5468_u65E5"><a href="#u5468_u65E5" class="headerlink" title="周日"></a>周日</h5><p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>无以下内容：标签为任何以下内容：周一、周二、周三、周四、周五、周六</li>
+<li>任何以下内容：<ul>
+<li>标签为全部以下内容：周日</li>
+<li>状态：即将到期</li>
+</ul>
+</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：单独操作</li>
+<li>项目分组方式：到期</li>
+<li>项目排列方式：已标注</li>
+</ul>
+<h4 id="u661F_u671F_u900F_u89C6_u89E3_u8BFB"><a href="#u661F_u671F_u900F_u89C6_u89E3_u8BFB" class="headerlink" title="星期透视解读"></a>星期透视解读</h4><p>以上这七个透视筛选的任务表示了在一周里，每天需要做的事情。它会根据条件筛选以下两种任务：</p>
+<ul>
+<li>可用的，并且没有其他星期的标签，并且设置了当天星期的标签的任务。</li>
+<li>可用的，并且没有其他星期的标签，并且在今天到期的任务。</li>
+</ul>
+<p>其实这两个筛选条件就是在前面小节挑选任务时，对任务做的操作。</p>
+<p>另外在排序方面，不按项目分组，只安到期日分类，并且排序顺序安是否已标注排序。也就是说，我在处理今天的任务时，不是特别关心这个任务属于哪个项目，而是关注任务在今天的到期时间，并且如果是打了标注的，表名优先级最高，排在最前面。</p>
+<h3 id="u5176_u4ED6_u900F_u89C6"><a href="#u5176_u4ED6_u900F_u89C6" class="headerlink" title="其他透视"></a>其他透视</h3><p>上面的透视是组成我任务系统的核心透视，还有几个其他的透视可以辅助我查看一些有共性的任务。</p>
+<h4 id="u4ECA_u65E5"><a href="#u4ECA_u65E5" class="headerlink" title="今日"></a>今日</h4><p>这个透视主要是用于OmniFocus的通知小组件和Apple Watch的小组件使用的。该视图主要作用的是提示我今天有多少个即将到期的任务。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>任何以下内容：即将到期</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：项目顺序</li>
+</ul>
+<h4 id="u4EEA_u5F0F"><a href="#u4EEA_u5F0F" class="headerlink" title="仪式"></a>仪式</h4><p>该视图主要显示哪些周期性重复执行的任务。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为全部以下内容：仪式</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：到期</li>
+</ul>
+<h4 id="u8D2D_u4E70_u6E05_u5355"><a href="#u8D2D_u4E70_u6E05_u5355" class="headerlink" title="购买清单"></a>购买清单</h4><p>该视图主要显示我的待购物品清单，不考虑什么时候买，但只要有想买的念头就会记下来，在这里显示。</p>
+<p>筛选规则：</p>
+<ul>
+<li>可用性：可用</li>
+<li>标签为任何以下内容：采购</li>
+</ul>
+<p>排列规则：</p>
+<ul>
+<li>群组和分类：整个项目</li>
+<li>项目分组方式：未分组</li>
+<li>项目排列方式：到期</li>
+</ul>
+<h2 id="u756A_u8304_u949F_u7CFB_u7EDF"><a href="#u756A_u8304_u949F_u7CFB_u7EDF" class="headerlink" title="番茄钟系统"></a>番茄钟系统</h2><p>番茄钟这个时间管理工具在这里不做解释。我选择番茄钟应用的原则是有较好的统计功能，能明确的看到一定范围内我的工作时间和番茄数，如果能跨多个平台当然更好，所以我最终选择了Flat Tomato这个番茄钟应用。该应用有iOS版、WatchOS版、MacOS版，在任何环境下我都可以快速的开始一个25分钟的番茄时间，并且它有比较好的统计系统。另外该应用还有一个亮点功能是自带一个轻量级的任务管理系统，也借鉴了一点GTD的概念，并且可以对每一个任务设置番茄钟数量预估，可以快速启动对应的项目的番茄钟，并且番茄时间、休息时间、再番茄时间是可以自动进行的，可以有效提供我们连续专注的效率。</p>
+<p>因为OmniFocus没有集成任何番茄系统，而Flat Tomato也没有集成OF，所以我的番茄系统目前属于半外挂形式，也就是当要执行OF中的任务时，标题上标注的🍅数量只是一个参考作用，然后再单独启动Flat Tomato的番茄时间，每个番茄钟完成后还需要手动标注这个番茄钟做了什么事。</p>
+<p>那么为什么说是半外挂呢？因为Flat Tomato集成了Todoist，它可以同步Todoist中的项目和任务，从而给每个任务设置番茄钟，所以我将Todoist作为一个任务中转站。将OmniFocus中的项目和任务同步到Todoist中，然后在Flat Tomato里就可以规划番茄数量了。这样每当我要执行OF中的任务时，我就可以直接在Flat Tomato中找到开始番茄钟。目前这种方式我只在做系统的任务分解时候才会用到。</p>
+<h3 id="u4EFB_u52A1_u5206_u89E3"><a href="#u4EFB_u52A1_u5206_u89E3" class="headerlink" title="任务分解"></a>任务分解</h3><p>首先我做任务分解时并不在OmniFocus里做，而是在Day One中，其实或者任意iOS中的文本App就可以。其次将任务同步进Todoist中使用了它提供的REST API和<a href="https://support.omnigroup.com/omnifocus-taskpaper-reference/" target="_blank" rel="external">OmniFocus支持TaskPaper规范导入</a>的功能。因为目前OmniFocus 3的Mac版还没有发布，只发布了iOS版。所以我制作了一个<a href="https://workflow.is/workflows/13a29ed7370b4b09923e8bd6ccaa672f" target="_blank" rel="external">Workflow</a>，将我在Day One中规划的任务创建进OmniFocus，同时通过REST API同步进Todoist。</p>
+<h2 id="u7EFC_u8FF0"><a href="#u7EFC_u8FF0" class="headerlink" title="综述"></a>综述</h2><p>以上就是我的任务系统的核心点。当然我还依然遵循GTD的方法，比如收集的概念，检查回顾等，这里就不再做解释了。希望大家能和我一起交流任务管理、时间管理的心得。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/任务管理/" rel="tag">#任务管理</a>
+          
+            <a href="/tags/生产力/" rel="tag">#生产力</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/testng-powermock/" rel="next" title="基于TestNG和PowerMock的单元测试指南">
+                <i class="fa fa-chevron-left"></i> 基于TestNG和PowerMock的单元测试指南
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">79</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jacefu" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.devtalking.com/qrcode.jpg" target="_blank">
+                  
+                    <i class="fa fa-qrcode"></i> 微信公众号
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#OmniFocus_u7684_u51E0_u4E2A_u4E3B_u8981_u6982_u5FF5"><span class="nav-number">1.</span> <span class="nav-text">OmniFocus的几个主要概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4EFB_u52A1_u7CFB_u7EDF"><span class="nav-number">2.</span> <span class="nav-text">任务系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u7CFB_u7EDF_u8BBE_u7F6E"><span class="nav-number">2.1.</span> <span class="nav-text">系统设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6784_u5EFA_u7CFB_u7EDF_u7684_u4E3B_u8981_u6807_u7B7E"><span class="nav-number">2.2.</span> <span class="nav-text">构建系统的主要标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4EFB_u52A1_u6C60_u900F_u89C6"><span class="nav-number">2.3.</span> <span class="nav-text">任务池透视</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u529E_u516C_u5BA4-_u805A_u7126"><span class="nav-number">2.3.1.</span> <span class="nav-text">办公室-聚焦</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u529E_u516C_u5BA4-_u653E_u677E"><span class="nav-number">2.3.2.</span> <span class="nav-text">办公室-放松</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u5BB6-_u805A_u7126"><span class="nav-number">2.3.3.</span> <span class="nav-text">家-聚焦</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u5BB6-_u653E_u677E"><span class="nav-number">2.3.4.</span> <span class="nav-text">家-放松</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u901A_u52E4"><span class="nav-number">2.3.5.</span> <span class="nav-text">通勤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u8DDF_u8E2A"><span class="nav-number">2.3.6.</span> <span class="nav-text">跟踪</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4EFB_u52A1_u67E5_u770B_u900F_u89C6"><span class="nav-number">2.4.</span> <span class="nav-text">任务查看透视</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u5982_u4F55_u5904_u7406_u4EFB_u52A1_u7B97_u662F_u5DF2_u6311_u9009_uFF1F"><span class="nav-number">2.4.1.</span> <span class="nav-text">如何处理任务算是已挑选？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u6311_u9009_u51FA_u7684_u4EFB_u52A1_u53BB_u54EA_u770B_uFF1F"><span class="nav-number">2.4.2.</span> <span class="nav-text">挑选出的任务去哪看？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#u5468_u4E00"><span class="nav-number">2.4.2.1.</span> <span class="nav-text">周一</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#u5468_u4E8C"><span class="nav-number">2.4.2.2.</span> <span class="nav-text">周二</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#u5468_u4E09"><span class="nav-number">2.4.2.3.</span> <span class="nav-text">周三</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#u5468_u56DB"><span class="nav-number">2.4.2.4.</span> <span class="nav-text">周四</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#u5468_u4E94"><span class="nav-number">2.4.2.5.</span> <span class="nav-text">周五</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#u5468_u516D"><span class="nav-number">2.4.2.6.</span> <span class="nav-text">周六</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#u5468_u65E5"><span class="nav-number">2.4.2.7.</span> <span class="nav-text">周日</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u661F_u671F_u900F_u89C6_u89E3_u8BFB"><span class="nav-number">2.4.3.</span> <span class="nav-text">星期透视解读</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5176_u4ED6_u900F_u89C6"><span class="nav-number">2.5.</span> <span class="nav-text">其他透视</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u4ECA_u65E5"><span class="nav-number">2.5.1.</span> <span class="nav-text">今日</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u4EEA_u5F0F"><span class="nav-number">2.5.2.</span> <span class="nav-text">仪式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u8D2D_u4E70_u6E05_u5355"><span class="nav-number">2.5.3.</span> <span class="nav-text">购买清单</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u756A_u8304_u949F_u7CFB_u7EDF"><span class="nav-number">3.</span> <span class="nav-text">番茄钟系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u4EFB_u52A1_u5206_u89E3"><span class="nav-number">3.1.</span> <span class="nav-text">任务分解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7EFC_u8FF0"><span class="nav-number">4.</span> <span class="nav-text">综述</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/task-manage-omnifocus/';
+      var disqus_title = '基于OmniFocus的任务系统';
+      var disqus_url = 'http://www.devtalking.com//articles/task-manage-omnifocus/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
