@@ -216,6 +216,149 @@
             
             
               
+                <a class="post-title-link" href="/articles/closure-expressions-in-swift/" itemprop="url">
+                  Swift中的闭包（Closure）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-09-01T00:00:00+08:00" content="2014-09-01">
+              2014-09-01
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/closure-expressions-in-swift/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/closure-expressions-in-swift/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>闭包在Swift中非常有用。通俗的解释就是一个<code>Int</code>类型里存储着一个整数，一个<code>String</code>类型包含着一串字符，同样，闭包是一个包含着函数的类型。有了闭包，你就可以处理很多在一些古老的语言中不能处理的事情。这是因为闭包使用的多样性，比如你可以将闭包赋值给一个变量，你也可以将闭包作为一个函数的参数，你甚至可以将闭包作为一个函数的返回值。它的强大之处可见一斑。</p>
+<p>在Swift的很多文档教材中都说函数是“一等公民”，起初我还不是很理解“一等公民”是什么意思，但当我理解了闭包以及它的强大功能后，我恍然大悟、茅塞顿开、醍醐灌顶。原来闭包的这些特性就是“一等公民”的特性啊！参见维基百科<a href="http://en.wikipedia.org/wiki/First-class_citizen" target="_blank" rel="external">First-class citizen</a>。</p>
+<p>Swift中的闭包类似Objective-C中的Block。其实，如果你想在Swift中实现Objective-C里的Block功能，你可以直接使用闭包来代替。Block和闭包的区别只是语法的不同而已，而且闭包的可读性比较强。</p>
+<h2 id="u51FD_u6570_u662F_u95ED_u5305_u5417_uFF1F"><a href="#u51FD_u6570_u662F_u95ED_u5305_u5417_uFF1F" class="headerlink" title="函数是闭包吗？"></a>函数是闭包吗？</h2><p>虽然你还没有意识到，但我们确实已经在Swift中这么用了。Swift中的函数就是闭包，在Apple的官方文档中有这样的描述：</p>
+<blockquote>
+<p>闭包有三种形式：  </p>
+<ol>
+<li>全局函数是一个有名字但不会捕获任何值的闭包。  </li>
+<li>嵌套函数是一个有名字并可以捕获到其封闭函数域内的值的闭包。  </li>
+<li>闭包表达式是一个利用轻量级语法所写的，可以捕获其上下文中变量或常量值的匿名闭包。</li>
+</ol>
+</blockquote>
+<p>今天，我们要讨论的是第三种形式，尤其讨论它是如何将繁复的、可读性比较差的业务逻辑代码压缩成高可读性、简明明了的形式。</p>
+<p>大家还记得数组的<code>map</code>方法么？它的参数就是一个闭包，它会将数组里的每一个元素放在闭包中进行处理，然后返回一个新的数组，甚至是与原数组不同元素类型的新数组。</p>
+<p><code>map</code>函数的原型如下：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">map</span><span class="generics">&lt;U&gt;</span><span class="params">(transform: <span class="params">(T)</span></span></span> -&gt; <span class="type">U</span>) -&gt; [<span class="type">U</span>]</span><br></pre></td></tr></table></figure>
+<p>我们可以看到该函数使用了泛型。<code>(T) -&gt; U</code>是一个泛型闭包，它的意思就是类型<code>T</code>将会在闭包中进行逻辑处理，然后返回<code>U</code>类型。最后<code>map</code>函数会返回一个<code>U</code>类型的数组。</p>
+<p>用一个例子来说明。今天我办生日聚会，要迎接很多人，并且为每个人都准备了一句欢迎词。我们要怎么做呢？首先我们将迎接的人放进一个数组名叫<code>guestList</code>，然后用一个名叫<code>greetPeople</code>的函数为每个人生成欢迎词：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">greetPeople</span><span class="params">(person: String)</span></span> -&gt; <span class="type">String</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> guestList = [<span class="string">"Chris"</span>, <span class="string">"Jill"</span>, <span class="string">"Tim"</span>]</span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(greetPeople)</span><br></pre></td></tr></table></figure>
+<p>然后将<code>greetPeople</code>函数作为<code>guestList</code>数组的<code>map</code>函数的参数传入，并返回一个新的数组<code>fullGreetings</code>，这个数组就包含了每个人的欢迎词。</p>
+<p>如果我们想展示一下每个人的欢迎词，我们甚至可以这样写：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">fullGreetings.<span class="built_in">map</span>(<span class="built_in">println</span>)</span><br></pre></td></tr></table></figure>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>这时也许有人要质疑了，<code>println</code>函数不是没有返回值么？那么<code>map</code>函数会返回什么呢？其实每一个没有返回值的函数，都会返回一个空的元组（<code>tuple</code>），所以说上述代码的返回值其实是<code>Array&lt;()&gt;</code>。</p>
+<p>上面的例子中我们就是将一个全局函数<code>greetPeople</code>作为一个闭包来使用的。</p>
+<h2 id="u7B80_u660E_u627C_u8981_u7684_u95ED_u5305_u8868_u8FBE_u5F0F"><a href="#u7B80_u660E_u627C_u8981_u7684_u95ED_u5305_u8868_u8FBE_u5F0F" class="headerlink" title="简明扼要的闭包表达式"></a>简明扼要的闭包表达式</h2><p>其实Swift已经为我们提供了很多简化的语法，可以让我们保证代码的高可读性和维护性。还用上面的例子来说明，对于<code>greetPeople</code>这个全局函数来说，其实只需要使用一次，所以我们没必要单独定义这个函数。我们可以直接使用闭包表达式来处理：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123;(person: <span class="type">String</span>) -&gt; <span class="type">String</span> <span class="keyword">in</span> <span class="keyword">return</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>闭包表达式其实是函数的字面值，官方一般称之为匿名函数。一般当我们需要使用函数快速的实现一个简短的处理逻辑并且只使用一次的时候，我们可以省去函数名，使用简化的语法。上面的代码中可以看到关键字<code>in</code>之前是闭包表达式的参数和返回值，<code>in</code>之后是闭包表达式实际处理逻辑的代码区域。</p>
+<p>下面我们将使用Swift更多的特性来进一步简化闭包表达式。</p>
+<p>我们知道Swift中有类型推断的特性，所以我们可以取掉参数类型：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123;(person) -&gt; <span class="type">String</span> <span class="keyword">in</span> <span class="keyword">return</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span> &#125;)</span><br></pre></td></tr></table></figure>
+<p>像我们示例中的这种单一闭包表达式，编译器可以根据<code>in</code>之前的返回值类型和<code>return</code>之后的返回数据类型自动判断，所以我们可以省略返回值和<code>return</code>关键字：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123;person <span class="keyword">in</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span> &#125;)</span><br></pre></td></tr></table></figure>
+<p>其实在Swift中还提供了参数的简写方式：<code>$0</code>代表第一个参数、<code>$1</code>代表第二个参数以此类推。所以我们又可以将参数名称省略：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123; <span class="string">"Hello, <span class="subst">\($<span class="number">0</span>)</span>!"</span> &#125;)</span><br></pre></td></tr></table></figure>
+<p>当函数的最后一个参数是闭包时，可以将闭包写在<code>()</code>之外，这也是Swift的一个特性，所以我们还可以继续简化：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>()&#123; <span class="string">"Hello, <span class="subst">\($<span class="number">0</span>)</span>!"</span> &#125;</span><br></pre></td></tr></table></figure>
+<p>当函数有且仅有一个参数，并该参数是闭包时，不但可以将闭包写在<code>()</code>外，还可以省略<code>()</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>&#123; <span class="string">"Hello, <span class="subst">\($<span class="number">0</span>)</span>!"</span> &#125;</span><br></pre></td></tr></table></figure>
+<p>到目前为止，示例中的闭包表达式已经被我们根据Swift的特性，简化为简明扼要、高可读性的闭包表达式了，是不是很酷呢！</p>
+<p>参考原文：<a href="http://www.codingexplorer.com/closure-expressions-swift/?utm_source=feedly&amp;utm_reader=feedly&amp;utm_medium=rss&amp;utm_campaign=closure-expressions-swift" target="_blank" rel="external">Closure Expressions in Swift</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/optionals-case-study/" itemprop="url">
                   Swift中Optional类型的使用案例分析：valuesForKeys
                 </a>
@@ -906,124 +1049,6 @@ Boundary contact occurred - nil
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/access-control-and-protected/" itemprop="url">
-                  Swift中的访问控制与protected
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-08-20T00:00:00+08:00" content="2014-08-20">
-              2014-08-20
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/access-control-and-protected/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/access-control-and-protected/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>当Swift提供了访问控制特性后大家对该特性的响应非常积极和强烈。同时也有很多开发者朋友会问，“为什么Swift中没有提供<code>protected</code>访问级别呢？” 然而在很多其他语言中有这种访问控制级别，就是只能由子类可以访问某些方法或属性的访问级别。</p>
-<p>当定义Swift的访问级别时，我们主要考虑了以下两个使用情况：</p>
-<ul>
-<li>在App中隐藏<code>class</code>的私人信息。</li>
-<li>在App客户端中隐藏框架中的实现细节。</li>
-</ul>
-<p>这两种情况就分别对应了<code>private</code>和<code>internal</code>访问级别。</p>
-<p>相比之下，<code>protected</code>级别保护了继承者的访问权限，这个新的访问控制级别给我们带来全新的思考方式和设计模式。但实际上，该级别并没有提供真正意义上的保护，因为子类总是能通过<code>public</code>级别的方法和属性去暴露<code>protected</code>级别的API。它也没有提供额外的优化解决机制，因为一个父类的方法或属性可以被很多个子类重写，很难控制。所以也没有必要在这方面进行限制，也就是说在现有机制下，子类可以访问父类的一些成员，但是在子类中使用的，或帮助子类实现某些功能的类并不一定能访问到该子类父类的成员。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>正如一些开发者指出的，Apple的框架里有些API被分离出来，专门供子类使用。那么为什么不使用<code>protected</code>级别控制一下呢？我们查看了相关代码后，发现这些API大体符合这么两点情况。第一，一些方法在子类外没有用，所以没有必要将其保护为只能由子类使用。第二，一些方法可以被重写，但不能被调用。比如<code>drawRect(_:)</code>方法，在<code>UIKit</code>框架代码库中肯定可以使用，但是在<code>UIKit</code>框架之外就没法使用了。</p>
-<p>在扩展类的时候，如何与<code>protected</code>级别的成员交互也思考的不是很明确。比如一个类的扩展是否可以访问该类的<code>protected</code>成员呢？或者一个子类的扩展是否能访问其父类的<code>protected</code>成员呢？在相同模块中申明类的扩展会有什么影响呢？</p>
-<p>还有一个影响我们设计的原因是：现在已有的应用大多数都使用了Apple提供的或第三方提供的框架。Objective-C的方法和属性通常都是在<code>.h</code>公共头文件中申明的，但同样可以加在类扩展的<code>.m</code>实现文件中。当公共类的某些部分在框架的其他地方使用，但没有超出框架外时，开发者就要创建第二个头文件用于内部使用。这些种情况就对应着Swift中的<code>public</code>、<code>private</code>、<code>internal</code>三种访问级别。</p>
-<p>Swift提供的访问控制特性本着单一、易于理解、与继承无关的原则。我们认为现在这种模式很简单也很容易理解，并且大多数的应用场景是想隐藏类或框架中一些功能实现细节。这种访问控制机制可能和你以前使用的其他语言不太一样，但是我们鼓励你们大胆的去尝试。</p>
-<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=11" target="_blank" rel="external">Access Control and protected</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1066,7 +1091,7 @@ Boundary contact occurred - nil
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">79</span>
+              <span class="site-state-item-count">80</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1080,7 +1105,7 @@ Boundary contact occurred - nil
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-count">44</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
@@ -1100,9 +1125,9 @@ Boundary contact occurred - nil
           
             
               <span class="links-of-author-item">
-                <a href="http://weibo.com/jacefu" target="_blank">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
                   
-                    <i class="fa fa-weibo"></i> Weibo
+                    <i class="fa fa-linkedin"></i> linkedin
                   
                 </a>
               </span>
@@ -1111,14 +1136,6 @@ Boundary contact occurred - nil
                 <a href="mailto:jace.fu@icloud.com" target="_blank">
                   
                     <i class="fa fa-envelope"></i> Email
-                  
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://www.devtalking.com/qrcode.jpg" target="_blank">
-                  
-                    <i class="fa fa-qrcode"></i> 微信公众号
                   
                 </a>
               </span>

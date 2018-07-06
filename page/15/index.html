@@ -216,6 +216,360 @@
             
             
               
+                <a class="post-title-link" href="/articles/gojs-links/" itemprop="url">
+                  GOJS教程 -- 如何使用Links
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-07-22T00:00:00+08:00" content="2014-07-22">
+              2014-07-22
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/gojs-links/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/gojs-links/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p><code>Link</code>对象顾名思义就是连线，它可以通过连线的方式表达<code>Node</code>之间的关系。</p>
+<h2 id="u65E0_u65B9_u5411_u8FDE_u7EBF"><a href="#u65E0_u65B9_u5411_u8FDE_u7EBF" class="headerlink" title="无方向连线"></a>无方向连线</h2><p>最简单的<code>Link</code>就是没有箭头的，无方向的连线。当Diagram中的<code>Node</code>之间的关系没有方向性或者它们之间存在隐性关系的时候，我们使用这种连线。  </p>
+<p>我们在构建<code>Link</code>时，先设置创建模板（<code>linkTemplate</code>），该模板指定了连线的样式。然后创建一个指定连线关系的数组<code>linkDataArray</code>，我们通过该数组指定<code>Node</code>之间的连线关系，最后通过<code>GraphLinksModel</code>方法构建连线。 </p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
+  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
+  $(go.TextBlock, { margin: 5 },
+    new go.Binding(&quot;text&quot;, &quot;key&quot;))
+);
+
+diagram.linkTemplate =
+$(go.Link,       // the whole link panel
+  $(go.Shape));  // the link shape, default black stroke
+
+var nodeDataArray = [
+{ key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
+{ key: &quot;Beta&quot;, loc: &quot;100 50&quot; }
+];
+var linkDataArray = [
+{ from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
+];
+diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link1.jpg" alt="Link"></p>
+<h2 id="u5E26_u65B9_u5411_u8FDE_u7EBF"><a href="#u5E26_u65B9_u5411_u8FDE_u7EBF" class="headerlink" title="带方向连线"></a>带方向连线</h2><p>一般情况下我们都需要使用带方向的连线，即带箭头的连线。我们只需要修改一下<code>linkTemplate</code>即可，我们在连线模板中加入一个箭头，通过在<code>Link</code>中再添加一个<code>Shape</code>，然后设置<code>Shape.toArrow</code>属性为<code>OpenTrigangle</code>。  </p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
+  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
+  $(go.TextBlock, { margin: 5 },
+    new go.Binding(&quot;text&quot;, &quot;key&quot;))
+);
+
+diagram.linkTemplate =
+$(go.Link,
+  $(go.Shape),  // the link shape
+  $(go.Shape,   // the arrowhead
+    { toArrow: &quot;OpenTriangle&quot;, fill: null })
+);
+
+var nodeDataArray = [
+    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
+    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; }
+];
+var linkDataArray = [
+    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
+];
+diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link2.jpg" alt="Link"></p>
+<h2 id="u8FDE_u7EBF_u8DEF_u5F84"><a href="#u8FDE_u7EBF_u8DEF_u5F84" class="headerlink" title="连线路径"></a>连线路径</h2><p>如果你想改变连线的路径，那么需要设置<code>Link.routing</code>属性，下面的例子中展示了<code>Link.Normal</code>和<code>Link.Orthogonal</code>两种连线路径。  </p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
+  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
+  $(go.TextBlock, { margin: 5 },
+    new go.Binding(&quot;text&quot;, &quot;key&quot;))
+);
+
+diagram.linkTemplate =
+$(go.Link,
+  new go.Binding(&quot;routing&quot;, &quot;routing&quot;),
+  $(go.Shape),
+  $(go.Shape, { toArrow: &quot;Standard&quot; })
+);
+
+var nodeDataArray = [
+    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
+    { key: &quot;Beta&quot;, loc: &quot;50 50&quot; },
+    { key: &quot;Gamma&quot;, loc: &quot;100 25&quot; }
+];
+var linkDataArray = [
+    { from: &quot;Alpha&quot;, to: &quot;Beta&quot;, routing: go.Link.Normal },
+    { from: &quot;Alpha&quot;, to: &quot;Gamma&quot;, routing: go.Link.Orthogonal }
+];
+diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link3.jpg" alt="Link"></p>
+<p>要注意的是，这里设置连线路径的是<code>Shape</code>里的属性，在<code>GraphObject</code>中也有设置路径的属性，<code>GraphObject.fromSpot</code>和<code>GraphObject.toSpot</code>，前者是作用于<code>Shape</code>上的，后者是作用于容器上的。</p>
+<p>你还可以设置<code>Link.routing</code>属性为<code>Link.AvoidsNodes</code>，可以让连线自动避开<code>Node</code>，也就是说可以避免<code>Link</code>与<code>Node</code>相交。但是如果有一个<code>Node</code>离起始<code>Node</code>或者终点<code>Node</code>非常近的时候，连线就没有办法避让了，因为它没有足够的空间去计算避让路线。  </p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
+  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
+  $(go.TextBlock, { margin: 5 },
+    new go.Binding(&quot;text&quot;, &quot;key&quot;))
+);
+
+diagram.linkTemplate =
+$(go.Link,
+  { routing: go.Link.AvoidsNodes },  // link route should avoid nodes
+  $(go.Shape),
+  $(go.Shape, { toArrow: &quot;Standard&quot; })
+);
+
+var nodeDataArray = [
+    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
+    { key: &quot;Beta&quot;, loc: &quot;250 40&quot; },
+    { key: &quot;Gamma&quot;, loc: &quot;100 0&quot; },
+    { key: &quot;Delta&quot;, loc: &quot;75 50&quot; },
+    { key: &quot;Epsilon&quot;, loc: &quot;150 30&quot; }
+];
+var linkDataArray = [
+    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
+];
+diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link4.jpg" alt="Link"></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u8FDE_u7EBF_u7684_u5F2F_u66F2_u5EA6_u548C_u89D2_u5EA6"><a href="#u8FDE_u7EBF_u7684_u5F2F_u66F2_u5EA6_u548C_u89D2_u5EA6" class="headerlink" title="连线的弯曲度和角度"></a>连线的弯曲度和角度</h2><p>在我们创建好连线关系以及路径后，就可以使用其他属性来控制连线的其他特性，比如说弯曲度。我们可以通过设置<code>Link.curve</code>属性设置连线的弯曲度，默认情况下该属性的值为<code>Link.Node</code>。</p>
+<p>下面的例子中，我们将<code>Link.curve</code>属性设置为<code>Link.bezier</code>，让连线产生弧度。</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
+  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
+  $(go.TextBlock, { margin: 5 },
+    new go.Binding(&quot;text&quot;, &quot;key&quot;))
+);
+
+diagram.linkTemplate =
+$(go.Link,
+  { curve: go.Link.Bezier },  // Bezier curve
+  $(go.Shape),
+  $(go.Shape, { toArrow: &quot;Standard&quot; })
+);
+
+var nodeDataArray = [
+    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
+    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; }
+];
+var linkDataArray = [
+    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
+];
+diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link5.jpg" alt="Link"></p>
+<p>我们还可以通过<code>Link.curviness</code>属性设置连线的弯曲力度。</p>
+<p>下面的例子中，两个<code>Node</code>之间有多条连线，并且我们没有设置连线的弯曲度，但是我们可以看到，每条连线都自动的产生了轻微的弯曲度的变化。</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
+  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
+  $(go.TextBlock, { margin: 5 },
+    new go.Binding(&quot;text&quot;, &quot;key&quot;))
+);
+
+diagram.linkTemplate =
+$(go.Link,
+  { curve: go.Link.Bezier },
+  $(go.Shape),
+  $(go.Shape, { toArrow: &quot;Standard&quot; })
+);
+
+var nodeDataArray = [
+    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
+    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; }
+];
+var linkDataArray = [
+    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },  // multiple links between the same nodes
+    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },
+    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },
+    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
+];
+diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link6.jpg" alt="Link"></p>
+<p>上面第四个例子中，连线避让<code>Node</code>时折角都是直角，我们还可以通过<code>Link.corner</code>属性，设置连线折角的弧度。</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
+  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
+  $(go.TextBlock, { margin: 5 },
+    new go.Binding(&quot;text&quot;, &quot;key&quot;))
+);
+
+diagram.linkTemplate =
+$(go.Link,
+  { routing: go.Link.AvoidsNodes,
+    corner: 10 },                  // rounded corners
+  $(go.Shape),
+  $(go.Shape, { toArrow: &quot;Standard&quot; })
+);
+
+var nodeDataArray = [
+    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
+    { key: &quot;Beta&quot;, loc: &quot;250 40&quot; },
+    { key: &quot;Gamma&quot;, loc: &quot;100 0&quot; },
+    { key: &quot;Delta&quot;, loc: &quot;75 50&quot; },
+    { key: &quot;Epsilon&quot;, loc: &quot;150 30&quot; }
+];
+var linkDataArray = [
+    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
+];
+diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link7.jpg" alt="Link"></p>
+<p>当两条连线相交时，我们希望在视觉上能有所表示。那么我们可以设置<code>Link.curve</code>属性为<code>Link.JumpOver</code>属性，展现出的效果就是一条线越过了交叉的另一条线。 </p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  { locationSpot: go.Spot.Center },
+  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
+  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
+  $(go.TextBlock, { margin: 5 },
+    new go.Binding(&quot;text&quot;, &quot;key&quot;))
+);
+
+diagram.linkTemplate =
+$(go.Link,
+  { routing: go.Link.Orthogonal,  // may be either Orthogonal or AvoidsNodes
+    curve: go.Link.JumpOver },
+  $(go.Shape),
+  $(go.Shape, { toArrow: &quot;Standard&quot; })
+);
+
+var nodeDataArray = [
+    { key: &quot;Alpha&quot;, loc: &quot;0 50&quot; },
+    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; },
+    { key: &quot;Alpha2&quot;, loc: &quot;50 0&quot; },
+    { key: &quot;Beta2&quot;, loc: &quot;50 100&quot; }
+];
+var linkDataArray = [
+    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },  // these two links will cross
+    { from: &quot;Alpha2&quot;, to: &quot;Beta2&quot; }
+];
+diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link8.jpg" alt="Link"></p>
+<p>或者我们也可以将<code>Link.curve</code>属性设置为<code>Link.JumpGap</code>，表现为当两条连线相交时，其中一条在相交处会断开。</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  { locationSpot: go.Spot.Center },
+  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
+  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
+  $(go.TextBlock, { margin: 5 },
+    new go.Binding(&quot;text&quot;, &quot;key&quot;))
+);
+
+diagram.linkTemplate =
+$(go.Link,
+  { routing: go.Link.Orthogonal,  // may be either Orthogonal or AvoidsNodes
+    curve: go.Link.JumpGap },
+  $(go.Shape),
+  $(go.Shape, { toArrow: &quot;Standard&quot; })
+);
+
+var nodeDataArray = [
+    { key: &quot;Alpha&quot;, loc: &quot;0 50&quot; },
+    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; },
+    { key: &quot;Alpha2&quot;, loc: &quot;50 0&quot; },
+    { key: &quot;Beta2&quot;, loc: &quot;50 100&quot; }
+];
+var linkDataArray = [
+    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },  // these two links will cross
+    { from: &quot;Alpha2&quot;, to: &quot;Beta2&quot; }
+];
+diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link9.jpg" alt="Link"></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/gojs-shape/" itemprop="url">
                   GOJS教程 -- 如何使用Shape
                 </a>
@@ -1003,328 +1357,6 @@ diagram.model = new go.GraphLinksModel(
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/method-category-protocol/" itemprop="url">
-                  Objective-C中的实例方法、类方法、Category、Protocol
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-07-16T00:00:00+08:00" content="2014-07-16">
-              2014-07-16
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/method-category-protocol/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/method-category-protocol/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-
-<h1 id="u65B9_u6CD5"><a href="#u65B9_u6CD5" class="headerlink" title="方法"></a>方法</h1><p>Objective-C中的方法有两种：</p>
-<h2 id="u5B9E_u4F8B_u65B9_u6CD5"><a href="#u5B9E_u4F8B_u65B9_u6CD5" class="headerlink" title="实例方法"></a>实例方法</h2><p>以<code>-</code>开头的方法是实例方法。它属于类的某一个或某几个实例对象，即类对象必须实例化后才可以使用的方法，将消息发送给实例对象：  </p>
-<pre><code>// Deck.h
-
-#import &lt;Foundation/Foundation.h&gt;
-#import &quot;Card.h&quot;
-
-@interface Deck : NSObject
-
-@property(nonatomic) int cardNum;
-
-// 实例方法
-- (Card *)randomDrawCard;
-
-+ (NSString *)CardKinds;
-
-@end
-</code></pre><p>实例方法中可以使用该类的所有实例变量：  </p>
-<pre><code>// Deck.m
-
-#import &quot;Card.h&quot;
-
-@implementation Deck
-
-- (Card *)drawCardFromTop
-{
-    // 实例变量
-    _cardNum--;
-
-    //TODO.....
-}
-
-+ (NSString *)CardKinds
-{
-    NSLog(&quot;Cards are divided into four kinds: spades, diamonds, clubs and hearts&quot;);
-}
-
-@end 
-</code></pre><h2 id="u7C7B_u65B9_u6CD5"><a href="#u7C7B_u65B9_u6CD5" class="headerlink" title="类方法"></a>类方法</h2><p>以<code>+</code>开头的方法是类方法。Objc中的类方法类似Java中的<code>static</code>静态方法，它是属于类本身的方法，不属于类的某一个实例对象，所以不需要实例化类，用类名即可使用，是将消息发送给类：  </p>
-<pre><code>// Deck.h
-
-#import &lt;Foundation/Foundation.h&gt;
-#import &quot;Card.h&quot;
-
-@interface Deck : NSObject
-
-- (Card *)randomDrawCard;
-
-// 类方法
-+ (NSString *)CardKinds;
-
-@end    
-</code></pre><p>类方法不能使用任何实例变量：  </p>
-<pre><code>// Deck.m
-
-#import &quot;Card.h&quot;
-
-@implementation Deck
-
-- (Card *)drawCardFromTop
-{
-    // 实例变量
-    _cardNum--;
-
-    //TODO.....
-}
-
-// 不能使用该类的实例变量_carNum
-+ (NSString *)CardKinds
-{
-    NSLog(&quot;Cards are divided into four kinds: spades, diamonds, clubs and hearts&quot;);
-}
-
-@end 
-</code></pre><p>所以我们使用类方法一般有两种情况：</p>
-<ul>
-<li>创建一些事物，比如特殊格式的字符串等。</li>
-<li>作为工具方法，比如返回常数等。</li>
-</ul>
-<h2 id="u7C7B_u65B9_u6CD5_u548C_u5B9E_u4F8B_u65B9_u6CD5_u8BA4_u77E5_u7684_u8BEF_u533A"><a href="#u7C7B_u65B9_u6CD5_u548C_u5B9E_u4F8B_u65B9_u6CD5_u8BA4_u77E5_u7684_u8BEF_u533A" class="headerlink" title="类方法和实例方法认知的误区"></a>类方法和实例方法认知的误区</h2><ul>
-<li><p>类方法常驻内存，所以比实例方法效率高。<br>  事实上，在加载时机和占用内存上，类方法和实例方法是一样的，在类第一次被使用时加载方法，所以在效率上没有什么区别。</p>
-</li>
-<li><p>类方法分配在堆上，实例方法分配在栈上。<br>  事实上，所有的方法都不可能分配在堆栈区，方法作为二进制代码是存储在内存的程序代码区，这个内存区域是不可写的。请查看我这篇笔记中的相关概念<a href="http://www.devtalking.com/articles/you-should-know-block/">Objective-C中的Block</a>。</p>
-</li>
-</ul>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>实例方法和类方法有大多数的共性，比如都可以有一个或多个参数、都可以继承基类的方法、相同的声明规范等。唯一不同的就是类方法不能使用实例变量，所以导致它只适用于一些特殊的情况。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-
-<h1 id="Category"><a href="#Category" class="headerlink" title="Category"></a>Category</h1><p>如果我们想给一个已存在的、很复杂的类添加一个新的方法，应该怎么做？<br>想翻源码添加？骚年，你太天真，你如果看不到源码呢。即便我们可以看到源码，如果我们新增的逻辑也很复杂，这样就会扩大原始设计的规模，有可能会打乱整个设计的结构。<br>Category就是Objective-C提供的为我们解决这一问题的方法。它可以让我们动态的在已经存在的类中添加新的行为，即方法。对类进行扩展时不需要访问其源码，也不需要创建子类。</p>
-<h2 id="u4F7F_u7528_u65B9_u6CD5"><a href="#u4F7F_u7528_u65B9_u6CD5" class="headerlink" title="使用方法"></a>使用方法</h2><p>Category的实现很简单，我们举例说明。</p>
-<pre><code>// Deck.h
-
-#import &lt;Foundation/Foundation.h&gt;
-#import &quot;Card.h&quot;
-
-@interface Deck : NSObject
-
-- (Card *)randomDrawCard;
-
-@end
-</code></pre><p>这是类Deck的声明文件，其中包含一个实例方法<code>randomDrawCard</code>，如果我们想在不修改原始类、不增加子类的情况下，为该类增加一个<code>drawCardFromTop</code>方法，只需要定义两个文件<code>Deck+DrawCardFromTop.h</code>和<code>Deck+DrawCardFromTop.m</code>，在声明文件和实现文件中用<code>()</code>把Category的名称括起来即可，声明文件如下：</p>
-<pre><code>// Deck+DrawCardFromTop.h
-
-#import &quot;Deck.h&quot;
-#import &quot;Card.h&quot;
-
-@interface Deck(DrawCardFromTop)
-
-- (Card *)drawCardFromTop;
-
-@end
-</code></pre><p>实现文件如下：</p>
-<pre><code>// Deck+DrawCardFromTop.m
-
-#import &quot;Deck+DrawCardFromTop.h&quot;
-#import &quot;Card.h&quot;
-
-@implementation Deck(DrawCardFromTop)
-
-- (Card *)drawCardFromTop
-{
-    //TODO.....
-}
-
-@end
-</code></pre><p><code>DrawCardFromTop</code>是Category的名称。这里一般使用约定俗成的习惯，将声明文件和实现文件统一采用”原类名+Category名”的方式命名。<br>使用也非常简单，引入Category的声明文件，然后正常调用即可：</p>
-<pre><code>// main.m
-
-#import &quot;Deck+DrawCardFromTop.h&quot;
-#import &quot;Card.h&quot;
-
-int main(int argc, char * argv[])
-{
-
-    Deck *deck = [[Deck alloc] init];
-    Card *card = [deck drawCardFromTop];
-
-    return 0;
-
-}
-</code></pre><h2 id="u4F7F_u7528_u573A_u666F"><a href="#u4F7F_u7528_u573A_u666F" class="headerlink" title="使用场景"></a>使用场景</h2><ul>
-<li>需求变更在整个开发周期是司空见惯的事情，那么我们可能就需要对某个或某几个类中添加新的方法以满足需求。</li>
-<li>我们在团队协作开发时候，经常需要多个人来实现一个类中的不同方法，在这种情况下采用Category是一个较好的选择。</li>
-<li>当一些基础类库满足不了我们的需求时，我们希望能扩展基础类库，这时就需要Category。</li>
-</ul>
-<h2 id="u9700_u8981_u6CE8_u610F_u7684_u95EE_u9898"><a href="#u9700_u8981_u6CE8_u610F_u7684_u95EE_u9898" class="headerlink" title="需要注意的问题"></a>需要注意的问题</h2><ul>
-<li>Category可以访问原始类的实例变量，但不能添加变量，如果想添加变量，可以考虑通过继承创建子类。</li>
-<li>Category可以重载原始类的方法，但不推荐这么做，这么做的后果是你再也不能访问原来的方法。如果确实要重载，正确的选择是创建子类。</li>
-<li>和普通接口有所区别的是，在分类的实现文件中可以不必实现所有声明的方法，只要你不去调用它。</li>
-</ul>
-<h2 id="u603B_u7ED3-1"><a href="#u603B_u7ED3-1" class="headerlink" title="总结"></a>总结</h2><p>掌握并用好Category可以充分利用Objective-C的动态特性，编写出灵活简洁的代码。</p>
-<h1 id="Protocol"><a href="#Protocol" class="headerlink" title="Protocol"></a>Protocol</h1><p>简单来说，Protocol不属于任何一个类，它只是一个方法列表，任何类都可以对其中声明的方法进行实现。这种设计模式一般称为代理模式（delegation）。你可以通过Protocol定义各种行为，在不同的场景采用不同的实现方式。在iOS和OS X开发中，Apple采用了大量的代理模式来实现MVC中View和Controller的解耦。</p>
-<h2 id="u4F7F_u7528_u65B9_u6CD5-1"><a href="#u4F7F_u7528_u65B9_u6CD5-1" class="headerlink" title="使用方法"></a>使用方法</h2><p>Protocol有两种声明的方式：</p>
-<ul>
-<li>在单独的声明文件（.h文件）中声明。</li>
-<li>在某个类的声明的文件中声明。</li>
-</ul>
-<p>以上两种方式视具体情况而定，但是在代码规范上都是一致的：</p>
-<pre><code>// HandleDeckDelegate.h
-
-@protocol HandleDeckDelegate &lt;NSObject&gt;
-
-@required
-- (void)ShuffleDeck;
-
-@optional
-- (void)CuttingDeck;
-
-@end
-</code></pre><p>上述代码中有两个关键字，<code>@required</code>和<code>@optional</code>，表示如果要实现这个协议，那么<code>ShuffleDeck</code>方法是必须要实现的，<code>CuttingDeck</code>则是可选的，如果不注明，那么方法默认是<code>@required</code>的，必须实现。 </p>
-<p>那么如何实现这个Protocol呢，很简单，创建一个普通的Objective-C类，如果Protocol使用单独的.h文件声明，那么在该类的.h声明文件中引入包含Protocol的.h文件，如果Protocol是声明在一个相关类中，那么就需要引入该类的.h文件。之后声明采用这个Protocol即可：</p>
-<pre><code>// Deck.h
-
-#import &lt;Foundation/Foundation.h&gt;
-#import &quot;Card.h&quot;
-#import &quot;HandleDeckDelegate.h&quot;
-
-@interface Deck : NSObject&lt;HandleDeckDelegate&gt;
-
-- (Card *)randomDrawCard;
-
-@end
-</code></pre><p>用尖括号（\&lt;…>）括起来的<code>HandleDeckDelegate</code>就是我们创建的Protocol。如果要采用多个Protocol，可以在尖括号内引入多个Protocol名称，并用逗号隔开即可。例如<code>&lt;HandleDeckDelegate,xxxDelegate&gt;</code>。</p>
-<pre><code>// Deck.m
-
-#import &quot;Card.h&quot;
-
-@implementation Deck
-
-- (Card *)drawCardFromTop
-{
-    //TODO.....
-}
-
-- (void)ShuffleDeck
-{
-    //TODO.....
-}
-
-@end
-</code></pre><p>由于<code>CuttingDeck</code>方法是可选的，所以我们只实现了<code>ShuffleDeck</code>。</p>
-<h2 id="u4F7F_u7528_u573A_u666F-1"><a href="#u4F7F_u7528_u573A_u666F-1" class="headerlink" title="使用场景"></a>使用场景</h2><ul>
-<li>Objective-C里的Protocol和Java语言中的接口很类似，如果一些类之间没有继承关系，但是又具备某些相同的行为，则可以使用Protocol来描述它们的关系。</li>
-<li>不同的类，可以遵守同一个Protocol，在不同的场景下注入不同的实例，实现不同的功能。</li>
-</ul>
-<h2 id="u9700_u8981_u6CE8_u610F_u7684_u95EE_u9898-1"><a href="#u9700_u8981_u6CE8_u610F_u7684_u95EE_u9898-1" class="headerlink" title="需要注意的问题"></a>需要注意的问题</h2><ul>
-<li>根据约定，框架中后缀为Delegate的都是Protocol，例如<code>UIApplicationDelegate</code>，<code>UIWebViewDelegate</code>等。</li>
-<li>Protocol本身是可以继承的，比如：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@protocol A&#10;    -(void)methodA;&#10;@end&#10;&#10;@protocol B &#60;A&#62;&#10;    -(void)methodB;&#10;@end</span><br></pre></td></tr></table></figure>
-<p>如果你要实现B，那么methodA和methodB都需要实现。</p>
-<ul>
-<li>Protocol是与任何类都无关的，任何类都可以实现定义好的Protocol，如果我们想知道某个类是否实现了某个Protocol，那么我们可以用<code>conformsToProtocol</code>方法进行判断：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[obj conformsToProtocol:@protocol(ProcessDataDelegate)]</span><br></pre></td></tr></table></figure>
-<h2 id="u603B_u7ED3-2"><a href="#u603B_u7ED3-2" class="headerlink" title="总结"></a>总结</h2><p>Protocol最常用的就是委托代理模式，Cocoa框架中大量采用了这种模式实现数据和UI的分离。例如UIView产生的所有事件，都是通过委托的方式交给Controller完成。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1367,7 +1399,7 @@ int main(int argc, char * argv[])
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">79</span>
+              <span class="site-state-item-count">80</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1381,7 +1413,7 @@ int main(int argc, char * argv[])
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-count">44</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
@@ -1401,9 +1433,9 @@ int main(int argc, char * argv[])
           
             
               <span class="links-of-author-item">
-                <a href="http://weibo.com/jacefu" target="_blank">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
                   
-                    <i class="fa fa-weibo"></i> Weibo
+                    <i class="fa fa-linkedin"></i> linkedin
                   
                 </a>
               </span>
@@ -1412,14 +1444,6 @@ int main(int argc, char * argv[])
                 <a href="mailto:jace.fu@icloud.com" target="_blank">
                   
                     <i class="fa fa-envelope"></i> Email
-                  
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://www.devtalking.com/qrcode.jpg" target="_blank">
-                  
-                    <i class="fa fa-qrcode"></i> 微信公众号
                   
                 </a>
               </span>

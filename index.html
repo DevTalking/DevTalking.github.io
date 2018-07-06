@@ -350,6 +350,122 @@
             
             
               
+                <a class="post-title-link" href="/articles/machine-learning-1/" itemprop="url">
+                  机器学习笔记一之机器学习定义、导数、最小二乘
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-01-06T00:00:00+08:00" content="2018-01-06">
+              2018-01-06
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u673A_u5668_u5B66_u4E60_u7684_u5B9A_u4E49"><a href="#u673A_u5668_u5B66_u4E60_u7684_u5B9A_u4E49" class="headerlink" title="机器学习的定义"></a>机器学习的定义</h2><ul>
+<li>非正式定义：在不直接针对问题进行编程的情况下，赋予计算机学习能力的一个研究领域。</li>
+<li>正式定义：对于一个计算机程序来讲，给他一个任务T和一个性能测量方法P，如果在经验E的影响下P对T的测量结果得到了改进，那么就说该程序从E中得到了学习。</li>
+</ul>
+<p>举个机器下棋的例子，经验E对应着程序不断和自己下棋的经历，任务T是下棋，性能测量方法P可以是它在和人类棋手对弈的胜率。如果说机器与人类棋手对应的胜率不断提高，那说明机器从自己和自己下棋的过程中得到了学习。</p>
+<h2 id="u673A_u5668_u5B66_u4E60_u56DB_u5927_u5185_u5BB9_u7B80_u8FF0"><a href="#u673A_u5668_u5B66_u4E60_u56DB_u5927_u5185_u5BB9_u7B80_u8FF0" class="headerlink" title="机器学习四大内容简述"></a>机器学习四大内容简述</h2><ul>
+<li>监督学习（Supervised Learning）</li>
+<li>学习理论（Learning Theory）</li>
+<li>无监督学习（Unsupervised Learning）</li>
+<li>强化学习（Reinforcement Learning）</li>
+</ul>
+<h3 id="u76D1_u7763_u5B66_u4E60_uFF08Supervised_Learning_uFF09"><a href="#u76D1_u7763_u5B66_u4E60_uFF08Supervised_Learning_uFF09" class="headerlink" title="监督学习（Supervised Learning）"></a>监督学习（Supervised Learning）</h3><p><img src="http://paxigrdp0.bkt.clouddn.com/34576cd0bbd2b3d3905c4c9f5a4db346.jpg" alt=""><br>如上图所示，描述了假定城市区域的房屋面积与售价的关系。横坐标是房屋面积，纵坐标是售价。如果我想在横轴随意取一个面积，就希望知道它的售价，那么就需要一个方法通过面积确定售价。图中的方法是通过一条标准线来找到对应的售价。那么这条线要如何得来呢？</p>
+<p>在这个示例中，我们已经给出了若干房屋面积和售价的数据集，即已经告知了机器若干问题和答案。机器通过这些数据集中面积和售价的关系，自我学习从而得出这条线，这种学习类型就属于监督学习类型。</p>
+<p>因为这种场景中的数据集取值都是连续的，所以这类问题都可以归为线性回归的问题。<br><img src="http://paxigrdp0.bkt.clouddn.com/da9d63e45fa11a781128bc64bb78ae92.jpg" alt=""></p>
+<p>如上图所示，描述了肿瘤大小与恶性良性的关系。横坐标是肿瘤的大小，纵坐标表示恶性或良性，与连续的房屋售价不同的是，这里的纵坐标只有两个值0或1。</p>
+<p>这个示例中，我们同样给出了一组肿瘤大小与恶性良性的数据集，我们希望机器通过这组答案数据集自我学习然后有能力通过肿瘤大小判断出恶性或良性。当然这里只是示例，实际中会有很多其他的横轴指标值用于判断学习。</p>
+<p>该示例中这种离散的数值问题可以归为分类的问题。</p>
+<h3 id="u5B66_u4E60_u7406_u8BBA_uFF08Learning_Theory_uFF09"><a href="#u5B66_u4E60_u7406_u8BBA_uFF08Learning_Theory_uFF09" class="headerlink" title="学习理论（Learning Theory）"></a>学习理论（Learning Theory）</h3><p>任何具体的方式方法背后都有一个或多个理论进行支撑，机器学习也不例外。</p>
+<p>这一大块的内容贯穿整个机器学习，包括人工智能和机器学习正式诞生之前的定理证明，理解为什么学习型算法是有效的。每种学习型算法需要多少训练数据，比如上面的房屋售价示例到底需要多少房屋的样本。以及机器学习渗透在我们生活中的真实应用场景等等。</p>
+<h3 id="u65E0_u76D1_u7763_u5B66_u4E60_uFF08Unsupervised_Learning_uFF09"><a href="#u65E0_u76D1_u7763_u5B66_u4E60_uFF08Unsupervised_Learning_uFF09" class="headerlink" title="无监督学习（Unsupervised Learning）"></a>无监督学习（Unsupervised Learning）</h3><p>如果我现在有一组不知道任何信息的数据集，然后需要机器进行分析然后给出这组数据集中的几种共性或者相似的结构，将其聚类，这个方式就称之为无监督学习。即我们不会提供机器问题和答案，只提供数据，需要机器自我学习和分析找出共性进行聚类。</p>
+<p>无监督学习的应用场景很多，当下流行的各种P图软件都或多或少的用到了这类算法，比如图的修复功能，抠图功能，像素化等一些滤镜都是对像素的聚类。还有声音驳杂功能，从嘈杂的声音中提取出有用的声音等。</p>
+<h3 id="u5F3A_u5316_u5B66_u4E60_uFF08Reinforcement_Learning_uFF09"><a href="#u5F3A_u5316_u5B66_u4E60_uFF08Reinforcement_Learning_uFF09" class="headerlink" title="强化学习（Reinforcement Learning）"></a>强化学习（Reinforcement Learning）</h3><p>强化学习是机器学习的精髓，更贴近机器的自我学习，用在不能通过一次决策下定论的情形中，比如分析病人肿瘤病情的例子，通过监督学习，我们给定了确切的答案，不是良性就是恶性，即我们做的决策要么对，要么错。但在强化学习中，在一段时间内会机器做出一系列决策。比如我们编写一个程序让一架无人机做出一系列特技表演动作，这种场景就不是一次决策能实现的了的。</p>
+<p>那么强化学习究竟是什么？在它背后有一个称为回报函数的概念。比如我们训练宠物狗坐下、握手等行为，每当小狗做出的正确的行为，我们都会给小狗奖励，比如摸摸头进行鼓励或者给一块小骨头。渐渐的小狗就知道做出怎样的行为有奖励，怎样的行为没有奖励，即学会了坐下和握手的行为。这就很类似强化学习的理论，我们需要找到一种方式，来定义我们想要什么，如何定义一个好的行为和一个坏的行为，然后就需要一个合适的学习型算法来获得更多的回报和更少的惩罚。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/machine-learning-1/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/testng-powermock/" itemprop="url">
                   基于TestNG和PowerMock的单元测试指南
                 </a>
@@ -684,123 +800,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/devops-guide/" itemprop="url">
-                  产品经理的DevOps自我修养
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-11-16T00:00:00+08:00" content="2016-11-16">
-              2016-11-16
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/devops-guide/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/devops-guide/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>本文首发<a href="http://geek.csdn.net/news/detail/122666">CSDN</a>，如需转载请与CSDN联系。</p>
-<p>作为一名产品经理，首先要知道产品对于所属公司来说意味着什么，要探寻这个问题，我们又得知道和公司息息相关的是什么，在我的理解来看，与公司状况相关的因素有以下这些：</p>
-<ul>
-<li>市场份额</li>
-<li>平均订单金额</li>
-<li>盈利能力</li>
-<li>资产回报率</li>
-<li>从订单转化为现金的周期</li>
-<li>应收账款</li>
-<li>借贷成本</li>
-</ul>
-<p>从这些因素体现出来的最直接的就是公司收入，公司的财务状况，进而可以得出公司的经营状况，如果这些指标一塌糊涂，那么这个公司离倒闭也就不远了。那么现在我们再来看产品对公司意味着什么，应该不难发现上面这些指标都离不开产品，产品的市场份额、产品的平均订单金额、产品的盈利能力、产品的回报率、产品订单转化为现金的周期、产品的应收账款、投入产品时的借贷成本。好的产品就能创造出好的这些指标，反之亦然，所以往大了说，产品经理在某种程度上对公司的生存有着一定决定因素，尤其规模不是很大的公司。那么作为产品管理者，如何能帮公司打造出好的产品呢？</p>
-<h1 id="u6B66_u88C5_u81EA_u5DF1"><a href="#u6B66_u88C5_u81EA_u5DF1" class="headerlink" title="武装自己"></a>武装自己</h1><p>首先我们需要能让我们打造出好产品的方法论来武装自己，所谓方法论，就是一门学问所采用的方法、规则与公理，放在软件工程中，它便指一系列编撰好的建议方法、训练方法及材料、使用的各种工具。在当今的IT领域，这种方法论莫过于DevOps了，我用它武装为自己的铠甲。</p>
-<p>我不打算就DevOps做概念上的解释，我要说的是为什么我要选择DevOps，它能给公司和产品带来哪些好处，概括来说有以下五点：</p>
-<ul>
-<li>它能使产品更快的投入市场。</li>
-<li>它能提升客户满意度。</li>
-<li>它能提升产品的市场份额。</li>
-<li>它能提升员工生产力及工作成就感和幸福感。</li>
-<li>它能给公司在市场中创造出巨大的竞争优势。</li>
-</ul>
-<h2 id="u6253_u9020_u5229_u5251"><a href="#u6253_u9020_u5229_u5251" class="headerlink" title="打造利剑"></a>打造利剑</h2><p>产品的产出过程就是开发过程，在开发方法上我选择敏捷开发作为我的利剑，虽然这不是什么新鲜东西，但是它却是经过长期千锤百炼，经得起考验的开发方法，就像使用千锻、万锻后的精钢打造的利剑一般，首先在材质上就不会轻易损坏，只是你能否耍好剑的问题。</p>
-<p>从理论上来说，敏捷开发在当今湍流的IT领域中好处不言而喻，积极甚至激进的个体互动、时刻有可交付的成果、紧密的客户合作、快速的响应变化都完胜传统瀑布式开发那套冗长的过程、冗余的事无巨细的文档、漫长的合同谈判和循规蹈矩的拖沓计划。</p>
-<p>有了利剑，我门要学习剑术，敏捷开发有若干方法可供我们使用，比如Scrum、特性驱动开发（FDD）、测试驱动该开发（TDD）、行为驱动开发（BDD）、精益开发等，但是敏捷开发不存在官方的方法，没有完整的方法列表，也不存在最好的方法一说，只有最合适的方法。我选择了Scrum，理由很简单，它同样经历了多年的历练，已去其糟粕。<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/devops-guide/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -843,7 +842,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">79</span>
+              <span class="site-state-item-count">80</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -857,7 +856,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-count">44</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
@@ -877,9 +876,9 @@
           
             
               <span class="links-of-author-item">
-                <a href="http://weibo.com/jacefu" target="_blank">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
                   
-                    <i class="fa fa-weibo"></i> Weibo
+                    <i class="fa fa-linkedin"></i> linkedin
                   
                 </a>
               </span>
@@ -888,14 +887,6 @@
                 <a href="mailto:jace.fu@icloud.com" target="_blank">
                   
                     <i class="fa fa-envelope"></i> Email
-                  
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="http://www.devtalking.com/qrcode.jpg" target="_blank">
-                  
-                    <i class="fa fa-qrcode"></i> 微信公众号
                   
                 </a>
               </span>
