@@ -402,7 +402,7 @@
     <link href="http://www.devtalking.com//articles/machine-learning-3/"/>
     <id>http://www.devtalking.com//articles/machine-learning-3/</id>
     <published>2018-01-19T16:00:00.000Z</published>
-    <updated>2018-07-09T14:06:54.975Z</updated>
+    <updated>2018-07-09T14:16:29.294Z</updated>
     <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -525,7 +525,7 @@
 <h3 id="u6B27_u62C9_u8DDD_u79BB"><a href="#u6B27_u62C9_u8DDD_u79BB" class="headerlink" title="欧拉距离"></a>欧拉距离</h3><p>kNN算法中唯一用到的数学知识就是如何求点与点之间的距离，在这里我们先使用最普遍的欧拉距离来进行计算，欧拉距离的公式如下：</p>
 <p>二维：<br>$$ \sqrt {(x^{(a)}-x^{(b)})^2+(y^{(a)}-y^{(b)})^2} $$</p>
 <p>三维：<br>$$ \sqrt {(x^{(a)}-x^{(b)})^2+(y^{(a)}-y^{(b)})^2+(z^{(a)}-z^{(b)})^2} $$</p>
-<p>N维(N个特征)：<br>$$ \sqrt {(x_1^{(a)}-x_1^{(b)})^2+(x_2^{(a)}-x_2^{(b)})^2+…+(x_n^{(a)}-x<em>n^{(b)})^2} =\\<br>\sqrt {\sum</em>{i=1}^n(x_i^{(a)}-x_i^{(b)})^2}$$</p>
+<p>N维(N个特征)：<br>$$ \sqrt {(x_1^{(a)}-x_1^{(b)})^2+(x_2^{(a)}-x_2^{(b)})^2+…+(x_n^{(a)}-x<em>n^{(b)})^2} =<br>\sqrt {\sum</em>{i=1}^n(x_i^{(a)}-x_i^{(b)})^2}$$</p>
 <p>用大白话解释就是两个点的所有相同维度之差求平方，然后全部相加再开方。有兴趣的话大家可以再深入研究一下点与点间距离的计算。</p>
 <h3 id="u7F16_u7801_u5B9E_u73B0kNN_u7B97_u6CD5"><a href="#u7F16_u7801_u5B9E_u73B0kNN_u7B97_u6CD5" class="headerlink" title="编码实现kNN算法"></a>编码实现kNN算法</h3><p>首先我们来准备一下数据：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">raw_data_X = [[<span class="number">3.393533211</span>, <span class="number">2.331273381</span>],</span><br><span class="line">			  [<span class="number">3.110073483</span>, <span class="number">1.781539638</span>],</span><br><span class="line">			  [<span class="number">1.343808831</span>, <span class="number">3.368360954</span>],</span><br><span class="line">			  [<span class="number">3.582294042</span>, <span class="number">4.679179110</span>],</span><br><span class="line">			  [<span class="number">2.280362439</span>, <span class="number">2.866990263</span>],</span><br><span class="line">			  [<span class="number">7.423436942</span>, <span class="number">4.696522875</span>],</span><br><span class="line">			  [<span class="number">5.745051997</span>, <span class="number">3.533989803</span>],</span><br><span class="line">			  [<span class="number">9.172168622</span>, <span class="number">2.511101045</span>],</span><br><span class="line">			  [<span class="number">7.792783481</span>, <span class="number">3.424088941</span>],</span><br><span class="line">			  [<span class="number">7.939820817</span>, <span class="number">0.791637231</span>]</span><br><span class="line">			 ]</span><br><span class="line">raw_data_y = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]</span><br></pre></td></tr></table></figure>
