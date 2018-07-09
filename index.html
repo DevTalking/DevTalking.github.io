@@ -354,6 +354,111 @@
             
             
               
+                <a class="post-title-link" href="/articles/machine-learning-3/" itemprop="url">
+                  机器学习笔记三之NumPy、Matplotlib、kNN算法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-01-20T00:00:00+08:00" content="2018-01-20">
+              2018-01-20
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-3/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-3/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="NumPy"><a href="#NumPy" class="headerlink" title="NumPy"></a>NumPy</h2><p>NumPy是Python中的一个类库，它支持高阶维度数组（矩阵）的创建及各种操作、运算，是我们在机器学习中经常会使用的一个类库。这一节再看一些NumPy的矩阵用法。</p>
+<h3 id="numpy-random"><a href="#numpy-random" class="headerlink" title="numpy.random"></a>numpy.random</h3><p>NumPy也提供了生成随机数和随机元素数组的方法，我们来看一下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 生成从0到10之间的随机数</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成元素从0到10，一共4个随机元素的数组</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=<span class="number">4</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([<span class="number">4</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成元素随机从0到10，3行5列的矩阵</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=(<span class="number">3</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">6</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">9</span>],</span><br><span class="line">	   [<span class="number">7</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">8</span>],</span><br><span class="line">	   [<span class="number">4</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">2</span>]])</span><br></pre></td></tr></table></figure>
+<p>如果我们希望每次使用随机方法生成的结果都是一样的，一般调试时候有这个需求，此时NumPy的<code>random()</code>方法也提供了方便简单的方式，既随机种子的概念：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 生成随机矩阵前给定一个种子</span></span><br><span class="line">np.random.seed(<span class="number">123</span>)</span><br><span class="line"><span class="comment"># 然后生成随机矩阵</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=(<span class="number">4</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">2</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>]])</span><br><span class="line">	   </span><br><span class="line"><span class="comment"># 再次生成随机矩阵时，只要传入相同的种子，就可以得到相同结果的矩阵</span></span><br><span class="line">np.random.seed(<span class="number">123</span>)</span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=(<span class="number">4</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">2</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>]])</span><br><span class="line">	   </span><br><span class="line"><span class="comment"># 默认范围是从0.0到1.0，返回值为float型</span></span><br><span class="line">np.random.random()</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.18249173045349998</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 传入的参数是数组的大小</span></span><br><span class="line">np.random.random(<span class="number">10</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([ <span class="number">0.17545176</span>,  <span class="number">0.53155137</span>,  <span class="number">0.53182759</span>,  <span class="number">0.63440096</span>,  <span class="number">0.84943179</span>,</span><br><span class="line">		<span class="number">0.72445532</span>,  <span class="number">0.61102351</span>,  <span class="number">0.72244338</span>,  <span class="number">0.32295891</span>,  <span class="number">0.36178866</span>])</span><br><span class="line">		</span><br><span class="line"><span class="comment"># 创建4行5列，元素值的范围从0.0到1.0的矩阵</span></span><br><span class="line">np.random.random((<span class="number">4</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[ <span class="number">0.22826323</span>,  <span class="number">0.29371405</span>,  <span class="number">0.63097612</span>,  <span class="number">0.09210494</span>,  <span class="number">0.43370117</span>],</span><br><span class="line">	   [ <span class="number">0.43086276</span>,  <span class="number">0.4936851</span> ,  <span class="number">0.42583029</span>,  <span class="number">0.31226122</span>,  <span class="number">0.42635131</span>],</span><br><span class="line">	   [ <span class="number">0.89338916</span>,  <span class="number">0.94416002</span>,  <span class="number">0.50183668</span>,  <span class="number">0.62395295</span>,  <span class="number">0.1156184</span> ],</span><br><span class="line">	   [ <span class="number">0.31728548</span>,  <span class="number">0.41482621</span>,  <span class="number">0.86630916</span>,  <span class="number">0.25045537</span>,  <span class="number">0.48303426</span>]])</span><br></pre></td></tr></table></figure>
+<h3 id="u6307_u5B9A_u5747_u503C_u548C_u6807_u51C6_u5DEE_u751F_u6210_u968F_u673A_u6570_u6570_u7EC4_u6216_u77E9_u9635"><a href="#u6307_u5B9A_u5747_u503C_u548C_u6807_u51C6_u5DEE_u751F_u6210_u968F_u673A_u6570_u6570_u7EC4_u6216_u77E9_u9635" class="headerlink" title="指定均值和标准差生成随机数数组或矩阵"></a>指定均值和标准差生成随机数数组或矩阵</h3><p>我们先来看看均值、方差、标准差的概念。均值很好理解，就是所有样本数据的平均值，描述了样本集合的中间点：</p>
+<p>$$ \overline X=\frac{\sum_{i=1}^nX_i}n $$</p>
+<p>方差是衡量样本点和样本期望值相差的度量值：</p>
+<p>$$ S^2 = \frac{\sum_{i=1}^n(X_i-\overline X)^2} n $$</p>
+<p>标准差描述的是样本集合的各个样本点到均值的距离之平均：</p>
+<p>$$ S = \sqrt {\frac{\sum_{i=1}^n(X_i-\overline X)^2} n } $$</p>
+<p>标准差也就是对方差开根号。举个例子，<code>[0, 8, 12, 20]</code>和<code>[8, 9, 11, 12]</code>，两个集合的均值都是10，但显然两个集合的差别是很大的，计算两者的标准差，前者是8.3后者是1.8，显然后者较为集中，标准差描述的就是这种散布度或者叫做波动大小。综上，方差的意义在于描述随机变量稳定与波动、集中与分散的状况。标准差则体现随机变量取值与其期望值的偏差。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/machine-learning-3/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/machine-learning-2/" itemprop="url">
                   机器学习笔记二之矩阵、环境搭建、NumPy
                 </a>
@@ -676,122 +781,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/google-web-tech/" itemprop="url">
-                  《Google力推的那些前端技术，最近有何进展？》笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2017-01-09T00:00:00+08:00" content="2017-01-09">
-              2017-01-09
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/google-web-tech/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/google-web-tech/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>Google是一个伟大的公司，有很多伟大的产品。从Google一直不做桌面系统和对Chrome的大力发展来看，Google对前端事业是非常热衷的。</p>
-<h2 id="Angular"><a href="#Angular" class="headerlink" title="Angular"></a>Angular</h2><p>Angular、React、Vue是目前前端框架的三驾马车。我在16年9月写过一篇文章<a href="http://www.devtalking.com/articles/angularjs1x-guide/">《温故而知新-AngularJS 1.x 小记》</a>，当时还叫AngularJS，版本是1.X，那时已经很惊艳了，把前端解释性的脚本语言封装成了面向对象的编程模式，另外对HTML的元素维护提供了便利的方式方法。当时我负责的BPM产品，Process Builder的前端架构果断更新为了AngularJS。时隔两年多，Angular 6都已经发布了，如果我还有机会做前端产品的话，我应该还是会果断选择Angular。</p>
-<blockquote>
-<p>Angular 6 添加了ng update和ng add这样的新功能，让你的应用程序保持最新的状态，帮助Angular开发者加快创新的步伐。渲染器Project Ivy也有很大的改进，它能使Angular调试更容易，以更快地速度编译和运行，它还可以与现有的应用程序一起使用，Angular团队还在小型Hello World应用程序做了演示，不使用的Angular功能将自动从应用的JavaScript bundle自动删除。</p>
-</blockquote>
-<h2 id="PWA"><a href="#PWA" class="headerlink" title="PWA"></a>PWA</h2><p>在移动的世界里，Application是重中之重，是构建移动生态的核心。那么构建Mobile App的方式的问题就来了。</p>
-<ul>
-<li>Native App：既用iOS的原生语言OC、Swift或Android原生语言Java构建的App。</li>
-<li>Web App：既使用前端框架和技术（Angular、React、Vue，HTML 5，CSS 3等）构建的，在移动设备上运行展现的App。</li>
-<li>Native &amp; Web App：原生语言和Web技术混搭构建的App。这类App还孕育出了像React Native这种使用前端语言解析为原生语言的框架。</li>
-</ul>
-<p>以上三种类型各有利弊：</p>
-<ul>
-<li>Native App给用户的体验是最好的，交互动画效果平滑，可以基于硬件的性能做优化等。但是研发周期比较长，并且因为iOS和Android应用的审核机制，导致版本更新周期比较长，修复完问题或有新需求增加后无法做到及时更系用户设备上的App。</li>
-<li>Web App可以做到版本的热更新，研发周期短，Web端和移动端可共享研发资源。但是用户体验比较差，一些需要使用到硬件功能不好实现。</li>
-<li>Native &amp; Web App则致力于综合他们的优点，规避他们的缺点。</li>
-</ul>
-<p>Progressive Web App（<a href="https://lavas.baidu.com/pwa">PWA</a>）就是Google推出的提升Web App体验，给用户原生应用体验的框架。主要特点包括：</p>
-<ul>
-<li>可靠 - 即使在不稳定的网络环境下，也能瞬间加载并展现。</li>
-<li>体验 - 快速响应，并且有平滑的动画响应用户的操作</li>
-<li>粘性 - 像设备上的原生应用，具有沉浸式的用户体验，用户可以添加到桌面<br>目前已支持Android，iOS 11.3以后版本，Safari，Chrome，MS Edge。</li>
-</ul>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/google-web-tech/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -834,7 +823,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">81</span>
+              <span class="site-state-item-count">82</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

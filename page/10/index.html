@@ -220,6 +220,128 @@
             
             
               
+                <a class="post-title-link" href="/articles/create-documentation-in-playground/" itemprop="url">
+                  在Playground中添加说明文档
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-09-15T00:00:00+08:00" content="2014-09-15">
+              2014-09-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/create-documentation-in-playground/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/create-documentation-in-playground/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>大家应该还记得Swift官方博客中的《Patterns Playground》和《Balloons》这两篇文章，虽然博文很短，但是它们都包含了一个Playground文件，通过这个文件向我们阐述当前文章的主题。当我们打开这两个Playground文件时，发现里面别有洞天，里面有代码，有说明文档，有引用，而且格式规整。它们看起来非常像《The Swift Programming Language》、《Using Swift with Cocoa and Objective-C》这两本iBook，但是却比这两本书有更高的交互性。让我们来看看这两个Playground文件的片段：</p>
+<p><img src="http://www.devtalking.com/postImages/2014-09-15-create-documentation-in-playground1.png" alt="片段"><br><img src="http://www.devtalking.com/postImages/2014-09-15-create-documentation-in-playground2.png" alt="片段"> </p>
+<p>大家可以看到，在Playground中还有小练习，加上它所见所得的特性，运用在教学中再好不过。可以想象，以后Objective-C，Swift的教学视频、材料都少不了Playground的身影。</p>
+<p>说了这么多，大家一定很捉急想知道如何在Playground中添加说明文档吧。别着急，让我们一步一步进行：</p>
+<ul>
+<li>创建一个Playground文件，并保存。</li>
+<li>找到刚刚保存的Playground文件，在其上点击鼠标右键，选择<strong>显示包内容</strong>。</li>
+<li>在该Playground文件包内新建一个文件夹，命名为“Documentation”。</li>
+<li>使用Mou或MacDown编辑你的说明文档：</li>
+</ul>
+<p><img src="http://www.devtalking.com/postImages/2014-09-15-create-documentation-in-playground3.png" alt="图片"> </p>
+<ul>
+<li>这里以MacDown为例（其实Mou也一样），点击File -> Export -> HTML，将编辑好的.md说明文档导出HTML文件，然后将该HTML文件拷贝到刚才创建的“Documentation”文件夹中。</li>
+</ul>
+<blockquote>
+<p>你也可以自己添加CSS文件，修饰你的HTML内容。</p>
+</blockquote>
+<ul>
+<li>打开Playground文件包内的contents.xcplayground文件，在<code>&lt;sections&gt;</code>标签中加入下面这行：</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">&lt;documentation relative-path='playgroundDocumentation.html'&gt;&lt;/documentation&gt;</span><br></pre></td></tr></table></figure>
+<p>也就是将我们刚才拷贝到“Documentation”文件夹中的HTML文件添加到Playground文件的xml文件中，使用<code>&lt;documentation&gt;</code>标签，将<code>relative-path</code>的值设置为HTML文件的名称：</p>
+<p><img src="http://www.devtalking.com/postImages/2014-09-15-create-documentation-in-playground4.png" alt="图片"> </p>
+<p>现在再打开刚才创建的Playground文件看看，是不是很酷呢！</p>
+<p><img src="http://www.devtalking.com/postImages/2014-09-15-create-documentation-in-playground5.png" alt="图片"> </p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/swift-required/" itemprop="url">
                   Swift中的required修饰符（Xcode 6 GM）
                 </a>
@@ -701,113 +823,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/how-to-test-library-with-playground/" itemprop="url">
-                  如何用Playground测试自己开发的库或第三方库
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-09-04T00:00:00+08:00" content="2014-09-04">
-              2014-09-04
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/how-to-test-library-with-playground/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/how-to-test-library-with-playground/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>距离Swift发布已经过去快2个月了，各路前辈和大神写教程、写出、录教学视频忙的不亦乐乎，我们也从中学习到了很多关于Swift有用的知识。在学习的过程中也见证了Apple一次次对Swift修正的历程，在正式版来临之际，我想说说被很多前辈和大神视为玩物的东西–Playground。</p>
-<p>我觉得Swift提供的Playground非常有趣，至少对初学者来说是一个能抓住眼球的重要因素。并且我认为Playground其实挺有用的，比如学习Swift的各种新特性、写一些有趣的代码片段、验证一些算法、甚至可以用它写一个小游戏等等，包括TopCoder的Swift Challange都要求使用Playground。但是很关键的一点是以上这些Playground的应用场景与真实的项目、产品开发之间没有太多的交际，换句话说就是Playground在实际开发中基本帮不上什么忙，这也正式很多人觉得目前的Playground没什么大用的原因。</p>
-<p>但事实真的是如此吗？是，好像又不是，今天我在这里就介绍一个Playground在实际开发中的用途 – 使用Playground在开发中测试自己的库或第三方的库。在80%的第三方常用库还是Objective-C的情况下，我们可以用Playground来测试在Swift中的使用健康程度，从而能更从容的选择继续使用还是更换方案。</p>
-<ul>
-<li>第一步：创建iOS Framework &amp; library project或打开已有的项目。</li>
-<li>第二步：将其存为workspace。</li>
-<li>第三步：新建Playground文件。</li>
-<li>第四步：在64位的模拟器（iPhone5s）上编译运行你的Framework。</li>
-<li>第五步：在Playground中导入库并编写测试代码。</li>
-</ul>
-<p>这样你就可以在Playground中看到每一行代码的运行情况，是不是很酷呢！</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -850,7 +865,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">81</span>
+              <span class="site-state-item-count">82</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
