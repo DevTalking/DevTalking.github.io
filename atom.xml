@@ -402,7 +402,7 @@
     <link href="http://www.devtalking.com//articles/machine-learning-3/"/>
     <id>http://www.devtalking.com//articles/machine-learning-3/</id>
     <published>2018-01-19T16:00:00.000Z</published>
-    <updated>2018-07-09T14:20:58.313Z</updated>
+    <updated>2018-07-09T14:24:43.576Z</updated>
     <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -545,6 +545,9 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 首先定义k的值为6</span></span><br><span class="line">k = <span class="number">6</span></span><br><span class="line"><span class="comment"># 离绿点距离最近的前6个点的类别</span></span><br><span class="line">topK_y = [y_train[i] <span class="keyword">for</span> i <span class="keyword">in</span> nearest[:k]]</span><br><span class="line">topK_y</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入collections的Counter类库用于计数计算</span></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line">votes = Counter(topK_y)</span><br><span class="line">votes</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">Counter(&#123;<span class="number">0</span>: <span class="number">1</span>, <span class="number">1</span>: <span class="number">5</span>&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过most_common方法获取最大的若干个结果，传入的参数为想要获取最大的几个结果，这里我们只需要最大的一个结果，既投票票数最多的那个结果</span></span><br><span class="line">votes.most_common(<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">[(<span class="number">1</span>, <span class="number">5</span>)]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更精准的获取投票票数最多的结果</span></span><br><span class="line">predict_y = votes.most_common(<span class="number">1</span>)[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">predict_y</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure>
 <p>到目前位置，我们就判断出了绿点有很大概率类别属于1，这个过程就是kNN算法的核心过程。</p>
 <h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>在下一篇笔记中，将会介绍Scikit Learn中是如何封装kNN算法的，以及我们会自己封装一个kNN算法，以及对分类准确度评定，超参数，数据归一化等知识点的讲解。</p>
+<blockquote>
+<p>申明：本文为慕课网<a href="https://www.imooc.com/t/108955" target="_blank" rel="external">liuyubobobo</a>老师<a href="https://coding.imooc.com/learn/list/169.html" target="_blank" rel="external">《Python3入门机器学习 经典算法与应用》</a>课程的学习笔记，未经过慕课网及本人同意不允许转载。</p>
+</blockquote>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
