@@ -83,7 +83,7 @@
 
 
 
-机器学习笔记三上一篇笔记主要介绍了NumPy，Matplotlib和Scikit Learn中Datasets三个库的用法，以及基于欧拉定理的kNN算法的基本实现。这一篇笔记的主要内容是通过PyCharm封装kNN算法并且在Jupy">
+上一篇笔记主要介绍了NumPy，Matplotlib和Scikit Learn中Datasets三个库的用法，以及基于欧拉定理的kNN算法的基本实现。这一篇笔记的主要内容是通过PyCharm封装kNN算法并且在Jupyter Not">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习笔记四之kNN算法、超参数、数据归一化">
 <meta property="og:url" content="http://www.devtalking.com/articles/machine-learning-4/index.html">
@@ -95,7 +95,7 @@
 
 
 
-机器学习笔记三上一篇笔记主要介绍了NumPy，Matplotlib和Scikit Learn中Datasets三个库的用法，以及基于欧拉定理的kNN算法的基本实现。这一篇笔记的主要内容是通过PyCharm封装kNN算法并且在Jupy">
+上一篇笔记主要介绍了NumPy，Matplotlib和Scikit Learn中Datasets三个库的用法，以及基于欧拉定理的kNN算法的基本实现。这一篇笔记的主要内容是通过PyCharm封装kNN算法并且在Jupyter Not">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/574075757e0d0a820e2a8a7ef37f79ec.jpg">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/13a8bbc81eef52f649e82539248d29ad.jpg">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/ab2b99d15c26edf50171a5dbb8e8cecb.jpg">
@@ -108,7 +108,7 @@
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/f4dbe1f0c876372c0263013bd3e27043.jpg">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/c962c7f93465af5cff9be84f884c97fd.jpg">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/a446676198ff1ff737c340099f48c7cb.jpg">
-<meta property="og:updated_time" content="2018-07-10T12:06:33.445Z">
+<meta property="og:updated_time" content="2018-07-10T12:10:31.527Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记四之kNN算法、超参数、数据归一化">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -118,7 +118,7 @@
 
 
 
-机器学习笔记三上一篇笔记主要介绍了NumPy，Matplotlib和Scikit Learn中Datasets三个库的用法，以及基于欧拉定理的kNN算法的基本实现。这一篇笔记的主要内容是通过PyCharm封装kNN算法并且在Jupy">
+上一篇笔记主要介绍了NumPy，Matplotlib和Scikit Learn中Datasets三个库的用法，以及基于欧拉定理的kNN算法的基本实现。这一篇笔记的主要内容是通过PyCharm封装kNN算法并且在Jupyter Not">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -311,7 +311,7 @@
 </script>
 
 
-<h1 id="u673A_u5668_u5B66_u4E60_u7B14_u8BB0_u4E09"><a href="#u673A_u5668_u5B66_u4E60_u7B14_u8BB0_u4E09" class="headerlink" title="机器学习笔记三"></a>机器学习笔记三</h1><p>上一篇笔记主要介绍了NumPy，Matplotlib和Scikit Learn中Datasets三个库的用法，以及基于欧拉定理的kNN算法的基本实现。这一篇笔记的主要内容是通过PyCharm封装kNN算法并且在Jupyter Notebook中调用，以及计算器算法的封装规范，kNN的<code>k</code>值如何计算，如何使用Scikit Learn中的kNN算法，还有机器学习算法中的一些主要概念，比如训练数据集、测试数据集，分类准确度，超参数，数据归一化。另外会具体用代码实现第一篇笔记中介绍过的线性回归算法。</p>
+<p>上一篇笔记主要介绍了NumPy，Matplotlib和Scikit Learn中Datasets三个库的用法，以及基于欧拉定理的kNN算法的基本实现。这一篇笔记的主要内容是通过PyCharm封装kNN算法并且在Jupyter Notebook中调用，以及计算器算法的封装规范，kNN的<code>k</code>值如何计算，如何使用Scikit Learn中的kNN算法，还有机器学习算法中的一些主要概念，比如训练数据集、测试数据集，分类准确度，超参数，数据归一化。另外会具体用代码实现第一篇笔记中介绍过的线性回归算法。</p>
 <h2 id="u5C01_u88C5kNN_u7B97_u6CD5"><a href="#u5C01_u88C5kNN_u7B97_u6CD5" class="headerlink" title="封装kNN算法"></a>封装kNN算法</h2><p>上一篇笔记中我们对kNN算法在Jupyter Notebook中进行了实现，但是想要复用这个算法就很不方便，所以我们来看看如何在PyCharm中封装算法，并且在Jupyter Notebook中进行调用。</p>
 <p>PyCharm的配置这里我就不再累赘，如图所示，我们创建了一个Python文件<code>kNN.py</code>，然后定义了<code>kNNClassify</code>方法，该方法有4个参数，分别是kNN算法的<code>k</code>值，训练样本特征数据集<code>XTrain</code>，训练样本类别数据集<code>yTrain</code>，预测特征数据集<code>x</code>。该方法中的实现和在Jupyter Notebook中实现的一模一样，只不过加了三个断言，让方法的健壮性更好一点。我们给出<strong>N维欧拉定理</strong>：</p>
 <p>$$ \sqrt {\sum_{i=1}^n(x_i^{(a)}-x_i^{(b)})^2} $$</p>
@@ -606,7 +606,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#u673A_u5668_u5B66_u4E60_u7B14_u8BB0_u4E09"><span class="nav-number">1.</span> <span class="nav-text">机器学习笔记三</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#u5C01_u88C5kNN_u7B97_u6CD5"><span class="nav-number">1.1.</span> <span class="nav-text">封装kNN算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u673A_u5668_u5B66_u4E60_u6D41_u7A0B"><span class="nav-number">1.2.</span> <span class="nav-text">机器学习流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4F7F_u7528Scikit_Learn_u4E2D_u7684kNN_u7B97_u6CD5"><span class="nav-number">1.3.</span> <span class="nav-text">使用Scikit Learn中的kNN算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u91CD_u65B0_u5C01_u88C5kNN_u7B97_u6CD5"><span class="nav-number">1.4.</span> <span class="nav-text">重新封装kNN算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5224_u65AD_u673A_u5668_u5B66_u4E60_u7B97_u6CD5_u7684_u6027_u80FD"><span class="nav-number">1.5.</span> <span class="nav-text">判断机器学习算法的性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u8D85_u53C2_u6570"><span class="nav-number">1.6.</span> <span class="nav-text">超参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BFB_u627E_u6700_u597D_u7684k_u503C"><span class="nav-number">1.6.1.</span> <span class="nav-text">寻找最好的k值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8DDD_u79BB_u7684_u6743_u91CD"><span class="nav-number">1.6.2.</span> <span class="nav-text">距离的权重</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8DDD_u79BB_u7684_u7C7B_u578B"><span class="nav-number">1.6.3.</span> <span class="nav-text">距离的类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7F51_u683C_u641C_u7D22_u8D85_u53C2_u6570"><span class="nav-number">1.7.</span> <span class="nav-text">网格搜索超参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GridSearchCV_u7684_u5176_u4ED6_u53C2_u6570"><span class="nav-number">1.7.1.</span> <span class="nav-text">GridSearchCV的其他参数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6570_u636E_u5F52_u4E00_u5316"><span class="nav-number">1.8.</span> <span class="nav-text">数据归一化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5982_u4F55_u5BF9_u6D4B_u8BD5_u6570_u636E_u96C6_u8FDB_u884C_u5F52_u4E00_u5316"><span class="nav-number">1.9.</span> <span class="nav-text">如何对测试数据集进行归一化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5C01_u88C5_u81EA_u5DF1_u7684_u6570_u636E_u5F52_u4E00_u5316_u65B9_u6CD5"><span class="nav-number">1.10.</span> <span class="nav-text">封装自己的数据归一化方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u603B_u7ED3"><span class="nav-number">1.11.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u5C01_u88C5kNN_u7B97_u6CD5"><span class="nav-number">1.</span> <span class="nav-text">封装kNN算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u673A_u5668_u5B66_u4E60_u6D41_u7A0B"><span class="nav-number">2.</span> <span class="nav-text">机器学习流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4F7F_u7528Scikit_Learn_u4E2D_u7684kNN_u7B97_u6CD5"><span class="nav-number">3.</span> <span class="nav-text">使用Scikit Learn中的kNN算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u91CD_u65B0_u5C01_u88C5kNN_u7B97_u6CD5"><span class="nav-number">4.</span> <span class="nav-text">重新封装kNN算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5224_u65AD_u673A_u5668_u5B66_u4E60_u7B97_u6CD5_u7684_u6027_u80FD"><span class="nav-number">5.</span> <span class="nav-text">判断机器学习算法的性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u8D85_u53C2_u6570"><span class="nav-number">6.</span> <span class="nav-text">超参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BFB_u627E_u6700_u597D_u7684k_u503C"><span class="nav-number">6.1.</span> <span class="nav-text">寻找最好的k值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8DDD_u79BB_u7684_u6743_u91CD"><span class="nav-number">6.2.</span> <span class="nav-text">距离的权重</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8DDD_u79BB_u7684_u7C7B_u578B"><span class="nav-number">6.3.</span> <span class="nav-text">距离的类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7F51_u683C_u641C_u7D22_u8D85_u53C2_u6570"><span class="nav-number">7.</span> <span class="nav-text">网格搜索超参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GridSearchCV_u7684_u5176_u4ED6_u53C2_u6570"><span class="nav-number">7.1.</span> <span class="nav-text">GridSearchCV的其他参数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6570_u636E_u5F52_u4E00_u5316"><span class="nav-number">8.</span> <span class="nav-text">数据归一化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5982_u4F55_u5BF9_u6D4B_u8BD5_u6570_u636E_u96C6_u8FDB_u884C_u5F52_u4E00_u5316"><span class="nav-number">9.</span> <span class="nav-text">如何对测试数据集进行归一化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5C01_u88C5_u81EA_u5DF1_u7684_u6570_u636E_u5F52_u4E00_u5316_u65B9_u6CD5"><span class="nav-number">10.</span> <span class="nav-text">封装自己的数据归一化方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u603B_u7ED3"><span class="nav-number">11.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
