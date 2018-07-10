@@ -365,6 +365,107 @@
             
             
               
+                <a class="post-title-link" href="/articles/machine-learning-4/" itemprop="url">
+                  机器学习笔记四之kNN算法、超参数、数据归一化
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-01-27T00:00:00+08:00" content="2018-01-27">
+              2018-01-27
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-4/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-4/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h1 id="u673A_u5668_u5B66_u4E60_u7B14_u8BB0_u4E09"><a href="#u673A_u5668_u5B66_u4E60_u7B14_u8BB0_u4E09" class="headerlink" title="机器学习笔记三"></a>机器学习笔记三</h1><p>上一篇笔记主要介绍了NumPy，Matplotlib和Scikit Learn中Datasets三个库的用法，以及基于欧拉定理的kNN算法的基本实现。这一篇笔记的主要内容是通过PyCharm封装kNN算法并且在Jupyter Notebook中调用，以及计算器算法的封装规范，kNN的<code>k</code>值如何计算，如何使用Scikit Learn中的kNN算法，还有机器学习算法中的一些主要概念，比如训练数据集、测试数据集，分类准确度，超参数，数据归一化。另外会具体用代码实现第一篇笔记中介绍过的线性回归算法。</p>
+<h2 id="u5C01_u88C5kNN_u7B97_u6CD5"><a href="#u5C01_u88C5kNN_u7B97_u6CD5" class="headerlink" title="封装kNN算法"></a>封装kNN算法</h2><p>上一篇笔记中我们对kNN算法在Jupyter Notebook中进行了实现，但是想要复用这个算法就很不方便，所以我们来看看如何在PyCharm中封装算法，并且在Jupyter Notebook中进行调用。</p>
+<p>PyCharm的配置这里我就不再累赘，如图所示，我们创建了一个Python文件<code>kNN.py</code>，然后定义了<code>kNNClassify</code>方法，该方法有4个参数，分别是kNN算法的<code>k</code>值，训练样本特征数据集<code>XTrain</code>，训练样本类别数据集<code>yTrain</code>，预测特征数据集<code>x</code>。该方法中的实现和在Jupyter Notebook中实现的一模一样，只不过加了三个断言，让方法的健壮性更好一点。我们给出<strong>N维欧拉定理</strong>：</p>
+<p>$$ \sqrt {\sum_{i=1}^n(x_i^{(a)}-x_i^{(b)})^2} $$</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/574075757e0d0a820e2a8a7ef37f79ec.jpg" alt=""></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># kNN.py</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> sqrt</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">kNNClassify</span><span class="params">(k, XTrain, yTrain, x)</span>:</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">assert</span> <span class="number">1</span> &lt;= k &lt;= XTrain.shape[<span class="number">0</span>], <span class="string">"k 的取值范围不正确"</span></span><br><span class="line">	<span class="keyword">assert</span> XTrain.shape[<span class="number">0</span>] == yTrain.shape[<span class="number">0</span>], <span class="string">"训练样本数据行数应该与训练结果集行数相同"</span></span><br><span class="line">	<span class="keyword">assert</span> XTrain.shape[<span class="number">1</span>] == x.shape[<span class="number">0</span>], <span class="string">"训练样本数据特性个数应该与被预测数据特性个数相同"</span></span><br><span class="line"></span><br><span class="line">	distances = [sqrt(np.sum((xTrain - x) ** <span class="number">2</span>)) <span class="keyword">for</span> xTrain <span class="keyword">in</span> XTrain]</span><br><span class="line">	nearest = np.argsort(distances)</span><br><span class="line"></span><br><span class="line">	topKy = [yTrain[i] <span class="keyword">for</span> i <span class="keyword">in</span> nearest[:k]]</span><br><span class="line">	votes = Counter(topKy)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> votes.most_common(<span class="number">1</span>)[<span class="number">0</span>][<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<p>这样我们就在PyCharm中封装好了kNN算法的方法，我们再来看看如何在Jupyter Notebook中调用封装好的方法呢，这就需要使用<code>%run</code>这个命令：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">raw_data_X = [[<span class="number">3.393533211</span>, <span class="number">2.331273381</span>],</span><br><span class="line">			  [<span class="number">3.110073483</span>, <span class="number">1.781539638</span>],</span><br><span class="line">			  [<span class="number">1.343808831</span>, <span class="number">3.368360954</span>],</span><br><span class="line">			  [<span class="number">3.582294042</span>, <span class="number">4.679179110</span>],</span><br><span class="line">			  [<span class="number">2.280362439</span>, <span class="number">2.866990263</span>],</span><br><span class="line">			  [<span class="number">7.423436942</span>, <span class="number">4.696522875</span>],</span><br><span class="line">			  [<span class="number">5.745051997</span>, <span class="number">3.533989803</span>],</span><br><span class="line">			  [<span class="number">9.172168622</span>, <span class="number">2.511101045</span>],</span><br><span class="line">			  [<span class="number">7.792783481</span>, <span class="number">3.424088941</span>],</span><br><span class="line">			  [<span class="number">7.939820817</span>, <span class="number">0.791637231</span>]</span><br><span class="line">			 ]</span><br><span class="line">raw_data_y = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">XTrain = np.array(raw_data_X)</span><br><span class="line">yTrain = np.array(raw_data_y)</span><br><span class="line"></span><br><span class="line">x = np.array([<span class="number">8.093607318</span>, <span class="number">3.365731514</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用%run命令可以引入Python文件，并可使用该Python文件中定义的属性和方法</span></span><br><span class="line">%run ../pycharm/kNN.py</span><br><span class="line">predicty = kNNClassify(<span class="number">6</span>, XTrain, yTrain, x)</span><br><span class="line">predicty</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/machine-learning-4/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/machine-learning-3/" itemprop="url">
                   机器学习笔记三之NumPy、Matplotlib、kNN算法
                 </a>
@@ -671,127 +772,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/testng-powermock/" itemprop="url">
-                  基于TestNG和PowerMock的单元测试指南
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2017-01-19T00:00:00+08:00" content="2017-01-19">
-              2017-01-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/testng-powermock/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/testng-powermock/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u4EC0_u4E48_u662FTestNG"><a href="#u4EC0_u4E48_u662FTestNG" class="headerlink" title="什么是TestNG"></a>什么是TestNG</h2><p>TestNG是一套开源测试框架，是从JUnit继承而来，TestNG意为test next generation。它的优势如下：</p>
-<ul>
-<li>支持注解。</li>
-<li>可以在任意的大线程池中，使用各种策略运行测试（所有方法都可以拥有自己的线程或者每个测试类拥有一个线程等等）。</li>
-<li>代码多线程安全测试。</li>
-<li>灵活的测试配置。</li>
-<li>支持数据驱动测试(@DataProvider)。</li>
-<li>支持参数。</li>
-<li>强大的执行模型（不再用TestSuite）。</li>
-<li>支持各种工具和插件（Eclipse、IDEA、Maven等）。</li>
-<li>可以更灵活地嵌入BeanShell。</li>
-<li>默认JDK运行时功能和日志记录（无依赖关系）。</li>
-<li>依赖应用服务测试的方式。</li>
-</ul>
-<h2 id="TestNG_u7684_u6700_u7B80_u5355_u793A_u4F8B"><a href="#TestNG_u7684_u6700_u7B80_u5355_u793A_u4F8B" class="headerlink" title="TestNG的最简单示例"></a>TestNG的最简单示例</h2><p>我们先来看一个TestNG最简单的示例：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.junit.AfterClass;</span><br><span class="line"><span class="keyword">import</span> org.junit.BeforeClass;</span><br><span class="line"><span class="keyword">import</span> org.testng.annotations.Test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"> <span class="annotation">@BeforeClass</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">beforeClass</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	System.out.println(<span class="string">"this is before class"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="annotation">@Test</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestHelloWorld</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	System.out.println(<span class="string">"this is HelloWorld test case"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="annotation">@AfterClass</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterClass</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	System.out.println(<span class="string">"this is after class"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从面上的简单示例中可以看出TestNG的生命周期，并且可以看到TestNG是使用注解来控制生命周期的。下面我们来看看TestNG支持的各种注解。</p>
-<h2 id="TestNG_u7684_u6CE8_u89E3"><a href="#TestNG_u7684_u6CE8_u89E3" class="headerlink" title="TestNG的注解"></a>TestNG的注解</h2><p>TestNG的注解大部分用在方法级别上，一共有六大类注解。</p>
-<h3 id="Before_u7C7B_u522B_u548CAfter_u7C7B_u522B_u6CE8_u89E3"><a href="#Before_u7C7B_u522B_u548CAfter_u7C7B_u522B_u6CE8_u89E3" class="headerlink" title="Before类别和After类别注解"></a>Before类别和After类别注解</h3><ul>
-<li>@BeforeSuite：被注解的方法将会在所有测试类执行之前运行。</li>
-<li>@AfterSuite：被注解的方法将会在所有测试类执行之后运行。</li>
-<li>@BeforeTest：被注解的方法将会在当前测试类中的所有测试方法执行之前运行。</li>
-<li>@AfterTest：被注解的方法将会在当前测试类中的所有测试方法执行之后运行。</li>
-<li>@BeforeClass：被注解的方法将会在当前测试类中的第一个测试方法执行之前运行。</li>
-<li>@AfterClass：被注解的方法将会在当前测试类中的最后一个测试方法执行之后运行。</li>
-<li>@BeforeMethod：被注解的方法将会在当前测试类中的每个测试方法执行之前运行。</li>
-<li>@AfterMethod：被注解的方法将会在当前测试类中的每个测试方法执行之后运行。<br>我们可以根据不同的场景来使用不同的注解。</li>
-</ul>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/testng-powermock/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -834,7 +814,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">82</span>
+              <span class="site-state-item-count">83</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
