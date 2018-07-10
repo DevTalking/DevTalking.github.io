@@ -108,7 +108,7 @@
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/f4dbe1f0c876372c0263013bd3e27043.jpg">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/c962c7f93465af5cff9be84f884c97fd.jpg">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/a446676198ff1ff737c340099f48c7cb.jpg">
-<meta property="og:updated_time" content="2018-07-10T12:10:31.527Z">
+<meta property="og:updated_time" content="2018-07-10T12:16:57.282Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记四之kNN算法、超参数、数据归一化">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -365,9 +365,9 @@
 <h3 id="u8DDD_u79BB_u7684_u7C7B_u578B"><a href="#u8DDD_u79BB_u7684_u7C7B_u578B" class="headerlink" title="距离的类型"></a>距离的类型</h3><p>到目前为止，我们自己封装的kNN算法使用的距离公式是欧拉距离，其实还有其他的距离公式，比如<strong>曼哈顿距离</strong>:</p>
 <p>$$\sum_{i=1}^n |X_i^{(a)}-X_i^{(b)}|$$</p>
 <p>其实曼哈顿距离和欧拉距离在数学公式表现形式上是有一定相似性的，我们可以将欧拉距离做以转换：</p>
-<p>$$ \sqrt {\sum_{i=1}^n(x_i^{(a)}-x<em>i^{(b)})^2} = \sqrt {\sum</em>{i=1}^n|x_i^{(a)}-x<em>i^{(b)}|^2} = (\sum</em>{i=1}^n|x_i^{(a)}-x_i^{(b)}|^2)^\frac 1 2 $$ </p>
+<p>$$ \sqrt {\sum_{i=1}^n(x_i^{(a)}-x_i^{(b)})^2} = \sqrt {\sum_{i=1}^n|x_i^{(a)}-x_i^{(b)}|^2} = (\sum_{i=1}^n|x_i^{(a)}-x_i^{(b)}|^2)^\frac 1 2 $$ </p>
 <p>对曼哈顿距离也做以转换：</p>
-<p>$$ \sum_{i=1}^n |X_i^{(a)}-X<em>i^{(b)}| = （\sum</em>{i=1}^n |X_i^{(a)}-X_i^{(b)}|^1）^\frac 1 1 $$</p>
+<p>$$ \sum_{i=1}^n |X_i^{(a)}-X_i^{(b)}| = （\sum_{i=1}^n |X_i^{(a)}-X_i^{(b)}|^1）^\frac 1 1 $$</p>
 <p>通过上面两个公式可以得到一个共性的公式：</p>
 <p>$$ （\sum_{i=1}^n |X_i^{(a)}-X_i^{(b)}|^p）^\frac 1 p $$</p>
 <p>这个公式就称之为<strong>明可夫斯基距离（Minkowski Distance）</strong>。</p>
@@ -389,9 +389,9 @@
 <h2 id="u6570_u636E_u5F52_u4E00_u5316"><a href="#u6570_u636E_u5F52_u4E00_u5316" class="headerlink" title="数据归一化"></a>数据归一化</h2><p><img src="http://paxigrdp0.bkt.clouddn.com/43b6730765831fcc1dbecb24069ed177.jpg" alt=""></p>
 <p>大家先看看上面表格中的样本数据，两个样本的肿瘤大小相差有5倍，从医学角度来讲这个差距已经是非常大了，但从实际数值差距来讲并不是很大。再看看发现时间，两个样本之间相差100天，在数值上的差距远远大于肿瘤大小的差距。所以如果使用kNN算法，用欧拉距离计算的话，两个样本发现时间之差远远大于肿瘤大小之差，所以就会主导样本间的距离，这个显然是有问题的，对预测的结果是有偏差的。</p>
 <p>所以我们就需要对样本数据进行数据归一化，将所有的数据映射到同一尺度。比较简便的方式就是<strong>最值归一化</strong>，既用下面的公式把所有数据映射到0-1之间：</p>
-<p>$$ x<em>{scale} = \frac {x - x</em>{min}} {x<em>{max} - x</em>{min}} $$</p>
+<p>$$ x_{scale} = \frac {x - x_{min}} {x_{max} - x_{min}} $$</p>
 <p>最值归一化虽然简便，但是是有一定适用范围的，那就是适用于样本数据有明显分布边界的情况，比如学生的考试分数，从0到100分，或者像素值，从0到255等。假如像人的月收入这种没有边界的样本数据集，就不能使用最值归一化了，此时就需要用到另外一个数据归一化的方法<strong>均值方差归一化</strong>，该方法就是把所有数据归一到均值为0方差为1的分布中，公式如下：</p>
-<p>$$ x<em>{scale} = \frac {x - x</em>{mean}} S $$</p>
+<p>$$ x_{scale} = \frac {x - x_{mean}} S $$</p>
 <p>就是将每个值减去均值，然后除以方差，通过均值方差归一化后的数据不一定在0-1之间，但是他们的均值为0，方差为1。</p>
 <p>下面我们来分别实现一下这两个数据归一化方法。先来看看最值归一化的实现：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="comment"># 生成从0到100，一共100个元素的数组</span></span><br><span class="line">x = np.random.randint(<span class="number">0</span>, <span class="number">100</span>, size = <span class="number">100</span>)</span><br><span class="line"><span class="comment"># 变更数组元素的类型</span></span><br><span class="line">x = np.array(x, dtype = float)</span><br><span class="line">x_scale = (x - np.min(x)) / (np.max(x) - np.min(x))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成50行，2列的矩阵，元素在0到100之间</span></span><br><span class="line">X = np.random.randint(<span class="number">0</span>, <span class="number">100</span>, (<span class="number">50</span>, <span class="number">2</span>))</span><br><span class="line"><span class="comment"># 对每一列数据进行最值归一化</span></span><br><span class="line">X[:, <span class="number">0</span>] = (X[:, <span class="number">0</span>] - np.min(X[:, <span class="number">0</span>])) / (np.max(X[:, <span class="number">0</span>]) - np.min(X[:, <span class="number">0</span>]))</span><br><span class="line">X[:, <span class="number">1</span>] = (X[:, <span class="number">1</span>] - np.min(X[:, <span class="number">1</span>])) / (np.max(X[:, <span class="number">1</span>]) - np.min(X[:, <span class="number">1</span>]))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用matplotlib将X展示出来</span></span><br><span class="line">plt.scatter(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
