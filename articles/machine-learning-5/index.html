@@ -109,7 +109,7 @@
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/af676eb4086d1d6c3aacbccc84c4f028.jpg">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/8b9e1069e189ca944744cb286b0e61ce.jpg">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/9a7cbfc5f10db88e5cef682e79ece6f7.jpg">
-<meta property="og:updated_time" content="2018-07-11T08:41:16.300Z">
+<meta property="og:updated_time" content="2018-07-11T09:23:14.067Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记五之线性回归、评测标准、多元线性回归">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -344,19 +344,19 @@
 <p>然后我们就可以在Jupyter Notebook中使用我们封装的简单线性回归方法：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> myML.SimpleLinearRegression <span class="keyword">import</span> SimpleLinearRegression</span><br><span class="line">slr = SimpleLinearRegression()</span><br><span class="line">slr.fit(x, y)</span><br><span class="line">slr.predict(np.array([x_predict]))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([ <span class="number">5.2</span>])</span><br><span class="line"></span><br><span class="line">slr.a_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.80000000000000071</span></span><br><span class="line"></span><br><span class="line">slr.b_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.39999999999999769</span></span><br></pre></td></tr></table></figure>
 <h2 id="u7EBF_u6027_u56DE_u5F52_u7B97_u6CD5_u7684_u8BC4_u6D4B_u6807_u51C6"><a href="#u7EBF_u6027_u56DE_u5F52_u7B97_u6CD5_u7684_u8BC4_u6D4B_u6807_u51C6" class="headerlink" title="线性回归算法的评测标准"></a>线性回归算法的评测标准</h2><p>在讲kNN算法时，我们分类问题的评测标准是基于将样本数据拆分为训练数据和测试数据的前提下的，那么在线性回归算法中也是一样的。我们使用训练数据计算出<code>a</code>和<code>b</code>的值，然后将测试数据代入拟合直线方程算出结果，进行比较。我们通过公式来看一下。</p>
-<p>$$ \sum<em>{i=1}^m(y</em>{train}^{(i)} - ax<em>{train}^{(i)} -b)^2 = \sum</em>{i=1}^m(y<em>{train}^{(i)} - \hat y</em>{train}^{(i)})^2 $$</p>
+<p>$$ \sum_{i=1}^m(y_{train}^{(i)} - ax_{train}^{(i)} -b)^2 = \sum_{i=1}^m(y_{train}^{(i)} - \hat y_{train}^{(i)})^2 $$</p>
 <p>将训练数据代入公式算出<code>a</code>和<code>b</code>，然后代入拟合直线方程算出$\hat y_{test}^{(i)}$：</p>
-<p>$$ \hat y<em>{test}^{(i)} = ax</em>{test}^{(i)} + b $$</p>
+<p>$$ \hat y_{test}^{(i)} = ax_{test}^{(i)} + b $$</p>
 <p>此时我们的衡量标准既为：</p>
-<p>$$ \sum<em>{i=1}^m(y</em>{test}^{(i)} - \hat y_{test}^{(i)})^2 $$</p>
+<p>$$ \sum_{i=1}^m(y_{test}^{(i)} - \hat y_{test}^{(i)})^2 $$</p>
 <p>也就是上面的公式值越小说明我们拟合的越好。</p>
 <h3 id="u5747_u65B9_u8BEF_u5DEE_uFF08MSE_uFF09"><a href="#u5747_u65B9_u8BEF_u5DEE_uFF08MSE_uFF09" class="headerlink" title="均方误差（MSE）"></a>均方误差（MSE）</h3><p>上面这个公式有一个问题，那就是最终值受$m$的影响，比如某个算法10个样本数据求出的值为80，另一个算法10000个样本数据求出的值为100，也不能表明第一个算法就比第二个算法好，因为样本数据量相差巨大，所以将上面公式改变一下，将值除以$m$：</p>
-<p>$$ \frac 1 m \sum<em>{i=1}^m(y</em>{test}^{(i)} - \hat y_{test}^{(i)})^2$$</p>
+<p>$$ \frac 1 m \sum_{i=1}^m(y_{test}^{(i)} - \hat y_{test}^{(i)})^2$$</p>
 <p>这个衡量标准称为均方误差（MSE, Mean Squared Error）</p>
 <h3 id="u5747_u65B9_u6839_u8BEF_u5DEE_uFF08RMSE_uFF09"><a href="#u5747_u65B9_u6839_u8BEF_u5DEE_uFF08RMSE_uFF09" class="headerlink" title="均方根误差（RMSE）"></a>均方根误差（RMSE）</h3><p>在对量纲不敏感的情况下，使用均方误差没什么问题，但是在一些对量纲比较敏感的场景下，均方误差就会有问题，因为均方误差的量纲为XX平方，比如房屋面积售价的例子，均方误差的量纲就成了$元^2$，所以就有了均方根误差（RMSE, Root Mean Squared Error）用以统一量纲：</p>
-<p>$$ \sqrt {\frac 1 m \sum<em>{i=1}^m(y</em>{test}^{(i)} - \hat y<em>{test}^{(i)})^2}= \sqrt {MSE</em>{test}} $$</p>
+<p>$$ \sqrt {\frac 1 m \sum_{i=1}^m(y_{test}^{(i)} - \hat y_{test}^{(i)})^2}= \sqrt {MSE_{test}} $$</p>
 <h3 id="u5E73_u5747_u7EDD_u5BF9_u8BEF_u5DEE_uFF08MAE_uFF09"><a href="#u5E73_u5747_u7EDD_u5BF9_u8BEF_u5DEE_uFF08MAE_uFF09" class="headerlink" title="平均绝对误差（MAE）"></a>平均绝对误差（MAE）</h3><p>另外一个能统一量纲的衡量公式为平均绝对误差，既将真实值与预测值的差取绝对值而不是平方：</p>
-<p>$$ \frac 1 m \sum <em>{i=1}^m |y</em>{test}^{(i)} - \hat y_{test}^{(i)}| $$</p>
+<p>$$ \frac 1 m \sum _{i=1}^m |y_{test}^{(i)} - \hat y_{test}^{(i)}| $$</p>
 <h3 id="u5B9E_u73B0MSE_uFF0C_RMSE_uFF0C_MAE"><a href="#u5B9E_u73B0MSE_uFF0C_RMSE_uFF0C_MAE" class="headerlink" title="实现MSE， RMSE， MAE"></a>实现MSE， RMSE， MAE</h3><p>实现这三个指标我们使用Scikit Learn中提供的波士顿房价的数据集，我们先使用简单线性回归进行预测：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">boston = datasets.load_boston()</span><br><span class="line">boston.feature_names</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([<span class="string">'CRIM'</span>, <span class="string">'ZN'</span>, <span class="string">'INDUS'</span>, <span class="string">'CHAS'</span>, <span class="string">'NOX'</span>, <span class="string">'RM'</span>, <span class="string">'AGE'</span>, <span class="string">'DIS'</span>, <span class="string">'RAD'</span>,</span><br><span class="line">	   <span class="string">'TAX'</span>, <span class="string">'PTRATIO'</span>, <span class="string">'B'</span>, <span class="string">'LSTAT'</span>],</span><br><span class="line">	  dtype=<span class="string">'&lt;U7'</span>)</span><br><span class="line">	  </span><br><span class="line"><span class="comment"># 波士顿房价数据提供了13个特征数据，因为是简单线性回归，所以我们只使用房间数量这个特征来预测房价   </span></span><br><span class="line">x = boston.data[:, <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将数据绘制回来</span></span><br><span class="line">plt.scatter(x, y)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
 <p><img src="http://paxigrdp0.bkt.clouddn.com/9cfafd69a87ddcc44ef322682086c423.jpg" alt=""></p>
@@ -376,10 +376,10 @@
 <p>这样就可以在Jupyter Notebook中方便的使用了：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> myML.metrics <span class="keyword">import</span> mean_squared_error</span><br><span class="line"><span class="keyword">from</span> myML.metrics <span class="keyword">import</span> root_mean_squared_error</span><br><span class="line"><span class="keyword">from</span> myML.metrics <span class="keyword">import</span> mean_absolute_error</span><br><span class="line"></span><br><span class="line">mean_squared_error(y_test, y_test_predict)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">24.156602134387402</span></span><br><span class="line"></span><br><span class="line">root_mean_squared_error(y_test, y_test_predict)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">4.9149366358466313</span></span><br><span class="line"></span><br><span class="line">mean_absolute_error(y_test, y_test_predict)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">3.5430974409463842</span></span><br></pre></td></tr></table></figure>
 <h2 id="R_Squared"><a href="#R_Squared" class="headerlink" title="R Squared"></a>R Squared</h2><p>在之前的分类问题中，衡量标准的值都是在0/1之间，1表示最好，0表示最差，这个值和量纲无关。但是在线性回归问题中衡量标准的值是带有量纲的，比如某个算法在预测房价的场景中RMSE是5万，但在预测学生分数的场景中RMSE是10分，那么这个算法是在预测房价场景中好呢还是在预测学生分数场景中好呢？这个是无法判断的，这就是RMSE和MAE的局限性。那么为解决这个问题，就出现了一个新的衡量指标R Squared，也就是$R^2$。这个指标也是目前机器学习算法使用比较广泛的一个指标。我们先来看看$R^2$的公式：</p>
-<p>$$ R^2 = 1 - \frac {\sum <em>{i=1}^m(\hat y^{(i)} - y^{(i)})^2} {\sum </em>{i=1}^m(\bar y  - y^{(i)})^2} $$</p>
+<p>$$ R^2 = 1 - \frac {\sum _{i=1}^m(\hat y^{(i)} - y^{(i)})^2} {\sum _{i=1}^m(\bar y  - y^{(i)})^2} $$</p>
 <p>这个公式的分子其实就是简单线性回归的模型预测产生的错误，既Loss函数。分母中的$\bar y$是均值，其实均值也是一种线性模型，只不过是比较粗糙的线性模型，所以分母是使用均值模型预测产生的错误。那么如果这个比值远远小于1，说明我们的模型的质量远远超出均值模型，那么$R^2$就无限接近于1，说明我们的模型拟合的非常好。如果比值接近1，说明我们的模型和均值模型没差多少，表明我们的模型比较烂，此时$R^2$就会接近0。那么综上，$R^2$的值小于等于1，值越大表示模型越好，当值为负数时表明我们的模型还不如均值模型，也表明了我们分析的数据之间可能根本就没有线性关系。</p>
 <p>我们对$R^2$的公式再处理一下，将1后面的分数分子分母各除以$m$：</p>
-<p>$$ R^2 = 1 - \frac {\sum <em>{i=1}^m(\hat y^{(i)} - y^{(i)})^2} {\sum </em>{i=1}^m(\bar y  - y^{(i)})^2} = 1 - \frac {(\sum <em>{i=1}^m(\hat y^{(i)} - y^{(i)})^2)/m} {(\sum </em>{i=1}^m(\bar y  - y^{(i)})^2)/m} $$</p>
+<p>$$ R^2 = 1 - \frac {\sum _{i=1}^m(\hat y^{(i)} - y^{(i)})^2} {\sum _{i=1}^m(\bar y  - y^{(i)})^2} = 1 - \frac {(\sum _{i=1}^m(\hat y^{(i)} - y^{(i)})^2)/m} {(\sum _{i=1}^m(\bar y  - y^{(i)})^2)/m} $$</p>
 <p>此时，分子其实就是上文中讲到的MSE，而分母就是我们在第二篇笔记中讲过的方差，所以$R^2$又可以写为：</p>
 <p>$$ R^2 = 1 - \frac {MSE(\hat y, y)} {Var(y)} $$</p>
 <h3 id="u5B9E_u73B0R_Squared"><a href="#u5B9E_u73B0R_Squared" class="headerlink" title="实现R Squared"></a>实现R Squared</h3><p>实现$R^2$其实是非常简单的：</p>
@@ -404,7 +404,7 @@
 <p>我们对上面的公式再进一步做一下处理，将截距$\theta_ 0$也乘以一个特征$X_0^{(i)}$，不过该特征值恒等于1:</p>
 <p>$$ \hat y^{(i)} = \theta _0X_0^{(i)}+\theta_1X_1^{(i)}+\theta_2X_2^{(i)}+…+\theta_nX_n^{(i)} $$</p>
 <p>我们将上面公式用矩阵的方式表示为（用到矩阵相乘的知识，1行n列矩阵乘以n行1列矩阵为1行1列矩阵，既一个标量）：</p>
-<p>$$ \hat y^{(i)} = \begin{bmatrix} X_0^{(i)}&amp; X_1^{(i)}&amp;X_2^{(i)}&amp; … &amp;X<em>n^{(i)}\end{bmatrix}\begin{bmatrix}<br> \theta</em> 0\<br> \theta<em> 1\<br> \theta</em> 2\<br> …\<br> \theta_ n\<br>\end{bmatrix} $$</p>
+<p>$$ \hat y^{(i)} = \begin{bmatrix} X_0^{(i)}&amp; X_1^{(i)}&amp;X_2^{(i)}&amp; … &amp;X_n^{(i)}\end{bmatrix}\begin{bmatrix}<br> \theta_ 0\<br> \theta_ 1\<br> \theta_ 2\<br> …\<br> \theta_ n\<br>\end{bmatrix} $$</p>
 <p>我们可以直接将上面公式表示为：</p>
 <p>$$ \hat y = X_b \theta $$</p>
 <p>我们知道简单线性回归就是使$\sum_{i=1}^m(y^{(i)}-\hat y^{(i)})^2$尽可能小，那多元线性回归也是一样的，只不过多元线性回归中的$\hat y^{(i)}$的公式不一样而已，将上面的公式代入：</p>
@@ -431,14 +431,14 @@
 <li>$\frac {\partial \theta^TX_b^TX_b\theta}{\partial \theta}$：分子为标量，分布为列向量，是标量/向量类型，并且是分母布局，因为$X_b^TX_b$还是矩阵，所以查表满足${\frac  {\partial {\mathbf  {x}}^{\top }{\mathbf  {A}}{\mathbf  {x}}}{\partial {\mathbf  {x}}}}$条件，故可得结果为$2X_b^TX_b\theta$。</li>
 </ul>
 <p>所以$F_{loss}$函数的最小值为：</p>
-<p>$$F(min)<em>{loss}=\frac {\partial F</em>{loss}}{\partial \theta}=\frac {\partial y^Ty}{\partial \theta}-\frac {\partial y^TX_b\theta}{\partial \theta}-\frac {\partial \theta^TX_b^Ty}{\partial \theta}+\frac {\partial \theta^TX_b^TX_b\theta}{\partial \theta}=0-2X_b^Ty+2X_b^TX_b\theta$$</p>
+<p>$$F(min)_{loss}=\frac {\partial F_{loss}}{\partial \theta}=\frac {\partial y^Ty}{\partial \theta}-\frac {\partial y^TX_b\theta}{\partial \theta}-\frac {\partial \theta^TX_b^Ty}{\partial \theta}+\frac {\partial \theta^TX_b^TX_b\theta}{\partial \theta}=0-2X_b^Ty+2X_b^TX_b\theta$$</p>
 <p>便可求得$\theta$的值为：</p>
 <p>$$-2X_b^Ty+2X_b^TX_b\theta=0$$<br>$$\theta=\frac {X_b^Ty}{X_b^TX_b}$$</p>
 <p>根据逆矩阵的转换规则可得：</p>
 <p>$$\theta=(X_b^TX_b)^{-1}X_b^Ty$$</p>
 <p>上面的公式就是多元线性回归的正规方程解 (Normal Equation)。</p>
 <h3 id="u4F7F_u7528_u6B63_u89C4_u65B9_u7A0B_u89E3_u5B9E_u73B0_u591A_u5143_u7EBF_u6027_u56DE_u5F52"><a href="#u4F7F_u7528_u6B63_u89C4_u65B9_u7A0B_u89E3_u5B9E_u73B0_u591A_u5143_u7EBF_u6027_u56DE_u5F52" class="headerlink" title="使用正规方程解实现多元线性回归"></a>使用正规方程解实现多元线性回归</h3><p>在实现之前，我们先明确一下$\theta$，它是一个列向量：</p>
-<p>$$\theta=\begin{bmatrix}<br> \theta<em> 0\<br> \theta</em> 1\<br> \theta<em> 2\<br> …\<br> \theta</em> n\<br>\end{bmatrix}$$</p>
+<p>$$\theta=\begin{bmatrix}<br> \theta_ 0\<br> \theta_ 1\<br> \theta_ 2\<br> …\<br> \theta_ n\<br>\end{bmatrix}$$</p>
 <p>其中$\theta_0$是多元线性方程的截距（intercept），$\theta_1$到$\theta_n$才是系数（coefficients）。</p>
 <p>在PyCharm中，我们创建一个类<code>LinearRegression</code>，然后构造函数如下：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LinearRegression</span>:</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">		<span class="comment"># 截距theta0</span></span><br><span class="line">		self.intercept_ = <span class="keyword">None</span></span><br><span class="line">		<span class="comment"># 系数，theta1 ... thetaN</span></span><br><span class="line">		self.coef_ = <span class="keyword">None</span></span><br><span class="line">		<span class="comment"># theta列向量</span></span><br><span class="line">		self._theta = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></span><br><span class="line">		<span class="keyword">return</span> <span class="string">"LinearRegression()"</span></span><br></pre></td></tr></table></figure>
