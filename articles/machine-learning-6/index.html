@@ -110,7 +110,7 @@
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/92e28ad8c4fa25fd273d2d0d92c7a1ec.jpg">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/abb3840fcba54f337a5ddc63dc52d835.jpg">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/0697eece8d0ea059c5dc25486f9e6190.jpg">
-<meta property="og:updated_time" content="2018-07-15T16:23:25.280Z">
+<meta property="og:updated_time" content="2018-07-15T16:40:19.742Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记六之梯度下降、优化梯度公式、随机梯度下降">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -380,7 +380,7 @@
 <p>在讲正规方程解时我们推导过，上面的函数可以转换为：</p>
 <p>$$\sum_{i=1}^m(y^{(i)}-X_b^{(i)} \theta)^2$$</p>
 <p>我们的目标就是让上面的函数尽可能的小，根据之前讲过的概念，我们知道损失函数的梯度就是对$\theta$向量中的每个$\theta$求导，并且在上篇笔记中我们知道$\theta$向量是一个列向量，根据复合函数求导定则，所以损失函数L的梯度为：</p>
-<p>$$ \nabla L(\theta) = \begin{bmatrix}<br> \frac {\partial L}{\partial \theta_0} \\<br> \frac {\partial L}{\partial \theta_1} \\<br> \frac {\partial L}{\partial \theta_2} \\<br> … \\<br> \frac {\partial L}{\partial \theta<em>n} \\<br>\end{bmatrix} =\begin{bmatrix}<br>\sum\</em>{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-1) \\<br>\sum_{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X_1^{(i)}) \\<br>\sum_{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X_2^{(i)}) \\<br>… \\<br>\sum_{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X_n^{(i)}) \\<br> \end{bmatrix}$$</p>
+<p>$$ \nabla L(\theta) = \begin{bmatrix}<br> \frac {\partial L}{\partial \theta_0} \\<br> \frac {\partial L}{\partial \theta_1} \\<br> \frac {\partial L}{\partial \theta_2} \\<br> … \\<br> \frac {\partial L}{\partial \theta<em>n} \\<br>\end{bmatrix} = \begin{bmatrix}<br>\sum\</em>{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-1) \\<br>\sum_{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X_1^{(i)}) \\<br>\sum_{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X_2^{(i)}) \\<br>… \\<br>\sum_{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X_n^{(i)}) \\<br> \end{bmatrix} $$</p>
 <p>将2提到外面，然后将后面的负号移进前面的括号里得：</p>
 <p>$$\begin{bmatrix}<br>\sum_{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-1) \\<br>\sum_{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X_1^{(i)}) \\<br>\sum_{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X_2^{(i)}) \\<br>… \\<br>\sum_{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X_n^{(i)}) \\<br> \end{bmatrix}=2\begin{bmatrix}<br>\sum_{i=1}^m (X_b^{(i)}\theta-y^{(i)}) \\<br>\sum_{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_1^{(i)} \\<br>\sum_{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_2^{(i)} \\<br>… \\<br>\sum_{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_n^{(i)} \\<br> \end{bmatrix}$$</p>
 <p>可以发现上面公式中每个元素都经过了m求和，这样带来的问题就是梯度受样本数据数量的影响极大，不过在线性回归的评测标准一节中讲到的均方误差MSE就是为了解决这个问题的，所以我们将损失函数直接转变为MSE：</p>
@@ -425,7 +425,7 @@
 <p><img src="http://paxigrdp0.bkt.clouddn.com/92e28ad8c4fa25fd273d2d0d92c7a1ec.jpg" alt=""></p>
 <p>因为每次只随机取一个样本进行计算，所以可以看到随机梯度下降法查找$\theta$的轨迹是也是随机的，很多时候搜索下一个$\theta$的路径并不是最短路径，并且下一个$\theta$的损失函数值比上一个$\theta$的损失函数值还要大，但是最终依然会找到使损失函数达到极小值的$\theta$。</p>
 <p>我们来看看梯度公式：</p>
-<p>$$\frac 2 m\begin{bmatrix}<br>\sum_{i=1}^m (X<em>b^{(i)}\theta-y^{(i)}) \\<br>\sum\</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X<em>1^{(i)} \\<br>\sum\</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X<em>2^{(i)} \\<br>… \\<br>\sum\</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_n^{(i)} \\<br> \end{bmatrix}$$</p>
+<p>$$\frac 2 m\begin{bmatrix}<br>\sum_{i=1}^m (X_b^{(i)}\theta-y^{(i)}) \\<br>\sum_{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_1^{(i)} \\<br>\sum_{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_2^{(i)} \\<br>… \\<br>\sum_{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_n^{(i)} \\<br> \end{bmatrix}$$</p>
 <p> 按照随机梯度下降的思路，每次只取一个样本进行计算，也就是i每次只取一个值：</p>
 <p> $$2\begin{bmatrix}<br>(X_b^{(i)}\theta-y^{(i)}) \\<br>(X_b^{(i)}\theta-y^{(i)})X_1^{(i)} \\<br>(X_b^{(i)}\theta-y^{(i)})X_2^{(i)} \\<br>… \\<br>(X_b^{(i)}\theta-y^{(i)})X_n^{(i)} \\<br> \end{bmatrix}$$</p>
 <p>向量化后可得：</p>
