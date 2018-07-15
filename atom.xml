@@ -402,7 +402,7 @@
     <link href="http://www.devtalking.com//articles/machine-learning-6/"/>
     <id>http://www.devtalking.com//articles/machine-learning-6/</id>
     <published>2018-02-14T16:00:00.000Z</published>
-    <updated>2018-07-15T16:48:19.672Z</updated>
+    <updated>2018-07-15T16:56:23.655Z</updated>
     <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -529,9 +529,9 @@
 <p>向量化后可得：</p>
 <p>$$2(X_b^{(i)})^\top(X_b^{(i)} \theta - y^{(i)})$$</p>
 <p>注意上面这个公式并不是梯度公式，而是搜索$\theta$的某一个方向，批量梯度下降是不放过任何一个搜索$\theta$的方向，而随机梯度下降是每次选择一个方向进行搜索。另外需要注意的是随机梯度下降法中的步长（学习率）并不是固定不变的，不然就无法找补随机路径的不足了，所以随机梯度下降法中的步长是根据搜索次数的增加而降低的，也就是逐渐递减的。那么学习率的公式我们首先想到的就是取搜索次数的倒数：</p>
-<p>$$\eta=\frac 1 {i_iters}$$</p>
+<p>$$\eta=\frac 1 {i\_iters}$$</p>
 <p>但是如果搜索次数很小或者很大的时候都会出现问题，前者会导致学习率下降的幅度过大，而后者会导致学习率下降的幅度过小，所以我们将分母加上一个常数，分子也用一个常数，这样就能保证学习率的递减幅度在一个较为平滑的状态：</p>
-<p>$$\eta=\frac a {i_iters + b}$$</p>
+<p>$$\eta=\frac a {i\_iters + b}$$</p>
 <p>a和b其实就是随机梯度下降法的两个超参数了，不过这里我们不对这两个超参数进行搜索，我们使用最佳实践就好，一般取a为5，b为50。</p>
 <p>另外一个关键的超参数是搜索次数，假设取样本数据量的1/3作为搜索次数，因为每次是随机取一个样本数据，那势必会有一部分样本数据取不到，从而不会计算，并且取到的样本数据里也会有重复的数据，这样虽然收敛时间减少了，但是准确率却会打折扣，那么为了训练数据的准确性，我们希望每次搜索到的样本数据不重复，并且能所有的样本数据都希望在某一方向进行计算，所以将搜索次数的概念转变一下，既为随机搜索样本数据，且不重复，且所有样本数据都被搜索到一遍的轮数。这样一来，这个轮数可以很小，一般搜索4轮5轮既可。</p>
 <h3 id="u5B9E_u73B0_u968F_u673A_u68AF_u5EA6_u4E0B_u964D_u6CD5"><a href="#u5B9E_u73B0_u968F_u673A_u68AF_u5EA6_u4E0B_u964D_u6CD5" class="headerlink" title="实现随机梯度下降法"></a>实现随机梯度下降法</h3><p>我们先模拟10万条样本数据，然后用批量梯度下降法训练一次，看看拟合时间：</p>
