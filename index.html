@@ -365,6 +365,111 @@
             
             
               
+                <a class="post-title-link" href="/articles/machine-learning-6/" itemprop="url">
+                  机器学习笔记六之梯度下降、优化梯度公式、随机梯度下降
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-02-15T00:00:00+08:00" content="2018-02-15">
+              2018-02-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-6/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-6/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这篇笔记主要介绍梯度下降法，梯度下降不是机器学习专属的算法，它是一种基于搜索的最优化方法，也就是通过不断的搜索然后找到损失函数的最小值。像上篇笔记中使用正规方程解实现多元线性回归，基于$X_b\theta$这个模型我们可以推导出$\theta$的数学解，但是很多模型是推导不出数学解的，所以就需要梯度下降法来搜索出最优解。</p>
+<h2 id="u68AF_u5EA6_u4E0B_u964D_u6CD5_u6982_u5FF5"><a href="#u68AF_u5EA6_u4E0B_u964D_u6CD5_u6982_u5FF5" class="headerlink" title="梯度下降法概念"></a>梯度下降法概念</h2><p>我们来看看在二维坐标里的一个曲线方程：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/8b3433626c22d7f31a236492458a58e0.jpg" alt=""></p>
+<p>纵坐标表示损失函数L的值，横坐标表示系数$\theta$。每一个$\theta$的值都会对应一个损失函数L的值，我们希望损失函数收敛，既找到一个$\theta$的值，使损失函数L的值最小。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/7d33b5dbd153029338804e42063e7dae.jpg" alt=""></p>
+<p>在曲线上定义一点A，对应一个$\theta$值，一个损失函数L的值，要判断点A是否是损失函数L的最小值，既求该点的导数，在第一篇笔记中我解释过，点A的导数就是直线M的斜率，直线M是点A的切线，所以导数描述了一个函数在某一点附近的变化率，并且导数大于零时，函数在区间内单调递增，导数小于零时函数在区间内单调递减。所以$\frac {d L}{d \theta}$表示损失函数L增大的变化率，$-\frac {d L}{d \theta}$表示损失函数L减小的变化率。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/79181d4455f5a40c4a652a41a743bc7b.jpg" alt=""></p>
+<p>再在曲线上定义一点B，在点A的下方，B点的$\theta$值就是A点的$\theta$值加上让损失函数L递减的变化率$-\eta \frac {d L}{d \theta}$，$\eta$称为步长，既B点在$-\frac {d L}{d \theta}$变化率的基础下移动了多少距离，在机器学习中$\eta$这个值也称为学习率。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/12d864def3bdafa3f3ecda683f2950e4.jpg" alt=""></p>
+<p>同理还可以再求得点C，然后看是否是损失函数的L的最小值。所以梯度下降法就是基于损失函数在某一点的变化率$-\frac {d L}{d \theta}$，以及寻找下一个点的步长$\eta$，不停的找到下一个点，然后判断该点处的损失函数值是否为最小值的过程。$-\eta \frac {d L}{d \theta}$就称为梯度。</p>
+<p>在第一篇笔记中将极值的时候提到过，当曲线或者曲面很复杂时，会有多个驻点，既局部极值，所以如果运行一次梯度下降法寻找损失函数极值的话很有可能找到的只是局部极小值点。所以在实际运用中我们需要多次运行算法，随机化初始点，然后进行比较找到真正的全局极小值点，所以初始点的位置是梯度下降法的一个超参数。</p>
+<p>不过在线性回归的场景中，我们的损失函数$\sum_{i=1}^m(y^{(i)}-\hat y^{(i)})^2$是有唯一极小值的，所以暂时不需要多次执行算法搜寻全局极值。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/machine-learning-6/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/machine-learning-5/" itemprop="url">
                   机器学习笔记五之线性回归、评测标准、多元线性回归
                 </a>
@@ -663,107 +768,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/machine-learning-2/" itemprop="url">
-                  机器学习笔记二之矩阵、环境搭建、NumPy
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2018-01-13T00:00:00+08:00" content="2018-01-13">
-              2018-01-13
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-2/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-2/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u77E9_u9635"><a href="#u77E9_u9635" class="headerlink" title="矩阵"></a>矩阵</h2><p>因为在机器学习中，一些概念、算法都涉及到矩阵的知识，比如训练数据集通常都是以矩阵的方式存在，所以在这里首先介绍一下矩阵的概念。</p>
-<h3 id="u57FA_u672C_u6982_u5FF5"><a href="#u57FA_u672C_u6982_u5FF5" class="headerlink" title="基本概念"></a>基本概念</h3><p>在数学概念中，一个$m \times n$的矩阵指的是一个由$m$行$n$列元素排列而成的矩形阵列。用大白话解释就是将一些元素排列成若干行，每行放上相同数量的元素，就是一个矩阵。矩阵里的元素可以是数字、符号或数学式，比如下面这个$A$矩阵就是一个四行两列的矩阵：<br>$$ A=\begin{bmatrix}<br> 1&amp;2\\<br> 3&amp;4\\<br> 5&amp;6\\<br> 7&amp;8\\<br>\end{bmatrix}$$</p>
-<p>一个矩阵$A$从左上角数起的第$i$行第$j$列上的元素称为第$i$，$j$项，通常记为$A_{i,j}$、$A_{ij}$或者$A_{[i,j]}$，那么上面的$A$矩阵中$A_{3,2}=6$。如果我们不知道矩阵$A$的具体元素，通常将其表示为$A=[a_{ij}]_{m \times n}$，如果$A$的元素可以写成与行$i$和列$j$有关的统一函数$f$，那么也可以用$A=[f(i,j)]_{m \times n}$来表示。</p>
-<h3 id="u77E9_u9635_u7684_u57FA_u672C_u8FD0_u7B97"><a href="#u77E9_u9635_u7684_u57FA_u672C_u8FD0_u7B97" class="headerlink" title="矩阵的基本运算"></a>矩阵的基本运算</h3><p>矩阵的最基本运算包括矩阵加（减）法、数乘、转置、矩阵乘法运算。</p>
-<h4 id="u52A0_u51CF_u6CD5_u8FD0_u7B97"><a href="#u52A0_u51CF_u6CD5_u8FD0_u7B97" class="headerlink" title="加减法运算"></a>加减法运算</h4><p>$m \times n$矩阵$A$和$B$的和（差）$A \pm B$也是一个$m \times n$矩阵，其中每个元素是$A$和$B$相应元素的和（差），即$ (A \pm B)_{ij}=A_{ij} \pm B_{ij} $，其中$1 \le i \le m$，$1 \le j \le n$。举个例子：</p>
-<p>$$ \begin{bmatrix}<br>1&amp;2&amp;3\\<br>4&amp;5&amp;6\\<br>\end{bmatrix} + \begin{bmatrix}<br>6&amp;5&amp;4\\<br>3&amp;2&amp;1\\<br>\end{bmatrix} = \begin{bmatrix}<br>1+6 &amp; 2+5 &amp; 3+4 \\<br>4+3 &amp; 5+2 &amp; 6+1 \\<br>\end{bmatrix}=\begin{bmatrix}<br>7&amp;7&amp;7\\<br>7&amp;7&amp;7\\<br>\end{bmatrix}<br> $$</p>
-<h4 id="u6570_u4E58_u8FD0_u7B97"><a href="#u6570_u4E58_u8FD0_u7B97" class="headerlink" title="数乘运算"></a>数乘运算</h4><p> 标量$c$与$m \times n$的矩阵$A$的数乘也是一个$m \times n$的矩阵$cA$，它的每个元素是矩阵$A$的相应元素与$c$的乘积$(cA)_{ij}=c \cdot A_{ij}$，举个例子：</p>
-<p> $$<br> 2 \cdot \begin{bmatrix}<br> 1&amp;2&amp;3\\<br> 4&amp;5&amp;6\\<br> \end{bmatrix}=\begin{bmatrix}<br> 2 \cdot 1 &amp; 2 \cdot 2 &amp; 2 \cdot 3 \\<br> 2 \cdot 4 &amp; 2 \cdot 5 &amp; 2 \cdot 6 \\<br> \end{bmatrix}=\begin{bmatrix}<br> 2&amp;4&amp;6\\<br> 8&amp;10&amp;12\\<br> \end{bmatrix}<br>  $$</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-2/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -806,7 +810,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">84</span>
+              <span class="site-state-item-count">85</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

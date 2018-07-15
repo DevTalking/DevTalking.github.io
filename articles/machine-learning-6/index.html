@@ -1,0 +1,956 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这篇笔记主要介绍梯度下降法，梯度下降不是机器学习专属的算法，它是一种基于搜索的最优化方法，也就是通过不断的搜索然后找到损失函数的最小值。像上篇笔记中使用正规方程解实现多元线性回归，基于$X_b\theta$这个模型我们可以推导出$\">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记六之梯度下降、优化梯度公式、随机梯度下降">
+<meta property="og:url" content="http://www.devtalking.com/articles/machine-learning-6/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这篇笔记主要介绍梯度下降法，梯度下降不是机器学习专属的算法，它是一种基于搜索的最优化方法，也就是通过不断的搜索然后找到损失函数的最小值。像上篇笔记中使用正规方程解实现多元线性回归，基于$X_b\theta$这个模型我们可以推导出$\">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/8b3433626c22d7f31a236492458a58e0.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/7d33b5dbd153029338804e42063e7dae.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/79181d4455f5a40c4a652a41a743bc7b.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/12d864def3bdafa3f3ecda683f2950e4.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/b7dc17cb71005d1d1ef768462ffbc042.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/c6c1c996f18edb6d77c85d7969ae8833.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/8ad7c792de47d281e7aed54b72d216fd.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/ce4c29ffc270f8d0a8db5b18b6690e09.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/1fe2d00a45041a7b2857819315291f8f.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/2675d3796567abc2691dd832b368d8d2.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/815e5ed71aee17484fb96bb11c362b9a.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/92e28ad8c4fa25fd273d2d0d92c7a1ec.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/abb3840fcba54f337a5ddc63dc52d835.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/0697eece8d0ea059c5dc25486f9e6190.jpg">
+<meta property="og:updated_time" content="2018-07-15T16:00:56.149Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记六之梯度下降、优化梯度公式、随机梯度下降">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这篇笔记主要介绍梯度下降法，梯度下降不是机器学习专属的算法，它是一种基于搜索的最优化方法，也就是通过不断的搜索然后找到损失函数的最小值。像上篇笔记中使用正规方程解实现多元线性回归，基于$X_b\theta$这个模型我们可以推导出$\">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 机器学习笔记六之梯度下降、优化梯度公式、随机梯度下降 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                机器学习笔记六之梯度下降、优化梯度公式、随机梯度下降
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-02-15T00:00:00+08:00" content="2018-02-15">
+              2018-02-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-6/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-6/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这篇笔记主要介绍梯度下降法，梯度下降不是机器学习专属的算法，它是一种基于搜索的最优化方法，也就是通过不断的搜索然后找到损失函数的最小值。像上篇笔记中使用正规方程解实现多元线性回归，基于$X_b\theta$这个模型我们可以推导出$\theta$的数学解，但是很多模型是推导不出数学解的，所以就需要梯度下降法来搜索出最优解。</p>
+<h2 id="u68AF_u5EA6_u4E0B_u964D_u6CD5_u6982_u5FF5"><a href="#u68AF_u5EA6_u4E0B_u964D_u6CD5_u6982_u5FF5" class="headerlink" title="梯度下降法概念"></a>梯度下降法概念</h2><p>我们来看看在二维坐标里的一个曲线方程：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/8b3433626c22d7f31a236492458a58e0.jpg" alt=""></p>
+<p>纵坐标表示损失函数L的值，横坐标表示系数$\theta$。每一个$\theta$的值都会对应一个损失函数L的值，我们希望损失函数收敛，既找到一个$\theta$的值，使损失函数L的值最小。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/7d33b5dbd153029338804e42063e7dae.jpg" alt=""></p>
+<p>在曲线上定义一点A，对应一个$\theta$值，一个损失函数L的值，要判断点A是否是损失函数L的最小值，既求该点的导数，在第一篇笔记中我解释过，点A的导数就是直线M的斜率，直线M是点A的切线，所以导数描述了一个函数在某一点附近的变化率，并且导数大于零时，函数在区间内单调递增，导数小于零时函数在区间内单调递减。所以$\frac {d L}{d \theta}$表示损失函数L增大的变化率，$-\frac {d L}{d \theta}$表示损失函数L减小的变化率。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/79181d4455f5a40c4a652a41a743bc7b.jpg" alt=""></p>
+<p>再在曲线上定义一点B，在点A的下方，B点的$\theta$值就是A点的$\theta$值加上让损失函数L递减的变化率$-\eta \frac {d L}{d \theta}$，$\eta$称为步长，既B点在$-\frac {d L}{d \theta}$变化率的基础下移动了多少距离，在机器学习中$\eta$这个值也称为学习率。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/12d864def3bdafa3f3ecda683f2950e4.jpg" alt=""></p>
+<p>同理还可以再求得点C，然后看是否是损失函数的L的最小值。所以梯度下降法就是基于损失函数在某一点的变化率$-\frac {d L}{d \theta}$，以及寻找下一个点的步长$\eta$，不停的找到下一个点，然后判断该点处的损失函数值是否为最小值的过程。$-\eta \frac {d L}{d \theta}$就称为梯度。</p>
+<p>在第一篇笔记中将极值的时候提到过，当曲线或者曲面很复杂时，会有多个驻点，既局部极值，所以如果运行一次梯度下降法寻找损失函数极值的话很有可能找到的只是局部极小值点。所以在实际运用中我们需要多次运行算法，随机化初始点，然后进行比较找到真正的全局极小值点，所以初始点的位置是梯度下降法的一个超参数。</p>
+<p>不过在线性回归的场景中，我们的损失函数$\sum_{i=1}^m(y^{(i)}-\hat y^{(i)})^2$是有唯一极小值的，所以暂时不需要多次执行算法搜寻全局极值。</p>
+<a id="more"></a>
+<h3 id="u68AF_u5EA6_u4E0B_u964D_u7684_u6B65_u957F"><a href="#u68AF_u5EA6_u4E0B_u964D_u7684_u6B65_u957F" class="headerlink" title="梯度下降的步长"></a>梯度下降的步长</h3><p>步长在梯度下降法中非常重要，这里着重说一下。</p>
+<ul>
+<li>$\eta$在机器学习中称为学习率（Learning rate）。</li>
+<li>$\eta$的取值影响获得最优解的速度。想象一下如果$\eta$过小，那么寻找的点就会变得很多，收敛速度下降。如果$\eta$过大可能会不断错过最优解，同样影响收敛速度。</li>
+<li>$\eta$取值不合适时甚至得不到最优解。比如$\eta$值过大会造成损失函数值越来越大。</li>
+<li>$\eta$也是梯度下降法的一个超参数。可能会有搜索最佳$\eta$的过程。</li>
+</ul>
+<h2 id="u5B9E_u73B0_u68AF_u5EA6_u4E0B_u964D_u6CD5"><a href="#u5B9E_u73B0_u68AF_u5EA6_u4E0B_u964D_u6CD5" class="headerlink" title="实现梯度下降法"></a>实现梯度下降法</h2><p>我们在Jupyter Notebook中来看看如何实现梯度下降法：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 模拟theta值，及确定一个损失函数</span></span><br><span class="line">plot_x = np.linspace(-<span class="number">1</span>, <span class="number">6</span>, <span class="number">100</span>)</span><br><span class="line">plot_y = (plot_x-<span class="number">2.5</span>)**<span class="number">2</span>-<span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 将该曲线绘制出来</span></span><br><span class="line">plt.plot(plot_x, plot_y)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/b7dc17cb71005d1d1ef768462ffbc042.jpg" alt=""></p>
+<p>下面我们来定义变化率$\frac {d L}{d \theta}$和损失函数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 变化率</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dL</span><span class="params">(theta)</span>:</span></span><br><span class="line"><span class="comment"># 对(theta-2.5)**2-1 求导，然后返回</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">2</span>*(theta-<span class="number">2.5</span>)</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line"><span class="comment"># 损失函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">L</span><span class="params">(theta)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> (theta-<span class="number">2.5</span>)**<span class="number">2</span>-<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>然后来看看实现梯度下降的过程：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 步长默认设为0.1</span></span><br><span class="line">eta = <span class="number">0.1</span></span><br><span class="line"><span class="comment"># 初始点默认设为0.0</span></span><br><span class="line">theta = <span class="number">0.0</span></span><br><span class="line"><span class="comment"># 找到的新的theta值与上一个theta值的差值最小边界</span></span><br><span class="line">difference = <span class="number">1e-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">	<span class="comment"># 求出梯度，既变化率</span></span><br><span class="line">	gradient = dL(theta)</span><br><span class="line">	<span class="comment"># 记录上一个theta值</span></span><br><span class="line">	last_theta = theta</span><br><span class="line">	<span class="comment"># 寻找下一个theta值，既当前的theta值加上乘以步长的使损失函数递减的变化率</span></span><br><span class="line">	theta = theta - eta*gradient</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 当新找到的theta值与上一个theta值之差小于1e-8时，表明此时变化率已经趋于0了，新的theta值可以使损失函数达到极小值 </span></span><br><span class="line">	<span class="keyword">if</span>(abs(L(theta) - L(last_theta)) &lt; difference):</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">		</span><br><span class="line">print(theta)</span><br><span class="line">print(L(theta))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">2.499891109642585</span></span><br><span class="line">-<span class="number">0.99999998814289</span></span><br></pre></td></tr></table></figure>
+<p>得到的$\theta$值为2.5，损失函数的极小值为-1，代入方程$(\theta - 2.5)^2-1$可验证我们的求解是正确的。</p>
+<h3 id="Theta_u7684_u53D8_u5316"><a href="#Theta_u7684_u53D8_u5316" class="headerlink" title="Theta的变化"></a>Theta的变化</h3><p>我们将每次$\theta$的值记下来，然后描绘出来，看看是如何变化的：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">eta = <span class="number">0.1</span></span><br><span class="line">difference = <span class="number">1e-8</span></span><br><span class="line">theta = <span class="number">0.0</span></span><br><span class="line">theta_history = [theta]</span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">	gradient = dL(theta)</span><br><span class="line">	last_theta = theta</span><br><span class="line">	theta = theta - eta * gradient</span><br><span class="line">	theta_history.append(theta)</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(abs(L(theta) - L(last_theta)) &lt; different):</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">		</span><br><span class="line">len(theta_history)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">46</span></span><br><span class="line"></span><br><span class="line">plt.plot(plot_x, L(plot_x))</span><br><span class="line">plt.plot(np.array(theta_history), L(np.array(theta_history)), color=<span class="string">'r'</span>, marker=<span class="string">'+'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/c6c1c996f18edb6d77c85d7969ae8833.jpg" alt=""></p>
+<p>从上面的示例代码中看到，一共经历了45次的查找得到了让函数达到最小值的$\theta$。并且看到一开始因为曲线比较陡，所以梯度比较大，两个点之间的间隔比较大，到曲线底部的时候因为曲线开始平缓，梯度逐渐变小，每个点之间的间隔就越来越小。</p>
+<p>我们将步长调大一些，看看$\theta$的查找轨迹是怎样的：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">eta = <span class="number">0.8</span></span><br><span class="line">difference = <span class="number">1e-8</span></span><br><span class="line">theta = <span class="number">0.0</span></span><br><span class="line">theta_history = [theta]</span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">	gradient = dL(theta)</span><br><span class="line">	last_theta = theta</span><br><span class="line">	theta = theta - eta * gradient</span><br><span class="line">	theta_history.append(theta)</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(abs(L(theta) - L(last_theta)) &lt; difference):</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">		</span><br><span class="line">plt.plot(plot_x, L(plot_x))</span><br><span class="line">plt.plot(np.array(theta_history), L(np.array(theta_history)), color=<span class="string">"r"</span>, marker=<span class="string">"+"</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/8ad7c792de47d281e7aed54b72d216fd.jpg" alt=""></p>
+<p>从图中可以看到，第一次查找的时候就越过了极值点，找到了曲线另一侧的点，不过好在损失函数的值还是递减的状态所以最终还是找到了极值点。</p>
+<p>我们将步长再调大点，看会发生什么情况：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">L</span><span class="params">(theta)</span>:</span></span><br><span class="line">	<span class="keyword">try</span>:</span><br><span class="line">		<span class="keyword">return</span> (theta-<span class="number">2.5</span>)**<span class="number">2</span>-<span class="number">1</span></span><br><span class="line">	<span class="keyword">except</span>:</span><br><span class="line">		<span class="keyword">return</span> float(<span class="string">'inf'</span>)</span><br><span class="line">		</span><br><span class="line">eta = <span class="number">1.1</span></span><br><span class="line">difference = <span class="number">1e-8</span></span><br><span class="line">theta = <span class="number">0.0</span></span><br><span class="line">theta_history = [theta]</span><br><span class="line">n_iters = <span class="number">100</span></span><br><span class="line">i_iter = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> i_iter &lt; n_iters:</span><br><span class="line">	gradient = dL(theta)</span><br><span class="line">	last_theta = theta</span><br><span class="line">	theta = theta - eta * gradient</span><br><span class="line">	theta_history.append(theta)</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(abs(L(theta) - L(last_theta)) &lt; difference):</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">		</span><br><span class="line">	i_iter += <span class="number">1</span></span><br><span class="line">plt.plot(plot_x, L(plot_x))</span><br><span class="line">plt.plot(np.array(theta_history), L(np.array(theta_history)), color=<span class="string">"r"</span>, marker=<span class="string">"+"</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/ce4c29ffc270f8d0a8db5b18b6690e09.jpg" alt=""></p>
+<p>从图中看到每次找到的$\theta$会使损失函数越来越大，根本无法找到极小值。所以步长的确定非常重要，不过一般情况下，我们将步长设为0.01是比较保险的做法，但是如果想使算法在各方面达到最优，那么还是需要先对步长这个超参数进行严谨的确定。</p>
+<h3 id="u6C42_u5BFC_u6982_u5FF5_u590D_u4E60"><a href="#u6C42_u5BFC_u6982_u5FF5_u590D_u4E60" class="headerlink" title="求导概念复习"></a>求导概念复习</h3><p>在看如何使用梯度下降解决线性回归问题前，我们先来复习一下求导的知识。</p>
+<h4 id="u4EE3_u6570_u51FD_u6570_u7684_u6C42_u5BFC"><a href="#u4EE3_u6570_u51FD_u6570_u7684_u6C42_u5BFC" class="headerlink" title="代数函数的求导"></a>代数函数的求导</h4><ul>
+<li>$\frac {dM}{dx}=0$</li>
+<li>$\frac {dx^n}{dx}=nx^{n-1}$</li>
+<li>$\frac {d|x|}{dx}=\frac {x}{|x|}$</li>
+</ul>
+<h4 id="u4E00_u822C_u6C42_u5BFC_u5B9A_u5219"><a href="#u4E00_u822C_u6C42_u5BFC_u5B9A_u5219" class="headerlink" title="一般求导定则"></a>一般求导定则</h4><h5 id="u7EBF_u6027_u5B9A_u5219"><a href="#u7EBF_u6027_u5B9A_u5219" class="headerlink" title="线性定则"></a>线性定则</h5><p>$$ \frac {d(Mf)}{dx}=M\frac {df}{dx} $$</p>
+<p>$$ \frac {d(f\pm g)}{dx}=\frac {df}{dx} \pm \frac {dg}{dx} $$</p>
+<h5 id="u4E58_u6CD5_u5B9A_u5219"><a href="#u4E58_u6CD5_u5B9A_u5219" class="headerlink" title="乘法定则"></a>乘法定则</h5><p>$$\frac {dfg}{dx}=\frac {df}{dx}g + f\frac {dg}{dx}$$</p>
+<h5 id="u9664_u6CD5_u5B9A_u5219"><a href="#u9664_u6CD5_u5B9A_u5219" class="headerlink" title="除法定则"></a>除法定则</h5><p>$$ \frac {d \frac f g} {dx} = \frac {\frac {df} {dx} g - f \frac {dg} {dx}} {g^2} \ \ \ (g\neq 0) $$</p>
+<h5 id="u5012_u6570_u5B9A_u5219"><a href="#u5012_u6570_u5B9A_u5219" class="headerlink" title="倒数定则"></a>倒数定则</h5><p>$$ \frac {d \frac 1 g} {dx} = \frac {-\frac {dg} {dx}} {g^2} \ \ \ (g\neq 0) $$</p>
+<h5 id="u590D_u5408_u51FD_u6570_u6C42_u5BFC_u6CD5_u5219"><a href="#u590D_u5408_u51FD_u6570_u6C42_u5BFC_u6CD5_u5219" class="headerlink" title="复合函数求导法则"></a>复合函数求导法则</h5><p>$$ \frac {df[g(x)]} {dx} = \frac {df(g)} {dg} \frac {dg} {dx} = f’[g(x)]g’(x) $$</p>
+<h2 id="u7EBF_u6027_u56DE_u5F52_u4E2D_u4F7F_u7528_u68AF_u5EA6_u4E0B_u964D_u6CD5"><a href="#u7EBF_u6027_u56DE_u5F52_u4E2D_u4F7F_u7528_u68AF_u5EA6_u4E0B_u964D_u6CD5" class="headerlink" title="线性回归中使用梯度下降法"></a>线性回归中使用梯度下降法</h2><p>上一节通过一维场景解释了梯度下降法，这一节在高维的场景中看看如何使用梯度下降法解决线性回归的问题。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/1fe2d00a45041a7b2857819315291f8f.jpg" alt=""></p>
+<p>在线性回归的问题中注意一下三个方面：</p>
+<ul>
+<li>首先损失函数$\sum_{i=1}^m(y^{(i)}-\hat y^{(i)})^2$是明确的，前面用正规方程解实现的时候已经推导过。</li>
+<li>其次系数$\theta$不是一维的了，而是多维的，既$\theta$是一个向量。</li>
+<li>最后损失函数不是对一维系数$\theta$求全导，而是对$\theta$向量求偏导，也就是对向量里的每一个$\theta$求导数，记为$\nabla L$，既梯度。</li>
+</ul>
+<p>在上一篇笔记中我们推导过$\hat y^{(i)}$的函数：</p>
+<p>$$ \hat y^{(i)} = \theta _0+\theta_1X_1^{(i)}+\theta_2X_2^{(i)}+…+\theta_nX_n^{(i)} $$</p>
+<p>所以代入损失函数后就得：</p>
+<p>$$\sum_{i=1}^m (y^{(i)}-\theta_0-\theta_1X_1^{(i)}-\theta_2X_2^{(i)}-…-\theta_nX_n^{(i)})^2$$</p>
+<p>在讲正规方程解时我们推导过，上面的函数可以转换为：</p>
+<p>$$\sum_{i=1}^m(y^{(i)}-X_b^{(i)} \theta)^2$$</p>
+<p>我们的目标就是让上面的函数尽可能的小，根据之前讲过的概念，我们知道损失函数的梯度就是对$\theta$向量中的每个$\theta$求导，并且在上篇笔记中我们知道$\theta$向量是一个列向量，根据复合函数求导定则，所以损失函数L的梯度为：</p>
+<p>$$ \nabla L(\theta) = \begin{bmatrix}<br> \frac {\partial L}{\partial \theta_0}\<br> \frac {\partial L}{\partial \theta_1}\<br> \frac {\partial L}{\partial \theta_2}\<br> …\<br> \frac {\partial L}{\partial \theta<em>n}\<br>\end{bmatrix} =\begin{bmatrix}<br>\sum</em>{i=1}^m 2(y^{(i)}-X<em>b^{(i)}\theta)(-1)\<br>\sum</em>{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X<em>1^{(i)})\<br>\sum</em>{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X<em>2^{(i)})\<br>…\<br>\sum</em>{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X_n^{(i)})\<br> \end{bmatrix}$$</p>
+<p>将2提到外面，然后将后面的负号移进前面的括号里得：</p>
+<p>$$\begin{bmatrix}<br>\sum_{i=1}^m 2(y^{(i)}-X<em>b^{(i)}\theta)(-1)\<br>\sum</em>{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X<em>1^{(i)})\<br>\sum</em>{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X<em>2^{(i)})\<br>…\<br>\sum</em>{i=1}^m 2(y^{(i)}-X_b^{(i)}\theta)(-X<em>n^{(i)})\<br> \end{bmatrix}=2\begin{bmatrix}<br>\sum</em>{i=1}^m (X<em>b^{(i)}\theta-y^{(i)})\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X<em>1^{(i)}\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X<em>2^{(i)}\<br>…\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_n^{(i)}\<br> \end{bmatrix}$$</p>
+<p>可以发现上面公式中每个元素都经过了m求和，这样带来的问题就是梯度受样本数据数量的影响极大，不过在线性回归的评测标准一节中讲到的均方误差MSE就是为了解决这个问题的，所以我们将损失函数直接转变为MSE：</p>
+<p>$$\frac 1 {m}\sum_{i=1}^m(y^{(i)}-X_b^{(i)} \theta)^2$$</p>
+<p>那么对MSE求梯度的结果自然也是损失函数求梯度后乘以1/m：</p>
+<p>$$\frac 2 m\begin{bmatrix}<br>\sum_{i=1}^m (X<em>b^{(i)}\theta-y^{(i)})\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X<em>1^{(i)}\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X<em>2^{(i)}\<br>…\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_n^{(i)}\<br> \end{bmatrix}$$</p>
+<h2 id="u5B9E_u73B0_u7EBF_u6027_u56DE_u5F52_u4E2D_u7684_u68AF_u5EA6_u4E0B_u964D_u6CD5"><a href="#u5B9E_u73B0_u7EBF_u6027_u56DE_u5F52_u4E2D_u7684_u68AF_u5EA6_u4E0B_u964D_u6CD5" class="headerlink" title="实现线性回归中的梯度下降法"></a>实现线性回归中的梯度下降法</h2><p>我们先在Jupyter Notebook中来实现，然后再在PyCharm中进行封装：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置随机种子</span></span><br><span class="line">np.random.seed(<span class="number">666</span>)</span><br><span class="line"><span class="comment"># 随机构建100个数</span></span><br><span class="line">x = <span class="number">2</span> * np.random.random(size=<span class="number">100</span>)</span><br><span class="line"><span class="comment"># 拟定一个线性方程，x乘3乘4后再加上随机生成的正态分布数</span></span><br><span class="line">y = x * <span class="number">3.</span> + <span class="number">4.</span> + np.random.normal(size=<span class="number">100</span>)</span><br><span class="line"><span class="comment"># 先从100行1列的矩阵开始，既样本数据只有一个特征</span></span><br><span class="line">X = x.reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">plt.scatter(x, y)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/2675d3796567abc2691dd832b368d8d2.jpg" alt=""></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 定义损失函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">L</span><span class="params">(theta, X_b, y)</span>:</span></span><br><span class="line">	<span class="keyword">try</span>:</span><br><span class="line">		<span class="keyword">return</span> np.sum((y - X_b.dot(theta))**<span class="number">2</span>) / len(X_b)</span><br><span class="line">	<span class="keyword">except</span>:</span><br><span class="line">		<span class="keyword">return</span> float(<span class="string">'inf'</span>)</span><br><span class="line">		</span><br><span class="line"><span class="comment"># 定义梯度</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dL</span><span class="params">(theta, X_b, y)</span>:</span></span><br><span class="line">	<span class="comment"># 开辟空间，大小为theta向量的大小</span></span><br><span class="line">	gradient = np.empty(len(theta))</span><br><span class="line">	<span class="comment"># 第0元素个特殊处理</span></span><br><span class="line">	gradient[<span class="number">0</span>] = np.sum(X_b.dot(theta) - y)</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(theta)):</span><br><span class="line">		<span class="comment"># 矩阵求和可以转换为点乘</span></span><br><span class="line">		gradient[i] = (X_b.dot(theta) - y).dot(X_b[:, i])</span><br><span class="line">	<span class="keyword">return</span> gradient * <span class="number">2</span> / len(X_b)</span><br><span class="line">	</span><br><span class="line"><span class="comment"># 梯度下降法</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient_descent</span><span class="params">(X_b, y, initial_theta, eta, n_iters = <span class="number">1e4</span>, difference = <span class="number">1e-8</span>)</span>:</span></span><br><span class="line">	theta = initial_theta</span><br><span class="line">	i_iter = <span class="number">0</span></span><br><span class="line">	<span class="keyword">while</span> i_iter &lt; n_iters:</span><br><span class="line">		gradient = dL(theta, X_b, y)</span><br><span class="line">		last_theta = theta</span><br><span class="line">		theta = theta - eta * gradient</span><br><span class="line">	</span><br><span class="line">		<span class="keyword">if</span>(abs(L(theta, X_b, y) - L(last_theta, X_b, y)) &lt; difference):</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		</span><br><span class="line">		i_iter += <span class="number">1</span></span><br><span class="line">	<span class="keyword">return</span> theta</span><br><span class="line">	</span><br><span class="line"><span class="comment"># 构建X_b</span></span><br><span class="line">X_b = np.hstack([np.ones((X.shape[<span class="number">0</span>], <span class="number">1</span>)), X])</span><br><span class="line"><span class="comment"># 初始化theta向量为元素全为0的向量</span></span><br><span class="line">initial_theta = np.zeros(X_b.shape[<span class="number">1</span>])</span><br><span class="line"><span class="comment"># 设置步长为0.01</span></span><br><span class="line">eta = <span class="number">0.01</span></span><br><span class="line"></span><br><span class="line">theta = gradient_descent(X_b, y, initial_theta, eta)</span><br><span class="line">theta</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([ <span class="number">4.02145786</span>,  <span class="number">3.00706277</span>])</span><br></pre></td></tr></table></figure>
+<p>可以看到我们得到的结果，解决为4，斜率为3，和我们拟定的线性方程是一致的。</p>
+<p>下面我们在PyCharm中封装梯度下降法。在<code>LinearRegression</code>类中再增加一个<code>fit_gd</code>方法，和<code>fit_normal</code>方法区分开，表明是用梯度下降法进行训练：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用梯度下降法，根据训练数据集X_train，y_train训练LinearRegression模型</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">fit_gd</span><span class="params">(self, X_train, y_train, eta=<span class="number">0.01</span>, n_iters=<span class="number">1e4</span>)</span>:</span></span><br><span class="line">		<span class="keyword">assert</span> X_train.shape[<span class="number">0</span>] == y_train.shape[<span class="number">0</span>], \</span><br><span class="line">			<span class="string">"特征数据矩阵的行数要等于样本结果数据的行数"</span></span><br><span class="line"></span><br><span class="line">		<span class="comment"># 定义损失函数</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">L</span><span class="params">(theta, X_b, y)</span>:</span></span><br><span class="line">			<span class="keyword">try</span>:</span><br><span class="line">				<span class="keyword">return</span> np.sum((y - X_b.dot(theta)) ** <span class="number">2</span>) / len(X_b)</span><br><span class="line">			<span class="keyword">except</span>:</span><br><span class="line">				<span class="keyword">return</span> float(<span class="string">'inf'</span>)</span><br><span class="line"></span><br><span class="line">		<span class="comment"># 定义梯度</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">dL</span><span class="params">(theta, X_b, y)</span>:</span></span><br><span class="line">			<span class="comment"># 开辟空间，大小为theta向量的大小</span></span><br><span class="line">			gradient = np.empty(len(theta))</span><br><span class="line">			<span class="comment"># 第0元素个特殊处理</span></span><br><span class="line">			gradient[<span class="number">0</span>] = np.sum(X_b.dot(theta) - y)</span><br><span class="line"></span><br><span class="line">			<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(theta)):</span><br><span class="line">				<span class="comment"># 矩阵求和可以转换为点乘</span></span><br><span class="line">				gradient[i] = (X_b.dot(theta) - y).dot(X_b[:, i])</span><br><span class="line"></span><br><span class="line">			<span class="keyword">return</span> gradient * <span class="number">2</span> / len(X_b)</span><br><span class="line"></span><br><span class="line">		<span class="comment"># 梯度下降法</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">gradient_descent</span><span class="params">(X_b, y, initial_theta, eta, n_iters=<span class="number">1e4</span>, difference=<span class="number">1e-8</span>)</span>:</span></span><br><span class="line">			theta = initial_theta</span><br><span class="line">			i_iter = <span class="number">0</span></span><br><span class="line">			<span class="keyword">while</span> i_iter &lt; n_iters:</span><br><span class="line">				gradient = dL(theta, X_b, y)</span><br><span class="line">				last_theta = theta</span><br><span class="line">				theta = theta - eta * gradient</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> (abs(L(theta, X_b, y) - L(last_theta, X_b, y)) &lt; difference):</span><br><span class="line">					<span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">				i_iter += <span class="number">1</span></span><br><span class="line">			<span class="keyword">return</span> theta</span><br><span class="line"></span><br><span class="line">		<span class="comment"># 构建X_b</span></span><br><span class="line">		X_b = np.hstack([np.ones((len(X_train), <span class="number">1</span>)), X_train])</span><br><span class="line">		<span class="comment"># 初始化theta向量为元素全为0的向量</span></span><br><span class="line">		initial_theta = np.zeros(X_b.shape[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">		self._theta = gradient_descent(X_b, y_train, initial_theta, eta)</span><br><span class="line">		self.intercept_ = self._theta[<span class="number">0</span>]</span><br><span class="line">		self.coef_ = self._theta[<span class="number">1</span>:]</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> self</span><br></pre></td></tr></table></figure>
+<h2 id="u4F18_u5316_u68AF_u5EA6_u516C_u5F0F"><a href="#u4F18_u5316_u68AF_u5EA6_u516C_u5F0F" class="headerlink" title="优化梯度公式"></a>优化梯度公式</h2><p>我们先将之前推导出来的梯度公式写出来：</p>
+<p>$$\nabla L = \frac 2 m\begin{bmatrix}<br>\sum_{i=1}^m (X<em>b^{(i)}\theta-y^{(i)})\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X<em>1^{(i)}\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X<em>2^{(i)}\<br>…\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_n^{(i)}\<br> \end{bmatrix}$$</p>
+<p>将展开来看：</p>
+<p>$$\nabla L = \frac 2 m\begin{bmatrix}<br>(X_b^{(1)}\theta-y^{(1)})+(X_b^{(2)}\theta-y^{(2)})+…+(X_b^{(m)}\theta-y^{(m)})\<br>(X_b^{(1)}\theta-y^{(1)})X_1^{(1)}+(X_b^{(2)}\theta-y^{(2)})X_1^{(2)}+…+(X_b^{(m)}\theta-y^{(m)})X_1^{(m)}\<br>(X_b^{(1)}\theta-y^{(1)})X_2^{(1)}+(X_b^{(2)}\theta-y^{(2)})X_2^{(2)}+…+(X_b^{(m)}\theta-y^{(m)})X_2^{(m)}\<br>…\<br>(X_b^{(1)}\theta-y^{(1)})X_n^{(1)}+(X_b^{(2)}\theta-y^{(2)})X_n^{(2)}+…+(X_b^{(m)}\theta-y^{(m)})X_n^{(m)}\<br> \end{bmatrix}$$</p>
+<p> 将第一行的元素形式统一，每项都乘以$X_0$，并且$X_0$恒等于1：</p>
+<p> $$\nabla L = \frac 2 m\begin{bmatrix}<br>(X_b^{(1)}\theta-y^{(1)})X_0^{(1)}+(X_b^{(2)}\theta-y^{(2)})X_0^{(2)}+…+(X_b^{(m)}\theta-y^{(m)})X_0^{(m)}\<br>(X_b^{(1)}\theta-y^{(1)})X_1^{(1)}+(X_b^{(2)}\theta-y^{(2)})X_1^{(2)}+…+(X_b^{(m)}\theta-y^{(m)})X_1^{(m)}\<br>(X_b^{(1)}\theta-y^{(1)})X_2^{(1)}+(X_b^{(2)}\theta-y^{(2)})X_2^{(2)}+…+(X_b^{(m)}\theta-y^{(m)})X_2^{(m)}\<br>…\<br>(X_b^{(1)}\theta-y^{(1)})X_n^{(1)}+(X_b^{(2)}\theta-y^{(2)})X_n^{(2)}+…+(X_b^{(m)}\theta-y^{(m)})X_n^{(m)}\<br> \end{bmatrix}$$</p>
+<p>下面我们来两个矩阵，A为一个1行m列的矩阵，B为一个m行n列的矩阵：</p>
+<p>$$A=\frac 2 m \begin{bmatrix}X_b^{(1)}\theta-y^{(1)}&amp; X_b^{(2)}\theta-y^{(2)}&amp; … &amp;X_b^{(m)}\theta-y^{(m)}\end{bmatrix}$$</p>
+<p>$$B=\begin{bmatrix}<br>X_0^{(1)}&amp; X_1^{(1)}&amp; X_2^{(1)}&amp; … &amp; X_n^{(1)}\<br>X_0^{(2)}&amp; X_1^{(2)}&amp; X_2^{(2)}&amp; … &amp; X_n^{(2)}\<br>…\<br>X_0^{(m)}&amp; X_1^{(m)}&amp; X_2^{(m)}&amp; … &amp; X_n^{(m)}<br>\end{bmatrix}$$</p>
+<p>在第二篇笔记中我们复习过矩阵的运算，让A矩阵点乘B矩阵会得到一个1行n列的新矩阵：</p>
+<p>$$A \cdot B=\frac 2 m \begin{bmatrix}X_b^{(1)}\theta-y^{(1)}&amp; X_b^{(2)}\theta-y^{(2)}&amp; … &amp;X_b^{(m)}\theta-y^{(m)}\end{bmatrix} \cdot\ \begin{bmatrix}<br>X_0^{(1)}&amp; X_1^{(1)}&amp; X_2^{(1)}&amp; … &amp; X_n^{(1)}\<br>X_0^{(2)}&amp; X_1^{(2)}&amp; X_2^{(2)}&amp; … &amp; X_n^{(2)}\<br>…\<br>X_0^{(m)}&amp; X_1^{(m)}&amp; X_2^{(m)}&amp; … &amp; X_n^{(m)}<br>\end{bmatrix}\<br>=\begin{bmatrix}<br>(X_b^{(1)}\theta-y^{(1)})X_0^{(1)}+(X_b^{(2)}\theta-y^{(2)})X_0^{(2)}+…+(X_b^{(m)}\theta-y^{(m)})X_0^{(m)}&amp; \ (X_b^{(1)}\theta-y^{(1)})X_1^{(1)}+(X_b^{(2)}\theta-y^{(2)})X_1^{(2)}+…+(X_b^{(m)}\theta-y^{(m)})X_1^{(m)}&amp; \<br>…\<br>(X_b^{(1)}\theta-y^{(1)})X_n^{(1)}+(X_b^{(2)}\theta-y^{(2)})X_n^{(2)}+…+(X_b^{(m)}\theta-y^{(m)})X_n^{(m)}<br>\end{bmatrix}$$</p>
+<p>注意上面$A \cdot B$的矩阵是1行n列的矩阵，将其转置后就称为了n行1列的矩阵，正是之前展开的梯度$\nabla L$，所以我们的梯度公式可写为：</p>
+<p>$$\nabla L = \frac 2 m((X_b \theta - y)^\top X_b)^\top=\frac 2 m X_b^\top(X_b \theta - y)$$</p>
+<p>如此一来我们就可以修改一下之前封装的梯度的方法了：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 定义梯度</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">dL</span><span class="params">(theta, X_b, y)</span>:</span></span><br><span class="line">			<span class="comment"># # 开辟空间，大小为theta向量的大小</span></span><br><span class="line">			<span class="comment"># gradient = np.empty(len(theta))</span></span><br><span class="line">			<span class="comment"># # 第0元素个特殊处理</span></span><br><span class="line">			<span class="comment"># gradient[0] = np.sum(X_b.dot(theta) - y)</span></span><br><span class="line">			<span class="comment">#</span></span><br><span class="line">			<span class="comment"># for i in range(1, len(theta)):</span></span><br><span class="line">			<span class="comment">#     # 矩阵求和可以转换为点乘</span></span><br><span class="line">			<span class="comment">#     gradient[i] = (X_b.dot(theta) - y).dot(X_b[:, i])</span></span><br><span class="line"></span><br><span class="line">			<span class="keyword">return</span> X_b.T.dot(X_b.dot(theta) - y) * <span class="number">2</span> / len(X_b)</span><br></pre></td></tr></table></figure>
+<p>此时就可以用一行代码取代之前的for循环来实现梯度了。</p>
+<h2 id="u7528_u771F_u5B9E_u6570_u636E_u6D4B_u8BD5_u68AF_u5EA6_u4E0B_u964D_u6CD5"><a href="#u7528_u771F_u5B9E_u6570_u636E_u6D4B_u8BD5_u68AF_u5EA6_u4E0B_u964D_u6CD5" class="headerlink" title="用真实数据测试梯度下降法"></a>用真实数据测试梯度下降法</h2><p>我们用Scikit Learn提供的波士顿房价来测试一下梯度下降法:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line">boston = datasets.load_boston()</span><br><span class="line">X = boston.data</span><br><span class="line">y = boston.target</span><br><span class="line"></span><br><span class="line">X = X[y &lt; <span class="number">50.0</span>]</span><br><span class="line">y = y[y &lt; <span class="number">50.0</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 取前10行数据观察一下</span></span><br><span class="line">X[<span class="number">10</span>:]</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"></span><br><span class="line">Out[<span class="number">17</span>]:</span><br><span class="line">array([[  <span class="number">2.24890000e-01</span>,   <span class="number">1.25000000e+01</span>,   <span class="number">7.87000000e+00</span>, ...,</span><br><span class="line">		  <span class="number">1.52000000e+01</span>,   <span class="number">3.92520000e+02</span>,   <span class="number">2.04500000e+01</span>],</span><br><span class="line">	   [  <span class="number">1.17470000e-01</span>,   <span class="number">1.25000000e+01</span>,   <span class="number">7.87000000e+00</span>, ...,</span><br><span class="line">		  <span class="number">1.52000000e+01</span>,   <span class="number">3.96900000e+02</span>,   <span class="number">1.32700000e+01</span>],</span><br><span class="line">	   [  <span class="number">9.37800000e-02</span>,   <span class="number">1.25000000e+01</span>,   <span class="number">7.87000000e+00</span>, ...,</span><br><span class="line">		  <span class="number">1.52000000e+01</span>,   <span class="number">3.90500000e+02</span>,   <span class="number">1.57100000e+01</span>],</span><br><span class="line">	   ..., </span><br><span class="line">	   [  <span class="number">6.07600000e-02</span>,   <span class="number">0.00000000e+00</span>,   <span class="number">1.19300000e+01</span>, ...,</span><br><span class="line">		  <span class="number">2.10000000e+01</span>,   <span class="number">3.96900000e+02</span>,   <span class="number">5.64000000e+00</span>],</span><br><span class="line">	   [  <span class="number">1.09590000e-01</span>,   <span class="number">0.00000000e+00</span>,   <span class="number">1.19300000e+01</span>, ...,</span><br><span class="line">		  <span class="number">2.10000000e+01</span>,   <span class="number">3.93450000e+02</span>,   <span class="number">6.48000000e+00</span>],</span><br><span class="line">	   [  <span class="number">4.74100000e-02</span>,   <span class="number">0.00000000e+00</span>,   <span class="number">1.19300000e+01</span>, ...,</span><br><span class="line">		  <span class="number">2.10000000e+01</span>,   <span class="number">3.96900000e+02</span>,   <span class="number">7.88000000e+00</span>]])</span><br></pre></td></tr></table></figure>
+<p>从前10行的数据中可以看出来，数据之间的差距非常大，不同于正规方程法的$\theta$有数学解，在梯度下降中会非常影响梯度的值，既影响$\theta$的搜索，从而影响收敛速度和是否能收敛，所以一般在使用梯度下降法前，都需要对数据进行归一化处理，将数据转换到同一尺度下。在第三篇笔记中介绍过数据归一化的方法，Scikit Learn中也提供了数据归一化的方法，我们就使用Scikit Learn中提供的方法对波士顿数据进行归一化：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 先将样本数据拆分为训练样本数据和测试样本数据</span></span><br><span class="line"><span class="keyword">from</span> myML.modelSelection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, y_train, X_test, y_test = train_test_split(X, y, seed=<span class="number">123</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用Scikit Learn提供的数据归一化方法处理训练数据</span></span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line">standard_scalar = StandardScaler()</span><br><span class="line">standard_scalar.fit(X_train)</span><br><span class="line">X_train_standard = standard_scalar.transform(X_train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再来看看归一化后的数据前10行，和未归一化之前的做一下比较</span></span><br><span class="line">X_train_standard[<span class="number">10</span>:]</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[-<span class="number">0.3854578</span> , -<span class="number">0.49494584</span>, -<span class="number">0.70629402</span>, ..., -<span class="number">0.5235474</span> ,</span><br><span class="line">		 <span class="number">0.22529916</span>, -<span class="number">1.09634897</span>],</span><br><span class="line">	   [ <span class="number">8.34092707</span>, -<span class="number">0.49494584</span>,  <span class="number">1.03476103</span>, ...,  <span class="number">0.80665081</span>,</span><br><span class="line">		 <span class="number">0.32122168</span>,  <span class="number">1.38375621</span>],</span><br><span class="line">	   [-<span class="number">0.44033902</span>,  <span class="number">1.83594326</span>, -<span class="number">0.83504431</span>, ..., -<span class="number">0.90360404</span>,</span><br><span class="line">		 <span class="number">0.45082029</span>, -<span class="number">0.83197228</span>],</span><br><span class="line">	   ..., </span><br><span class="line">	   [-<span class="number">0.39976896</span>, -<span class="number">0.49494584</span>,  <span class="number">1.58926511</span>, ...,  <span class="number">1.28172161</span>,</span><br><span class="line">		 <span class="number">0.42018591</span>,  <span class="number">0.2101475</span> ],</span><br><span class="line">	   [-<span class="number">0.422702</span>  , -<span class="number">0.49494584</span>, -<span class="number">0.74140773</span>, ...,  <span class="number">0.33158002</span>,</span><br><span class="line">		 <span class="number">0.4131248</span> , -<span class="number">0.41372555</span>],</span><br><span class="line">	   [-<span class="number">0.44280463</span>,  <span class="number">3.05688517</span>, -<span class="number">1.35589775</span>, ..., -<span class="number">0.14349077</span>,</span><br><span class="line">		-<span class="number">0.1499176</span> , -<span class="number">0.02205637</span>]])</span><br></pre></td></tr></table></figure>
+<p>可以看到数据都在同一个尺度内了，然后我们用优化后的梯度下降法来训练归一化后的样本数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> myML.LinearRegression <span class="keyword">import</span> LinearRegression</span><br><span class="line">lr = LinearRegression()</span><br><span class="line">lr.fit_gd(X_train_standard, y_train)</span><br><span class="line">lr.intercept_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">21.629336734693847</span></span><br><span class="line"></span><br><span class="line">lr.coef_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([-<span class="number">0.9525182</span> ,  <span class="number">0.55252408</span>, -<span class="number">0.30736822</span>, -<span class="number">0.03926274</span>, -<span class="number">1.37014814</span>,</span><br><span class="line">		<span class="number">2.61387294</span>, -<span class="number">0.82461734</span>, -<span class="number">2.36441751</span>,  <span class="number">2.02340617</span>, -<span class="number">2.17890468</span>,</span><br><span class="line">	   -<span class="number">1.76883751</span>,  <span class="number">0.7438223</span> , -<span class="number">2.25694241</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在计算score前，需要对X_test数据也进行归一化处理</span></span><br><span class="line">X_test_standard = standard_scalar.transform(X_test)</span><br><span class="line">lr1.score(X_test_standard, y_test)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.80028998868733348</span></span><br></pre></td></tr></table></figure>
+<p>看到结果与我们之前使用正规方程法得到的结果是一致的。</p>
+<h2 id="u968F_u673A_u68AF_u5EA6_u4E0B_u964D_u6CD5"><a href="#u968F_u673A_u68AF_u5EA6_u4E0B_u964D_u6CD5" class="headerlink" title="随机梯度下降法"></a>随机梯度下降法</h2><p>在实际的运用中，训练数据的量级往往都很大，我们目前实现梯度下降法是需要让每一个样本数据都参与梯度计算的，称为批量梯度下降，所以当样本数据量很大的时候，计算梯度的速度就会很慢，所以这一节我们来看看改进这个情况的随机梯度下降法。</p>
+<p>以一个山谷的俯视示意图为例，先来看看批量梯度下降法对$\theta$值的查找轨迹：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/815e5ed71aee17484fb96bb11c362b9a.jpg" alt=""></p>
+<p>可以看到呈现出的轨迹是平滑下降的，每一个$\theta$值都比上一个$\theta$值小，最终找到使损失函数达到极小值的$\theta$。这是因为每一个$\theta$都会对所有样本进行了计算，为了增加拟合效率，对每一个$\theta$，我们不对所有样本进行计算，而是每次只取一个样本进行计算，取多次来找到最终的$\theta$值，这就是随机梯度下降的基本思想。</p>
+<p>那么我们再来看看随机梯度下降法的$\theta$查找轨迹：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/92e28ad8c4fa25fd273d2d0d92c7a1ec.jpg" alt=""></p>
+<p>因为每次只随机取一个样本进行计算，所以可以看到随机梯度下降法查找$\theta$的轨迹是也是随机的，很多时候搜索下一个$\theta$的路径并不是最短路径，并且下一个$\theta$的损失函数值比上一个$\theta$的损失函数值还要大，但是最终依然会找到使损失函数达到极小值的$\theta$。</p>
+<p>我们来看看梯度公式：</p>
+<p>$$\frac 2 m\begin{bmatrix}<br>\sum_{i=1}^m (X<em>b^{(i)}\theta-y^{(i)})\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X<em>1^{(i)}\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X<em>2^{(i)}\<br>…\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_n^{(i)}\<br> \end{bmatrix}$$</p>
+<p> 按照随机梯度下降的思路，每次只取一个样本进行计算，也就是i每次只取一个值：</p>
+<p> $$2\begin{bmatrix}<br>(X_b^{(i)}\theta-y^{(i)})\<br>(X_b^{(i)}\theta-y^{(i)})X_1^{(i)}\<br>(X_b^{(i)}\theta-y^{(i)})X_2^{(i)}\<br>…\<br>(X_b^{(i)}\theta-y^{(i)})X_n^{(i)}\<br> \end{bmatrix}$$</p>
+<p>向量化后可得：</p>
+<p>$$2(X_b^{(i)})^\top(X_b^{(i)} \theta - y^{(i)})$$</p>
+<p>注意上面这个公式并不是梯度公式，而是搜索$\theta$的某一个方向，批量梯度下降是不放过任何一个搜索$\theta$的方向，而随机梯度下降是每次选择一个方向进行搜索。另外需要注意的是随机梯度下降法中的步长（学习率）并不是固定不变的，不然就无法找补随机路径的不足了，所以随机梯度下降法中的步长是根据搜索次数的增加而降低的，也就是逐渐递减的。那么学习率的公式我们首先想到的就是取搜索次数的倒数：</p>
+<p>$$\eta=\frac 1 {i_iters}$$</p>
+<p>但是如果搜索次数很小或者很大的时候都会出现问题，前者会导致学习率下降的幅度过大，而后者会导致学习率下降的幅度过小，所以我们将分母加上一个常数，分子也用一个常数，这样就能保证学习率的递减幅度在一个较为平滑的状态：</p>
+<p>$$\eta=\frac a {i_iters + b}$$</p>
+<p>a和b其实就是随机梯度下降法的两个超参数了，不过这里我们不对这两个超参数进行搜索，我们使用最佳实践就好，一般取a为5，b为50。</p>
+<p>另外一个关键的超参数是搜索次数，假设取样本数据量的1/3作为搜索次数，因为每次是随机取一个样本数据，那势必会有一部分样本数据取不到，从而不会计算，并且取到的样本数据里也会有重复的数据，这样虽然收敛时间减少了，但是准确率却会打折扣，那么为了训练数据的准确性，我们希望每次搜索到的样本数据不重复，并且能所有的样本数据都希望在某一方向进行计算，所以将搜索次数的概念转变一下，既为随机搜索样本数据，且不重复，且所有样本数据都被搜索到一遍的轮数。这样一来，这个轮数可以很小，一般搜索4轮5轮既可。</p>
+<h3 id="u5B9E_u73B0_u968F_u673A_u68AF_u5EA6_u4E0B_u964D_u6CD5"><a href="#u5B9E_u73B0_u968F_u673A_u68AF_u5EA6_u4E0B_u964D_u6CD5" class="headerlink" title="实现随机梯度下降法"></a>实现随机梯度下降法</h3><p>我们先模拟10万条样本数据，然后用批量梯度下降法训练一次，看看拟合时间：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="comment"># 模拟10万条样本数据</span></span><br><span class="line">m = <span class="number">100000</span></span><br><span class="line"><span class="comment"># 随机生成10万个数</span></span><br><span class="line">x = np.random.random(size=m)</span><br><span class="line"><span class="comment"># 转换成10万行1列的矩阵</span></span><br><span class="line">X = x.reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line"><span class="comment"># 拟定一个线性方程，计算y值，系数为4，截距为3，并且加上一个随机噪音值</span></span><br><span class="line">y = x * <span class="number">4</span> + <span class="number">3</span> + np.random.normal(<span class="number">0</span>, <span class="number">3</span>, size=m)</span><br><span class="line"><span class="comment"># 先使用批量梯度下降法</span></span><br><span class="line"><span class="keyword">from</span> myML.LinearRegression <span class="keyword">import</span> LinearRegression</span><br><span class="line">lr = LinearRegression()</span><br><span class="line">%%time</span><br><span class="line">lr.fit_gd(X, y)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">CPU times: user <span class="number">6.59</span> s, sys: <span class="number">496</span> ms, total: <span class="number">7.08</span> s</span><br><span class="line">Wall time: <span class="number">5.19</span> s</span><br><span class="line"></span><br><span class="line"><span class="comment"># 截距</span></span><br><span class="line">lr.intercept_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">2.9982721096748928</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 系数</span></span><br><span class="line">lr.coef_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([ <span class="number">3.99485476</span>])</span><br></pre></td></tr></table></figure>
+<p>我们看到使用批量梯度下降法计算出的截距和系数和拟定的线性方程中的截距和系数是差不多的，并且拟合时间用了5.19秒。</p>
+<p>下面我们直接在PyCharm中封装随机梯度下降的方法，在<code>LinearRegression</code>类中增加<code>fit_sgd</code>方法：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用随机梯度下降法，根据训练数据集X_train，y_train训练LinearRegression模型</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">fit_sgd</span><span class="params">(self, X_train, y_train, n_iters=<span class="number">5</span>, a=<span class="number">5</span>, b=<span class="number">50</span>)</span>:</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">assert</span> X_train.shape[<span class="number">0</span>] == y_train.shape[<span class="number">0</span>], \</span><br><span class="line">			<span class="string">"特征数据矩阵的行数要等于样本结果数据的行数"</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">assert</span> n_iters &gt;= <span class="number">1</span>, \</span><br><span class="line">			<span class="string">"至少要搜索一轮"</span></span><br><span class="line"></span><br><span class="line">		<span class="comment"># 定义theta查找方向的函数，这里不是全量的X_b矩阵了，而是X_b矩阵中的一行数据，</span></span><br><span class="line">		<span class="comment"># 既其中的的一个样本数据，对应的y值也只有一个</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">dL_sgd</span><span class="params">(theta, X_b_i, y_i)</span>:</span></span><br><span class="line">			<span class="keyword">return</span> X_b_i.T.dot(X_b_i.dot(theta) - y_i) * <span class="number">2</span></span><br><span class="line"></span><br><span class="line">		<span class="comment"># 实现随机梯度下降法</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">sgd</span><span class="params">(X_b, y, initial_theta, n_iters)</span>:</span></span><br><span class="line"></span><br><span class="line">			<span class="comment"># 定义学习率公式</span></span><br><span class="line">			<span class="function"><span class="keyword">def</span> <span class="title">eta</span><span class="params">(iters)</span>:</span></span><br><span class="line">				<span class="keyword">return</span> a / (iters + b)</span><br><span class="line"></span><br><span class="line">			theta = initial_theta</span><br><span class="line"></span><br><span class="line">			<span class="comment"># 样本数量</span></span><br><span class="line">			m = len(X_b)</span><br><span class="line"></span><br><span class="line">			<span class="comment"># 第一层循环是循环轮数</span></span><br><span class="line">			<span class="keyword">for</span> i_inter <span class="keyword">in</span> range(n_iters):</span><br><span class="line"></span><br><span class="line">				<span class="comment"># 在每一轮，随机生成一个乱序数组，个数为m</span></span><br><span class="line">				indexs = np.random.permutation(m)</span><br><span class="line"></span><br><span class="line">				<span class="comment"># 打乱样本数据</span></span><br><span class="line">				X_b_new = X_b[indexs]</span><br><span class="line">				y_new = y[indexs]</span><br><span class="line"></span><br><span class="line">				<span class="comment"># 第二层循环便利所有为乱序的样本数据，既保证样本数据能被随机的，全部的计算到</span></span><br><span class="line">				<span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">					<span class="comment"># 每次用一个随机样本数据计算theta搜索方向</span></span><br><span class="line">					gradient = dL_sgd(theta, X_b_new[i], y_new[i])</span><br><span class="line">					<span class="comment"># 计算下一个theta</span></span><br><span class="line">					theta = theta - eta(i_inter * m + i) * gradient</span><br><span class="line"></span><br><span class="line">				<span class="keyword">return</span> theta</span><br><span class="line"></span><br><span class="line">		<span class="comment"># 构建X_b</span></span><br><span class="line">		X_b = np.hstack([np.ones((len(X_train), <span class="number">1</span>)), X_train])</span><br><span class="line">		<span class="comment"># 初始化theta向量为元素全为0的向量</span></span><br><span class="line">		initial_theta = np.zeros(X_b.shape[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">		self._theta = sgd(X_b, y_train, initial_theta, n_iters)</span><br><span class="line">		self.intercept_ = self._theta[<span class="number">0</span>]</span><br><span class="line">		self.coef_ = self._theta[<span class="number">1</span>:]</span><br></pre></td></tr></table></figure>
+<p>然后在Jupyter Notebook中使用封装好的随机梯度下降法来训练刚才的数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">lr1 = LinearRegression()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里我们使用默认的5次搜索轮数，轮数越少，拟合时间越短</span></span><br><span class="line">%%time</span><br><span class="line">lr1.fit_sgd(X, y)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">CPU times: user <span class="number">967</span> ms, sys: <span class="number">6.31</span> ms, total: <span class="number">973</span> ms</span><br><span class="line">Wall time: <span class="number">971</span> ms</span><br><span class="line"></span><br><span class="line"><span class="comment"># 截距</span></span><br><span class="line">lr1.intercept_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">2.9746308939605761</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 系数</span></span><br><span class="line">lr1.coef_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([ <span class="number">3.96594805</span>])</span><br></pre></td></tr></table></figure>
+<p>可以看到最终的结果和批量梯度下降法训练出的是差不多的，但是拟合时间只用了971毫秒。</p>
+<h2 id="Scikit_Learn_u4E2D_u7684_u968F_u673A_u68AF_u5EA6_u4E0B_u964D_u6CD5"><a href="#Scikit_Learn_u4E2D_u7684_u968F_u673A_u68AF_u5EA6_u4E0B_u964D_u6CD5" class="headerlink" title="Scikit Learn中的随机梯度下降法"></a>Scikit Learn中的随机梯度下降法</h2><p>这一节我们用真实的波士顿房价数据，使用Scikit Learn中的随机梯度下降进行训练看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">boston = datasets.load_boston()</span><br><span class="line">X = boston.data</span><br><span class="line">y = boston.target</span><br><span class="line"></span><br><span class="line">X = X[y &lt; <span class="number">50.0</span>]</span><br><span class="line">y = y[y &lt; <span class="number">50.0</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> myML.modelSelection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, y_train, X_test, y_test = train_test_split(X, y, seed=<span class="number">123</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line">standard_scalar = StandardScaler()</span><br><span class="line">standard_scalar.fit(X_train)</span><br><span class="line">X_train_standard = standard_scalar.transform(X_train)</span><br><span class="line">X_test_standard = standard_scalar.transform(X_test)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> SGDRegressor</span><br><span class="line">sgd_reg = SGDRegressor(n_iter=<span class="number">150</span>)</span><br><span class="line">%time sgd_reg.fit(X_train_standard, y_train)</span><br><span class="line">sgd_reg.score(X_test_standard, y_test)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">CPU times: user <span class="number">8.59</span> ms, sys: <span class="number">2.26</span> ms, total: <span class="number">10.8</span> ms</span><br><span class="line">Wall time: <span class="number">8.06</span> ms</span><br><span class="line"><span class="number">0.80003192122081712</span></span><br></pre></td></tr></table></figure>
+<p>再来看看使用我们自己封装的随机梯度下降训练波士顿房价数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> myML.LinearRegression <span class="keyword">import</span> LinearRegression</span><br><span class="line">lr = LinearRegression()</span><br><span class="line">%%time</span><br><span class="line">lr.fit_gd(X_train_standard, y_train, n_iters=<span class="number">150</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">CPU times: user <span class="number">256</span> ms, sys: <span class="number">3.43</span> ms, total: <span class="number">259</span> ms</span><br><span class="line">Wall time: <span class="number">257</span> ms</span><br><span class="line"></span><br><span class="line">lr1.score(X_test_standard, y_test)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.80028998868733348</span></span><br></pre></td></tr></table></figure>
+<p>可以看到在同样的搜索轮数，相同的评分值情况下，Scikit Learn中的随机梯度下降法的收敛时间远远小于我们自己实现的随机梯度下降法，这是因为Scikit Learn中实现的时候使用了大量优化的算法，我们只是使用了最核心的思想进行封装，这点需要大家知晓。</p>
+<h2 id="u5173_u4E8E_u68AF_u5EA6_u7684_u8C03_u8BD5"><a href="#u5173_u4E8E_u68AF_u5EA6_u7684_u8C03_u8BD5" class="headerlink" title="关于梯度的调试"></a>关于梯度的调试</h2><p>从字面意思就不难看出梯度下降法中梯度的重要性，在线性回归问题中，我们尚且能推导出梯度的公式，但在一些复杂的情况下，推导梯度的公式非常不容易，所以我们推导出的梯度公式是否合理，是否是正确的，就需要有一个方法来验证。这一小节就给大家介绍一个梯度调试的方法。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/abb3840fcba54f337a5ddc63dc52d835.jpg" alt=""></p>
+<p>拿一维场景来说，A点的梯度也就是导数是它切线M的斜率。然后我们在直线M的右侧再画出一条平行与直线M的直线N，直线N的斜率与直线M的斜率近乎相等，此时直线N与曲线有两个相交点B和点C，这两个点分别在A点的负方向，也就是下上方，和在A点的正方向，也就是在下方，此时直线M也称为曲线的割线：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/0697eece8d0ea059c5dc25486f9e6190.jpg" alt=""></p>
+<p>在第一篇笔记中讲过直线的斜率定义，既对于两个已知点$(x_1,y_1)$和$(x_2,y_2)$，如果$x_1$不等于$x_2$，则经过这两点直线的斜率为$(y_1-y_2)/(x_1-x_2)$。我们假设点B和点C相距点A为$\epsilon$，所以直线N的斜率为：</p>
+<p>$$\frac {L(\theta + \epsilon)-L(\theta - \epsilon)}{\theta + \epsilon - (\theta - \epsilon)}=\frac {L(\theta + \epsilon)-L(\theta - \epsilon)}{2\epsilon}$$ </p>
+<p>通过这个公式就可以模拟计算出某一点的导数。对于高维的梯度也是同样的道理。</p>
+<p>$$\theta = (\theta_0,\theta_1,\theta_2,…,\theta_n)$$<br>$$\frac {\partial L}{\partial \theta}=(\frac {\partial L}{\partial \theta_0},\frac {\partial L}{\partial \theta_1},\frac {\partial L}{\partial \theta_2},…,\frac {\partial L}{\partial \theta_n})$$</p>
+<p>高维情况中，$\theta$和梯度如上所示，如果我们要模拟计算$\theta_0$的梯度，首先得出$\theta_0$上方和下方的$\theta$：</p>
+<p>$$\theta_0^+ = (\theta_0+\epsilon,\theta_1,\theta_2,…,\theta_n)$$<br>$$\theta_0^- = (\theta_0-\epsilon,\theta_1,\theta_2,…,\theta_n)$$</p>
+<p>那么模拟出的$\theta_0$导数为：</p>
+<p>$$\frac {\partial L}{\partial \theta_0}=\frac {L(\theta_0^+)-L(\theta_0^-)}{2\epsilon}$$</p>
+<p>以此类推，可以模拟计算出所有$\theta$的导数，从而模拟计算出梯度。虽然该方法与损失函数形态无关，但是对每个$\theta$导数的模拟计算都需要将两组$\theta$向量代入损失函数进行计算，时间复杂度还是非常高的，但是有一个优势是可以忽略损失函数形态。所以我们一般用这种方式在一开始投入一些时间算出梯度，因为这个梯度是基于斜率的数学定理计算出的，所以它可以认为是一个合理的梯度，然后将它作为标准来验证通过梯度下降法计算出的梯度的正确性。</p>
+<h3 id="u5B9E_u73B0_u68AF_u5EA6_u7684_u8C03_u8BD5_u65B9_u6CD5"><a href="#u5B9E_u73B0_u68AF_u5EA6_u7684_u8C03_u8BD5_u65B9_u6CD5" class="headerlink" title="实现梯度的调试方法"></a>实现梯度的调试方法</h3><p>我们在PyCharm中对我们封装好的梯度下降做一下改动，首先在<code>LinearRegression</code>类中增加一个名为<code>dL_debug()</code>的方法：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dL_debug</span><span class="params">(theta, X_b, y, epsilon=<span class="number">0.01</span>)</span>:</span></span><br><span class="line">			<span class="comment"># 开辟大小与theta向量一致的向量空间</span></span><br><span class="line">			result = np.empty(len(theta))</span><br><span class="line">			<span class="comment"># 便利theta向量中的每一个theta</span></span><br><span class="line">			<span class="keyword">for</span> i <span class="keyword">in</span> range(len(theta)):</span><br><span class="line">				<span class="comment"># 复制一份theta向量</span></span><br><span class="line">				theta_1 = theta.copy()</span><br><span class="line">				<span class="comment"># 将第i个theta加上一个距离，既求该theta正方向的theta</span></span><br><span class="line">				theta_1[i] += epsilon</span><br><span class="line">				<span class="comment"># 在复制一份theta向量</span></span><br><span class="line">				theta_2 = theta.copy()</span><br><span class="line">				<span class="comment"># 将第i个theta减去同样的距离，既求该theta负方向的theta</span></span><br><span class="line">				theta_2[i] -= epsilon</span><br><span class="line">				<span class="comment"># 求出这两个点连线的斜率，既模拟该theta的导数</span></span><br><span class="line">				result[i] = (L(theta_1, X_b, y) - L(theta_2, X_b, y)) / (<span class="number">2</span> * epsilon)</span><br><span class="line">			<span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<p>然后对<code>fit_gd()</code>方法增加一个参数<code>is_debug</code>，默认值为<code>False</code>，然后对<code>gradient_descent()</code>进行修改，让其当<code>is_debug</code>为<code>True</code>时走Debug的求梯度的方法，反之走梯度公式的方法：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 实现批量梯度下降法</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">gradient_descent</span><span class="params">(X_b, y, initial_theta, eta, difference=<span class="number">1e-8</span>)</span>:</span></span><br><span class="line">			theta = initial_theta</span><br><span class="line">			i_iter = <span class="number">0</span></span><br><span class="line">			<span class="keyword">while</span> i_iter &lt; n_iters:</span><br><span class="line">				<span class="comment"># 当is_debug为True时走debug的求梯度的方法，反之走梯度公式的方法</span></span><br><span class="line">				<span class="keyword">if</span> is_debug:</span><br><span class="line">					gradient = dL_debug(theta, X_b, y)</span><br><span class="line">				<span class="keyword">else</span>:</span><br><span class="line">					gradient = dL(theta, X_b, y)</span><br><span class="line">				last_theta = theta</span><br><span class="line">				theta = theta - eta * gradient</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> (abs(L(theta, X_b, y) - L(last_theta, X_b, y)) &lt; difference):</span><br><span class="line">					<span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">				i_iter += <span class="number">1</span></span><br><span class="line">			<span class="keyword">return</span> theta</span><br></pre></td></tr></table></figure>
+<p>下面我们使用波士顿房价的数据验证一下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line">boston = datasets.load_boston()</span><br><span class="line">X = boston.data</span><br><span class="line">y = boston.target</span><br><span class="line"></span><br><span class="line">X = X[y &lt; <span class="number">50.0</span>]</span><br><span class="line">y = y[y &lt; <span class="number">50.0</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> myML.modelSelection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, y_train, X_test, y_test = train_test_split(X, y, seed=<span class="number">123</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line">standard_scalar = StandardScaler()</span><br><span class="line">standard_scalar.fit(X_train)</span><br><span class="line">X_train_standard = standard_scalar.transform(X_train)</span><br><span class="line">X_test_standard = standard_scalar.transform(X_test)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> myML.LinearRegression <span class="keyword">import</span> LinearRegression</span><br><span class="line">lr = LinearRegression()</span><br><span class="line"><span class="comment"># 使用debug方式训练</span></span><br><span class="line">%time lr.fit_gd(X_train_standard, y_train, is_debug=<span class="keyword">True</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">CPU times: user <span class="number">2.55</span> s, sys: <span class="number">11.4</span> ms, total: <span class="number">2.57</span> s</span><br><span class="line">Wall time: <span class="number">2.57</span> s</span><br><span class="line"></span><br><span class="line">lr.intercept_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">21.629336734693936</span></span><br><span class="line"></span><br><span class="line">lr.coef_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([-<span class="number">0.9525182</span> ,  <span class="number">0.55252408</span>, -<span class="number">0.30736822</span>, -<span class="number">0.03926274</span>, -<span class="number">1.37014814</span>,</span><br><span class="line">		<span class="number">2.61387294</span>, -<span class="number">0.82461734</span>, -<span class="number">2.36441751</span>,  <span class="number">2.02340617</span>, -<span class="number">2.17890468</span>,</span><br><span class="line">	   -<span class="number">1.76883751</span>,  <span class="number">0.7438223</span> , -<span class="number">2.25694241</span>])</span><br><span class="line">	   </span><br><span class="line"><span class="comment"># 用梯度公式方式训练</span></span><br><span class="line">% time lr.fit_gd(X_train_standard, y_train)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">CPU times: user <span class="number">241</span> ms, sys: <span class="number">4.12</span> ms, total: <span class="number">245</span> ms</span><br><span class="line">Wall time: <span class="number">242</span> ms</span><br><span class="line"></span><br><span class="line">lr.intercept_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">21.629336734693936</span></span><br><span class="line"></span><br><span class="line">lr.coef_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([-<span class="number">0.9525182</span> ,  <span class="number">0.55252408</span>, -<span class="number">0.30736822</span>, -<span class="number">0.03926274</span>, -<span class="number">1.37014814</span>,</span><br><span class="line">		<span class="number">2.61387294</span>, -<span class="number">0.82461734</span>, -<span class="number">2.36441751</span>,  <span class="number">2.02340617</span>, -<span class="number">2.17890468</span>,</span><br><span class="line">	   -<span class="number">1.76883751</span>,  <span class="number">0.7438223</span> , -<span class="number">2.25694241</span>])</span><br></pre></td></tr></table></figure>
+<p>可以看到我们使用Debug方式训练数据时用了2.57秒，不过求了准确合理的梯度。然后用梯度公式法训练了数据，耗时242毫米，但结果相同，说明梯度计算的没有问题。</p>
+<blockquote>
+<p>申明：本文为慕课网<a href="https://www.imooc.com/t/108955" target="_blank" rel="external">liuyubobobo</a>老师<a href="https://coding.imooc.com/learn/list/169.html" target="_blank" rel="external">《Python3入门机器学习 经典算法与应用》</a>课程的学习笔记，未经允许不得转载。</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/machine-learning-5/" rel="next" title="机器学习笔记五之线性回归、评测标准、多元线性回归">
+                <i class="fa fa-chevron-left"></i> 机器学习笔记五之线性回归、评测标准、多元线性回归
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/task-manage-omnifocus/" rel="prev" title="基于OmniFocus的任务系统">
+                基于OmniFocus的任务系统 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">85</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u68AF_u5EA6_u4E0B_u964D_u6CD5_u6982_u5FF5"><span class="nav-number">1.</span> <span class="nav-text">梯度下降法概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u68AF_u5EA6_u4E0B_u964D_u7684_u6B65_u957F"><span class="nav-number">1.1.</span> <span class="nav-text">梯度下降的步长</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5B9E_u73B0_u68AF_u5EA6_u4E0B_u964D_u6CD5"><span class="nav-number">2.</span> <span class="nav-text">实现梯度下降法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Theta_u7684_u53D8_u5316"><span class="nav-number">2.1.</span> <span class="nav-text">Theta的变化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6C42_u5BFC_u6982_u5FF5_u590D_u4E60"><span class="nav-number">2.2.</span> <span class="nav-text">求导概念复习</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#u4EE3_u6570_u51FD_u6570_u7684_u6C42_u5BFC"><span class="nav-number">2.2.1.</span> <span class="nav-text">代数函数的求导</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u4E00_u822C_u6C42_u5BFC_u5B9A_u5219"><span class="nav-number">2.2.2.</span> <span class="nav-text">一般求导定则</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#u7EBF_u6027_u5B9A_u5219"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">线性定则</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#u4E58_u6CD5_u5B9A_u5219"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">乘法定则</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#u9664_u6CD5_u5B9A_u5219"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">除法定则</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#u5012_u6570_u5B9A_u5219"><span class="nav-number">2.2.2.4.</span> <span class="nav-text">倒数定则</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#u590D_u5408_u51FD_u6570_u6C42_u5BFC_u6CD5_u5219"><span class="nav-number">2.2.2.5.</span> <span class="nav-text">复合函数求导法则</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7EBF_u6027_u56DE_u5F52_u4E2D_u4F7F_u7528_u68AF_u5EA6_u4E0B_u964D_u6CD5"><span class="nav-number">3.</span> <span class="nav-text">线性回归中使用梯度下降法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5B9E_u73B0_u7EBF_u6027_u56DE_u5F52_u4E2D_u7684_u68AF_u5EA6_u4E0B_u964D_u6CD5"><span class="nav-number">4.</span> <span class="nav-text">实现线性回归中的梯度下降法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4F18_u5316_u68AF_u5EA6_u516C_u5F0F"><span class="nav-number">5.</span> <span class="nav-text">优化梯度公式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7528_u771F_u5B9E_u6570_u636E_u6D4B_u8BD5_u68AF_u5EA6_u4E0B_u964D_u6CD5"><span class="nav-number">6.</span> <span class="nav-text">用真实数据测试梯度下降法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u968F_u673A_u68AF_u5EA6_u4E0B_u964D_u6CD5"><span class="nav-number">7.</span> <span class="nav-text">随机梯度下降法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5B9E_u73B0_u968F_u673A_u68AF_u5EA6_u4E0B_u964D_u6CD5"><span class="nav-number">7.1.</span> <span class="nav-text">实现随机梯度下降法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scikit_Learn_u4E2D_u7684_u968F_u673A_u68AF_u5EA6_u4E0B_u964D_u6CD5"><span class="nav-number">8.</span> <span class="nav-text">Scikit Learn中的随机梯度下降法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5173_u4E8E_u68AF_u5EA6_u7684_u8C03_u8BD5"><span class="nav-number">9.</span> <span class="nav-text">关于梯度的调试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5B9E_u73B0_u68AF_u5EA6_u7684_u8C03_u8BD5_u65B9_u6CD5"><span class="nav-number">9.1.</span> <span class="nav-text">实现梯度的调试方法</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/machine-learning-6/';
+      var disqus_title = '机器学习笔记六之梯度下降、优化梯度公式、随机梯度下降';
+      var disqus_url = 'http://www.devtalking.com//articles/machine-learning-6/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

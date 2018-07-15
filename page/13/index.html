@@ -231,6 +231,124 @@
             
             
               
+                <a class="post-title-link" href="/articles/access-control-and-protected/" itemprop="url">
+                  Swift中的访问控制与protected
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-20T00:00:00+08:00" content="2014-08-20">
+              2014-08-20
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/access-control-and-protected/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/access-control-and-protected/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>当Swift提供了访问控制特性后大家对该特性的响应非常积极和强烈。同时也有很多开发者朋友会问，“为什么Swift中没有提供<code>protected</code>访问级别呢？” 然而在很多其他语言中有这种访问控制级别，就是只能由子类可以访问某些方法或属性的访问级别。</p>
+<p>当定义Swift的访问级别时，我们主要考虑了以下两个使用情况：</p>
+<ul>
+<li>在App中隐藏<code>class</code>的私人信息。</li>
+<li>在App客户端中隐藏框架中的实现细节。</li>
+</ul>
+<p>这两种情况就分别对应了<code>private</code>和<code>internal</code>访问级别。</p>
+<p>相比之下，<code>protected</code>级别保护了继承者的访问权限，这个新的访问控制级别给我们带来全新的思考方式和设计模式。但实际上，该级别并没有提供真正意义上的保护，因为子类总是能通过<code>public</code>级别的方法和属性去暴露<code>protected</code>级别的API。它也没有提供额外的优化解决机制，因为一个父类的方法或属性可以被很多个子类重写，很难控制。所以也没有必要在这方面进行限制，也就是说在现有机制下，子类可以访问父类的一些成员，但是在子类中使用的，或帮助子类实现某些功能的类并不一定能访问到该子类父类的成员。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>正如一些开发者指出的，Apple的框架里有些API被分离出来，专门供子类使用。那么为什么不使用<code>protected</code>级别控制一下呢？我们查看了相关代码后，发现这些API大体符合这么两点情况。第一，一些方法在子类外没有用，所以没有必要将其保护为只能由子类使用。第二，一些方法可以被重写，但不能被调用。比如<code>drawRect(_:)</code>方法，在<code>UIKit</code>框架代码库中肯定可以使用，但是在<code>UIKit</code>框架之外就没法使用了。</p>
+<p>在扩展类的时候，如何与<code>protected</code>级别的成员交互也思考的不是很明确。比如一个类的扩展是否可以访问该类的<code>protected</code>成员呢？或者一个子类的扩展是否能访问其父类的<code>protected</code>成员呢？在相同模块中申明类的扩展会有什么影响呢？</p>
+<p>还有一个影响我们设计的原因是：现在已有的应用大多数都使用了Apple提供的或第三方提供的框架。Objective-C的方法和属性通常都是在<code>.h</code>公共头文件中申明的，但同样可以加在类扩展的<code>.m</code>实现文件中。当公共类的某些部分在框架的其他地方使用，但没有超出框架外时，开发者就要创建第二个头文件用于内部使用。这些种情况就对应着Swift中的<code>public</code>、<code>private</code>、<code>internal</code>三种访问级别。</p>
+<p>Swift提供的访问控制特性本着单一、易于理解、与继承无关的原则。我们认为现在这种模式很简单也很容易理解，并且大多数的应用场景是想隐藏类或框架中一些功能实现细节。这种访问控制机制可能和你以前使用的其他语言不太一样，但是我们鼓励你们大胆的去尝试。</p>
+<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=11" target="_blank" rel="external">Access Control and protected</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/implicitly-converting-functions-return-optionals/" itemprop="url">
                   Swift中将函数的返回值隐式转换为Optional类型的特性
                 </a>
@@ -773,187 +891,6 @@ let y: Int = a ?? b;
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/creating-an-app-extension/" itemprop="url">
-                  开发应用扩展 -- iOS8/OS X v10.10应用扩展编程指南
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-08-11T00:00:00+08:00" content="2014-08-11">
-              2014-08-11
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/creating-an-app-extension/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/creating-an-app-extension/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>当你准备好开发一个应用扩展时，要选择一个合适的扩展点来呈现你的应用扩展的功能。然后使用Xcode提供的各个扩展点的模板来创建<code>Target</code>，以便使默认文件与你自定义的代码和界面更好的结合。最后，在你调试并优化你的应用扩展之后，就可以打包进你的应用程序给用户使用了。</p>
-<h2 id="u5F00_u53D1_u4E4B_u524D_u8981_u9009_u62E9_u6B63_u786E_u7684_u6269_u5C55_u70B9"><a href="#u5F00_u53D1_u4E4B_u524D_u8981_u9009_u62E9_u6B63_u786E_u7684_u6269_u5C55_u70B9" class="headerlink" title="开发之前要选择正确的扩展点"></a>开发之前要选择正确的扩展点</h2><p>因为每一个扩展点，它的功能定义都非常明确，对用户的使用习惯针对性很强，所以你首先应该考虑清楚的是，我要开发的这个应用扩展给用户提供什么样的功能，并且用户最习惯在哪个扩展点使用它。这是非常关键的，因为每个扩展点都有不同的API，为你提供不同的功能开发，所以如果你选错了扩展点，那么很有可能你就无法实现你想要的功能。<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/index.html#//apple_ref/doc/uid/TP40014214-CH20-SW3" target="_blank" rel="external">表1-1</a>列出了iOS和OS X中支持的所有扩展点。</p>
-<p>当你选定了一个扩展点并创建后，在你准备包含扩展的应用程序工程中就会有一个新的<code>Target</code>出现。创建一个应用扩展<code>Target</code>最简单的方式就是使用Xcode提供的模板，因为它已经帮你将基本的配置信息都配置好了，你只需要进行功能的开发即可。</p>
-<p>你可以通过菜单<code>choose File &gt; New &gt; Target</code>在你的Xcode工程中创建一个新<code>Target</code>。在打开的窗口中，选择iOS或OS X的<code>Application Extension</code>选项，然后选择你想要创建的应用扩展模板，如下图所示：<br><img src="http://www.devtalking.com/postImages/addNewTarget.png" alt="图片">  </p>
-<p>当你选择好模板，并在工程中创建<code>Target</code>后，你就可以试着编译并运行一下默认代码。如果你是基于Xcode提供的模板创建的扩展<code>Target</code>，那么当编译成功后，就会生成一个扩展名为<code>.appex</code>的应用扩展包。</p>
-<blockquote>
-<p>注意64位的架构：<br>一个应用程序扩展在设置其编译架构时必须要包含<code>arm64</code>的架构，否则在上传App Store时会被拒绝。你创建完一个应用扩展后，可以在Xcode的<code>Standard architectures</code>选项中设置<code>arm64</code>架构。<br>如果你的包含扩展的应用程序使用了一些框架，那么你的应用程序也必须要包含<code>arm64</code>架构，否则上传App Store时也会被拒绝。<br>关于64位架构开发环境的更多信息，请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/CocoaTouch64BitGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40013501" target="_blank" rel="external">64-Bit Transition Guide for Cocoa Touch</a>  </p>
-</blockquote>
-<p>在大多数情况下，你可以在OS X的<code>System Preferences</code>或iOS的<code>Settings</code>中开启应用扩展，或授予权限，这样就可以在其他应用中测试只含有初始默认代码的扩展了。比如说，你可以在OS X系统中通过<code>Safari</code>中打开一个页面来测试分享扩展，点击分享按钮，然后选择你要测试的扩展即可。</p>
-<h2 id="u68C0_u67E5_u9ED8_u8BA4_u7684_u6269_u5C55_u6A21_u677F"><a href="#u68C0_u67E5_u9ED8_u8BA4_u7684_u6269_u5C55_u6A21_u677F" class="headerlink" title="检查默认的扩展模板"></a>检查默认的扩展模板</h2><p>一般情况下，每个扩展模板都包含一个属性列表文件（就是<code>Info.plist</code>文件），一个View Controller类和一个默认的界面文件，这些都是基于扩展点定义的。默认的View Controller类（或主体类）都含有扩展点对应功能的方法，需要我们去实现。</p>
-<p>应用扩展<code>Target</code>的<code>Info.plist</code>文件中除了标示扩展点的信息外还挪列了应用扩展的详细信息。但至少，该文件中包含一个Key <code>NSExtension</code>，它的值是一个用于说明扩展点的<code>Dictionary</code>。比如Key <code>NSExtensionPointIdentifier</code>的值就代表一个扩展点的名称的引用值，比如<code>com.apple.widget-extension</code>。在应用扩展的<code>NSExtension</code>字典中还有其他的Key代表了不同的信息。</p>
-<ul>
-<li><code>NSExtensionAttributes</code>：这是一个描述扩展点具体属性的字典，就像照片编辑扩展中的<code>PHSupportedMediaTypes</code>一样。</li>
-<li><code>NSExtensionPrincipalClass</code>：这是扩展模板创建的主体视图控制器类，就像<code>SharingViewController</code>。当主应用程序调用扩展时，扩展点会实例化这个类。</li>
-<li><code>NSExtensionMainStoryboard</code>（只适用于iOS）：扩展的默认<code>Storyboard</code>文件，一般名为<code>MainInterface</code>。</li>
-</ul>
-<p>除了在属性列表中设置以外，扩展模板还可以设置一些默认的功能。每个扩展点都可以给它们提供任务类型的场景定义功能，比如说一个iOS的<code>Document Provider</code>扩展就包含<code>com.apple.security.application-groups</code>的功能。</p>
-<p>所有的OS X扩展模板，都默认包含应用程序沙箱和<code>com.apple.security.files.user-selected.read-only</code>功能。如果你开发的扩展需要适用网络，或者访问用户的相册，再或者需要访问用户的通讯录，那么你就需要额外定义这些功能。</p>
-<blockquote>
-<p>注意：<br>通常情况下，如果用户允许主应用程序访问他们的私有数据，那么主程序里的扩展也同样拥有该权限。</p>
-</blockquote>
-<h2 id="u54CD_u5E94_u4E3B_u7A0B_u5E8F_u7684_u8BF7_u6C42"><a href="#u54CD_u5E94_u4E3B_u7A0B_u5E8F_u7684_u8BF7_u6C42" class="headerlink" title="响应主程序的请求"></a>响应主程序的请求</h2><p>正如你在<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionOverview.html#//apple_ref/doc/uid/TP40014214-CH2-SW2" target="_blank" rel="external">Understand How an Extension Works</a>这篇文档中了解的，当用户在主程序选择一个扩展，并使主程序向扩展发出请求时，扩展才会被打开。说的再详细一点，用户做出了一个动作或者说是任务请求，然后你的扩展收到了一个请求，这个请求是帮助用户完成他希望完成的任务，最后扩展完成并关闭这个请求。比如说，一个分享扩展收到了它主程序的请求，然后该扩展响应请求并打开它相应的界面。然后用户在该界面中编辑要分享的内容，用户可以选择发送或者不发送，最后扩展根据用户的行为响应完成还是关闭请求。</p>
-<p>当主程序向扩展发出请求时，一般都会指明扩展运行的上下文。对于很多扩展来说，最重要的一部分就是要设置一个工作项，这个工作项就是用户在使用这个扩展时要处理的工作项。比如说，一个分享扩展的上下文可能就包含用户选择的想要分享的一段文字。</p>
-<p>当主程序发出一个请求（通常就是调用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionRequestHandling_Protocol/index.html#//apple_ref/occ/intfm/NSExtensionRequestHandling/beginRequestWithExtensionContext:" target="_blank" rel="external">beginRequestWithExtensionContext:</a>方法），你的扩展就可以用主试图控制器中的<code>extensionContext</code>属性来接受上下文，然后使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionContext_Class/index.html#//apple_ref/occ/cl/NSExtensionContext" target="_blank" rel="external">NSExtensionContext</a>类解析上下文并获得工作项。通常，在视图控制器的<a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIViewController_Class/index.html#//apple_ref/occ/instm/UIViewController/loadView" target="_blank" rel="external">loadView</a>方法中解析上下文并获得工作项，这样在加载完视图后就可以将信息显示在视图界面中了。获取扩展上下文可以使用如下代码：  </p>
-<pre><code>NSExtensionContext *myExtensionContext = [self extensionContext];
-</code></pre><p>有意思的<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionContext_Class/index.html#//apple_ref/occ/instp/NSExtensionContext/inputItems" target="_blank" rel="external">inputItems</a>属性，它包含了用户在使用扩展时要处理的工作项。<code>inputItems</code>属性包含一个<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionItem_Class/index.html#//apple_ref/occ/cl/NSExtensionItem" target="_blank" rel="external">NSExtensionItem</a>类型的数组，数组的每一个成员都包含一个可执行的工作项。从上下文中获取工作项可以使用如下代码：  </p>
-<pre><code>NSArray *inputItems = [myExtensionContext inputItems];
-</code></pre><p>每个<code>NSExtensionItem</code>对象都包含若干个描述工作项的属性，比如标题、文本内容、附件信息、用户信息。</p>
-<p>注意<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionItem_Class/index.html#//apple_ref/occ/instp/NSExtensionItem/attachments" target="_blank" rel="external">attachments</a>属性，它包含一个与工作项相关联的媒体数据数组。比如说一个分享请求的工作项，那么<code>attachments</code>属性可能就包含用户想要分享网页中的信息。</p>
-<p>当用户希望的工作项处理完后，应用扩展通常会给用户两个选择，完成任务或取消任务。根据用户的选择，扩展会调用<code>completeRequestReturningItems:expirationHandler:completion:</code>方法，选择返回给主体程序的工作项，或者会调用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionContext_Class/index.html#//apple_ref/occ/instm/NSExtensionContext/cancelRequestWithError:" target="_blank" rel="external">cancelRequestWithError:</a>方法，返回一个错误编码。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>在iOS中，你的应用程序扩展可能需要更多的时间去处理潜在的需要长时间处理的任务，比如说往网上上传数据。这种情况下，你就要使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSession_class/index.html#//apple_ref/occ/cl/NSURLSession" target="_blank" rel="external">NSURLSession</a>类将该任务转为后台处理的任务。因为转换到后台处理任务需要用一个单独的线程，所以在扩展完成主应用请求并关闭后仍然可以处理。想了解更多关于扩展中<code>NSURLSession</code>类的使用，请参阅：<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW2" target="_blank" rel="external">Performing Uploads and Downloads</a>。</p>
-<blockquote>
-<p>注意：<br>虽然你可以设置一个在后台通过URL上传下载的任务，但是有一些类型的后台任务，比如提供<code>VoIp</code>或者在后台播放音乐的任务，是不能通过扩展来实现的。<br>如果你应用扩展的<code>Info.plist</code>文件中含有<code>UIBackgroundModes</code>关键字，那么在上传App Store时会被拒绝。（想了解更多关于<code>UIBackgroundModes</code>关键字的内容，请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009247" target="_blank" rel="external">Information Property List Key Reference</a>中的<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW22" target="_blank" rel="external">UIBackgroundModes</a>）</p>
-</blockquote>
-<h2 id="u4F18_u5316_u6548_u7387_u548C_u6027_u80FD"><a href="#u4F18_u5316_u6548_u7387_u548C_u6027_u80FD" class="headerlink" title="优化效率和性能"></a>优化效率和性能</h2><p>应用扩展在内存使用优先级上要明显低于当前运行的应用程序。不管是iOS还是OS X，系统都会频繁的终止扩展，因为用户想返回到主应用程序。但是也有一些应用扩展的内存使用优先级要高于其他扩展，比如说<code>widgets</code>就要求要高一些，因为它要实时的显示一些信息，并且一般用户都会同时开启多个<code>widgets</code>。</p>
-<p>你的应用扩展并不拥有主循环线程，你要遵循这一规则，以便让扩展在主循环线程中发挥最好的性能。比如说，如果你的应用扩展阻止了主循环线程，那么在用户使用主应用程序的过程中会造成非常糟糕的用户体验效果。</p>
-<p>我们需要明确的一点是，GPU在系统中是一个共享的资源，所以应用扩展不会得到很高的优先级照顾。比如说，如果你正在玩一个对GPU消耗很高的游戏，那么由于内存压力比较大，它就有可能会选择关闭<code>Today widget</code>。</p>
-<h2 id="u8BBE_u8BA1_u4E00_u4E2A_u7CBE_u7B80_u7684_u7528_u6237_u754C_u9762"><a href="#u8BBE_u8BA1_u4E00_u4E2A_u7CBE_u7B80_u7684_u7528_u6237_u754C_u9762" class="headerlink" title="设计一个精简的用户界面"></a>设计一个精简的用户界面</h2><p>大多数的扩展点都允许你向用户提供一个自定义的界面，它在用户打开你的应用扩展时呈现给用户。通常情况下，应用扩展的界面要尽可能的简约、功能的针对性要强。为了提高性能和用户体验效果，你要避免与该扩展功能无关的界面出现。</p>
-<p>大多数Xcode提供的扩展点模板都包含一个初始界面文件，你可以在这个文件中设计界面。</p>
-<p>在用户的惯性思维中，一般他们都是通过应用扩展的图标来辨识扩展功能的。不过通常情况下，应用扩展的图标和它的主体应用的图标是一致的。使用主体应用的图标作为应用扩展的图标有利于用户去判断这个扩展的来源，也就是说让用户确信这个扩展是来源于他们安装的主体应用。当然也有一些例外。</p>
-<ul>
-<li>在iOS中，自定义的<code>Action</code>扩展的图标使用它主体应用的图标。</li>
-<li>在OS X中，如果一个扩展的主体程序只是用来安装扩展的安装包，那么该扩展要提供一个单独的图标，否则都会使用主体应用的图标。</li>
-</ul>
-<p>应用扩展要使用一个简短，语义明确的名字，这能让用户更乐意使用主体应用和应用扩展，并且能让他们在系统中更好的管理应用扩展。通过应用扩展<code>Target</code>的<code>CFBundleDisplayName</code>属性来设置它的名称，你可以在<code>Info.plist</code>文件中修改它。如果你没有给<code>CFBundleDisplayName</code>设置值，也就是没有给扩展设置名称，那么应用扩展会使用它的主体应用的名称，也就是<code>CFBundleName</code>属性中的值。</p>
-<p>同时一些应用扩展也需要一个简短的说明。比如说，OS X中的<code>Widget</code>扩展就会显示一个简单的描述，这能帮助用户更好的选择他们想要显示在今日通知中的<code>Widget</code>扩展。扩展的描述可以在<code>InfoPlist.strings</code>文件的<code>widget.description</code>属性中设置。</p>
-<h2 id="u8C03_u8BD5_uFF0C_u914D_u7F6E_u548C_u6D4B_u8BD5_u4F60_u7684_u5E94_u7528_u6269_u5C55"><a href="#u8C03_u8BD5_uFF0C_u914D_u7F6E_u548C_u6D4B_u8BD5_u4F60_u7684_u5E94_u7528_u6269_u5C55" class="headerlink" title="调试，配置和测试你的应用扩展"></a>调试，配置和测试你的应用扩展</h2><blockquote>
-<p>注意：要确保主体应用中的所有扩展都要使用相同签名方式的代码。</p>
-</blockquote>
-<p>在Xcode调试应用扩展和调试其他程序基本是一样的，但唯一一点不同的是：你要选择一个能看到扩展的载体应用。当你编译运行应用扩展后，Xcode会运行载体应用，等待你去使用扩展并触发调试点来调试扩展。你要在<a href="https://developer.apple.com/library/prerelease/ios/featuredarticles/XcodeConcepts/Concept-Schemes.html#//apple_ref/doc/uid/TP40009328-CH8" target="_blank" rel="external">scheme</a>中要为扩展指定一个载体应用（一个<code>scheme</code>封装了<code>Target</code>编译的说明）。</p>
-<p>当你在主体应用工程中创建一个应用扩展的<code>Target</code>时，Xcode就会为应用扩展默认创建一个<code>scheme</code>。应用扩展的<code>scheme</code>可以让你指定在调试时，由哪个应用程序来调用你的扩展，也就是指定一个调试时的载体应用。默认情况下，当你编译运行扩展时，会询问你使用哪个载体应用来调用该扩展。</p>
-<p>在你编译运行应用扩展之前，你要确保你的扩展已经选择了一个<code>scheme</code>。你可以通过<code>Product &gt; Scheme &gt; MyExtensionName</code>或者使用Xcode菜单栏呼出<code>scheme</code>菜单并选择<code>MyExtensionName</code>来设置应用扩展的<code>scheme</code>。</p>
-<blockquote>
-<p>注意：如果你使用运行主体应用的<code>scheme</code>代替应用扩展的<code>scheme</code>，那么你在编译工程时Xcode会告诉你它正在等待调试应用扩展。</p>
-</blockquote>
-<p>当你编译运行应用扩展时，Xcode会为你列出允许调用该扩展的载体应用程序。当你选择一个载体应用程序并且运行后，调试器就准备开始工作了，并准备好在你打的断点处进行拦截。当你在载体应用程序中使用扩展时，就可以对应用扩展进行<code>Debug</code>调试了。调试应用扩展的方式和方法与调试其他应用程序是一样的。</p>
-<blockquote>
-<p>注意：如果你选择的载体应用程序不是扩展的<code>scheme</code>中指定的载体应用程序，那么当你在这个载体应用程序中访问扩展时，<code>Debug</code>调试器是不会起作用的。</p>
-</blockquote>
-<p>在OS X中，你在载体应用程序中访问扩展之前，要确保该扩展是允许被使用的。一般情况下，在<code>System Preferences</code>的扩展面板中开启或关闭扩展（你也可以在共享或<code>Action</code>菜单中打开应用扩展面板）。这里要注意一点，在OS X中使用<code>Widget</code>模拟器调试<code>Widget</code>扩展时，是不需要对其进行开启操作的。当你要调试键盘扩展时，必须要开启该扩展（你可以通过<code>Settings &gt; General &gt; Keyboard &gt; Keyboards</code>开启键盘扩展）。</p>
-<p>在调试时，Xcode会在OS X中创建一个持续的编译应用扩展的会话。这意味着，如果你要使用OS X系统下的扩展，就要将该扩展编译打包好的程序拷贝到<code>Finder</code>中的<code>Applications</code>文件里。</p>
-<blockquote>
-<p>注意：在Xcode的调试控制台日志中，应用扩展的二进制值可能是和<code>CFBundleIdentifier</code>属性关联，而不是<code>CFBundleDisplayName</code>属性。</p>
-</blockquote>
-<p>因为应用扩展必须要做出一个有效的响应，所以当你运行应用扩展时，在调试导航中查看各种调试监控器就非常的清晰明了。这些调试监控器会告诉你当前运行的应用扩展占用了多少CPU、内存和其他系统资源。当你发现类似占用CPU资源出现异常的性能问题后，你就可以使用<code>Instruments</code>来分析你的应用扩展，并确定需要改进的地方。想学习了解调试监控器，请查阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/ToolsLanguages/Conceptual/Xcode_Overview/DebugYourApp/DebugYourApp.html#//apple_ref/doc/uid/TP40010215-CH18" target="_blank" rel="external">Debug Your App</a>，想学习了解<code>Instruments</code>，请查阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40004652" target="_blank" rel="external">Instruments User Guide</a>。</p>
-<blockquote>
-<p>注意：通过<code>Product &gt; Profile</code>可以直接在<code>Instruments</code>中编译并运行应用扩展。</p>
-</blockquote>
-<p>如果要使用Xcode提供的测试框架（比如XCTest APIs），你需要在主体应用程序中写一些测试用例代码。想了解更多XCTest的知识，请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/DeveloperTools/Conceptual/testing_with_xcode/Introduction/Introduction.html#//apple_ref/doc/uid/TP40014132" target="_blank" rel="external">Testing with Xcode</a>。</p>
-<h2 id="u5206_u53D1_u6269_u5C55_u4E3B_u4F53_u5E94_u7528_u7A0B_u5E8F"><a href="#u5206_u53D1_u6269_u5C55_u4E3B_u4F53_u5E94_u7528_u7A0B_u5E8F" class="headerlink" title="分发扩展主体应用程序"></a>分发扩展主体应用程序</h2><p>你不能直接将应用扩展上传至App Store，你只能上传应用扩展的主体应用程序，并且你不能将应用扩展从一个应用程序中转到另一个应用程序。</p>
-<p>如果想让用户使用你的应用扩展，你就比如将该扩展的主体应用程序上传至App Store中，并且主体应用程序如要有其他的功能，不能只包含应用扩展。</p>
-<p>虽然我们推荐将应用扩展主体应用程序上传至App Store作为用户使用应用扩展的途径，但这也不是唯一的途径。比如在OS X中，主体应用程序就可以只包含应用扩展，而不需要提供其他的功能。</p>
-<blockquote>
-<p>注意：如果你不使用通过上传主体应用程序到App Store这种方式交付应用扩展，那么在主体应用程序被用户认可或批准前，<code>Gatekeeper</code>是不会允许应用扩展生效的。同时，如果你不将主体应用程序上传至App Store，那么该主体应用程序也不能签署你的开发者ID名称，所以用户需要在设置用手动将你的主体应用设置为可信任的应用程序，才可以使用你的应用扩展。</p>
-</blockquote>
-<p>原文地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionCreation.html#//apple_ref/doc/uid/TP40014214-CH5-SW1" target="_blank" rel="external">Creating an App Extension</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -996,7 +933,7 @@ let y: Int = a ?? b;
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">84</span>
+              <span class="site-state-item-count">85</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
