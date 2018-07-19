@@ -402,7 +402,7 @@
     <link href="http://www.devtalking.com//articles/machine-learning-7/"/>
     <id>http://www.devtalking.com//articles/machine-learning-7/</id>
     <published>2018-02-26T16:00:00.000Z</published>
-    <updated>2018-07-19T07:12:09.460Z</updated>
+    <updated>2018-07-19T07:21:16.435Z</updated>
     <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -434,8 +434,8 @@
 <p>我们在使用PCA之前首先需要对样本数据进行特征去均值化，也就是将每个特征的值减去该维特征的平均值。去均值化的目的是去除均值对数据变化的影响，也就是避免第一主成分收到均值的影响。</p>
 <p>在第二篇笔记中，我们提到过方差，它的公式为：<br>$$ Var(X) = \frac{\sum_{i=1}^m(X_i-\overline X)^2} m $$</p>
 <p>那么当数据去均值化后，公式中的$\overline X$就成了0，所以去均值后的方差为：<br>$$ Var(X) = \frac{\sum_{i=1}^mX_i^2} m $$</p>
-<p>此时$X_i$就是降维后的特征，我们记为$X_p^{(i)}$，那么降维后特征值的方差公式为：<br>$$ Var(X<em>p) = \frac{\sum</em>{i=1}^m (X_p^{(i)})^2} m $$</p>
-<p>因为在高维特征下，$X^{(i)}$和$X_p^{(i)}$都是向量，所以求方差时候应该对他们取模：<br>$$ Var(X<em>p) = \frac{\sum</em>{i=1}^m ||X_p^{(i)}||^2} m $$</p>
+<p>此时$X_i$就是降维后的特征，我们记为$X_p^{(i)}$，那么降维后特征值的方差公式为：<br>$$ Var(X_p) = \frac{\sum_{i=1}^m (X_p^{(i)})^2} m $$</p>
+<p>因为在高维特征下，$X^{(i)}$和$X_p^{(i)}$都是向量，所以求方差时候应该对他们取模：<br>$$ Var(X_p) = \frac{\sum_{i=1}^m ||X_p^{(i)}||^2} m $$</p>
 <p>所以我们就是要求上面这个公式的最大值。那么首先如何求得这个$X_p^{(i)}$<br>呢？我们来具体看一下：</p>
 <p><img src="http://paxigrdp0.bkt.clouddn.com/383a2da3f194b61833471f52e29ed96c.jpg" alt=""></p>
 <p>如上图所示，蓝色向量是特征值原始维度的向量，$w$黑色向量就是我们要寻求的新维度的向量，绿色的点就是蓝色点在新维度上的投影点，红色向量的长度就是投影点的特征值。下面我们先来看看初高中数学中学过的知识。</p>
@@ -444,14 +444,14 @@
 <p>因为我们需要的$w$只是方向，所以它可以是一个方向向量，既长度为1，所以上面的公式就变为：<br>$$X^{(i)} \cdot w=||X^{(i)}||\cdot \cos \theta$$</p>
 <p>然后由三角函数可知，夹角的余弦等于邻边除以斜边。上图中$\theta$角的斜边就是$||X^{(i)}||$，邻边就是$||X_p^{(i)}||$，所以：<br>$$||X_p^{(i)}||=||X^{(i)}|| \cdot \cos \theta$$</p>
 <p>此时我们就知道了，我们要求得的红色向量的长度，既：<br>$$||X_p^{(i)}||=X^{(i)} \cdot w$$</p>
-<p>代入上面的方差公式为：<br>$$ Var(X<em>p) = \frac{\sum</em>{i=1}^m ||X^{(i)} \cdot w||^2} m $$</p>
-<p>因为两个向量的点乘是一个标量，所以最终公式为：<br>$$ Var(X<em>p) = \frac{\sum</em>{i=1}^m (X^{(i)} \cdot w)^2} m $$</p>
+<p>代入上面的方差公式为：<br>$$ Var(X_p) = \frac{\sum_{i=1}^m ||X^{(i)} \cdot w||^2} m $$</p>
+<p>因为两个向量的点乘是一个标量，所以最终公式为：<br>$$ Var(X_p) = \frac{\sum_{i=1}^m (X^{(i)} \cdot w)^2} m $$</p>
 <p>那么我们的目标就是求$w$向量，使得上面的这个公式最大。上一篇笔记我们讲了用梯度下降法求函数极小值，那么这里我们就要用到梯度上升法求函数的极大值。</p>
-<h2 id="u4F7F_u7528_u68AF_u5EA6_u4E0A_u5347_u6CD5_u89E3_u51B3_u4E3B_u6210_u5206_u5206_u6790_u95EE_u9898"><a href="#u4F7F_u7528_u68AF_u5EA6_u4E0A_u5347_u6CD5_u89E3_u51B3_u4E3B_u6210_u5206_u5206_u6790_u95EE_u9898" class="headerlink" title="使用梯度上升法解决主成分分析问题"></a>使用梯度上升法解决主成分分析问题</h2><p>我们先将上面的公式展开（w是一个列向量）：<br>$$ Var(X<em>p) = \frac{\sum</em>{i=1}^m (X^{(i)} \cdot w)^2} m\<br>=\frac 1 m \sum_{i=1}^m(X_1^{(i)}w_1+X_2^{(i)}w_2+…+X_n^{(i)}w_n)^2$$</p>
-<p>既然是梯度上升，那么第一步当然是求梯度了，这和梯度下降是一样的，结合第五篇笔记中的梯度推导可得，上面公式的梯度为：<br>$$ \nabla f(w) = \begin{bmatrix}<br> \frac {\partial L}{\partial w_1}\<br> \frac {\partial L}{\partial w_2}\<br> …\<br> \frac {\partial L}{\partial w<em>n}\<br>\end{bmatrix} =\frac 2 m\begin{bmatrix}<br>\sum</em>{i=1}^m 2(X^{(i)}w)X<em>1^{(i)}\<br>\sum</em>{i=1}^m 2(X^{(i)}w)X<em>2^{(i)}\<br>…\<br>\sum</em>{i=1}^m 2(X^{(i)}w)X_n^{(i)}\<br> \end{bmatrix}$$</p>
+<h2 id="u4F7F_u7528_u68AF_u5EA6_u4E0A_u5347_u6CD5_u89E3_u51B3_u4E3B_u6210_u5206_u5206_u6790_u95EE_u9898"><a href="#u4F7F_u7528_u68AF_u5EA6_u4E0A_u5347_u6CD5_u89E3_u51B3_u4E3B_u6210_u5206_u5206_u6790_u95EE_u9898" class="headerlink" title="使用梯度上升法解决主成分分析问题"></a>使用梯度上升法解决主成分分析问题</h2><p>我们先将上面的公式展开（w是一个列向量）：<br>$$ Var(X_p) = \frac{\sum_{i=1}^m (X^{(i)} \cdot w)^2} m\<br>=\frac 1 m \sum_{i=1}^m(X_1^{(i)}w_1+X_2^{(i)}w_2+…+X_n^{(i)}w_n)^2$$</p>
+<p>既然是梯度上升，那么第一步当然是求梯度了，这和梯度下降是一样的，结合第五篇笔记中的梯度推导可得，上面公式的梯度为：<br>$$ \nabla f(w) = \begin{bmatrix}<br> \frac {\partial L}{\partial w_1} \\<br> \frac {\partial L}{\partial w_2} \\<br> … \\<br> \frac {\partial L}{\partial w_n} \\<br>\end{bmatrix} =\frac 2 m\begin{bmatrix}<br>\sum_{i=1}^m 2(X^{(i)}w)X_1^{(i)} \\<br>\sum_{i=1}^m 2(X^{(i)}w)X_2^{(i)} \\<br>… \\<br>\sum_{i=1}^m 2(X^{(i)}w)X_n^{(i)} \\<br> \end{bmatrix}$$</p>
 <p>下面对上面的公式再进行向量化，这里我再推导一遍，首先我们将$X^{(i)}w$看成是一个1行m列的行矩阵中的元素：<br>$$\begin{bmatrix}X^{(1)}w&amp; X^{(2)}w&amp; X^{(3)}w&amp; … &amp;X^{(m)}w)\end{bmatrix}$$</p>
-<p>然后将它和一个m行n列的矩阵相乘：<br>$$\begin{bmatrix}X^{(1)}w&amp; X^{(2)}w&amp; X^{(3)}w&amp; … &amp;X^{(m)}w)\end{bmatrix}\<br>\cdot \begin{bmatrix}<br>X_1^{(1)}&amp; X_2^{(1)}&amp; X_3^{(1)}&amp; … &amp;X_n^{(1)}\<br>X_1^{(2)}&amp; X_2^{(2)}&amp; X_3^{(2)}&amp; … &amp;X_n^{(2)}\<br>X_1^{(3)}&amp; X_2^{(3)}&amp; X_3^{(3)}&amp; … &amp;X_n^{(3)}\<br>…\<br>X_1^{(m)}&amp; X_2^{(m)}&amp; X_3^{(m)}&amp; … &amp;X_n^{(m)}\<br> \end{bmatrix}$$</p>
-<p>因为X是一个m行n列矩阵，w是一个n行1列的矩阵，所以X乘w是一个m行1列的矩阵，上面我们将其转换为了1行m列的矩阵，所以上面的公式简写为$(Xw)^TX$，相乘后的结果是一个1行n列的矩阵：<br>$$(Xw)^TX=\begin{bmatrix}\sum_{i=1}^m(X^{(i)}w)X<em>1^{(i)}&amp; \sum</em>{i=1}^m(X^{(i)}w)X<em>2^{(i)}&amp; …&amp; \sum</em>{i=1}^m(X^{(i)}w)X_n^{(i)} \end{bmatrix}$$</p>
+<p>然后将它和一个m行n列的矩阵相乘：<br>$$\begin{bmatrix}X^{(1)}w&amp; X^{(2)}w&amp; X^{(3)}w&amp; … &amp;X^{(m)}w)\end{bmatrix} \\<br>\cdot \begin{bmatrix}<br>X_1^{(1)}&amp; X_2^{(1)}&amp; X_3^{(1)}&amp; … &amp;X_n^{(1)} \\<br>X_1^{(2)}&amp; X_2^{(2)}&amp; X_3^{(2)}&amp; … &amp;X_n^{(2)} \\<br>X_1^{(3)}&amp; X_2^{(3)}&amp; X_3^{(3)}&amp; … &amp;X_n^{(3)} \\<br>… \\<br>X_1^{(m)}&amp; X_2^{(m)}&amp; X_3^{(m)}&amp; … &amp;X_n^{(m)} \\<br> \end{bmatrix}$$</p>
+<p>因为X是一个m行n列矩阵，w是一个n行1列的矩阵，所以X乘w是一个m行1列的矩阵，上面我们将其转换为了1行m列的矩阵，所以上面的公式简写为$(Xw)^TX$，相乘后的结果是一个1行n列的矩阵：<br>$$(Xw)^TX=\begin{bmatrix}\sum_{i=1}^m(X^{(i)}w)X_1^{(i)}&amp; \sum_{i=1}^m(X^{(i)}w)X_2^{(i)}&amp; …&amp; \sum_{i=1}^m(X^{(i)}w)X_n^{(i)} \end{bmatrix}$$</p>
 <p>那我们的梯度是一个n行1列的矩阵，所以将上面的矩阵再做转置：<br>$$((Xw)^TX)^T=X^T(Xw)$$</p>
 <p>所以最终主成分分析的梯度向量化后为：<br>$$\nabla f = \frac 2 m X^T(Xw)$$</p>
 <h3 id="u4EE3_u7801_u5B9E_u73B0PCA_u68AF_u5EA6_u4E0A_u5347"><a href="#u4EE3_u7801_u5B9E_u73B0PCA_u68AF_u5EA6_u4E0A_u5347" class="headerlink" title="代码实现PCA梯度上升"></a>代码实现PCA梯度上升</h3><p>首先我们构建样本数据，其中有100条样本数据，每条样本数据中有2个特征：</p>
@@ -492,9 +492,9 @@
 <p>下面我们封装一个计算n个主成分的方法：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">first_n_component</span><span class="params">(n, X, eta=<span class="number">0.01</span>, n_iters=<span class="number">1e4</span>, different=<span class="number">1e-8</span>)</span>:</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 拷贝原始样本数据</span></span><br><span class="line">	X_pca = X.copy()</span><br><span class="line">	<span class="comment"># 对样本数据进行均值归一化</span></span><br><span class="line">	X_pca = demean(X_pca)</span><br><span class="line">	<span class="comment"># 存储结果数组</span></span><br><span class="line">	res = []</span><br><span class="line">	<span class="comment"># 希望计算几个主成分就循环几次</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">		<span class="comment"># 每次随机一个初始向量</span></span><br><span class="line">		initial_w = np.random.random(X_pca.shape[<span class="number">1</span>])</span><br><span class="line">		<span class="comment"># 通过获取主成分方法计算出主成分向量</span></span><br><span class="line">		w = first_component(X_pca, initial_w, eta)</span><br><span class="line">		res.append(w)</span><br><span class="line">		</span><br><span class="line">		<span class="comment"># 每次从原始样本数据中除去主成分数据</span></span><br><span class="line">		X_pca = X_pca - X_pca.dot(w).reshape(-<span class="number">1</span>, <span class="number">1</span>) * w</span><br><span class="line">		</span><br><span class="line">	<span class="keyword">return</span> res</span><br><span class="line">	</span><br><span class="line">first_n_component(<span class="number">2</span>, X)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">[array([ <span class="number">0.77899988</span>,  <span class="number">0.62702407</span>]), array([-<span class="number">0.62702407</span>,  <span class="number">0.77899988</span>])]</span><br></pre></td></tr></table></figure>
 <h2 id="u9AD8_u7EF4_u6570_u636E_u5411_u4F4E_u7EF4_u6570_u636E_u6620_u5C04"><a href="#u9AD8_u7EF4_u6570_u636E_u5411_u4F4E_u7EF4_u6570_u636E_u6620_u5C04" class="headerlink" title="高维数据向低维数据映射"></a>高维数据向低维数据映射</h2><p>我们再来回顾一下PCA降维的基本原理，首先要做的事情就是对样本数据寻找另外一个坐标系，这个坐标系中的每一个轴依次可以表达样本数据的重要程度，既主成分。我们取出前k个主成分，然后就可以将所有的样本数据映射到这k个轴上，既获得了一个低维的数据信息。</p>
-<p>$$X=\begin{bmatrix}<br>X_1^{(1)}&amp; X_2^{(1)}&amp; … &amp;X_n^{(1)}\<br>X_1^{(2)}&amp; X_2^{(2)}&amp; … &amp;X_n^{(2)}\<br>…\<br>X_1^{(m)}&amp; X_2^{(m)}&amp; … &amp;X_n^{(m)}<br> \end{bmatrix}$$</p>
+<p>$$X=\begin{bmatrix}<br>X_1^{(1)}&amp; X_2^{(1)}&amp; … &amp;X_n^{(1)} \\<br>X_1^{(2)}&amp; X_2^{(2)}&amp; … &amp;X_n^{(2)} \\<br>… \\<br>X_1^{(m)}&amp; X_2^{(m)}&amp; … &amp;X_n^{(m)}<br> \end{bmatrix}$$</p>
 <p>上面的$X$是样本数据，该样本数据有m行，n个特征，既是一个n维的样本数据。</p>
-<p>$$W_k=\begin{bmatrix}<br>W_1^{(1)}&amp; W_2^{(1)}&amp; … &amp;W_n^{(1)}\<br>W_1^{(2)}&amp; W_2^{(2)}&amp; … &amp;W_n^{(2)}\<br>…\<br>W_1^{(k)}&amp; W_2^{(k)}&amp; … &amp;W_n^{(k)}\<br>\end{bmatrix}$$</p>
+<p>$$W_k=\begin{bmatrix}<br>W_1^{(1)}&amp; W_2^{(1)}&amp; … &amp;W_n^{(1)} \\<br>W_1^{(2)}&amp; W_2^{(2)}&amp; … &amp;W_n^{(2)} \\<br>… \\<br>W_1^{(k)}&amp; W_2^{(k)}&amp; … &amp;W_n^{(k)} \\<br>\end{bmatrix}$$</p>
 <p>假设上面的$W$是样本数据$X$的主成分向量矩阵，每一行代表一个主成分向量，一共有k个主成分向量，每个主成分向量上有n个值。</p>
 <p>我们已经推导出了求映射后的向量的大小，也就是每一行样本数据映射到该主成分上的大小为：</p>
 <p>$$||X_p^{(i)}||=X^{(i)} w$$</p>
