@@ -231,6 +231,136 @@
             
             
               
+                <a class="post-title-link" href="/articles/custom-subscripts-in-swift/" itemprop="url">
+                  在Swift中自定义下标（Subscripts）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-09-03T00:00:00+08:00" content="2014-09-03">
+              2014-09-03
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/custom-subscripts-in-swift/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/custom-subscripts-in-swift/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>通常情况下，我们在使用数组（Array）或字典（Dictionary）时会使用到下标。其实在Swift中，我们还可以给类（class）自定义下标，下面就让我们来看看Swift中是如何自定义下标的。</p>
+<h2 id="u901A_u8FC7Subscript_u8D4B_u503C_u548C_u83B7_u53D6_u503C"><a href="#u901A_u8FC7Subscript_u8D4B_u503C_u548C_u83B7_u53D6_u503C" class="headerlink" title="通过Subscript赋值和获取值"></a>通过Subscript赋值和获取值</h2><p>我们先看看下面这个类：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DailyMeal</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">MealTime</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Breakfast</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Lunch</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Dinner</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> meals: [<span class="type">MealTime</span> : <span class="type">String</span>] = [:]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们使用该类时可以直接用<code>meals</code>字典，以枚举作为key来查询，像这样：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday.meals[.<span class="type">Breakfast</span>] = <span class="string">"Toast"</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> someMeal = monday.meals[.<span class="type">Breakfast</span>]</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">println</span>(someMeal)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到目前呢，我们创建了<code>DailyMeal</code>类的实例变量<code>monday</code>，并可以使用<code>DailyMeal</code>类中的<code>meals</code>字典进行查询。但是大家有没有感觉<code>monday.meals[]</code>这种写法很累赘呢？至少我看<code>meals</code>就很不顺眼，有没有更简单快捷的方法让我们直接使用<code>monday</code>变量就能赋值或获取<code>Breakfast</code>的值呢？别着急，今天的主角要登场了，让我们先在<code>DailyMeal</code>类中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span>?</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">get</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> meals[requestedMeal]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">set</span>(newMealName)</span><br><span class="line">    &#123;</span><br><span class="line">        meals[requestedMeal] = newMealName</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码就是一个自定义下标，看起来是不是有点像计算类属性的<code>getter</code>、<code>setter</code>方法的写法呢？但是它们还是有区别的，首先下标使用<code>subscript</code>关键字，然后跟一个圆括号，里面是该下标的参数和参数类型（在实际使用中该参数就相当于数组的index和字典的key一样），最后有该下标的返回值类型。</p>
+<p>从上面代码可以看到，在下标的<code>getter</code>和<code>setter</code>方法中，其实还是在对<code>meals</code>数组进行操作，但是我们通过下标就可以将对<code>meals</code>数组的操作屏蔽掉。现在来看看我们应该怎样使用：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday[.<span class="type">Breakfast</span>] = <span class="string">"Toast"</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> someMeal = monday[.<span class="type">Breakfast</span>]</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">println</span>(someMeal) <span class="comment">// Toast</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在是不是已经没有碍眼的<code>meals</code>了呢，使用起来更加简洁，语义也更加明确了呢，这就是下标最简单的一个用法。</p>
+<p>如果上面的代码中我们不给<code>monday[.Breakfast]</code>赋值，直接输出值会得到什么结果呢？细心的同学可能会注意到，在定义下标时它的返回值是Optional类型的，所以不赋值直接输出的结果是<code>nil</code>，这样就显得太没礼貌了，所以我们再来改造一下下标的代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">get</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> thisMeal = meals[requestedMeal]</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> thisMeal</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Ramen"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">set</span>(newMealName)</span><br><span class="line">    &#123;</span><br><span class="line">        meals[requestedMeal] = newMealName</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们看到下标的返回值从<code>String?</code>改为了<code>String</code>，那么相应的我们要在<code>getter</code>方法中对<code>meals[requestedMeal]</code>的值进行判断，如果没有赋值的话，我们将返回一个默认值<code>Ramen</code>（兰州拉面让人欲罢不能）。现在我们就可以这样用啦：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday[.<span class="type">Lunch</span>] = <span class="string">"Pizza"</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(monday[.<span class="type">Lunch</span>])         <span class="comment">//Output:  "Pizza"</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(monday[.<span class="type">Dinner</span>])        <span class="comment">//Output:  "Ramen"</span></span><br></pre></td></tr></table></figure>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>现在使用<code>DailyMeal</code>类是不是感觉到很简介，语义很明确也很健壮呢，答案是肯定的。我们通过下标避免向用户暴露不必要的API，同时也达到了高维护性的目的。</p>
+<p><code>DailyMeal</code>类的完整代码如下：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DailyMeal</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">MealTime</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Breakfast</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Lunch</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Dinner</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">var</span> meals: [<span class="type">MealTime</span> : <span class="type">String</span>] = [:]    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> thisMeal = meals[requestedMeal]</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> thisMeal</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">"Ramen"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">set</span>(newMealName)</span><br><span class="line">        &#123;</span><br><span class="line">            meals[requestedMeal] = newMealName</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="u53EA_u8BFB_u4E0B_u6807"><a href="#u53EA_u8BFB_u4E0B_u6807" class="headerlink" title="只读下标"></a>只读下标</h2><p>何为只读下标，顾名思义就是不能通过下标赋值，只能通过下标查询。这种下标的应用场景一般是实现一些数据公式、数据函数，它们一般都是只需要你指定一个数字，然后返回该公式对该数字的计算结果。下面我们用一个阶乘的例子来说明只读下标：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">FactorialGenerator</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">subscript</span>(n: <span class="type">Int</span>) -&gt; <span class="type">Int</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> result = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> n &gt; <span class="number">0</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span> value <span class="keyword">in</span> <span class="number">1</span>...n</span><br><span class="line">            &#123;</span><br><span class="line">                result *= value</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同学们可能已经注意到了，上面的下标并没有<code>getter</code>和<code>setter</code>方法。这是因为，如果你想定义一个只读的下标，那么可以不实现<code>setter</code>方法，并且可以省略<code>getter</code>方法的<code>get</code>关键字。Swfit的编译器会判断出这是一个只读的下标，如果你强行通过下标赋值，那么编译器会报错。</p>
+<p>让我们来使用以下这个阶乘结构体：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> factorial = <span class="type">FactorialGenerator</span>()</span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(<span class="string">"Five factorial is equal to <span class="subst">\(factorial[<span class="number">5</span>])</span>."</span>)</span><br><span class="line"><span class="comment">//Output:  "Five factorial is equal to 120."</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(<span class="string">"Ten Factorial is equal to <span class="subst">\(factorial[<span class="number">10</span>])</span>."</span>)</span><br><span class="line"><span class="comment">//Output:  "Ten Factorial is equal to 3628800."</span></span><br></pre></td></tr></table></figure>
+<p>当然上面这个示例只是展示了只读下标的语法和应用场景，阶乘的实现逻辑在这就不累赘了。总的来说，我们可以通过下标简化暴露给用户的API，你可以在用户毫不知情的情况下更改某个API的功能。不仅使代码更易读，同时也大大提高了代码的可维护性，是不是很酷呢！</p>
+<p>参考原文：<a href="http://www.codingexplorer.com/custom-subscripts-swift/?utm_source=feedly&amp;utm_reader=feedly&amp;utm_medium=rss&amp;utm_campaign=custom-subscripts-swift" target="_blank" rel="external">Custom Subscripts in Swift</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/closure-expressions-in-swift/" itemprop="url">
                   Swift中的闭包（Closure）
                 </a>
@@ -889,186 +1019,11 @@ Boundary contact occurred - nil
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/swift-uikit-dynamics-1/" itemprop="url">
-                  Swift中的UIKit动力学（一）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-08-23T00:00:00+08:00" content="2014-08-23">
-              2014-08-23
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/swift-uikit-dynamics-1/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-uikit-dynamics-1/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p><strong>动力学</strong>这个名词不论在哪个行业领域听起来似乎都很高大上。那么在Swift中的重力学是什么呢？那就是将我们移动端屏幕上毫无生命力的东西也置于万有引力中，使它们能够展现出好像真的由于引力而向下坠落以及碰到物体后自然的弹开的效果。  </p>
-<p>要想做到这一点，我们得需要两个利器：<code>UIKit Dynamics</code>和<code>Motion Effects</code>。</p>
-<ul>
-<li><code>UIKit Dynamics</code>是<code>UIKit</code>中一套完整的物理引擎。它可以让我们在程序中对界面元素添加一些行为从而达到诸如重力、弹簧等现实中的动作行为。你只需在引擎中注册界面元素，并指定好物理行为，其他的事就交给物理引擎去完成了。</li>
-<li><code>Motion Effects</code>可以创建很酷的视差效果，就像你iPhone上横竖屏切换时那样。它基于Apple提供的重力加速器提供的数据计算分析，使我们的界面元素根据移动设备的倾斜方向做出相应的反应。  </li>
-</ul>
-<p>当这两者一起使用的时候，我们就可以让程序活起来，富有生命力。</p>
-<h2 id="u8BA9_u6211_u4EEC_u5F00_u59CB_u5C4C_u4E1D_u7684_u9006_u88AD"><a href="#u8BA9_u6211_u4EEC_u5F00_u59CB_u5C4C_u4E1D_u7684_u9006_u88AD" class="headerlink" title="让我们开始屌丝的逆袭"></a>让我们开始屌丝的逆袭</h2><p>我们挑一些小例子来学习<code>UIKit Dynamics</code>。</p>
-<blockquote>
-<p>注：由于个人编码习惯，在Swift代码中我还是加了<code>;</code>，其实可加可不加，根据大家喜好。</p>
-</blockquote>
-<p>打开Xcode6新建项目，选择<code>iOS Application/Single View Application</code>，名称随便取，我这里命名为<code>UIKitDynamicsDemo</code>，我们可以看到<code>Single View Application</code>的目录结构：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics1.png" alt="目录结构"> </p>
-<p>打开<code>ViewController.swift</code>文件，在<code>viewDidLoad</code>方法中添加如下代码：  </p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 创建一个正方形View，颜色设置为蓝绿色，加入当前的View中</span></span><br><span class="line"><span class="keyword">let</span> square = <span class="type">UIView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">100</span>, y: <span class="number">100</span>, width: <span class="number">100</span>, height: <span class="number">100</span>));</span><br><span class="line">square.backgroundColor = <span class="type">UIColor</span>.cyanColor();</span><br><span class="line"><span class="keyword">self</span>.view.addSubview(square);</span><br></pre></td></tr></table></figure>
-<p>上面的代码在我们的屏幕上添加了一个蓝绿色的正方形<code>UIView</code>。运行一下，我们能看到一个木讷的蓝绿色正方形静静的待在屏幕中：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics2.png" alt="屏幕"></p>
-<p>如果你用真机运行，你可以摇晃一下手机、倾斜手机、拿着手机手舞足蹈一下，看看那个木讷的方块有什么反应和变化么？答案是要有反应你就见鬼了。因为我们写的这几行代码只能让它杵在那一动不动，那怎么能让它动起来呢？接下来让我们见证奇迹的时刻！</p>
-<h2 id="u6DFB_u52A0_u91CD_u529B_u884C_u4E3A"><a href="#u6DFB_u52A0_u91CD_u529B_u884C_u4E3A" class="headerlink" title="添加重力行为"></a>添加重力行为</h2><p>在<code>ViewController.swift</code>文件中添加两个属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// UIKit物理引擎</span></span><br><span class="line"><span class="keyword">var</span> animator: <span class="type">UIDynamicAnimator</span>!;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 重力行为</span></span><br><span class="line"><span class="keyword">var</span> gravity: <span class="type">UIGravityBehavior</span>!;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注：代码中感叹号的作用这里不做过多介绍，请自行查阅官方文档。</p>
-</blockquote>
-<p>然后在<code>viewDidLoad</code>方法中再加入以下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化UIKit物理引擎类，作用于ViewController的View</span></span><br><span class="line">animator = <span class="type">UIDynamicAnimator</span>(referenceView: <span class="keyword">self</span>.view);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 实例化重力行为类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">gravity = <span class="type">UIGravityBehavior</span>(items: [square]);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 将重力行为添加到UIKit物理引擎类中</span></span><br><span class="line">animator.addBehavior(gravity);</span><br></pre></td></tr></table></figure>
-<p>现在再编译运行一下，这时我们可以看到这个蓝绿色正方形开始做自由落体运动了，一直跌落出屏幕下边缘然后消失。  </p>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics61.gif" alt="屏幕">  </p>
-<p>我们来看看刚才我们添加的两个属性的类型：</p>
-<ul>
-<li><code>UIDynamicAnimator</code>属于<code>UIKit</code>物理引擎中的类。它的作用是跟踪你添加到物理引擎中的各种行为动作，比如这里的重力行为，并且提供整个上下文。实例化<code>UIDynamicAnimator</code>时，它的构造函数需要传入一个<code>referenceView</code>参数，用于告知它要跟踪并制定坐标的<code>View</code>。</li>
-<li><code>UIGravityBehavior</code>是一个模拟重力的模型，可作用于一个或多个元素。它的构造函数需要传入一个数组，该数组的内容就是我们希望有重力表现的一个元素或多个元素。  </li>
-</ul>
-<p>大多数的行为都有一些配置属性，比如重力行为就有可以改变角度和速率的属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化UIKit物理引擎类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">animator = <span class="type">UIDynamicAnimator</span>(referenceView: <span class="keyword">self</span>.view); </span><br><span class="line"></span><br><span class="line"><span class="comment">// 实例化重力行为类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">gravity = <span class="type">UIGravityBehavior</span>(items: [square]);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 角度</span></span><br><span class="line">gravigy.angle = <span class="number">1.6</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 速率</span></span><br><span class="line">gravigy.magnitude = <span class="number">0.1</span>;</span><br><span class="line">    </span><br><span class="line"><span class="comment">// 将重力行为添加到UIKit物理引擎类中</span></span><br><span class="line">animator.addBehavior(gravity);</span><br></pre></td></tr></table></figure>
-<p>上述代码中的<code>angle</code>是重力行为的角度属性，<code>angle</code>的值为0时，方块会水平向右移动，随着值的增大，方块会顺时针改变角度。不过我们要模拟现实中的重力，所以该属性一般不设置，不设置时默认是垂直向下移动。<code>magnitude</code>是重力行为的速率属性，值越大下降的速度越快，当<code>magnitude</code>属性的值为0时，方块就不会下降了，所以最小的速率是0.1。</p>
-<blockquote>
-<p>注意：在现实世界中，重力加速度大约是<code>g = 9.80665m/s^2</code>，就是9.8米每平方秒。根据牛顿第二定律，我们可以使用<code>0.5 * g * Time^2</code>公式来计算下坠距离。<br>在UIKit的重力世界中，计算重力加速度的公式是一样的，但是单位有所不同。不是米而是像素，即<code>g = 1000pixels/s^2</code>，我们同样可以使用牛顿第二定律来计算我们的方块在单位时间内下降的距离。我们只需要知道重力加速度<code>g</code>越大，坠落速度越快，所以上述代码中的<code>magnitude</code>属性就差不多是这意思。</p>
-</blockquote>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u4E0D_u80FD_u8BA9_u6211_u4EEC_u7684_u65B9_u5757_u4E00_u5760_u5343_u91CC"><a href="#u4E0D_u80FD_u8BA9_u6211_u4EEC_u7684_u65B9_u5757_u4E00_u5760_u5343_u91CC" class="headerlink" title="不能让我们的方块一坠千里"></a>不能让我们的方块一坠千里</h2><p>从目前代码的运行状况知道，我们的方块下降到屏幕底部时丝毫没有停止的意思，直接坠崖而下，看都看不见。我们希望我们的屏幕类似一个盒子一样，方块在盒子中，当下降到底部时就停止，那么我们就需要设置一个边界。  </p>
-<p>在<code>ViewController.swift</code>文件中再添加一个属性：  </p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"> </span><br><span class="line"><span class="comment">// 碰撞行为</span></span><br><span class="line"><span class="keyword">var</span> collision: <span class="type">UICollisionBehavior</span>!;</span><br></pre></td></tr></table></figure>
-<p>然后在<code>viewDidLoad</code>方法中加入以下几行代码：  </p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化碰撞行为类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square]);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 将参考视图的边界作为碰撞边界</span></span><br><span class="line">collision.translatesReferenceBoundsIntoBoundary = <span class="literal">true</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 将碰撞行为添加到UIKit物理引擎类中</span></span><br><span class="line">animator.addBehavior(collision);</span><br></pre></td></tr></table></figure>
-<p>上面的代码创建了边界行为，它会将一个或多个边界与指定的View联系起来，并使两者有具有交互行为。</p>
-<p>从上面代码我可以注意到<code>collision.translatesReferenceBoundsIntoBoundary = true;</code>这行代码，它的意思是将<code>UIDynamicAnimator</code>引用的View的边界作为碰撞行为的触发边界，这样就不用我们再去设置边界的坐标了，非常好用。</p>
-<p>接着我们编译运行看看，此时小方块坠落到屏幕底部时会产生碰撞效果，并且还会反弹几下，是不是很逼真呢。</p>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics71.gif" alt="屏幕">  </p>
-<h2 id="u78B0_u649E_u884C_u4E3A_u8FDB_u9636_u5E94_u7528"><a href="#u78B0_u649E_u884C_u4E3A_u8FDB_u9636_u5E94_u7528" class="headerlink" title="碰撞行为进阶应用"></a>碰撞行为进阶应用</h2><p>接下来我们在屏幕中再添加一个View，长方形并横在屏幕中间，在<code>viewDidLoad</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 创建一个长方形View，颜色设置为红色，加入当前的View中</span></span><br><span class="line"><span class="keyword">let</span> barrier = <span class="type">UIView</span>(frame:<span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">300</span>, width: <span class="number">140</span>, height: <span class="number">20</span>));</span><br><span class="line">barrier.backgroundColor = <span class="type">UIColor</span>.redColor();</span><br><span class="line"><span class="keyword">self</span>.view.addSubview(barrier);</span><br></pre></td></tr></table></figure>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics3.png" alt="屏幕"></p>
-<p>但是我们发现这个红色的障碍物和方块并没有任何交互行为，这里有一点很重要：只有被行为关联起来的Views才会具有交互行为。我们来看看下面这张关系图：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics4.png" alt="屏幕"></p>
-<p><code>UIDynamicAnimator</code>引擎引用了当前屏幕的view，该view给引擎提供了整个坐标系统。每个行为可以关联多个元素，每个元素都可以被多个行为关联，上面的关系图可以很清晰的表现出当前app中各个行为与元素的关联关系。由于所有行为都没有与长方形view关联，所以<code>barrier</code>基本可以被忽略。</p>
-<h2 id="u5524_u9192Barrier"><a href="#u5524_u9192Barrier" class="headerlink" title="唤醒Barrier"></a>唤醒Barrier</h2><p>如果我们想让<code>barrier</code>活起来，我们得让碰撞行为将它关联起来：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化碰撞行为类，目前作用于刚才创建的正方形View和长方形View</span></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square,barrier]);</span><br></pre></td></tr></table></figure>
-<p>将<code>barrier</code>添加到碰撞行为关联元素的数组中。这样的话，<code>square</code>和<code>barrier</code>这两个view都会有碰撞行为，所以当他们相撞时就会产生碰撞效果。</p>
-<p>编译并运行，让我们来看看睡醒的<code>barrier</code>会产生什么效果：</p>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics81.gif" alt="屏幕">  </p>
-<p>我们再来看看现在app中行为与元素的关系图：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics5.png" alt="屏幕"></p>
-<p>来看看我给这个红色长方形view起的名字：<code>barrier</code>，没错，障碍物。但是它现在是一个称职的障碍物吗？显然不是，当它与蓝绿色正方形碰撞时，它会于正方形一起旋转坠落。</p>
-<p>等等，为什么<code>barrier</code>坠落到屏幕底部后不像<code>square</code>会有蹦跶一下然后停止，反而在缓慢旋转，感觉向失重一样。嗯哼，这是因为我们并没有将重力行为与<code>barrier</code>关联起来，所以它会向失重一样开始旋转。</p>
-<p>这显然不是我想要的结果，我希望<code>square</code>坠落碰到<code>barrier</code>后，<code>barrier</code>纹丝不动，然后<code>square</code>被撞的七荤八素。我们要拦住那个<code>square</code>！</p>
-<h2 id="u9690_u5F62_u7684_u8FB9_u754C_u4E0E_u78B0_u649E_u6548_u679C"><a href="#u9690_u5F62_u7684_u8FB9_u754C_u4E0E_u78B0_u649E_u6548_u679C" class="headerlink" title="隐形的边界与碰撞效果"></a>隐形的边界与碰撞效果</h2><p>我们先去掉<code>barrier</code>的碰撞效果，将：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square,barrier]);</span><br></pre></td></tr></table></figure>
-<p>改为：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square]);</span><br></pre></td></tr></table></figure>
-<p>然后在这行下面添加另外一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square]);</span><br><span class="line">collision.addBoundaryWithIdentifier(<span class="string">"barrier"</span>, forPath: <span class="type">UIBezierPath</span>(rect: barrier.frame));</span><br></pre></td></tr></table></figure>
-<p>这行代码的意思是在碰撞效果中添加一个隐形的边界，它的位置和形状和<code>barrier</code>的一样。这样就会让人产生一种错觉，认为红色的<code>barrier</code>成为了边界，其实真正的边界隐藏在它之后。编译运行一下，我们来看看会发生什么：</p>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics91.gif" alt="屏幕"> </p>
-<p>我们看到了当蓝绿色方块下降碰到红色障碍物时产生了碰撞行为，蓝绿色方块弹开并翻转落下。</p>
-<p>从上面内容我们了解到，Swift的UIKit动力引擎非常强大，通过简短的几行代码就可以帮助我们实现惊艳的实现行为。下篇文章会向大家详细的介绍碰撞行为背后的故事。</p>
-<p>参考原文：<a href="http://www.raywenderlich.com/76147/uikit-dynamics-tutorial-swift" target="_blank" rel="external">UIKit Dynamics Tutorial in Swift</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1106,7 +1061,7 @@ Boundary contact occurred - nil
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">85</span>
+              <span class="site-state-item-count">86</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

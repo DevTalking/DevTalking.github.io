@@ -231,6 +231,262 @@
             
             
               
+                <a class="post-title-link" href="/articles/text-kit-tutorial-in-swift-2/" itemprop="url">
+                  如何在Swift中运用Text Kit框架（二）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-12-11T00:00:00+08:00" content="2014-12-11">
+              2014-12-11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/text-kit-tutorial-in-swift-2/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/text-kit-tutorial-in-swift-2/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u52A8_u6001_u7684_u6587_u672C_u683C_u5F0F_u548C_u5B58_u50A8"><a href="#u52A8_u6001_u7684_u6587_u672C_u683C_u5F0F_u548C_u5B58_u50A8" class="headerlink" title="动态的文本格式和存储"></a>动态的文本格式和存储</h2><p>在上篇文章中，同学们已经看到了Text Kit可以根据用户在设置选项里对文本属性设置而动态的改变App中的文本属性。但你们不知道它还有更酷的功能，那就是可以根据文本本身的某种字符而更改文本属性。</p>
+<p>比如说，你们也许希望我们这个应用中还有以下这些自动的功能：</p>
+<ul>
+<li>被波浪号（~）括起来的文本会显示艺术字体。</li>
+<li>被下划线（_）括起来的文本会显示斜体。</li>
+<li>被破折号（-）括起来的文本会在其上划一道横线。</li>
+<li>所有大写字体会显示红色。</li>
+</ul>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-12.png" alt="pic"></p>
+<p>如何用TextKit实现上述这些功能就是这篇文章将要向同学们介绍的内容。</p>
+<p>在学习这些之前，大家需要先理解在TextKit中，文本的存储系统是如何工作的。下面的图展示了TextKit中对文本进行存储、渲染、显现的基本流程：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-13.png" alt="pic"></p>
+<p>在开发过程中，如果你创建了<code>UITextView</code>、<code>UILabel</code>或<code>UITextField</code>，那么同时Apple会在幕后自动创建上图中的这些类。你可以使用这些类默认实现的行为，也可以自己实现这些类，从而达到你想要的一些对文本控制的行为。让我们来看看这些类的作用：</p>
+<ul>
+<li><code>NSTextStorage</code>的功能是存储文本，并通过字符串属性渲染文本。当文本内容发生任何变化的时候，它会告知布局管理器（Layout Manager）。你们也许脑海中已经有了一点想法，那就是实现一个<code>NSTextStorage</code>的子类，以便实现当文本更新时动态改变文本属性的功能，Bingo！想法基本正确（在后文中你将会看到它的运用）。</li>
+<li><code>NSLayoutManager</code>的功能是从<code>NSTextStorage</code>中获取文本并在屏幕上渲染文本。它将作为你应用中的布局引擎。</li>
+<li><code>NSTextContainer</code>的功能是在屏幕上描绘一个几何图形区域，要显示的文本就是在这个区域内进行渲染的。每个Text Container一般都和一和<code>UITextView</code>相关联。你可以实现一个<code>NSTextContainer</code>的子类，描绘一个复杂的几何图形，让文本在其中进行渲染。</li>
+</ul>
+<p>如果想要在我们的应用中实现动态文本格式的功能，那么就需要实现一个<code>NSTextStorage</code>的子类，然后根据用户键入的字符动态的设置文本格式属性。</p>
+<p>一旦你实现了<code>NSTextStorage</code>的子类，那么你就要替换<code>UITextView</code>默认的存储类示例，同学们接着往下看。</p>
+<h2 id="UITextStorage_u7684_u5B50_u7C7B"><a href="#UITextStorage_u7684_u5B50_u7C7B" class="headerlink" title="UITextStorage的子类"></a>UITextStorage的子类</h2><p>我们选中左侧项目结构目录中的<strong>SwiftTextKitNotepad</strong>，然后选择菜单栏中的<strong>New File…</strong> ，接着选择<strong>iOS/Source/Cocoa Touch Class</strong> ，点击<strong>Next</strong>。</p>
+<p>我们给该类起名为<strong>SyntaxHighlightTextStorage</strong>，让它继承<code>NSTextStorage</code>，确认<strong>Language</strong>选项为 <strong>Swift</strong>，然后点击 <strong>Next</strong> ，最后点击<strong>Create</strong>。 </p>
+<p>打开<strong>SyntaxHighlightTextStorage.swift</strong>文件，申明一个新的属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> backingStore = <span class="type">NSMutableAttributedString</span>()</span><br></pre></td></tr></table></figure>
+<p>文本存储的子类必须要保证自己的持久性，因此使用<code>NSMutableAttributedString</code>作为<code>backingStore</code>的类型。后面我们会经常用到。</p>
+<p>然后在该类中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">var</span> string: <span class="type">String</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> backingStore.string</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">attributesAtIndex</span><span class="params">(index: Int, effectiveRange range: NSRangePointer)</span></span> -&gt; [<span class="type">NSObject</span> : <span class="type">AnyObject</span>] &#123;</span><br><span class="line">  <span class="keyword">return</span> backingStore.attributesAtIndex(index, effectiveRange: range)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先我们重写了计算属性<code>string</code>的<code>get</code>方法，让它返回咱们定义的<code>backingStore</code>中字符串的值，同样重写了<code>attributesAtIndex</code>方法，并返回<code>backingStore</code>的<code>attributesAtIndex</code>方法的返回值。</p>
+<p>最后重写这些必须要重写的方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">replaceCharactersInRange</span><span class="params">(range: NSRange, withString str: String)</span></span> &#123;</span><br><span class="line">  <span class="built_in">println</span>(<span class="string">"replaceCharactersInRange:<span class="subst">\(range)</span> withString:<span class="subst">\(str)</span>"</span>)</span><br><span class="line"> </span><br><span class="line">  beginEditing()</span><br><span class="line">  backingStore.replaceCharactersInRange(range, withString:str)</span><br><span class="line">  edited(.<span class="type">EditedCharacters</span> | .<span class="type">EditedAttributes</span>, range: range, changeInLength: (str <span class="keyword">as</span> <span class="type">NSString</span>).length - range.length)</span><br><span class="line">  endEditing()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">setAttributes</span><span class="params">(attrs: [NSObject : AnyObject]!, range: NSRange)</span></span> &#123;</span><br><span class="line">  <span class="built_in">println</span>(<span class="string">"setAttributes:<span class="subst">\(attrs)</span> range:<span class="subst">\(range)</span>"</span>)</span><br><span class="line"> </span><br><span class="line">  beginEditing()</span><br><span class="line">  backingStore.setAttributes(attrs, range: range)</span><br><span class="line">  edited(.<span class="type">EditedAttributes</span>, range: range, changeInLength: <span class="number">0</span>)</span><br><span class="line">  endEditing()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>和上面一样，这些方法的实现都使用我们自己定义的<code>backingStore</code>属性的相同方法代替。然而，从上面的示例代码中可以看到使用<code>backingStore</code>的相关方法时，它是被包围在<code>beginEditing</code>、<code>edited</code>和<code>endEditing</code>三个方法中的。这三个方法是必须要写的，它们的作用是当文本准备被编辑时通知与之相关联的布局管理器（Layout Manager）。</p>
+<p>通过上面的示例代码你们可能已经注意到了要实现一个<code>NSTextStorage</code>的子类要重写这么多的方法（写这么多的代码）。因为<code>NSTextStorage</code>是一个<strong>类集群</strong>的公共接口，所以在实现它的子类时只重写一两个方法是没法真正扩展其功能的，上面这几个主要的方法是我们必须要重写的。</p>
+<blockquote>
+<p>注意：<strong>类集群</strong>是Apple框架中经常使用的一种设计模式。类集群是Objective-C对抽象工厂设计模式的一种简单的实现，它的作用就是将相似的类聚集到一起，通过一个工厂类暴露给开发者，该工厂类提供若干工厂方法，每个或每几个工厂方法对应其包含的某个类。我们比较熟悉的像<code>NSArray</code>、<code>NSNumber</code>都是类集群。</p>
+</blockquote>
+<p>Apple使用类集群将私有的具体的子类压缩到一个公共的抽象超类中，该超类会申明一些方法，用于创建其包含子类的实例。开发者不必关心公共抽象类内部的事情，也无法得知，因为开发者永远只是和这个抽象类打交道。</p>
+<p>使用类集群确实可以简化接口，使类的使用和学习更加简单，但是有一点很重要，那就是在使用类集群时要权衡可扩展性和易用性。比如说如果使用类集群，那么你就很难创建一个个性化的子类。</p>
+<p>现在，我们已经有了一个自定义的<code>NSTextStorage</code>，接下来就需要用<code>UITextView</code>来使用它了。</p>
+<h2 id="u8BA9UITextView_u4F7F_u7528_u6211_u4EEC_u81EA_u5B9A_u4E49_u7684Text_Kit_Stack"><a href="#u8BA9UITextView_u4F7F_u7528_u6211_u4EEC_u81EA_u5B9A_u4E49_u7684Text_Kit_Stack" class="headerlink" title="让UITextView使用我们自定义的Text Kit Stack"></a>让UITextView使用我们自定义的Text Kit Stack</h2><p>如果我们在Storyboard中创建一个<code>UITextView</code>，那么就同时会自动创建<code>NSTextStorage</code>、<code>NSLayoutManager</code>和<code>NSTextContainer</code>这三个类的实例（也就是<strong>Text Kit Stack</strong>），并且这三个实例是只读状态的。也就意味着在Storyboard中，我们没法让<code>UITextView</code>使用我们自己定义的Text Kit Stack。真的没招了吗？非也，我们可以在代码中创建<code>UITextView</code>，然后让它使用自定义的Text Kit Stack。</p>
+<p>打开<code>Main.storyboard</code>，找到<code>NoteEditorViewController</code>，展开它，在<strong>Detail Scene/Detail/View</strong>中找到 <strong>Text View</strong>，然后删掉<code>UITextView</code>实例。</p>
+<p>然后打开<code>NoteEditorViewController.swift</code>文件，移除<code>UITextView</code>的<code>outlet</code>。添加如下代码重新申明<code>UITextView</code>和<code>SyntaxHighlightTextStorage</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> textView: <span class="type">UITextView</span>!</span><br><span class="line"><span class="keyword">var</span> textStorage: <span class="type">SyntaxHighlightTextStorage</span>!</span><br></pre></td></tr></table></figure>
+<p>接下来移除<code>viewDidLoad</code>方法中的这两行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">textView.text = note.contents</span><br><span class="line">textView.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br></pre></td></tr></table></figure>
+<p>因为我们已经移除了<code>UITextView</code>的<code>outlet</code>，并且手动申明了新的<code>UITextView</code>，所以这两行就不需要了，因为我们先要对新的<code>UITextView</code>进行初始化和相关设置。</p>
+<p>继续在<code>NoteEditorViewController.swift</code>中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">createTextView</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// 1. 初始化用于备份编辑器中文本的存储器</span></span><br><span class="line">  <span class="keyword">let</span> attrs = [<span class="type">NSFontAttributeName</span> : <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)]</span><br><span class="line">  <span class="keyword">let</span> attrString = <span class="type">NSAttributedString</span>(string: note.contents, attributes: attrs)</span><br><span class="line">  textStorage = <span class="type">SyntaxHighlightTextStorage</span>()</span><br><span class="line">  textStorage.appendAttributedString(attrString)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> newTextViewRect = view.bounds</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 2. 创建layoutManager</span></span><br><span class="line">  <span class="keyword">let</span> layoutManager = <span class="type">NSLayoutManager</span>()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3. 创建text container</span></span><br><span class="line">  <span class="keyword">let</span> containerSize = <span class="type">CGSize</span>(width: newTextViewRect.width, height: <span class="type">CGFloat</span>.<span class="built_in">max</span>)</span><br><span class="line">  <span class="keyword">let</span> container = <span class="type">NSTextContainer</span>(size: containerSize)</span><br><span class="line">  container.widthTracksTextView = <span class="literal">true</span></span><br><span class="line">  layoutManager.addTextContainer(container)</span><br><span class="line">  textStorage.addLayoutManager(layoutManager)</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 4. 初始化并设置UITextView</span></span><br><span class="line">  textView = <span class="type">UITextView</span>(frame: newTextViewRect, textContainer: container)</span><br><span class="line">  textView.delegate = <span class="keyword">self</span></span><br><span class="line">  view.addSubview(textView)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这次加的代码有点多，不过没关系，我们一一来分析：</p>
+<ol>
+<li>初始化我们之前自定义的文本存储类，并定义了文本的属性。</li>
+<li>创建了一个布局管理器。</li>
+<li>创建了一个文本容器，并添加到上步创建的布局管理器中，然后又将布局管理器添加到我们自定义的文本存储器中。</li>
+<li>初始化文本视图，其<code>frame</code>为父视图的大小，<code>textContainer</code>为上步创建的容器。然后设置了文本视图的代理，并将其添加到父视图中。</li>
+</ol>
+<p>到目前为止，之前向大家展示过的这张图中的四个关键点（存储，布局器，容器，文本视图）之间的关系应该会更容易了理解了：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-14.png" alt="pic"></p>
+<p>这里要注意的是，在上面添加的代码中文本容器的宽度为屏幕的宽度，但是高度是无限大的，这样设置的目的是为了当<code>UITextView</code>中的文本很长的时候可以上下滚动。</p>
+<p>现在我们就可以在<code>viewDidLoad</code>方法中调用<code>createTextView()</code>方法了，不过要记得加在<code>super.viewDidLoad()</code>方法的后面：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">createTextView()</span><br></pre></td></tr></table></figure>
+<p>最后还有一点需要注意的是：在代码中创建的自定义的视图不能沿用storyboard中添加的布局约束，这就意味着当改变设备的横竖屏方向时，代码中创建的视图是不能根据布局约束改变大小和位置的。你需要在代码中添加布局约束。</p>
+<p>此时我们还需要在<code>viewDidLayoutSubviews</code>方法中加一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">textView.frame = view.bounds</span><br></pre></td></tr></table></figure>
+<p>编译并运行应用，在应用中打开一条笔记，然后去编辑它，此时注意观察Xcode的控制台，你可以看到在控制台中像瀑布一般的刷出好多日志信息：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-15.png" alt="pic"></p>
+<p>产生这些日志信息的来源是<code>SyntaxHighlightTextStorage</code>类，该类中输出的日志信息可以让你们知道你们自定义的类是否在正常的工作。</p>
+<p>现在文本解析器的基本框架看似已经可以稳定的运行了，接下来实现动态文本格式吧！</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u52A8_u6001_u6587_u672C_u683C_u5F0F"><a href="#u52A8_u6001_u6587_u672C_u683C_u5F0F" class="headerlink" title="动态文本格式"></a>动态文本格式</h2><p>在接下来的步骤中，你们要对自定义的文本存储类进行修改，让它实现被星号包围起来的文本加粗的功能。</p>
+<p>打开<code>SyntaxHighlightTextStorage.swift</code>文件，添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">applyStylesToRange</span><span class="params">(searchRange: NSRange)</span></span> &#123;</span><br><span class="line">  <span class="comment">// 1. 创建一些字体</span></span><br><span class="line">  <span class="keyword">let</span> fontDescriptor = <span class="type">UIFontDescriptor</span>.preferredFontDescriptorWithTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">  <span class="keyword">let</span> boldFontDescriptor = fontDescriptor.fontDescriptorWithSymbolicTraits(.<span class="type">TraitBold</span>)</span><br><span class="line">  <span class="keyword">let</span> boldFont = <span class="type">UIFont</span>(descriptor: boldFontDescriptor, size: <span class="number">0</span>)</span><br><span class="line">  <span class="keyword">let</span> normalFont = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 2. 匹配由星号包围的文本</span></span><br><span class="line">  <span class="keyword">let</span> regexStr = <span class="string">"(\\*\\w+(\\s\\w+)*\\*)"</span></span><br><span class="line">  <span class="keyword">let</span> regex = <span class="type">NSRegularExpression</span>(pattern: regexStr, options: <span class="literal">nil</span>, error: <span class="literal">nil</span>)</span><br><span class="line">  <span class="keyword">let</span> boldAttributes = [<span class="type">NSFontAttributeName</span> : boldFont]</span><br><span class="line">  <span class="keyword">let</span> normalAttributes = [<span class="type">NSFontAttributeName</span> : normalFont]</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3. 遍历所有匹配上的文本，设置加粗字体属性</span></span><br><span class="line">  regex.enumerateMatchesInString(backingStore.string, options: <span class="literal">nil</span>, range: searchRange) &#123;</span><br><span class="line">    match, flags, stop <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">let</span> matchRange = match.rangeAtIndex(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">self</span>.addAttributes(boldAttributes, range: matchRange)</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 4. 还原字体格式</span></span><br><span class="line">    <span class="keyword">let</span> maxRange = matchRange.location + matchRange.length</span><br><span class="line">    <span class="keyword">if</span> maxRange + <span class="number">1</span> &lt; <span class="keyword">self</span>.length &#123;</span><br><span class="line">      <span class="keyword">self</span>.addAttributes(normalAttributes, range: <span class="type">NSMakeRange</span>(maxRange, <span class="number">1</span>))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码主要功能是：</p>
+<ol>
+<li>通过<code>UIFontDescriptor</code>创建一个加粗的字体格式和一个正常的字体格式。<code>UIFontDescriptor</code>可帮助你们避免使用硬编码来设置字体的类型和格式。</li>
+<li>创建一个正则表达式，用于查找被星号包围的文本。比如说，这有一个字符串”iOS8是*非常完美*的一个系统”,那么正则表达式就可以将”*非常完美*“过滤出来。如果你不熟悉正则表达式也没关系，在后面会详细给大家介绍的。</li>
+<li>遍历通过正则表达式过滤出的文本，将我们定义的加粗字体属性设置给它们。</li>
+<li>重置跟在最后一个星号后的文本的属性为正常，确保只在闭合星号内的文本才显示为粗体。</li>
+</ol>
+<p>在上面的方法后面添加如下方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performReplacementsForRange</span><span class="params">(changedRange: NSRange)</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> extendedRange = <span class="type">NSUnionRange</span>(changedRange, <span class="type">NSString</span>(string: backingStore.string).lineRangeForRange(<span class="type">NSMakeRange</span>(changedRange.location, <span class="number">0</span>)))</span><br><span class="line">  extendedRange = <span class="type">NSUnionRange</span>(changedRange, <span class="type">NSString</span>(string: backingStore.string).lineRangeForRange(<span class="type">NSMakeRange</span>(<span class="type">NSMaxRange</span>(changedRange), <span class="number">0</span>)))</span><br><span class="line">  applyStylesToRange(extendedRange)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这个方法的作用是设置检查被星号包围文本的范围。这个方法是很重要的，因为<code>changedRange</code>通常代表一个字符，而<code>lineRangeForRange</code>将其扩展到一行的范围。</p>
+<p>最后在<code>performReplacementsForRange()</code>方法后再添加一个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">processEditing</span><span class="params">()</span></span> &#123;</span><br><span class="line">  performReplacementsForRange(<span class="keyword">self</span>.editedRange)</span><br><span class="line">  <span class="keyword">super</span>.processEditing()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当文本发生改变时，<code>processEditing</code>方法会向布局管理器发送通知，告知布局管理器文本发生了变化。</p>
+<p>编译运行应用，打开一条笔记，输入一些文本信息，然后用星号包围几段文本，你会看到被星号包围的文本变成了粗体：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-16.png" alt="pic"></p>
+<p>是不是很方便呢，你还可以依法炮制，举一反三，比如两个下划线包围的文本显示为斜体等等。</p>
+<h2 id="u6DF1_u5165_u5B8C_u5584"><a href="#u6DF1_u5165_u5B8C_u5584" class="headerlink" title="深入完善"></a>深入完善</h2><p>实现该功能的基本方法其实很简单：在<code>applyStylesToRange</code>方法中通过正则表达式过滤出你想要的文本信息，然后给过滤出的文本设置新的文本属性。</p>
+<p>打开<code>SyntaxHighlightTextStorage.swift</code>文件，添加如下方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">createAttributesForFontStyle</span><span class="params">(style: String, withTrait trait: UIFontDescriptorSymbolicTraits)</span></span> -&gt; [<span class="type">NSObject</span> : <span class="type">AnyObject</span>] &#123;</span><br><span class="line">  <span class="keyword">let</span> fontDescriptor = <span class="type">UIFontDescriptor</span>.preferredFontDescriptorWithTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">  <span class="keyword">let</span> descriptorWithTrait = fontDescriptor.fontDescriptorWithSymbolicTraits(trait)</span><br><span class="line">  <span class="keyword">let</span> font = <span class="type">UIFont</span>(descriptor: descriptorWithTrait, size: <span class="number">0</span>)</span><br><span class="line">  <span class="keyword">return</span> [<span class="type">NSFontAttributeName</span> : font]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方法可以创建正文文本字体的样式。在该方法中，构建<code>UIFont</code>时，其构造函数中的<code>size</code>属性设置为0，这是为了让字体的大小使用用户当前设置的字体大小。</p>
+<p>接下来，在该类中添加一个属性和一个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> replacements: [<span class="type">String</span> : [<span class="type">NSObject</span> : <span class="type">AnyObject</span>]]!</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">createHighlightPatterns</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> scriptFontDescriptor = <span class="type">UIFontDescriptor</span>(fontAttributes: [<span class="type">UIFontDescriptorFamilyAttribute</span> : <span class="string">"Zapfino"</span>])</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 1. 让我们的手写字体的大小基于首选设置中正文字体的大小</span></span><br><span class="line">  <span class="keyword">let</span> bodyFontDescriptor = <span class="type">UIFontDescriptor</span>.preferredFontDescriptorWithTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">  <span class="keyword">let</span> bodyFontSize = bodyFontDescriptor.fontAttributes()[<span class="type">UIFontDescriptorSizeAttribute</span>] <span class="keyword">as</span> <span class="type">NSNumber</span></span><br><span class="line">  <span class="keyword">let</span> scriptFont = <span class="type">UIFont</span>(descriptor: scriptFontDescriptor, size: <span class="type">CGFloat</span>(bodyFontSize.floatValue))</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 2. 创建一些字体属性</span></span><br><span class="line">  <span class="keyword">let</span> boldAttributes = createAttributesForFontStyle(<span class="type">UIFontTextStyleBody</span>, withTrait:.<span class="type">TraitBold</span>)</span><br><span class="line">  <span class="keyword">let</span> italicAttributes = createAttributesForFontStyle(<span class="type">UIFontTextStyleBody</span>, withTrait:.<span class="type">TraitItalic</span>)</span><br><span class="line">  <span class="keyword">let</span> strikeThroughAttributes = [<span class="type">NSStrikethroughStyleAttributeName</span> : <span class="number">1</span>]</span><br><span class="line">  <span class="keyword">let</span> scriptAttributes = [<span class="type">NSFontAttributeName</span> : scriptFont]</span><br><span class="line">  <span class="keyword">let</span> redTextAttributes = [<span class="type">NSForegroundColorAttributeName</span> : <span class="type">UIColor</span>.redColor()]</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 创建一个正则表达式的字典</span></span><br><span class="line">  replacements = [</span><br><span class="line">    <span class="string">"(\\*\\w+(\\s\\w+)*\\*)"</span> : boldAttributes,</span><br><span class="line">    <span class="string">"(_\\w+(\\s\\w+)*_)"</span> : italicAttributes,</span><br><span class="line">    <span class="string">"([0-9]+\\.)\\s"</span> : boldAttributes,</span><br><span class="line">    <span class="string">"(-\\w+(\\s\\w+)*-)"</span> : strikeThroughAttributes,</span><br><span class="line">    <span class="string">"(~\\w+(\\s\\w+)*~)"</span> : scriptAttributes,</span><br><span class="line">    <span class="string">"\\s([A-Z]&#123;2,&#125;)\\s"</span> : redTextAttributes</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法主要有以下几个功能：</p>
+<ul>
+<li>首先，使用Zapfino字体创建一个手写风格的字体。然后让它的字体大小基于正文文本设置的字体大小。</li>
+<li>其次，创建若干用于匹配的字体属性。</li>
+<li>最后，创建了一个字典，key为各种正则表达式，值为刚才创建的字体属性。</li>
+</ul>
+<p>如果你们不熟悉正则表达式，可能这个字典看起来会比较奇怪。但是如果你们一点一点去解析它，就会发现其实很简单。</p>
+<p>我们拿出字典中的第一个正则表达式，也就是过滤被星号围绕的文本的表达式来看看：</p>
+<pre><code>(\\*\\w+(\\s\\w+)*\\*)
+</code></pre><p>在正则表达式中一个反斜杠“\”代表将下一个字符标记为特殊字符或一个原义字符，双反斜杠的作用是不会使程序解析时忽略“\”，如果你把额外的一个反斜杠去掉，那么该正则表达式应该是这样：</p>
+<pre><code>(\*\w+(\s\w+)*\*)
+</code></pre><p>现在我们来一步一步解析这个正则表达式：</p>
+<ol>
+<li><strong>(*</strong> - 匹配一个星号。</li>
+<li><strong>\w+</strong> - 匹配包括下划线在内任何单词字符以及该字符之前的字符。</li>
+<li><strong>(\s\w+)</strong>* - 这是一个字表达式，\s的含义是匹配任何空白字符，包括空格、制表符、换页符等，*的含义是匹配前面的子表达式0次或多次。</li>
+<li><strong>*)</strong> - 匹配后面的星号。</li>
+</ol>
+<blockquote>
+<p><strong>注意</strong>：如果你想了解更多关于正则表达式的知识，请查阅这篇文章<a href="http://www.raywenderlich.com/?p=30288" target="_blank" rel="external">NSRegularExpression tutorial and cheat sheet</a></p>
+</blockquote>
+<p>接下来我们在<code>SyntaxHighlightTextStorage</code>类的初始化方法中调用<code>createHighlightPatterns()</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">    <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">    createHighlightPatterns()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">required</span> <span class="keyword">init</span>(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">    <span class="keyword">super</span>.<span class="keyword">init</span>(coder: aDecoder)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后，我们来修改<code>applyStylesToRange()</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">applyStylesToRange</span><span class="params">(searchRange: NSRange)</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> normalAttrs = [<span class="type">NSFontAttributeName</span> : <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)]</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 遍历每个需要替换字体属性的文本</span></span><br><span class="line">  <span class="keyword">for</span> (pattern, attributes) <span class="keyword">in</span> replacements &#123;</span><br><span class="line">    <span class="keyword">let</span> regex = <span class="type">NSRegularExpression</span>(pattern: pattern, options: <span class="literal">nil</span>, error: <span class="literal">nil</span>)</span><br><span class="line">    regex.enumerateMatchesInString(backingStore.string, options: <span class="literal">nil</span>, range: searchRange) &#123;</span><br><span class="line">      match, flags, stop <span class="keyword">in</span></span><br><span class="line">      <span class="comment">// 设置字体属性</span></span><br><span class="line">      <span class="keyword">let</span> matchRange = match.rangeAtIndex(<span class="number">1</span>)</span><br><span class="line">      <span class="keyword">self</span>.addAttributes(attributes, range: matchRange)</span><br><span class="line"> </span><br><span class="line">      <span class="comment">// 还原字体样式</span></span><br><span class="line">      <span class="keyword">let</span> maxRange = matchRange.location + matchRange.length</span><br><span class="line">      <span class="keyword">if</span> maxRange + <span class="number">1</span> &lt; <span class="keyword">self</span>.length &#123;</span><br><span class="line">        <span class="keyword">self</span>.addAttributes(normalAttrs, range: <span class="type">NSMakeRange</span>(maxRange, <span class="number">1</span>))</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在之前，该方法只使用一个正则表达式过滤出被星号围绕的文本，并将其设置为粗体，现在，虽然该方法所做的事情没有变，但是却不只使用一个正则表达式，而是遍历正则表达式字典中的所有表达式，过滤出文本中所有被符号围绕的文本，然后设置相应的字体样式。</p>
+<p>现在再次编译运行应用，你看到了什么？</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-17.png" alt="pic"></p>
+<p>到目前为止，似乎这个记事本应用已经大功告成了，但是还有几个小问题需要解决。</p>
+<p>第一个问题是如果在使用该应用时，改变手机的方向，也就是从竖屏变为横屏，你会注意到屏幕上的内容并没有变化，这是因为自定义的子类不支持这种转变，之前我们也提到过。</p>
+<p>第二个问题是当一条笔记中有很多文本信息的时候，文本的底部会被键盘遮住，这时你打字写东西就很困难。</p>
+<p>也是时候解决这两个问题了。</p>
+<h2 id="u56DE_u987E_u52A8_u6001_u7C7B_u578B"><a href="#u56DE_u987E_u52A8_u6001_u7C7B_u578B" class="headerlink" title="回顾动态类型"></a>回顾动态类型</h2><p>要想通过动态类型正确的解决该问题，你们得修改代码，当文本显示区域大小发生改变的通知发生时，要通过字体属性来改变字体。</p>
+<p>在<code>SyntaxHighlightTextStorage</code>类中添加如下方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">update</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// update the highlight patterns</span></span><br><span class="line">  createHighlightPatterns()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// change the 'global' font</span></span><br><span class="line">  <span class="keyword">let</span> bodyFont = [<span class="type">NSFontAttributeName</span> : <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)]</span><br><span class="line">  addAttributes(bodyFont, range: <span class="type">NSMakeRange</span>(<span class="number">0</span>, length))</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// re-apply the regex matches</span></span><br><span class="line">  applyStylesToRange(<span class="type">NSMakeRange</span>(<span class="number">0</span>, length))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的方法更新了所有与各种正则表达式相关联的字体，让所有字符串都基于正文文本的属性，然后重新过滤文本。</p>
+<p>最后，打开<code>NoteEditorViewController.swift</code>文件，更新<code>preferredContentSizeChanged()</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">preferredContentSizeChanged</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  textStorage.update()</span><br><span class="line">  updateTimeIndicatorFrame()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译运行应用，在设置中修改文本大小，看看会发生什么：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-18.png" alt="pic"></p>
+<h2 id="u6539_u53D8_u6587_u672C_u89C6_u56FE_u7684_u5927_u5C0F"><a href="#u6539_u53D8_u6587_u672C_u89C6_u56FE_u7684_u5927_u5C0F" class="headerlink" title="改变文本视图的大小"></a>改变文本视图的大小</h2><p>剩下的另一个问题就是编辑长文本时，键盘会遮住一半文本的问题。</p>
+<p>解决这个问题的核心就是当键盘弹出时减小文本视图的高度。</p>
+<p>打开<code>NoteEditorViewController.swift</code>文件，在<code>viewDidLoad()</code>方法中的<code>createTextView()</code>后面加一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">textView.scrollEnabled = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>这行代码允许文本视图开启滚动条。</p>
+<p>然后在<code>viewDidLoad()</code>的最后面添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSNotificationCenter</span>.defaultCenter().addObserver(<span class="keyword">self</span>, selector: <span class="string">"keyboardDidShow:"</span>, name: <span class="type">UIKeyboardDidShowNotification</span>, object: <span class="literal">nil</span>)</span><br><span class="line"><span class="type">NSNotificationCenter</span>.defaultCenter().addObserver(<span class="keyword">self</span>, selector: <span class="string">"keyboardDidHide:"</span>, name: <span class="type">UIKeyboardDidHideNotification</span>, object: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>这两个通知可以让你捕捉到键盘弹出和收起的事件，好让你修改文本视图的相应大小。</p>
+<p>再在该类中添加如下方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">updateTextViewSizeForKeyboardHeight</span><span class="params">(keyboardHeight: CGFloat)</span></span> &#123;</span><br><span class="line">  textView.frame = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: view.frame.width, height: view.frame.height - keyboardHeight)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方法让文本视图的高度减去键盘的高度，保证合适的文本视图高度。</p>
+<p>最后就是实现<code>keyboardDidShow</code>和<code>keyboardDidHide</code>方法了：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">keyboardDidShow</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> rectValue = notification.userInfo?[<span class="type">UIKeyboardFrameBeginUserInfoKey</span>] <span class="keyword">as</span>? <span class="type">NSValue</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> keyboardSize = rectValue.<span class="type">CGRectValue</span>().size</span><br><span class="line">    updateTextViewSizeForKeyboardHeight(keyboardSize.height)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">keyboardDidHide</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  updateTextViewSizeForKeyboardHeight(<span class="number">0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当键盘弹出时，你需要从通知中获取到键盘的高度，然后让文本视图减去这个高度，当键盘收回时，要复原文本视图的高度。</p>
+<blockquote>
+<p><strong>注意：</strong>在iOS8之前的版本中，当设备的方向发生变化时，也就是从竖屏变为横屏时，我们要计算新的文本视图的大小（因为<code>UIView的高和宽会交换，但是键盘的高和宽不会交换</code>），但是在iOS8中已经没这个必要了。</p>
+</blockquote>
+<p>现在编译运行应用，选择一条长文本的日记，编辑文本，此时弹出的键盘就不会再遮挡文本信息了：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-19.png" alt="pic"></p>
+<p>原文链接：<a href="http://www.raywenderlich.com/77092/text-kit-tutorial-swift" target="_blank" rel="external">Text Kit Tutorial in Swift</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/watchkit-pagebase-navigation/" itemprop="url">
                   使用WatchKit实现Page-Based Navigation
                 </a>
@@ -698,220 +954,11 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/text-kit-tutorial-in-swift-1/" itemprop="url">
-                  如何在Swift中运用Text Kit框架（一）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-10-31T00:00:00+08:00" content="2014-10-31">
-              2014-10-31
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/text-kit-tutorial-in-swift-1/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/text-kit-tutorial-in-swift-1/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-
-<p>由于Apple近几年在iOS系统的不断改进过程中添加了许多新的特性和功能，这使得iOS系统对文本的渲染能力有了大大的提升。在iOS7中我们就已经能感觉到在文本渲染方面有了很大改进和提升。现在iOS8发布了，在文本渲染方面在延续了之前强大功能的基础上，又提升了其易用性。简单纵观iOS文本渲染的发展史，你也许对目前文本渲染的强大能有更深刻的体会。</p>
-<p>在iOS6之前，使用web视图渲染文本是当时最为容易的一种方式，因为它能较为有效的处理混合编排的文本，比如有粗体字、斜体字、有颜色的字等。</p>
-<p>2012年，iOS6在UIKit框架中添加一些支持字符串编辑或渲染的控件。这使得在渲染文本时，使用web视图不再是唯一的选择了。并且在文本排版方面不用再依赖通过HTML布局这种方式了。</p>
-<p>在iOS6中，UIKit中支持字符串编辑和渲染的控件是同时基于WebKit和Core Graphic的<code>String drawing</code>函数开发出的，整个如下图所示：</p>
-<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-1.png" alt="pic"></p>
-<blockquote>
-<p>注意：在这张图上有没有让你疑惑的地方呢？没错，<code>UITextView</code>是基于WebKit框架的。实际上，UIKit中与文本相关的这些控件在底层还是使用HTML渲染的。没有深入研究过相关框架的开发者是不太容易察觉这一点的。</p>
-</blockquote>
-<p>尽管iOS6中提供的这些文本控件在实际开发中的确带来了不少便利，但是当遇到复杂的布局、多行混合渲染等这种高级应用场景时，这些控件就显得捉襟见肘了，此时虽然Core Text是相对底层而且用法繁复的框架，但使用它来解决问题仍是唯一可以选择的方法。</p>
-<p>直到iOS7的问世，这种窘境得以改善。随着扁平化的设计思路，iOS的UI拚弃了沿用多年的拟物化风格，将重点和关注点集中在排版工艺上。比如<code>UIButton</code>在iOS7中去掉了整个外边框和阴影，只留下了按钮文字。所以Apple在iOS7中加入了用于文本编排和渲染的<strong>Text Kit</strong>框架就不足为奇了。</p>
-<p>在iOS7中关于文本渲染的控件及框架结构就比较清晰和合理了。因为所有UIKit中的文本控件都基于Text Kit框架，而不像iOS6中还有基于Web Kit框架的：</p>
-<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-2.png" alt="pic"></p>
-<p>Text Kit在继承了Core Text所有强大功能的基础上，将功能封装为面向对象的API，让开发者们都乐开了花。</p>
-<p>在这篇教程中，你要去探索Text Kit的各种功能特性，并且你要创建一个简单的但又功能丰富的iPhone笔记应用。</p>
-<p>本教程包含一个初始的项目，里面含有事先创建好的UI部分，以便使同学们只关注于Text Kit的部分。在这里可以下载该<a href="http://cdn2.raywenderlich.com/wp-content/uploads/2014/09/SwiftTextKitNotepad-starter6.zip" target="_blank" rel="external">项目</a>。下载完成后解压并在Xcode中打开项目，编译运行后你会看到如下的界面：</p>
-<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-3.png" alt="pic"></p>
-<p>该示例应用创建了一个初始的数组用于存放笔记实例，然后在TableViewController中将其渲染出来，当你点击选择某条笔记时，Storyboard和segue会捕获到你的行为，然后处理视图转换的先关工作，使你看到该条笔记的详细信息。</p>
-<h2 id="Dynamic_Type"><a href="#Dynamic_Type" class="headerlink" title="Dynamic Type"></a>Dynamic Type</h2><p><strong>Dynamic Type</strong>是iOS7中给我们的开发带来变化最多的特性之一，它的作用是让应用中的字体大小遵循你设置的字体大小和粗细。</p>
-<p>在iOS7中，打开设置，可以在 <strong>通用/辅助功能（General/Accessibility）</strong> 和 <strong>通用/字体大小（General/Text Size）</strong> 中查看和设置系统中应用显示字体的属性： </p>
-<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-4.png" alt="pic"></p>
-<p>在iOS8中，打开设置，可以在 <strong>通用/辅助功能/更大字体（General/Accessibility/Larger Text）</strong> 查看Dynamic Type的文本尺寸。</p>
-<p>不管是增加文字粗细还是改变文字大小，在支持Dynamic Type的应用中这都能给用户带来极大的便利，增加了文字的可读性。</p>
-<p>为了让应用支持Dynamic Type，你需要设置文本遵循某一<strong>风格</strong>，而不是明确的指定文本的字体名称和大小。在iOS7中已经为<code>UIFont</code>增加了一个新的方法<code>preferredFontForTextStyle</code>，它的作用是给创建出一个由用户在设置中根据自身需要设定的风格的字体。</p>
-<p>下表中展示了六种不同字体样式的不同大小和粗细程度：</p>
-<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-5.png" alt="pic"></p>
-<p>表中最左边的字体是用户可选择的最小的字体，中间是可选择的最大的字体，最右边是选择了辅助功能中给字体加粗后的样式。</p>
-<h2 id="u6700_u57FA_u672C_u7684_u529F_u80FD_u652F_u6301"><a href="#u6700_u57FA_u672C_u7684_u529F_u80FD_u652F_u6301" class="headerlink" title="最基本的功能支持"></a>最基本的功能支持</h2><p>实现动态文本的基本功能还是相对较简单的。应用中的字体不再是一个明确的字体，而是需要请求一个特殊的字体样式。在运行时，应用会根据用户在设置应用中对字体的设置以及请求到的字体样式中选择一个合适的字体样式。</p>
-<p>到了iOS8，Apple让实现Dynamic Type变得比iOS7更加容易了。尤其是TableView中的默认Label自动支持Dynamic Type，这个很赞！但是如果还想适配iOS7的话那就要在TableView中使用自定义的Label了。所以首先同学们要学会如何在iOS7中处理Dynamic Type，然后你就会发现到了iOS8后，生活是多么美好，晴空万里，没有雾霾！</p>
-<h2 id="u4E3A_u4EC0_u4E48iOS7_u662F_u4F18_u79C0_u7684_u7CFB_u7EDF_uFF0C_u800CiOS8_u662F_u8D8B_u8FD1_u5B8C_u7F8E_u7684_u7CFB_u7EDF"><a href="#u4E3A_u4EC0_u4E48iOS7_u662F_u4F18_u79C0_u7684_u7CFB_u7EDF_uFF0C_u800CiOS8_u662F_u8D8B_u8FD1_u5B8C_u7F8E_u7684_u7CFB_u7EDF" class="headerlink" title="为什么iOS7是优秀的系统，而iOS8是趋近完美的系统"></a>为什么iOS7是优秀的系统，而iOS8是趋近完美的系统</h2><p>该教程中初始项目的设置和配置是基于iOS8的。在我们开始学习之前，先编译运行应用，然后尝试改变默认的文本字体大小，多试几次不同的字体大小。你会发现不光是字体大小变了，TableView列表的Cell高度也相应发生了改变。但是你对这个项目还没动过一根手指。同时你也应该发现了点击选择一条笔记后，该笔的详细信息的文本字体却没有发生变化。</p>
-<p>但在iOS7中我们的确还要做一些额外的事，没有十全十美的事应该指的就是这个吧。如果你的编译环境是iOS7或iOS8（确保你使用的Xcode版本是6），那么本教程的绝大部分内容都是没问题的。现在我们需要将Xcode的编译环境设置为iOS7已经选择合适的iOS模拟器（iPhone5s）。如果你不打算支持iOS8之前的系统，那么你可以直接使用iOS8的编译环境。</p>
-<p>现在咱们在iOS7下编译运行应用，然后重复之前修改字体的操作，你会发现什么？没错，发现了悲剧。应用中的字体会忽略你对字体的设置，根本不起作用。所以，同学们必须要做点什么让Dynamic Type在iOS7跑起来。</p>
-<p>打开<strong>NoteEditorViewController.swift</strong>，在<code>viewDidLoad</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">textView.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br></pre></td></tr></table></figure>
-<p>这里需要注意的是你并没有给<code>textView.font</code>设置具体的字体，比如Helvetica Neue之类。相反，你只是请求了一个适合主体文本的字体样式<code>UIFontTextStyleBody</code>。</p>
-<p>然后打开<strong>NotesListViewController.swift</strong>，在<code>tableView(_:cellForRowAtIndexPath:)</code>方法的<code>return</code>语句后添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">cell.textLabel?.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleHeadline</span>)</span><br></pre></td></tr></table></figure>
-<p>你依然没有给字体具体的类型，而是请求了一个合适的字体样式。</p>
-<p>使用语义接近的字体样式名称，比如<code>UIFontTextStyleSubHeadline</code>，可以避免在代码中对字体样式使用硬编码，并确保你的应用中的文本信息能正确的响应用户的设置。</p>
-<p>现在再编译和运行应用，你会发现TableView和笔记详细信息页面中的文本字体都发生了变化。下面的截图是设置不同字体大小后的笔记详细信息页面：</p>
-<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-6.png" alt="pic"></p>
-<p>目前看起来一起都很完美，但是细心的读者可能会发现这种解决方法只能解决一半的问题。让我们回到设置应用然后再次更改字体大小，然后我们通过后台程序回到我们的笔记应用中，我们发现了什么？没错，文本字体没有响应我们刚才的设置从而发生变化。</p>
-<p>我相信我们的用户是不会允许这种事情发生的。又一个挑战出现了，让我们来看看如何解决这个问题。</p>
-<h2 id="u5373_u65F6_u54CD_u5E94_u5B57_u4F53_u8BBE_u7F6E"><a href="#u5373_u65F6_u54CD_u5E94_u5B57_u4F53_u8BBE_u7F6E" class="headerlink" title="即时响应字体设置"></a>即时响应字体设置</h2><p>打开<code>NoteEditorViewController.swift</code>，在<code>viewDidLoad</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSNotificationCenter</span>.defaultCenter().addObserver(<span class="keyword">self</span>, </span><br><span class="line">    selector: <span class="string">"preferredContentSizeChanged:"</span>, </span><br><span class="line">    name: <span class="type">UIContentSizeCategoryDidChangeNotification</span>,</span><br><span class="line">    object: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>上面这段代码的作用是将我们的<code>NodeEditorViewController</code>注册到通知中心里，当字体发生改变时会通知<code>NodeEditorViewController</code>中的<code>preferredContentSizeChanged</code>方法。</p>
-<p>我们再来看看<code>preferredContentSizeChanged</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">preferredContentSizeChanged</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  textView.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在这个方法中我们就可以改变文本的字体样式了。</p>
-<blockquote>
-<p>注意：这里你可能会有疑惑，已经更改过字体样式了，为什么这里再次请求样式的时候还是<code>UIFontTextStyleBody</code>呢？当用户更改完字体样式后，你需要通过<code>preferredFontForTextStyle</code>方法重新请求一次字体样式，该方法的参数只代表文本的类型和所在位置，比如是Body里的还是Head中的等，所以<code>UIFont.preferredFontForTextStyle(UIFontTextStyleBody)</code>的意思就是请求类型和位置在Body中显示文本的字体样式，每次请求都是获取最新一次设置的字体样式。</p>
-</blockquote>
-<p>打开<code>NotesListViewController.swift</code>，重写<code>viewDidLoad</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">  <span class="type">NSNotificationCenter</span>.defaultCenter().addObserver(<span class="keyword">self</span>,</span><br><span class="line">      selector: <span class="string">"preferredContentSizeChanged:"</span>, </span><br><span class="line">      name: <span class="type">UIContentSizeCategoryDidChangeNotification</span>, </span><br><span class="line">      object: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>同学们应该注意到了，我们刚才添加的方法和<code>NoteEditorViewController.swift</code>中添加的方法一样。没错，给<code>NSNotificationCenter</code>注册的方法是相同的，但是<code>preferredContentSizeChanged</code>方法会有点区别。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>然后在<code>NotesListViewController.swift</code>中再添加<code>preferredContentSizeChanged</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">preferredContentSizeChanged</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  tableView.reloadData()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面这段代码的作用是让Tableview重新加载可见的Cell，在更新时就会触发<code>preferredFontForTextStyle()</code>方法，将新设置的字体样式应用到Tableview的Cell中。</p>
-<p>再次编译运行应用，设置字体样式，然后看看我们的应用有没有正确的响应你的设置。</p>
-<h2 id="u4F7FCell_u9AD8_u5EA6_u81EA_u9002_u5E94"><a href="#u4F7FCell_u9AD8_u5EA6_u81EA_u9002_u5E94" class="headerlink" title="使Cell高度自适应"></a>使Cell高度自适应</h2><p>响应字体设置这部分到目前为止我们已经处理完了，效果也不错，但是当你把字体设置为一个足够小的，或者最小的字体时，在TableView中看起来就不怎么好看了，因为Cell的高度没有变化，而字体很小，所以看起来很不美观，比如下面左侧的截图一样：</p>
-<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-7.png" alt="pic"></p>
-<p>这个问题是iOS7中在Dynamic Type中比较坑爹的一个问题。想要使你的应用在不同字体样式下都显示的比较完美，你必须要让Cell的高度根据字体样式的大小做出相应的调整。虽然Auto Layout能帮你解决大部分布局适配上的问题，但在这个问题上，它就比较无力了，这得需要你自己去解决了。</p>
-<p>解决这个问题的原理很简单，就是让TableView的Cell高度根据字体样式的大小进行改变。那么可以通过实现<code>UITextViewDelegate</code>的<code>tableView(_:heightForRowAtIndexPath:)</code>方法来解决该问题。</p>
-<p>在<code>NotesListViewController.swift</code>中加入如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> label: <span class="type">UILabel</span> = &#123;</span><br><span class="line">  <span class="keyword">let</span> temporaryLabel = <span class="type">UILabel</span>(frame: <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: <span class="type">Int</span>.<span class="built_in">max</span>, height: <span class="type">Int</span>.<span class="built_in">max</span>))</span><br><span class="line">  temporaryLabel.text = <span class="string">"test"</span></span><br><span class="line">  <span class="keyword">return</span> temporaryLabel</span><br><span class="line">&#125;()</span><br><span class="line"> </span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!)</span></span> -&gt; <span class="type">CGFloat</span> &#123;</span><br><span class="line">  label.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleHeadline</span>)</span><br><span class="line">  label.sizeToFit()</span><br><span class="line">  <span class="keyword">return</span> label.frame.height * <span class="number">1.7</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的代码中，首先创建了一个<code>UILabel</code>的实例，用于计算TableView中Cell的高度，也就是这个<code>UILabel</code>的高度就是Cell的高度，然后在<code>tableView(_:heightForRowAtIndexPath:)</code>方法中设置该<code>UILabel</code>的字体样式，调用<code>sizeToFit</code>方法使Label的高度适配字体的高度，最后将Label的高度返回，也就相当于将Cell的高度设置为Label的高度了。这里需要注意的是当调用完<code>sizeToFit</code>方法后，Label与它里面字体之间几乎没有上下间隔，所以我们在返回高度的时候乘以一个上下间隔的比例系数。</p>
-<p>再次编译和运行你的应用，多更改几次字体样式，你会看到Cell的高度随着字体样式也进行着调整：</p>
-<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-8.png" alt="pic"></p>
-<h2 id="u7ED9_u6587_u672C_u6DFB_u52A0_u5370_u5237_u6548_u679C"><a href="#u7ED9_u6587_u672C_u6DFB_u52A0_u5370_u5237_u6548_u679C" class="headerlink" title="给文本添加印刷效果"></a>给文本添加印刷效果</h2><p>给文本添加一点高亮和阴影来达到文本像嵌入纸张的那种印刷效果。</p>
-<p>打开<code>NotesListViewController.swift</code>用下面的代码替换<code>tableView(_:cellForRowAtIndexPath:)</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!)</span></span> -&gt; <span class="type">UITableViewCell</span>? &#123;</span><br><span class="line">  <span class="keyword">let</span> cell = tableView.dequeueReusableCellWithIdentifier(<span class="string">"Cell"</span>, forIndexPath: indexPath) <span class="keyword">as</span> <span class="type">UITableViewCell</span></span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> note = notes[indexPath.row]</span><br><span class="line">  <span class="keyword">let</span> font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleHeadline</span>)</span><br><span class="line">  <span class="keyword">let</span> textColor = <span class="type">UIColor</span>(red: <span class="number">0.175</span>, green: <span class="number">0.458</span>, blue: <span class="number">0.831</span>, alpha: <span class="number">1</span>)</span><br><span class="line">  <span class="keyword">let</span> attributes = [</span><br><span class="line">    <span class="type">NSForegroundColorAttributeName</span> : textColor,</span><br><span class="line">    <span class="type">NSFontAttributeName</span> : font,</span><br><span class="line">    <span class="type">NSTextEffectAttributeName</span> : <span class="type">NSTextEffectLetterpressStyle</span></span><br><span class="line">  ]</span><br><span class="line">  <span class="keyword">let</span> attributedString = <span class="type">NSAttributedString</span>(string: note.title, attributes: attributes)</span><br><span class="line"> </span><br><span class="line">  cell.textLabel?.attributedText = attributedString</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">return</span> cell</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的代码给TableView的Cell中的文本添加了颜色和<code>NSTextEffectLetterpressStyle</code>文字样式。</p>
-<p>编译运行应用，你会看到更加立体的文本：</p>
-<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-9.png" alt="pic"></p>
-<p>这种印刷效果虽然只是一种较为细微的效果，但这并不代表你就能滥用这种效果，它虽然能使文本看起来有立体感，但是有可能会影响到文本的清晰度。</p>
-<h2 id="u6587_u672C_u7ED5_u884C_u6392_u7248"><a href="#u6587_u672C_u7ED5_u884C_u6392_u7248" class="headerlink" title="文本绕行排版"></a>文本绕行排版</h2><p>一般我们在常用的文本编辑器，比如Word中都能看到文本围绕图片或表格等其他元素的排版格式。TextKit也提供了能让文本按指定的路径排版或按一定形状排版的功能，叫做绕行路径。</p>
-<p>下面我们希望在笔记详细页中添加一个圆形的视图，放在右上角，用于显示这篇笔记的创建时间。</p>
-<p>当你创建完视图摆好位置后，你会发现这个圆形的视图会遮盖住笔记文本信息，所以我们需要给文本创建一个绕行路径来绕开这个圆形的视图。</p>
-<h3 id="u6DFB_u52A0_u5706_u5F62_u89C6_u56FE"><a href="#u6DFB_u52A0_u5706_u5F62_u89C6_u56FE" class="headerlink" title="添加圆形视图"></a>添加圆形视图</h3><p>打开<code>NoteEditorViewController.swift</code>，申明一个属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> timeView: <span class="type">TimeIndicatorView</span>!</span><br></pre></td></tr></table></figure>
-<p>然后在<code>viewDidLoad</code>方法的最后添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">timeView = <span class="type">TimeIndicatorView</span>(date: note.timestamp)</span><br><span class="line">textView.addSubview(timeView)</span><br></pre></td></tr></table></figure>
-<p>创建一个<code>timeView</code>的示例，然后将它作为一个子视图添加到<code>textView</code>中。</p>
-<p>刚才创建的视图需要合适的尺寸大小，你需要一种机制在ViewController绘制子视图调用<code>updateSize</code>方法来计算尺寸。</p>
-<p>所以我们加入如下两个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLayoutSubviews</span><span class="params">()</span></span> &#123;</span><br><span class="line">  updateTimeIndicatorFrame()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">updateTimeIndicatorFrame</span><span class="params">()</span></span> &#123;</span><br><span class="line">  timeView.updateSize()</span><br><span class="line">  timeView.frame = <span class="type">CGRectOffset</span>(timeView.frame, textView.frame.width - timeView.frame.width, <span class="number">0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里的<code>viewDidLayoutSubviews</code>方法会调用<code>updateTimeIndicatorFrame</code>方法，该方法会处理两件事，一个是调用<code>updateSize</code>方法设置<code>timeView</code>的尺寸，另一个是设置<code>timeView</code>的位置，使它处于<code>textView</code>的右上角。</p>
-<p>之后每次当ViewController接收到文本字体样式更改的时候都会调用<code>updateTimeIndicatorFrame</code>方法，以便将<code>timeView</code>的尺寸和位置调整到合适的状态。所以我们更改一下<code>preferredContentSizeChanged</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">preferredContentSizeChanged</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  textView.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">  updateTimeIndicatorFrame()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>现在编译运行应用，点击笔记条目进入详细信息页后你就会在右上角看到一个显示创建时间的圆形视图：</p>
-<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-10.png" alt="pic"></p>
-<p>你可以在设置中改变字体样式，显示创建日期的视图会根据字体样式自动调整到合适的大小。</p>
-<p>但是你们会发现还有一些美中不足的地方，那就是日期视图把笔记文本信息给遮住了，幸运的是TextKit提供的文本绕行路径能帮我们解决这个问题。</p>
-<h3 id="u521B_u5EFA_u7ED5_u884C_u8DEF_u5F84"><a href="#u521B_u5EFA_u7ED5_u884C_u8DEF_u5F84" class="headerlink" title="创建绕行路径"></a>创建绕行路径</h3><p>打开<code>TimeIndicatorView.swift</code>，看看<code>curvePathWithOrigin</code>方法，日期视图在填充渲染背景色的时候会调用该方法，但是你可以通过该方法来决定文本的绕行路径，该方法会自己计算视图的贝塞尔曲线，也就相当于是文本的绕行路径了。</p>
-<p>打开<code>NoteEditorViewController.swift</code>，在<code>updateTimeIndicatorFrame</code>方法末尾中添加如下两行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> exclusionPath = timeView.curvePathWithOrigin(timeView.center)</span><br><span class="line">textView.textContainer.exclusionPaths = [exclusionPath]</span><br></pre></td></tr></table></figure>
-<p>上面的代码通过日期视图的<code>curvePathWithOrigin</code>方法基于贝塞尔曲线计算出绕行路径，然后放在数组中赋值给<code>textView.textContainter.exclusionPaths</code>属性。这里要注意的是绕行路径的起点和坐标与文本信息是相对位置。</p>
-<p>编译运行应用，现在你就可以看到文本信息都绕开了日期视图：</p>
-<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-11.png" alt="pic"></p>
-<p>这个简单的示例只是体现出了绕行路径强大功能的冰山一角，从上面的代码中你可能也注意到了，绕行路径是放在数组中进行赋值的，所以这就意味着每个容器，不管是文本容器还是其他容器都可以被设置多个绕行路径。</p>
-<p>除此之外，绕行路径可以随着你的想法变得简单或者复杂，你甚至可以让文本围绕着星星形状或者蝴蝶形状排版。</p>
-<p>每当绕行路径发生改变时，文本容器就会通知布局管理器，你可以让绕行路径进行动态的改变，比如从星星形状的路径变成蝴蝶形状的路径，此时文本容器也会动态的改变排版。但是这样做会得不偿失，因为用户在阅读的时候看到文字动来动去，估计会砸了手机！</p>
-<p>未完待续……</p>
-<p>原文地址：<a href="http://www.raywenderlich.com/77092/text-kit-tutorial-swift" target="_blank" rel="external">Text Kit Tutorial in Swift</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -949,7 +996,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">85</span>
+              <span class="site-state-item-count">86</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

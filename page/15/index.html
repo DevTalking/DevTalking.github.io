@@ -231,6 +231,195 @@
             
             
               
+                <a class="post-title-link" href="/articles/swift-boolean/" itemprop="url">
+                  在Swift中构建布尔类型
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-06T00:00:00+08:00" content="2014-08-06">
+              2014-08-06
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/swift-boolean/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-boolean/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>Swift中的<code>Bool</code>类型是许多原始函数的基础。所以基于它可以展示一个有趣的如何构建基本类型的示例。这篇文章的主旨是在Swift中创建一个类似<code>Bool</code>类型的新类型<code>MyBool</code>。我们希望通过这个简单的示例，能让你更清晰的了解Swift语言的工作原理。  </p>
+<p>让我们从最基本的定义开始。我们用枚举来定义<code>MyBool</code>类型的模型，它有两个不同的<code>case</code>：</p>
+<pre><code>enum MyBool {
+    case myTrue, myFalse
+}
+</code></pre><p>为了使大家不会产生混淆，这篇文章中我们将<code>MyBool</code>的两个<code>case</code>命名为<code>myTrue</code>和<code>myFalse</code>。我们希望<code>MyBool</code>的构造函数<code>MyBool()</code>将其自身赋值为<code>false</code>，所以我们提供了如下<code>init</code>方法：</p>
+<pre><code>extension MyBool {
+    init() { self = .myFalse }
+}
+</code></pre><p>Swift中的枚举会隐式的在它们自身内申明其枚举检索器的范围，允许我们使用<code>MyBool.myFalse</code>这种语法调用其成员，如果根据上下文可以推断出类型的话，我们甚至可以使用<code>.myFalse</code>调用其成员。但是在真正使用中，我们还是希望使用原始的<code>true</code>和<code>false</code>关键字。想要做到这一点，我们的新类型<code>MyBool</code>需要遵循<code>BooleanLiteralConvertible</code>协议，像这样：</p>
+<pre><code>extension MyBool : BooleanLiteralConvertible {
+    static func convertFromBooleanLiteral(value: Bool) -&gt; MyBool {
+        return value ? myTrue : myFalse
+    }
+}
+
+// 我们现在就可以给MyBool类型的变量赋值为true或false.
+var a : MyBool = true
+</code></pre><p>通过以上设置，我们有了自己的基本类型，但是目前我们用它还做不了什么。布尔值需要通过<code>if</code>条件语句进行测试。在Swift中，我们通过<code>BooleanType</code>协议来做到这一点，该协议允许任意类型用于进行逻辑判断：</p>
+<pre><code>extension MyBool : BooleanType {
+    func getBooleanType() -&gt; Bool {
+        switch self {
+        case .myTrue: return true
+        case .myFalse: return false
+        }
+    }   
+}
+
+// 现在我们就可以将MyBool类型的变量a用于&apos;if&apos;和&apos;while&apos;语句中进行测试.
+if a {}
+</code></pre><p>我们更希望所有遵循了<code>BooleanType</code>协议的类型都要强制转换为<code>MyBool</code>类型，所以我们可以这样写：</p>
+<pre><code>extension MyBool {
+    // MyBool类型构造函数的参数设定为BooleanType类型.
+    init(_ v : BooleanType) {
+        if v.getBooleanType() {
+            self = .myTrue
+        } else {
+            self = .myFalse
+        }
+    }
+}
+
+// 现在我们就可以这样进行转换了.
+var basicBool : Bool = true
+a = MyBool(basicBool)
+</code></pre><p>注意构造函数里的<code>_</code>，它可以使我们在使用构造函数时省略参数命名。可以使用<code>MyBool(x)</code>这种语法，而不用使用<code>MyBool(v: x)</code>这种啰嗦的语法。  </p>
+<p>现在我们有了基本的功能，现在让我们来定义它的操作符，先来看看如何定义<code>==</code>操作符。没有关联数据的简单的枚举（像<code>MyBool</code>一样）是由编译器自动认为遵循<code>Equatable</code>协议进行编译的，所以没有必须要实现额外的代码。尽管如此，你也可以让任意类型遵循<code>Equatable</code>协议，并实现<code>==</code>操作符。比如我们的<code>MyBool</code>类型：</p>
+<pre><code>extension MyBool : Equatable {
+}
+
+func ==(lhs: MyBool, rhs: MyBool) -&gt; Bool {
+    switch (lhs, rhs) {
+    case (.myTrue,.myTrue), (.myFalse,.myFalse):
+        return true
+    default:
+        return false
+    }
+}
+
+// 现在我们就可以使用==和!=进行比较了.
+if a == a {}
+if a != a {}
+</code></pre><p>这里我们在<code>swich</code>语句中使用简单的匹配模式来处理。由于<code>MyBool</code>现在遵循了<code>Equatable</code>协议，所以他已经自动实现了<code>!=</code>操作符。再让我们加一些二进制运算符：</p>
+<pre><code>func &amp;(lhs: MyBool, rhs: MyBool) -&gt; MyBool {
+    if lhs {
+        return rhs
+    }
+    return false
+}
+
+func |(lhs: MyBool, rhs: MyBool) -&gt; MyBool {
+    if lhs {
+        return true
+    }
+    return rhs
+}
+
+func ^(lhs: MyBool, rhs: MyBool) -&gt; MyBool {
+    return MyBool(lhs != rhs)
+}
+</code></pre><p>有了基本的运算符后，我们就可以实现各种有用的一元和复合赋值运算符，比如：</p>
+<pre><code>prefix func !(a: MyBool) -&gt; MyBool {
+    return a ^ true
+}
+
+// 复合赋值（按位）
+func &amp;=(inout lhs: MyBool, rhs: MyBool) {
+    lhs = lhs &amp; rhs
+}
+</code></pre><p><code>&amp;=</code>运算符将左边的运算对象作为<code>inout</code>对象，因为要对它进行读写操作，并且其效果对于操作者是可见的。Swift提供的值类型，使我们可以完全掌控丰富多变的各种操作，比如<code>enum</code>和<code>struct</code>。</p>
+<p>至此，简单的<code>MyBool</code>类型已经具备了基本的运算符操作。希望这篇文章能给你一些思路，使你能够在自己的代码中构建更高级更复杂的类型。  </p>
+<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=8" target="_blank" rel="external">Boolean</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/swift-reusable-datasource/" itemprop="url">
                   基于Swift构建可复用的UITableViewDataSource
                 </a>
@@ -1003,253 +1192,11 @@ println(&quot;The number of edits is \(stringToEdit.numberOfEdits)&quot;)
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/gojs-nodes/" itemprop="url">
-                  GOJS教程 -- 如何使用Nodes
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-07-23T00:00:00+08:00" content="2014-07-23">
-              2014-07-23
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/gojs-nodes/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/gojs-nodes/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>你可以自定义节点的样式和行为。</p>
-<h2 id="u5E38_u89C4_u8282_u70B9"><a href="#u5E38_u89C4_u8282_u70B9" class="headerlink" title="常规节点"></a>常规节点</h2><h3 id="u7B80_u5355_u7684_u6846_u56FE_u8282_u70B9"><a href="#u7B80_u5355_u7684_u6846_u56FE_u8282_u70B9" class="headerlink" title="简单的框图节点"></a>简单的框图节点</h3><p>大多数情况下，我们的节点都是一个框包含着文本信息（<code>TextBlock</code>），并且将排列属性设置为<code>Panel.Auto</code>。</p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  $(go.Shape, &quot;Rectangle&quot;,
-    new go.Binding(&quot;fill&quot;, &quot;color&quot;)),
-  $(go.TextBlock,
-    { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.model.nodeDataArray = [
-    { key: &quot;Alpha&quot;, color: &quot;lightblue&quot; }
-];
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node1.jpg" alt="node"></p>
-<h3 id="u5176_u4ED6_u5F62_u72B6_u7684_u6846_u56FE_u8282_u70B9"><a href="#u5176_u4ED6_u5F62_u72B6_u7684_u6846_u56FE_u8282_u70B9" class="headerlink" title="其他形状的框图节点"></a>其他形状的框图节点</h3><p>下面的例子中展示其他几种形状的框图：</p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  $(go.Shape,
-    new go.Binding(&quot;figure&quot;, &quot;fig&quot;),
-    new go.Binding(&quot;fill&quot;, &quot;color&quot;)),
-  $(go.TextBlock,
-    { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.model.nodeDataArray = [
-    { key: &quot;Alpha&quot;, color: &quot;lightblue&quot;, fig: &quot;RoundedRectangle&quot; },
-    { key: &quot;Beta&quot;, color: &quot;lightblue&quot;, fig: &quot;Ellipse&quot; },
-    { key: &quot;Gamma&quot;, color: &quot;lightblue&quot;, fig: &quot;Hexagon&quot; },
-    { key: &quot;Delta&quot;, color: &quot;lightblue&quot;, fig: &quot;FramedRectangle&quot; },
-    { key: &quot;Epsilon&quot;, color: &quot;lightblue&quot;, fig: &quot;Cloud&quot; },
-    { key: &quot;Zeta&quot;, color: &quot;lightblue&quot;, fig: &quot;Procedure&quot; }
-];
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node2.jpg" alt="node"></p>
-<h3 id="u8F83_u590D_u6742_u7684_u6846_u56FE_u8282_u70B9"><a href="#u8F83_u590D_u6742_u7684_u6846_u56FE_u8282_u70B9" class="headerlink" title="较复杂的框图节点"></a>较复杂的框图节点</h3><p>一个排列参数设置为<code>Panel.Auto</code>的节点中，你不必将<code>TextBlock</code>局限为一个，你可以根据情况自行组合<code>Panel</code>对象。下面的例子中就使用<code>TablePanel</code>包含了多个<code>TextBlock</code>。</p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  $(go.Shape,
-    { fill: $(go.Brush, go.Brush.Linear, { 0: &quot;white&quot;, 1: &quot;lightblue&quot; }),
-      stroke: &quot;darkblue&quot;, strokeWidth: 2 }),
-  $(go.Panel, &quot;Table&quot;,
-    { defaultAlignment: go.Spot.Left, margin: 4 },
-    $(go.RowColumnDefinition, { column: 1, width: 4 }),
-    $(go.TextBlock,
-      { row: 0, column: 0, columnSpan: 3, alignment: go.Spot.Center },
-      { font: &quot;bold 12pt sans-serif&quot; },
-      new go.Binding(&quot;text&quot;, &quot;key&quot;)),
-    $(go.TextBlock, &quot;First: &quot;,
-      { row: 1, column: 0 }),
-    $(go.TextBlock,
-      { row: 1, column: 2 },
-      new go.Binding(&quot;text&quot;, &quot;prop1&quot;)),
-    $(go.TextBlock, &quot;Second: &quot;,
-      { row: 2, column: 0 }),
-    $(go.TextBlock,
-      { row: 2, column: 2 },
-      new go.Binding(&quot;text&quot;, &quot;prop2&quot;))
-  )
-);
-
-diagram.model.nodeDataArray = [
-    { key: &quot;Alpha&quot;, prop1: &quot;value of &apos;prop1&apos;&quot;, prop2: &quot;the other property&quot; }
-];
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node3.jpg" alt="node"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u7B80_u5355_u7EC4_u5408_u8282_u70B9"><a href="#u7B80_u5355_u7EC4_u5408_u8282_u70B9" class="headerlink" title="简单组合节点"></a>简单组合节点</h2><h3 id="u56FE_u6807_u8282_u70B9"><a href="#u56FE_u6807_u8282_u70B9" class="headerlink" title="图标节点"></a>图标节点</h3><p>像下面例子这种的节点，一般元素的排列属性都设置为<code>Panel.Vertical</code>，也就是说上面是图，下面是文字信息。</p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Vertical&quot;,
-  $(go.Picture,
-    { maxSize: new go.Size(50, 50) },
-    new go.Binding(&quot;source&quot;, &quot;img&quot;)),
-  $(go.TextBlock,
-    { margin: new go.Margin(3, 0, 0, 0),
-      maxSize: new go.Size(100, 30),
-      editable: true, isMultiline: false },
-    new go.Binding(&quot;text&quot;, &quot;text&quot;))
-);
-
-diagram.model.nodeDataArray = [
-    { text: &quot;kitten&quot;, img: &quot;images/50x40.png&quot; }
-];
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node4.jpg" alt="node"></p>
-<h3 id="u5C0F_u56FE_u6807_u8282_u70B9"><a href="#u5C0F_u56FE_u6807_u8282_u70B9" class="headerlink" title="小图标节点"></a>小图标节点</h3><p>一般这种节点元素的排列属性为<code>Panel.Horizontal</code>，水平排列，就是左边是图，右边是文字信息。</p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Horizontal&quot;,
-  $(go.Picture,
-    { maxSize: new go.Size(16, 16) },
-    new go.Binding(&quot;source&quot;, &quot;img&quot;)),
-  $(go.TextBlock,
-    { margin: new go.Margin(0, 0, 0, 2) },
-    new go.Binding(&quot;text&quot;, &quot;text&quot;))
-);
-
-diagram.model.nodeDataArray = [
-    { text: &quot;kitten&quot;, img: &quot;images/50x40.png&quot; }
-];
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node5.jpg" alt="node"></p>
-<h2 id="u590D_u6742_u7EC4_u5408_u8282_u70B9"><a href="#u590D_u6742_u7EC4_u5408_u8282_u70B9" class="headerlink" title="复杂组合节点"></a>复杂组合节点</h2><p>有时候，你需要在节点中展示更多的信息。那么我们就需要将元素排列属性设置为<code>Panel.Spot</code>，这个属性的意思就是<code>Node</code>里的元素都排列在这个<code>Node</code>中的各个锚点上。</p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Spot&quot;,
-  // the main content:
-  $(go.Panel, &quot;Vertical&quot;,
-    $(go.Picture,
-      { maxSize: new go.Size(50, 50) },
-      new go.Binding(&quot;source&quot;, &quot;img&quot;)),
-    $(go.TextBlock,
-      { margin: new go.Margin(3, 0, 0, 0) },
-      new go.Binding(&quot;text&quot;, &quot;text&quot;),
-      new go.Binding(&quot;stroke&quot;, &quot;error&quot;, function(err) { return err ? &quot;red&quot; : &quot;black&quot; }))
-  ),
-  // decorations:
-  $(go.Shape, &quot;TriangleUp&quot;,
-    { alignment: go.Spot.TopLeft,
-      fill: &quot;yellow&quot;, width: 14, height: 14,
-      visible: false },
-    new go.Binding(&quot;visible&quot;, &quot;info&quot;, function(i) { return i ? true : false; })),
-  $(go.Shape, &quot;StopSign&quot;,
-    { alignment: go.Spot.TopRight,
-      fill: &quot;red&quot;, width: 14, height: 14,
-      visible: false },
-    new go.Binding(&quot;visible&quot;, &quot;error&quot;)),
-  {
-    toolTip:
-      $(go.Adornment, &quot;Auto&quot;,
-        $(go.Shape, { fill: &quot;#FFFFCC&quot; },
-          new go.Binding(&quot;visible&quot;, &quot;info&quot;, function(i) { return i ? true : false; })),
-        $(go.TextBlock, { margin: 4 },
-          new go.Binding(&quot;text&quot;, &quot;info&quot;))
-      )
-  }
-);
-
-diagram.model.nodeDataArray = [
-    { text: &quot;kitten&quot;, img: &quot;images/50x40.png&quot;, info: &quot;&quot; },
-    { text: &quot;kitten&quot;, img: &quot;images/50x40.png&quot;, error: true, info: &quot;shredded curtains&quot; }
-];
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node6.jpg" alt="node"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1287,7 +1234,7 @@ diagram.model.nodeDataArray = [
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">85</span>
+              <span class="site-state-item-count">86</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

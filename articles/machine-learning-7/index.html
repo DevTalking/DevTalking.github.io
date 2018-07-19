@@ -1,0 +1,961 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+在机器学习的实际使用中，我们都希望有足够多的样本数据，并且有足够的特征来训练我们的模型，所以高维特征数据是经常会用到的，但是高维特征数据同样会带来一些问题：
+
+机器学习算法收敛速度下降。
+特征难于分辨，很难第一时间认识某个特征代表的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记七之主成分分析法（PCA）、人脸识别应用">
+<meta property="og:url" content="http://www.devtalking.com/articles/machine-learning-7/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+在机器学习的实际使用中，我们都希望有足够多的样本数据，并且有足够的特征来训练我们的模型，所以高维特征数据是经常会用到的，但是高维特征数据同样会带来一些问题：
+
+机器学习算法收敛速度下降。
+特征难于分辨，很难第一时间认识某个特征代表的">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/96db7d87e7af97e05b630366cc02bcf1.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/b51d7ec017736d4f47fb7e836c33f074.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/aa709dfbb796ada2b6b6dae9d0d43d64.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/0525efddb7f229a87f9b6443cd26dd8a.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/383a2da3f194b61833471f52e29ed96c.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/e01e7bb0d5bbec7f7d1b4207d4378acb.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/f32ca27448cba21bd998cc340a256122.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/69c624ca541ae98c6bc93edaa8acebe7.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/2f981772960cac65e9bd92c0d2730498.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/cdc274aa080990d956209bd63ce14494.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/76a44ae0d563f682721b8b41e409a5a0.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/7cfee67ba1e669c885ba225245afe591.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/c746273510d90c4aa181718a637a4b43.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/c71f5704cc9ae4e706af966ad3800b46.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/cc4530b8fc647677b84b0396c36c6322.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/aed715f032be849f502a12923db1f792.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/8a165d8efeeeef3e03b63029fff2d00f.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/fe52449ca67f5e31a9635a263892f689.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/410019ede0a6862e2963c3f98992fe2c.jpg">
+<meta property="og:updated_time" content="2018-07-19T07:12:09.460Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记七之主成分分析法（PCA）、人脸识别应用">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+在机器学习的实际使用中，我们都希望有足够多的样本数据，并且有足够的特征来训练我们的模型，所以高维特征数据是经常会用到的，但是高维特征数据同样会带来一些问题：
+
+机器学习算法收敛速度下降。
+特征难于分辨，很难第一时间认识某个特征代表的">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 机器学习笔记七之主成分分析法（PCA）、人脸识别应用 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                机器学习笔记七之主成分分析法（PCA）、人脸识别应用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-02-27T00:00:00+08:00" content="2018-02-27">
+              2018-02-27
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-7/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-7/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>在机器学习的实际使用中，我们都希望有足够多的样本数据，并且有足够的特征来训练我们的模型，所以高维特征数据是经常会用到的，但是高维特征数据同样会带来一些问题：</p>
+<ul>
+<li>机器学习算法收敛速度下降。</li>
+<li>特征难于分辨，很难第一时间认识某个特征代表的意义。</li>
+<li>会产生冗余特征，增加模型训练难度，比如说某一品牌型号汽车的特征数据，有从中国采集的，也有从国外采集的，那么就会产生公里/小时和英里/小时这种特征，但其实这两个特征代表的意义是一样的。</li>
+<li>无法通过可视化对训练数据进行综合分析。</li>
+</ul>
+<p>以上问题都是高维特征数据带来的普遍问题，所以将高维特征数据降为低维特征数据就很重要了。这篇笔记主要讲解机器学习中经常用到的降维算法PCA。</p>
+<p>PCA是英文Principle Component Analysis的缩写，既主成分分析法。该算法能从冗余特征中提取主要成分，在不太损失模型质量的情况下，提升了模型训练速度。</p>
+<h2 id="u7406_u89E3PCA_u7B97_u6CD5_u964D_u7EF4_u7684_u539F_u7406"><a href="#u7406_u89E3PCA_u7B97_u6CD5_u964D_u7EF4_u7684_u539F_u7406" class="headerlink" title="理解PCA算法降维的原理"></a>理解PCA算法降维的原理</h2><p><img src="http://paxigrdp0.bkt.clouddn.com/96db7d87e7af97e05b630366cc02bcf1.jpg" alt=""></p>
+<p>我们从二维降一维的场景来理解PCA降维的原理。上面的图示显示了一个二维的特征坐标，横坐标是特征1，纵座标是特征2。图中的五个点就表示了五条特征数据。我们先来想一下最简单粗暴的降维方式就是丢弃掉其中一个特征。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/b51d7ec017736d4f47fb7e836c33f074.jpg" alt=""></p>
+<p>如上图中显示，将特征2抛弃，这里大家先注意一下这五个点落在特征1轴上的间距。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/aa709dfbb796ada2b6b6dae9d0d43d64.jpg" alt=""></p>
+<p>或者如上图所示抛弃特征1，大家再注意一下这五个点落在特征2轴上的间距。能很明显的发现，抛弃特征2，落在特征1轴上的五个点之间间距比较大，并且分布均匀。而抛弃特征1，落在特征2轴上的五个点之间间距大多都比较小，并且分布不均匀。</p>
+<p>就这两种简单粗暴的降维方式而言，哪种更好一些呢？这里我们先来看看方差的概念，方差描述的是随机数据的离散程度，也就是离期望值（不严谨的说，期望值等同于均值）的距离。所以方差越大，数据的离散程度越高，约分散，离均值的距离越大。方差越小，数据的离散程度越小，约聚合，离均值的距离约小。那么大家可以想想作为机器学习算法训练的样本数据，每组特征应该尽可能的全，在该特征的合理范围内尽可能的广，这样才能更高的代表真实性，也就是每组特征数据的方差应该尽可能的大才好。所以就上面两种情况来看，抛弃特征2的降维方式更好一些。</p>
+<a id="more"></a>
+<p>但是简单粗暴的完全丢弃一个特征自然是不合理的，这极大的影响了训练出模型的正确性。所以，按照方差最大的理论，我们应该再找到一个特征向量，使样本数据落在这个特征向量后的方差最大，那么这个特征向量代表的特征就是我们需要的降维后的特征。这就是支撑PCA算法的理论之一。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/0525efddb7f229a87f9b6443cd26dd8a.jpg" alt=""></p>
+<p>如上图所示，降维后的特征方差明显大于抛弃特征1或抛弃特征2后的方差。</p>
+<p>我们在使用PCA之前首先需要对样本数据进行特征去均值化，也就是将每个特征的值减去该维特征的平均值。去均值化的目的是去除均值对数据变化的影响，也就是避免第一主成分收到均值的影响。</p>
+<p>在第二篇笔记中，我们提到过方差，它的公式为：<br>$$ Var(X) = \frac{\sum_{i=1}^m(X_i-\overline X)^2} m $$</p>
+<p>那么当数据去均值化后，公式中的$\overline X$就成了0，所以去均值后的方差为：<br>$$ Var(X) = \frac{\sum_{i=1}^mX_i^2} m $$</p>
+<p>此时$X_i$就是降维后的特征，我们记为$X_p^{(i)}$，那么降维后特征值的方差公式为：<br>$$ Var(X<em>p) = \frac{\sum</em>{i=1}^m (X_p^{(i)})^2} m $$</p>
+<p>因为在高维特征下，$X^{(i)}$和$X_p^{(i)}$都是向量，所以求方差时候应该对他们取模：<br>$$ Var(X<em>p) = \frac{\sum</em>{i=1}^m ||X_p^{(i)}||^2} m $$</p>
+<p>所以我们就是要求上面这个公式的最大值。那么首先如何求得这个$X_p^{(i)}$<br>呢？我们来具体看一下：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/383a2da3f194b61833471f52e29ed96c.jpg" alt=""></p>
+<p>如上图所示，蓝色向量是特征值原始维度的向量，$w$黑色向量就是我们要寻求的新维度的向量，绿色的点就是蓝色点在新维度上的投影点，红色向量的长度就是投影点的特征值。下面我们先来看看初高中数学中学过的知识。</p>
+<p>首先向量的点乘有代数定义，也有几何定义。在几何定义下，两个向量的点乘为这两个向量的长度相乘，再乘以这两个向量夹角的余弦：<br>$$ \vec{a} \cdot \vec{b} = |\vec{a}| \, |\vec{b}| \cos \theta $$</p>
+<p>所以从上图来看：<br>$$X^{(i)} \cdot w=||X^{(i)}|| \cdot ||w|| \cdot \cos \theta$$</p>
+<p>因为我们需要的$w$只是方向，所以它可以是一个方向向量，既长度为1，所以上面的公式就变为：<br>$$X^{(i)} \cdot w=||X^{(i)}||\cdot \cos \theta$$</p>
+<p>然后由三角函数可知，夹角的余弦等于邻边除以斜边。上图中$\theta$角的斜边就是$||X^{(i)}||$，邻边就是$||X_p^{(i)}||$，所以：<br>$$||X_p^{(i)}||=||X^{(i)}|| \cdot \cos \theta$$</p>
+<p>此时我们就知道了，我们要求得的红色向量的长度，既：<br>$$||X_p^{(i)}||=X^{(i)} \cdot w$$</p>
+<p>代入上面的方差公式为：<br>$$ Var(X<em>p) = \frac{\sum</em>{i=1}^m ||X^{(i)} \cdot w||^2} m $$</p>
+<p>因为两个向量的点乘是一个标量，所以最终公式为：<br>$$ Var(X<em>p) = \frac{\sum</em>{i=1}^m (X^{(i)} \cdot w)^2} m $$</p>
+<p>那么我们的目标就是求$w$向量，使得上面的这个公式最大。上一篇笔记我们讲了用梯度下降法求函数极小值，那么这里我们就要用到梯度上升法求函数的极大值。</p>
+<h2 id="u4F7F_u7528_u68AF_u5EA6_u4E0A_u5347_u6CD5_u89E3_u51B3_u4E3B_u6210_u5206_u5206_u6790_u95EE_u9898"><a href="#u4F7F_u7528_u68AF_u5EA6_u4E0A_u5347_u6CD5_u89E3_u51B3_u4E3B_u6210_u5206_u5206_u6790_u95EE_u9898" class="headerlink" title="使用梯度上升法解决主成分分析问题"></a>使用梯度上升法解决主成分分析问题</h2><p>我们先将上面的公式展开（w是一个列向量）：<br>$$ Var(X<em>p) = \frac{\sum</em>{i=1}^m (X^{(i)} \cdot w)^2} m\<br>=\frac 1 m \sum_{i=1}^m(X_1^{(i)}w_1+X_2^{(i)}w_2+…+X_n^{(i)}w_n)^2$$</p>
+<p>既然是梯度上升，那么第一步当然是求梯度了，这和梯度下降是一样的，结合第五篇笔记中的梯度推导可得，上面公式的梯度为：<br>$$ \nabla f(w) = \begin{bmatrix}<br> \frac {\partial L}{\partial w_1}\<br> \frac {\partial L}{\partial w_2}\<br> …\<br> \frac {\partial L}{\partial w<em>n}\<br>\end{bmatrix} =\frac 2 m\begin{bmatrix}<br>\sum</em>{i=1}^m 2(X^{(i)}w)X<em>1^{(i)}\<br>\sum</em>{i=1}^m 2(X^{(i)}w)X<em>2^{(i)}\<br>…\<br>\sum</em>{i=1}^m 2(X^{(i)}w)X_n^{(i)}\<br> \end{bmatrix}$$</p>
+<p>下面对上面的公式再进行向量化，这里我再推导一遍，首先我们将$X^{(i)}w$看成是一个1行m列的行矩阵中的元素：<br>$$\begin{bmatrix}X^{(1)}w&amp; X^{(2)}w&amp; X^{(3)}w&amp; … &amp;X^{(m)}w)\end{bmatrix}$$</p>
+<p>然后将它和一个m行n列的矩阵相乘：<br>$$\begin{bmatrix}X^{(1)}w&amp; X^{(2)}w&amp; X^{(3)}w&amp; … &amp;X^{(m)}w)\end{bmatrix}\<br>\cdot \begin{bmatrix}<br>X_1^{(1)}&amp; X_2^{(1)}&amp; X_3^{(1)}&amp; … &amp;X_n^{(1)}\<br>X_1^{(2)}&amp; X_2^{(2)}&amp; X_3^{(2)}&amp; … &amp;X_n^{(2)}\<br>X_1^{(3)}&amp; X_2^{(3)}&amp; X_3^{(3)}&amp; … &amp;X_n^{(3)}\<br>…\<br>X_1^{(m)}&amp; X_2^{(m)}&amp; X_3^{(m)}&amp; … &amp;X_n^{(m)}\<br> \end{bmatrix}$$</p>
+<p>因为X是一个m行n列矩阵，w是一个n行1列的矩阵，所以X乘w是一个m行1列的矩阵，上面我们将其转换为了1行m列的矩阵，所以上面的公式简写为$(Xw)^TX$，相乘后的结果是一个1行n列的矩阵：<br>$$(Xw)^TX=\begin{bmatrix}\sum_{i=1}^m(X^{(i)}w)X<em>1^{(i)}&amp; \sum</em>{i=1}^m(X^{(i)}w)X<em>2^{(i)}&amp; …&amp; \sum</em>{i=1}^m(X^{(i)}w)X_n^{(i)} \end{bmatrix}$$</p>
+<p>那我们的梯度是一个n行1列的矩阵，所以将上面的矩阵再做转置：<br>$$((Xw)^TX)^T=X^T(Xw)$$</p>
+<p>所以最终主成分分析的梯度向量化后为：<br>$$\nabla f = \frac 2 m X^T(Xw)$$</p>
+<h3 id="u4EE3_u7801_u5B9E_u73B0PCA_u68AF_u5EA6_u4E0A_u5347"><a href="#u4EE3_u7801_u5B9E_u73B0PCA_u68AF_u5EA6_u4E0A_u5347" class="headerlink" title="代码实现PCA梯度上升"></a>代码实现PCA梯度上升</h3><p>首先我们构建样本数据，其中有100条样本数据，每条样本数据中有2个特征：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建样本数据</span></span><br><span class="line"><span class="comment"># 构建一个100行2列的矩阵</span></span><br><span class="line">X = np.empty((<span class="number">100</span>, <span class="number">2</span>))</span><br><span class="line"><span class="comment"># 第一个特征为0到100的随机分布</span></span><br><span class="line">X[:, <span class="number">0</span>] = np.random.uniform(<span class="number">0.</span>, <span class="number">100.</span>, size=<span class="number">100</span>)</span><br><span class="line"><span class="comment"># 第二个特征和第一个特征有一定线性关系，并且增加了0到10的正态分布的噪音</span></span><br><span class="line">X[:, <span class="number">1</span>] = X[:, <span class="number">0</span>] * <span class="number">0.75</span> + <span class="number">3.</span> + np.random.normal(<span class="number">0</span>, <span class="number">10</span>, size=<span class="number">100</span>)</span><br><span class="line"><span class="comment"># 将特征绘制出来</span></span><br><span class="line">plt.scatter(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/e01e7bb0d5bbec7f7d1b4207d4378acb.jpg" alt=""></p>
+<p>接下来根据上文中讲到呃，下一步要对样本数据的每一个特征进行均值归0操作，也就是每一列的元素减去这一列所有元素的均值：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">demean</span><span class="params">(X)</span>:</span></span><br><span class="line">	<span class="comment"># 对矩阵X在横轴方向上求均值，既求每一列的均值</span></span><br><span class="line">	<span class="keyword">return</span> X - np.mean(X, axis=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 均值归0化后的样本数据    </span></span><br><span class="line">X_demean = demean(X)</span><br><span class="line"></span><br><span class="line">plt.scatter(X_demean[:, <span class="number">0</span>], X_demean[:, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/f32ca27448cba21bd998cc340a256122.jpg" alt=""></p>
+<p>可以看到均值归0化后，样本数据的分布形态是没有变化的，但是坐标轴往右上移动了，既0点现在在样本数据的中间。下面来定义目标函数和梯度函数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 目标函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(X, w)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> np.sum(X.dot(w)**<span class="number">2</span>) / len(X)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 梯度函数    </span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">df</span><span class="params">(X, w)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> X.T.dot(X.dot(x)) / <span class="number">2</span> * len(X)</span><br></pre></td></tr></table></figure>
+<p>在上面的公式推导的过程中提到过，我们期望的向量$w$是一个单位向量，所以在代码实现计算的时候需要将传入的初始向量$w$和计算后的新$w$向量都转换为单位向量（向量的单位向量为该向量除以该向量的模）：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">direction</span><span class="params">(w)</span>:</span></span><br><span class="line">	<span class="comment"># np.linalg.norm(w)为求向量的模</span></span><br><span class="line">	<span class="keyword">return</span> w / np.linalg.norm(w)</span><br></pre></td></tr></table></figure>
+<p>接下来的梯度上升计算和梯度下降计算基本是大同小异的：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 参数传入样本矩阵，初始向量，步长，查找循环次数，两次方差的最小差值</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient_ascent</span><span class="params">(X, initial_w, eta, n_iters=<span class="number">1e4</span>, different=<span class="number">1e-8</span>)</span>:</span></span><br><span class="line">	<span class="comment"># 将向量转换为单位向量</span></span><br><span class="line">	w = direction(initial_w)</span><br><span class="line">	i_iters = <span class="number">0</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">while</span> i_iters &lt; n_iters:</span><br><span class="line">		gradient = df(X, w)</span><br><span class="line">		last_w = w</span><br><span class="line">		w = w + eta * gradient</span><br><span class="line">		w = direction(w)</span><br><span class="line">		<span class="keyword">if</span>(abs(f(X, w) - f(X, last_w)) &lt; different):</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">			</span><br><span class="line">		i_iters += <span class="number">1</span></span><br><span class="line">		</span><br><span class="line">	<span class="keyword">return</span> w</span><br></pre></td></tr></table></figure>
+<p>在使用我们定义的方法前，有两点需要注意的是，一点是在PCA中，初始向量$w$不能为0，因为方差公式里$w$在分子，所以如果为0了，那么方差始终为0，所以每次我们随机初始化一个不为0的向量。另外一点是在PCA中我们不对样本数据做归一化或标准化处理，因为一旦做了归一化处理，样本数据的方差就变成了1，自然求不到最大方差了。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 初始化随机向量</span></span><br><span class="line">initial_w = np.random.random(X.shape[<span class="number">1</span>])</span><br><span class="line"><span class="comment"># 设置步长</span></span><br><span class="line">eta = <span class="number">0.01</span></span><br><span class="line"><span class="comment"># 梯度上升</span></span><br><span class="line">w = gradient_ascent(X_demean, initial_w, eta)</span><br><span class="line"><span class="comment"># 绘制w向量</span></span><br><span class="line">plt.scatter(X_demean[:, <span class="number">0</span>], X_demean[:, <span class="number">1</span>])</span><br><span class="line">plt.plot([<span class="number">0</span>, w[<span class="number">0</span>]*<span class="number">30</span>], [<span class="number">0</span>, w[<span class="number">1</span>]*<span class="number">30</span>], color=<span class="string">'r'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/69c624ca541ae98c6bc93edaa8acebe7.jpg" alt=""></p>
+<p>这样我们就求出了样本数据的第一个降维到的向量，我们称为样本的第一主成分。</p>
+<h3 id="u6C42_u6570_u636E_u7684_u5176_u4ED6_u4E3B_u6210_u5206"><a href="#u6C42_u6570_u636E_u7684_u5176_u4ED6_u4E3B_u6210_u5206" class="headerlink" title="求数据的其他主成分"></a>求数据的其他主成分</h3><p>在上节中我们使用的样本数据是在二维空间的，求出的第一主成分其实可以看作是将坐标轴旋转后横轴或纵轴，我们降维后的数据其实是新的坐标轴上某个轴的分量，那么另外一个分量自然是降维到垂直于第一主成分向量的向量，既新坐标轴的另外一个轴。该向量是第一主成分向量的正交线。那么下面我们来看一下第一主成分的正交线如何求：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/2f981772960cac65e9bd92c0d2730498.jpg" alt=""></p>
+<p>从上图可以看到，$X^{‘(i)}$就是第一主成分向量$w$的正交线，由向量的加减法可得：</p>
+<p>$$X^{‘(i)}=X^{(i)}-X_p^{(i)}$$</p>
+<p>因为上文推导过：</p>
+<p>$$X_p^{(i)}=||X_p^{(i)}|| w$$</p>
+<p>$$||X_p^{(i)}||=X^{(i)} \cdot w$$</p>
+<p>所以得：</p>
+<p>$$X^{‘(i)}=X^{(i)}-(X^{(i)} \cdot w)w $$</p>
+<p>这就相当于原始样本数据减去投影到第一主成分上的数据，我们对去掉第一主成分数据的样本数据再求第一主成分数据，那么就相当于在求原始样本数据的第二主成分了，以此类推就可以求得样本数据的n个主成分。</p>
+<p>下面我们来用代码实现，首先我们算出样本数据在新坐标轴上的另一个分量，根据上面推导出的公式可得：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X2 = X - X.dot(w).reshape(-<span class="number">1</span>, <span class="number">1</span>) * w</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制X2及第一主成分向量w</span></span><br><span class="line">plt.scatter(X2[:, <span class="number">0</span>], X2[:, <span class="number">1</span>])</span><br><span class="line">plt.plot([<span class="number">0</span>, w[<span class="number">0</span>]*<span class="number">30</span>], [<span class="number">0</span>, w[<span class="number">1</span>]*<span class="number">30</span>], color=<span class="string">'r'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/cdc274aa080990d956209bd63ce14494.jpg" alt=""></p>
+<p>首先可以看到，当样本数据去掉第一主成分数据后，另一个分量的数据其实就是在正交于第一主成分向量的轴上，所以所有点都在一条直线上。</p>
+<p>然后将之前的<code>gradient_ascent</code>方法改个名称，因为它就是求第一主成分的方法，所以改名为<code>first_component</code>，然后求出<code>X2</code>的第一主成分：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">first_component</span><span class="params">(X, initial_w, eta, n_iters=<span class="number">1e4</span>, different=<span class="number">1e-8</span>)</span>:</span></span><br><span class="line">	w = direction(initial_w)</span><br><span class="line">	i_iters = <span class="number">0</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">while</span> i_iters &lt; n_iters:</span><br><span class="line">		gradient = df(X, w)</span><br><span class="line">		last_w = w</span><br><span class="line">		w = w + eta * gradient</span><br><span class="line">		w = direction(w)</span><br><span class="line">		<span class="keyword">if</span>(abs(f(X, w) - f(X, last_w)) &lt; different):</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">			</span><br><span class="line">		i_iters += <span class="number">1</span></span><br><span class="line">		</span><br><span class="line">	<span class="keyword">return</span> w</span><br><span class="line">	</span><br><span class="line">w2 = first_component(X2, initial_w, eta)</span><br></pre></td></tr></table></figure>
+<p>由向量的正交定理知道，垂直的向量点乘结果为0，所以我们来验证一下<code>w</code>和<code>w2</code>之间的点乘结果：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">w.dot(w2)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">3.2666630511712924e-10</span></span><br></pre></td></tr></table></figure>
+<p>可以看到结果基于趋近于0。</p>
+<p>下面我们封装一个计算n个主成分的方法：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">first_n_component</span><span class="params">(n, X, eta=<span class="number">0.01</span>, n_iters=<span class="number">1e4</span>, different=<span class="number">1e-8</span>)</span>:</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 拷贝原始样本数据</span></span><br><span class="line">	X_pca = X.copy()</span><br><span class="line">	<span class="comment"># 对样本数据进行均值归一化</span></span><br><span class="line">	X_pca = demean(X_pca)</span><br><span class="line">	<span class="comment"># 存储结果数组</span></span><br><span class="line">	res = []</span><br><span class="line">	<span class="comment"># 希望计算几个主成分就循环几次</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">		<span class="comment"># 每次随机一个初始向量</span></span><br><span class="line">		initial_w = np.random.random(X_pca.shape[<span class="number">1</span>])</span><br><span class="line">		<span class="comment"># 通过获取主成分方法计算出主成分向量</span></span><br><span class="line">		w = first_component(X_pca, initial_w, eta)</span><br><span class="line">		res.append(w)</span><br><span class="line">		</span><br><span class="line">		<span class="comment"># 每次从原始样本数据中除去主成分数据</span></span><br><span class="line">		X_pca = X_pca - X_pca.dot(w).reshape(-<span class="number">1</span>, <span class="number">1</span>) * w</span><br><span class="line">		</span><br><span class="line">	<span class="keyword">return</span> res</span><br><span class="line">	</span><br><span class="line">first_n_component(<span class="number">2</span>, X)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">[array([ <span class="number">0.77899988</span>,  <span class="number">0.62702407</span>]), array([-<span class="number">0.62702407</span>,  <span class="number">0.77899988</span>])]</span><br></pre></td></tr></table></figure>
+<h2 id="u9AD8_u7EF4_u6570_u636E_u5411_u4F4E_u7EF4_u6570_u636E_u6620_u5C04"><a href="#u9AD8_u7EF4_u6570_u636E_u5411_u4F4E_u7EF4_u6570_u636E_u6620_u5C04" class="headerlink" title="高维数据向低维数据映射"></a>高维数据向低维数据映射</h2><p>我们再来回顾一下PCA降维的基本原理，首先要做的事情就是对样本数据寻找另外一个坐标系，这个坐标系中的每一个轴依次可以表达样本数据的重要程度，既主成分。我们取出前k个主成分，然后就可以将所有的样本数据映射到这k个轴上，既获得了一个低维的数据信息。</p>
+<p>$$X=\begin{bmatrix}<br>X_1^{(1)}&amp; X_2^{(1)}&amp; … &amp;X_n^{(1)}\<br>X_1^{(2)}&amp; X_2^{(2)}&amp; … &amp;X_n^{(2)}\<br>…\<br>X_1^{(m)}&amp; X_2^{(m)}&amp; … &amp;X_n^{(m)}<br> \end{bmatrix}$$</p>
+<p>上面的$X$是样本数据，该样本数据有m行，n个特征，既是一个n维的样本数据。</p>
+<p>$$W_k=\begin{bmatrix}<br>W_1^{(1)}&amp; W_2^{(1)}&amp; … &amp;W_n^{(1)}\<br>W_1^{(2)}&amp; W_2^{(2)}&amp; … &amp;W_n^{(2)}\<br>…\<br>W_1^{(k)}&amp; W_2^{(k)}&amp; … &amp;W_n^{(k)}\<br>\end{bmatrix}$$</p>
+<p>假设上面的$W$是样本数据$X$的主成分向量矩阵，每一行代表一个主成分向量，一共有k个主成分向量，每个主成分向量上有n个值。</p>
+<p>我们已经推导出了求映射后的向量的大小，也就是每一行样本数据映射到该主成分上的大小为：</p>
+<p>$$||X_p^{(i)}||=X^{(i)} w$$</p>
+<p>那如果将一行有n个特征的样本数据分别映射到k个主成分上，既得到有k个值的新向量，既降维后的，有k个特征的新样本数据。所以我们需要的就是$X$矩阵的第一行和$W$矩阵的每一行对应元素相乘然后再相加，$X$矩阵的第二行和$W$矩阵的每一行对应元素相乘然后再相加，以此类推就可以求出降维后的，m行k列的新矩阵数据：</p>
+<p>$$X^{‘}=XW_k^T$$</p>
+<p>$X^{‘}$就是降维后的数据，既然可以降维，那么我们也可从数学的角度将降维后的数据还原回去。$X^{‘}$是m行k列的矩阵，$W_k$是k行n列的矩阵，所以$X^{‘} W_k$就是还原后的ｍ行ｎ列的原矩阵。那为什么说是从数学角度来说呢，因为毕竟已经从高维降到了低维，那势必会有丢失的数据信息，所以还原回去的数据也不可能和原始数据一样的。</p>
+<h3 id="u5728PyCharm_u4E2D_u5C01_u88C5PCA"><a href="#u5728PyCharm_u4E2D_u5C01_u88C5PCA" class="headerlink" title="在PyCharm中封装PCA"></a>在PyCharm中封装PCA</h3><p>我们在<code>myML</code>中新建一个类<code>PCA</code>：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PCA</span>:</span></span><br><span class="line"></span><br><span class="line">	<span class="comment"># 初始化PCA</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, n_components)</span>:</span></span><br><span class="line">		<span class="keyword">assert</span> n_components &gt;= <span class="number">1</span>, <span class="string">"至少要有一个主成分"</span></span><br><span class="line">		self.n_components = n_components</span><br><span class="line">		self.component_ = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">	<span class="comment"># 训练主成分矩阵</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self, X, eta=<span class="number">0.01</span>, n_iters=<span class="number">1e4</span>)</span>:</span></span><br><span class="line">		<span class="keyword">assert</span> self.n_components &lt;= X.shape[<span class="number">1</span>], <span class="string">"主成分数要小于等于样本数据的特征数"</span></span><br><span class="line"></span><br><span class="line">		<span class="comment"># 均值归一化</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">demean</span><span class="params">(X)</span>:</span></span><br><span class="line">			<span class="keyword">return</span> X - np.mean(X, axis=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">		<span class="comment"># 目标函数</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(w, X)</span>:</span></span><br><span class="line">			<span class="keyword">return</span> np.sum((X.dot(w)**<span class="number">2</span>)) / len(X)</span><br><span class="line">		<span class="comment"># 梯度</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">df</span><span class="params">(w, X)</span>:</span></span><br><span class="line">			<span class="keyword">return</span> (X.T.dot(X.dot(w)) * <span class="number">2</span>) / len(X)</span><br><span class="line"></span><br><span class="line">		<span class="comment"># 求单位向量</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">direction</span><span class="params">(w)</span>:</span></span><br><span class="line">			<span class="keyword">return</span> w / np.linalg.norm(w)</span><br><span class="line"></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">first_component</span><span class="params">(X, initial_w, eta=<span class="number">0.01</span>, n_iters=<span class="number">1e4</span>, different=<span class="number">1e-8</span>)</span>:</span></span><br><span class="line"></span><br><span class="line">			<span class="comment"># 转换初始向量为单位向量，既只表明方向</span></span><br><span class="line">			w = direction(initial_w)</span><br><span class="line">			cur_iters = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">			<span class="keyword">while</span> cur_iters &lt; n_iters:</span><br><span class="line">				<span class="comment"># 求出梯度</span></span><br><span class="line">				gradient = df(w, X)</span><br><span class="line">				<span class="comment"># 记录上一个方向向量</span></span><br><span class="line">				last_w = w</span><br><span class="line">				<span class="comment"># 通过梯度上升求下一个方向向量</span></span><br><span class="line">				w = w + eta * gradient</span><br><span class="line">				<span class="comment"># 将新求出的方向向量单位向量化</span></span><br><span class="line">				w = direction(w)</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span>(abs(f(w, X) - f(last_w, X)) &lt; different):</span><br><span class="line">					<span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">				cur_iters += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">			<span class="keyword">return</span> w</span><br><span class="line"></span><br><span class="line">		<span class="comment"># 对样本数据的特征数据均值归一化</span></span><br><span class="line">		X_pca = demean(X)</span><br><span class="line">		<span class="comment"># 构建一个空的主成分矩阵，大小和样本数据保持一致</span></span><br><span class="line">		self.component_ = np.empty(shape=(self.n_components, X.shape[<span class="number">1</span>]))</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(self.n_components):</span><br><span class="line">			<span class="comment"># 随机生成一个初始向量</span></span><br><span class="line">			initial_w = np.random.random(X_pca.shape[<span class="number">1</span>])</span><br><span class="line">			<span class="comment"># 求第一主成分</span></span><br><span class="line">			w = first_component(X_pca, initial_w, eta, n_iters)</span><br><span class="line">			<span class="comment"># 存储主成分</span></span><br><span class="line">			self.component_[i, :] = w</span><br><span class="line"></span><br><span class="line">			X_pca = X_pca - X_pca.dot(w).reshape(-<span class="number">1</span>, <span class="number">1</span>) * w</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> self</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 根据主成分矩阵降维样本数据</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">transform</span><span class="params">(self, X)</span>:</span></span><br><span class="line">		<span class="keyword">assert</span> X.shape[<span class="number">1</span>] == self.component_.shape[<span class="number">1</span>], <span class="string">"样本数据的列数，既特征数要等于主成分矩阵的列数"</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> X.dot(self.component_.T)</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 根据主成分矩阵还原样本数据</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">inverse_transform</span><span class="params">(self, X_pca)</span>:</span></span><br><span class="line">		<span class="keyword">assert</span> X_pca.shape[<span class="number">1</span>] == self.component_.shape[<span class="number">0</span>], <span class="string">"降维后的样本数据特征数要等于主成分矩阵的行数"</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> X_pca.dot(self.component_)</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></span><br><span class="line">		<span class="keyword">return</span> <span class="string">"PCA(n_components=%d)"</span> % self.n_components</span><br></pre></td></tr></table></figure>
+<h3 id="u5728Jupyter_Notebook_u4E2D_u4F7F_u7528_u5C01_u88C5_u7684PCA"><a href="#u5728Jupyter_Notebook_u4E2D_u4F7F_u7528_u5C01_u88C5_u7684PCA" class="headerlink" title="在Jupyter Notebook中使用封装的PCA"></a>在Jupyter Notebook中使用封装的PCA</h3><p>首先构建样本数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="comment"># 构建样本数据</span></span><br><span class="line"><span class="comment"># 构建一个100行，2列的空矩阵</span></span><br><span class="line">X = np.empty((<span class="number">100</span>, <span class="number">2</span>))</span><br><span class="line"><span class="comment"># 第一个特征为0到100的随机分布</span></span><br><span class="line">X[:, <span class="number">0</span>] = np.random.uniform(<span class="number">0.</span>, <span class="number">100.</span>, size=<span class="number">100</span>)</span><br><span class="line"><span class="comment"># 第二个特征和第一个特征有一定线性关系，并且增加了0到10的正态分布的噪音</span></span><br><span class="line">X[:, <span class="number">1</span>] = X[:, <span class="number">0</span>] * <span class="number">0.75</span> + <span class="number">3.</span> + np.random.normal(<span class="number">0</span>, <span class="number">10.</span>, size=<span class="number">100</span>)</span><br><span class="line"><span class="comment"># 将特征绘制出来</span></span><br><span class="line">plt.scatter(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/76a44ae0d563f682721b8b41e409a5a0.jpg" alt=""></p>
+<p>然后导入我们封装好的PCA类，训练主成分并根据主成分对样本数据降维：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入我们封装的PCA类</span></span><br><span class="line"><span class="keyword">from</span> myML.PCA <span class="keyword">import</span> PCA</span><br><span class="line"><span class="comment"># 初始化PCA类，给定只训练一个主成分</span></span><br><span class="line">pca = PCA(n_components=<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 训练主成分矩阵</span></span><br><span class="line">pca.fit(X)</span><br><span class="line"><span class="comment"># 查看主成分</span></span><br><span class="line">pca.component_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[ <span class="number">0.7756218</span> ,  <span class="number">0.63119792</span>]])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 根据主成分对样本数据进行降维</span></span><br><span class="line">X_reduction = pca.transform(X)</span><br><span class="line"><span class="comment"># 降维后的数据为一个100行1列的矩阵</span></span><br><span class="line">X_reduction.shape</span><br></pre></td></tr></table></figure>
+<p>看到我们非常简单地就把一个二维特征的样本数据根据主成分映射为了一维特征的样本数据。同时我们还可以将其恢复二维特征数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 恢复样本数据维度</span></span><br><span class="line">X_restore = pca.inverse_transform(X_reduction)</span><br><span class="line">X_restore.shape</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">(<span class="number">100</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将原始样本数据和从低维恢复后的样本数据绘制出来进行对比</span></span><br><span class="line">plt.scatter(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X_restore[:, <span class="number">0</span>], X_restore[:, <span class="number">1</span>], color=<span class="string">'r'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/7cfee67ba1e669c885ba225245afe591.jpg" alt=""></p>
+<p>在前面提到过，从高维降到低维就已经有部分信息丢失了，所以再恢复回去后势必不会和原始数据一样。从上图中可以看到，恢复后的二维特征数据其实是在一条直线上，而这条直线其实就是原始样本数据的主成分。</p>
+<h2 id="Scikit_Learn_u4E2D_u7684PCA"><a href="#Scikit_Learn_u4E2D_u7684PCA" class="headerlink" title="Scikit Learn中的PCA"></a>Scikit Learn中的PCA</h2><p>这一节我们来看看Scikit Learn中封装的PCA如何使用，</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="comment"># 构建样本数据</span></span><br><span class="line"><span class="comment"># 构建一个100行，2列的空矩阵</span></span><br><span class="line">X = np.empty((<span class="number">100</span>, <span class="number">2</span>))</span><br><span class="line"><span class="comment"># 第一个特征为0到100的随机分布</span></span><br><span class="line">X[:, <span class="number">0</span>] = np.random.uniform(<span class="number">0.</span>, <span class="number">100.</span>, size=<span class="number">100</span>)</span><br><span class="line"><span class="comment"># 第二个特征和第一个特征有一定线性关系，并且增加了0到10的正态分布的噪音</span></span><br><span class="line">X[:, <span class="number">1</span>] = X[:, <span class="number">0</span>] * <span class="number">0.75</span> + <span class="number">3.</span> + np.random.normal(<span class="number">0</span>, <span class="number">10.</span>, size=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入Scikit Learn中的PCA</span></span><br><span class="line"><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA</span><br><span class="line">pca = PCA(n_components=<span class="number">1</span>)</span><br><span class="line">pca.fit(X)</span><br><span class="line">X_reduction = pca.transform(X)</span><br><span class="line">X_reduction.shape</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">(<span class="number">100</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">X_restore = pca.inverse_transform(X_reduction)</span><br><span class="line">X_restore.shape</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">(<span class="number">100</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">plt.scatter(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X_restore[:, <span class="number">0</span>], X_restore[:, <span class="number">1</span>], color=<span class="string">'r'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/c746273510d90c4aa181718a637a4b43.jpg" alt=""></p>
+<p>可以看到，我们封装PCA类时，使用标准的机器学习算法的模式，所以在使用Scikit Learn提供的PCA时，几乎是一样的。</p>
+<h3 id="u4F7F_u7528_u771F_u5B9E_u7684_u6570_u636E"><a href="#u4F7F_u7528_u771F_u5B9E_u7684_u6570_u636E" class="headerlink" title="使用真实的数据"></a>使用真实的数据</h3><p>这一节我们使用真实的数据来体会一下PCA的威力。我们使用Scikit Learn中提供的手写数字数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">digits = datasets.load_digits()</span><br><span class="line">X = digits.data</span><br><span class="line">y = digits.target</span><br><span class="line">X.shape</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">(<span class="number">1797</span>, <span class="number">64</span>)</span><br></pre></td></tr></table></figure>
+<p>可以看到，Scikit Learn提供的手写数据是一个64维特征的样本数据，一共有1797行，也就是一个1797行，64列的矩阵。</p>
+<p>我们先用KNN分类算法来计算这个样本数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 首先将样本数据拆分为训练数据集和测试数据集</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line">X_train.shape</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">(<span class="number">1347</span>, <span class="number">64</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 然后使用Scikit Learn的KNN算法训练分类模型，</span></span><br><span class="line"><span class="keyword">from</span> sklearn.neighbors <span class="keyword">import</span> KNeighborsClassifier</span><br><span class="line">knn_clf = KNeighborsClassifier()</span><br><span class="line"><span class="comment"># 在训练的时候计一下时</span></span><br><span class="line">%time knn_clf.fit(X_train, y_train)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">CPU times: user <span class="number">4.61</span> ms, sys: <span class="number">3.25</span> ms, total: <span class="number">7.86</span> ms</span><br><span class="line">Wall time: <span class="number">38.1</span> ms</span><br><span class="line">KNeighborsClassifier(algorithm=<span class="string">'auto'</span>, leaf_size=<span class="number">30</span>, metric=<span class="string">'minkowski'</span>, metric_params=<span class="keyword">None</span>, n_jobs=<span class="number">1</span>, n_neighbors=<span class="number">5</span>, p=<span class="number">2</span>, weights=<span class="string">'uniform'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看分类准确率</span></span><br><span class="line">knn_clf.score(X_test, y_test)</span><br><span class="line"><span class="comment"># 0.98666666666666669</span></span><br></pre></td></tr></table></figure>
+<p>从上面的代码可以看出，使用KNN算法对样本数据进行训练时通过网格搜索的邻近点为5个，使用了明可夫斯基距离，但是<code>p</code>是2，所以其实还是欧拉距离，并且没有使用距离权重。训练后的分类准确率为98.7%，在我的电脑上耗时38.1毫秒。</p>
+<p>下面我们先简单粗暴的将这个64维特征的样本数据降至2维特征数据，然后再用KNN算法训练一下看看情况：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用Scikit Learn提供的PCA</span></span><br><span class="line"><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA</span><br><span class="line"><span class="comment"># 设置主成分为2</span></span><br><span class="line">pca = PCA(n_components=<span class="number">2</span>)</span><br><span class="line">pca.fit(X_train)</span><br><span class="line"><span class="comment"># 将训练数据和测试数据分别降至2维</span></span><br><span class="line">X_train_reduction = pca.transform(X_train)</span><br><span class="line">X_test_reduction = pca.transform(X_test)</span><br><span class="line">X_train_reduction.shape</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">(<span class="number">1347</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对降维后的数据进行KNN分类训练</span></span><br><span class="line">knn_clf = KNeighborsClassifier()</span><br><span class="line">%time knn_clf.fit(X_train_reduction, y_train)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">CPU times: user <span class="number">1.75</span> ms, sys: <span class="number">1.02</span> ms, total: <span class="number">2.77</span> ms</span><br><span class="line">Wall time: <span class="number">1.77</span> ms</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看分类准确率</span></span><br><span class="line">knn_clf.score(X_test_reduction, y_test)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.60666666666666669</span></span><br></pre></td></tr></table></figure>
+<p>从上面的代码和结果可以看到，首先使用KNN算法训练的耗时从64维时的38.1毫秒降至了1.77毫秒，所以这验证了PCA降维的其中的减少计算时间的作用。但是当我们查看分类准确率的时候发现非常低，所以说明我们降维度的降的太低，丢失了太多的数据信息。那么PCA中的超参数<code>n_components</code>应该如何取呢？其实Scikit Learn的PCA提供了一个方法就是可以计算出每个主成分代表的方差比率：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pca.explained_variance_ratio_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([ <span class="number">0.14566817</span>,  <span class="number">0.13735469</span>])</span><br></pre></td></tr></table></figure>
+<p>比如通过<code>explained_variance_ratio_</code>我们可以知道通过PCA分析出的手写数据的前两个主成分的方差比率为14.6%和13.7%，加起来既标识降维后的数据只能保留了原始样本数据38.3%的数据信息，所以自然分类准确率很差了。那么如果我们使用PCA将64维数据计算出64个主成分，然后看看每个主成分的方差比率是如何变化的：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pca = PCA(n_components=X_train.shape[<span class="number">1</span>])</span><br><span class="line">pca.fit(X_train)</span><br><span class="line">pca.explained_variance_ratio_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([  <span class="number">1.45668166e-01</span>,   <span class="number">1.37354688e-01</span>,   <span class="number">1.17777287e-01</span>,</span><br><span class="line">		 <span class="number">8.49968861e-02</span>,   <span class="number">5.86018996e-02</span>,   <span class="number">5.11542945e-02</span>,</span><br><span class="line">		 <span class="number">4.26605279e-02</span>,   <span class="number">3.60119663e-02</span>,   <span class="number">3.41105814e-02</span>,</span><br><span class="line">		 <span class="number">3.05407804e-02</span>,   <span class="number">2.42337671e-02</span>,   <span class="number">2.28700570e-02</span>,</span><br><span class="line">		 <span class="number">1.80304649e-02</span>,   <span class="number">1.79346003e-02</span>,   <span class="number">1.45798298e-02</span>,</span><br><span class="line">		 <span class="number">1.42044841e-02</span>,   <span class="number">1.29961033e-02</span>,   <span class="number">1.26617002e-02</span>,</span><br><span class="line">		 <span class="number">1.01728635e-02</span>,   <span class="number">9.09314698e-03</span>,   <span class="number">8.85220461e-03</span>,</span><br><span class="line">		 <span class="number">7.73828332e-03</span>,   <span class="number">7.60516219e-03</span>,   <span class="number">7.11864860e-03</span>,</span><br><span class="line">		 <span class="number">6.85977267e-03</span>,   <span class="number">5.76411920e-03</span>,   <span class="number">5.71688020e-03</span>,</span><br><span class="line">		 <span class="number">5.08255707e-03</span>,   <span class="number">4.89020776e-03</span>,   <span class="number">4.34888085e-03</span>,</span><br><span class="line">		 <span class="number">3.72917505e-03</span>,   <span class="number">3.57755036e-03</span>,   <span class="number">3.26989470e-03</span>,</span><br><span class="line">		 <span class="number">3.14917937e-03</span>,   <span class="number">3.09269839e-03</span>,   <span class="number">2.87619649e-03</span>,</span><br><span class="line">		 <span class="number">2.50362666e-03</span>,   <span class="number">2.25417403e-03</span>,   <span class="number">2.20030857e-03</span>,</span><br><span class="line">		 <span class="number">1.98028746e-03</span>,   <span class="number">1.88195578e-03</span>,   <span class="number">1.52769283e-03</span>,</span><br><span class="line">		 <span class="number">1.42823692e-03</span>,   <span class="number">1.38003340e-03</span>,   <span class="number">1.17572392e-03</span>,</span><br><span class="line">		 <span class="number">1.07377463e-03</span>,   <span class="number">9.55152460e-04</span>,   <span class="number">9.00017642e-04</span>,</span><br><span class="line">		 <span class="number">5.79162563e-04</span>,   <span class="number">3.82793717e-04</span>,   <span class="number">2.38328586e-04</span>,</span><br><span class="line">		 <span class="number">8.40132221e-05</span>,   <span class="number">5.60545588e-05</span>,   <span class="number">5.48538930e-05</span>,</span><br><span class="line">		 <span class="number">1.08077650e-05</span>,   <span class="number">4.01354717e-06</span>,   <span class="number">1.23186515e-06</span>,</span><br><span class="line">		 <span class="number">1.05783059e-06</span>,   <span class="number">6.06659094e-07</span>,   <span class="number">5.86686040e-07</span>,</span><br><span class="line">		 <span class="number">7.44075955e-34</span>,   <span class="number">7.44075955e-34</span>,   <span class="number">7.44075955e-34</span>,</span><br><span class="line">		 <span class="number">7.15189459e-34</span>])</span><br></pre></td></tr></table></figure>
+<p>可以看到上面64个方差比率是从大到小排序的，而且后面的方差率越来越小，所以从这个数据我们其实已经可以计算出一个合适的主成分个数，使其方差比率之和达到一个极大值。我们将维数和方差率绘制出来看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 横轴为维数，纵轴为每个维度对应的之前所有维度的方差率之和</span></span><br><span class="line">plt.plot([i <span class="keyword">for</span> i <span class="keyword">in</span> range(X_train.shape[<span class="number">1</span>])], [np.sum(pca.explained_variance_ratio_[:i+<span class="number">1</span>]) <span class="keyword">for</span> i <span class="keyword">in</span> range(X_train.shape[<span class="number">1</span>])])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/c71f5704cc9ae4e706af966ad3800b46.jpg" alt=""><br>从图中可以看到，当维度数在30左右的时候，方差率上升已经很平缓了，所以从这个图中都可以目测出，我们将64维特征的样本数据降维至30维左右是比较合适的。</p>
+<p>其实Scikit Learn的PCA提供了一个参数，就是我们期望达到的总方差率为多少，然后会帮我们自动计算出主成分个数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 传入一个0到1的小数，既总方差率</span></span><br><span class="line">pca = PCA(<span class="number">0.95</span>)</span><br><span class="line">pca.fit(X_train)</span><br><span class="line"><span class="comment"># 查看主成分数</span></span><br><span class="line">pca.n_components_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">28</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，我们期望的总方差率为95%时的主成分数为28。然后我们再使用KNN来训练一下降为28维特征的样本数据，看看准确率和时间为多少：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 对原始训练数据和原始测试数据进行降维</span></span><br><span class="line">X_train_reduction = pca.transform(X_train)</span><br><span class="line">X_test_reduction = pca.transform(X_test)</span><br><span class="line"></span><br><span class="line">X_train_reduction.shape</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">(<span class="number">1347</span>, <span class="number">28</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对28维特征的数据进行KNN训练</span></span><br><span class="line">knn_clf = KNeighborsClassifier()</span><br><span class="line">%time knn_clf.fit(X_train_reduction, y_train)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">CPU times: user <span class="number">2.25</span> ms, sys: <span class="number">1.54</span> ms, total: <span class="number">3.79</span> ms</span><br><span class="line">Wall time: <span class="number">2.44</span> ms</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看分类准确率</span></span><br><span class="line">knn_clf.score(X_test_reduction, y_test)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.97999999999999998</span></span><br></pre></td></tr></table></figure>
+<p>从上面代码的结果可以看到，在使用KNN训练28维特征的数据时耗时也只有2.44毫秒，但是分类准确率达到了98%。比64维特征的数据耗时减少了15倍，但是准确率只减少了0.6%。这个性价比是非常之高的，这就是PCA的威力所在。</p>
+<h2 id="u4F7F_u7528PCA_u5BF9_u6570_u636E_u8FDB_u884C_u964D_u566A"><a href="#u4F7F_u7528PCA_u5BF9_u6570_u636E_u8FDB_u884C_u964D_u566A" class="headerlink" title="使用PCA对数据进行降噪"></a>使用PCA对数据进行降噪</h2><p><img src="http://paxigrdp0.bkt.clouddn.com/cc4530b8fc647677b84b0396c36c6322.jpg" alt=""></p>
+<p>这张图是之前小节中生成的，其中蓝色的点是我们构建的原始样本数据，红色的点是经过PCA降维后，又通过PCA还原维度的样本数据。对这个图我们可以这样理解，原始样本数据的分布都在这条红色点组成的直线上下，而导致这些蓝色点没有落在红色直线上的原因就是因为数据有噪音，所以通过PCA降维其实是去除了数据的噪音。但这些噪音也是也是数据信息，所以通常我们说使用PCA对数据进行降维后会丢失一些数据信息。</p>
+<p>下面我们通过一个实际的例子来看一下PCA的降噪过程。我们依然使用手写识别的例子，我们手写识别的样本数据中加一些噪音，然后看PCA如何去除这些噪音：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">digits = datasets.load_digits()</span><br><span class="line">X = digits.data</span><br><span class="line">y = digits.target</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建噪音数据，将原始样本数据增加上方差为4的噪音数据</span></span><br><span class="line">nosiy_digits = X + np.random.normal(<span class="number">0</span>, <span class="number">4</span>, size=X.shape)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制手写图片</span></span><br><span class="line"><span class="comment"># 取手写数字为0的前十条样本数据</span></span><br><span class="line">example_digits = nosiy_digits[y == <span class="number">0</span>, :][:<span class="number">10</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 累加循环取手写数字为1到9的前十条样本数据</span></span><br><span class="line"><span class="keyword">for</span> num <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">10</span>):</span><br><span class="line">	num_digits = nosiy_digits[y == num, :][:<span class="number">10</span>]</span><br><span class="line">	example_digits = np.vstack([example_digits, num_digits])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 目前example_digits的结构为，10条手写数字0，10条手写数字1，...， 10条手写数字9。一共100行。 </span></span><br><span class="line">example_digits.shape</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">(<span class="number">100</span>, <span class="number">64</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义一个显示手写数字图片的方法</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_digits</span><span class="params">(data)</span>:</span></span><br><span class="line">	<span class="comment"># 构建尺寸为10 X 10的画图区域，既每行10个图片，一共10行</span></span><br><span class="line">	plt.figure(figsize=(<span class="number">10</span>, <span class="number">10</span>))</span><br><span class="line">	<span class="comment"># 遍历加了噪音的手写数字数据</span></span><br><span class="line">	<span class="keyword">for</span> index, imageData <span class="keyword">in</span> enumerate(data):</span><br><span class="line">		<span class="comment"># 图片分布为10行10列，正好100个图片，第三个参数是每张图片的位置</span></span><br><span class="line">		plt.subplot(<span class="number">10</span>, <span class="number">10</span>, index + <span class="number">1</span>)</span><br><span class="line">		<span class="comment"># 将有64个元素的数组转换为8 X 8的矩阵，既8 X 8个像素的图片</span></span><br><span class="line">		image = np.reshape(imageData, (<span class="number">8</span>, <span class="number">8</span>))</span><br><span class="line">		<span class="comment"># 图片的ColorMap用灰度显示，为了能更好的观察</span></span><br><span class="line">		plt.imshow(image, cmap = plt.cm.gray)</span><br><span class="line">	</span><br><span class="line">	plt.show()</span><br><span class="line">	</span><br><span class="line"><span class="comment"># 显示加了噪音的手写数字</span></span><br><span class="line">plot_digits(example_digits)</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/aed715f032be849f502a12923db1f792.jpg" alt=""></p>
+<p>从图中可以看出，手写数字的识别度非常差。下面我们使用PCA对<code>example_digits</code>进行降噪处理：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只保留50%的主成分，因为我们之前添加的噪音数据方差比较大，也就是认为噪音比较多，既有50%的噪音</span></span><br><span class="line">pca = PCA(<span class="number">0.5</span>)</span><br><span class="line">pca.fit(nosiy_digits)</span><br><span class="line">pca.n_components_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">12</span></span><br><span class="line"></span><br><span class="line">example_components = pca.transform(example_digits)</span><br><span class="line">example_components.shape</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">(<span class="number">100</span>, <span class="number">12</span>)</span><br></pre></td></tr></table></figure>
+<p>当我们只保留50%主成分的时候，特征维度从64维降到了12维。然后我们再将其还原为64维，既过滤掉了噪音：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">example_components_inverse = pca.inverse_transform(example_components)</span><br><span class="line"></span><br><span class="line">example_components_inverse.shape</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">(<span class="number">100</span>, <span class="number">64</span>)</span><br><span class="line"><span class="comment"># 显示降噪后的手写数字图片</span></span><br><span class="line">plot_digits(example_components_inverse)</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/8a165d8efeeeef3e03b63029fff2d00f.jpg" alt=""></p>
+<p>可以看到，此时图片中的手写数字的识别度有明显的提升。这就是PCA降噪的作用。</p>
+<h2 id="u4EBA_u8138_u8BC6_u522B"><a href="#u4EBA_u8138_u8BC6_u522B" class="headerlink" title="人脸识别"></a>人脸识别</h2><p>PCA有一个典型的实际应用，就是人脸识别。我们这一节就来简单看看PCA在人脸识别中的应用。</p>
+<p>首先我们还是先从PCA的原理来说，PCA就将高维数据降至相对的低维数据，但是这些低维的数据却能反应了原始高维数据的绝大多数主要特征。那么由PCA训练出的这些主成分其实就代表了原始数据的主要特征。那么如果原始高维数据是一张张不同的人脸数据时，那么由PCA训练出的主成分其实就是这一张张人脸的主要特征，称为特征脸。好比，爷爷，爸爸，儿子三个人长的很像，其实是这三张人脸有共同的特征脸。下面我们就使用Scikit Learn中提供的人脸数据来看看特征脸的应用。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入人脸数据集</span></span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> fetch_lfw_people</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入人脸数据集(这里需要等一阵，因为需要下载数据)</span></span><br><span class="line">faces = fetch_lfw_people()</span><br><span class="line">faces.data.shape</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">(<span class="number">13233</span>, <span class="number">2914</span>)</span><br><span class="line"></span><br><span class="line">faces.images.shape</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">(<span class="number">13233</span>, <span class="number">62</span>, <span class="number">47</span>)</span><br></pre></td></tr></table></figure>
+<p>如果网络不好的朋友，可以去<a href="http://vis-www.cs.umass.edu/lfw/" target="_blank" rel="external">这里</a>手动下载<strong>All images aligned with funneling</strong>数据集，然后在使用<code>fetch_lfw_people()</code>时需要增加<code>data_home</code>这个参数，指定你存放数据集的目录，比如<code>fetch_lfw_people(data_home=&#39;/XXX/XXX&#39;)</code>然后执行，Scikit Learn就会去你指定的目录下解压<code>lfw_funneled</code>压缩包，抓取数据。从上面代码结果可以看到，这个人脸的数据集一共有13233张人脸图片，每张人脸图片有2914个特征，其实也就是由2914个不同值的像素组成，通过<code>faces.images.shape</code>我们知道这13233张图片的大小是62乘以47像素，相乘的值正好就是2914。</p>
+<p>因为这个数据集里人脸的分布并不均匀，所以我们在用之前先将其进行随机处理：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 求一个随机索引</span></span><br><span class="line">random_indexs = np.random.permutation(len(faces.data))</span><br><span class="line">X = faces.data[random_indexs]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 取前36张脸进行展示</span></span><br><span class="line">example_faces = X[:<span class="number">36</span>, :]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义一个显示人脸图片的方法</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_faces</span><span class="params">(data)</span>:</span></span><br><span class="line">	<span class="comment"># 构建尺寸为12 X 12的画图区域，既每行12个图片，一共12行</span></span><br><span class="line">	plt.figure(figsize=(<span class="number">12</span>, <span class="number">12</span>))</span><br><span class="line">	<span class="comment"># 遍历加了噪音的手写数字数据</span></span><br><span class="line">	<span class="keyword">for</span> index, imageData <span class="keyword">in</span> enumerate(data):</span><br><span class="line">		<span class="comment"># 图片分布为6行6列，正好36张图片，第三个参数是每张图片的位置</span></span><br><span class="line">		plt.subplot(<span class="number">6</span>, <span class="number">6</span>, index + <span class="number">1</span>)</span><br><span class="line">		<span class="comment"># 将有2914个元素的数组转换为62 X 47的矩阵，既62 X 47个像素的图片</span></span><br><span class="line">		image = np.reshape(imageData, (<span class="number">62</span>, <span class="number">47</span>))</span><br><span class="line">		plt.imshow(image, cmap = <span class="string">'bone'</span>)</span><br><span class="line">	</span><br><span class="line">	plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/fe52449ca67f5e31a9635a263892f689.jpg" alt=""></p>
+<p>然后我们通过PCA求出这个13233条样本数据，2914维特征数据集的所有主成分。所有主成分要等于小于样本数据的特征数量。下面来求这个样本数据集的最大维度：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA</span><br><span class="line"><span class="comment"># 求出样本数据的最大主成分数</span></span><br><span class="line">pca = PCA(svd_solver=<span class="string">'randomized'</span>)</span><br><span class="line">pca.fit(X)</span><br><span class="line"></span><br><span class="line">pca.components_.shape</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">(<span class="number">2914</span>, <span class="number">2914</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看前36个主成分的方差比率</span></span><br><span class="line">pca.explained_variance_ratio_[:<span class="number">36</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([ <span class="number">0.23333138</span>,  <span class="number">0.10693729</span>,  <span class="number">0.08233336</span>,  <span class="number">0.07026902</span>,  <span class="number">0.03252576</span>,</span><br><span class="line">		<span class="number">0.03012665</span>,  <span class="number">0.0210468</span> ,  <span class="number">0.01823955</span>,  <span class="number">0.01764975</span>,  <span class="number">0.0158582</span> ,</span><br><span class="line">		<span class="number">0.01480933</span>,  <span class="number">0.01337274</span>,  <span class="number">0.01252589</span>,  <span class="number">0.01161669</span>,  <span class="number">0.01068777</span>,</span><br><span class="line">		<span class="number">0.00960774</span>,  <span class="number">0.00873549</span>,  <span class="number">0.00775879</span>,  <span class="number">0.00771184</span>,  <span class="number">0.00693537</span>,</span><br><span class="line">		<span class="number">0.00674195</span>,  <span class="number">0.00626633</span>,  <span class="number">0.00590671</span>,  <span class="number">0.00531572</span>,  <span class="number">0.00512598</span>,</span><br><span class="line">		<span class="number">0.00500887</span>,  <span class="number">0.0048442</span> ,  <span class="number">0.00466389</span>,  <span class="number">0.00435357</span>,  <span class="number">0.0041365</span> ,</span><br><span class="line">		<span class="number">0.00390986</span>,  <span class="number">0.00387675</span>,  <span class="number">0.00366964</span>,  <span class="number">0.0035524</span> ,  <span class="number">0.00342629</span>,</span><br><span class="line">		<span class="number">0.00328901</span>], dtype=float32)</span><br><span class="line">		</span><br><span class="line"><span class="comment"># 绘制前36个主成分，既最能描述人脸特征的成分</span></span><br><span class="line">plot_faces(pca.components_[:<span class="number">36</span>, :])</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/410019ede0a6862e2963c3f98992fe2c.jpg" alt=""></p>
+<p>从代码结果可以看出，主成分的方差比率由大到小排序，第一个主成分能表示23.33%的人脸特征，从图上也能看到，第一个图显示了一个人脸的整个脸庞，第二个图显示了人脸的五官位置等。图中的这些脸就是特征脸，可以清晰的看到特征脸依次显示人脸特征的变化过程。</p>
+<blockquote>
+<p>申明：本文为慕课网<a href="https://www.imooc.com/t/108955" target="_blank" rel="external">liuyubobobo</a>老师<a href="https://coding.imooc.com/learn/list/169.html" target="_blank" rel="external">《Python3入门机器学习 经典算法与应用》</a>课程的学习笔记，未经允许不得转载。</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/machine-learning-6/" rel="next" title="机器学习笔记六之梯度下降、优化梯度公式、随机梯度下降">
+                <i class="fa fa-chevron-left"></i> 机器学习笔记六之梯度下降、优化梯度公式、随机梯度下降
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/task-manage-omnifocus/" rel="prev" title="基于OmniFocus的任务系统">
+                基于OmniFocus的任务系统 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">86</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u7406_u89E3PCA_u7B97_u6CD5_u964D_u7EF4_u7684_u539F_u7406"><span class="nav-number">1.</span> <span class="nav-text">理解PCA算法降维的原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4F7F_u7528_u68AF_u5EA6_u4E0A_u5347_u6CD5_u89E3_u51B3_u4E3B_u6210_u5206_u5206_u6790_u95EE_u9898"><span class="nav-number">2.</span> <span class="nav-text">使用梯度上升法解决主成分分析问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u4EE3_u7801_u5B9E_u73B0PCA_u68AF_u5EA6_u4E0A_u5347"><span class="nav-number">2.1.</span> <span class="nav-text">代码实现PCA梯度上升</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u6C42_u6570_u636E_u7684_u5176_u4ED6_u4E3B_u6210_u5206"><span class="nav-number">2.2.</span> <span class="nav-text">求数据的其他主成分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u9AD8_u7EF4_u6570_u636E_u5411_u4F4E_u7EF4_u6570_u636E_u6620_u5C04"><span class="nav-number">3.</span> <span class="nav-text">高维数据向低维数据映射</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5728PyCharm_u4E2D_u5C01_u88C5PCA"><span class="nav-number">3.1.</span> <span class="nav-text">在PyCharm中封装PCA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5728Jupyter_Notebook_u4E2D_u4F7F_u7528_u5C01_u88C5_u7684PCA"><span class="nav-number">3.2.</span> <span class="nav-text">在Jupyter Notebook中使用封装的PCA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scikit_Learn_u4E2D_u7684PCA"><span class="nav-number">4.</span> <span class="nav-text">Scikit Learn中的PCA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u4F7F_u7528_u771F_u5B9E_u7684_u6570_u636E"><span class="nav-number">4.1.</span> <span class="nav-text">使用真实的数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4F7F_u7528PCA_u5BF9_u6570_u636E_u8FDB_u884C_u964D_u566A"><span class="nav-number">5.</span> <span class="nav-text">使用PCA对数据进行降噪</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4EBA_u8138_u8BC6_u522B"><span class="nav-number">6.</span> <span class="nav-text">人脸识别</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/machine-learning-7/';
+      var disqus_title = '机器学习笔记七之主成分分析法（PCA）、人脸识别应用';
+      var disqus_url = 'http://www.devtalking.com//articles/machine-learning-7/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
