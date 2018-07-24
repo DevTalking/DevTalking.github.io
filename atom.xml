@@ -402,7 +402,7 @@
     <link href="http://www.devtalking.com//articles/machine-learning-8/"/>
     <id>http://www.devtalking.com//articles/machine-learning-8/</id>
     <published>2018-03-14T16:00:00.000Z</published>
-    <updated>2018-07-24T03:45:03.125Z</updated>
+    <updated>2018-07-24T05:48:25.407Z</updated>
     <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -470,7 +470,7 @@
 <p><img src="http://paxigrdp0.bkt.clouddn.com/cb7c0ec8a7e776a768c1faac8be589ce.jpg" alt=""></p>
 <p>可以看到最终的结果和我们之前将每一步单独分开得到的结果相同。在实际处理多步骤、复杂的机器学习问题时，<code>Pipeline</code>非常有用，是很好的化繁为简的工具。</p>
 <h2 id="u6B20_u62DF_u5408_u548C_u8FC7_u62DF_u5408"><a href="#u6B20_u62DF_u5408_u548C_u8FC7_u62DF_u5408" class="headerlink" title="欠拟合和过拟合"></a>欠拟合和过拟合</h2><p>在讲欠拟合和过拟合前，我们先来回顾一下线性回归的评测标准均方误差（MSE）：</p>
-<p>$$ \frac 1 m \sum<em>{i=1}^m(y</em>{test}^{(i)} - \hat y_{test}^{(i)})^2$$</p>
+<p>$$ \frac 1 m \sum_{i=1}^m(y_{test}^{(i)} - \hat y_{test}^{(i)})^2$$</p>
 <p>就是将原始目标值和通过模型计算出的目标值相减再平方，这就是其中一条样本数据的误差，将所有样本数据的误差相加再除以所有样本数据的数量，就得到了均方误差。均方误差值约小说明训练出的模型越好，也就是拟合的越好，反之亦然。其实欠拟合和过拟合从字面上也很好理解，前者表示拟合程度不够，通过模型计算出的目标值与原始目标值差距太大，后者表示拟合程度过高，以至于无法表示出样本数据的共性和真实情况。下面我们来看看示例：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建样本数据</span></span><br><span class="line">x = np.random.uniform(-<span class="number">3</span>, <span class="number">3</span>, size=<span class="number">100</span>)</span><br><span class="line">X = x.reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">y = <span class="number">0.5</span> * x ** <span class="number">2</span> + x + <span class="number">2</span> + np.random.normal(<span class="number">0</span>, <span class="number">1</span>, size=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 先用线性回归进行拟合</span></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression</span><br><span class="line">lr = LinearRegression()</span><br><span class="line">lr.fit(X, y)</span><br><span class="line">y_predict = lr.predict(X)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入均方误差</span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error</span><br><span class="line">mean_squared_error(y, y_predict)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">2.6823097152963338</span></span><br></pre></td></tr></table></figure>
 <p>我们构建和之前一样的样本数据，然后先使用线性回归训练模型，然后通过模型计算出的值的均方误差为2.68。然后再用多项式回归对同样的样本数据训练模型看看结果：</p>
