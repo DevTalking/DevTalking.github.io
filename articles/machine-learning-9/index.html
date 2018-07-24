@@ -1,0 +1,898 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+验证数据集与交叉验证在上一篇笔记中我们又提到了训练数据集和测试数据集，拆分样本数据的这种做法目的就是通过测试数据集判断模型的好坏，如果我们发现训练出的模型产生了过拟合的现象，既在训练数据集上预测评分很好，但是在测试数据集上预测评分不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记九之交叉验证、模型正则化">
+<meta property="og:url" content="http://www.devtalking.com/articles/machine-learning-9/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+验证数据集与交叉验证在上一篇笔记中我们又提到了训练数据集和测试数据集，拆分样本数据的这种做法目的就是通过测试数据集判断模型的好坏，如果我们发现训练出的模型产生了过拟合的现象，既在训练数据集上预测评分很好，但是在测试数据集上预测评分不">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/9b3e80db3abbe355b5251935cb97e28b.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/a608405bddca5a8c05d8727ff4ebb58d.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/f88229c7c8998ded048224d19fd9b5a8.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/cf61ca378119f75352f49f34089284a1.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/e60fe9ae830a92027e0ffd9f615bba95.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/ce6f0729ff4665954be6ab5e2d9a79f8.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/a8b84f8353e822a872f6a0f34ee5761b.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/db8310345d08409779200070e8c67bf0.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/00dd5241732ed5f4a1d681ee4091246b.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/f349a0f686afc20da5d749f1b9683b5f.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/1944c9ae33c895730eef92205517cac0.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/5b021819b37fe49fb71ec11829ffa93f.jpg">
+<meta property="og:updated_time" content="2018-07-24T05:56:51.127Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记九之交叉验证、模型正则化">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+验证数据集与交叉验证在上一篇笔记中我们又提到了训练数据集和测试数据集，拆分样本数据的这种做法目的就是通过测试数据集判断模型的好坏，如果我们发现训练出的模型产生了过拟合的现象，既在训练数据集上预测评分很好，但是在测试数据集上预测评分不">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 机器学习笔记九之交叉验证、模型正则化 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                机器学习笔记九之交叉验证、模型正则化
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-03-30T00:00:00+08:00" content="2018-03-30">
+              2018-03-30
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-9/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-9/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u9A8C_u8BC1_u6570_u636E_u96C6_u4E0E_u4EA4_u53C9_u9A8C_u8BC1"><a href="#u9A8C_u8BC1_u6570_u636E_u96C6_u4E0E_u4EA4_u53C9_u9A8C_u8BC1" class="headerlink" title="验证数据集与交叉验证"></a>验证数据集与交叉验证</h2><p>在上一篇笔记中我们又提到了训练数据集和测试数据集，拆分样本数据的这种做法目的就是通过测试数据集判断模型的好坏，如果我们发现训练出的模型产生了过拟合的现象，既在训练数据集上预测评分很好，但是在测试数据集上预测评分不好的情况，那可能就需要重新调整超参数训练模型，以此类推，最终找到一个或一组参数使得模型在测试数据集上的预测评分也很好，也就是训练出的模型泛化能力比较好。那么这种方式会产生一个问题，就是有可能会针对测试数据过拟合，因为每次都是找到参数训练模型，然后看看在测试数据集上的表现如何，这就让我们的模型又被测试数据集左右了，既可以理解为训练出的模型对特定的训练数据集和特定的测试数据集表现都不错，但是再来一种类似的样本数据，表现可能又不尽如人意了。</p>
+<p>那么要彻底解决这个问题，就要引入验证数据集的概念，既将样本数据分为三份，训练数据集、验证数据集、测试数据集。</p>
+<ul>
+<li>训练数据集和之前的用途一样，是用来训练模型的。</li>
+<li>验证数据集的作用和之前的测试数据集一样，是用来验证由训练数据集训练出的模型的好坏程度的，或者说是调整超参数使用的数据集。</li>
+<li>此时的测试数据集和之前的作用就不一样了，这里的测试数据集是当训练出的模型在训练数据集和验证数据集上都表现不错的前提下，最终衡量该模型性能的数据集。测试数据集在整个训练模型的过程中是不参与的。</li>
+</ul>
+<h3 id="u4EA4_u53C9_u9A8C_u8BC1_uFF08Cross_Validation_uFF09"><a href="#u4EA4_u53C9_u9A8C_u8BC1_uFF08Cross_Validation_uFF09" class="headerlink" title="交叉验证（Cross Validation）"></a>交叉验证（Cross Validation）</h3><p>我们在验证数据集概念的基础上，再来看看交叉验证。交叉验证其实解决的是随机选取验证数据集的问题，因为如果验证数据集是固定的，那么万一验证数据集过拟合了，那就没有可用的验证数据集了，所以交叉验证提供了随机的、可持续的、客观的模型验证方式。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/9b3e80db3abbe355b5251935cb97e28b.jpg" alt=""></p>
+<p>交叉验证的思路是将训练数据分成若干份，假设分为A、B、C三份，分别将这三份各作为一次验证数据集，其他两份作为训练数据集训练模型，然后将训练出的三个模型评分取均值，将这个均值作为衡量算法训练模型的结果来调整参数，如果平均值不够好，那么再调整参数，再训练出三个模型，以此类推。</p>
+<a id="more"></a>
+<h3 id="u5B9E_u73B0_u4EA4_u53C9_u9A8C_u8BC1"><a href="#u5B9E_u73B0_u4EA4_u53C9_u9A8C_u8BC1" class="headerlink" title="实现交叉验证"></a>实现交叉验证</h3><p>我们使用KNN算法，用训练数据集和测试数据集方式进行超参数<code>k</code>和<code>p</code>的调整查找（KNN的<code>k</code>，<code>p</code>两个超参数查阅第二篇学习笔记）：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># KNN算法中使用训练数据集和测试数据集进行超参数k和p的调整</span></span><br><span class="line"><span class="keyword">from</span> sklearn.neighbors <span class="keyword">import</span> KNeighborsClassifier</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化最佳评分，最佳k值和最佳p值</span></span><br><span class="line">best_score, best_k, best_p = <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"><span class="comment"># k值从2到10之间搜寻</span></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> range(<span class="number">2</span>, <span class="number">11</span>):</span><br><span class="line">	<span class="comment"># p值从1到5之间搜寻</span></span><br><span class="line">	<span class="keyword">for</span> p <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">6</span>):</span><br><span class="line">		<span class="comment"># 对每个k值，p值的组合实例化KNN分类器，通过训练数据训练出模型，然后通过测试数据计算评分，每次将最好的评分和对应的k，p值记录下来，最终找到评分最好的k和p值</span></span><br><span class="line">		knn_clf = KNeighborsClassifier(weights=<span class="string">'distance'</span>, n_neighbors=k, p=p)</span><br><span class="line">		knn_clf.fit(X_train, y_train)</span><br><span class="line">		score = knn_clf.score(X_test, y_test)</span><br><span class="line">		<span class="keyword">if</span> score &gt; best_score:</span><br><span class="line">			best_score, best_k, best_p = score, k, p</span><br><span class="line"></span><br><span class="line">print(<span class="string">"Best Score ="</span>, best_score)</span><br><span class="line">print(<span class="string">"Best k = "</span>, best_k)</span><br><span class="line">print(<span class="string">"Best p ="</span>, best_p)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">Best Score = <span class="number">0.986091794159</span></span><br><span class="line">Best k =  <span class="number">3</span></span><br><span class="line">Best p = <span class="number">4</span></span><br></pre></td></tr></table></figure>
+<p>从结果看，通过上面的算法，我们找到了最好评分98.6%和对应的<code>k</code>值3和<code>p</code>值4。但是需要注意的是，这个结果有可能是对测试数据集过拟合的结果。</p>
+<p>下面我们再来看看如何使用交叉验证方法进行超参数的调参：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入Scikit Learn中交叉验证的函数</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_score</span><br><span class="line"></span><br><span class="line">knn_clf = KNeighborsClassifier()</span><br><span class="line">cross_val_score(knn_clf, X_train, y_train)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([ <span class="number">0.98895028</span>,  <span class="number">0.97777778</span>,  <span class="number">0.96629213</span>])</span><br></pre></td></tr></table></figure>
+<p>我们直接使用Scikit Learn中提供的交叉验证函数，默认会将训练数据分成三份，所以会有三个模型的评分。然后再修改一下上面调参的算法：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># KNN算法中使用训练数据集和验证数据集进行超参数k和p的调整</span></span><br><span class="line"><span class="keyword">from</span> sklearn.neighbors <span class="keyword">import</span> KNeighborsClassifier</span><br><span class="line"></span><br><span class="line">best_score, best_k, best_p = <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> range(<span class="number">2</span>, <span class="number">11</span>):</span><br><span class="line">	<span class="keyword">for</span> p <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">6</span>):</span><br><span class="line">		knn_clf = KNeighborsClassifier(weights=<span class="string">'distance'</span>, n_neighbors=k, p=p)</span><br><span class="line">		<span class="comment"># 对每个k值，p值的组合实例化KNN分类器，通过交叉验证发训练出若干个模型，然后对这若干个模型的评分求平均值，该平均值即为每次的模型评分，每次将最好的评分和对应的k，p值记录下来，最终找到评分最好的k和p值</span></span><br><span class="line">		scores = cross_val_score(knn_clf, X_train, y_train)</span><br><span class="line">		<span class="comment"># 对若干个模型的评分求平均值</span></span><br><span class="line">		score = np.mean(scores)</span><br><span class="line">		<span class="keyword">if</span> score &gt; best_score:</span><br><span class="line">			best_score, best_k, best_p = score, k, p</span><br><span class="line"></span><br><span class="line">print(<span class="string">"Best Score ="</span>, best_score)</span><br><span class="line">print(<span class="string">"Best k = "</span>, best_k)</span><br><span class="line">print(<span class="string">"Best p ="</span>, best_p)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">Best Score = <span class="number">0.982359987401</span></span><br><span class="line">Best k =  <span class="number">2</span></span><br><span class="line">Best p = <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，使用交叉验证法最后搜寻到的最佳<code>k</code>值是2，最佳<code>p</code>值是2，然后我们再用搜寻出的这两个超参数来训练模型，然后使用测试数据集来计算评分：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">knn_clf = KNeighborsClassifier(weights=<span class="string">'distance'</span>, n_neighbors=<span class="number">2</span>, p=<span class="number">2</span>)</span><br><span class="line">knn_clf.fit(X_train, y_train)</span><br><span class="line">knn_clf.score(X_test, y_test)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.98052851182197498</span></span><br></pre></td></tr></table></figure>
+<p>最终我们搜寻到的最佳超参数训练出的模型，通过测试数据验证后评分为98.05%，这个评分虽然比之前用训练数据和测试数据搜寻到的最佳评分低一些，但是这个分数不会对验证数据集过拟合，是泛化能力更好的模型。</p>
+<p>第三篇笔记中，讲过KNN通过网格搜索搜寻最佳超参数的方法，其实当时<code>GridSearchCV</code>中的CV就是Cross Validation的意思，也就是网格搜索本身就使用的交叉验证的方式搜寻超参数，我们再来回顾一下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> GridSearchCV</span><br><span class="line"><span class="comment"># 定义出超参数的组合，就相当于之前我们算法中的两层循环</span></span><br><span class="line">param_grid = [</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="string">"weights"</span>: [<span class="string">'distance'</span>],</span><br><span class="line">		<span class="string">"n_neighbors"</span>: [i <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>, <span class="number">11</span>)],</span><br><span class="line">		<span class="string">"p"</span>: [i <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">6</span>)]</span><br><span class="line">	&#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">grid_search = GridSearchCV(knn_clf, param_grid, verbose=<span class="number">1</span>)</span><br><span class="line">grid_search.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">Fitting <span class="number">3</span> folds <span class="keyword">for</span> each of <span class="number">45</span> candidates, totalling <span class="number">135</span> fits</span><br></pre></td></tr></table></figure>
+<p>可以看到执行<code>fit</code>函数后，会打印出一句话来，意思就是超参数组合一共有45个，每个组合会将训练数据分为三份，一共会训练出135个模型，最后求出一个泛化能力最好的模型。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">grid_search.best_score_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.98237476808905377</span></span><br><span class="line"></span><br><span class="line">grid_search.best_params_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">&#123;<span class="string">'n_neighbors'</span>: <span class="number">2</span>, <span class="string">'p'</span>: <span class="number">2</span>, <span class="string">'weights'</span>: <span class="string">'distance'</span>&#125;</span><br><span class="line"></span><br><span class="line">best_knn_clf = grid_search.best_estimator_</span><br><span class="line">best_knn_clf.score(X_test, y_test)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.98052851182197498</span></span><br></pre></td></tr></table></figure>
+<p>通过上面的结果可以看到，和我们之前的结果是一致的。</p>
+<h2 id="u504F_u5DEE_uFF08Bias_uFF09_u4E0E_u65B9_u5DEE_uFF08Variance_uFF09"><a href="#u504F_u5DEE_uFF08Bias_uFF09_u4E0E_u65B9_u5DEE_uFF08Variance_uFF09" class="headerlink" title="偏差（Bias）与方差（Variance）"></a>偏差（Bias）与方差（Variance）</h2><p>在机器学习算法中，模型的好坏有一个统称就是预测结果的误差大小。那么这个误差具体可分为偏差和方差。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/a608405bddca5a8c05d8727ff4ebb58d.jpg" alt=""><br>上面这幅图有四个靶子，可以很好的诠释方差和偏差的概念。红色靶心就相当于我们目标，灰色弹孔就相当于模型预测的值。我们来解读一下这四幅图：</p>
+<ul>
+<li>左上：模型预测的值基本都在目标值上，并且每次预测的都很集中，说明偏差和方差都很小。</li>
+<li>左下：模型预测的值虽然每次都很集中，但是整体和目标值差的很远，说明偏差很大，方差比较小。</li>
+<li>右上：模型预测的值基本都围绕着目标值，但是每次预测的值之间差距较大，说明偏差较小，方差比较大。</li>
+<li>右下：模型预测的值离目标值都很远，并且每次预测的值之间差距也比较打，说明偏差和方差都很大。</li>
+</ul>
+<p>通常情况下，我们训练出的模型误差指的是偏差和方差的总和，再加上一些不可避免的误差，比如训练数据本身噪音比较大等。</p>
+<p>通常导致偏差的主要原因是对问题本身的假设不正确，比如本身训练数据并没有线性关系，但我们还是使用线性回归去训练模型，那么模型的偏差肯定会很大，也就是欠拟合的情况。</p>
+<p>通常导致方差的主要原因是因为我们的模型太过复杂，学习到太多的噪音，比如多项式回归，当<code>degree</code>参数非常大的时候，也就是过拟合的情况。</p>
+<p>非参数学习通常都是高方差算法，比如分类的算法，因为不会对数据进行任何假设。参数学习通常都是高偏差算法，因为会对数据有极强的假设，一旦训练数据有问题，那么就会导致模型整体偏离真实情况。</p>
+<p>在使用机器学习解决问题的实践中，通常我们的挑战都是降低模型的方差，一般有以下几种手段：</p>
+<ul>
+<li>降低模型复杂度。比如降低多项式回归的<code>degree</code>参数。</li>
+<li>减少数据维度，降噪。比如使用PCA。</li>
+<li>增加样本数量。让训练数据足以支撑复杂的模型，从而能计算出合适的参数。</li>
+<li>使用交叉验证。避免过拟合情况。</li>
+</ul>
+<h2 id="u6A21_u578B_u6B63_u5219_u5316_uFF08Regularization_uFF09"><a href="#u6A21_u578B_u6B63_u5219_u5316_uFF08Regularization_uFF09" class="headerlink" title="模型正则化（Regularization）"></a>模型正则化（Regularization）</h2><p>在说模型正则化之前，我们先来看一个例子：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建和之前一样的样本数据</span></span><br><span class="line">x = np.random.uniform(-<span class="number">3</span>, <span class="number">3</span>, size=<span class="number">100</span>)</span><br><span class="line">X = x.reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">y = <span class="number">0.5</span> * x ** <span class="number">2</span> + x + <span class="number">2</span> + np.random.normal(<span class="number">0</span>, <span class="number">1</span>, size=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将这些的折线图绘制出来</span></span><br><span class="line">plt.plot(np.sort(x), y[np.argsort(x)], color=<span class="string">'r'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/f88229c7c8998ded048224d19fd9b5a8.jpg" alt=""></p>
+<p>可以看到当计算<code>y</code>的方程，多项式前的系数比较低（0.5和1）的时候折线图在横轴从-3到3，纵轴从-1到10的坐标系里还能全部展现，如果将这两个系数扩大10倍，会出现什么情况呢：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">y1 = <span class="number">5</span> * x ** <span class="number">2</span> + <span class="number">10</span> * x + <span class="number">2</span> + np.random.normal(<span class="number">0</span>, <span class="number">1</span>, size=<span class="number">100</span>)</span><br><span class="line">plt.plot(np.sort(x), y1[np.argsort(x)], color=<span class="string">'r'</span>)</span><br><span class="line">plt.axis([-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">1</span>, <span class="number">10</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/cf61ca378119f75352f49f34089284a1.jpg" alt=""></p>
+<p>可以看到这个折线图波动已经非常大了，在同样的坐标系中只能展现出一部分了。我们再来回顾一下前面的那张过拟合的图：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/e60fe9ae830a92027e0ffd9f615bba95.jpg" alt=""></p>
+<p>上图中，两侧的曲线图波动非常大，其实就说明了这条曲线的线性多项式方程的系数非常大，那么模型正则化做的事情就是限制这些系数的大小。</p>
+<p>下面来看看模型正则化的基本思路，在第四篇笔记中将多元线性回归问题的时候，我们知道最终求的是下面这个函数的最优解，既让下面这个损失函数的值尽可能的小：</p>
+<p>$$ \sum_{i=1}^m(y^{(i)}- (\theta_0+\theta_1X_1^{(i)}+\theta_2X_2^{(i)}+…+\theta_nX_n^{(i)} ))^2$$</p>
+<p>下面我们来转变一下这个损失函数：</p>
+<p>$$ L(\theta) = \sum_{i=1}^m(y^{(i)}- (\theta_0+\theta_1X_1^{(i)}+\theta_2X_2^{(i)}+…+\theta_nX_n^{(i)} ))^2 + \alpha \frac 1 2 \sum_{i=1}^n \theta_i^2$$</p>
+<p>我们在损失函数里加了一部分$\alpha \frac 1 2 \sum_{i=1}^n \theta_i^2$，此时要想让损失函数尽可能的小，就不能只考虑前面那一部分了，还要考虑后面新加的这一部分，又因为后面这部分包含多项式系数的平方，所以就整体约束了多项式系数的大小。这就是模型正则化的基本思路。这里的$\alpha$就是一个新的超参数，它的含义代表在模型正则化下，新的损失函数中每一个$\theta$都尽可能的小，这个小的程度占整个优化损失函数的多少。比如如果$\alpha$是0，那么相当于损失函数没有加入模型正则化，如果$\alpha$非常非常大，那么真正的损失函数就可以忽略了，主要考虑使模型正则化中的$\theta$尽可能小。所以$\alpha$的作用就是让真正的损失函数尽可能小和新加入的模型正则化中的$\theta$尽可能小之间找到一个平衡，在实际的运用中，不同的数据，$\alpha$的取值也不同，是需要有不断调整$\alpha$这个超参数的过程。</p>
+<h3 id="u5CAD_u56DE_u5F52_uFF08Ridge_Regression_uFF09"><a href="#u5CAD_u56DE_u5F52_uFF08Ridge_Regression_uFF09" class="headerlink" title="岭回归（Ridge Regression）"></a>岭回归（Ridge Regression）</h3><p>在模型正则化中，加入$\alpha \frac 1 2 \sum_{i=1}^n \theta_i^2$的方式，称之为岭回归。下面通过不使用模型正则化和使用岭回归对比来看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建样本数据</span></span><br><span class="line">np.random.seed(<span class="number">666</span>)</span><br><span class="line">x = np.random.uniform(-<span class="number">3</span>, <span class="number">3</span>, size=<span class="number">100</span>)</span><br><span class="line">X = x.reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">y = <span class="number">0.5</span> * x + <span class="number">3</span> + np.random.normal(<span class="number">0</span>, <span class="number">1</span>, size=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">plt.scatter(x, y)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/ce6f0729ff4665954be6ab5e2d9a79f8.jpg" alt=""></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入Pipeline和其他需要打包进Pipeline的类</span></span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将样本数据集拆分为训练数据集和测试数据集</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.4</span>, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建多项式线性回归Pipeline</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">PloynomialRegression</span><span class="params">(degree)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> Pipeline([</span><br><span class="line">		(<span class="string">"poly"</span>, PolynomialFeatures(degree=degree)),</span><br><span class="line">		(<span class="string">"std_scalar"</span>, StandardScaler()),</span><br><span class="line">		(<span class="string">"lr"</span>, LinearRegression())</span><br><span class="line">	])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入均方误差MSE函数</span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error</span><br><span class="line"></span><br><span class="line">ploy_reg = PloynomialRegression(degree=<span class="number">20</span>)</span><br><span class="line">ploy_reg.fit(X_train, y_train)</span><br><span class="line">y_poly_predict = ploy_reg.predict(X_test)</span><br><span class="line">mean_squared_error(y_test, y_poly_predict)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">1.9558727426614517</span></span><br><span class="line"></span><br><span class="line">X_ploy = np.linspace(-<span class="number">3</span>, <span class="number">3</span>, <span class="number">100</span>).reshape(<span class="number">100</span>, <span class="number">1</span>)</span><br><span class="line">y_ploy = ploy_reg.predict(X_ploy)</span><br><span class="line"></span><br><span class="line">plt.scatter(x, y)</span><br><span class="line">plt.plot(X_ploy[:, <span class="number">0</span>], y_ploy, color=<span class="string">'r'</span>)</span><br><span class="line">plt.axis([-<span class="number">3</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">6</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/a8b84f8353e822a872f6a0f34ee5761b.jpg" alt=""></p>
+<p>可以看到不试用模型正则化时，MSE为1.95，虽然数值不大，但是拟合曲线的波动非常大，是一个过拟合的特征。下面来看看使用模型正则化岭回归后结果会怎样：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入Scikit Learn中岭回归的类Ridge</span></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> Ridge</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建通过岭回归进行模型正则化的Pipeline，有两个超参数degree和alpha</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">RidgeRegression</span><span class="params">(degree, alpha)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> Pipeline([</span><br><span class="line">		(<span class="string">"poly"</span>, PolynomialFeatures(degree=degree)),</span><br><span class="line">		(<span class="string">"std_scalar"</span>, StandardScaler()),</span><br><span class="line">		(<span class="string">"rr"</span>, Ridge(alpha=alpha))</span><br><span class="line">	])</span><br><span class="line"></span><br><span class="line">ridge_reg = RidgeRegression(<span class="number">20</span>, <span class="number">0.0001</span>)</span><br><span class="line">ridge_reg.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line">y_ridge_predict = ridge_reg.predict(X_test)</span><br><span class="line">mean_squared_error(y_test, y_ridge_predict)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">1.0033258623784587</span></span><br><span class="line"></span><br><span class="line">X_ridge = np.linspace(-<span class="number">3</span>, <span class="number">3</span>, <span class="number">100</span>).reshape(<span class="number">100</span>, <span class="number">1</span>)</span><br><span class="line">y_ridge = ridge_reg.predict(X_ridge)</span><br><span class="line"></span><br><span class="line">plt.scatter(x, y)</span><br><span class="line">plt.plot(X_ridge[:, <span class="number">0</span>], y_ridge, color=<span class="string">'r'</span>)</span><br><span class="line">plt.axis([-<span class="number">3</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">6</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/db8310345d08409779200070e8c67bf0.jpg" alt=""></p>
+<p>使用岭回归后MSE降低到1，并且拟合曲线波动平缓了许多，尤其是曲线两头。这就是模型正则化的作用。</p>
+<h3 id="LASSO__u56DE_u5F52_uFF08Least_Absolute_Shrinkage_and_Selection_Operator_Regression_uFF09"><a href="#LASSO__u56DE_u5F52_uFF08Least_Absolute_Shrinkage_and_Selection_Operator_Regression_uFF09" class="headerlink" title="LASSO 回归（Least Absolute Shrinkage and Selection Operator Regression）"></a>LASSO 回归（Least Absolute Shrinkage and Selection Operator Regression）</h3><p>其实岭回归和LASSO都是模型正则化的一种具体实现，区别就在于增加的模型正则公式不同。岭回归增加的是$\alpha \frac 1 2 \sum_{i=1}^n \theta_i^2$，而LASSO回归中增加的是$\alpha \sum_{i=1}^n |\theta_i|$。</p>
+<p>下面来看看相同的数据使用LASSO回归后的结果：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="comment"># 构建样本数据</span></span><br><span class="line">np.random.seed(<span class="number">666</span>)</span><br><span class="line">x = np.random.uniform(-<span class="number">3</span>, <span class="number">3</span>, size=<span class="number">100</span>)</span><br><span class="line">X = x.reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">y = <span class="number">0.5</span> * x + <span class="number">3</span> + np.random.normal(<span class="number">0</span>, <span class="number">1</span>, size=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.4</span>, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入Pipeline和其他需要打包进Pipeline的类</span></span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> Lasso</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">LassoRegression</span><span class="params">(degree, alpha)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> Pipeline([</span><br><span class="line">		(<span class="string">"poly"</span>, PolynomialFeatures(degree=degree)),</span><br><span class="line">		(<span class="string">"std_scalar"</span>, StandardScaler()),</span><br><span class="line">		(<span class="string">"lasso"</span>, Lasso(alpha=alpha))</span><br><span class="line">	])</span><br><span class="line"></span><br><span class="line">lasso_reg = LassoRegression(<span class="number">20</span>, <span class="number">0.01</span>)</span><br><span class="line">lasso_reg.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line">y_lasso_predict = lasso_reg.predict(X_test)</span><br><span class="line">mean_squared_error(y_test, y_lasso_predict)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.90488682905372464</span></span><br><span class="line"></span><br><span class="line">X_lasso = np.linspace(-<span class="number">3</span>, <span class="number">3</span>, <span class="number">100</span>).reshape(<span class="number">100</span>, <span class="number">1</span>)</span><br><span class="line">y_lasso = lasso_reg.predict(X_lasso)</span><br><span class="line"></span><br><span class="line">plt.scatter(x, y)</span><br><span class="line">plt.plot(X_lasso[:, <span class="number">0</span>], y_lasso, color=<span class="string">'r'</span>)</span><br><span class="line">plt.axis([-<span class="number">3</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">6</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/00dd5241732ed5f4a1d681ee4091246b.jpg" alt=""></p>
+<p>可以看到相同的数据，通过LASSO处理后的模型MSE更小一些，拟合曲线也更平滑。</p>
+<h3 id="u5CAD_u56DE_u5F52_u548CLASSO_u56DE_u5F52_u7684_u6570_u5B66_u542B_u4E49_u4E0A_u7684_u533A_u522B"><a href="#u5CAD_u56DE_u5F52_u548CLASSO_u56DE_u5F52_u7684_u6570_u5B66_u542B_u4E49_u4E0A_u7684_u533A_u522B" class="headerlink" title="岭回归和LASSO回归的数学含义上的区别"></a>岭回归和LASSO回归的数学含义上的区别</h3><p>下面来解释一下岭回归和LASSO回归之间深层意义上的区别。先来看看岭回归，在前面讲过，当$\alpha$趋近无穷大时，真正的损失函数就可以忽略了，模型正则化后的损失函数就变成了求解模型正则公式的最小值，既求$\alpha \frac 1 2 \sum_{i=1}^n \theta_i^2$的最小值，那么该公式的梯度就是对$\theta$求导可得：</p>
+<p>$$ \nabla = \begin{bmatrix}<br>\theta_1 \\<br>\theta_2 \\<br>\theta_3 \\<br>… \\<br>\theta_n<br>\end{bmatrix} $$</p>
+<p>数据点按照梯度一步一步寻求最优解，如下图：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/f349a0f686afc20da5d749f1b9683b5f.jpg" alt=""><br>所以经过岭回归处理后训练出的模型，拟合线基本都是曲线。</p>
+<p>再来看看LASSO回归，当$\alpha$趋近无穷大时，我们只考虑$\alpha \sum_{i=1}^n |\theta_i|$，但是$|\theta_i|$是不可导的，我们使用数学符号函数来表示其梯度：</p>
+<blockquote>
+<p>符号函数（$sign(x)$）是很有用的一类函数，能够帮助我们实现一些直接实现有困难的情况。在数学和计算机运算中，其功能是取某个数的符号（正或负），既当$x &gt; 0$时，$sign(x) = 1$，当$x = 0$时，$sign(x) = 0$，当$x &lt; 0$时，$sign(x) = -1$。</p>
+</blockquote>
+<p>$$ \nabla = \alpha \begin{bmatrix}<br>sign(\theta_1) \\<br>sign(\theta_2) \\<br>sign(\theta_3) \\<br>… \\<br>sign(\theta_n)<br>\end{bmatrix} $$</p>
+<p>对于$\alpha \sum_{i=1}^n |\theta_i|$而言，当$x &gt; 0$时，就相当于$y = x$这条直线，当$x &lt; 0$时，就相当于$y = -x$这条直线。当数据点按照LASSO的梯度寻找最优解的路线是下图情况：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/1944c9ae33c895730eef92205517cac0.jpg" alt=""></p>
+<p>可以看到真正的寻址路线是橘黄色的虚线，应该中间有很多点直接打到了$y$轴，所以绘制出的拟合蓝色线很多时候就是一条直线，而不是曲线。那些$sign(x)$为0的梯度，既损失函数中的一部分$\theta$为0，这也就说明了LASSO中最后的SO（Selection Operator）选择操作符的含义，既将一些噪音比较大的特征过滤掉，选择出主要的、有用的特征。但是这是有风险的，因为很有可能LASSO将实际有用的特征给过滤掉了，所以就模型正则化的准确率来说，岭回归还是更好一些。但是在处理有巨大量特征的样本数据时，使用LASSO可以作为降低特征数量的一种方法。</p>
+<h2 id="LP_u8303_u6570"><a href="#LP_u8303_u6570" class="headerlink" title="LP范数"></a>LP范数</h2><p>在数学定义上，范数包括向量范数和矩阵范数，向量范数表示向量空间中向量的大小，矩阵范数表征矩阵引起向量变化的大小。比如对于向量范数，向量空间中的向量都是有大小的，这个大小如何度量，就是用范数来度量的，不同的范数都可以来度量这个大小，就好比米和尺都可以来度量远近一样。对于矩阵范数，我们知道，通过运算$Ax=B$，可以将向量$x$变化为矩阵$B$，矩阵范数就是来度量这个变化大小的。</p>
+<p>下面我们再来看一张图：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/5b021819b37fe49fb71ec11829ffa93f.jpg" alt=""></p>
+<p>上图展示了模型正则化岭回归、LASSO回归，线性回归评测标准均方误差（MSE）、平均绝对误差（MAE），距离公式欧拉距离、曼哈顿距离之间的对比。我们可以发现一个很有意思的现象，第一行的三个公式都是平方求和的模式，第二行的三个公式都是绝对值求和的模式。其实虽然机器学习中的公式、名词很多，但是究其背后的数学原理都是有规律可循的。</p>
+<p>我们在讲KNN时知道它除了$k$这个超参数外还有一个超参数$p$，继而介绍了明可夫斯基距离：</p>
+<p>$$ （\sum_{i=1}^n |X_i^{(a)}-X_i^{(b)}|^p）^\frac 1 p $$</p>
+<p>我们对明可夫斯基距离公式再进行一下泛化，将其提炼成这种形式：</p>
+<p>$$||X||_p=(\sum_{i=1}^n|X_i|^p)^{\frac 1 p}$$</p>
+<p>在数学上，我们将上面这个公式称为$L_p$范数，当$p$为1时，$L_1$范数就是曼哈顿距离，$p$为2时，$L_2$范数就是欧拉距离。那么在模型正则项中，是$L_2$范数就是岭回归，或者叫$L_2$正则项，$L_1$范数就是LASSO回归，或者叫$L_1$正则化。</p>
+<blockquote>
+<p>这里要注意的时，如果是$L_2$范数，岭回归的模型正则化公式应该还需要开根号，但是为了计算方便，一般使用时不加这个开根号，但是加不加根号对于模型正则化的效果来说是一样的。</p>
+</blockquote>
+<h3 id="u5F39_u6027_u7F51_uFF08Elastic_Net_uFF09"><a href="#u5F39_u6027_u7F51_uFF08Elastic_Net_uFF09" class="headerlink" title="弹性网（Elastic Net）"></a>弹性网（Elastic Net）</h3><p>弹性网很简单，就是将$L_1$正则项和$L_2$正则项都加入模型正则化中，既结合了岭回归和LASSO回归：</p>
+<p>$$ L(\theta) = \sum_{i=1}^m(y^{(i)}- (\theta_0+\theta_1X_1^{(i)}+\theta_2X_2^{(i)}+…+\theta_nX_n^{(i)} ))^2 + (1-r)\alpha \frac 1 2 \sum_{i=1}^n \theta_i^2 + r\alpha \sum_{i=1}^n |\theta_i|$$</p>
+<p>从公式中看到我们又引入了一个超参数$r$，这个超参数表示岭回归和LASSO回归在整个模型正则化中各占的比例。</p>
+<blockquote>
+<p>申明：本文为慕课网<a href="https://www.imooc.com/t/108955" target="_blank" rel="external">liuyubobobo</a>老师<a href="https://coding.imooc.com/learn/list/169.html" target="_blank" rel="external">《Python3入门机器学习 经典算法与应用》</a>课程的学习笔记，未经允许不得转载。</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/machine-learning-8/" rel="next" title="机器学习笔记八之多项式回归、拟合程度、模型泛化">
+                <i class="fa fa-chevron-left"></i> 机器学习笔记八之多项式回归、拟合程度、模型泛化
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/task-manage-omnifocus/" rel="prev" title="基于OmniFocus的任务系统">
+                基于OmniFocus的任务系统 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">88</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u9A8C_u8BC1_u6570_u636E_u96C6_u4E0E_u4EA4_u53C9_u9A8C_u8BC1"><span class="nav-number">1.</span> <span class="nav-text">验证数据集与交叉验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u4EA4_u53C9_u9A8C_u8BC1_uFF08Cross_Validation_uFF09"><span class="nav-number">1.1.</span> <span class="nav-text">交叉验证（Cross Validation）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5B9E_u73B0_u4EA4_u53C9_u9A8C_u8BC1"><span class="nav-number">1.2.</span> <span class="nav-text">实现交叉验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u504F_u5DEE_uFF08Bias_uFF09_u4E0E_u65B9_u5DEE_uFF08Variance_uFF09"><span class="nav-number">2.</span> <span class="nav-text">偏差（Bias）与方差（Variance）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6A21_u578B_u6B63_u5219_u5316_uFF08Regularization_uFF09"><span class="nav-number">3.</span> <span class="nav-text">模型正则化（Regularization）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5CAD_u56DE_u5F52_uFF08Ridge_Regression_uFF09"><span class="nav-number">3.1.</span> <span class="nav-text">岭回归（Ridge Regression）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LASSO__u56DE_u5F52_uFF08Least_Absolute_Shrinkage_and_Selection_Operator_Regression_uFF09"><span class="nav-number">3.2.</span> <span class="nav-text">LASSO 回归（Least Absolute Shrinkage and Selection Operator Regression）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5CAD_u56DE_u5F52_u548CLASSO_u56DE_u5F52_u7684_u6570_u5B66_u542B_u4E49_u4E0A_u7684_u533A_u522B"><span class="nav-number">3.3.</span> <span class="nav-text">岭回归和LASSO回归的数学含义上的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LP_u8303_u6570"><span class="nav-number">4.</span> <span class="nav-text">LP范数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5F39_u6027_u7F51_uFF08Elastic_Net_uFF09"><span class="nav-number">4.1.</span> <span class="nav-text">弹性网（Elastic Net）</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/machine-learning-9/';
+      var disqus_title = '机器学习笔记九之交叉验证、模型正则化';
+      var disqus_url = 'http://www.devtalking.com//articles/machine-learning-9/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

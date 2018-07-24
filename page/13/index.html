@@ -231,6 +231,231 @@
             
             
               
+                <a class="post-title-link" href="/articles/handling-common-scenarios/" itemprop="url">
+                  常见问题的处理方案 -- iOS8/OS X v10.10应用扩展编程指南
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-27T00:00:00+08:00" content="2014-08-27">
+              2014-08-27
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/handling-common-scenarios/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/handling-common-scenarios/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>当你在开发一个应用扩展，让其执行某个任务时，你可能会遇到一些常见的，或者说在多种扩展中都会出现的通用的问题，并且必须要处理这些问题。在这一章节中，我们将帮助你如何应对和处理这些常见的问题。</p>
+<h2 id="u4F7F_u7528_u5185_u5D4C_u6846_u67B6_u5171_u4EAB_u4EE3_u7801"><a href="#u4F7F_u7528_u5185_u5D4C_u6846_u67B6_u5171_u4EAB_u4EE3_u7801" class="headerlink" title="使用内嵌框架共享代码"></a>使用内嵌框架共享代码</h2><p>你可以创建一个内嵌框架，用于在应用扩展和它的载体应用之间共享代码。比如，你开发了一个图片滤镜的照片编辑扩展，同时该扩展的载体应用也有这个功能，那么你就可以将实现该功能的代码封装成一个框架，让扩展<code>target</code>和载体应用<code>target</code>都使用这个框架。</p>
+<p>你要确保你创建的内嵌框架不包含应用扩展不能使用的API。这类API一般使用<code>unavailability</code>宏来标记，比如像<code>NS_EXTENSION_UNAVAILABLE</code>。</p>
+<p>如果你创建的内嵌框架中包含应用扩展不能使用的API，那么你将其Link到载体应用没关系，载体应用可以正常使用框架中的API，但是不能与应用扩展共享代码，也就是应用扩展不能使用该框架提供的所有API，继而无法做到代码共享。如果你上传App Store的应用扩展中有这种框架，或者应用扩展中使用了不允许使用的API，那么审核时会被拒绝。</p>
+<p>如果我们要想应用扩展使用内嵌框架，那么首先要配置一下。将<code>target</code>的<code>Require Only App-Extension-Safe API</code>选项设置为<code>Yes</code>。如果你不这样设置，那么Xcode会向你提示警告：<code>linking against dylib not safe for use in application extensions</code>。</p>
+<blockquote>
+<p>重要提示：如果载体应用要使用内嵌框架，那么必须要支持<code>arm64</code>架构，否则在上传App Store时会被拒绝。（如“创建应用扩展”章节中介绍的，所有应用扩展都要支持<code>arm64</code>架构。）</p>
+</blockquote>
+<p>在配置你的Xcode项目时，在<code>Build Phases</code>选项卡的<code>Copy Files</code>项中一定要将<code>Destination</code>设置为<code>Frameworks</code>。</p>
+<blockquote>
+<p>重要提示：我们要始终将<code>Destination</code>设置为<code>Frameworks</code>，如果你将其设置为<code>SharedFramework</code>，那么上传App Store时会被拒绝的。</p>
+</blockquote>
+<p>你可以让载体应用支持iOS7或更早的版本，但当在iOS8或更新的版本中运行时，要特别注意内嵌框架的安全性。详细内容可以参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW3" target="_blank" rel="external">Deploying a Containing App to Older Versions of iOS</a>。</p>
+<p>有关创建和使用内嵌框架的更多内容，请观看<a href="https://developer.apple.com/videos/wwdc/2014" target="_blank" rel="external">WWDC 2014的视频</a>“Building Modern Frameworks”。</p>
+<h2 id="u4E0E_u8F7D_u4F53_u5E94_u7528_u5171_u4EAB_u6570_u636E"><a href="#u4E0E_u8F7D_u4F53_u5E94_u7528_u5171_u4EAB_u6570_u636E" class="headerlink" title="与载体应用共享数据"></a>与载体应用共享数据</h2><p>虽然应用扩展的包内嵌在载体应用中，但是应用扩展和载体应用的安全域还是不一样的。默认情况下，应用扩展和载体应用是不能直接访问对方内容的。</p>
+<p>不过你可以通过数据共享来实现这个愿望。比如，你希望应用扩展和它的载体应用共享一个单一的大数据集。比如<code>prerendered assets</code>。</p>
+<p>要实现数据共享，我们要使用Xcode或者开发者门户网站允许应用扩展和它的载体应用成为一个应用组，然后在开发者门户网站中注册应用组，并指明在载体应用中使用该应用组。关于应用组的知识请查阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/AboutEntitlements.html#//apple_ref/doc/uid/TP40011195" target="_blank" rel="external">Entitlement Key Reference</a>文档的<a href="https://developer.apple.com/library/prerelease/ios/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/EnablingAppSandbox.html#//apple_ref/doc/uid/TP40011195-CH4-SW19" target="_blank" rel="external">Adding an App to an App Group</a>章节。</p>
+<p>当你设置好应用组后，应用扩展和它的载体应用就可以通过<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSUserDefaults_Class/index.html#//apple_ref/occ/cl/NSUserDefaults" target="_blank" rel="external">NSUserDefaults</a>API共享访问用户的信息。我们可以使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSUserDefaults_Class/index.html#//apple_ref/occ/instm/NSUserDefaults/initWithSuiteName:" target="_blank" rel="external">initWithSuiteName:</a>方法实例化一个<code>NSUserDefaults</code>对象，然后传入共享组的标示符。比如一个共享扩展，它或许会更新用户最近经常使用的共享账号，那么我们可以这样来写：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Create and share access to an NSUserDefaults object.</span></span><br><span class="line"><span class="type">NSUserDefaults</span> *mySharedDefaults = [[<span class="type">NSUserDefaults</span> alloc] initWithSuiteName:@<span class="string">"com.example.domain.MyShareExtension"</span>];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">// Use the shared user defaults object to update the user's account.</span></span><br><span class="line">[mySharedDefaults setObject:theAccountName forKey:@<span class="string">"lastAccountName"</span>];</span><br></pre></td></tr></table></figure>
+<p>下图向我们展示了应用扩展和它的载体应用是如何通过共享容器实现数据共享的：  </p>
+<p><img src="http://www.devtalking.com/postImages/handling-common-scenarios1.png" alt="结构"></p>
+<blockquote>
+<p>重要提示：如果你的应用扩展使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSession_class/index.html#//apple_ref/occ/cl/NSURLSession" target="_blank" rel="external">NSURLSession</a>类执行后台的上传下载任务时，你必须要设置一个共享容器。这样扩展和载体应用就可以访问到转换传输的数据。后台上传下载的更多知识请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW2" target="_blank" rel="external"> Performing Uploads and Downloads</a>。</p>
+</blockquote>
+<p>如果你设置了共享容器，那么载体应用和它包含的扩展就可以对共享容器里的内容进行读写操作了。同时你还必须要对数据的操作进行同步，以避免数据损坏或出错。使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIDocument_Class/index.html#//apple_ref/occ/cl/UIDocument" target="_blank" rel="external">UIDocument</a>类、Core Data或者SQLite可以帮助定位、协调操作共享容器中的内容。</p>
+<h2 id="u8BBF_u95EE_u7F51_u9875"><a href="#u8BBF_u95EE_u7F51_u9875" class="headerlink" title="访问网页"></a>访问网页</h2><p>在分享扩展（iOS与OS X平台）和Action扩展（iOS平台）中，一般都允许用户使用Safari浏览器执访问网页并通过执行JavaScript脚本将结果返回到扩展中。你也可以在你的扩展运行之前或执行完任务之后通过JavaScript文件修改网页内容。比如分享扩展，它可以帮助用户将网页上的内容分享到用户的社交网站上，或者iOS上的Action扩展可能会显示当前网页的指定翻译内容。</p>
+<p>如果要通过应用扩展访问网页并操作网页内容，那么需要遵循下面几个步骤：</p>
+<ul>
+<li>创建一个JavaScript文件，并申明一个全局对象，名为<code>ExtensionPreprocessingJS</code>并将其实例化。</li>
+<li>在应用扩展的属性列表文件中添加关键字<code>NSExtensionJavaScriptPreprocessingFile</code>，给Safari浏览器指明使用哪个JavaScript文件。</li>
+<li>在<code>NSExtensionActivationRule</code>字典中，将<code>NSExtensionActivationSupportsWebURLWithMaxCount</code>赋值一个非零的值。（更多关于<code>NSExtensionActivationRule</code>字典的知识请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW8" target="_blank" rel="external">Declaring Supported Data Types for a Share or Action Extension</a>。）</li>
+<li>当你的应用扩展开始运行时，使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSItemProvider_Class/index.html#//apple_ref/occ/cl/NSItemProvider" target="_blank" rel="external">NSItemProvider</a>类从JavaScript文件的返回值中获取结果。</li>
+<li>在iOS系统的应用扩展中，如果你希望当应用扩展执行完任务后实时更新网页内容，那么你要向JavaScript文件中传入内容。（在这一步中也使用<code>NSItemProvider</code>类。）</li>
+</ul>
+<p>为了告知Safari你的应用扩展中包含一个JavaScript文件，你需要在应用扩展的<code>Info.plist</code>文件中，向<code>NSExtensionAttributes</code>字典添加<code>NSExtensionJavaScriptPreprocessingFile</code>关键字来指明你的JavaScript文件。这个关键字的值就是你希望当你的应用扩展运行前，Safari要加载的JavaScript文件的名称。比如：</p>
+<pre><code>&lt;key&gt;NSExtensionAttributes&lt;/key&gt;
+    &lt;dict&gt;
+        &lt;key&gt;NSExtensionJavaScriptPreprocessingFile&lt;/key&gt;
+        &lt;string&gt;MyJavaScriptFile&lt;/string&gt;
+    &lt;/dict&gt;
+</code></pre><p>在iOS和OS X平台中，在你自定义的JavaScript类中可以定义一个<code>run()</code>函数，该函数就是Safari加载JavaScript文件的入口。在<code>run()</code>函数中，Safari提供了一个名为<code>completionFunction</code>的参数，你可以使用键值对象的形式将结果传给应用扩展。</p>
+<p>在iOS平台中，你还可以定义一个<code>finalize()</code>函数，当应用扩展在任务结束阶段调用<code>completeRequestReturningItems:expirationHandler:completion:</code>方法时Safari会调用<code>finalize()</code>函数。在该函数中，可以通过向<code>completeRequestReturningItems:expirationHandler:completion:</code>方法传值，来改变网页内容。</p>
+<p>比如，你的iOS应用扩展需要基于一个网页URI启动，并且当它结束运行时改变网页的背景色，那么你需要这样写JavaScript代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">MyExtensionJavaScriptClass</span> = function() &#123;&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="type">MyExtensionJavaScriptClass</span>.prototype = &#123;</span><br><span class="line">    run: function(arguments) &#123;</span><br><span class="line">    <span class="comment">// Pass the baseURI of the webpage to the extension.</span></span><br><span class="line">        arguments.completionFunction(&#123;<span class="string">"baseURI"</span>: document.baseURI&#125;);</span><br><span class="line">    &#125;,</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// Note that the finalize function is only available in iOS.</span></span><br><span class="line">    finalize: function(arguments) &#123;</span><br><span class="line">    <span class="comment">// arguments contains the value the extension provides in [NSExtensionContext completeRequestReturningItems:expirationHandler:completion:].</span></span><br><span class="line">    <span class="comment">// In this example, the extension provides a color as a returning item.</span></span><br><span class="line">    document.body.style.backgroundColor = arguments[<span class="string">"bgColor"</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// The JavaScript file must contain a global object named "ExtensionPreprocessingJS".</span></span><br><span class="line"><span class="keyword">var</span> <span class="type">ExtensionPreprocessingJS</span> = new <span class="type">MyExtensionJavaScriptClass</span>;</span><br></pre></td></tr></table></figure>
+<p>在iOS和OS X平台中，你需要编写代码来处理<code>fun()</code>函数返回的值，为获取到字典中的值，我们需要指定<code>kUTTypePropertyList</code>类型作为标示符传入<code>NSItemProvider</code>类的<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSItemProvider_Class/index.html#//apple_ref/occ/instm/NSItemProvider/loadItemForTypeIdentifier:options:completionHandler:" target="_blank" rel="external"> loadItemForTypeIdentifier:options:completionHandler:</a>方法。在该字典中使用<code>NSExtensionJavaScriptPreprocessingResultsKey</code>作为<code>key</code>来取值。比如下面例子中我们想要获取将URI传入<code>run()</code>的返回值：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">[imageProvider loadItemForTypeIdentifier:kUTTypePropertyList options:<span class="literal">nil</span> completionHandler:^(<span class="type">NSDictionary</span> *item, <span class="type">NSError</span> *error) &#123;</span><br><span class="line">    <span class="type">NSDictionary</span> *results = (<span class="type">NSDictionary</span> *)item;</span><br><span class="line">        <span class="type">NSString</span> *baseURI = [[results objectForKey:<span class="type">NSExtensionJavaScriptPreprocessingResultsKey</span>] objectForKey:@<span class="string">"baseURI"</span>];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p><code>finalize()</code>函数是在当应用扩展执行完任务后传参并调用的，创建一个含有我们需要处理的值的字典，然后用<code>NSItemProvider</code>的<code>initWithItem:typeIdentifier:</code>方法来封装该字典。比如当扩展执行完任务后我们想让网页变为红色，我们可以这样写：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSExtensionItem</span> *extensionItem = [[<span class="type">NSExtensionItem</span> alloc] <span class="keyword">init</span>];</span><br><span class="line">extensionItem.attachments = @[[[<span class="type">NSItemProvider</span> alloc] initWithItem: @&#123;<span class="type">NSExtensionJavaScriptFinalizeArgumentKey</span>: @&#123;@<span class="string">"bgColor"</span>:@<span class="string">"red"</span>&#125;&#125; typeIdentifier:(<span class="type">NSString</span> *)kUTTypePropertyList]];</span><br><span class="line">[[<span class="keyword">self</span> extensionContext] completeRequestReturningItems:@[extensionItem] expirationHandler:<span class="literal">nil</span> completion:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u6267_u884C_u4E0A_u4F20_u4E0B_u8F7D_u4EFB_u52A1"><a href="#u6267_u884C_u4E0A_u4F20_u4E0B_u8F7D_u4EFB_u52A1" class="headerlink" title="执行上传下载任务"></a>执行上传下载任务</h2><p>用户一般的操作习惯都倾向于当使用你的应用扩展完成某个任务后，可以将结果立即反馈在使用扩展的应用中。如果一个扩展要处理的任务包含较长时间的上传下载操作时，你要确保当你的应用扩展关闭后能继续完成该任务。为实现这个功能，我们需要使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSession_class/index.html#//apple_ref/occ/cl/NSURLSession" target="_blank" rel="external">NSURLSession</a>类创建一个URL会话并创建后台的上传下载任务。</p>
+<blockquote>
+<p>提示：你可以回想一下其他类型的后台任务，比如后台支持VoIP、后台播放音乐，这些是不能用应用扩展去实现的。更多信息请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionCreation.html#//apple_ref/doc/uid/TP40014214-CH5-SW3" target="_blank" rel="external">Respond to the Host App’s Request</a>。</p>
+</blockquote>
+<p>当你的应用扩展准备好上传下载任务后，扩展会完成调用它的应用发出的请求，并在不影响上传下载任务的前提下终止扩展。更多关于扩展处理主叫应用请求的知识请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionCreation.html#//apple_ref/doc/uid/TP40014214-CH5-SW3" target="_blank" rel="external">Respond to the Host App’s Request</a>。在iOS系统中，如果你的应用扩展在执行完后台任务时并没有在运行，那么系统会自动在后台运行扩展的载体应用，并调用<a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIApplicationDelegate_Protocol/index.html#//apple_ref/occ/intfm/UIApplicationDelegate/application:handleEventsForBackgroundURLSession:completionHandler:" target="_blank" rel="external">application:handleEventsForBackgroundURLSession:completionHandler:</a>代理方法。</p>
+<blockquote>
+<p>重要提示：如果你的应用扩展在后台创建了<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSession_class/index.html#//apple_ref/occ/cl/NSURLSession" target="_blank" rel="external">NSURLSession</a>任务，那么你必须要设置一个共享容器，以确保扩展和载体应用实现数据共享。我们可以在<code>NSURLSessionConfiguration</code>类中使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSessionConfiguration_class/index.html#//apple_ref/occ/instp/NSURLSessionConfiguration/sharedContainerIdentifier" target="_blank" rel="external">sharedContainerIdentifier</a>属性来指定一个共享容器的标示符，然后我们就可以通过该标示符获取到共享容器。<br>请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW6" target="_blank" rel="external">Sharing Data with Your Containing App</a>文档来设置共享容器。</p>
+</blockquote>
+<p>下面的例子展示了如何配置一个URL会话，并创建一个下载任务：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSURLSession</span> *mySession = [<span class="keyword">self</span> configureMySession];</span><br><span class="line"><span class="type">NSURL</span> *url = [<span class="type">NSURL</span> <span class="type">URLWithString</span>:@<span class="string">"http://www.example.com/LargeFile.zip"</span>];</span><br><span class="line"><span class="type">NSURLSessionTask</span> *myTask = [mySession downloadTaskWithURL:url];</span><br><span class="line">[myTask resume];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">- (<span class="type">NSURLSession</span> *) configureMySession &#123;</span><br><span class="line">    <span class="keyword">if</span> (!mySession) &#123;</span><br><span class="line">        <span class="type">NSURLSessionConfiguration</span>* config = [<span class="type">NSURLSessionConfiguration</span> backgroundSessionConfigurationWithIdentifier:@“com.mycompany.myapp.backgroundsession”];</span><br><span class="line">        <span class="comment">// To access the shared container you set up, use the sharedContainerIdentifier property on your configuration object.</span></span><br><span class="line">        config.sharedContainerIdentifier = @“com.mycompany.myappgroupidentifier”;</span><br><span class="line">        mySession = [<span class="type">NSURLSession</span> sessionWithConfiguration:config delegate:<span class="keyword">self</span> delegateQueue:<span class="literal">nil</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> mySession;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为在单位时间内只能由一个进程使用后台会话，所以你需要为载体应用中的所有扩展创建不同的后台会话（每个后台会话都要有一个唯一的标示符）。在这里我们建议当载体应用在后台处理扩展的任务时，只使用一个该扩展创建的后台会话。如果你要执行其他的网络相关的任务，那么就要创建相应的URL会话。</p>
+<p>如果你需要在后台创建URL会话之前完成主叫应用的请求，那么要确保创建和使用会话的代码是有效可执行的。当你的扩展调用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionContext_Class/index.html#//apple_ref/occ/instm/NSExtensionContext/completeRequestReturningItems:completionHandler:" target="_blank" rel="external">completeRequestReturningItems:completionHandler:</a>方法告知主叫应用已经完成相关请求后，系统就可以随时终止你的应用扩展。</p>
+<h2 id="u4E3A_u5206_u4EAB_u548CAction_u6269_u5C55_u7533_u660E_u652F_u6301_u7684_u6570_u636E_u7C7B_u578B"><a href="#u4E3A_u5206_u4EAB_u548CAction_u6269_u5C55_u7533_u660E_u652F_u6301_u7684_u6570_u636E_u7C7B_u578B" class="headerlink" title="为分享和Action扩展申明支持的数据类型"></a>为分享和Action扩展申明支持的数据类型</h2><p>在你的分享或Action扩展中，在它们的工作中可能会使用到一些数据，并且这些数据的类型各不相同。为了确保只有当用户在主叫应用中选择了你的扩展支持的数据类型时，才会展示你的扩展功能。你需要在扩展的属性列表文件中添加<code>NSExtensionActivationRule</code>关键字。你也可以使用该关键字指定扩展处理每种类型的最大数目。当你的应用扩展运行时，系统会用改关键字的值与扩展数据项的<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionItem_Class/index.html#//apple_ref/occ/instp/NSExtensionItem/attachments" target="_blank" rel="external">attachments</a>属性值作比较。关于<code>NSExtensionActivationRule</code>关键字的详细信息可以参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/SystemExtensionKeys.html#//apple_ref/doc/uid/TP40014212-SW2" target="_blank" rel="external">Action Extension Keys</a>文档中的<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009247" target="_blank" rel="external">Information Property List Key Reference</a>章节。</p>
+<p>比如，你可以申明你的分享扩展支持最大处理10张图片，一部影片和一个网站URL。你可以参考下面的写法：</p>
+<pre><code>&lt;key&gt;NSExtensionAttributes&lt;/key&gt;
+    &lt;dict&gt;
+        &lt;key&gt;NSExtensionActivationRule&lt;/key&gt;
+        &lt;dict&gt;
+            &lt;key&gt;NSExtensionActivationSupportsImageWithMaxCount&lt;/key&gt;
+            &lt;integer&gt;10&lt;/integer&gt;
+            &lt;key&gt;NSExtensionActivationSupportsMovieWithMaxCount&lt;/key&gt;
+            &lt;integer&gt;1&lt;/integer&gt;
+            &lt;key&gt;NSExtensionActivationSupportsWebURLWithMaxCount&lt;/key&gt;
+            &lt;integer&gt;1&lt;/integer&gt;
+        &lt;/dict&gt;
+    &lt;/dict&gt;
+</code></pre><p>如果你想指定不支持的数据类型，那么你可以将该类型的值设置为0，或者在<code>NSExtensionActivationRule</code>中不添加该类型即可。</p>
+<blockquote>
+<p>提示：如果你的分享扩展或iOS中的Action扩展需要访问网页，那你必须要确保<code>NSExtensionActivationSupportsWebURLWithMaxCount</code>关键字的值不为0（更多关于在应用扩展中通过JavaScript访问网页的内容请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ShareSheet.html#//apple_ref/doc/uid/TP40014214-CH12-SW8" target="_blank" rel="external">Accessing a Webpage</a>）。</p>
+</blockquote>
+<p>你也可以使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionItem_Class/index.html#//apple_ref/doc/uid/TP40014375-CH1" target="_blank" rel="external">NSExtensionItem</a>定义的<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/DevPedia-CocoaCore/UniformTypeIdentifier.html#//apple_ref/doc/uid/TP40008195-CH60" target="_blank" rel="external">UTI</a>子类型以便数据检测器检测文本信息，比如电话号码或通讯地址。</p>
+<p><code>NSExtensionActivationRule</code>字典中的关键字足以满足大多数应用的过滤需求。如果你需要做更复杂的过滤，比如像<code>public.url</code>和<code>public.image</code>之间的区别，那么你就得在文本中创建断言语句。如果你要创建一个断言，那么就将<code>NSExtensionActivationRule</code>关键字的值设置为你指定的断言字符串。（在运行时，系统会自动将该字符串编译为<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSPredicate_Class/index.html#//apple_ref/occ/cl/NSPredicate" target="_blank" rel="external">NSPredicate</a>对象）</p>
+<p>比如，一个应用扩展的附件属性可以指定为PDF文件，可以这样写：</p>
+<pre><code>{extensionItems = ({
+    attachments =     (
+                {
+            registeredTypeIdentifiers =             (
+             &quot;com.adobe.pdf&quot;,
+            &quot;public.file-url&quot;
+            );
+        }
+    );
+})}
+</code></pre><p>为了指定你的应用扩展可以处理PDF文件，你可以像这样创建断言字符串：</p>
+<pre><code>SUBQUERY(extensionItems, $extensionItem, SUBQUERY($extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;com.adobe.pdf&quot;).@count == 1).@count == 1
+</code></pre><p>开发过程中，在你创建断言语句之前你可以使用<code>TRUEPREDICATE</code>常量（结果为<code>true</code>）测试你的代码路径。更多断言语句的语法知识请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Conceptual/Predicates/Articles/pSyntax.html#//apple_ref/doc/uid/TP40001795" target="_blank" rel="external">Predicate Format String Syntax</a>。</p>
+<blockquote>
+<p>重要提示：在将你的载体应用上传App Store之前，要确保所有的<code>TRUEPREDICATE</code>常量已经替换为指定的断言语句或<code>NSExtensionActivationRule</code>关键字，不然载体应用会被App Store拒绝。</p>
+</blockquote>
+<h2 id="u914D_u7F6E_u8F7D_u4F53_u5E94_u7528_u4EE5_u9002_u7528_u4E8E_u8001_u7248_u672C_u7684iOS_u7CFB_u7EDF"><a href="#u914D_u7F6E_u8F7D_u4F53_u5E94_u7528_u4EE5_u9002_u7528_u4E8E_u8001_u7248_u672C_u7684iOS_u7CFB_u7EDF" class="headerlink" title="配置载体应用以适用于老版本的iOS系统"></a>配置载体应用以适用于老版本的iOS系统</h2><p>如果你在载体应用中使用了内嵌框架，那么它就可以在iOS8.0之后的版本中使用，即便内嵌框架不支持老版本的系统也没关系。</p>
+<p>使载体应用能做到上述这一点的是<a href="x-man-page://dlopen" target="_blank" rel="external">dlopen</a>命令，它可以使你使用条件链接和加载框架包的机制。你可以使用这个命令来代替编译时链接，你可以在Xcode的General 选项或Build Phases选项中对该命令进行编辑。其原理就是只有当载体应用在iOS8.0或更高的版本中运行时，才会链接使用内嵌框架。</p>
+<blockquote>
+<p>重要提示：如果你的载体应用使用了内嵌框架，那么就必须要支持<code>arm64</code>架构，否则会被App Store拒绝。</p>
+</blockquote>
+<h3 id="u8BBE_u7F6EXcode_u9879_u76EE_u4E2D_u5E94_u7528_u6269_u5C55_u7684_u6761_u4EF6_u94FE_u63A5"><a href="#u8BBE_u7F6EXcode_u9879_u76EE_u4E2D_u5E94_u7528_u6269_u5C55_u7684_u6761_u4EF6_u94FE_u63A5" class="headerlink" title="设置Xcode项目中应用扩展的条件链接"></a>设置Xcode项目中应用扩展的条件链接</h3><ol>
+<li>将每一个应用扩展的运行系统版本设置为iOS8.0或更高，通常选中Xcode中的<code>target</code>，在<code>General</code>选项中设置<code>Deployment info</code>。</li>
+<li>将你载体应用的运行系统版本设置为你想支持的最低iOS版本。</li>
+<li>在你的载体应用中，通过<a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIDevice_Class/index.html#//apple_ref/occ/instp/UIDevice/systemVersion" target="_blank" rel="external">systemVersion</a>方法，在运行时检查判断iOS的版本，并判断是否执行<code>dlopen</code>命令。只有你的载体应用在iOS8.0或更高的版本中运行时才会指定<code>dlopen</code>命令。</li>
+</ol>
+<p>特定的iOS API通过<code>dlopen</code>命令使用内嵌框架。你必须选择性的使用这些API，就像使用<code>dlopen</code>命令时那样。这些API都是<a href="https://developer.apple.com/library/prerelease/ios/documentation/CoreFoundation/Reference/CFBundleRef/index.html#//apple_ref/c/tdef/CFBundleRef" target="_blank" rel="external">CFBundleRef</a>的封装类型：</p>
+<ul>
+<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/CoreFoundation/Reference/CFBundleRef/index.html#//apple_ref/c/func/CFBundleGetFunctionPointerForName" target="_blank" rel="external">CFBundleGetFunctionPointerForName</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/CoreFoundation/Reference/CFBundleRef/index.html#//apple_ref/c/func/CFBundleGetFunctionPointersForNames" target="_blank" rel="external">CFBundleGetFunctionPointersforNames</a></li>
+</ul>
+<p>还有来自<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSBundle_Class/index.html#//apple_ref/occ/cl/NSBundle" target="_blank" rel="external">NSBundle</a>类的方法：</p>
+<ul>
+<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSBundle_Class/index.html#//apple_ref/occ/instm/NSBundle/load" target="_blank" rel="external">load</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSBundle_Class/index.html#//apple_ref/occ/instm/NSBundle/loadAndReturnError:" target="_blank" rel="external">loadAndReturnError:</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSBundle_Class/index.html#//apple_ref/occ/instm/NSBundle/classNamed:" target="_blank" rel="external">classNamed:</a></li>
+</ul>
+<p>因为你一般会将载体应用的运行系统版本配置为较低的版本，所以这些API通常都是在运行时检查，只有确保载体应用在iOS8.0或更高版本中运行时才会使用这些API。</p>
+<p>原文地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW1" target="_blank" rel="external">Handling Common Scenarios</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/swift-uikit-dynamics-2/" itemprop="url">
                   Swift中的UIKit动力学（二）
                 </a>
@@ -799,125 +1024,6 @@ Boundary contact occurred - nil
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/swift-value-and-reference-types/" itemprop="url">
-                  Swift中的值类型和参照类型
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-08-17T00:00:00+08:00" content="2014-08-17">
-              2014-08-17
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/swift-value-and-reference-types/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-value-and-reference-types/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>在Swift中，类型分为两类：第一种是<strong>值类型</strong>，该类型的每个实例持有数据的副本，并且该副本对于每个实例来说是独一无二的一份，比如结构体（struct）、枚举（enum）、元组（tuple）都是值类型。第二种是<strong>参照类型</strong>，该类型的实例共享数据唯一的一份副本（在native层面说的话，就是该类型的每个实例都指向内存中的同一个地址），比如类（class）就是参照类型。在这篇文章中，我们将深入探讨值类型和参照类型的使用价值，以及如何在某种场景下选择正确的类型。</p>
-<h2 id="u5B83_u4EEC_u6709_u4EC0_u4E48_u4E0D_u540C_uFF1F"><a href="#u5B83_u4EEC_u6709_u4EC0_u4E48_u4E0D_u540C_uFF1F" class="headerlink" title="它们有什么不同？"></a>它们有什么不同？</h2><p>值类型最基本的特点就是复制，这影响到它的赋值、初始化、传参等操作。来看看下面的代码示例：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 值类型示例</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">S</span> </span>&#123; <span class="keyword">var</span> data: <span class="type">Int</span> = -<span class="number">1</span> &#125;</span><br><span class="line"><span class="keyword">var</span> a = <span class="type">S</span>()</span><br><span class="line"><span class="keyword">var</span> b = a                       <span class="comment">// a复制一份，并将副本赋值给了b</span></span><br><span class="line">a.data = <span class="number">42</span>                     <span class="comment">// a的数据改变了，但是b的并没有改变</span></span><br><span class="line"><span class="built_in">println</span>(<span class="string">"<span class="subst">\(a.data)</span>, <span class="subst">\(b.data)</span>"</span>) <span class="comment">// prints "42, -1"</span></span><br></pre></td></tr></table></figure>
-<p>参照类型的复制行为其实是隐式的创建了一个共享的实例，作为原始类型的参照。下面的例子中，两个变量都会参照唯一的那个共享实例的数据，所当改变这两个变量中任何一个的数据，都会同样作用于原始类型的数据：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 参照类型示例</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123; <span class="keyword">var</span> data: <span class="type">Int</span> = -<span class="number">1</span> &#125;</span><br><span class="line"><span class="keyword">var</span> x = <span class="type">C</span>()</span><br><span class="line"><span class="keyword">var</span> y = x       <span class="comment">// 将x赋值给y</span></span><br><span class="line">x.data = <span class="number">42</span>     <span class="comment">// 修改了x的数据，其实是修改了参照数据，那么y的数据也会改变 </span></span><br><span class="line"><span class="built_in">println</span>(<span class="string">"<span class="subst">\(x.data)</span>, <span class="subst">\(y.data)</span>"</span>) <span class="comment">// prints "42, 42"</span></span><br></pre></td></tr></table></figure>
-<h2 id="Mutation_u5728_u5B89_u5168_u6027_u4E2D_u7684_u89D2_u8272"><a href="#Mutation_u5728_u5B89_u5168_u6027_u4E2D_u7684_u89D2_u8272" class="headerlink" title="Mutation在安全性中的角色"></a>Mutation在安全性中的角色</h2><p>选择值类型的一个很重要的原因是可以让你比较容易的理解和掌控你的代码。如果你使用值类型，那么都是唯一的数据值、类型的副本在和你打交道，你对数据的修改只作用于数据所属的类型实例，所以你可以不用担心因为你在某个地方对数据的修改而影响到其他地方的数据。这在多线程环境中非常有用，因为在多线程下，不同的线程有可能会在你不知情的情况下改变数据。发生这种Bug后，调试起来就非常困难。</p>
-<p>因为值类型和参照类型的表象区别就在于当你修改类型实例的数据时，它们对原始类型数据的处理方式不同。但是有一种情况，值类型和参照类型的处理方式却又相似，那就是当类型实例的数据为只读的时候。在不存在修改的情况下，值类型和参照类型就没什么区别了。</p>
-<p>你可能会觉得这一点很有用，假如说一个<code>class</code>是完全不能被重定义的，那么就比较符合使用Cocoa的<code>NSObject</code>对象的一些习惯，并能很好的保持原本的语义。今天，在Swift你可以通过定义不可改变的存储属性来创建一个不可重定义的类，这样可以避免暴露出的API被修改。事实上，许多普通的Cocoa框架里的类，比如<code>NSURL</code>，都被定义成了不可重定义的类。尽管如此，Swift目前还不提供任何机制像结构体（struct）和枚举（enum）一样去强制使一个<code>class</code>成为不可重定义的类（比如像子类）。</p>
-<h2 id="u5982_u4F55_u9009_u62E9_u6B63_u786E_u7684_u7C7B_u578B_uFF1F"><a href="#u5982_u4F55_u9009_u62E9_u6B63_u786E_u7684_u7C7B_u578B_uFF1F" class="headerlink" title="如何选择正确的类型？"></a>如何选择正确的类型？</h2><p>如果你想创建一个新类型，那么你应该选择值类型还是参照类型呢？当你使用Cocoa框架时，很多API都是<code>NSObject</code>的子类，那么你就必须要使用参照类型，也就是<code>class</code>。在其他情况下，这里有一些指导建议你可以参考：</p>
-<p>使用值类型的情形：</p>
-<ul>
-<li>使用<code>==</code>运算符比较实例数据的时候。</li>
-<li>你想单独复制一份实例数据的时候。</li>
-<li>当在多线程环境下操作数据的时候。</li>
-</ul>
-<p>使用参照类型（比如<code>class</code>）的情形：</p>
-<ul>
-<li>当使用<code>===</code>运算符判断两个对象是否引用同一个对象实例的时候。</li>
-<li>当上下文需要创建一个共享的、可变的对象时。</li>
-</ul>
-<p>在Swift中，<code>Array</code>、<code>String</code>、<code>Dictionary</code>都是值类型。它们的使用方式类似C语言中得<code>int</code>，每一个实例都有一份数据。你不需要进行显示的复制操作去防止数据在你不知情的情况下被修改。更重要的是，你可以跨线程进行传参而不需要考虑同步的问题，因为传递值类型很安全。秉着高安全性的精神，这种类型划分模式能帮助你在Swift中写出更加有可预测性的代码。</p>
-<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=10" target="_blank" rel="external">Value and Reference Types</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -960,7 +1066,7 @@ Boundary contact occurred - nil
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">87</span>
+              <span class="site-state-item-count">88</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
