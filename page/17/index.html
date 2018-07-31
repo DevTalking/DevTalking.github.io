@@ -231,402 +231,6 @@
             
             
               
-                <a class="post-title-link" href="/articles/gojs-textblock/" itemprop="url">
-                  GOJS教程 -- 如何使用TextBlocks
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-07-20T00:00:00+08:00" content="2014-07-20">
-              2014-07-20
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/gojs-textblock/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/gojs-textblock/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p><code>TextBlock</code>是用于显示文本信息的对象。 </p>
-<p>通过设置<code>TexkBlock.text</code>属性来显示文本信息，这也是唯一的一个方法。因为<code>TexkBlock</code>继承自<code>GraphObject</code>，所以一些<code>GraphObject</code>的属性也有可能对文本有影响。  </p>
-<h2 id="u5B57_u4F53_u548C_u989C_u8272"><a href="#u5B57_u4F53_u548C_u989C_u8272" class="headerlink" title="字体和颜色"></a>字体和颜色</h2><p>可以通过<code>TexkBlock.font</code>属性设置文本的字体，该属性的值可以使用CSS来设置。  </p>
-<p>可以通过<code>TextBlock.stroke</code>属性设置文本字体的颜色，同样可以使用CSS来设置。</p>
-<p>因为<code>TexkBlock</code>继承自<code>GraphObject</code>，所以<code>GraphObject.background</code>属性也可以作用于<code>TextBlock</code>，可以通过该属性设置文本背景色。</p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Vertical&quot;,
-  $(go.TextBlock, { text: &quot;a Text Block&quot; }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, stroke: &quot;red&quot; }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightblue&quot; }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, font: &quot;bold 14pt serif&quot; })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/texkBlock1.jpg" alt="textblock"></p>
-<h2 id="u5C3A_u5BF8_u548C_u88C1_u526A"><a href="#u5C3A_u5BF8_u548C_u88C1_u526A" class="headerlink" title="尺寸和裁剪"></a>尺寸和裁剪</h2><p><code>TexkBlock</code>的自然尺寸是会自适应设置文本的字体以及文本长度的。但是实际上它的尺寸是可大可小的。  </p>
-<p>下面的例子中首先展示了自然尺寸的<code>TextBlock</code>，然后对其进行明确的尺寸设置，并给与绿色背景：</p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Vertical&quot;,
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2 }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                    width: 100, height: 33 }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                    width: 60, height: 33 }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                    width: 50, height: 22 }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                    width: 40, height: 9 })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/texkBlock2.jpg" alt="textblock"></p>
-<h2 id="u6587_u672C_u81EA_u9002_u5E94"><a href="#u6587_u672C_u81EA_u9002_u5E94" class="headerlink" title="文本自适应"></a>文本自适应</h2><p><code>TextBlock</code>也可以使文本信息在规定的尺寸内自动换行，以达到自适应尺寸。可以通过<code>TextBlock.wrap</code>属性来设置，该属性不能为空，必须对其进行属性设置。  </p>
-<p>下面的例子中，第一个使用自然尺寸，第二个规定了宽度，第三第四个在规定相同宽度的基础上设置了<code>TextBlock.wrap</code>属性： </p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Vertical&quot;,
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2 }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                    width: 50, wrap: go.TextBlock.None }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                    width: 50, wrap: go.TextBlock.WrapDesiredSize }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                    width: 50, wrap: go.TextBlock.WrapFit })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/texkBlock3.jpg" alt="textblock"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u6587_u672C_u5BF9_u9F50"><a href="#u6587_u672C_u5BF9_u9F50" class="headerlink" title="文本对齐"></a>文本对齐</h2><p>使用<code>TextBlock.textAlign</code>属性可以设置文本的对齐方式。</p>
-<p>这里注意<code>TextBlock.textAlign</code>与<code>GraphObject.alignment</code>是不同的，前者是针对文本的对齐方式，后者是针对所在容器的对齐方式：</p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Horizontal&quot;,
-  $(go.Panel, &quot;Vertical&quot;,
-    { width: 150, defaultStretch: go.GraphObject.Horizontal },
-    $(go.TextBlock, { text: &quot;textAlign: &apos;left&apos;&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                      textAlign: &quot;left&quot; }),
-    $(go.TextBlock, { text: &quot;textAlign: &apos;center&apos;&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                      textAlign: &quot;center&quot; }),
-    $(go.TextBlock, { text: &quot;textAlign: &apos;right&apos;&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                      textAlign: &quot;right&quot; })
-  ),
-  $(go.Panel, &quot;Vertical&quot;,
-    { width: 150, defaultStretch: go.GraphObject.None },
-    $(go.TextBlock, { text: &quot;alignment: Left&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                      alignment: go.Spot.Left }),
-    $(go.TextBlock, { text: &quot;alignment: Center&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                      alignment: go.Spot.Center }),
-    $(go.TextBlock, { text: &quot;alignment: Right&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                      alignment: go.Spot.Right })
-  )
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/texkBlock4.jpg" alt="textblock"></p>
-<h2 id="u5BF9_u9F50_u65B9_u5F0F_u3001_u6362_u884C_u3001_u81EA_u9002_u5E94"><a href="#u5BF9_u9F50_u65B9_u5F0F_u3001_u6362_u884C_u3001_u81EA_u9002_u5E94" class="headerlink" title="对齐方式、换行、自适应"></a>对齐方式、换行、自适应</h2><p><code>TextBlock.textAlign</code>不管在自然尺寸中处理多行还是在规定尺寸中处理多行都很好用。</p>
-<p><code>TextBlock.isMultiline</code>属性用于设置是否开启内嵌文本中的换行符作用。</p>
-<p><code>TextBlock.wrap</code>属性在处理换行时就更加游刃有余，它会根据<code>TexkBlock</code>的尺寸自动对文本进行换行。  </p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Vertical&quot;,
-  $(go.TextBlock, { text: &quot;a Text Block\nwith three logical lines\nof text&quot;,
-                    background: &quot;lightgreen&quot;, margin: 2,
-                    isMultiline: false }),
-  $(go.TextBlock, { text: &quot;a Text Block\nwith three logical lines\nof text&quot;,
-                    background: &quot;lightgreen&quot;, margin: 2,
-                    isMultiline: true }),
-  $(go.TextBlock, { text: &quot;a Text Block\nwith three logical lines\nof centered text&quot;,
-                    background: &quot;lightgreen&quot;, margin: 2,
-                    isMultiline: true, textAlign: &quot;center&quot; }),
-  $(go.TextBlock, { text: &quot;a single line of centered text that should wrap because we will limit the width&quot;,
-                    background: &quot;lightgreen&quot;, margin: 2, width: 80,
-                    wrap: go.TextBlock.WrapFit, textAlign: &quot;center&quot; })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/texkBlock5.jpg" alt="textblock"></p>
-<h2 id="u7F16_u8F91_u6587_u672C"><a href="#u7F16_u8F91_u6587_u672C" class="headerlink" title="编辑文本"></a>编辑文本</h2><p>GOJS也提供了对<code>TextBlock</code>文本的编辑功能，只需要设置<code>TextBlock.editable</code>为<code>true</code>即可。<br>如果你想对<code>TextBlock</code>中的文本进行某种规则的验证，那么可以设置<code>TextBlock.textValidation</code>属性，该属性的值为<code>function</code>，你可以自行编写验证规则。你甚至可以更换文本编辑器，设置<code>TextBlock.textEditor</code>属性即可。 </p>
-<pre><code>diagram.add(
-$(go.Part,
-  $(go.TextBlock,
-    { text: &quot;select and then click to edit&quot;,
-      background: &quot;lightblue&quot;,
-      editable: true, isMultiline: false })
-));
-diagram.add(
-$(go.Part,
-  $(go.TextBlock,
-    { text: &quot;this one allows embedded newlines&quot;,
-      background: &quot;lightblue&quot;,
-      editable: true })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/texkBlock6.jpg" alt="textblock"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/gojs-build-diagram/" itemprop="url">
-                  GOJS教程 -- 如何构建Parts
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-07-19T00:00:00+08:00" content="2014-07-19">
-              2014-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/gojs-build-diagram/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/gojs-build-diagram/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p><code>Parts</code>是一个图表对象，它继承自<code>Panel</code>。它是所有用户操作级别对象的基类。因为它继承自<code>Panel</code>，所以它实际上也是其他<code>GraphObject</code>可视对象的容器。也同样因为继承自<code>Panel</code>，所以它的超类是<code>GraphObject</code>，因此<code>Parts</code>也拥有<code>GraphObject</code>的属性，比如<code>GraphObject.actualBounds</code>、<code>GraphObject.contextMenu</code>、<code>GraphObject.visible</code>。  </p>
-<p>如果你只想创建一个用户可以选中并拖拽移动的可视对象，那么创建<code>Parts</code>就可以满足你。但通常情况下<code>Parts</code>并不能满足我们，所以我们一般创建的是<code>Node</code>和<code>Link</code>，它们都继承自<code>Parts</code>。<br>gojs框架提供两种构建对象的语法，即普通的JavaScript语法和gojs的进阶语法，下面我们来一一了解一下。  </p>
-<h2 id="u4F20_u7EDF_u6784_u5EFA_u8BED_u6CD5"><a href="#u4F20_u7EDF_u6784_u5EFA_u8BED_u6CD5" class="headerlink" title="传统构建语法"></a>传统构建语法</h2><p><code>Node</code>是gojs中最低级的<code>GraphObject</code>对象容器，它只能包含继承自<code>GraphObject</code>对象的<code>TextBlock</code>和<code>Shape</code>对象。<code>Node</code>的父类<code>Part</code>可包含<code>Node</code>和<code>Link</code>对象，<code>Node</code>的超类<code>Panel</code>就能包含更多的<code>GraphObject</code>对象了。 <code>Diagram</code>是gojs中最大的<code>GraphObject</code>对象容器，<code>Palette</code>次之。<br>一个最简单的<code>Node</code>是由<code>TextBlock</code>和<code>Shape</code>组成的：  </p>
-<pre><code>var node = new go.Node(go.Panel.Auto);
-var shape = new go.Shape();
-shape.figure = &quot;RoundedRectangle&quot;;
-shape.fill = &quot;lightblue&quot;;
-node.add(shape);
-var textblock = new go.TextBlock();
-textblock.text = &quot;Hello!&quot;;
-textblock.margin = 5;
-node.add(textblock);
-diagram.add(node);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagram.jpg" alt="diagram">  </p>
-<p>上面的图片就是通过上述代码创建的Diagram，虽然这里只是图片展示，但实际上他是有交互行为的，你可以选中<code>Node</code>，并拖拽移动。  </p>
-<p>虽然通过这种语法构建Diagram没有问题，但是如果工程量比较大的时候，这种方式会使代码的可读性变的很差，维护起来也很困难。幸好，gojs为我们提供了另一种构建Diagram的语法。</p>
-<h2 id="gojs_u6784_u5EFA_u8BED_u6CD5"><a href="#gojs_u6784_u5EFA_u8BED_u6CD5" class="headerlink" title="gojs构建语法"></a>gojs构建语法</h2><p>gojs定义了一个用于创建<code>GraphObject</code>对象的静态函数<code>GraphObject.make</code>。如果使用该方法创建对象，我们就不用再关心要创建什么样的对象变量名，什么地方该使用什么变量等。该方法还支持内嵌模式，这样的好处就是代码不会是一行一行罗列下来，而是能够表达出层级关系和所属关系的结构体。  </p>
-<p><code>GraphObject.make</code>函数的参数量是可变的，但是第一个参数必须是一个<code>GraphObject</code>对象的子类。其他的参数一般有这么几种：</p>
-<ul>
-<li>普通JavaScript的键值对象，用于设置构建类型的相关属性比如<code>{ figure:&quot;RoundedRectangle&quot; }</code>。</li>
-<li>构建对象的子元素，比如说给<code>Node</code>里添加一个<code>Shape</code>。</li>
-<li>一个枚举类型的参数，一般该参数用于设定构建对象在Diagram中的排列方式，比如平铺排列、垂直排列等，以及嵌套元素的自适应方法。</li>
-<li>一个字符串，这个参数一般作为第二个参数，用于设置某个<code>GraphObject</code>子类型的第一属性，比如设置<code>TextBlock</code>的<code>text</code>、<code>Shape</code>的<code>figure</code>、<code>Picture</code>的<code>source</code>、<code>Panel</code>的<code>type</code>等。</li>
-<li>如果构建的是一个<code>Table Panel</code>，那么有一个<code>RowCoumnDefinition</code>属性，用于描述<code>row</code>和<code>column</code>的信息。不过有一点要注意的是，如果构建的是一个<code>Diagram</code>，那么这个字符串必须是<code>DIV</code>的<code>id</code>。</li>
-<li>一个JavaScript数组，它的作用有点像元组，如果过一个函数的返回类型由多个的时候，用它来储存。</li>
-</ul>
-<p>下面我们用<code>go.GraphObject.make</code>语法来构建一个与上述例子相同的Diagram：</p>
-<pre><code>// 注意，这里的$可以更换，随你喜好    
-var $ = go.GraphObject.make;
-diagram.add(
-$(go.Node, go.Panel.Auto,
-  $(go.Shape,
-    { figure: &quot;RoundedRectangle&quot;,
-      fill: &quot;lightblue&quot; }),
-  $(go.TextBlock,
-    { text: &quot;Hello!&quot;,
-      margin: 5 })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagram.jpg" alt="diagram"> </p>
-<p>上面的代码还可以进行简化，将枚举类型参数替换为字符串，可参阅上文中提到的参数类型： </p>
-<pre><code>var $ = go.GraphObject.make;
-diagram.add(
-$(go.Node, &quot;Auto&quot;,
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightblue&quot; }),
-  $(go.TextBlock, &quot;Hello!&quot;, { margin: 5 })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagram.jpg" alt="diagram"> </p>
-<p>使用<code>go.GraphObject.make</code>不仅可以构建可视对象，还可以方便的实例化gojs中的装饰对象，可以动态的创建某些作为参数或属性的对象。比如上述例子中的<code>Node</code>是蓝色，我们可以使用样式刷对象（<code>Brush</code>）对其颜色进行修饰：  </p>
-<pre><code>diagram.add(
-$(go.Node, &quot;Auto&quot;,
-  $(go.Shape, &quot;RoundedRectangle&quot;,
-    { fill: $(go.Brush, go.Brush.Linear,
-              { 0.0: &quot;Violet&quot;, 1.0: &quot;Lavender&quot; }) }),
-  $(go.TextBlock, &quot;Hello!&quot;,
-    { margin: 5 })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagramWithBrush.jpg" alt="diagram"><br>下面我们再来看一个构建<code>Diagram</code>的例子：  </p>
-<pre><code>var myDiagram =
-$(go.Diagram, &quot;myDiagramDiv&quot;,  // must name or refer to the DIV HTML element
-  {
-    // any initial diagram is centered in the viewport
-    initialContentAlignment: go.Spot.Center,
-
-    // don&apos;t initialize some properties until after a new model has been loaded
-    &quot;InitialLayoutCompleted&quot;: loadDiagramProperties,  // this DiagramEvent listener is defined below
-
-    // have mouse wheel events zoom in and out instead of scroll up and down
-    &quot;toolManager.mouseWheelBehavior&quot;: go.ToolManager.WheelZoom,
-
-    // specify a data object to copy for each new Node that is created by clicking
-    &quot;clickCreatingTool.archetypeNodeData&quot;: { text: &quot;new node&quot; }
-  });
-
-function loadDiagramProperties(e) { . . . }
-</code></pre><p>从上面的例子中可以看出，第二个参数为<code>DIV</code>的<code>id</code>，第三个参数就是键值对象了，其实就是json字符串，用于配置<code>Diagram</code>的相关属性。<br>我们也可以单独创建能够复用的对象，比如样式刷（<code>Brush</code>）：</p>
-<pre><code>var violetbrush = $(go.Brush, go.Brush.Linear, { 0.0: &quot;Violet&quot;, 1.0: &quot;Lavender&quot; });
-
-diagram.add(
-$(go.Node, &quot;Auto&quot;,
-  $(go.Shape, &quot;RoundedRectangle&quot;,
-    { fill: violetbrush }),
-  $(go.TextBlock, &quot;Hello!&quot;,
-    { margin: 5 })
-));
-
-diagram.add(
-$(go.Node, &quot;Auto&quot;,
-  $(go.Shape, &quot;Ellipse&quot;,
-    { fill: violetbrush }),
-  $(go.TextBlock, &quot;Goodbye!&quot;,
-    { margin: 5 })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagramWithBrush2.jpg" alt="diagram"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 <a class="post-title-link" href="/articles/gojs-simple-diagram/" itemprop="url">
                   JavaScript图表图形框架 -- GOJS简介
                 </a>
@@ -1459,6 +1063,667 @@ int main(int argc, char * argv[])
 
 
     
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/you-should-know-block/" itemprop="url">
+                  Objective-C中的Block
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-06-25T00:00:00+08:00" content="2014-06-25">
+              2014-06-25
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/you-should-know-block/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/you-should-know-block/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h1 id="u76F8_u5173_u6982_u5FF5"><a href="#u76F8_u5173_u6982_u5FF5" class="headerlink" title="相关概念"></a>相关概念</h1><p>在这篇笔记开始之前，我们需要对以下概念有所了解。</p>
+<h2 id="u64CD_u4F5C_u7CFB_u7EDF_u4E2D_u7684_u6808_u548C_u5806"><a href="#u64CD_u4F5C_u7CFB_u7EDF_u4E2D_u7684_u6808_u548C_u5806" class="headerlink" title="操作系统中的栈和堆"></a>操作系统中的栈和堆</h2><blockquote>
+<p>注：这里所说的堆和栈与数据结构中的堆和栈不是一回事。</p>
+</blockquote>
+<p>我们先来看看一个由C/C++/OBJC编译的程序占用内存分布的结构：<br><img src="http://www.devtalking.com/postImages/memory_structure.jpg" alt="内存分布结构"> </p>
+<ul>
+<li><p>栈区（stack）：由系统自动分配，一般存放函数参数值、局部变量的值等。由编译器自动创建与释放。其操作方式类似于数据结构中的栈，即后进先出、先进后出的原则。</p>
+<blockquote>
+<p>例如：在函数中申明一个局部变量<code>int b</code>;系统自动在栈中为b开辟空间。</p>
+</blockquote>
+</li>
+<li><p>堆区（heap）：一般由程序员申请并指明大小，最终也由程序员释放。如果程序员不释放，程序结束时可能会由OS回收。对于堆区的管理是采用<strong>链表</strong>式管理的，操作系统有一个记录空闲内存地址的链表，当接收到程序分配内存的申请时，操作系统就会遍历该链表，遍历到一个记录的内存地址大于申请内存的链表节点，并将该节点从该链表中删除，然后将该节点记录的内存地址分配给程序。  </p>
+<blockquote>
+<p>例如：在C中malloc函数<br>char <em>p1;<br>p1 = (char </em>)malloc(10);<br>但是p1本身是在栈中的。   </p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>链表：是一种常见的基础数据结构，一般分为单向链表、双向链表、循环链表。以下为单向链表的结构图：<br><img src="http://www.devtalking.com/postImages/linked_list.jpg" alt="单向链表"><br>单向链表是链表中最简单的一种，它包含两个区域，一个信息域和一个指针域。信息域保存或显示关于节点的信息，指针域储存下一个节点的地址。<br>上述的空闲内存地址链表的信息域保存的就是空闲内存的地址。</p>
+</blockquote>
+<ul>
+<li>全局区/静态区：顾名思义，全局变量和静态变量存储在这个区域。只不过初始化的全局变量和静态变量存储在一块，未初始化的全局变量和静态变量存储在一块。程序结束后由系统释放。</li>
+<li>文字常量区：这个区域主要存储字符串常量。程序结束后由系统释放。</li>
+<li>程序代码区：这个区域主要存放函数体的二进制代码。</li>
+</ul>
+<p>下面举一个前辈写的例子：</p>
+<pre><code>//main.cpp
+int a = 0; // 全局初始化区
+char *p1; // 全局未初始化区
+main {
+    int b; // 栈
+    char s[] = &quot;abc&quot;; // 栈
+    char *p2; // 栈
+    char *p3 = &quot;123456&quot;; // 123456\0在常量区，p3在栈上
+    static int c =0； // 全局静态初始化区
+    p1 = (char *)malloc(10);
+    p2 = (char *)malloc(20); // 分配得来的10和20字节的区域就在堆区
+    strcpy(p1, &quot;123456&quot;); // 123456\0在常量区，这个函数的作用是将&quot;123456&quot; 这串字符串复制一份放在p1申请的10个字节的堆区域中。
+    // p3指向的&quot;123456&quot;与这里的&quot;123456&quot;可能会被编译器优化成一个地址。
+}
+</code></pre><blockquote>
+<p>strcpy函数<br>原型声明：<code>extern char *strcpy(char* dest, const char *src);</code><br>功能：把从src地址开始且含有NULL结束符的字符串复制到以dest开始的地址空间。</p>
+</blockquote>
+<h2 id="u7ED3_u6784_u4F53_uFF08Struct_uFF09"><a href="#u7ED3_u6784_u4F53_uFF08Struct_uFF09" class="headerlink" title="结构体（Struct）"></a>结构体（Struct）</h2><p>在C语言中，结构体(struct)指的是一种数据结构。结构体可以被声明为变量、指针或数组等，用以实现较复杂的数据结构。结构体同时也是一些元素的集合，这些元素称为结构体的成员(member)，且这些成员可以为不同的类型，成员一般用名字访问。<br>我们来看看结构体的定义： </p>
+<pre><code>struct tag { member-list } variable-list;
+</code></pre><ul>
+<li><code>struct</code>：结构体关键字。</li>
+<li><code>tag</code>：结构体标签。</li>
+<li><code>member-list</code>：结构体成员列表。</li>
+<li><code>variable-list</code>：为结构体声明的变量列表。</li>
+</ul>
+<p>在一般情况下，<code>tag</code>，<code>member-list</code>，<code>variable-list</code>这三部分至少要出现两个。以下为示例：</p>
+<pre><code>// 该结构体拥有3个成员，整型的a，字符型的b，双精度型的c
+// 并且为该结构体声明了一个变量s1
+// 该结构体没有标明其标签
+struct{
+    int a;
+    char b;
+    double c;
+} s1;
+
+// 该结构体拥有同样的三个成员
+// 并且该结构体标明了标签EXAMPLE
+// 该结构体没有声明变量
+struct EXAMPLE{
+    int a;
+    char b;
+    double c;
+};
+
+//用EXAMPLE标签的结构体，另外声明了变量t1、t2、t3
+struct EXAMPLE t1, t2[20], *t3;
+</code></pre><p>以上就是简单结构体的代码示例。结构体的成员可以包含其他结构体，也可以包含指向自己结构体类型的指针。结构体的变量也可以是指针。</p>
+<p>下面我们来看看结构体成员的访问。结构体成员依据结构体变量类型的不同，一般有2种访问方式，一种为直接访问，一种为间接访问。直接访问应用于普通的结构体变量，间接访问应用于指向结构体变量的指针。直接访问使用结构体变量名.成员名，间接访问使用(*结构体指针名).成员名或者使用结构体指针名->成员名。相同的成员名称依靠不同的变量前缀区分。</p>
+<pre><code>struct EXAMPLE{
+    int a;
+    char b;
+};
+
+//声明结构体变量s1和指向结构体变量的指针s2
+struct EXAMPLE s1, *s2;
+
+//给变量s1和s2的成员赋值,注意s1.a和s2-&gt;a并不是同一成员
+s1.a = 5;
+s1.b = 6;
+s2-&gt;a = 3;
+s2-&gt;b = 4;
+</code></pre><p>最后我们来看看结构体成员存储。在内存中，编译器按照成员列表顺序分别为每个结构体成员分配内存。如果想确认结构体占多少存储空间，则使用关键字<code>sizeof</code>，如果想得知结构体的某个特定成员在结构体的位置，则使用<code>offsetof</code>宏(定义于stddef.h)。</p>
+<pre><code>struct EXAMPLE{
+    int a;
+    char b;
+};
+
+//获得EXAMPLE类型结构体所占内存大小
+int size_example = sizeof( struct EXAMPLE );
+
+//获得成员b相对于EXAMPLE储存地址的偏移量
+int offset_b = offsetof( struct EXAMPLE, b );
+</code></pre><h2 id="u95ED_u5305_uFF08Closure_uFF09"><a href="#u95ED_u5305_uFF08Closure_uFF09" class="headerlink" title="闭包（Closure）"></a>闭包（Closure）</h2><p>闭包就是一个函数，或者一个指向函数的指针，加上这个函数执行的非局部变量。<br>说的通俗一点，就是闭包允许一个函数访问声明该函数运行上下文中的变量，甚至可以访问不同运行上文中的变量。<br>我们用脚本语言来看一下：</p>
+<pre><code>function funA(callback){
+    alert(callback());
+}
+
+function funB(){
+    var str = &quot;Hello World&quot;; // 函数funB的局部变量，函数funA的非局部变量
+    funA（
+        function（）{
+            return str;
+        }
+    ）；
+}
+</code></pre><p>通过上面的代码我们可以看出，按常规思维来说，变量<code>str</code>是函数<code>funB</code>的局部变量，作用域只在函数<code>funB</code>中，函数<code>funA</code>是无法访问到<code>str</code>的。但是上述代码示例中函数<code>funA</code>中的<code>callbac</code>k可以访问到<code>str</code>，这是为什么呢，因为闭包性。</p>
+<h1 id="block_u57FA_u7840_u77E5_u8BC6"><a href="#block_u57FA_u7840_u77E5_u8BC6" class="headerlink" title="block基础知识"></a>block基础知识</h1><p>block实际上就是Objective-C语言对闭包的实现。</p>
+<h2 id="block_u7684_u539F_u578B_u53CA_u5B9A_u4E49"><a href="#block_u7684_u539F_u578B_u53CA_u5B9A_u4E49" class="headerlink" title="block的原型及定义"></a>block的原型及定义</h2><p>我们来看看block的原型：</p>
+<pre><code>NSString * ( ^ myBlock )( int );
+</code></pre><p>上面的代码声明了一个block(^)原型，名字叫做<code>myBlock</code>，包含一个<code>int</code>型的参数，返回值为<code>NSString</code>类型的指针。</p>
+<p>下面来看看block的定义：</p>
+<pre><code>myBlock = ^( int paramA )
+{
+    return [ NSString stringWithFormat: @&quot;Passed number: %i&quot;, paramA ];
+};
+</code></pre><p>上面的代码中，将一个函数体赋值给了<code>myBlock</code>变量，其接收一个名为<code>paramA</code>的参数，返回一个<code>NSString</code>对象。</p>
+<blockquote>
+<p>注意：一定不要忘记block后面的分号。</p>
+</blockquote>
+<p>定义好block后，就可以像使用标准函数一样使用它了：</p>
+<pre><code>myBlock(7);
+</code></pre><p>由于block数据类型的语法会降低整个代码的阅读性，所以常使用<code>typedef</code>来定义block类型。例如，下面的代码创建了<code>GetPersonEducationInfo</code>和<code>GetPersonFamilyInfo</code>两个新类型，这样我们就可以在下面的方法中使用更加有语义的数据类型。</p>
+<pre><code>// Person.h
+#import &lt;Foundation/Foundation.h&gt;
+
+// Define a new type for the block
+typedef NSString * (^GetPersonEducationInfo)(NSString *);
+typedef NSString * (^GetPersonFamilyInfo)(NSString *);
+
+@interface Person : NSObject
+
+- (NSString *)getPersonInfoWithEducation:(GetPersonEducationInfo)educationInfo
+    andFamily:(GetPersonFamilyInfo)familyInfo;
+
+@end
+</code></pre><p>我们用一张大师文章里的图来总结一下block的结构：<br><img src="http://www.devtalking.com/postImages/block.png" alt="block"> </p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2 id="u5C06block_u4F5C_u4E3A_u53C2_u6570_u4F20_u9012"><a href="#u5C06block_u4F5C_u4E3A_u53C2_u6570_u4F20_u9012" class="headerlink" title="将block作为参数传递"></a>将block作为参数传递</h2><pre><code>// .h
+-(void) testBlock:( NSString * ( ^ )( int ) )myBlock;
+
+// .m
+-(void) testBlock:( NSString * ( ^ )( int ) )myBlock
+{
+    NSLog(@&quot;Block returned: %@&quot;, myBlock(7) );
+}
+</code></pre><p>由于Objective-C是强制类型语言，所以作为函数参数的block也必须要指定返回值的类型，以及相关参数类型。</p>
+<h2 id="u95ED_u5305_u6027"><a href="#u95ED_u5305_u6027" class="headerlink" title="闭包性"></a>闭包性</h2><p>上文说过，block实际是Objc对闭包的实现。<br>我们来看看下面代码：  </p>
+<pre><code>#import &lt;Cocoa/Cocoa.h&gt;
+
+void logBlock( int ( ^ theBlock )( void ) )
+{
+    NSLog( @&quot;Closure var X: %i&quot;, theBlock() );
+}
+
+int main( void )
+{
+    NSAutoreleasePool * pool;
+    int ( ^ myBlock )( void );
+    int x;
+
+    pool = [ [ NSAutoreleasePool alloc ] init ];
+    x = 42;
+
+    myBlock = ^( void )
+    {
+        return x;
+    };
+
+    logBlock( myBlock );
+
+    [ pool release ];
+
+    return EXIT_SUCCESS;
+}
+</code></pre><p>上面的代码在<code>main</code>函数中声明了一个整型，并赋值42，另外还声明了一个block，该block会将42返回。然后将block传递给<code>logBlock</code>函数，该函数会显示出返回的值42。即使是在函数<code>logBlock</code>中执行block，而block又声明在<code>main</code>函数中，但是block仍然可以访问到<code>x</code>变量，并将这个值返回。</p>
+<blockquote>
+<p>注意：block同样可以访问全局变量，即使是<code>static</code>。</p>
+</blockquote>
+<h2 id="block_u4E2D_u53D8_u91CF_u7684_u590D_u5236_u4E0E_u4FEE_u6539"><a href="#block_u4E2D_u53D8_u91CF_u7684_u590D_u5236_u4E0E_u4FEE_u6539" class="headerlink" title="block中变量的复制与修改"></a>block中变量的复制与修改</h2><p>对于block外的变量引用，block默认是将其复制到其数据结构中来实现访问的，如下图：<br><img src="http://www.devtalking.com/postImages/block-capture-1.jpg" alt="copy variables"><br>通过block进行闭包的变量是<code>const</code>的。也就是说不能在block中直接修改这些变量。来看看当block试着增加<code>x</code>的值时，会发生什么：</p>
+<pre><code>myBlock = ^( void )
+{
+    x++;
+
+    return x;
+};
+</code></pre><p>编译器会报错，表明在block中变量<code>x</code>是只读的。<br>有时候确实需要在block中处理变量，怎么办？别着急，我们可以用<code>__block</code>关键字来声明变量，这样就可以在block中修改变量了。<br>基于之前的代码，给x变量添加<code>__block</code>关键字，如下：</p>
+<pre><code>__block int x;
+</code></pre><p>对于用<code>__block</code>修饰的外部变量引用，block是复制其引用地址来实现访问的，如下图：<br><img src="http://www.devtalking.com/postImages/block-capture-2.jpg" alt="ref variables"></p>
+<h1 id="3-_u7F16_u8BD1_u5668_u4E2D_u7684block"><a href="#3-_u7F16_u8BD1_u5668_u4E2D_u7684block" class="headerlink" title="3.编译器中的block"></a>3.编译器中的block</h1><h2 id="3-1_block_u7684_u6570_u636E_u7ED3_u6784_u5B9A_u4E49"><a href="#3-1_block_u7684_u6570_u636E_u7ED3_u6784_u5B9A_u4E49" class="headerlink" title="3.1 block的数据结构定义"></a>3.1 block的数据结构定义</h2><p>我们通过大师文章中的一张图来说明：<br><img src="http://www.devtalking.com/postImages/block-struct.jpg" alt="block struct"><br>上图这个结构是在栈中的结构，我们来看看对应的结构体定义：  </p>
+<pre><code>struct Block_descriptor {
+    unsigned long int reserved;
+    unsigned long int size;
+    void (*copy)(void *dst, void *src);
+    void (*dispose)(void *);
+};
+
+struct Block_layout {
+    void *isa;
+    int flags;
+    int reserved;
+    void (*invoke)(void *, ...);
+    struct Block_descriptor *descriptor;
+    /* Imported variables. */
+};
+</code></pre><p>从上面代码看出，<code>Block_layout</code>就是对block结构体的定义：</p>
+<ul>
+<li><code>isa</code>指针：指向表明该block类型的类。</li>
+<li><code>flags</code>：按bit位表示一些block的附加信息，比如判断block类型、判断block引用计数、判断block是否需要执行辅助函数等。</li>
+<li><code>reserved</code>：保留变量，我的理解是表示block内部的变量数。</li>
+<li><code>invoke</code>：函数指针，指向具体的block实现的函数调用地址。</li>
+<li><code>descriptor</code>：block的附加描述信息，比如保留变量数、block的大小、进行<code>copy</code>或<code>dispose</code>的辅助函数指针。</li>
+<li><code>variables</code>：因为block有闭包性，所以可以访问block外部的局部变量。这些<code>variables</code>就是复制到结构体中的外部局部变量或变量的地址。</li>
+</ul>
+<h2 id="block_u7684_u7C7B_u578B"><a href="#block_u7684_u7C7B_u578B" class="headerlink" title="block的类型"></a>block的类型</h2><p>block有几种不同的类型，每种类型都有对应的类，上述中<code>isa</code>指针就是指向这个类。这里列出常见的三种类型：</p>
+<ul>
+<li><code>_NSConcreteGlobalBlock</code>：全局的静态block，不会访问任何外部变量，不会涉及到任何拷贝，比如一个空的block。例如：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#include &#60;stdio.h&#62;&#10;&#10;int main()&#10;&#123;&#10;    ^&#123; printf(&#34;Hello, World!\n&#34;); &#125; ();&#10;    return 0;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>_NSConcreteStackBlock</code>：保存在栈中的block，当函数返回时被销毁。例如：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#include &#60;stdio.h&#62;&#10;&#10;int main()&#10;&#123;&#10;    char a = &#39;A&#39;;&#10;    ^&#123; printf(&#34;%c\n&#34;,a); &#125; ();&#10;    return 0;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>_NSConcreteMallocBlock</code>：保存在堆中的block，当引用计数为0时被销毁。该类型的block都是由<code>_NSConcreteStackBlock</code>类型的block从栈中复制到堆中形成的。例如下面代码中，在<code>exampleB_addBlockToArray</code>方法中的block还是<code>_NSConcreteStackBlock</code>类型的，在<code>exampleB</code>方法中就被复制到了堆中，成为<code>_NSConcreteMallocBlock</code>类型的block：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">void exampleB_addBlockToArray(NSMutableArray *array) &#123;&#10;    char b = &#39;B&#39;;&#10;    [array addObject:^&#123;&#10;            printf(&#34;%c\n&#34;, b);&#10;    &#125;];&#10;&#125;&#10; &#10;void exampleB() &#123;&#10;    NSMutableArray *array = [NSMutableArray array];&#10;    exampleB_addBlockToArray(array);&#10;    void (^block)() = [array objectAtIndex:0];&#10;    block();&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>总结一下：</p>
+<ul>
+<li><code>_NSConcreteGlobalBlock</code>类型的block要么是空block，要么是不访问任何外部变量的block。它既不在栈中，也不在堆中，我理解为它可能在内存的全局区。</li>
+<li><code>_NSConcreteStackBlock</code>类型的block有闭包行为，也就是有访问外部变量，并且该block只且只有有一次执行，因为栈中的空间是可重复使用的，所以当栈中的block执行一次之后就被清除出栈了，所以无法多次使用。</li>
+<li><code>_NSConcreteMallocBlock</code>类型的block有闭包行为，并且该block需要被多次执行。当需要多次执行时，就会把该block从栈中复制到堆中，供以多次执行。</li>
+</ul>
+<h2 id="u7F16_u8BD1_u5668_u5982_u4F55_u7F16_u8BD1"><a href="#u7F16_u8BD1_u5668_u5982_u4F55_u7F16_u8BD1" class="headerlink" title="编译器如何编译"></a>编译器如何编译</h2><p>我们通过一个简单的示例来说明：  </p>
+<pre><code>#import &lt;dispatch/dispatch.h&gt;
+
+typedef void(^BlockA)(void);
+
+__attribute__((noinline))
+void runBlockA(BlockA block) {
+    block();
+}
+
+void doBlockA() {
+    BlockA block = ^{
+        // Empty block
+    };
+    runBlockA(block);
+}
+</code></pre><p>上面的代码定义了一个名为<code>BlockA</code>的block类型，该block在函数<code>doBlockA</code>中实现，并将其作为函数<code>runBlockA</code>的参数，最后在函数<code>doBlockA</code>中调用函数<code>runBloackA</code>。</p>
+<blockquote>
+<p>注意：如果block的创建和调用都在一个函数里面，那么优化器(optimiser)可能会对代码做优化处理，从而导致我们看不到编译器中的一些操作，所以用<code>__attribute__((noinline))</code>给函数<code>runBlockA</code>添加<code>noinline</code>，这样优化器就不会在<code>doBlockA</code>函数中对<code>runBlockA</code>的调用做内联优化处理。</p>
+</blockquote>
+<p>我们来看看编译器做的工作内容：</p>
+<pre><code>#import &lt;dispatch/dispatch.h&gt;
+
+__attribute__((noinline))
+void runBlockA(struct Block_layout *block) {
+    block-&gt;invoke();
+}
+
+void block_invoke(struct Block_layout *block) {
+    // Empty block function
+}
+
+void doBlockA() {
+    struct Block_descriptor descriptor;
+    descriptor-&gt;reserved = 0;
+    descriptor-&gt;size = 20;
+    descriptor-&gt;copy = NULL;
+    descriptor-&gt;dispose = NULL;
+
+    struct Block_layout block;
+    block-&gt;isa = _NSConcreteGlobalBlock;
+    block-&gt;flags = 1342177280;
+    block-&gt;reserved = 0;
+    block-&gt;invoke = block_invoke;
+    block-&gt;descriptor = descriptor;
+
+    runBlockA(&amp;block);
+}
+</code></pre><p>上面的代码结合block的数据结构定义，我们能很容易得理解编译器内部对block的工作内容。</p>
+<h2 id="copy_28_29_u548Cdispose_28_29"><a href="#copy_28_29_u548Cdispose_28_29" class="headerlink" title="copy()和dispose()"></a>copy()和dispose()</h2><p>上文中提到，如果我们想要在以后继续使用某个block，就必须要对该block进行拷贝操作，即从栈空间复制到堆空间。所以拷贝操作就需要调用<code>Block_copy()</code>函数，block的<code>descriptor</code>中有一个<code>copy()</code>辅助函数，该函数在<code>Block_copy()</code>中执行，用于当block需要拷贝对象的时候，拷贝辅助函数会retain住已经拷贝的对象。</p>
+<p>既然有有copy那么就应该有release，与<code>Block_copy()</code>对应的函数是<code>Block_release()</code>，它的作用不言而喻，就是释放我们不需要再使用的block，block的<code>descriptor</code>中有一个<code>dispose()</code>辅助函数，该函数在<code>Block_release()</code>中执行，负责做和<code>copy()</code>辅助函数相反的操作，例如释放掉所有在block中拷贝的变量等。</p>
+<h1 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h1><p>以上内容是我学习各大师的文章后对自己学习情况的一个记录，其中有部分文字和代码示例是来自大师的文章，还有一些自己的理解，如有错误还请大家勘误。</p>
+<p>参考链接：  </p>
+<ul>
+<li><a href="http://www.galloway.me.uk/2012/10/a-look-inside-blocks-episode-1/" target="_blank" rel="external">A look inside blocks: Episode 1</a>  </li>
+<li><a href="http://www.galloway.me.uk/2012/10/a-look-inside-blocks-episode-2/" target="_blank" rel="external">A look inside blocks: Episode 2</a></li>
+<li><a href="http://www.galloway.me.uk/2013/05/a-look-inside-blocks-episode-3-block-copy/" target="_blank" rel="external">A look inside blocks: Episode 3</a></li>
+<li><a href="http://blog.parse.com/2013/02/05/objective-c-blocks-quiz/" target="_blank" rel="external">Objective-C Blocks Quiz</a></li>
+<li><a href="http://blog.devtang.com/blog/2013/07/28/a-look-inside-blocks/" target="_blank" rel="external">谈Objective-C Block的实现</a></li>
+</ul>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/git-gitHub-markdown-jekyll/" itemprop="url">
+                  Git+GitHub+Markdown+Jekyll=Perfect Personal Blog
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-06-17T00:00:00+08:00" content="2014-06-17">
+              2014-06-17
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/git-gitHub-markdown-jekyll/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/git-gitHub-markdown-jekyll/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>以前建过个人网站，也用过第三方的博客系统，然后又回归到自建的个人博客，但总有不敬人意的地方。比如自建的博客涉及到购买的服务器的稳定性、流量成本、维护成本、数据的安全性、文本编辑器的舒适度等，第三方的博客系统又觉得局限性比较大、缺乏插件、觉得不牛逼等原因。总之人是很贪心的，总想找到一个既不用担心服务器稳定性、又不用担心流量成本、也不用担心数据安全性、而且还能方便的维护资源、并且还有丰富的插件的个人博客解决方案。于是外事问Google，经过一阵寻觅后发现大牛们的博客方案不正是我所需要的么，于是便有了上一篇的补脑笔记，把涉及到的知识大概整理了一下，准备开始搭建自己的个人学习笔记博客。今天这篇笔记将记录我使用Git+GitHub+Markdown+Jekyll搭建博客系统的过程。</p>
+<blockquote>
+<p>注：以下过程均在OS X系统上操作，Win系统的童靴请勿效仿，但可借鉴。</p>
+</blockquote>
+<h2 id="GitHub"><a href="#GitHub" class="headerlink" title="GitHub"></a>GitHub</h2><blockquote>
+<p>让人不再担心本地备份与远程协作，一切提交均有记录，均可追溯。</p>
+</blockquote>
+<h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2><blockquote>
+<p>让人不再担心写废，想到哪里，写到哪里。</p>
+</blockquote>
+<p>由于OS X系统自带Git，所以不需要再安装Git，自带的Git版本为1.8.5.2。</p>
+<h2 id="Markdown"><a href="#Markdown" class="headerlink" title="Markdown"></a>Markdown</h2><blockquote>
+<p>不再忧虑排版，专注于写作。</p>
+</blockquote>
+<p>Markdown是我认为最好的写作利器没有之一。GitHub完美支持，个人写作使用的DayOne也完美支持，Win系统下也有MarkdownPad这种成熟的工具。</p>
+<h2 id="u4EC0_u4E48_u662FGithub_Pages"><a href="#u4EC0_u4E48_u662FGithub_Pages" class="headerlink" title="什么是Github Pages"></a>什么是Github Pages</h2><blockquote>
+<p>Github Pages：Websites for you and your projects.</p>
+</blockquote>
+<p>Github Pages 是面向用户、组织和项目开放的公共静态页面搭建托管服 务，站点可以被免费托管在 Github 上，你可以选择使用 Github Pages 默 认提供的域名 username.github.io 或者自定义域名来发布站点。Github Pages 支持自动利用 Jekyll 生成站点，也同样支持纯 HTML 文档，将你的 Jekyll 站点托管在 Github Pages 上是一个不错的选择。</p>
+<p>通俗一点讲。你可以将你个人网站的html、css、js、image等按一定<strong>目录结构</strong>托管在github上，以index.html为入口（即个人网站首页），使用username.github.io就可以访问你的个人网站了。</p>
+<p>再通俗一点讲。github为你提供了一台无限流量、稳定、的服务器。你将个人网站的资源以一定<strong>目录结构</strong>上传（托管）到github，该服务器的ip就是username.github.io。</p>
+<p>上述两次提到<strong>目录结构</strong>，下面我解释一下这个目录结构。</p>
+<h2 id="u4EC0_u4E48_u662FJekyll"><a href="#u4EC0_u4E48_u662FJekyll" class="headerlink" title="什么是Jekyll"></a>什么是Jekyll</h2><p>Jekyll 的核心其实是一个文本转换引擎。它的概念其实就是： 你用你最喜欢的标记语言来写文章，可以是 Markdown，也可以是 Textile,或者就是简单的 HTML, 然后 Jekyll 就会帮你套入一个或一系列的布局中。在整个过程中你可以设置URL路径, 你的文本在布局中的显示样式等等。这些都可以通过纯文本编辑来实现，最终生成的静态页面就是你的成品了。</p>
+<h2 id="u5982_u4F55_u4F7F_u7528Github_Pages_u4E0EJekyll"><a href="#u5982_u4F55_u4F7F_u7528Github_Pages_u4E0EJekyll" class="headerlink" title="如何使用Github Pages与Jekyll"></a>如何使用Github Pages与Jekyll</h2><h3 id="Jekyll_u76EE_u5F55_u7ED3_u6784"><a href="#Jekyll_u76EE_u5F55_u7ED3_u6784" class="headerlink" title="Jekyll目录结构"></a>Jekyll目录结构</h3><p>上述多次提到的目录结构即Jekyll的目录结构。如下：</p>
+<pre><code>.   
+|--_config.yml&gt;  
+|--_drafts  
+    |--articles1.textile 
+    |--articles2.md
+|--_includes
+    |--footer.html
+    |--header.html
+|--_layouts
+    |--default.html
+    |--post.html
+|--_posts
+    |--2014-06-17-articles1.textile
+    |--2014-06-17-articles1.md
+|--_site
+|--index.html
+|--other files
+</code></pre><ul>
+<li><code>_config.yml</code>：保存配置数据。  </li>
+<li><code>_drafts</code>：存放未发布的文章。  </li>
+<li><code>_includes</code>：存放页面片段，即页头（<code>head.html</code>）、页脚（<code>footer.html</code>）、导航（<code>navigation.html</code>）、评论（<code>disqus_comments.html</code>）等，这些资源通过标签添加到index.html中，从而形成一个完整的页面。  </li>
+<li><code>_layouts</code>：存放模板文件。文章模板、关于页面模板、首页模板等。  </li>
+<li><code>_posts</code>：存放文章的文件。并且文章文件名称要符合<code>YEAR-MONTH-DAY-title.MARKUP</code>格式。</li>
+<li><code>_site</code>：经过jekyll转换的页面。</li>
+<li><code>index.html</code>：网站首页。</li>
+<li><code>other files</code>：其他文件，存放css、js、image等。</li>
+</ul>
+<h3 id="Jekyll_u89E3_u6790_u6D41_u7A0B"><a href="#Jekyll_u89E3_u6790_u6D41_u7A0B" class="headerlink" title="Jekyll解析流程"></a>Jekyll解析流程</h3><ul>
+<li>首先会加载_posts及文件夹下的所有文章，将其参数和文章内容组织保存在内存中，所有的文章的内容、参数都在site.posts对象（其他文件夹下的文章不会放入site.posts中）。</li>
+<li>其次加载_layouts文件夹下的所有模板。</li>
+<li>再次加载_includes文件夹下的所有需要被引入的内容。</li>
+<li>最后根据每一篇需要编译的文章选择的其参数定义的模板来创建一个模板，并将当前文章的内容、参数等进行扩展后放在page对象、content对象中，然后进行模板的编译，生成html文件，并按照一定规则放在_site文件夹下。也就是说在创建一篇文章时，其实所有文章的内容都已经被读取出来了，这也为文章相互之间的关联提供了可能。</li>
+</ul>
+<h3 id="u5728_u672C_u5730_u5B89_u88C5jekyll"><a href="#u5728_u672C_u5730_u5B89_u88C5jekyll" class="headerlink" title="在本地安装jekyll"></a>在本地安装jekyll</h3><blockquote>
+<p>注：这里默认安装环境已具备Ruby、RubyGems环境。</p>
+</blockquote>
+<ul>
+<li>安装jekyll：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo gem update &#8212;system&#10;$ sudo gem install jekyll</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装模板，默认的模板是Maruku，我们替换为RDiscount。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo gem install rdiscount</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Maruku是纯ruby写的Markdown模板解释器。<br>RDiscount是C写的模板解释器。</p>
+</blockquote>
+<p>为什么要替换为RDiscount呢，有心人对两者做了比较，优劣可见一斑。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Maruku: 08.424132s total time, 00.084241s average  &#10;RDiscount: 00.082019s total time, 00.000820s average</span><br></pre></td></tr></table></figure>
+<ul>
+<li>新建一个jekyll目录：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ jekyll new blog</span><br></pre></td></tr></table></figure>
+<ul>
+<li>进入到该目录下，你就能看到上述的目录结构：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cd blog</span><br></pre></td></tr></table></figure>
+<p>jekyll集成了一个开发用的服务器，可以让你使用浏览器在本地进行预览。启动server，访问地址为<a href="http://localhost:4000/：" target="_blank" rel="external">http://localhost:4000/：</a></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ jekyll serve</span><br></pre></td></tr></table></figure>
+<p>至此，一个简单的基于本机服务器的jekyll框架的个人网站就算搭建完毕，在浏览器中访问<a href="http://localhost:4000/，就可以看到index.html中的内容，一般在制作模板时多采在本地安装的方式，便于调试。更多配置信息请参见[Jekyll文档][1]。" target="_blank" rel="external">http://localhost:4000/，就可以看到index.html中的内容，一般在制作模板时多采在本地安装的方式，便于调试。更多配置信息请参见[Jekyll文档][1]。</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h3 id="u7ED3_u5408Github_Pages_u4F7F_u7528Jekyll"><a href="#u7ED3_u5408Github_Pages_u4F7F_u7528Jekyll" class="headerlink" title="结合Github Pages使用Jekyll"></a>结合Github Pages使用Jekyll</h3><p>这篇笔记的主题不是如何在本机搭建个人网站，所以这种使用方式是重点。</p>
+<p>由于Github Pages完美支持Jekyll，所以你只需要安照Jekyll的文件目录结构，托管在Github中即可，不需要在本机安装Jekyll，只需要关注于github，可以借鉴大师们设计的Jekyll模板，然后push或pull你的文章即可。</p>
+<ul>
+<li>注册GitHub账号，只需要一个邮箱和密码。<a href="https://github.com" target="_blank" rel="external">GitHub官网</a></li>
+<li>创建一个Repository，命名格式为：username.github.io，这样就生成了你的User site。可参见<a href="https://pages.github.com" target="_blank" rel="external">GitHub Pages</a></li>
+</ul>
+<blockquote>
+<p>注意：这里的username必须和你的账号名一致。</p>
+</blockquote>
+<ul>
+<li>不管用命令行还是用Finder，总之新建一个目录，我这里起名为GitRepo。</li>
+<li>进入GitRepo目录，键入git init命令，初始化一个git库。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /Users/JaceFu/GitRepo</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将刚才在Github中创建的Repo克隆到你本地的Git库中，即刚在本地创建的GitRepo目录中。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /Users/JaceFu/GitRepo&#10;git clone https://github.com/username/username.github.io</span><br></pre></td></tr></table></figure>
+<p>在GitRepo文件中会看到名为username.github.io的文件，这就是你从Github中克隆的Repo文件。</p>
+<ul>
+<li>Hello World，进入Repo目录中，创建一个HTML文件，名为index，内容为“Hello World”。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /Users/JaceFu/GitRepo/username.github.io&#10;echo &#8220;Hello World&#8221; &#62; index.html</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将创建的index.html文件push到github中</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /Users/JaceFu/GitRepo/username.github.io&#10;git add .&#10;git commit -m &#8220;Hello World update&#8221;&#10;git push</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>在浏览器中访问<code>http://username.github.io</code>，你将会看到index.html文件中的内容，我们这里会显示“Hello World”。至此，基于Github Pages功能的个人站点就算搭建好了。</p>
+</li>
+<li><p>在克隆到本地的Repo文件中，按照上述的Jekyll文件目录结构手动创建所需的文件资源，并上传。由于Github本身完美支持Jekyll，所以只要符合Jekyll的文件目录，Github就自动使用Jekyll解析形成页面。</p>
+</li>
+</ul>
+<p>至此，我们应该有了一定的理解，这里我再简单梳理一下：</p>
+<ul>
+<li>Jekyll可以将我们使用markdown写的文章按照指定模板解析为html文件。</li>
+<li>Github Pages可以充当我们的服务器，通过username.github.io可以访问到我们上传的html页面。</li>
+<li>Github Pages完美支持Jekyll，所以不需要我们自己编写复杂的html页面，只要将Jekyll的目录结构上传至Github中，就可以通过username.github.io访问由Jekyll解析生成的html页面，从而形成了个人网站。</li>
+</ul>
+<h3 id="u914D_u7F6E_config-yml_u6587_u4EF6"><a href="#u914D_u7F6E_config-yml_u6587_u4EF6" class="headerlink" title="配置_config.yml文件"></a>配置_config.yml文件</h3><p>基本配置参见<a href="http://jekyllcn.com/docs/configuration/" target="_blank" rel="external">官方配置文档</a>。<br>不同的模板，在该文件中的配置项也不一样，因为我自己使用了大师设计的模板，配置了如下参数（部分）：</p>
+<ul>
+<li>title：网站名称。</li>
+<li>description：网站说明。</li>
+<li>logo：网站logo。</li>
+<li>disqus_shortname：disqus标示符。</li>
+<li>search：是否运行搜索。</li>
+<li>url：网站中一些资源文件使用的url地址。</li>
+<li>encoding：编码。</li>
+<li>markdown：md解析模板。</li>
+<li>timezone：时区。</li>
+</ul>
+<h3 id="u7F16_u5199_u535A_u6587"><a href="#u7F16_u5199_u535A_u6587" class="headerlink" title="编写博文"></a>编写博文</h3><p>可以看一下_posts下的jekyll给的例子：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#10;---&#10;layout: post&#10;title:  &#34;Welcome to Jekyll!&#34;&#10;date:   2014-01-27 21:57:11&#10;categories: jekyll update&#10;&#10;---&#10;&#10;You&#39;ll find this post in your `_posts` directory - edit this post and re-build (or run with the `-w` switch) to see your changes!&#10;To add new posts, simply add a file in the `_posts` directory that follows the convention: YYYY-MM-DD-name-of-post.ext.&#10;&#10;Jekyll also offers powerful support for code snippets:&#10;&#10;&#123; % highlight ruby % &#125; &#10;def print_hi(name)&#10;  puts &#34;Hi, #&#123;name&#125;&#34;&#10;end&#10;print_hi(&#39;Tom&#39;)&#10;&#10;#=&#62; prints &#39;Hi, Tom&#39; to STDOUT.&#10;&#10;&#123; % endhighlight % &#125;&#10;&#10;Check out the [Jekyll docs][jekyll] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll&#39;s GitHub repo][jekyll-gh].&#10;&#10;[jekyll-gh]: https://github.com/mojombo/jekyll&#10;[jekyll]:    http://jekyllrb.com</span><br></pre></td></tr></table></figure>
+<p>可以看到在博文的最上方有被两个—包裹起来的一段，这里就定义了文章的一些参数，更多参数在FrontMatter和Variables获取，简单的只需要关注几个就好：</p>
+<ul>
+<li>title：文章的标题。</li>
+<li>date：文章的日期。</li>
+<li>categories：定义了文章所属的目录。</li>
+<li>layout：文章所使用的模板名称。</li>
+<li>tags：文章标签。</li>
+</ul>
+<p>这里就写一个最简单的文章，只是用其中的两个参数：layout，title，如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#10;---&#10;layout: mylayout&#10;title: hello-jekyll&#10;&#10;---&#10;&#10;Hello jekyll!</span><br></pre></td></tr></table></figure>
+<p>将这个写完的文章保存为 “年-月-日-标题.markdown”的名字形式，上传至Github中的_posts文件中，Jekyll会自动解析生成该文章的html页面。</p>
+<blockquote>
+<p>注：文章的文件名不要使用中文，否则会出现Bug。</p>
+</blockquote>
+<h3 id="u7F16_u5199_u6A21_u677F"><a href="#u7F16_u5199_u6A21_u677F" class="headerlink" title="编写模板"></a>编写模板</h3><p>如果想自己编写模板可以参见<a href="http://blog.segmentfault.com/skyinlayer/1190000000406013" target="_blank" rel="external">如何创建Jekyll模板</a>。<br>或者可以使用大师们设计好的模板。<a href="http://yuanyong.org/blog/collect-jekyll-theme.html" target="_blank" rel="external">Jekyll模板锦集</a>。</p>
+<h3 id="u4E2A_u6027_u57DF_u540D"><a href="#u4E2A_u6027_u57DF_u540D" class="headerlink" title="个性域名"></a>个性域名</h3><p>个人网站要有一个称心的域名，使用username.github.io实在不像话，所以我说一下如何配置个性域名。如何申请域名这里就不再累赘。</p>
+<p>在Github中的User Site Repo根目录（即Github中Jekyll目录的根目录）下创建CNAME目录，内容为你的个性域名，格式为www.yourdomain.com即可。</p>
+<p>然后在域名管理系统中解析域名，添加CNAME记录，服务器为username.github.io。等待一个多小时后，就可以使用自己的域名访问了。</p>
+<h2 id="u7ED3_u675F"><a href="#u7ED3_u675F" class="headerlink" title="结束"></a>结束</h2><p>至此，使用Github Pages和Jekyll搭建个人网站的过程记录完毕。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1501,7 +1766,7 @@ int main(int argc, char * argv[])
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">88</span>
+              <span class="site-state-item-count">86</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

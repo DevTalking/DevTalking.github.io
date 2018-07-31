@@ -231,525 +231,6 @@
             
             
               
-                <a class="post-title-link" href="/articles/read-threading-programming-guide-3/" itemprop="url">
-                  读 Threading Programming Guide 笔记（三）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-18T00:00:00+08:00" content="2016-02-18">
-              2016-02-18
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/read-threading-programming-guide-3/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/read-threading-programming-guide-3/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>本文首发<a href="http://geek.csdn.net/news/detail/56056" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<blockquote>
-<p>记得第一次读这个文档还是3年前，那时也只是泛读。如今关于iOS多线程的文章层出不穷，但我觉得若想更好的领会各个实践者的文章，应该先仔细读读官方的相关文档，打好基础，定会有更好的效果。文章中有对官方文档的翻译，也有自己的理解，官方文档中代码片段的示例在这篇文章中都进行了完整的重写，还有一些文档中没有的代码示例，并且都使用Swift完成，给大家一些Objc与Swift转换的参考。<br>官方文档地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Conceptual/Multithreading/Introduction/Introduction.html" target="_blank" rel="external">Threading Programming Guide</a></p>
-</blockquote>
-<h2 id="u4F55_u65F6_u4F7F_u7528Run_Loop"><a href="#u4F55_u65F6_u4F7F_u7528Run_Loop" class="headerlink" title="何时使用Run Loop"></a>何时使用Run Loop</h2><p>前文中多次提到过，在主线程中Run Loop是随着应用程序一起启动的，也就是说当我们打开一个应用时，主线程中的Run Loop就已经启动了，尤其现在我们都使用Xcode中的项目模版创建项目，更是不用考虑主线程中Run Loop的状体。所以只有在二级线程中，也就是我们自己创建的线程中才有机会手动的创建的Run Loop，并对其进行配置的操作。</p>
-<p>在前文中还提到过，Run Loop在线程中的主要作用就是帮助线程常驻在进程中，并且不会过多消耗资源。所以说Run Loop在二级线程中也不是必须需要的，要根据该线程执行的任务类型以及在整个应用中担任何作用而决定是否需要使用Run Loop。比如说，如果你创建一个二级线程只是为了执行一个不会频繁执行的一次性任务，或者需要执行很长时间的任务，那么可能就不需要使用Run Loop了。如果你需要一个线程执行周期性的定时任务，或者需要较为频繁的与主线程之间进行交互，那么就需要使用Run Loop。归纳一下需要使用Run Loop的情况大概有以下四点：</p>
-<ul>
-<li>通过基于端口或自定义的数据源与其他线程进行交互。</li>
-<li>在线程中执行定时事件源的任务。</li>
-<li>使用Cocoa框架提供的<code>performSelector…</code>系列方法。</li>
-<li>在线程中执行较为频繁的，具有周期性的任务。</li>
-</ul>
-<p>光说不练假把式，下面就让我们来看看如何具体创建、配置、操作Run Loop。</p>
-<h2 id="Run_Loop_u5BF9_u8C61"><a href="#Run_Loop_u5BF9_u8C61" class="headerlink" title="Run Loop对象"></a>Run Loop对象</h2><p>要想操作配置Run Loop，那自然需要通过Run Loop对象来完成，它提供了一系列接口，可帮助我们便捷的添加Input sources、timers以及观察者。较高级别的Cocoa框架提供了<code>NSRunLoop</code>类，较底层级别的Core Foundation框架提供了指向<code>CFRunloopRef</code>的指针。</p>
-<h3 id="u83B7_u53D6Run_Loop_u5BF9_u8C61"><a href="#u83B7_u53D6Run_Loop_u5BF9_u8C61" class="headerlink" title="获取Run Loop对象"></a>获取Run Loop对象</h3><p>前文中提到过，在Cocoa和Core Foundation框架中都没有提供创建Run Loop的方法，只有从当前线程获取Run Loop的方法：</p>
-<ul>
-<li>在Cocoa框架中，<code>NSRunLoop</code>类提供了类方法<code>currentRunLoop()</code>获取<code>NSRunLoop</code>对象。<br>> 该方法是获取当前线程中已存在的Run Loop，如果不存在，那其实还是会创建一个Run Loop对象返回，只是Cocoa框架没有向我们暴露该接口。</li>
-<li>在Core Foundation框架中提供了<code>CFRunLoopGetCurrent()</code>函数获取<code>CFRunLoop</code>对象。</li>
-</ul>
-<p>虽然这两个Run Loop对象并不完全等价，它们之间还是可以转换的，我们可以通过<code>NSRunLoop</code>对象提供的<code>getCFRunLoop()</code>方法获取<code>CFRunLoop</code>对象。因为<code>NSRunLoop</code>和<code>CFRunLoop</code>指向的都是当前线程中同一个Run Loop，所以在使用时它们可以混用，比如说要给Run Loop添加观察者时就必须得用<code>CFRunLoop</code>了。</p>
-<h3 id="u914D_u7F6ERun_Loop_u89C2_u5BDF_u8005"><a href="#u914D_u7F6ERun_Loop_u89C2_u5BDF_u8005" class="headerlink" title="配置Run Loop观察者"></a>配置Run Loop观察者</h3><p>前文中提到过，可以向Run Loop中添加各种事件源和观察者，这里事件源是必填项，也就是说Run Loop中至少要有一种事件源，不论是Input source还是timer，如果Run Loop中没有事件源的话，那么在启动Run Loop后就会立即退出。而观察者是可选项，如果没有监控Run Loop各运行状态的需求，可以不配置观察者，这一节先看看如何向Run Loop中添加观察者。</p>
-<p>在Cocoa框架中，并没有提供创建配置Run Loop观察者的相关接口，所以我们只能通过Core Foundation框架中提供的对象和方法创建并配置Run Loop观察者，下面我们看看示例代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"First event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="type">NSThread</span>.detachNewThreadSelector(<span class="string">"createAndConfigObserverInSecondaryThread"</span>, toTarget: <span class="keyword">self</span>, withObject: <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="type">NSThread</span>.isMultiThreaded())</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Second event in Main Thread."</span>)</span><br><span class="line">  </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">createAndConfigObserverInSecondaryThread</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        autoreleasepool&#123;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 1</span></span><br><span class="line">            <span class="keyword">let</span> runloop = <span class="type">NSRunLoop</span>.currentRunLoop()</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 2</span></span><br><span class="line">            <span class="keyword">var</span> _self = <span class="keyword">self</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 3</span></span><br><span class="line">            <span class="keyword">var</span> observerContext = <span class="type">CFRunLoopObserverContext</span>(version: <span class="number">0</span>, info: &amp;_self, retain: <span class="literal">nil</span>, release: <span class="literal">nil</span>, copyDescription: <span class="literal">nil</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 4</span></span><br><span class="line">            <span class="keyword">let</span> observer = <span class="type">CFRunLoopObserverCreate</span>(kCFAllocatorDefault, <span class="type">CFRunLoopActivity</span>.<span class="type">AllActivities</span>.rawValue, <span class="literal">true</span>, <span class="number">0</span>, <span class="keyword">self</span>.observerCallbackFunc(), &amp;observerContext)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(observer != <span class="literal">nil</span>) &#123;</span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 5</span></span><br><span class="line">                <span class="keyword">let</span> cfRunloop = runloop.getCFRunLoop()</span><br><span class="line">                </span><br><span class="line">                <span class="comment">// 6</span></span><br><span class="line">                <span class="type">CFRunLoopAddObserver</span>(cfRunloop, observer, kCFRunLoopDefaultMode)</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 7</span></span><br><span class="line">            <span class="type">NSTimer</span>.scheduledTimerWithTimeInterval(<span class="number">0.5</span>, target: <span class="keyword">self</span>, selector: <span class="string">"fireTimer"</span>, userInfo: <span class="literal">nil</span>, repeats: <span class="literal">true</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">var</span> loopCount = <span class="number">10</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">repeat</span> &#123;</span><br><span class="line">            </span><br><span class="line">                <span class="comment">// 8</span></span><br><span class="line">                runloop.runUntilDate(<span class="type">NSDate</span>(timeIntervalSinceNow: <span class="number">1</span>))</span><br><span class="line">                </span><br><span class="line">                loopCount--</span><br><span class="line">            </span><br><span class="line">            &#125; <span class="keyword">while</span>(loopCount &gt; <span class="number">0</span>)</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">observerCallbackFunc</span><span class="params">()</span></span> -&gt; <span class="type">CFRunLoopObserverCallBack</span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123;(observer, activity, context) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">        </span><br><span class="line">            <span class="keyword">switch</span>(activity) &#123;</span><br><span class="line">                </span><br><span class="line">            <span class="keyword">case</span> <span class="type">CFRunLoopActivity</span>.<span class="type">Entry</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Run Loop已经启动"</span>)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">case</span> <span class="type">CFRunLoopActivity</span>.<span class="type">BeforeTimers</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Run Loop分配定时任务前"</span>)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">case</span> <span class="type">CFRunLoopActivity</span>.<span class="type">BeforeSources</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Run Loop分配输入事件源前"</span>)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">case</span> <span class="type">CFRunLoopActivity</span>.<span class="type">BeforeWaiting</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Run Loop休眠前"</span>)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">case</span> <span class="type">CFRunLoopActivity</span>.<span class="type">AfterWaiting</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Run Loop休眠后"</span>)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">case</span> <span class="type">CFRunLoopActivity</span>.<span class="type">Exit</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Run Loop退出后"</span>)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">fireTimer</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testThread = <span class="type">TestThread</span>()</span><br><span class="line">testThread.launch()</span><br></pre></td></tr></table></figure>
-<p>下面解读一下上述代码示例，<code>launch()</code>方法在主线程中，通过<code>NSThread</code>类的类方法<code>detachNewThreadSelector:toTarget:withObject:</code>创建并启动一个二级线程，将<code>createAndConfigObserverInSecondaryThread()</code>方法作为事件消息传入该二级线程，这个方法的主要作用就是在二级线程中创建配置Run Loop观察者并启动Run Loop，然后让主线程持续3秒，以便二级线程有足够的时间执行任务。</p>
-<p>在<code>createAndConfigObserverInSecondaryThread()</code>中共有8个关键步骤，下面一一进行说明：</p>
-<ul>
-<li><strong>第一步</strong>：通过<code>NSRunLoop</code>类的类方法<code>currentRunLoop()</code>获取当前线程的Run Loop，这里获取到的Run Loop对象是<code>NSRunLoop</code>对象。</li>
-<li><strong>第二步</strong>：申明当前对象的变量，至于为什么要这么做，在下一步中会有说明。</li>
-<li><strong>第三步</strong>：通过Core Foundation框架的<code>CFRunLoopObserverContext</code>结构体构造Run Loop观察者上下文，大家需要注意前两个参数，我们先看看这个结构体：</li>
-</ul>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">struct</span> <span class="title">CFRunLoopObserverContext</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">var</span> version: <span class="type">CFIndex</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">var</span> info: <span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">var</span> retain: (<span class="preprocessor">@convention</span>(<span class="built_in">c</span>) (<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;)!</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">var</span> release: (<span class="preprocessor">@convention</span>(<span class="built_in">c</span>) (<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">Void</span>)!</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">var</span> copyDescription: (<span class="preprocessor">@convention</span>(<span class="built_in">c</span>) (<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">Unmanaged</span>&lt;<span class="type">CFString</span>&gt;!)!</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">init</span>()</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">init</span>(version: <span class="type">CFIndex</span>, info: <span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;, retain: (<span class="preprocessor">@convention</span>(<span class="built_in">c</span>) (<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;)!, release: (<span class="preprocessor">@convention</span>(<span class="built_in">c</span>) (<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">Void</span>)!, copyDescription: (<span class="preprocessor">@convention</span>(<span class="built_in">c</span>) (<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">Unmanaged</span>&lt;<span class="type">CFString</span>&gt;!)!)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol>
-<li><code>version</code>：结构体版本号，必须设置为0。</li>
-<li><code>info</code>：上下文中<code>retain</code>、<code>release</code>、<code>copyDescription</code>三个回调函数以及Run Loop观察者的回调函数所有者对象的指针。在Swift中，<code>UnsafePointer</code>结构体代表C系语言中申明为常量的指针，<code>UnsafeMutablePoinger</code>结构体代表C系语言中申明为非常量的指针，比如说：</li>
-</ol>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">C</span>:</span><br><span class="line">void functionWithConstArg(const int *constIntPointer);</span><br><span class="line"></span><br><span class="line"><span class="type">Swift</span>:</span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">functionWithConstArg</span><span class="params">(constIntPointer: UnsafePointer&lt;Int32&gt;)</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">C</span>:</span><br><span class="line">void functionWithNotConstArg(unsigned int *unsignedIntPointer);</span><br><span class="line"></span><br><span class="line"><span class="type">Swift</span>:</span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">functionWithNotConstArg</span><span class="params">(unsignedIntPointer: UnsafeMutablePointer&lt;UInt32&gt;)</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">C</span>:</span><br><span class="line">void functionWithNoReturnArg(void *voidPointer);</span><br><span class="line"></span><br><span class="line"><span class="type">Swift</span>:</span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">functionWithNoReturnArg</span><span class="params">(voidPointer: UnsafeMutablePointer&lt;Void&gt;)</span></span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>第四步</strong>：通过Core Foundation框架的<code>CFRunLoopObserverCreate</code>函数创建<code>CFRunLoopObserver</code>对象：</li>
-</ul>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">CFRunLoopObserverCreate</span><span class="params">(allocator: CFAllocator!, <span class="number">_</span> activities: CFOptionFlags, <span class="number">_</span> repeats: Bool, <span class="number">_</span> order: CFIndex, <span class="number">_</span> callout: CFRunLoopObserverCallBack!, <span class="number">_</span> context: UnsafeMutablePointer&lt;CFRunLoopObserverContext&gt;)</span></span> -&gt; <span class="type">CFRunLoopObserver</span>!</span><br></pre></td></tr></table></figure>
-<ol>
-<li><code>allocator</code>：该参数为对象内存分配器，一般使用默认的分配器<code>kCFAllocatorDefault</code>。</li>
-<li><code>activities</code>：该参数配置观察者监听Run Loop的哪种运行状态。在示例中，我们让观察者监听Run Loop的所有运行状态。</li>
-<li><code>repeats</code>：该参数标识观察者只监听一次还是每次Run Loop运行时都监听。</li>
-<li><code>order</code>：观察者优先级，当Run Loop中有多个观察者监听同一个运行状态时，那么就根据该优先级判断，0为最高优先级别。</li>
-<li><code>callout</code>：观察者的回调函数，在Core Foundation框架中用<code>CFRunLoopObserverCallBack</code>重定义了回调函数的闭包。</li>
-<li><code>context</code>：观察者的上下文。</li>
-</ol>
-<ul>
-<li><strong>第五步</strong>：因为<code>NSRunLoop</code>没有提供操作观察者的接口，所以我们需要<code>getCFRunLoop()</code>方法获取到<code>CFRunLoop</code>对象。</li>
-<li><strong>第六步</strong>：通过<code>CFRunLoopAddObserver</code>函数向当前线程的Run Loop中添加创建好的观察者：</li>
-</ul>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">CFRunLoopAddObserver</span><span class="params">(<span class="number">_</span> rl: CFRunLoop!, <span class="number">_</span> observer: CFRunLoopObserver!, <span class="number">_</span> mode: CFString!)</span></span></span><br></pre></td></tr></table></figure>
-<ol>
-<li><code>rl</code>：当前线程的<code>CFRunLoop</code>对象。</li>
-<li><code>observer</code>：创建好的观察者。</li>
-<li><code>mode</code>：设置将观察者添加到哪个Run Loop模式中。</li>
-</ol>
-<blockquote>
-<p>这里需要注意的是，一个观察者只能被添加到一个Run Loop中，但是可以被添加到Run Loop中的多个模式中。</p>
-</blockquote>
-<ul>
-<li><strong>第七步</strong>：通过Timer事件源向当前线程发送重复执行的定时任务，时间间隔为0.5秒，因为只是为了测试观察者，所以<code>fireTimer()</code>是一个空任务。另外前文中提到过，如果Run Loop中没有任何数据源，那么Run Loop启动后会立即退出，所以大家可以把这行注释了运行看看会有什么效果。</li>
-<li><strong>第八步</strong>：通过<code>NSRunLoop</code>对象的<code>runUntilDate(limitDate: NSDate)</code>方法启动Run Loop，设置Run Loop的运行时长为1秒。这里将其放在一个循环里，最大循环次数为10次，也就是说，如果不考虑主线程的运行时间，该二级线程的Run Loop可运行10次。</li>
-</ul>
-<p>再来看看观察者的回调方法<code>observerCallbackFunc()</code>，上面在介绍<code>CFRunLoopObserverCreate</code>函数时提到观察者的回调函数是<code>CFRunLoopObserverCallBack</code>重定义的一个闭包，我们来看看这个闭包：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typealias</span> <span class="type">CFRunLoopObserverCallBack</span> = (<span class="type">CFRunLoopObserver</span>!, <span class="type">CFRunLoopActivity</span>, <span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">Void</span></span><br></pre></td></tr></table></figure>
-<p>这个闭包没有返回值，第一个参数是触发监听的观察者，第二个参数是观察者监听的Run Loop运行状态，第三个参数是观察者的运行上下文环境。所以在回调方法中，我们只需要根据第二个参数的值即可判断观察者监听到的Run Loop状态。大家可以拷贝上面的代码，建一个Command Application运行看看结果。</p>
-<h3 id="u542F_u52A8Run_Loop"><a href="#u542F_u52A8Run_Loop" class="headerlink" title="启动Run Loop"></a>启动Run Loop</h3><p>在启动Run Loop前务必要保证已添加一种类型的事件源，原因在前文中已提到多次。在Cocoa框架和Core Foundation框架中启动Run Loop大体有三种形式，分别是无条件启动、设置时间限制启动、指定特定模式启动。</p>
-<h4 id="u65E0_u6761_u4EF6_u542F_u52A8"><a href="#u65E0_u6761_u4EF6_u542F_u52A8" class="headerlink" title="无条件启动"></a>无条件启动</h4><p><code>NSRunLoop</code>对象的<code>run()</code>方法和Core Foundation框架中的<code>CFRunLoopRun()</code>函数都是无条件启动Run Loop的方式。这种方式虽然是最简单的启动方式，但也是最不推荐使用的一个方式，因为这种方式将Run Loop置于一个永久运行并且不可控的状态，它使Run Loop只能在默认模式下运行，无法给Run Loop设置特定的或自定义的模式，而且以这种模式启动的Run Loop只能通过<code>CFRunLoopStop(_ rl: CFRunLoop!)</code>函数强制停止。</p>
-<h4 id="u8BBE_u7F6E_u65F6_u95F4_u9650_u5236_u542F_u52A8"><a href="#u8BBE_u7F6E_u65F6_u95F4_u9650_u5236_u542F_u52A8" class="headerlink" title="设置时间限制启动"></a>设置时间限制启动</h4><p>该方式对应的方法是<code>NSRunLoop</code>对象的<code>runUntilDate(_ limitDate: NSDate)</code>方法，在启动Run Loop时设置超时时间，一旦超时那么Run Loop则自动退出。该方法的好处是可以在循环中反复启动Run Loop处理相关任务，而且可控制运行时长。</p>
-<h4 id="u6307_u5B9A_u7279_u5B9A_u6A21_u5F0F_u542F_u52A8"><a href="#u6307_u5B9A_u7279_u5B9A_u6A21_u5F0F_u542F_u52A8" class="headerlink" title="指定特定模式启动"></a>指定特定模式启动</h4><p>该方式对应的方法是<code>NSRunLoop</code>对象的<code>runMode(_ mode: String, beforeDate limitDate: NSDate)</code>方法和Core Foundation框架的<code>CFRunLoopRunInMode(_ mode: CFString!, _ seconds: CFTimeInterval, _ returnAfterSourceHandled: Bool)</code>函数。前者有两个参数，第一个参数是Run Loop模式，第二个参数仍然是超时时间，该方法使Run Loop只处理指定模式中的事件源事件，当处理完事件或超时Run Loop会退出，该方法的返回值类型是<code>Bool</code>，如果返回<code>true</code>则表示Run Loop启动成功，并分派执行了任务或者达到超时时间，若返回<code>false</code>则表示Run Loop启动失败。后者有三个参数，前两个参数的作用一样，第三个参数的意思是Run Loop是否在执行完任务后就退出，如果设置为<code>false</code>，那么代表Run Loop在执行完任务后不退出，而是一直等到超时后才退出。该方法返回Run Loop的退出状态：</p>
-<ul>
-<li><code>CFRunLoopRunResult.Finished</code>：表示Run Loop已分派执行完任务，并且再无任务执行的情况下退出。</li>
-<li><code>CFRunLoopRunResult.Stopped</code>：表示Run Loop通过<code>CFRunLoopStop(_ rl: CFRunLoop!)</code>函数强制退出。</li>
-<li><code>CFRunLoopRunResult.TimedOut</code>：表示Run Loop因为超时时间到而退出。</li>
-<li><code>CFRunLoopRunResult.HandledSource</code>：表示Run Loop已执行完任务而退出，改状态只有在<code>returnAfterSourceHandled</code>设置为<code>true</code>时才会出现。</li>
-</ul>
-<h3 id="u9000_u51FARun_Loop"><a href="#u9000_u51FARun_Loop" class="headerlink" title="退出Run Loop"></a>退出Run Loop</h3><p>退出Run Loop的方式总体来说有三种：</p>
-<ul>
-<li>启动Run Loop时设置超时时间。</li>
-<li>强制退出Run Loop。</li>
-<li>移除Run Loop中的事件源，从而使Run Loop退出。</li>
-</ul>
-<p>第一种方式是推荐使用的方式，因为可以给Run Loop设置可控的运行时间，让它执行完所有的任务以及给观察者发送通知。第二种强制退出Run Loop主要是应对无条件启动Run Loop的情况。第三种方式是最不推荐的方式，虽然在理论上说当Run Loop中没有任何数据源时会立即退出，但是在实际情况中我们创建的二级线程除了执行我们指定的任务外，有可能系统还会让其执行一些系统层面的任务，而且这些任务我们一般无法知晓，所以用这种方式退出Run Loop往往会存在延迟退出。</p>
-<h3 id="Run_Loop_u5BF9_u8C61_u7684_u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#Run_Loop_u5BF9_u8C61_u7684_u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="Run Loop对象的线程安全性"></a>Run Loop对象的线程安全性</h3><p>Run Loop对象的线程安全性取决于我们使用哪种API去操作。Core Foundation框架中的<code>CFRunLoop</code>对象是线程安全的，我们可以在任何线程中使用。Cocoa框架的<code>NSRunLoop</code>对象是线程不安全的，我们必须在拥有Run Loop的当前线程中操作Run Loop，如果操作了不属于当前线程的Run loop，会导致异常和各种潜在的问题发生。</p>
-<h2 id="u81EA_u5B9A_u4E49Run_Loop_u4E8B_u4EF6_u6E90"><a href="#u81EA_u5B9A_u4E49Run_Loop_u4E8B_u4EF6_u6E90" class="headerlink" title="自定义Run Loop事件源"></a>自定义Run Loop事件源</h2><p>Cocoa框架因为是较为高层的框架，所以没有提供操作较为底层的Run Loop事件源相关的接口和对象，所以我们只能使用Core Foundation框架中的对象和函数创建事件源并给Run Loop设置事件源。</p>
-<h3 id="u521B_u5EFARun_Loop_u4E8B_u4EF6_u6E90_u5BF9_u8C61"><a href="#u521B_u5EFARun_Loop_u4E8B_u4EF6_u6E90_u5BF9_u8C61" class="headerlink" title="创建Run Loop事件源对象"></a>创建Run Loop事件源对象</h3><p>我们定义自己的Run Loop事件源首先就是需要创建事件源，我们来看看创建事件源的方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">CFRunLoopSourceCreate</span><span class="params">(<span class="number">_</span> allocator: CFAllocator!, <span class="number">_</span> order: CFIndex, <span class="number">_</span> context: UnsafeMutablePointer&lt;CFRunLoopSourceContext&gt;)</span></span> -&gt; <span class="type">CFRunLoopSource</span>!</span><br></pre></td></tr></table></figure>
-<ol>
-<li><code>allocator</code>：该参数为对象内存分配器，一般使用默认的分配器<code>kCFAllocatorDefault</code>。</li>
-<li><code>order</code>：事件源优先级，当Run Loop中有多个接收相同事件的事件源被标记为待执行时，那么就根据该优先级判断，0为最高优先级别。</li>
-<li><code>context</code>：事件源上下文。</li>
-</ol>
-<p>Run Loop事件源上下文很重要，我们来看看它的结构：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">CFRunLoopSourceContext</span> </span>&#123; </span><br><span class="line">    <span class="keyword">var</span> version: <span class="type">CFIndex</span> </span><br><span class="line">    <span class="keyword">var</span> info: <span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt; </span><br><span class="line">    <span class="keyword">var</span> retain: ((<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;)! </span><br><span class="line">    <span class="keyword">var</span> release: ((<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">Void</span>)! </span><br><span class="line">    <span class="keyword">var</span> copyDescription: ((<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">Unmanaged</span>&lt;<span class="type">CFString</span>&gt;!)! </span><br><span class="line">    <span class="keyword">var</span> <span class="built_in">equal</span>: ((<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;, <span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">DarwinBoolean</span>)! </span><br><span class="line">    <span class="keyword">var</span> hash: ((<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">CFHashCode</span>)! </span><br><span class="line">    <span class="keyword">var</span> schedule: ((<span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;, <span class="type">CFRunLoop</span>!, <span class="type">CFString</span>!) -&gt; <span class="type">Void</span>)! </span><br><span class="line">    <span class="keyword">var</span> cancel: ((<span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;, <span class="type">CFRunLoop</span>!, <span class="type">CFString</span>!) -&gt; <span class="type">Void</span>)! </span><br><span class="line">    <span class="keyword">var</span> perform: ((<span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">Void</span>)! </span><br><span class="line">    <span class="keyword">init</span>() </span><br><span class="line">    <span class="keyword">init</span>(version version: <span class="type">CFIndex</span>, info info: <span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;, retain retain: ((<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;)!, release release: ((<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">Void</span>)!, copyDescription copyDescription: ((<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">Unmanaged</span>&lt;<span class="type">CFString</span>&gt;!)!, <span class="built_in">equal</span> <span class="built_in">equal</span>: ((<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;, <span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">DarwinBoolean</span>)!, hash hash: ((<span class="type">UnsafePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">CFHashCode</span>)!, schedule schedule: ((<span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;, <span class="type">CFRunLoop</span>!, <span class="type">CFString</span>!) -&gt; <span class="type">Void</span>)!, cancel cancel: ((<span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;, <span class="type">CFRunLoop</span>!, <span class="type">CFString</span>!) -&gt; <span class="type">Void</span>)!, perform perform: ((<span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">Void</span>)!) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>该结构体中我们需要关注的是前两个和后三个属性：</p>
-<ol>
-<li><code>version</code>：事件源上下文的版本，必须设置为0。</li>
-<li><code>info</code>：上下文中<code>retain</code>、<code>release</code>、<code>copyDescription</code>、<code>equal</code>、<code>hash</code>、<code>schedule</code>、<code>cancel</code>、<code>perform</code>这八个回调函数所有者对象的指针。</li>
-<li><code>schedule</code>：该回调函数的作用是将该事件源与给它发送事件消息的线程进行关联，也就是说如果主线程想要给该事件源发送事件消息，那么首先主线程得能获取到该事件源。</li>
-<li><code>cancel</code>：该回调函数的作用是使该事件源失效。</li>
-<li><code>perform</code>：该回调函数的作用是执行其他线程或当前线程给该事件源发来的事件消息。</li>
-</ol>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h3 id="u5C06_u4E8B_u4EF6_u6E90_u6DFB_u52A0_u81F3Run_Loop"><a href="#u5C06_u4E8B_u4EF6_u6E90_u6DFB_u52A0_u81F3Run_Loop" class="headerlink" title="将事件源添加至Run Loop"></a>将事件源添加至Run Loop</h3><p>事件源创建好之后，接下来就是将其添加到指定某个模式的Run Loop中，我们来看看这个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">CFRunLoopAddSource</span><span class="params">(<span class="number">_</span> rl: CFRunLoop!, <span class="number">_</span> source: CFRunLoopSource!, <span class="number">_</span> mode: CFString!)</span></span></span><br></pre></td></tr></table></figure>
-<ol>
-<li><code>rl</code>：希望添加事件源的Run Loop对象，类型是<code>CFRunLoop</code>。</li>
-<li><code>source</code>：我们创建好的事件源。</li>
-<li><code>mode</code>：Run Loop的模式。（可以回顾之前文章）</li>
-</ol>
-<p>我们再来看看这个方法都干了些什么：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">void <span class="type">CFRunLoopAddSource</span>(<span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFStringRef</span> modeName) &#123;</span><br><span class="line">  </span><br><span class="line">    .....</span><br><span class="line">  </span><br><span class="line">    __CFRunLoopSourceSchedule(rls, rl, rlm);</span><br><span class="line">  </span><br><span class="line">    .....</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> void __CFRunLoopSourceSchedule(<span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopModeRef</span> rlm) &#123;  </span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> == rls-&gt;_context.version0.version) &#123;</span><br><span class="line">         <span class="keyword">if</span> (<span class="type">NULL</span> != rls-&gt;_context.version0.schedule) &#123;</span><br><span class="line">             rls-&gt;_context.version0.schedule(rls-&gt;_context.version0.info, rl, rlm-&gt;_name);</span><br><span class="line">         &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上述的代码片段可以看出，在<code>CFRunLoopAddSource</code>中调用了<code>__CFRunLoopSourceSchedule</code>内部函数，而该函数中正是执行了Run Loop事件源上下文中的<code>schedule</code>回调函数。也就是说当把事件源添加到Run Loop中后就会将事件源与给它发送事件消息的线程进行关联。</p>
-<h3 id="u6807_u8BB0_u4E8B_u4EF6_u6E90_u53CA_u5524_u9192Run_Loop"><a href="#u6807_u8BB0_u4E8B_u4EF6_u6E90_u53CA_u5524_u9192Run_Loop" class="headerlink" title="标记事件源及唤醒Run Loop"></a>标记事件源及唤醒Run Loop</h3><p>前面的文章中说过，srouce0类型，也就是非port类型的事件源都需要进行手动标记，标记完还需要手动唤醒Run Loop，下面我们来看看这两个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">CFRunLoopSourceSignal</span><span class="params">(<span class="number">_</span> source: CFRunLoopSource!)</span></span></span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">CFRunLoopWakeUp</span><span class="params">(<span class="number">_</span> rl: CFRunLoop!)</span></span></span><br></pre></td></tr></table></figure>
-<p>这里需要注意的是唤醒Run Loop并不等价与启动Run Loop，因为启动Run Loop时需要对Run Loop进行模式、时限的设置，而唤醒Run Loop只是当已启动的Run Loop休眠时重新让其运行。</p>
-<h3 id="u6267_u884CRun_Loop_u4E8B_u4EF6_u6E90_u7684_u4EFB_u52A1"><a href="#u6267_u884CRun_Loop_u4E8B_u4EF6_u6E90_u7684_u4EFB_u52A1" class="headerlink" title="执行Run Loop事件源的任务"></a>执行Run Loop事件源的任务</h3><p>唤醒Run Loop意味着让休眠的Run Loop重新运行，那么我们就从启动Run Loop，让其开始运行的方法看起：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">NSRunLoop</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    .....</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">runUntilDate</span><span class="params">(limitDate: NSDate)</span></span> &#123;</span><br><span class="line">        <span class="keyword">while</span> runMode(<span class="type">NSDefaultRunLoopMode</span>, beforeDate: limitDate) &amp;&amp; limitDate.timeIntervalSinceReferenceDate &gt; <span class="type">CFAbsoluteTimeGetCurrent</span>() &#123; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">runMode</span><span class="params">(mode: String, beforeDate limitDate: NSDate)</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">        </span><br><span class="line">        .....</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> limitTime = limitDate.timeIntervalSinceReferenceDate</span><br><span class="line">        <span class="keyword">let</span> ti = limitTime - <span class="type">CFAbsoluteTimeGetCurrent</span>()</span><br><span class="line">        <span class="type">CFRunLoopRunInMode</span>(modeArg, ti, <span class="literal">true</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">SInt32</span> <span class="type">CFRunLoopRunInMode</span>(<span class="type">CFStringRef</span> modeName, <span class="type">CFTimeInterval</span> seconds, <span class="type">Boolean</span> returnAfterSourceHandled) &#123;     </span><br><span class="line">    <span class="type">CHECK_FOR_FORK</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="type">CFRunLoopRunSpecific</span>(<span class="type">CFRunLoopGetCurrent</span>(), modeName, seconds, returnAfterSourceHandled);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">SInt32</span> <span class="type">CFRunLoopRunSpecific</span>(<span class="type">CFRunLoopRef</span> rl, <span class="type">CFStringRef</span> modeName, <span class="type">CFTimeInterval</span> seconds, <span class="type">Boolean</span> returnAfterSourceHandled) &#123;     </span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    result = __CFRunLoopRun(rl, currentMode, seconds, returnAfterSourceHandled, <span class="literal">false</span>);</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> int32_t __CFRunLoopRun(<span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopModeRef</span> rlm, <span class="type">CFTimeInterval</span> seconds, <span class="type">Boolean</span> stopAfterHandle, <span class="type">Boolean</span> waitIfEmpty) &#123;</span><br><span class="line"></span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    __CFRunLoopDoSources0(rl, rlm, stopAfterHandle);</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="type">Boolean</span> __CFRunLoopDoSources0(<span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopModeRef</span> rlm, <span class="type">Boolean</span> stopAfterHandle) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">CFTypeRef</span> sources = <span class="type">NULL</span>;</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (__CFRunLoopSourceIsSignaled(rls)) &#123;</span><br><span class="line">    </span><br><span class="line">        .....</span><br><span class="line">    </span><br><span class="line">        rls-&gt;_context.version0.perform(rls-&gt;_context.version0.info);</span><br><span class="line">        </span><br><span class="line">        .....</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上述代码片段中可以看出，当Run Loop运行后会调用内部函数<code>__CFRunLoopDoSources0</code>执行自定义事件源的任务，在执行之前会通过内部函数<code>__CFRunLoopSourceIsSignaled(rls)</code>判断事件源是否已被标记为待执行，然后执行Run Loop事件上下文中的<code>perform</code>回调函数。</p>
-<h3 id="u79FB_u9664Run_Loop_u4E8B_u4EF6_u6E90"><a href="#u79FB_u9664Run_Loop_u4E8B_u4EF6_u6E90" class="headerlink" title="移除Run Loop事件源"></a>移除Run Loop事件源</h3><p>当我们自定义的事件源完成使命后就可以将其从Run Loop中移除，我们来看看对应的方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">CFRunLoopRemoveSource</span><span class="params">(<span class="number">_</span> rl: CFRunLoop!, <span class="number">_</span> source: CFRunLoopSource!, <span class="number">_</span> mode: CFString!)</span></span></span><br><span class="line"></span><br><span class="line">void <span class="type">CFRunLoopRemoveSource</span>(<span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFStringRef</span> modeName) &#123;</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    __CFRunLoopSourceCancel(rls, rl, rlm);</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> void __CFRunLoopSourceCancel(<span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopModeRef</span> rlm) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> == rls-&gt;_context.version0.version) &#123;</span><br><span class="line">          <span class="keyword">if</span> (<span class="type">NULL</span> != rls-&gt;_context.version0.cancel) &#123;</span><br><span class="line">              rls-&gt;_context.version0.cancel(rls-&gt;_context.version0.info, rl, rlm-&gt;_name);</span><br><span class="line">          &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上述代码片段可以看出，当我们调用了<code>CFRunLoopRemoveSource</code>方法后，其实是执行了Run Loop事件源上下文中的<code>cancel</code>回调函数。</p>
-<h3 id="u81EA_u5B9A_u4E49Run_Loop_u4E8B_u4EF6_u6E90_u7684_u5B9E_u9645_u8FD0_u7528"><a href="#u81EA_u5B9A_u4E49Run_Loop_u4E8B_u4EF6_u6E90_u7684_u5B9E_u9645_u8FD0_u7528" class="headerlink" title="自定义Run Loop事件源的实际运用"></a>自定义Run Loop事件源的实际运用</h3><p>在讲解示例之前，我们先来看看示例Demo的效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-5.gif" alt="LearnThread-5"></p>
-<p>在这个示例中，创建了两个自定义事件源，一个添加到主线程中，另一个添加到二级线程中。主线程给二级线程中的自定义事件源发送事件消息，目的是让其改变所有<code>UICollectionViewCell</code>的透明度，当二级线程收到事件消息后执行计算每个<code>UICollectionViewCell</code>透明度的任务，然后再给主线程的自定义事件源发送事件消息，让其更新<code>UICollectionViewCell</code>的透明度并显示。下面来看看类图：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-6-new.png" alt="LearnThread-6"></p>
-<p>整个工程一共就这六个类：</p>
-<ul>
-<li><code>MainCollectionViewController</code>：程序主控制器，启动程序、展示UI及计算<code>UICollectionViewCell</code>透明度的相关方法。</li>
-<li><code>MainThreadRunLoopSource</code>：主线程自定义事件源管理对象，负责初始化事件源，将事件源添加至指定线程，标记事件源并唤醒指定Run Loop以及包含上文中说过的事件源最主要的三个回调方法。</li>
-<li><code>MainThreadRunLoopSourceContext</code>：主线程自定义事件源上下文，可获取到对应的事件源及添加了该事件源的Run Loop。</li>
-<li><code>SecondaryThreadRunLoopSource</code>：二级线程自定义事件源管理对象，负责初始化事件源，将事件源添加至指定线程，标记事件源并唤醒指定Run Loop以及包含上文中说过的事件源最主要的三个回调方法。</li>
-<li><code>SecondaryThreadRunLoopSourceContext</code>：二级线程自定义事件源上下文，可获取到对应的事件源及添加了该事件源的Run Loop。</li>
-<li><code>AppDelegate</code>：应用程序代理类，这里零时充当为各自定义事件源回调方法执行内容的管理类。</li>
-</ul>
-<p>下面我按照程序的运行顺序一一对这些类及属性和方法进行简单说明。</p>
-<h4 id="u7A0B_u5E8F_u5F00_u59CB_u8FD0_u884C"><a href="#u7A0B_u5E8F_u5F00_u59CB_u8FD0_u884C" class="headerlink" title="程序开始运行"></a>程序开始运行</h4><p><code>MainCollectionViewController</code>类中与UI展示相关的方法在这里就不再累赘了。点击<strong>Start</strong>按钮，调用<code>start()</code>方法，初始化<code>MainThreadRunLoopSource</code>对象，在这个过程中初始化了<code>CFRunLoopSourceContext</code>对象并且创建<code>CFRunLoopSource</code>对象以及初始化该事件源的指令池：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> mainThreadRunLoopSource = <span class="type">MainThreadRunLoopSource</span>()</span><br><span class="line">        </span><br><span class="line">mainThreadRunLoopSource.addToCurrentRunLoop()</span><br></pre></td></tr></table></figure>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> runloopSourceContext = <span class="type">CFRunLoopSourceContext</span>(version: <span class="number">0</span>, info: <span class="built_in">unsafeBitCast</span>(<span class="keyword">self</span>, <span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;.<span class="keyword">self</span>), retain: <span class="literal">nil</span>, release: <span class="literal">nil</span>, copyDescription: <span class="literal">nil</span>, <span class="built_in">equal</span>: <span class="literal">nil</span>, hash: <span class="literal">nil</span>, schedule: runloopSourceScheduleRoutine(), cancel: runloopSourceCancelRoutine(), perform: runloopSourcePerformRoutine())</span><br><span class="line">        </span><br><span class="line">runloopSource = <span class="type">CFRunLoopSourceCreate</span>(kCFAllocatorDefault, <span class="number">0</span>, &amp;runloopSourceContext)</span><br><span class="line">        </span><br><span class="line">commandBuffer = <span class="type">Array</span>&lt;<span class="type">SecondaryThreadRunLoopSourceContext</span>&gt;()</span><br></pre></td></tr></table></figure>
-<p>这里需要注意的是<code>CFRunLoopSourceContext</code>的<code>init</code>方法中的第二个参数和<code>CFRunLoopSourceCreate</code>方法的第三个参数都是指针，那么在Swift中，将对象转换为指针的方法有两种：</p>
-<ul>
-<li>使用<code>unsafeBitCast</code>方法，该方法会将第一个参数的内容按照第二个参数的类型进行转换。一般当需要对象与指针来回转换时使用该方法。</li>
-<li>在对象前面加<code>&amp;</code>符号，表示传入指针地址。</li>
-</ul>
-<p>当主线程的自定义事件源初始化完成之后，调用<code>addToCurrentRunLoop()</code>方法，将事件源添加至当前Run Loop中，即主线程的Run Loop：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> cfrunloop = <span class="type">CFRunLoopGetCurrent</span>()</span><br><span class="line">        </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> rls = runloopSource &#123;</span><br><span class="line">            </span><br><span class="line">    <span class="type">CFRunLoopAddSource</span>(cfrunloop, rls, kCFRunLoopDefaultMode)</span><br><span class="line">            </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>接下来创建二级线程，并且让其执行二级线程的配置任务：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> secondaryThread = <span class="type">NSThread</span>(target: <span class="keyword">self</span>, selector: <span class="string">"startThreadWithRunloop"</span>, object: <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">secondaryThread.start()</span><br></pre></td></tr></table></figure>
-<p>在二级线程中同样初始化自定义事件源，并将将其添加至二级线程的Run Loop中，然后启动Run Loop：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">startThreadWithRunloop</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">    autoreleasepool&#123;</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">var</span> done = <span class="literal">false</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">let</span> secondaryThreadRunLoopSource = <span class="type">SecondaryThreadRunLoopSource</span>()</span><br><span class="line">            </span><br><span class="line">        secondaryThreadRunLoopSource.addToCurrentRunLoop()</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">repeat</span> &#123;</span><br><span class="line">                </span><br><span class="line">            <span class="keyword">let</span> result = <span class="type">CFRunLoopRunInMode</span>(kCFRunLoopDefaultMode, <span class="number">5</span>, <span class="literal">true</span>)</span><br><span class="line">                </span><br><span class="line">            <span class="keyword">if</span> ((result == <span class="type">CFRunLoopRunResult</span>.<span class="type">Stopped</span>) || (result == <span class="type">CFRunLoopRunResult</span>.<span class="type">Finished</span>)) &#123;</span><br><span class="line">                    </span><br><span class="line">                done = <span class="literal">true</span>;</span><br><span class="line">                    </span><br><span class="line">            &#125;</span><br><span class="line">                </span><br><span class="line">        &#125; <span class="keyword">while</span>(!done)</span><br><span class="line">            </span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="u6267_u884C_u4E8B_u4EF6_u6E90_u7684schedule_u56DE_u8C03_u51FD_u6570"><a href="#u6267_u884C_u4E8B_u4EF6_u6E90_u7684schedule_u56DE_u8C03_u51FD_u6570" class="headerlink" title="执行事件源的schedule回调函数"></a>执行事件源的schedule回调函数</h4><p>前文中说过将事件源添加至Run Loop后会触发事件源的<code>schedule</code>回调函数，所以当执行完<code>mainThreadRunLoopSource.addToCurrentRunLoop()</code>这句代码后，便会触发主线程自定义事件源的<code>schedule</code>回调函数：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">runloopSourceScheduleRoutine</span><span class="params">()</span></span> -&gt; <span class="preprocessor">@convention</span>(<span class="built_in">c</span>) (<span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;, <span class="type">CFRunLoop</span>!, <span class="type">CFString</span>!) -&gt; <span class="type">Void</span> &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> &#123; (info, runloop, runloopMode) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> mainThreadRunloopSource = <span class="built_in">unsafeBitCast</span>(info, <span class="type">MainThreadRunLoopSource</span>.<span class="keyword">self</span>)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">let</span> mainThreadRunloopSourceContext = <span class="type">MainThreadRunLoopSourceContext</span>(runloop: runloop, runloopSource: mainThreadRunloopSource)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">let</span> appDelegate = <span class="type">UIApplication</span>.sharedApplication().delegate <span class="keyword">as</span>! <span class="type">AppDelegate</span></span><br><span class="line">            </span><br><span class="line">        appDelegate.performSelector(<span class="string">"registerMainThreadRunLoopSource:"</span>, withObject: mainThreadRunloopSourceContext)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里还需注意的是在Swift2.0中，如果一个作为回调函数方法的返回类型是指向函数的指针，这类指针可以转换为闭包，并且要在闭包前面加上<code>@convention(c)</code>标注。在<code>runloopSourceScheduleRoutine()</code>方法中，获取到主线程事件源对象并初始化事件源上下文对象，然后将该事件源上下文对象传给<code>AppDelegate</code>的对应方法注册该事件源上下文对象：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">registerMainThreadRunLoopSource</span><span class="params">(runloopSourceContext: MainThreadRunLoopSourceContext)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">    mainThreadRunloopSourceContext = runloopSourceContext</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>自然当在二级线程中执行完<code>secondaryThreadRunLoopSource.addToCurrentRunLoop()</code>这句代码后，也会触发二级线程自定义事件源的<code>schedule</code>回调函数：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">runloopSourceScheduleRoutine</span><span class="params">()</span></span> -&gt; <span class="preprocessor">@convention</span>(<span class="built_in">c</span>) (<span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;, <span class="type">CFRunLoop</span>!, <span class="type">CFString</span>!) -&gt; <span class="type">Void</span> &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> &#123; (info, runloop, runloopMode) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">let</span> secondaryThreadRunloopSource = <span class="built_in">unsafeBitCast</span>(info, <span class="type">SecondaryThreadRunLoopSource</span>.<span class="keyword">self</span>)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">let</span> secondaryThreadRunloopSourceContext = <span class="type">SecondaryThreadRunLoopSourceContext</span>(runloop: runloop, runloopSource: secondaryThreadRunloopSource)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">let</span> appDelegate = <span class="type">UIApplication</span>.sharedApplication().delegate <span class="keyword">as</span>! <span class="type">AppDelegate</span></span><br><span class="line">            </span><br><span class="line">        appDelegate.performSelectorOnMainThread(<span class="string">"registerSecondaryThreadRunLoopSource:"</span>, withObject: secondaryThreadRunloopSourceContext, waitUntilDone: <span class="literal">true</span>)</span><br><span class="line">            </span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里要注意的是，在该方法中同样是将二级线程事件源上下文对象传给了<code>AppDelegate</code>的对应方法，但是这里用了<code>performSelectorOnMainThread</code>方法，让其在主线程中执行，目的在于注册完上下文对象后就接着从主线程给二级线程发送事件消息了，其实我将这里作为了主线程触发二级线程执行任务的触发点：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">registerSecondaryThreadRunLoopSource</span><span class="params">(runloopSourceContext: SecondaryThreadRunLoopSourceContext)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">    secondaryThreadRunloopSourceContext = runloopSourceContext</span><br><span class="line">        </span><br><span class="line">    sendCommandToSecondaryThread()</span><br><span class="line">        </span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">sendCommandToSecondaryThread</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">    secondaryThreadRunloopSourceContext?.runloopSource?.commandBuffer?.append(mainThreadRunloopSourceContext!)</span><br><span class="line">        </span><br><span class="line">    secondaryThreadRunloopSourceContext?.runloopSource?.signalSourceAndWakeUpRunloop(secondaryThreadRunloopSourceContext!.runloop!)</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上述代码中可以看到在<code>sendCommandToSecondaryThread()</code>方法中，将主线程的事件源上下文放入了二级线程事件源的指令池中，这里我设计的是只要指令池中有内容就代表事件源需要执行后续任务了。然后执行了二级线程事件源的<code>signalSourceAndWakeUpRunloop()</code>方法，给其标记为待执行，并唤醒二级线程的Run Loop：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">signalSourceAndWakeUpRunloop</span><span class="params">(runloop: CFRunLoopRef)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="type">CFRunLoopSourceSignal</span>(runloopSource)</span><br><span class="line">        </span><br><span class="line">    <span class="type">CFRunLoopWakeUp</span>(runloop)</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="u6267_u884C_u4E8B_u4EF6_u6E90_u7684perform_u56DE_u8C03_u51FD_u6570"><a href="#u6267_u884C_u4E8B_u4EF6_u6E90_u7684perform_u56DE_u8C03_u51FD_u6570" class="headerlink" title="执行事件源的perform回调函数"></a>执行事件源的perform回调函数</h4><p>当二级线程事件源被标记并且二级线程Run Loop被唤醒后，就会触发事件源的<code>perform</code>回调函数：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">runloopSourcePerformRoutine</span><span class="params">()</span></span> -&gt; <span class="preprocessor">@convention</span>(<span class="built_in">c</span>) (<span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">Void</span> &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> &#123; info -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">let</span> appDelegate = <span class="type">UIApplication</span>.sharedApplication().delegate <span class="keyword">as</span>! <span class="type">AppDelegate</span></span><br><span class="line">            </span><br><span class="line">        appDelegate.performSelector(<span class="string">"performSecondaryThreadRunLoopSourceTask"</span>)</span><br><span class="line">            </span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>二级线程事件源的<code>perform</code>回调函数会在当前线程，也就是二级线程中执行<code>AppDelegate</code>中的对应方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSecondaryThreadRunLoopSourceTask</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">if</span> secondaryThreadRunloopSourceContext!.runloopSource!.commandBuffer!.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            </span><br><span class="line">        mainCollectionViewController!.generateRandomAlpha()</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">let</span> mainThreadRunloopSourceContext = secondaryThreadRunloopSourceContext!.runloopSource!.commandBuffer![<span class="number">0</span>]</span><br><span class="line">            </span><br><span class="line">        secondaryThreadRunloopSourceContext!.runloopSource!.commandBuffer!.removeAll()</span><br><span class="line">            </span><br><span class="line">        mainThreadRunloopSourceContext.runloopSource?.commandBuffer?.append(secondaryThreadRunloopSourceContext!)</span><br><span class="line">            </span><br><span class="line">        mainThreadRunloopSourceContext.runloopSource?.signalSourceAndWakeUpRunloop(mainThreadRunloopSourceContext.runloop!)</span><br><span class="line">            </span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上述代码中可以看到，先会判断二级线程事件源的指令池中有没有内容，如果有的话，那么执行计算<code>UICollectionViewCell</code>透明度的任务，然后从指令池中获取到主线程事件源上下文对象，将二级线程事件源上下文对象放入主线程事件源的指令池中，并将主线程事件源标记为待执行，然后唤醒主线程Run Loop。之后便会触发主线程事件源的<code>perform</code>回调函数：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">runloopSourcePerformRoutine</span><span class="params">()</span></span> -&gt; <span class="preprocessor">@convention</span>(<span class="built_in">c</span>) (<span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Void</span>&gt;) -&gt; <span class="type">Void</span> &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> &#123; info -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">let</span> appDelegate = <span class="type">UIApplication</span>.sharedApplication().delegate <span class="keyword">as</span>! <span class="type">AppDelegate</span></span><br><span class="line">            </span><br><span class="line">        appDelegate.performSelector(<span class="string">"performMainThreadRunLoopSourceTask"</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performMainThreadRunLoopSourceTask</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">if</span> mainThreadRunloopSourceContext!.runloopSource!.commandBuffer!.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">        </span><br><span class="line">        mainThreadRunloopSourceContext!.runloopSource!.commandBuffer!.removeAll()</span><br><span class="line">            </span><br><span class="line">        mainCollectionViewController!.collectionView.reloadData()</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">let</span> timer = <span class="type">NSTimer</span>(timeInterval: <span class="number">1</span>, target: <span class="keyword">self</span>, selector: <span class="string">"sendCommandToSecondaryThread"</span>, userInfo: <span class="literal">nil</span>, repeats: <span class="literal">false</span>)</span><br><span class="line">            </span><br><span class="line">        <span class="type">NSRunLoop</span>.mainRunLoop().addTimer(timer, forMode: <span class="type">NSDefaultRunLoopMode</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在<code>performMainThreadRunLoopSourceTask()</code>方法中同样会先判断主线程事件源的指令池是否有内容，然后执行<code>MainCollectionViewController</code>中的刷新UI的方法，最后再次给二级线程发送事件消息，以此循环。大家可以去Github下载该示例的<a href="https://github.com/DevTalking/CustomRunloopInputSourceSample.git" target="_blank" rel="external">源码</a>，编译环境是Xcode7.2，然后可以自己试着在界面中添加一个<strong>Stop</strong>按钮，让事件源执行<code>cancel</code>回调函数。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/read-threading-programming-guide-2/" itemprop="url">
-                  读 Threading Programming Guide 笔记（二）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-10T00:00:00+08:00" content="2016-02-10">
-              2016-02-10
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/read-threading-programming-guide-2/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/read-threading-programming-guide-2/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>本文首发<a href="http://geek.csdn.net/news/detail/55617" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<blockquote>
-<p>记得第一次读这个文档还是3年前，那时也只是泛读。如今关于iOS多线程的文章层出不穷，但我觉得若想更好的领会各个实践者的文章，应该先仔细读读官方的相关文档，打好基础，定会有更好的效果。文章中有对官方文档的翻译，也有自己的理解，官方文档中代码片段的示例在这篇文章中都进行了完整的重写，还有一些文档中没有的代码示例，并且都使用Swift完成，给大家一些Objc与Swift转换的参考。<br>官方文档地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Conceptual/Multithreading/Introduction/Introduction.html" target="_blank" rel="external">Threading Programming Guide</a></p>
-</blockquote>
-<h2 id="u7EBF_u7A0B_u5C5E_u6027_u914D_u7F6E"><a href="#u7EBF_u7A0B_u5C5E_u6027_u914D_u7F6E" class="headerlink" title="线程属性配置"></a>线程属性配置</h2><p>线程也是具有若干属性的，自然一些属性也是可配置的，在启动线程之前我们可以对其进行配置，比如线程占用的内存空间大小、线程持久层中的数据、设置线程类型、优先级等。</p>
-<h3 id="u914D_u7F6E_u7EBF_u7A0B_u7684_u6808_u7A7A_u95F4_u5927_u5C0F"><a href="#u914D_u7F6E_u7EBF_u7A0B_u7684_u6808_u7A7A_u95F4_u5927_u5C0F" class="headerlink" title="配置线程的栈空间大小"></a>配置线程的栈空间大小</h3><p>在前文中提到过线程对内存空间的消耗，其中一部分就是线程栈，我们可以对线程栈的大小进行配置：</p>
-<ul>
-<li>Cocoa框架：在OS X v10.5之后的版本和iOS2.0之后的版本中，我们可以通过修改<code>NSThread</code>类的<code>stackSize</code>属性，改变二级线程的线程栈大小，不过这里要注意的是该属性的单位是字节，并且设置的大小必须得是4KB的倍数。</li>
-<li>POSIX API：通过<code>pthread_attr_- setstacksize</code>函数给线程属性<code>pthread_attr_t</code>结构体设置线程栈大小，然后在使用<code>pthread_create</code>函数创建线程时将线程属性传入即可。</li>
-</ul>
-<blockquote>
-<p>注意：在使用Cocoa框架的前提下修改线程栈时，不能使用<code>NSThread</code>的<code>detachNewThreadSelector: toTarget:withObject:</code>方法，因为上文中说过，该方法先创建线程，即刻便启动了线程，所以根本没有机会修改线程属性。</p>
-</blockquote>
-<h3 id="u914D_u7F6E_u7EBF_u7A0B_u5B58_u50A8_u5B57_u5178"><a href="#u914D_u7F6E_u7EBF_u7A0B_u5B58_u50A8_u5B57_u5178" class="headerlink" title="配置线程存储字典"></a>配置线程存储字典</h3><p>每一个线程，在整个生命周期里都会有一个字典，以<code>key-value</code>的形式存储着在线程执行过程中你希望保存下来的各种类型的数据，比如一个常驻线程的运行状态，线程可以在任何时候访问该字典里的数据。</p>
-<p>在Cocoa框架中，可以通过<code>NSThread</code>类的<code>threadDictionary</code>属性，获取到<code>NSMutableDictionary</code>类型对象，然后自定义<code>key</code>值，存入任何里先储存的对象或数据。如果使用POSIX线程，可以使用<code>pthread_setspecific</code>和<code>pthread_getspecific</code>函数设置获取线程字典。</p>
-<h3 id="u914D_u7F6E_u7EBF_u7A0B_u7C7B_u578B"><a href="#u914D_u7F6E_u7EBF_u7A0B_u7C7B_u578B" class="headerlink" title="配置线程类型"></a>配置线程类型</h3><p>在上文中提到过，线程有Joinable和Detached类型，大多数非底层的线程默认都是Detached类型的，相比Joinable类型的线程来说，Detached类型的线程不用与其他线程结合，并且在执行完任务后可自动被系统回收资源，而且主线程不会因此而阻塞，这着实要方便许多。</p>
-<p>使用<code>NSThread</code>创建的线程默认都是Detached类型，而且似乎也不能将其设置为Joinable类型。而使用POSIX API创建的线程则默认为Joinable类型，而且这也是唯一创建Joinable类型线程的方式。通过POSIX API可以在创建线程前通过函数<code>pthread_attr_setdetachstate</code>更新线程属性，将其设置为不同的类型，如果线程已经创建，那么可以使用<code>pthread_detach</code>函数改变其类型。Joinable类型的线程还有一个特性，那就是在终止之前可以将数据传给与之相结合的线程，从而达到线程之间的交互。即将要终止的线程可以通过<code>pthread_exit</code>函数传递指针或者任务执行的结果，然后与之结合的线程可以通过<code>pthread_join</code>函数接受数据。</p>
-<p>虽然通过POSIX API创建的线程使用和管理起来较为复杂和麻烦，但这也说明这种方式更为灵活，更能满足不同的使用场景和需求。比如当执行一些关键的任务，不能被打断的任务，像执行I/O操作之类。</p>
-<h3 id="u8BBE_u7F6E_u7EBF_u7A0B_u4F18_u5148_u7EA7"><a href="#u8BBE_u7F6E_u7EBF_u7A0B_u4F18_u5148_u7EA7" class="headerlink" title="设置线程优先级"></a>设置线程优先级</h3><p>每一个新创建的二级线程都有它自己的默认优先级，内核会根据线程的各属性通过分配算法计算出线程的优先级。这里需要明确一个概念，高优先级的线程虽然会更早的运行，但这其中并没有执行时间效率的因素，也就是说高优先级的线程会更早的执行它的任务，但在执行任务的时间长短方面并没有特别之处。</p>
-<p>不论是通过<code>NSThread</code>创建线程还是通过POSIX API创建线程，他们都提供了设置线程优先级的方法。我们可以通过<code>NSThread</code>的类方法<code>setThreadPriority:</code>设置优先级，因为线程的优先级由0.0～1.0表示，所以设置优先级时也一样。我们也可以通过<code>pthread_setschedparam</code>函数设置线程优先级。</p>
-<blockquote>
-<p>注意：设置线程的优先级时可以在线程运行时设置。</p>
-</blockquote>
-<p>虽然我们可以调节线程的优先级，但不到必要时还是不建议调节线程的优先级。因为一旦调高了某个线程的优先级，与低优先级线程的优先等级差距太大，就有可能导致低优先级线程永远得不到运行的机会，从而产生性能瓶颈。比如说有两个线程A和B，起初优先级相差无几，那么在执行任务的时候都会相继无序的运行，如果将线程A的优先级调高，并且当线程A不会因为执行的任务而阻塞时，线程B就可能一直不能运行，此时如果线程A中执行的任务需要与线程B中任务进行数据交互，而迟迟得不到线程B中的结果，此时线程A就会被阻塞，那么程序的性能自然就会产生瓶颈。</p>
-<h2 id="u7EBF_u7A0B_u6267_u884C_u7684_u4EFB_u52A1"><a href="#u7EBF_u7A0B_u6267_u884C_u7684_u4EFB_u52A1" class="headerlink" title="线程执行的任务"></a>线程执行的任务</h2><p>在任何平台，线程存在的价值和意义都是一样的，那就是执行任务，不论是方法、函数或一段代码，除了依照语言语法正常编写外，还有一些额外需要大家注意的事项。</p>
-<h3 id="Autorelease_Pool"><a href="#Autorelease_Pool" class="headerlink" title="Autorelease Pool"></a>Autorelease Pool</h3><p>在Xcode4.3之前，我们都处在手动管理引用计数的时代，代码里满是<code>retain</code>和<code>release</code>的方法，所以那个时候，被线程执行的任务中，为了能自动处理大量对象的<code>retain</code>和<code>release</code>操作，都会使用<code>NSAutoreleasePool</code>类创建自动释放池，它的作用是将线程中要执行的任务都放在自动释放池中，自动释放池会捕获所有任务中的对象，在任务结束或线程关闭之时自动释放这些对象：</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)myThreadMainRoutine</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSAutoreleasePool</span> *pool = [[<span class="built_in">NSAutoreleasePool</span> alloc] init]; <span class="comment">// 顶层自动释放池</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 线程执行任务的逻辑代码</span></span><br><span class="line"></span><br><span class="line">    [pool release];</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>到了自动引用计数（ARC）时代，就不能使用<code>NSAutoreleasePool</code>进行自动释放池管理了，而是新加了<code>@autoreleasepool</code>代码块语法来创建自动释放池：</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)myThreadMainRoutine</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">     </span><br><span class="line">     <span class="comment">// 线程执行任务的逻辑代码</span></span><br><span class="line">     </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们知道每个应用程序都是运行在一个主线程里的，而线程都至少得有一个自动释放池，所以说整个应用其实是跑在一个自动释放池中的。大家都知道C系语言中，程序的入口函数都是<code>main</code>函数，当我们创建一个Objective－C的iOS应用后，Xcode会在<strong>Supporting Files</strong>目录下自动为我们创建一个<code>main.m</code>文件：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-2.png" alt="LearnThread-2"></p>
-<p>在<code>main.m</code>这个文件中就能证实上面说的那点：</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIApplicationMain</span>(argc, argv, <span class="literal">nil</span>, <span class="built_in">NSStringFromClass</span>([AppDelegate class]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>以上都是在Objective－C中，但在Swift中，就有点不一样了，<code>NSAutoreleasePool</code>和<code>@autoreleasepool</code>都不能用了，取而代之的是Swift提供的一个方法<code>func autoreleasepool(code: () -&gt; ())</code>，接收的参数为一个闭包，我们可以这样使用：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performInBackground</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        autoreleasepool(&#123;</span><br><span class="line">        </span><br><span class="line">          <span class="comment">// 线程执行任务的逻辑代码</span></span><br><span class="line">          </span><br><span class="line">          <span class="built_in">print</span>(<span class="string">"I am a event, perform in Background Thread."</span>)  </span><br><span class="line">          </span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>根据尾随闭包的写法，还可以这样使用：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performInBackground</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">        autoreleasepool&#123;</span><br><span class="line">        </span><br><span class="line">          <span class="comment">// 线程执行任务的逻辑代码</span></span><br><span class="line">          </span><br><span class="line">          <span class="built_in">print</span>(<span class="string">"I am a event, perform in Background Thread."</span>)</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>有些人可能会问在ARC的时代下为什么还要用自动释放池呢？比如在SDWebImage中就大量使用了<code>@autoreleasepool</code>代码块，其原因就是为了避免内存峰值，大家都知道在MRC时代，除了<code>retain</code>和<code>release</code>方法外，还有一个常用的方法是<code>autorelease</code>，用来延迟释放对象，它释放对象的时机是当前runloop结束时。到了ARC时代，虽然不用我们手动管理内存了，但其自动管理的本质与MRC时是一样的，只不过由编译器帮我们在合适的地方加上了这三个方法，所以说如果在一个线程执行的任务中大量产生需要<code>autorelease</code>的对象时，因为不能及时释放对象，所以就很有可能产生内存峰值。那么在这种任务中在特定的时候使用<code>@autorelease</code>代码块，帮助释放对象，就可以有效的防止内存峰值的发生。</p>
-<h3 id="u8BBE_u7F6E_u5F02_u5E38_u5904_u7406"><a href="#u8BBE_u7F6E_u5F02_u5E38_u5904_u7406" class="headerlink" title="设置异常处理"></a>设置异常处理</h3><p>在线程执行任务的时候，难免会出现异常，如果不能及时捕获异常任由其抛出，就会导致整个应用程序退出。在Swift2.0中，Apple提供了新的<a href="http://www.devtalking.com/articles/what-is-new-in-swift/">异常控制处理机制</a>，让我们能像Java中一样形如流水的捕获处理异常。所以在线程执行的任务中，我们尽量使用异常处理机制，提高健壮性。</p>
-<h3 id="u521B_u5EFARunloop"><a href="#u521B_u5EFARunloop" class="headerlink" title="创建Runloop"></a>创建Runloop</h3><p>大家知道，一个线程只能执行一个任务，当任务结束后也就意味着这个线程也要结束，频繁的创建线程也是挺消耗资源的一件事，于是就有了常驻线程，前文介绍线程相关概念时也提到过：</p>
-<blockquote>
-<p>简单的来说，RunLoop用于管理和监听异步添加到线程中的事件，当有事件输入时，系统唤醒线程并将事件分派给RunLoop，当没有需要处理的事件时，RunLoop会让线程进入休眠状态。这样就能让线程常驻在进程中，而不会过多的消耗系统资源，达到有事做事，没事睡觉的效果。</p>
-</blockquote>
-<p>如果想要线程不结束，那就要被执行的任务不结束，让被执行的任务不结束显然不靠谱，那么就需要一个机制，能占着线程。该机制就是事件循环机制（Eventloop），体现在代码中就是一个<code>do-while</code>循环，不断的接收事件消息、处理事件、等待新事件消息，除非接收到一个让其退出的事件消息，否则它将一直这么循环着，线程自然就不会结束。Runloop就是管理消息和事件，并提供Eventloop函数的对象，线程执行的任务其实就是在Runloop对象的Eventloop函数里运行。关于Runloop更详细的知识及配置<br>操作在后文中会有讲述。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h3 id="u7EC8_u6B62_u7EBF_u7A0B"><a href="#u7EC8_u6B62_u7EBF_u7A0B" class="headerlink" title="终止线程"></a>终止线程</h3><p>打个不恰当的比方，人终有一死，或正常生老病死，或非正常出事故意外而亡，前者尚合情合理后者悲痛欲绝。线程也一样，有正常终止结束，也有非正常的强制结束，不管是线程本身还是应用程序都希望线程能正常结束，因为正常结束也就意味着被执行的任务正常执行完成，从而让线程处理完后事随即结束，如果在任务执行途中强制终止线程，会导致线程没有机会处理后事，也就是正常释放资源对象等，这样会给应用程序带来例如内存溢出这类潜在的问题，所以强烈不推荐强制终止线程的做法。</p>
-<p>如果确实有在任务执行途中终止线程的需求，那么可以使用Runloop，在任务执行过程中定期查看是否有收到终止任务的事件消息，这样一来可以在任务执行途中判断出终止任务的信号，然后进行终止任务的相关处理，比如保存数据等，二来可以让线程有充分的时间释放资源。</p>
-<h2 id="Run_Loop"><a href="#Run_Loop" class="headerlink" title="Run Loop"></a>Run Loop</h2><p>Run Loops是线程中的基础结构，在上文中也提到过，Run Loops其实是一个事件循环机制，用来分配、分派线程接受到的事件任务，同时可以让线程成为一个常驻线程，即有任务时处理任务，没任务时休眠，且不消耗资源。在实际应用时，Run Loop的生命周期并不全是自动完成的，还是需要人工进行配置，不论是Cocoa框架还是Core Foundation框架都提供了Run Loop的相关对象对其进行配置和管理。</p>
-<blockquote>
-<p>注：Core Foundation框架是一组C语言接口，它们为iOS应用程序提供基本数据管理和服务功能，比如线程和Run Loop、端口、Socket、时间日期等。</p>
-</blockquote>
-<p>在所有的线程中，不论是主线程还是二级线程，都不需要显示的创建Run Loop对象，这里的显示指的是通过任何<em>create</em>打头的方法创建Run Loop。对于主线程来说，当应用程序通过<code>UIApplicationMain</code>启动时，主线程中的Run Loop就已经创建并启动了，而且也配置好了。那么如果是二级线程，则需要我们手动先获取Run Loop，然后再手动进行配置并启动。下面的章节会向大家详细介绍Run Loop的知识。</p>
-<blockquote>
-<p>注：在二级线程中获取Run Loop有两种方式，通过<code>NSRunloop</code>的类方法<code>currentRunLoop</code>获取Run Loop对象（<code>NSRunLoop</code>），或者通过Core Foundation框架中的<code>CFRunLoopGetCurrent()</code>函数获取当前线程的Run Loop对象（<code>CFRunLoop</code>）。<code>NSRunLoop</code>是<code>CFRunLoop</code>的上层封装。</p>
-</blockquote>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> nsrunloop = <span class="type">NSRunLoop</span>.currentRunLoop()</span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> cfrunloop = <span class="type">CFRunLoopGetCurrent</span>()</span><br></pre></td></tr></table></figure>
-<h3 id="Run_Loop_u7684_u4E8B_u4EF6_u6765_u6E90"><a href="#Run_Loop_u7684_u4E8B_u4EF6_u6765_u6E90" class="headerlink" title="Run Loop的事件来源"></a>Run Loop的事件来源</h3><p>Run Loop有两个事件来源，一个是<strong>Input source</strong>，接收来自其他线程或应用程序（进程）的异步事件消息，并将消息分派给对应的事件处理方法。另一个是<strong>Timer source</strong>，接收定期循环执行或定时执行的同步事件消息，同样会将消息分派给对应的事件处理方法。</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-3.png" alt="LearnThread-3"></p>
-<p>上图展示了Run Loop的两类事件来源，以及在Input source中的两种不同的子类型，它们分别对应着Run Loop中不同的处理器。当不同的事件源接收到消息后，通过<code>NSRunLoop</code>的<code>runUntilDate:</code>方法启动运行Run Loop，将事件消息分派给对应的处理器执行，一直到指定的时间时退出Run Loop。</p>
-<h3 id="Run_Loop_u7684_u89C2_u5BDF_u8005"><a href="#Run_Loop_u7684_u89C2_u5BDF_u8005" class="headerlink" title="Run Loop的观察者"></a>Run Loop的观察者</h3><p>Run Loop的观察者可以理解为Run Loop自身运行状态的监听器，它可以监听Run Loop的下面这些运行状态：</p>
-<ul>
-<li>Run Loop准备开始运行时。</li>
-<li>当Run Loop准备要执行一个Timer Source事件时。</li>
-<li>当Run Loop准备要执行一个Input Source事件时。</li>
-<li>当Run Loop准备休眠时。</li>
-<li>当Run Loop被进入的事件消息唤醒并且还没有开始让处理器执行事件消息时。</li>
-<li>退出Run Loop时。</li>
-</ul>
-<p>Run Loop的观察者在<code>NSRunloop</code>中没有提供相关接口，所以我们需要通过Core Foundation框架使用它，可以通过<code>CFRunLoopObserverCreate</code>方法创建Run Loop的观察者，类型为<code>CFRunLoopObserverRef</code>，它其实是<code>CFRunLoopObserver</code>的重定义名称。上述的那些可以被监听的运行状态被封装在了<code>CFRunLoopActivity</code>结构体中，对应关系如下：</p>
-<ul>
-<li><code>CFRunLoopActivity.Entry</code></li>
-<li><code>CFRunLoopActivity.BeforeTimers</code></li>
-<li><code>CFRunLoopActivity.BeforeSources</code></li>
-<li><code>CFRunLoopActivity.BeforeWaiting</code></li>
-<li><code>CFRunLoopActivity.AfterWaiting</code></li>
-<li><code>CFRunLoopActivity.Exit</code></li>
-</ul>
-<p>Run Loop的观察者和Timer事件类似，可以只使用一次，也可以重复使用，在创建观察者时可以设置。如果只使用一次，那么当监听到对应的状态后会自行移除，如果是重复使用的，那么会留在Run Loop中多次监听Run Loop相同的运行状态。</p>
-<h3 id="Run_Loop_Modes"><a href="#Run_Loop_Modes" class="headerlink" title="Run Loop Modes"></a>Run Loop Modes</h3><p>Run Loop Modes可以称之为Run Loop模式，这个模式可以理解为对Run Loop各种设置项的不同组合，举个例子，iPhone手机运行的iOS有很多系统设置项，假设白天我打开蜂窝数据，晚上我关闭蜂窝数据，而打开无线网络，到睡觉时我关闭蜂窝数据和无线网络，而打开飞行模式。假设在这三个时段中其他的所有设置项都相同，而只有这三个设置项不同，那么就可以说我的手机有三种不同的设置模式，对应着不同的时间段。那么Run Loop的设置项是什么呢？那自然就是前文中提到的不同的事件来源以及观察者了，比如说，Run Loop的模式A（Mode A），只包含接收Timer Source事件源的事件消息以及监听Run Loop运行时的观察者，而模式B（Mode B）只包含接收Input Source事件源的事件消息以及监听Run Loop准备休眠时和退出Run Loop时的观察者，如下图所示：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread%EF%BC%8D7.png" alt="LearnThread-4"></p>
-<p>所以说，Run Loop的模式就是不同类型的数据源和不同观察者的集合，当Run Loop运行时要设置它的模式，也就是告知Run Loop只需要关心这个集合中的数据源类型和观察者，其他的一概不予理会。那么通过模式，就可以让Run Loop过滤掉它不关心的一些事件，以及避免被无关的观察者打扰。如果有不在当前模式中的数据源发来事件消息，那只能等Run Loop改为包含有该数据源类型的模式时，才能处理事件消息。</p>
-<p>在Cocoa框架和Core Foundation框架中，已经为我们预定义了一些Run Loop模式：</p>
-<ul>
-<li>默认模式：在<code>NSRunloop</code>中的定义为<code>NSDefaultRunLoopMode</code>，在<code>CFRunloop</code>中的定义为<code>kCFRunLoopDefaultMode</code>。该模式包含的事件源囊括了除网络链接操作的大多数操作以及时间事件，用于当前Run Loop处于空闲状态等待事件时，以及Run Loop开始运行时。</li>
-<li>NSConnectionReplyMode：该模式用于监听<code>NSConnection</code>相关对象的返回结果和状态，在系统内部使用，我们一般不会使用该模式。</li>
-<li>NSModalPanelRunLoopMode：该模式用于过滤在模态面板中处理的事件（Mac App）。</li>
-<li>NSEventTrackingRunLoopMode：该模式用于跟踪用户与界面交互的事件。</li>
-<li>模式集合：或者叫模式组，顾名思义就是将多个模式组成一个组，然后将模式组认为是一个模式设置给Run Loop，在<code>NSRunloop</code>中的定义为<code>NSRunLoopCommonModes</code>，在<code>CFRunloop</code>中的定义为<code>kCFRunLoopCommonModes</code>。系统提供的模式组名为Common Modes，它默认包含NSDefaultRunLoopMode、NSModalPanelRunLoopMode、NSEventTrackingRunLoopMode这三个模式。</li>
-</ul>
-<p>以上五种系统预定的模式中，前四种属于只读模式，也就是我们无法修改它们包含的事件源类型和观察者类型。而模式组我们可以通过Core Foundation框架提供的<code>CFRunLoopAddCommonMode(_ rl: CFRunLoop!, _ mode: CFString!)</code>方法添加新的模式，甚至是我们自定义的模式。这里需要注意的是，既然在使用时，模式组是被当作一个模式使用的，那么自然可以给它设置不同类型的事件源或观察者，当给模式组设置事件源或观察者时，实际是给该模式组包含的所有模式设置。比如说给模式组设置了一个监听Run Loop准备休眠时的观察者，那么该模式组里的所有模式都会被设置该观察者。</p>
-<h3 id="Input_Source"><a href="#Input_Source" class="headerlink" title="Input Source"></a>Input Source</h3><p>前文中说过，Input Sources接收到各种操作输入事件消息，然后异步的分派给对应事件处理方法。在Input Sources中又分两大类的事件源，一类是基于端口事件源（Port-based source），在<code>CFRunLoopSourceRef</code>的结构中为source1，主要通过监听应用程序的Mach端口接收事件消息并分派，该类型的事件源可以主动唤醒Run Loop。另一类是自定义事件源（Custom source），在<code>CFRunLoopSourceRef</code>的结构中为source0，一般是接收其他线程的事件消息并分派给当前线程的Run Loop，比如<code>performSwlwctor:onThread:...</code>系列方法，该类型的事件源无法自动唤醒Run Loop，而是需要手动将事件源设置为待执行的标记，然后再手动唤醒Run Loop。虽然这两种类型的事件源接收事件消息的方式不一样，但是当接收到消息后，对消息的分派机制是完全相同的。</p>
-<h4 id="Port-Based_Source"><a href="#Port-Based_Source" class="headerlink" title="Port-Based Source"></a>Port-Based Source</h4><p>Cocoa框架和Core Foundation框架都提供了相关的对象和函数用于创建基于端口的事件源。在Cocoa框架中，实现基于端口的事件源主要是通过<code>NSPort</code>类实现的，它代表了交流通道，也就是说在不同的线程的Run Loop中都存在<code>NSPort</code>，那么它们之间就可以通过发送与接收消息（<code>NSPortMessage</code>）互相通信。所以我们只需要通过<code>NSPort</code>类的类方法<code>port</code>创建对象实例，然后通过<code>NSRunloop</code>的方法将其添加到Run Loop中，或者在创建二级线程时将创建好的<code>NSPort</code>对象传入即可，无需我们再做消息、消息上下文、事件源等其他配置，都由Run Loop自行配置好了。而在Core Foundation框架中就比较麻烦一些，大多数配置都需要我们手动配置，在后面会详细举例说明。</p>
-<h4 id="Custom_Input_Source"><a href="#Custom_Input_Source" class="headerlink" title="Custom Input Source"></a>Custom Input Source</h4><p>Cocoa框架中没有提供创建自定义事件源的相关接口，我们只能通过Core Foundation框架中提供的对象和函数创建自定义事件源，手动配置事件源各个阶段要处理的逻辑，比如创建<code>CFRunLoopSourceRef</code>事件源对象，通过<code>CFRunLoopScheduleCallBack</code>回调函数配置事件源上下文并注册事件源，通过<code>CFRunLoopPerformCallBack</code>回调函数处理接收到事件消息后的逻辑，通过<code>CFRunLoopCancelCallBack</code>函数销毁事件源等等，在后文中会有详细举例说明。</p>
-<p>虽然Cocoa框架没有提供创建自定义事件源的相关对象和接口，但是它为我们预定义好了一些事件源，能让我们在当前线程、其他二级线程、主线程中执行我们希望被执行的方法，让我们看看<code>NSObject</code>中的这些方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSelectorOnMainThread</span><span class="params">(<span class="number">_</span> aSelector: Selector, withObject arg: AnyObject?, waitUntilDone wait: Bool)</span></span></span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSelectorOnMainThread</span><span class="params">(<span class="number">_</span> aSelector: Selector, withObject arg: AnyObject?, waitUntilDone wait: Bool, modes array: [String]?)</span></span></span><br></pre></td></tr></table></figure>
-<p>这两个方法允许我们将当前线程中对象的方法让主线程去执行，可以选择是否阻塞当前线程，以及希望被执行的方法作为事件消息被何种Run Loop模式监听。</p>
-<blockquote>
-<p>注：如果在主线程中使用该方法，当选择阻塞当前线程，那么发送的方法会立即被主线程执行，若选择不阻塞当前线程，那么被发送的方法将被排进主线程Run Loop的事件队列中，并等待执行。</p>
-</blockquote>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSelector</span><span class="params">(<span class="number">_</span> aSelector: Selector, withObject anArgument: AnyObject?, afterDelay delay: NSTimeInterval)</span></span></span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSelector</span><span class="params">(<span class="number">_</span> aSelector: Selector, withObject anArgument: AnyObject?, afterDelay delay: NSTimeInterval, inModes modes: [String])</span></span></span><br></pre></td></tr></table></figure>
-<p>这两个方法允许我们给当前线程发送事件消息，当前线程接收到消息后会依次加入Run Loop的事件消息队列中，等待Run Loop迭代执行。该方法还可以指定消息延迟发送时间及消息希望被何种Run Loop模式监听。</p>
-<blockquote>
-<p>注：该方法中的延迟时间并不是延迟Run Loop执行事件消息的事件，而是延迟向当前线程发送事件消息的时间。另外，即便不设置延迟时间，那么发送的事件消息也不一定立即被执行，因为在Run Loop的事件消息队列中可以已有若干等待执行的消息。</p>
-</blockquote>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSelector</span><span class="params">(<span class="number">_</span> aSelector: Selector, onThread thr: NSThread, withObject arg: AnyObject?, waitUntilDone wait: Bool)</span></span></span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSelector</span><span class="params">(<span class="number">_</span> aSelector: Selector, onThread thr: NSThread, withObject arg: AnyObject?, waitUntilDone wait: Bool, modes array: [String]?)</span></span></span><br></pre></td></tr></table></figure>
-<p>这两个方法允许我们给其他二级线程发送事件消息，前提是要取得目标二级线程的<code>NSThread</code>对象实例，该方法同样提供了是否阻塞当前线程的选项和设置Run Loop模式的选项。</p>
-<blockquote>
-<p>注：使用该方法给二级线程发送事件消息时要确保目标线程正在运行，换句话说就是目标线程要有启动着的Run Loop。并且保证目标线程执行的任务要在应用程序代理执行<code>applicationDidFinishLaunching:</code>方法前完成，否则主线程就结束了，目标线程自然也就结束了。</p>
-</blockquote>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSelectorInBackground</span><span class="params">(<span class="number">_</span> aSelector: Selector, withObject arg: AnyObject?)</span></span></span><br></pre></td></tr></table></figure>
-<p>该方法允许我们在当前应用程序中创建一个二级线程，并将指定的事件消息发送给新创建的二级线程。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">cancelPreviousPerformRequestsWithTarget</span>(<span class="title">_</span> <span class="title">aTarget</span>: <span class="title">AnyObject</span>)</span><br><span class="line"></span><br><span class="line"><span class="title">class</span> <span class="title">func</span> <span class="title">cancelPreviousPerformRequestsWithTarget</span>(<span class="title">_</span> <span class="title">aTarget</span>: <span class="title">AnyObject</span>, <span class="title">selector</span> <span class="title">aSelector</span>: <span class="title">Selector</span>, <span class="title">object</span> <span class="title">anArgument</span>: <span class="title">AnyObject</span>?)</span></span><br></pre></td></tr></table></figure>
-<p>这两个方法是<code>NSObject</code>的类方法，第一个方法作用是在当前线程中取消Run Lop中某对象通过<code>performSelector:withObject:afterDelay:</code>方法发送的所有事件消息执行请求。第二个方法多了两个过滤参数，那就是方法名称和参数，取消指定方法名和参数的事件消息执行请求。</p>
-<h3 id="Timer_Source"><a href="#Timer_Source" class="headerlink" title="Timer Source"></a>Timer Source</h3><p>Timer Source顾名思义就是向Run Loop发送在将来某一时间执行或周期性重复执行的同步事件消息。当某线程不需要其他线程通知而需要自己通知自己执行任务时就可以用这种事件源。举个应用场景，在iOS应用中，我们经常会用到搜索功能，而且一些搜索框具有自动搜索的能力，也就是说不用我们点击搜索按钮，只需要输入完我想要搜索的内容就会自动搜索，大家想一想如果每输入一个字就开始立即搜索，不但没有意义，性能开销也大，用户体验自然也很糟糕，我们希望当输入完这句话，或至少输入一部分之后再开始搜索，所以我们就可以在开始输入内容时向执行搜索功能的线程发送定时搜索的事件消息，让其在若干时间后再执行搜索任务，这样就有缓冲时间输入搜索内容了。</p>
-<p>这里需要注意的是Timer Source发送给Run Loop的周期性执行任务的重复时间是相对时间。比如说给Run Loop发送了一个每隔5秒执行一次的任务，每次执行任务的正常时间为2秒，执行5次后终止，假设该任务被立即执行，那么当该任务终止时应该历时30秒，但当第一次执行时出现了问题，导致任务执行了20秒，那么该任务只能再执行一次就终止了，执行的这一次其实就是第5次，也就是说不论任务的执行时间延迟与否，Run Loop都会按照初始的时间间隔执行任务，并非按Finish-To-Finish去算的，所以一旦中间任务有延时，那么就会丢失任务执行次数。关于Timer Source的使用，在后文中会有详细举例说明。</p>
-<h3 id="Run_Loop_u5185_u90E8_u8FD0_u884C_u903B_u8F91"><a href="#Run_Loop_u5185_u90E8_u8FD0_u884C_u903B_u8F91" class="headerlink" title="Run Loop内部运行逻辑"></a>Run Loop内部运行逻辑</h3><p>在Run Loop的运行生命周期中，无时无刻都伴随着执行等待执行的各种任务以及在不同的运行状态时通知不同的观察者，下面我们看看Run Loop中的运行逻辑到底是怎样的：</p>
-<ol>
-<li>通知对应观察者Run Loop准备开始运行。</li>
-<li>通知对应观察者准备执行定时任务。</li>
-<li>通知对应观察者准备执行自定义事件源的任务。</li>
-<li>开始执行自定义事件源任务。</li>
-<li>如果有基于端口事件源的任务准备待执行，那么立即执行该任务。然后跳到步骤9继续运转。</li>
-<li>通知对应观察者线程进入休眠。</li>
-<li>如果有下面的事件发生，则唤醒线程：<ol>
-<li>接收到基于端口事件源的任务。</li>
-<li>定时任务到了该执行的时间点。</li>
-<li>Run Loop的超时时间到期。</li>
-<li>Run Loop被手动唤醒。</li>
-</ol>
-</li>
-<li>通知对应观察者线程被唤醒。</li>
-<li>执行等待执行的任务。<ol>
-<li>如果有定时任务已启动，执行定时任务并重启Run Loop。然后跳到步骤2继续运转。</li>
-<li>如果有非定时器事件源的任务待执行，那么分派执行该任务。</li>
-<li>如果Run Loop被手动唤醒，重启Run Loop。然后跳转到步骤2继续运转。</li>
-</ol>
-</li>
-<li>通知对应观察者已退出Run Loop。</li>
-</ol>
-<p>以上这些Run Loop中的步骤也不是每一步都会触发，举一个例子：<br>1.对应观察者接收到通知Run Loop准备开始运行 -> 3.对应观察者接收到通知Run Loop准备执行自定义事件源任务 -> 4.开始执行自定义事件源任务 -> 任务执行完毕且没有其他任务待执行 -> 6.线程进入休眠状态，并通知对应观察者 -> 7.接收到定时任务并唤醒线程 -> 8.通知对应观察者线程被唤醒 -> 9.执行定时任务并重启Run Loop -> 2.通知对应观察者准备执行定时任务 －> Run Loop执行定时任务，并在等待下次执行任务的间隔中线程休眠 -> 6.线程进入休眠状态，并通知对应观察者…</p>
-<p>这里需要注意的一点是从上面的运行逻辑中可以看出，当观察者接收到执行任务的通知时，Run Loop并没有真正开始执行任务，所以观察者接收到通知的时间与Run Loop真正执行任务的时间有时间差，一般情况下这点时间差影响不大，但如果你需要通过观察者知道Run Loop执行任务的确切时间，并根据这个时间要进行后续操作的话，那么就需要通过结合多个观察者接收到的通知共同确定了。一般通过监听准备执行任务的观察者、监听线程进入休眠的观察者、监听线程被唤醒的观察者共同确定执行任务的确切时间。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 <a class="post-title-link" href="/articles/read-threading-programming-guide-1/" itemprop="url">
                   读 Threading Programming Guide 笔记（一）
                 </a>
@@ -1416,6 +897,367 @@
 
 
     
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/tvOS-initial-impression/" itemprop="url">
+                   一个iOS开发者对tvOS SDK的初探
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-09-17T00:00:00+08:00" content="2015-09-17">
+              2015-09-17
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/tvOS-initial-impression/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/tvOS-initial-impression/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>作者：<a href="http://www.raywenderlich.com/u/cwagdev" target="_blank" rel="external">Chris Wagner</a>  原文地址：<a href="http://www.raywenderlich.com/114313/tvos-initial-impressions" target="_blank" rel="external">tvOS SDK: An iOS Developer’s Initial Impressions</a></p>
+<p>在Walter Isaacson编写的《Steve Jobs》的最后一章中，Steve说过“我最终实现并让它拥有了你们能想象到的最简单的用户界面”。当时他指的就是Apple TV。</p>
+<p>Steve不幸离世已经过去很久了，但是人们一直翘首以盼着这款产品。就在昨天2015年9月9日，超过四个春秋的期盼，我们终于等来了这个礼物，虽然可能与Steve对这款产品的愿景和理想有所差距，但是革命的步伐已经坚实的迈出了第一步。</p>
+<p>作为一名iOS开发者，昨天的产品发布会让我心潮澎湃，因为Apple宣布，新的Apple TV集成了App Store，这就意味着我们可以为它开发专有的应用，并且会让我们重新认知已了解的iOS知识，以及会开启更多新的展现想法、创意的机会。</p>
+<p>我和其他教程团队的成员已经开始深入研究tvOS SDK，并且正在努力准备一些有价值的tvOS教程（通宵达旦！），在此同时，我想从一个iOS开发者的视角与大家分享我对tvOS的初步印象。</p>
+<p>让我们一探究竟吧！</p>
+<h2 id="u57FA_u672C_u6982_u5FF5"><a href="#u57FA_u672C_u6982_u5FF5" class="headerlink" title="基本概念"></a>基本概念</h2><p>老款的Apple TV其实类似一个机顶盒，主要提供的功能是让用户通过及其简单的操作界面导航或浏览视频内容。昨天发布的新Apple TV在此基础上进一步的扩充功能，使一些成熟的应用能在Apple TV中运行，比如购物应用，甚至是游戏。</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_02-457x320.jpg" alt="tvOS-1"></p>
+<p>让我们来看看以下这些信息：</p>
+<ul>
+<li><strong>硬件规格：</strong> 值得一说规格是64位 A8处理器，32G或64G的存储空间，2G的内存，1080p的分辨率以及支持HDMI，Siri远程遥控，新的Apple TV遥控器。</li>
+<li><strong>价格：</strong> 新Apple TV的定价为32G 149美元，64G 199美元。这样的定价出乎大多人的以外，原以为新Apple TV的价格会更高一些。</li>
+<li><strong>发售时间：</strong> Apple在发布会上给出了一个非常模糊和不确定的发售时间“十月下旬”，但是Apple在发布会之后就立即向开发者们提供了tvOS SDK。现在离正式发售已时日不多，如果大家有针对新Apple TV好的想法，我建议你们要抓紧时间了。</li>
+<li><strong>开发硬件：</strong> Apple已经宣布了一个开发者计划允许已经注册的开发者们请求<a href="https://developer.apple.com/tvos/developer-kit/" target="_blank" rel="external">Apple TV Developer Kit</a>。该计划可以让开发者们提前对Apple TV进行开发测试。这看起来似乎是一件很美好的事，但是如果你真的要加入该开发者计划，那么仔细看看下面的建议：</li>
+</ul>
+<p>-> <strong>注意：</strong> 众所周知，iOS、OSX的开发者计划都是收费的，tvOS的开发者计划应该也不例外，不过之前对于该计划的收费信息是非常含糊不清的，但是现在我们通过Apple员工在开发者论坛上发的帖子中<a href="https://forums.developer.apple.com/thread/16984#51332" target="_blank" rel="external">确认</a>了该计划只需要话费1美元即可加入。如果大家有意为tvOS贡献一份力量，或者需要编写教程材料的话，强烈建议你们加入该开发计划。</p>
+<h2 id="u5F00_u53D1_tvOS__u5E94_u7528"><a href="#u5F00_u53D1_tvOS__u5E94_u7528" class="headerlink" title="开发 tvOS 应用"></a>开发 tvOS 应用</h2><p>啰嗦完一堆后，显然最重要的事就是怎样为新Apple TV开发应用，这应该也是大家最感兴趣的事！</p>
+<p>为新Apple TV开发应用实际就是在为tvOS开发应用，当然tvOS这个名字是由Apple根据不同设备而创造的。tvOS仍然是基于iOS开发的，所以有很多框架大家都应该非常熟悉了。</p>
+<p>如果要为tvOS开发应用，大家必须要从开发者中心下载<a href="https://developer.apple.com/xcode/download/" target="_blank" rel="external">Xcode7.1</a>进行开发。该版本是Xcode新的beta版，目前只有该版本支持tvOS以及提供tvOS的模拟器。如果你有需要的话，也可同时下载Xcode7 GM版本，他们可以共存于你们的电脑中。</p>
+<p>Apple提供了两种在tvOS上开发应用的方法：</p>
+<ol>
+<li><strong>TVML Apps：</strong> 这类应用是使用完整的新开发技术开发的，比如TVML、TVJS、TVMLKit。这对我们来说是一个巨大的惊喜，我们会在之后有较详细的介绍。</li>
+<li><strong>Custom Apps：</strong> 这类应用是使用我们已经比较熟悉的开发技术进行开发的，比如大家熟知的一些iOS框架，Storyboard、UIKit、Auto Layout等。</li>
+</ol>
+<p>当你们在为Apple TV开发应用时，你们会发现Xcode中会出现单独的程序目标（这意味着用户将会单独购买的形式购买tvOS应用）。虽然Apple在发布会上说Apple TV中的应用支持通用购买模式，也就是针对iOS和tvOS都支持的应用，用户只需要购买一次即可同时在iPhone和Apple TV上使用。但是从目前的情况来看，我们还不确定Apple是如何实现的，或许在Itunes Connect中支持连接两个程序目标的功能即将来临？</p>
+<h3 id="TVML_Apps"><a href="#TVML_Apps" class="headerlink" title="TVML Apps"></a>TVML Apps</h3><p>先前我提过，为tvOS开发应用有两种方式，第一种就是通过TVML、TVJS和TVMLKit技术。如果这些缩写对于你们来说非常陌生，那么不要着急，这就告诉你们他们都是什么：</p>
+<ul>
+<li><strong>TVML</strong>是一种基于“Television Markup Language”的XML格式。</li>
+<li><strong>TVJS</strong>是基于JavaScript APIs的脚本语言，它可以根据TVML中定义的内容展示应用。</li>
+<li><strong>TVMLKit</strong>是连接TVML、TVJS和原生tvOS应用的工具包。</li>
+</ul>
+<p>如果你是一名经常使用原生APIs开发原生iOS应用的开发者，那么看到这些类似前端的技术可能会有点退缩。但希望你能保持一颗学习的心，学习了解这些新的强大的特性。</p>
+<p>我在这列举一个非常典型的Apple TV的应用场景。大家可以想象一下：你们想把一些内容或信息展现给用户，这些内容和信息储存在你们的服务器上，并且这些内容的格式、查询方式都服务于iPhone或iPad中的应用，那么你肯定会希望你的tvOS中的应用也能方便的使用这些内容，并做到与iOS中应用有相似的展现、查询、导航方式。</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_03-700x296.jpg" alt="tvOS-2"></p>
+<p>如果我列举的这个例子正好是你们tvOS应用的需求，那么你可能需要考虑如何使用TVMLKit工具包。Apple已经为我们开发者完成了一些主要的工作，比如提供了许多可重用的tvOS界面展示模板，这些模板大都与iOS应用的界面神似，所以用户们并不会感到陌生，这些模板大概有18种之多。大多数模板都可以让你创建出脱凡的、非常适合家中电视展示的界面。大家可以访问Apple的<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/TextboxTemplate.html#//apple_ref/doc/uid/TP40015064-CH2-SW8" target="_blank" rel="external">文档</a>查看这些我们强烈推荐使用的模板。</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_04-700x296.jpg" alt="tvOS-3"></p>
+<p>我也推荐大家在tvOS模拟器运行<a href="https://developer.apple.com/library/prerelease/tvos/samplecode/TVMLCatalog/Introduction/Intro.html#//apple_ref/doc/uid/TP40016505" target="_blank" rel="external">TVML Catalog sample app</a>去查看每个模板。同时你需要启动一个本地的web服务器，便于tvOS应用通过模板展示内容时访问，所以你需要仔细查阅<strong>README.md</strong>文件去了解相关内容。</p>
+<p>诚然TVMLKit还有许多知识点，如果你希望基于它开发一款tvOS应用，那么我提到的一些文档是非常值得你们去查阅参考的。这里我着重推荐大家首先看看如何使用菜单导航类的模板，比如<strong>menuBarTemplate</strong>、<strong>mainTemplate</strong>、<strong>searchTemplate</strong>等。然而，如果你希望用户不只是被动的通过你的tvOS应用观看或收听内容，而是希望用户与应用有更多的交互，给用户高质量的用户体验，那么你们就需要了解如何开发完整的自定义的tvOS应用。</p>
+<h3 id="Custom_Apps"><a href="#Custom_Apps" class="headerlink" title="Custom Apps"></a>Custom Apps</h3><p>你所知道的大多数iOS框架，比如UIKit、Core Graphics、CloudKit等等都可以在tvOS中使用。你可以在Apple提供的这个<a href="https://developer.apple.com/library/prerelease/tvos/releasenotes/General/tvOS90APIDiffs/index.html#//apple_ref/doc/uid/TP40016577" target="_blank" rel="external">文档</a>中查看哪些框架可以用，哪些不可以使用。如果你现在正是一名iOS开发者，那么会对这个文档中的列表非常熟悉。而且不管使用Swift还是Objective-C或者C都可以开发tvOS应用。</p>
+<p>尽管如此，如果想开发自定义的tvOS应用，还是有许多新的知识需要我们学习，作为一名iOS开发者，也应该掌握甚至精通这些新的知识。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="Focus_Engine"><a href="#Focus_Engine" class="headerlink" title="Focus Engine"></a>Focus Engine</h2><p>其中一个对于iOS开发者比较陌生的概念是用户输入/选择方法。在使用Apple TV的过程中，用户不会用手指去按压或滑动屏幕，取而代之的是使用Apple提供的遥控器或者是一些游戏控制器。</p>
+<p>tvOS采用了一个被称为<strong>Focus Engine</strong>的引擎系统，它在整个tvOS中有且只有一个。该引擎负责响应当用户使用遥控器上的手势操作或按键操作对菜单或内容进行上下左右的选择。</p>
+<p>Focus Engine会自动根据用户的选择决定要聚焦或展示的视图，你不需要在代码中做任何类似选中或导航的处理。比如说，此时展示的界面是你已经在Storyboard中设计好的视图布局，其中有一个视图是当前聚焦状态，那么当用户通过手势往右滑动时，Focus Engine会自动根据当前聚焦的视图找到与之相邻的左边的视图，并将其选中和聚焦。</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_05-700x328.jpg" alt="tvOS-4"></p>
+<p>作为一个开发者，你必须要学习与Focus Engine相关的API，比如当聚焦的视图发生变化时如何获取通知、如何通过编码触发聚焦视图的改变扥等。更多关于Focus Engine的API可以参阅App Programming Guide for tvOS文档中的<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/WorkingwiththeAppleTVRemote.html#//apple_ref/doc/uid/TP40015241-CH5-SW14" target="_blank" rel="external"> Supporting Focus Within Your App</a>章节。</p>
+<h2 id="TVServices"><a href="#TVServices" class="headerlink" title="TVServices"></a>TVServices</h2><p>虽然iOS开发者在tvOS应用的开发过程中，主要使用的是一些已经比较熟悉的iOS框架，但是也有一些tvOS特有的框架需要开发者们去了解掌握，比如像新加入的<code>TVServices</code>框架。</p>
+<p><code>TVServices</code>的主要作用是描述你的应用的内容，以便tvOS在首页的顶部栏位显示。在首页顶部栏位显示的应用都是用户自己设置的，用户可以将他们认为最为常用的或最为重要的应用放在首页顶部栏位，便于快速打开或浏览其中主要信息。</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_06-478x320.jpg" alt="tvOS-5"></p>
+<p>你们的应用可以在用户不进入应用的情况下，向用户提供简短的、感兴趣的信息，这就会使你的应用有了额外价值，使用<code>TVServices</code>无疑是提高你的应用下载量的绝佳手段。比如一个游戏应用，通过<code>TVServices</code>显示游戏存档，那么用户就可以直接从首页通过游戏存档进入游戏。如果是一个社交应用，那么就可以在首页显示社交动态信息，如果是一个照片分享应用，那么就可以显示近期朋友和家人分享的照片。</p>
+<p>更多关于<code>TVServices</code>的信息可以查阅<a href="https://developer.apple.com/library/prerelease/tvos/documentation/TVServices/Reference/TVServices_Ref/index.html#//apple_ref/doc/uid/TP40016412" target="_blank" rel="external">TVServices Framework Reference</a>文档。使用好它对你的应用非常有益。</p>
+<h2 id="Parallax_Images"><a href="#Parallax_Images" class="headerlink" title="Parallax Images"></a>Parallax Images</h2><p>还有一件会让你疑惑的可能就是在发布会的Keynote中，Apple着重强调了图片和应用图标的视差效果。这是一个非常棒的视图效果，但是为什么这个特性会被放在Keynote中提及，它为什么这么重要呢？</p>
+<p>如果你使用了tvOS模拟器，你就会明白为什么这个特性如此重要。当移动聚焦视图时，你需要向左或向右滑动，但如果你只滑动了一点，Apple会对当前聚焦的视图做一个轻微的旋转处理，目的是让用户知道现在正在作以操作（但是还需要继续滑动来改变聚焦视图）。这是一个着眼于细节但又非常有用的特性。</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_07.jpg" alt="tvOS-6"></p>
+<p>Apple把视差效果看做tvOS设计中的一个关键组成部分，并强烈建议应用图标和电影海报使用该特性。不过感谢Apple在App Programming Guide for tvOS文档中提供了<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/CreatingParallaxArtwork.html#//apple_ref/doc/uid/TP40015241-CH19-SW1" target="_blank" rel="external">Creating Parallax Artwork</a>章节，帮助我们创建视差特性的图片资源，以及为我们提供了视察图片资源的预览应用。</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_08.jpg" alt="tvOS-7"></p>
+<h2 id="Controllers"><a href="#Controllers" class="headerlink" title="Controllers"></a>Controllers</h2><p>每一个购买了新Apple TV的用户，都会收到一个功能强大的新版遥控器。上一代只能上下左右简单选择方位以及只有几个简单导航按键的遥控器，而新一代的Apple TV遥控器增加了更多令人激动的新特性：</p>
+<ul>
+<li><strong>玻璃触控板：</strong>位于遥控器的顶部，可以让用户在其上面进行一些手势操作，比如滑动、轻拍、点击。</li>
+<li><strong>麦克风：</strong>可以让用户通过遥控器访问Siri（Siri有使用国家的限制）以及可以通过语音控制电视的音量。</li>
+<li><strong>陀螺仪：</strong>结合动作传感器可以为用户提供非常棒的游戏体验。用户可以通过倾斜遥控器在游戏中控制方向盘开车，或者控制英雄奔跑穿越山洞。</li>
+</ul>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_09.jpg" alt="tvOS-8"></p>
+<p>你可以使用你知道的处理手势操作的API去监听滑动或轻点，还有一些新的API去监听遥控器上不同的按钮，比如<code>pressesBegan()</code>、<code>pressesEnded()</code>、<code>pressesChanged()</code>和<code>pressesCancelled()</code>。</p>
+<p>遥控器通过蓝牙技术与Apple TV主机交互，这意味着为蓝牙游戏控制器敞开的大门（恕我直言，用Apple的遥控器玩游戏并不是很好的选择）。Apple已经宣布<a href="https://steelseries.com/gaming-controllers/nimbus" target="_blank" rel="external">Nimbus Steelseries Controller</a>将会支持新Apple TV。想了解更多关于这方面的信息请查阅<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/WorkingwithGameControllers.html#//apple_ref/doc/uid/TP40015241-CH18-SW1" target="_blank" rel="external">Working with Game Controllers</a>。</p>
+<h2 id="tvOS_and_Games"><a href="#tvOS_and_Games" class="headerlink" title="tvOS and Games"></a>tvOS and Games</h2><p>我们衷心的希望游戏能在tvOS上火起来，Apple似乎是直接瞄准了任天堂漠不关心的一个游戏市场。</p>
+<p>tvOS有很健壮的游戏技术作为支撑，SpriteKit和SceneKit都可以在tvOS中正常工作，在Keynote中Crossy Roads开发者展示了他们的tvOS游戏，该游戏使用Unity开发，所以这也暗示着在不久的将来tvOS也会支持Unity开发的游戏。</p>
+<p>大多数用SceneKit开发的游戏都可以无缝移植到新Apple TV中。比如Ray就将教程中介绍过的Zombie Conga游戏移植到了新Apple TV中，花费时间还不到10分钟，几乎不需要修改任何代码。</p>
+<p>-> 注：游戏视频可前往原文查看，但需要科学上网。</p>
+<h2 id="Limitations"><a href="#Limitations" class="headerlink" title="Limitations"></a>Limitations</h2><p>或许目前关于tvOS比较有疑惑的两点就是本地存储和应用大小的限制。</p>
+<h3 id="Limitation_3A_Local_Storage"><a href="#Limitation_3A_Local_Storage" class="headerlink" title="Limitation: Local Storage"></a>Limitation: Local Storage</h3><p>关于本地存储，基本确定是没有！如果你的应用需要持久化用户的数据，那么你需要使用iCloud、CloudKit或者自己的备份服务去实现。任何试图存在Apple TV中的数据都不保证在下次打开应用时还嫩存在。如果你想同步不同设置之间的数据，那么你就需要将数据线存在某个地方，但绝不是Apple TV中。</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/tvOS_10-480x313.jpg" alt="tvOS-9"></p>
+<p>一定要牢记这点，它对于你设计tvOS应用的结构时很关键。这里列出了一些规则：</p>
+<ul>
+<li><strong>如果你需要存储的数据量小于1MB</strong>，iCloud的key-value存储方式是一个可以选择的方案。但是要切记，iCloud KVS严格限制了只能有所属者才可以访问数据，并且不能共享给其他用户。</li>
+<li><strong>如果你需要分享事件或者数据给其他用户</strong>，CloudKit是一个不错的选择方案。</li>
+<li><strong>如果你开发的是一个跨平台的应用或者有特殊的需求</strong>，你就得使用你自己的备份服务了。</li>
+</ul>
+<h3 id="Limitation_3A_App_Size"><a href="#Limitation_3A_App_Size" class="headerlink" title="Limitation: App Size"></a>Limitation: App Size</h3><p>另一个限制是关于应用大小的限制，规定不能超过200MB。</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/FlipTable-250x228.png" alt="tvOS-10"></p>
+<p>在你们掀桌之前，请回顾一下WWDC2015以及介绍过的“On-Demand Resources”相关API。这几乎像是Apple为tvOS提前铺垫的。</p>
+<p>这些API通过按需下载资源文件减小应用初始安装时的大小。开发者可以在Xcode中给多媒体资源文件用标签进行标记，将应用提交后，App Store会自动根据标记将多媒体资源文件拆分为一个一个下载包。当用户在使用应用时如果需要用到某类标记的资源文件，就可以请求下载该标记的资源文件。当然你得有预期的判断，要先于用户使用资源前开始下载他们需要的资源，这样对于用户来说他们根本不会感受到因为下载资源带来的不好的用户体验。</p>
+<p>举一个简单的例子，比如你有一款游戏应用有10个关卡。在用户安装该游戏时可以只包含两个关卡的多媒体资源文件。一旦用户完成了第一个关卡，你应该发送一个下载请求，下载第三个关卡的多媒体资源文件。当用户完成了第二个关卡时，第三个关卡需要的资源文件早已下载好准备妥当。在用户的整个游戏过程中，你就可以运用该机制一步一步去下载所需的资源文件。</p>
+<p>虽然这种机制对于开发者来说无疑增加了工作量，但是这对用户来说是一件非常愉悦的事情。你试想一下，用户是愿意等待下载一个1GB大小的游戏呢，还是更愿意下载一个100MB大小的游戏并立即开始游戏呢。不过该机制也存在一个隐患，如果用户的网络条件很差，他们一般都更愿意在晚上挂着下载。那么如果用户在白天玩你的游戏，然后同时用龟速的网络下载后面关卡的资源文件，这简直是令人发指的用户体验。不幸的是作为tvOS开发者，在这种情形下目前也无能为力。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/calayer-animation-replicator-animation/" itemprop="url">
+                  CALayer Animation - Replicator Animation
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-09-09T00:00:00+08:00" content="2015-09-09">
+              2015-09-09
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/calayer-animation-replicator-animation/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/calayer-animation-replicator-animation/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://www.csdn.net/article/2015-09-09/2825659" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+<p>上一篇文章通过两个动画示例带大家了解和认识了CALayer动画，包括如何使用CAShapeLayer、CABasicAnimation、CAAnimationGroup等。在这篇文章中，依然会通过两个示例向大家讲解更多CALayer动画的知识。</p>
+<p>老规矩，先让我们看看最终要实现的动画效果：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-17.gif" alt="ReplicatorAnimation-17"></p>
+<p>经常听音乐的人对第一个动画效果肯定有会觉得很眼熟，类似播放音乐时音频高低起伏的动画，这种动画在应用中常被用作标识正在播放音乐或广播。第二个动画依然是一个等待加载的动画，在我的印象中肯定是有应用使用过，具体的已经记不清了。下面就让我们来实现这两个动画吧。</p>
+<h2 id="Replicator_Animation"><a href="#Replicator_Animation" class="headerlink" title="Replicator Animation"></a>Replicator Animation</h2><p>新建一个项目，名为ReplicatorAnimation，打开<code>Main.storyboard</code>，添加一个UIView，颜色位置按大家喜好设定：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-1.png" alt="ReplicatorAnimation-1"></p>
+<p>添加该UIView在<code>ViewController.swift</code>中的Outlet：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-2.png" alt="ReplicatorAnimation-2"></p>
+<p>接下来我们在<code>ViewController.swift</code>中添加一个方法<code>firstReplicatorAnimation()</code>，在该方法中编写如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> replicatorLayer = <span class="type">CAReplicatorLayer</span>()</span><br><span class="line">replicatorLayer.bounds = <span class="type">CGRect</span>(x: replicatorAnimationView.frame.origin.x, y: replicatorAnimationView.frame.origin.y, width: replicatorAnimationView.frame.size.width, height: replicatorAnimationView.frame.size.height)</span><br><span class="line">replicatorLayer.anchorPoint = <span class="type">CGPoint</span>(x: <span class="number">0</span>, y: <span class="number">0</span>)</span><br><span class="line">replicatorLayer.backgroundColor = <span class="type">UIColor</span>.lightGrayColor().<span class="type">CGColor</span></span><br><span class="line">replicatorAnimationView.layer.addSublayer(replicatorLayer)</span><br></pre></td></tr></table></figure>
+<p>这里出现的CAReplicatorLayer是一个新面孔，它也是CALayer的子类，正如它的名称一样，CAReplicatorLayer可以对它自己的子Layer进行复制操作。创建了CAReplicatorLayer实例后，设置了它的尺寸大小、位置、锚点位置、背景色，并且将它添加到了<code>replicatorAnimationView</code>的Layer中:</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-4.png" alt="ReplicatorAnimation-4"></p>
+<p>这里要啰嗦几句，Layer的默认锚点坐标是(0.5, 0.5)，也就是Layer的中心点位置，而Layer的<code>position</code>又是根据锚点计算的，所以如果你设置Layer的<code>position</code>属性为(10, 10)，就相当于设置了Layer的中心位置为(10, 10)，并不是你期望的左上角位置。所以如果Layer想使用它父视图的坐标位置，就需要将锚点位置设置为(0, 0)，这样一来Layer的<code>position</code>属性标识的就是Layer左上角的位置：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-3.png" alt="ReplicatorAnimation-3"></p>
+<p>然后我们继续在<code>firstReplicatorAnimation()</code>方法中添加代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> rectangle = <span class="type">CALayer</span>()</span><br><span class="line">rectangle.bounds = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: <span class="number">30</span>, height: <span class="number">90</span>)</span><br><span class="line">rectangle.anchorPoint = <span class="type">CGPoint</span>(x: <span class="number">0</span>, y: <span class="number">0</span>)</span><br><span class="line">rectangle.position = <span class="type">CGPoint</span>(x: replicatorAnimationView.frame.origin.x + <span class="number">10</span>, y: replicatorAnimationView.frame.origin.y + <span class="number">110</span>)</span><br><span class="line">rectangle.cornerRadius = <span class="number">2</span></span><br><span class="line">rectangle.backgroundColor = <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span></span><br><span class="line">replicatorLayer.addSublayer(rectangle)</span><br></pre></td></tr></table></figure>
+<p>通过上面的代码，再次创建了一个Layer，这次使用的是CALayer，因为我们只需要一个很普通的Layer，为其设置位置、尺寸、背景色、圆角属性，然后添加在<code>replicatorLayer</code>中：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-5.png" alt="ReplicatorAnimation-5"></p>
+<p>动画的主体之一已经绘制好了，下面我们让它动起来。在上述代码后面，接着添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> moveRectangle = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"position.y"</span>)</span><br><span class="line">moveRectangle.toValue = rectangle.position.y - <span class="number">70</span></span><br><span class="line">moveRectangle.duration = <span class="number">0.7</span></span><br><span class="line">moveRectangle.autoreverses = <span class="literal">true</span></span><br><span class="line">moveRectangle.repeatCount = <span class="type">HUGE</span></span><br><span class="line">rectangle.addAnimation(moveRectangle, forKey: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>首先我们创建了按Y轴移动的动画实例，然后设置了移动的目标位置，动画持续时间，重复次数设置为无限大。这里有一个属性大家可能比较陌生，那就是<code>autoreverses</code>，这个属性为Bool类型，设置为true时，开启自动反向执行动画，比如示例中的白色长方形的移动动画为向上移动50个像素，如过<code>autoreverses</code>设置为false，那么动画结束后，会根据重复次数，白色长方形重新回到初始位置，继续向上移动，如果<code>autoreverses</code>设置为true，则当动画结束后，白色长方形会继续向下移动至初始位置，然后再开始第二次的向上移动动画。</p>
+<p>编译运行看看效果：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-6.gif" alt="ReplicatorAnimation-6"></p>
+<p>至此，大家应该也已经看出来了，这个白色的长方形就是动画中第一个上下移动的白色长方形，那么后两个如何创建呢？还需要再写两遍上面的代码吗？请大家在下面的文章中寻找答案。</p>
+<p>在上述代码下面再添加一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceCount = <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>显而易见，这是CAReplicatorLayer的能力了，这行代码的意思是将<code>replicatorLayer</code>的子Layer复制3份，复制Layer与原Layer的大小、位置、颜色、Layer上的动画等等所有属性都一模一样，所以这时编译运行代码我们看不到任何不同的效果，因为三个白色长方形是重合在一起的，所以我们需要设置每个白色长方形的间隔：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceTransform = <span class="type">CATransform3DMakeTranslation</span>(<span class="number">40</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>这行代码涉及到CAReplicatorLayer的另一个属性<code>instanceTransform</code>，它的作用是设置每个子Layer如何变化。<code>CATransform3DMakeTranslation</code>这个类的含义是使Layer根据X、Y、Z轴进行平移。现在再编译运行看看效果如何：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-7.gif" alt="ReplicatorAnimation-7"></p>
+<p>现在三个白色长方形的运动轨迹和时刻都是一直的，这显然不是我们想要的结果，我们需要三个白色长方形有上下起伏的视觉效果，所以我们继续添加一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceDelay = <span class="number">0.3</span></span><br></pre></td></tr></table></figure>
+<p><code>instanceDelay</code>这个属性使CAReplicatorLayer中的每个子Layer的动画起始时间逐个递增。这里我们设置为0.3秒，也就是第一个长方形先执行动画，过0.3秒后第二个开始执行动画，再过0.3秒后第三个开始执行动画。我们编译运行看看效果：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-8.gif" alt="ReplicatorAnimation-8"></p>
+<p>显然我们只想显示<code>replicatorLayer</code>区域里的内容，我们并不想看到超出它边界的内容，所以我们再添加一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.masksToBounds = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p><code>masksToBounds</code>是CALayer的属性，作用是将Layer视为一个遮罩，只显示遮罩区域内的内容。最后我们回到初始化<code>replicatorLayer</code>的地方，找到这行代码<code>replicatorLayer.backgroundColor = UIColor.lightGrayColor().CGColor</code>，将<code>replicatorLayer</code>的背景色改为无色<code>replicatorLayer.backgroundColor = UIColor.clearColor().CGColor</code>。再次编译运行看看最终效果：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-9.gif" alt="ReplicatorAnimation-9"></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="Replicator_Indicator_Animation"><a href="#Replicator_Indicator_Animation" class="headerlink" title="Replicator Indicator Animation"></a>Replicator Indicator Animation</h2><p>CAReplicatorLayer的功能是很强大的，这一节将通过另一个加载动画的实例向大家介绍它的其他特性。</p>
+<p>首先打开<code>Main.storyboard</code>，拖进一个新的UIView，位置颜色随大家喜好：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-10.png" alt="ReplicatorAnimation-10"></p>
+<p>随后添加该UIView在<code>ViewController.swift</code>中的Outlet <code>activityIndicatorView</code>：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-11.png" alt="ReplicatorAnimation-11"></p>
+<p>然后在<code>ViewController.swift</code>中添加一个方法<code>activityIndicatorAnimation</code>，和上一个动画示例一样，我们先创建一个CAReplicatorLayer：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> replicatorLayer = <span class="type">CAReplicatorLayer</span>()</span><br><span class="line">replicatorLayer.bounds = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: activityIndicatorView.frame.size.width, height: activityIndicatorView.frame.size.height)</span><br><span class="line">replicatorLayer.position = <span class="type">CGPoint</span>(x: activityIndicatorView.frame.size.width/<span class="number">2</span>, y: activityIndicatorView.frame.size.height/<span class="number">2</span>)</span><br><span class="line">replicatorLayer.backgroundColor = <span class="type">UIColor</span>.lightGrayColor().<span class="type">CGColor</span></span><br><span class="line">activityIndicatorView.layer.addSublayer(replicatorLayer)</span><br></pre></td></tr></table></figure>
+<p>上述代码和上个示例中的差不多，唯一不同的就是<code>replicatorLayer</code>的锚点使用的是默认值，即锚点就是中点，<code>position</code>属性代表亦是中点，所以将<code>position</code>属性设置为父视图的中点即可。这里意在让大家多多理解CALayer中<code>anchorPoint</code>与<code>position</code>属性。接下来添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> circle = <span class="type">CALayer</span>()</span><br><span class="line">circle.bounds = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: <span class="number">15</span>, height: <span class="number">15</span>)</span><br><span class="line">circle.position = <span class="type">CGPoint</span>(x: activityIndicatorView.frame.size.width/<span class="number">2</span>, y: activityIndicatorView.frame.size.height/<span class="number">2</span> - <span class="number">55</span>)</span><br><span class="line">circle.cornerRadius = <span class="number">7.5</span></span><br><span class="line">circle.backgroundColor = <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span></span><br><span class="line">replicatorLayer.addSublayer(circle)</span><br></pre></td></tr></table></figure>
+<p>上述代码的目的是用CALayer创建一个圆形，其实CALayer创建出的形状默认是矩形，但是把四个角的弧度设置为边宽的一半，矩形就变成了圆形。将这个圆形的位置设置在父Layer的中间靠上位置，背景色设置为白色。此时该圆形就是文章开头效果图中第二个动画里的主体了：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-12.png" alt="ReplicatorAnimation-12"></p>
+<p>不过在动画中我们看到有许多个小圆形组成一个大圆，如果重复上面的代码，一个一个设置位置，那绝对是令人发指的行为，好在我们有CAReplicatorLayer帮助我们实现，下面就来看看如何使用CAReplicatorLayer复制子Layer，并让子Layer形成一个圆形。让我们接着添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceCount = <span class="number">15</span></span><br><span class="line"><span class="keyword">let</span> angle = <span class="type">CGFloat</span>(<span class="number">2</span> * <span class="type">M_PI</span>) / <span class="type">CGFloat</span>(<span class="number">15</span>)</span><br><span class="line">replicatorLayer.instanceTransform = <span class="type">CATransform3DMakeRotation</span>(angle, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>上述的代码中，首先对子Layer，也就是白色圆形复制了15份。然后将360°除以15份，算出每一个圆形针对它前一个圆形应该偏移的角度。最后我们用到了<code>CATransform3DMakeRotation</code>，它同样是<code>CATransform3D</code>的一个结构，含义是使Layer在X、Y、Z轴根据给定的角度旋转。这样我们复制的15份圆形就会按照我们计算的角度排列，并形成一个大圆：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-13.png" alt="ReplicatorAnimation-13"></p>
+<p>接下来让我们分析一下这个动画，整体看上去感觉像一颗流星拖着尾巴在不停的转圈，但细看每一个小圆点，其实是在不停的进行放大缩小的动画，只不过每个小圆点的动画对于它前一个小圆点的动画有一定的延迟。所以首先我们需要实现小圆点放大缩小的动画，在上述代码后面接着添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> scale = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"transform.scale"</span>)</span><br><span class="line">scale.fromValue = <span class="number">1</span></span><br><span class="line">scale.toValue = <span class="number">0.1</span></span><br><span class="line">scale.duration = <span class="number">1</span></span><br><span class="line">scale.repeatCount = <span class="type">HUGE</span></span><br><span class="line">circle.addAnimation(scale, forKey: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>首先创建一个按比例缩放类型的动画，设置起始比例为1，也就是当前大小。再设置希望缩放到的比例为0.1。动画持续时间为1秒，重复无限次。最后将该动画添加在小圆点中。编译运行看看效果：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-14.gif" alt="ReplicatorAnimation-14"></p>
+<p>目前每个小圆点是同时执行动画，我们需要设置小圆点的动画延迟时间，接着添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceDelay = <span class="number">1</span>/<span class="number">15</span></span><br></pre></td></tr></table></figure>
+<p>这里为什么是1/15呢，因为整个动画的时间是由每个小圆点的动画时间决定的，这里也就是1秒，所有小圆点的延迟时间加起来要等于整个动画的持续时间，所以这里就是用1秒除以小圆点的数量15。编译运行看看效果：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-15.gif" alt="ReplicatorAnimation-15"></p>
+<p>从效果图中可以看到，刚开始的动画不是很自然，那是因为小圆点的初始比例是1，所以一开始会先看到小圆点，然后才会慢慢开始正常的动画。这个问题很好解决，我们让小圆点的初始比例为0.1，也就是刚开始看不到小圆点，这样就可以避免这个情况了，我们接着加一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">circle.transform = <span class="type">CATransform3DMakeScale</span>(<span class="number">0.01</span>, <span class="number">0.01</span>, <span class="number">0.01</span>)</span><br></pre></td></tr></table></figure>
+<p>同时将<code>replicatorLayer</code>的背景色改为无色，再次编译运行看看效果：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/ReplicatorAnimation-16.gif" alt="ReplicatorAnimation-16"></p>
+<p>展现在我们眼前的是一个完美的加载动画。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>今天主要给大家介绍了CAReplicatorLayer的用法，大家领悟其核心功能复制、延迟后也可以尝试实现其他有趣的动画效果。下篇文章我会向大家介绍CALayer另一个子类的用法，敬请期待吧。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1458,7 +1300,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">88</span>
+              <span class="site-state-item-count">86</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
