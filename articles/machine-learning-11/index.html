@@ -1,0 +1,928 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+决策边界决策边界顾名思义就是需要分类的数据中，区分不同类别的边界，举个不恰当的例子，就像省的地界一样，你处在北京还是处在河北，全看你站在区分北京和河北的那条线的哪边。这节我们来看看使用逻辑回归算法如何绘制鸢尾花前两个分类的决策边界。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记十一之决策边界">
+<meta property="og:url" content="http://www.devtalking.com/articles/machine-learning-11/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+决策边界决策边界顾名思义就是需要分类的数据中，区分不同类别的边界，举个不恰当的例子，就像省的地界一样，你处在北京还是处在河北，全看你站在区分北京和河北的那条线的哪边。这节我们来看看使用逻辑回归算法如何绘制鸢尾花前两个分类的决策边界。">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/c99b013a642d5a94de6a3ddf1ef15f2b.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/d21db36f419130b7568c5dfb78af4713.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/bf12018ff3808ef78bcfa8b64b7fa520.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/5624ad5284cad5b733941979c035cb62.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/0bc50c52d714eac55d0c3df8f7f334f4.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/1753cc6e40fdb3734a7c8a41ff585a47.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/b639aa52f1f5e00348e6a00020c87082.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/5420707445a99c5cb7520cb19361ce36.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/b38865f865d8d7d391732d6537ec1d47.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/14c901391bfcd5c647d83a90de0450df.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/80d9d6cdeb044c5d245b57d7d8c73957.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/ea97f4a72fc0eb2e31cac5e105166f9c.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/2802fa23be191a0afa093f0a86cbddd7.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/37ef4687f99025680ef6f919045dbf07.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/520afe6eaba281739ca38058e4d86772.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/8b403e17ab26fe11a1dbcfd561007632.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/d2805fa3251e0b23ced05d648514576d.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/9878951b26aa662274f6dcee71126cea.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/b3e4dacbf0262a1b55308bcbaf1a944e.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/4651eb1bf5a06c4fa28800c674be0cf6.jpg">
+<meta property="og:updated_time" content="2018-08-02T02:42:39.850Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记十一之决策边界">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+决策边界决策边界顾名思义就是需要分类的数据中，区分不同类别的边界，举个不恰当的例子，就像省的地界一样，你处在北京还是处在河北，全看你站在区分北京和河北的那条线的哪边。这节我们来看看使用逻辑回归算法如何绘制鸢尾花前两个分类的决策边界。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 机器学习笔记十一之决策边界 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                机器学习笔记十一之决策边界
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-04-30T00:00:00+08:00" content="2018-04-30">
+              2018-04-30
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-11/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-11/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u51B3_u7B56_u8FB9_u754C"><a href="#u51B3_u7B56_u8FB9_u754C" class="headerlink" title="决策边界"></a>决策边界</h2><p>决策边界顾名思义就是需要分类的数据中，区分不同类别的边界，举个不恰当的例子，就像省的地界一样，你处在北京还是处在河北，全看你站在区分北京和河北的那条线的哪边。这节我们来看看使用逻辑回归算法如何绘制鸢尾花前两个分类的决策边界。</p>
+<h3 id="u7EBF_u6027_u51B3_u7B56_u8FB9_u754C"><a href="#u7EBF_u6027_u51B3_u7B56_u8FB9_u754C" class="headerlink" title="线性决策边界"></a>线性决策边界</h3><p>再来回顾一下逻辑回归，我们需要找到一组$\theta$值，让这组$\theta$和训练数据相乘，然后代入Sigmoid函数，求出某个类别的概率，并且假设，当概率大于等于0.5时，分类为1，当概率小于0.5时，分类为0：</p>
+<p>$$\hat p = \sigma(\theta^T X_b)=\frac 1 {1+e^{-\theta^{T}X_b}}$$</p>
+<p>$$\hat y =\left\{<br>\begin{aligned}<br>1, \ \ \ \hat p \ge 0.5 \\<br>0, \ \ \ \hat p &lt; 0.5 \\<br>\end{aligned}<br>\right.<br>$$</p>
+<p>在Sigmoid函数那节解释过，当$t&gt;0$时，$\hat p&gt;0.5$。当$t&lt;0$时，$\hat p&lt;0.5$，因为$t= \theta^T X_b $，所以：</p>
+<p>$$\hat y =\left\{<br>\begin{aligned}<br>1, \ \ \ \ \hat p \ge 0.5, \ \ \ \ \theta^T X_b \ge 0 \\<br>0, \ \ \ \ \hat p &lt; 0.5, \ \ \ \ \theta^T X_b &lt; 0 \\<br>\end{aligned}<br>\right.<br>$$</p>
+<p>那么当$\theta^T X_b =0$时，理论上$\hat p$就是0.5，分类既可以为0，也可以为1。只不过我们在这里将$\hat p=0.5$是，分类假设为1。由此可见$\theta^T X_b =0$就是逻辑回归中的决策边界，并且是线性决策边界。</p>
+<a id="more"></a>
+<p>下面来解释一下为何说是线性决策边界。我们以前两个分类的鸢尾花为例，将$\theta^T X_b =0$展开得：</p>
+<p>$$\theta_0 + \theta_1 X_1 + \theta_2 X_2=0$$</p>
+<p>$\theta_0$就是截距，$\theta_1$和$\theta_2$是系数，这个公式绘制出来的是一条直线，这条直线就是能将鸢尾花数据的前两个分类区分开的直线，既线性决策边界。为了能方便的将这条直线绘制出来，我们对上面的公式做一下转换：</p>
+<p>$$X_2 = \frac {-\theta_0 - \theta_1 X_1} {\theta_2}$$</p>
+<p>下面我们在Jupyter Notebook中绘制出来看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line"><span class="comment"># 还是使用鸢尾花的前两个类型的前两个特征</span></span><br><span class="line">iris = datasets.load_iris()</span><br><span class="line"></span><br><span class="line">X = iris.data</span><br><span class="line">y = iris.target</span><br><span class="line"></span><br><span class="line">X = X[y&lt;<span class="number">2</span>, :<span class="number">2</span>]</span><br><span class="line">y = y[y&lt;<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> myML.LogisticRegression <span class="keyword">import</span> LogisticRegression</span><br><span class="line">log_reg = LogisticRegression()</span><br><span class="line">log_reg.fit(X_train, y_train)</span><br><span class="line">log_reg.score(X_test, y_test)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">1.0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 系数，既theta1和theta2</span></span><br><span class="line">log_reg.coef_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([ <span class="number">3.01749692</span>, -<span class="number">5.03046934</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 截距</span></span><br><span class="line">log_reg.intercept_</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">-<span class="number">0.68273836989931069</span></span><br></pre></td></tr></table></figure>
+<p>上面的代码中可以看到，$\theta_0$，$\theta_1$和$\theta_2$都已经知道了。接下来要做的就是给定一组$X_1$然后通过上面的公式求出$X_2$，最后绘制出线性决策边界直线：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 定义求X2的函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">X2</span><span class="params">(X1)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> (-log_reg.intercept_ - log_reg.coef_[<span class="number">0</span>] * X1) / log_reg.coef_[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建X1</span></span><br><span class="line">X1 = np.linspace(<span class="number">4</span>, <span class="number">8</span>, <span class="number">1000</span>)</span><br><span class="line">X2 = X2(X1)</span><br><span class="line"></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'r'</span>)</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'b'</span>)</span><br><span class="line">plt.plot(X1, X2)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/c99b013a642d5a94de6a3ddf1ef15f2b.jpg" alt=""></p>
+<h3 id="u4E0D_u89C4_u5219_u51B3_u7B56_u8FB9_u754C"><a href="#u4E0D_u89C4_u5219_u51B3_u7B56_u8FB9_u754C" class="headerlink" title="不规则决策边界"></a>不规则决策边界</h3><p>目前我们实现的逻辑回归是使用线性回归来实现的，同样可以通过添加多项式项使决策边界不再是直线。同样，还有像KNN算法在多分类问题中决策边界必然都不是直线，而是不规则的决策边界，所以自然也无法通过一个线性方程来绘制。那么这一小节来看看如何绘制不规则决策边界。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/d21db36f419130b7568c5dfb78af4713.jpg" alt=""></p>
+<p>从上面的图中可以看出，红蓝点的区分界限并不是一条直线，而是一个不规则的形状，这就是不规则决策边界。那么绘制不规则决策边界的方法其实也很简单，就是将特征平面上的每一个点都用我们训练出的模型判断它属于哪一类，然后将判断出的分类颜色绘制出来，就得到了上图所示的效果，那么不规则决策边界自然也就出来了，这个原理类似绘制地形图的等高线，在同一等高范围内的点就是同一类。</p>
+<blockquote>
+<p>等高线指的是地形图上高程相等的各点所连成的闭合曲线。</p>
+</blockquote>
+<p>既然运用了等高线的原理，那么我们的绘制方法思路就很明了了：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_decision_boundary</span><span class="params">(model, axis)</span>:</span></span><br><span class="line">	<span class="comment"># meshgrid函数用两个坐标轴上的点在平面上画格，返回坐标矩阵</span></span><br><span class="line">	X0, X1 = np.meshgrid(</span><br><span class="line">		<span class="comment"># 随机两组数，起始值和密度由坐标轴的起始值决定</span></span><br><span class="line">		np.linspace(axis[<span class="number">0</span>], axis[<span class="number">1</span>], int((axis[<span class="number">1</span>] - axis[<span class="number">0</span>]) * <span class="number">100</span>)).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">		np.linspace(axis[<span class="number">2</span>], axis[<span class="number">3</span>], int((axis[<span class="number">3</span>] - axis[<span class="number">2</span>]) * <span class="number">100</span>)).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">	)</span><br><span class="line">	<span class="comment"># ravel()方法将高维数组降为一维数组，c_[]将两个数组以列的形式拼接起来，形成矩阵</span></span><br><span class="line">	X_grid_matrix = np.c_[X0.ravel(), X1.ravel()]</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 通过训练好的逻辑回归模型，预测平面上这些点的分类</span></span><br><span class="line">	y_predict = model.predict(X_grid_matrix)</span><br><span class="line">	y_predict_matrix = y_predict.reshape(X0.shape)</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 设置色彩表</span></span><br><span class="line">	<span class="keyword">from</span> matplotlib.colors <span class="keyword">import</span> ListedColormap</span><br><span class="line">	my_colormap = ListedColormap([<span class="string">'#0000CD'</span>, <span class="string">'#40E0D0'</span>, <span class="string">'#FFFF00'</span>])</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 绘制等高线，并且填充等高区域的颜色</span></span><br><span class="line">	plt.contourf(X0, X1, y_predict_matrix, linewidth=<span class="number">5</span>, cmap=my_colormap)</span><br></pre></td></tr></table></figure>
+<p>我对这个方法中的几个函数做一下解释：</p>
+<ul>
+<li><code>np.meshgrid()</code>这个函数的作用是用给定坐标轴上的点在平面上画格，返回组成网格点的坐标矩阵。</li>
+<li><code>ravel()</code>方法将高维数组降为一维数组。</li>
+<li><code>c_[]</code>将两个数组以列的形式拼接起来，形成矩阵。</li>
+</ul>
+<p>我用一幅图对上面的方法做以形象的说明：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/bf12018ff3808ef78bcfa8b64b7fa520.jpg" alt=""></p>
+<p>假设传给<code>np.meshgrid()</code>方法的两个坐标轴上共计六个点，然后返回由这六个点组成的网格的坐标矩阵，既网格相交点的坐标矩阵：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x0, x1 = np.meshgrid(</span><br><span class="line">		np.linspace(<span class="number">0</span>, <span class="number">3</span>, <span class="number">3</span>).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">		np.linspace(<span class="number">0</span>, <span class="number">3</span>, <span class="number">3</span>).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">	)</span><br><span class="line"></span><br><span class="line">x0</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[ <span class="number">0.</span> ,  <span class="number">1.5</span>,  <span class="number">3.</span> ],</span><br><span class="line">	   [ <span class="number">0.</span> ,  <span class="number">1.5</span>,  <span class="number">3.</span> ],</span><br><span class="line">	   [ <span class="number">0.</span> ,  <span class="number">1.5</span>,  <span class="number">3.</span> ]])</span><br><span class="line"></span><br><span class="line">x1</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[ <span class="number">0.</span> ,  <span class="number">0.</span> ,  <span class="number">0.</span> ],</span><br><span class="line">	   [ <span class="number">1.5</span>,  <span class="number">1.5</span>,  <span class="number">1.5</span>],</span><br><span class="line">	   [ <span class="number">3.</span> ,  <span class="number">3.</span> ,  <span class="number">3.</span> ]])</span><br></pre></td></tr></table></figure>
+<p>因为返回的结果将这九个点的坐标分开了，所以通过<code>np.c_[X0.ravel(), X1.ravel()]</code>将这九个点的坐标合起来。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">np.c_[x0.ravel(), x1.ravel()]</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[ <span class="number">0.</span> ,  <span class="number">0.</span> ],</span><br><span class="line">	   [ <span class="number">1.5</span>,  <span class="number">0.</span> ],</span><br><span class="line">	   [ <span class="number">3.</span> ,  <span class="number">0.</span> ],</span><br><span class="line">	   [ <span class="number">0.</span> ,  <span class="number">1.5</span>],</span><br><span class="line">	   [ <span class="number">1.5</span>,  <span class="number">1.5</span>],</span><br><span class="line">	   [ <span class="number">3.</span> ,  <span class="number">1.5</span>],</span><br><span class="line">	   [ <span class="number">0.</span> ,  <span class="number">3.</span> ],</span><br><span class="line">	   [ <span class="number">1.5</span>,  <span class="number">3.</span> ],</span><br><span class="line">	   [ <span class="number">3.</span> ,  <span class="number">3.</span> ]])</span><br></pre></td></tr></table></figure>
+<p>然后通过训练好的逻辑回归模型对这九个点预测它们的分类，将预测出的分类作为等高区间。最后通过<code>ListedColormap</code>定义我们自己的色彩表，再使用Matplotlib的<code>contourf</code>函数将等高区域绘制出来，也就是将分类用颜色区分出来。<code>contourf</code>函数的前两个参数是确定点的坐标矩阵，第三个参数是高度，第四个参数是等高线的粗细度，第五个参数是色彩表。</p>
+<p>下面我们来使用一下<code>plot_decision_boundary</code>方法：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plot_decision_boundary(log_reg, axis=[<span class="number">4</span>, <span class="number">7.5</span>, <span class="number">1.5</span>, <span class="number">4.5</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'r'</span>)</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'b'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/5624ad5284cad5b733941979c035cb62.jpg" alt=""></p>
+<h3 id="kNN_u7684_u51B3_u7B56_u8FB9_u754C"><a href="#kNN_u7684_u51B3_u7B56_u8FB9_u754C" class="headerlink" title="kNN的决策边界"></a>kNN的决策边界</h3><p>因为kNN算法在解决二分类问题时是无法像逻辑回归算法那样推导出线性决策边界的公式的，所以我们使用绘制不规则决策边界的方式来看一下kNN算法的决策边界：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.neighbors <span class="keyword">import</span> KNeighborsClassifier</span><br><span class="line">knn_clf = KNeighborsClassifier()</span><br><span class="line">knn_clf.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(knn_clf, axis=[<span class="number">4</span>, <span class="number">7.5</span>, <span class="number">1.5</span>, <span class="number">4.5</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'r'</span>)</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'b'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/0bc50c52d714eac55d0c3df8f7f334f4.jpg" alt=""></p>
+<p>下面再来看看当kNN在解决多分类问题时的决策边界是怎样的：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">knn_clf_all = KNeighborsClassifier()</span><br><span class="line"><span class="comment"># 鸢尾花还是取前两个特征，但是使用全部的三个分类</span></span><br><span class="line">knn_clf_all.fit(iris.data[:, :<span class="number">2</span>], iris.target)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(knn_clf_all, axis=[<span class="number">4</span>, <span class="number">8</span>, <span class="number">1.5</span>, <span class="number">4.5</span>])</span><br><span class="line">plt.scatter(iris.data[iris.target==<span class="number">0</span>,<span class="number">0</span>], iris.data[iris.target==<span class="number">0</span>,<span class="number">1</span>])</span><br><span class="line">plt.scatter(iris.data[iris.target==<span class="number">1</span>,<span class="number">0</span>], iris.data[iris.target==<span class="number">1</span>,<span class="number">1</span>])</span><br><span class="line">plt.scatter(iris.data[iris.target==<span class="number">2</span>,<span class="number">0</span>], iris.data[iris.target==<span class="number">2</span>,<span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/1753cc6e40fdb3734a7c8a41ff585a47.jpg" alt=""></p>
+<p>从上面的三分类不规则决策边界图中可以看到，在绿色区域里还有些黄色区域，这表示我们的kNN模型有过拟合的现象，也就是k值过小导致的。在第三篇笔记中讲kNN算法时讲过，k值越小，kNN的模型就越复杂。所以我们手动将k值调整为50，再看一下决策边界的情况：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">knn_clf_all = KNeighborsClassifier(n_neighbors=<span class="number">50</span>)</span><br><span class="line">knn_clf_all.fit(iris.data[:,:<span class="number">2</span>], iris.target)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(knn_clf_all, axis=[<span class="number">4</span>, <span class="number">8</span>, <span class="number">1.5</span>, <span class="number">4.5</span>])</span><br><span class="line">plt.scatter(iris.data[iris.target==<span class="number">0</span>,<span class="number">0</span>], iris.data[iris.target==<span class="number">0</span>,<span class="number">1</span>])</span><br><span class="line">plt.scatter(iris.data[iris.target==<span class="number">1</span>,<span class="number">0</span>], iris.data[iris.target==<span class="number">1</span>,<span class="number">1</span>])</span><br><span class="line">plt.scatter(iris.data[iris.target==<span class="number">2</span>,<span class="number">0</span>], iris.data[iris.target==<span class="number">2</span>,<span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/b639aa52f1f5e00348e6a00020c87082.jpg" alt=""></p>
+<p>现在可以看到分类区域界限是相对比较规整清晰了。</p>
+<h2 id="u903B_u8F91_u56DE_u5F52_u4E2D_u4F7F_u7528_u591A_u9879_u5F0F_u7279_u5F81"><a href="#u903B_u8F91_u56DE_u5F52_u4E2D_u4F7F_u7528_u591A_u9879_u5F0F_u7279_u5F81" class="headerlink" title="逻辑回归中使用多项式特征"></a>逻辑回归中使用多项式特征</h2><p>在讲逻辑回归中使用多项式特征前，先来举个例子看一下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建随机的均值为0，标准差为1的矩阵X</span></span><br><span class="line">X = np.random.normal(<span class="number">0</span>, <span class="number">1</span>, size=(<span class="number">200</span>, <span class="number">2</span>))</span><br><span class="line"><span class="comment"># 构造一个生成y的函数，让其值判断是大于1.5还是小于1.5，既将y值分类</span></span><br><span class="line">y = np.array(X[:, <span class="number">0</span>]**<span class="number">2</span> + X[:, <span class="number">1</span>]**<span class="number">2</span> &lt; <span class="number">1.5</span>, dtype=<span class="string">'int'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘样本数据</span></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/5420707445a99c5cb7520cb19361ce36.jpg" alt=""></p>
+<p>从上图可以看到，我们构建的样本数据，明显无法用一条直线将两个不同颜色的点区分开，我们使用上一节的方法来验证一下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 导入我们实现的逻辑回归方法训练模型</span></span><br><span class="line"><span class="keyword">from</span> myML.LogisticRegression <span class="keyword">import</span> LogisticRegression</span><br><span class="line">log_reg = LogisticRegression()</span><br><span class="line">log_reg.fit(X, y)</span><br><span class="line">log_reg.score(X, y)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.42499999999999999</span></span><br></pre></td></tr></table></figure>
+<p>可以看到训练出的模型预测分数非常低。再来看看决策边界：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plot_decision_boundary(log_reg, axis=[-<span class="number">4</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/b38865f865d8d7d391732d6537ec1d47.jpg" alt=""></p>
+<p>从图中可以看到，绘制出的线性决策边界是完全没办法区分样本数据中的两种类型的。</p>
+<p>并且我们也清楚的知道，样本数据的决策边界应该是下图所示：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/14c901391bfcd5c647d83a90de0450df.jpg" alt=""></p>
+<p>那么我们如何能得到一个圆形的决策边界呢？大家回忆一下，在几何中我们学过圆的标准方程应该是：</p>
+<p>$$(x-a)^2 + (y-b)^2 = r^2$$</p>
+<p>$a$和$b$是圆心坐标，$r$是半径。那如果我们将上图的圆看作是一个圆心在$(0, 0)$的圆，那么这个圆形的决策边界公式应该就是：</p>
+<p>$$x^2 + y^2 -r^2 = 0$$</p>
+<p>和逻辑回归的线性决策边界公式做一下对比：</p>
+<p>$$\theta_1 X_1 + \theta_2 X_2 + \theta_0 = 0$$</p>
+<p>是不是发现相当于给线性决策边界的特征增加幂次，再回想之前笔记中讲过的多项式回归，此时大家应该心中就了然了。那就是如果要让逻辑回归处理不规则决策边界分类问题，那么就运用多项式回归的原理，下面我们实现来看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 用到了前面笔记中讲过的Pipeline</span></span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">PolynomialLogisticRegression</span><span class="params">(degree)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> Pipeline([</span><br><span class="line">		(<span class="string">"poly"</span>, PolynomialFeatures(degree=degree)),</span><br><span class="line">		(<span class="string">"std_scalar"</span>, StandardScaler()),</span><br><span class="line">		(<span class="string">"log_reg"</span>, LogisticRegression())</span><br><span class="line">	])</span><br><span class="line"></span><br><span class="line">ploy_log_reg = PolynomialLogisticRegression(degree=<span class="number">2</span>)</span><br><span class="line">ploy_log_reg.fit(X, y)</span><br><span class="line">ploy_log_reg.score(X, y)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.97999999999999998</span></span><br></pre></td></tr></table></figure>
+<p>可以看到使用多项式回归原理后，我们训练出的新的模型对样本数据的预测评分达到了98%。再来绘制一下决策边界看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plot_decision_boundary(ploy_log_reg, axis=[-<span class="number">4</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/80d9d6cdeb044c5d245b57d7d8c73957.jpg" alt=""></p>
+<p>现在圆形的决策边界就被绘制出来了，并且将样本数据的类型区分的很准确。</p>
+<h2 id="u903B_u8F91_u56DE_u5F52_u4E2D_u4F7F_u7528_u6A21_u578B_u6B63_u5219_u5316"><a href="#u903B_u8F91_u56DE_u5F52_u4E2D_u4F7F_u7528_u6A21_u578B_u6B63_u5219_u5316" class="headerlink" title="逻辑回归中使用模型正则化"></a>逻辑回归中使用模型正则化</h2><p>上一节中，我们讲了使用多项式的方式使得逻辑回归可以解决非线性分类的问题，那么既然使用了多项式方法，那势必模型就会变的很复杂，继而产生过拟合的问题。所以和多项式解决回归问题一样，在逻辑回归中使用多项式也要使用模型正则化来避免过拟合的问题。</p>
+<p>这一节我们使用Scikit Learn中提供的逻辑回归来看一下如何使用模型正则化。在这之前先来复习一下模型正则化。所谓模型正则化，就是在损失函数中加一个带有系数的正则模型，那么此时如果想让损失函数尽可能的小，就要兼顾原始损失函数和正则模型中的$\theta$值，从而做以权衡，起到约束多项式系数大小的作用。正则模型前的系数$\alpha$ 决定了新的损失函数中每一个$\theta$都尽可能的小，这个小的程度占整个优化损失函数的多少。</p>
+<p>$$L(\theta)_{new} = L(\theta) + \alpha L_p$$</p>
+<blockquote>
+<p>$L_p$范数请参见上一篇笔记。</p>
+</blockquote>
+<p>但是这种方式有一个问题，那就是可以刻意回避模型正则化，也就是将$\alpha$取值为0的时候。所以还有另一种模型正则化的方式是将这个系数加在原始损失函数前面，这种情况的话相当于正则模型前的系数永远是1，无论如何都要进行模型正则化。</p>
+<p>$$L(\theta)_{new} = CL(\theta) + L_p$$</p>
+<p>Scikit Learn中的逻辑回归就自带这种形式的模型正则化，下面我们来看一下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建样本数据，构建200行2列的矩阵，均值为0，标准差为1，既200个样本，每个样本2个特征</span></span><br><span class="line">X = np.random.normal(<span class="number">0</span>, <span class="number">1</span>, size=(<span class="number">200</span>, <span class="number">2</span>))</span><br><span class="line"><span class="comment"># 构建y的方程，曲线为抛物线</span></span><br><span class="line">y = np.array(X[:, <span class="number">0</span>]**<span class="number">2</span> + X[:, <span class="number">1</span>] &lt;<span class="number">1.5</span>, dtype=<span class="string">'int'</span>)</span><br><span class="line"><span class="comment"># 在样本数据中加一些噪音</span></span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">20</span>):</span><br><span class="line">	y[np.random.randint(<span class="number">200</span>)] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘样本数据</span></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/ea97f4a72fc0eb2e31cac5e105166f9c.jpg" alt=""></p>
+<p>样本数据构建好了，我们先用逻辑回归对其进行分类预测看看准确度：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line">log_reg = LogisticRegression()</span><br><span class="line">log_reg.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">LogisticRegression(C=<span class="number">1.0</span>, class_weight=<span class="keyword">None</span>, dual=<span class="keyword">False</span>, fit_intercept=<span class="keyword">True</span>,</span><br><span class="line">		  intercept_scaling=<span class="number">1</span>, max_iter=<span class="number">100</span>, multi_class=<span class="string">'ovr'</span>, n_jobs=<span class="number">1</span>,</span><br><span class="line">		  penalty=<span class="string">'l2'</span>, random_state=<span class="keyword">None</span>, solver=<span class="string">'liblinear'</span>, tol=<span class="number">0.0001</span>,</span><br><span class="line">		  verbose=<span class="number">0</span>, warm_start=<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
+<p>当模型训练完后，我们在返回内容中可以看到两个超参数<code>C</code>和<code>penalty</code>，前者就是前面讲到的原始损失函数前的系数，后者就是正则模型，逻辑回归中这两个超参数的默认值是1和$L_2$范式正则模型，也就是LASSO正则模型。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">log_reg.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.80000000000000004</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制决策边界</span></span><br><span class="line">plot_decision_boundary(log_reg, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/2802fa23be191a0afa093f0a86cbddd7.jpg" alt=""></p>
+<p>可以看到用线性逻辑回归训练出的模型准确度只有80%，并且线性决策边界无法很好的区分两种分类。下面我们再用多项式逻辑回归训练模型看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">PolynomialLogisiticRegression</span><span class="params">(degree, C)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> Pipeline([</span><br><span class="line">		(<span class="string">'poly'</span>, PolynomialFeatures(degree=degree)),</span><br><span class="line">		(<span class="string">'std_scaler'</span>, StandardScaler()),</span><br><span class="line">		(<span class="string">'log_reg'</span>, LogisticRegression(C=C))</span><br><span class="line">	])</span><br><span class="line"></span><br><span class="line">ploy_log_reg = PolynomialLogisiticRegression(degree=<span class="number">2</span>, C=<span class="number">1</span>)</span><br><span class="line">ploy_log_reg.fit(X_train, y_train)</span><br><span class="line">ploy_log_reg.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.93999999999999995</span></span><br><span class="line"></span><br><span class="line">plot_decision_boundary(ploy_log_reg, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/37ef4687f99025680ef6f919045dbf07.jpg" alt=""></p>
+<p>可以看到当使用多项式逻辑回归后，模型准确度达到了94%，不规则决策边界也很好的区分了两种类型。下面我们增加多项式的复杂度，再来看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">ploy_log_reg2 = PolynomialLogisiticRegression(degree=<span class="number">20</span>, C=<span class="number">1</span>)</span><br><span class="line">ploy_log_reg2.fit(X_train, y_train)</span><br><span class="line">ploy_log_reg2.score(X_test, y_test)</span><br></pre></td></tr></table></figure>
+<p>可以看到当<code>degree</code>增大到20时，模型准确率有所下降，因为我们的样本数据量比较小，所以过拟合的现象不是很明显，我们绘制出决策边界看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plot_decision_boundary(ploy_log_reg2, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/520afe6eaba281739ca38058e4d86772.jpg" alt=""></p>
+<p>从决策边界上能很明显的看到过拟合的状态。下面我们来调整<code>C</code>这个系数，让正则模型来干预整个损失函数中$\theta$的大小，然后再看看模型准确率和决策边界：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">ploy_log_reg3 = PolynomialLogisiticRegression(degree=<span class="number">20</span>, C=<span class="number">0.1</span>)</span><br><span class="line">ploy_log_reg3.fit(X_train, y_train)</span><br><span class="line">ploy_log_reg3.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.92000000000000004</span></span><br><span class="line"></span><br><span class="line">plot_decision_boundary(ploy_log_reg3, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/8b403e17ab26fe11a1dbcfd561007632.jpg" alt=""></p>
+<p>可以看到当正则模型进行干预后，模型的准确率有所提升，决策边界也比之前好了许多。这就是逻辑回归中的模型正则化。</p>
+<h2 id="u903B_u8F91_u56DE_u5F52_u89E3_u51B3_u591A_u5206_u7C7B_u95EE_u9898"><a href="#u903B_u8F91_u56DE_u5F52_u89E3_u51B3_u591A_u5206_u7C7B_u95EE_u9898" class="headerlink" title="逻辑回归解决多分类问题"></a>逻辑回归解决多分类问题</h2><p>在前面的章节中，对逻辑回归的应用一直是在二分类问题中进行的。这一节来讲讲能够让逻辑回归解决多分类问题的方法。</p>
+<h3 id="OvR"><a href="#OvR" class="headerlink" title="OvR"></a>OvR</h3><p>所谓OvR就是One vs Rest的缩写，从字面上来讲是一对剩余的所有的意思。那么我们通过一系列示图来解释一下OvR：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/d2805fa3251e0b23ced05d648514576d.jpg" alt=""></p>
+<p>假设有四个分类，如上图所示，如果One指的是蓝色的点，那么剩余的红色、绿色、黄色三个点就是Rest，也就是我们选取一个类别，把其他剩余的类别称之为剩余类别：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/9878951b26aa662274f6dcee71126cea.jpg" alt=""></p>
+<p>这样就把一个四分类问题转换成了二分类问题，现在我们就可以使用逻辑回归算法预测再来一个点时它属于蓝色点的概率和属于剩余点的概率。</p>
+<p>同理，这个过程也可以在其他颜色的点上进行，如果是上图的四分类问题，那么就可以拆分为四个二分类问题：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/b3e4dacbf0262a1b55308bcbaf1a944e.jpg" alt=""></p>
+<p>然后对新来的点分别在这四个二分类问题中计算概率，也就是N个类别就进行N次分类，最后选择分类概率最高的那个二分类，这样就可以判断这个新点的类别了。</p>
+<h3 id="OvO"><a href="#OvO" class="headerlink" title="OvO"></a>OvO</h3><p>所谓OvO就是One vs One的缩写，从字面上来讲是一对一的意思。那么我们同样通过一系列示图来解释一下OvO：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/4651eb1bf5a06c4fa28800c674be0cf6.jpg" alt=""></p>
+<p>还是假设有四个分类，将其中的每两个分类单独拿出来处理，这样就一共有六组二分类问题，然后对新来的点分别在这六个二分类问题中计算概率，最后选择分类概率最高的那个二分类，这样就可以判断这个新点的类别了，这就是OvO方式。很明显OvO方式的时间复杂度要比OvR高很多，但是准确率也高很多，因为每次都是在绝对的二分类中对新来的样本数据进行概率计算</p>
+<h3 id="Scikit_Learn_u4E2D_u7684_u903B_u8F91_u56DE_u5F52"><a href="#Scikit_Learn_u4E2D_u7684_u903B_u8F91_u56DE_u5F52" class="headerlink" title="Scikit Learn中的逻辑回归"></a>Scikit Learn中的逻辑回归</h3><p>这一节我们来看看Scikit Learn中封装的逻辑回归。我们使用鸢尾花的样本数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">iris = datasets.load_iris()</span><br><span class="line">X = iris.data</span><br><span class="line">y = iris.target</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"></span><br><span class="line">log_reg = LogisticRegression()</span><br><span class="line">log_reg.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">LogisticRegression(C=<span class="number">1.0</span>, class_weight=<span class="keyword">None</span>, dual=<span class="keyword">False</span>, fit_intercept=<span class="keyword">True</span>,</span><br><span class="line">		  intercept_scaling=<span class="number">1</span>, max_iter=<span class="number">100</span>, multi_class=<span class="string">'ovr'</span>, n_jobs=<span class="number">1</span>,</span><br><span class="line">		  penalty=<span class="string">'l2'</span>, random_state=<span class="keyword">None</span>, solver=<span class="string">'liblinear'</span>, tol=<span class="number">0.0001</span>,</span><br><span class="line">		  verbose=<span class="number">0</span>, warm_start=<span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line">log_reg.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.94736842105263153</span></span><br></pre></td></tr></table></figure>
+<p>从打印结果中我们能看到有一个属性叫<code>multi_class</code>它的值为<code>ovr</code>，其实Scikit Learn中的逻辑回归是自带OvR和OvO能力的，默认使用OvR。另外还需要注意<code>solver</code>属性，这个属性指定了逻辑回归使用的算法，如果使用了<code>ovr</code>，则对应的算法是<code>liblinear</code>。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">log_reg1 = LogisticRegression(multi_class=<span class="string">'multinomial'</span>, solver=<span class="string">'newton-cg'</span>)</span><br><span class="line">log_reg1.fit(X_train, y_train)</span><br><span class="line">log_reg1.score(X_train, y_train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.9732142857142857</span></span><br></pre></td></tr></table></figure>
+<p>如果要使用OvO方式，需要显示的传入<code>multi_class</code>和<code>solver</code>这两个参数，对应OvO的算法是<code>newton_cg</code>，这里就不对这两个算法做详细解释了，可以看看Scikit Learn的官网说明。</p>
+<h3 id="OvO_u548COvR_u7C7B"><a href="#OvO_u548COvR_u7C7B" class="headerlink" title="OvO和OvR类"></a>OvO和OvR类</h3><p>除了在逻辑回归中自带了OvR和OvO方式以外，Scikit Learn还专门提供了单独的OvR和OvO的类，只要传入一个二分类器，就可以运用OvR和OvO的原理来解决多分类问题了：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.multiclass <span class="keyword">import</span> OneVsRestClassifier</span><br><span class="line"></span><br><span class="line">ovr = OneVsRestClassifier(log_reg)</span><br><span class="line">ovr.fit(X_train, y_train)</span><br><span class="line">ovr.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.94736842105263153</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.multiclass <span class="keyword">import</span> OneVsOneClassifier</span><br><span class="line"></span><br><span class="line">ovo = OneVsOneClassifier(log_reg)</span><br><span class="line">ovo.fit(X_train, y_train)</span><br><span class="line">ovo.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">1.0</span></span><br></pre></td></tr></table></figure>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>这两篇笔记主要讲了逻辑回归，这是解决分类问题应用很广泛的一个算法，它拓展了线性回归算法，将估算概率的方式将回归问题转换为了分类问题。下一篇笔记将讨论如何更好的评价分类问题的准确度。</p>
+<blockquote>
+<p>申明：本文为慕课网<a href="https://www.imooc.com/t/108955" target="_blank" rel="external">liuyubobobo</a>老师<a href="https://coding.imooc.com/learn/list/169.html" target="_blank" rel="external">《Python3入门机器学习 经典算法与应用》</a>课程的学习笔记，未经允许不得转载。</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/machine-learning-10/" rel="next" title="机器学习笔记十之逻辑回归">
+                <i class="fa fa-chevron-left"></i> 机器学习笔记十之逻辑回归
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/task-manage-omnifocus/" rel="prev" title="基于OmniFocus的任务系统">
+                基于OmniFocus的任务系统 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">90</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u51B3_u7B56_u8FB9_u754C"><span class="nav-number">1.</span> <span class="nav-text">决策边界</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u7EBF_u6027_u51B3_u7B56_u8FB9_u754C"><span class="nav-number">1.1.</span> <span class="nav-text">线性决策边界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4E0D_u89C4_u5219_u51B3_u7B56_u8FB9_u754C"><span class="nav-number">1.2.</span> <span class="nav-text">不规则决策边界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kNN_u7684_u51B3_u7B56_u8FB9_u754C"><span class="nav-number">1.3.</span> <span class="nav-text">kNN的决策边界</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u903B_u8F91_u56DE_u5F52_u4E2D_u4F7F_u7528_u591A_u9879_u5F0F_u7279_u5F81"><span class="nav-number">2.</span> <span class="nav-text">逻辑回归中使用多项式特征</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u903B_u8F91_u56DE_u5F52_u4E2D_u4F7F_u7528_u6A21_u578B_u6B63_u5219_u5316"><span class="nav-number">3.</span> <span class="nav-text">逻辑回归中使用模型正则化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u903B_u8F91_u56DE_u5F52_u89E3_u51B3_u591A_u5206_u7C7B_u95EE_u9898"><span class="nav-number">4.</span> <span class="nav-text">逻辑回归解决多分类问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#OvR"><span class="nav-number">4.1.</span> <span class="nav-text">OvR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OvO"><span class="nav-number">4.2.</span> <span class="nav-text">OvO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Scikit_Learn_u4E2D_u7684_u903B_u8F91_u56DE_u5F52"><span class="nav-number">4.3.</span> <span class="nav-text">Scikit Learn中的逻辑回归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OvO_u548COvR_u7C7B"><span class="nav-number">4.4.</span> <span class="nav-text">OvO和OvR类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u603B_u7ED3"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/machine-learning-11/';
+      var disqus_title = '机器学习笔记十一之决策边界';
+      var disqus_url = 'http://www.devtalking.com//articles/machine-learning-11/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
