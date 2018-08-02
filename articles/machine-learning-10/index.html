@@ -106,7 +106,7 @@
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/c9c81130b42d0ec7a1d9d13771791494.jpg">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/661c9948cbf818ba028f89db922b50eb.jpg">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/ee5c380438a6b086cbebbf6ade764dc5.jpg">
-<meta property="og:updated_time" content="2018-08-02T01:59:40.294Z">
+<meta property="og:updated_time" content="2018-08-02T02:18:12.951Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记十之逻辑回归、模型正则化">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -332,7 +332,7 @@
 <p>前面说过，逻辑回归只能解决二分类问题，既当概率估计值$\hat p$大于等于0.5时，我们记$\hat y$为1，当$\hat p$小于等于0.5时，记$\hat y$为0，既：</p>
 <p>$$\hat y =\left\{<br>\begin{aligned}<br>1, \ \ \ \hat p \ge 0.5 \\<br>0, \  \ \ \hat p \leq 0.5 \\<br>\end{aligned}<br>\right.<br>$$</p>
 <p>那么我们先将损失函数也分为两种情况来看：</p>
-<p>$$cost = \left{<br>\begin{aligned}<br>如果y=1，p越小，cost越大（损失越大） \<br>如果y=0，p越大，cost越大（损失越大）\<br>\end{aligned}<br>\right.<br>$$</p>
+<p>$$cost = \left\{<br>\begin{aligned}<br>如果y=1，p越小，cost越大（损失越大） \\<br>如果y=0，p越大，cost越大（损失越大）\\<br>\end{aligned}<br>\right.<br>$$</p>
 <p>也就是说，在真实的分类为1的情况下，如果概率越小，那么说明损失越大，因为概率越小，分类应该越趋向0。在真实的分类为0的情况下，如果概率越大，那么也说明损失越大，因为概率越大，分类应该越趋向1。</p>
 <p>上面我们只是根据逻辑回归分类的方式，定义出了逻辑回归损失函数的损失趋势和语言解释，那么我们需要在数学的海洋中找到符合这种趋势的数学工具，或者说函数。再次之前，我们先来回顾一下高中学过的数学知识<strong>对数</strong>。</p>
 <h3 id="u5BF9_u6570"><a href="#u5BF9_u6570" class="headerlink" title="对数"></a>对数</h3><p>在数学中，如果有$x=\alpha ^y$，$y$是$\alpha$的指数，那么可以说以$\alpha$为底$x$的对数是$y$，记为：</p>
@@ -345,15 +345,15 @@
 </ul>
 <p>对数的主要作用是解幂比如：</p>
 <ul>
-<li>$log<em>{\theta} \ xy = log</em>{\theta} \ x + log_{\theta} \ y$</li>
-<li>$log<em>{\theta} \ \frac x y = log</em>{\theta} \ x - log_{\theta} \ y$</li>
-<li>$log<em>{\theta} \ x^y = y log</em>{\theta} \ x$</li>
-<li>$log<em>{\theta} \ \sqrt[y]{x} = \frac {log</em>{\theta} \ x} y$</li>
+<li>$log_{\theta} \ xy = log_{\theta} \ x + log_{\theta} \ y$</li>
+<li>$log_{\theta} \ \frac x y = log_{\theta} \ x - log_{\theta} \ y$</li>
+<li>$log_{\theta} \ x^y = y log_{\theta} \ x$</li>
+<li>$log_{\theta} \ \sqrt[y]{x} = \frac {log_{\theta} \ x} y$</li>
 </ul>
 <p>对数的存在使得求这种复杂幂的问题更快更方便。</p>
 <p>我们再来看看对数在几何意义上的曲线：<br><img src="http://paxigrdp0.bkt.clouddn.com/f427c68e356b03469b66f870e0e9f00d.jpg" alt="" title="对数曲线"><br>可以很容易的算出，对数的曲线始终是过$(1, 0)$点的。</p>
 <h3 id="u5B9A_u4E49_u635F_u5931_u51FD_u6570"><a href="#u5B9A_u4E49_u635F_u5931_u51FD_u6570" class="headerlink" title="定义损失函数"></a>定义损失函数</h3><p>回顾完对数后，我们再来看看逻辑回归的损失函数，没错，我们就是要使用对数的函数来表示：</p>
-<p>$$cost = \left{<br>\begin{aligned}<br>{如果y=1,那么损失函数为：-log(\hat p)\<br>如果y=0,那么损失函数为：-log(1-\hat p)}<br>\end{aligned}<br>\right.<br>$$</p>
+<p>$$cost = \left\{<br>\begin{aligned}<br>{如果y=1,那么损失函数为：-log(\hat p) \\<br>如果y=0,那么损失函数为：-log(1-\hat p)}<br>\end{aligned}<br>\right.<br>$$</p>
 <p>我们来看看这两个函数为什么符合之前我们定义的损失函数的描述。首先$-log x$的曲线为：</p>
 <p><img src="http://paxigrdp0.bkt.clouddn.com/cffe527aa375d697fbbcc500da80f28a.jpg" alt=""></p>
 <p>之前说了，概率的值域在$(0,1)$之间，所以上图曲线的x轴以下的曲线是没有意义的，所以对于$-log (\hat p)$，它的曲线是：</p>
@@ -400,9 +400,9 @@
 <p>$$log(1-\sigma(t))^{‘}=\frac 1 {1-\sigma(t)} \cdot (-\sigma(t))^{‘}=\<br>\frac 1 {1- \frac 1 {1+e^{-t}}} \cdot (1+e^{-t})^{-2} \cdot e^{-t} \cdot -1=\<br>\frac {(1+e^{-t})^{-1}} {e^{-t}} \cdot e^{-t} \cdot -1 = \<br>-(1+e^{-t})^{-1} = -\sigma(t)<br>$$</p>
 <h3 id="u903B_u8F91_u56DE_u5F52_u635F_u5931_u51FD_u6570_u6C42_u5BFC"><a href="#u903B_u8F91_u56DE_u5F52_u635F_u5931_u51FD_u6570_u6C42_u5BFC" class="headerlink" title="逻辑回归损失函数求导"></a>逻辑回归损失函数求导</h3><p>当我们知道了Sigmoid函数和Sigmoid函数的对数的求导结果后，我们对逻辑回归损失函数求导就很容易了（这里对第$j$个$\theta$求导），先来看前半部分：<br>$$\frac {d(y^{(i)}log(\sigma(X_b^{(i)} \theta)))} {d\theta_j}=\<br>y^{(i)} \cdot (1-\sigma(X_b^{(i)} \theta)) \cdot X_j^{(i)}<br>$$</p>
 <p>最后的那个$X_j^{(i)}$是第$j$个$\theta$前面的系数，再来看后半部分：<br>$$\frac {d((1-y^{i})log(1-\sigma(X_b^{(i)} \theta)))} {d\theta_j}=\<br>(1-y^{(i)}) \cdot (-\sigma(X_b^{(i)} \theta)) \cdot X_j^{(i)}<br>$$</p>
-<p>此时对整个损失函数求导就是上面两部分相加：<br>$$\frac {d(L(\theta))} {d(\theta<em>j)}=-\frac 1 m \sum</em>{i=1}^m (y^{(i)} \cdot (1-\sigma(X_b^{(i)} \theta)) \cdot X_j^{(i)} + (1-y^{(i)}) \cdot (-\sigma(X_b^{(i)} \theta)) \cdot X<em>j^{(i)})=\<br>-\frac 1 m \sum</em>{i=1}^m(y^{(i)}X_j^{(i)}-y^{(i)}\sigma(X_b^{(i)} \theta) \cdot X_j^{(i)}-\sigma(X_b^{(i)} \theta) \cdot X_j^{(i)} + y^{(i)}\sigma(X_b^{(i)} \theta) \cdot X<em>j^{(i)})=\<br>-\frac 1 m \sum</em>{i=1}^m(y^{(i)}X_j^{(i)}-\sigma(X_b^{(i)} \theta) \cdot X<em>j^{(i)})=\<br>-\frac 1 m \sum</em>{i=1}^m(y^{(i)}-\sigma(X_b^{(i)} \theta)) \cdot X<em>j^{(i)})=\<br>\frac 1 m \sum</em>{i=1}^m(\sigma(X_b^{(i)} \theta)-y^{(i)})X_j^{(i)}<br>$$</p>
-<p>所以逻辑回归损失函数的梯度为：<br>$$\nabla L(\theta)=\frac 1 m \begin{bmatrix}<br>\sum_{i=1}^m(\sigma(X<em>b^{(i)} \theta)-y^{(i)}) \<br>\sum</em>{i=1}^m(\sigma(X_b^{(i)} \theta)-y^{(i)})X<em>1^{(i)} \<br>\sum</em>{i=1}^m(\sigma(X_b^{(i)} \theta)-y^{(i)})X<em>2^{(i)} \<br>… \<br>\sum</em>{i=1}^m(\sigma(X_b^{(i)} \theta)-y^{(i)})X_n^{(i)} \<br>\end{bmatrix}$$</p>
-<p>大家再来回顾一下第五篇笔记中线性回归的梯度：<br>$$\nabla L(\theta) = \frac 2 m\begin{bmatrix}<br>\sum_{i=1}^m (X<em>b^{(i)}\theta-y^{(i)})\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X<em>1^{(i)}\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X<em>2^{(i)}\<br>…\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_n^{(i)}\<br> \end{bmatrix}$$</p>
+<p>此时对整个损失函数求导就是上面两部分相加：<br>$$\frac {d(L(\theta))} {d(\theta_j)}=-\frac 1 m \sum_{i=1}^m (y^{(i)} \cdot (1-\sigma(X_b^{(i)} \theta)) \cdot X_j^{(i)} + (1-y^{(i)}) \cdot (-\sigma(X_b^{(i)} \theta)) \cdot X<em>j^{(i)})= \\<br>-\frac 1 m \sum\</em>{i=1}^m(y^{(i)}X_j^{(i)}-y^{(i)}\sigma(X_b^{(i)} \theta) \cdot X_j^{(i)}-\sigma(X_b^{(i)} \theta) \cdot X_j^{(i)} + y^{(i)}\sigma(X_b^{(i)} \theta) \cdot X_j^{(i)})= \\<br>-\frac 1 m \sum_{i=1}^m(y^{(i)}X_j^{(i)}-\sigma(X_b^{(i)} \theta) \cdot X_j^{(i)})= \\<br>-\frac 1 m \sum_{i=1}^m(y^{(i)}-\sigma(X_b^{(i)} \theta)) \cdot X_j^{(i)})= \\<br>\frac 1 m \sum_{i=1}^m(\sigma(X_b^{(i)} \theta)-y^{(i)})X_j^{(i)}<br>$$</p>
+<p>所以逻辑回归损失函数的梯度为：<br>$$\nabla L(\theta)=\frac 1 m \begin{bmatrix}<br>\sum_{i=1}^m(\sigma(X_b^{(i)} \theta)-y^{(i)}) \<br>\sum_{i=1}^m(\sigma(X_b^{(i)} \theta)-y^{(i)})X_1^{(i)} \\<br>\sum_{i=1}^m(\sigma(X_b^{(i)} \theta)-y^{(i)})X_2^{(i)} \\<br>… \\<br>\sum_{i=1}^m(\sigma(X_b^{(i)} \theta)-y^{(i)})X_n^{(i)} \\<br>\end{bmatrix}$$</p>
+<p>大家再来回顾一下第五篇笔记中线性回归的梯度：<br>$$\nabla L(\theta) = \frac 2 m\begin{bmatrix}<br>\sum_{i=1}^m (X_b^{(i)}\theta-y^{(i)})\<br>\sum_{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_1^{(i)} \\<br>\sum_{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_2^{(i)} \\<br>…\\<br>\sum_{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_n^{(i)} \\<br> \end{bmatrix}$$</p>
 <p>可以发现这两个梯度在形态上是非常相似的，因为线性回归的梯度通过向量化可以优化为：<br>$$\nabla L(\theta) =\frac 2 m X_b^\top(X_b \theta - y)$$</p>
 <p>所以逻辑回归的梯度最终可以写为：<br>$$\nabla L(\theta) =\frac 1 m X_b^\top(\sigma(X_b \theta) - y)$$</p>
 <h2 id="u5B9E_u73B0_u903B_u8F91_u56DE_u5F52_u7B97_u6CD5"><a href="#u5B9E_u73B0_u903B_u8F91_u56DE_u5F52_u7B97_u6CD5" class="headerlink" title="实现逻辑回归算法"></a>实现逻辑回归算法</h2><p>因为逻辑回归拟合损失函数使用的是梯度下降法，所以我们封装逻辑回归算法时大部分都可以套用我们之前封装的线性回归梯度下降方法，需要修改的只是损失函数、预测和评分里的一些代码。</p>
