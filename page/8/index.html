@@ -231,6 +231,408 @@
             
             
               
+                <a class="post-title-link" href="/articles/ios-design-pattern-in-swift-2/" itemprop="url">
+                  Swift中的iOS设计模式（二）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-01-14T00:00:00+08:00" content="2015-01-14">
+              2015-01-14
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/ios-design-pattern-in-swift-2/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/ios-design-pattern-in-swift-2/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="Facade_u8BBE_u8BA1_u6A21_u5F0F"><a href="#Facade_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="Facade设计模式"></a>Facade设计模式</h2><p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-7.png" alt="pic"></p>
+<p>Facade设计模式为多个子模块或子系统提供统一的、单独的API接口。也就是说，不用给用户暴露一堆乱七八糟的接口，只需要暴露一个简单的、标准的接口即可。</p>
+<p>下面这张图能更好的描述这个概念：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-8.png" alt="pic"></p>
+<p>用户在使用我们暴露的标准的API时，根本不知道在这个API底下其实疏导着大量复杂的接口。该设计模式是暴露大量接口的最佳模式，尤其当接口使用很复杂、很难理解时，尤为体现该模式的价值。</p>
+<p>Facade模式可以有效保证调用各个模块功能的接口和你隐藏起来的实现模块功能的逻辑代码是一个松耦合的关系。同时也可以减少你的子系统或子模块对外部代码的依赖。例如一个遵循Facade模式的类，如果逻辑有变化，需要修改内部实现代码，但是并不需要修改该逻辑的接口。使用接口的用户甚至根本都不知道你已经修改了该接口背后的某些逻辑功能。</p>
+<h2 id="u5982_u4F55_u4F7F_u7528Facade_u8BBE_u8BA1_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528Facade_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="如何使用Facade设计模式"></a>如何使用Facade设计模式</h2><p>目前，你们已经有<code>PersistencyManager</code>类用于在本地保存专辑的数据，以及<code>HTTPClient</code>类用于和远程服务器进行交互。项目中的其他类压根不会知道这两个类中具体的处理逻辑，因为他们将要遵循Facade模式，隐藏与<code>LibraryAPI</code>身后。</p>
+<p>要遵循Facade模式，我们要有一个暴露给用户接口的类，那就是<code>LibraryAPI</code>，它持有<code>PersistencyManager</code>和<code>HTTPClient</code>的实例，并暴露一些简单的接口来访问这两个类中的方法：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-9.png" alt="pic"></p>
+<p><code>LibraryAPI</code>就是作为暴露给其他类的标准接口，它能有效的向接口使用者规避掉<code>HTTPClient</code>和<code>PersistencyManager</code>复杂的逻辑代码。</p>
+<p>打开<code>LibraryAPI.swift</code>文件添加如下常量属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> persistencyManager: <span class="type">PersistencyManager</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> httpClient: <span class="type">HTTPClient</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> isOnline: <span class="type">Bool</span></span><br></pre></td></tr></table></figure>
+<p><code>isOnline</code>属性决定了是否向远程服务器上更新专辑数据的变化，比如添加或删除专辑。</p>
+<p>然后需要添加<code>init</code>初始化方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">  persistencyManager = <span class="type">PersistencyManager</span>()</span><br><span class="line">  httpClient = <span class="type">HTTPClient</span>()</span><br><span class="line">  isOnline = <span class="literal">false</span></span><br><span class="line"> </span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为本篇教程中的示例应用只是为了向大家介绍如何运用各种设计模式，所以没有远程服务器的需求，<code>HTTPClient</code>自然不会用到。所以这里<code>isOnline</code>属性总是设置为<code>false</code>。</p>
+<p>下一步，向<code>LibraryAPI.swift</code>文件中添加如下三个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAlbums</span><span class="params">()</span></span> -&gt; [<span class="type">Album</span>] &#123;</span><br><span class="line">  <span class="keyword">return</span> persistencyManager.getAlbums()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">addAlbum</span><span class="params">(album: Album, index: Int)</span></span> &#123;</span><br><span class="line">  persistencyManager.addAlbum(album, index: index)</span><br><span class="line">  <span class="keyword">if</span> isOnline &#123;</span><br><span class="line">    httpClient.postRequest(<span class="string">"/api/addAlbum"</span>, body: album.description())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">deleteAlbum</span><span class="params">(index: Int)</span></span> &#123;</span><br><span class="line">  persistencyManager.deleteAlbumAtIndex(index)</span><br><span class="line">  <span class="keyword">if</span> isOnline &#123;</span><br><span class="line">    httpClient.postRequest(<span class="string">"/api/deleteAlbum"</span>, body: <span class="string">"<span class="subst">\(index)</span>"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>大家看一下<code>addAlbum(_:index:)</code>方法，该方法顾名思义是添加专辑的方法，在实现时会先更新本地的数据，如果网络连通且需要使用远程服务的时候，再调用远程服务接口更新数据状态。当该模块以外的类调用了<code>LibraryAPI</code>接口的<code>addAlbum</code>方法时，它并不知道添加专辑的具体实现逻辑，并且也不需要知道，这就是Facade设计模式的魅力所在。</p>
+<p>现在编译运行你们的应用。你们会看到两个空的视图，和一个Toolbar。顶部的视图用于显示专辑的封面，下面的视图会以列表的形式显示该专辑的相关信息。</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-10.png" alt="pic"></p>
+<p>接下来的工作就是将专辑的数据或图片等显示在屏幕上，这就给我们带来了学习另一个设计模式的机会 – <strong>Decorator设计模式</strong>。</p>
+<h2 id="Decorator_u8BBE_u8BA1_u6A21_u5F0F"><a href="#Decorator_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="Decorator设计模式"></a>Decorator设计模式</h2><p>Decorator模式可以自动的为对象添加某些行为或响应能力，并且不需要对该对象做任何修改。</p>
+<p>该模式可以通过将希望添加的行为或响应能力打包到另一个对象中，然后通过该对象获得添加的行为或响应能力。</p>
+<p>在Swift中，有两种最为常用的实现该模式的方案： <strong>Extensions</strong> 和 <strong>Delegation</strong>。</p>
+<h3 id="Extensions"><a href="#Extensions" class="headerlink" title="Extensions"></a>Extensions</h3><p>你们可以对class、struct或者enum添加Extension，用于添加新的行为或响应能力，最关键的是不需要让它们继承乱七八糟的父类。更厉害的是通过Extension你们甚至不需要去访问目标class、struct或enum，就可以给它们添加新的能力。这意味着，你们可以让Cocoa框架中的对象元素更加符合你们自己的口味，比如给UIView或UIImage添加你们想要的能力。这就是Extension机制的强大之处。</p>
+<p>这里要注意，通过Extension新添加的方法在编译阶段被加载，然后你们可以像使用某类的原生方法一样使用扩展的方法。但是与传统的Decorator模式有些许不同的是，扩展体不会持有被扩展对象的实例，说白了就是你不能实例化一个扩展体，只能通过实例化被扩展的对象，才能使用其扩展的方法。</p>
+<h3 id="u5982_u4F55_u4F7F_u7528Extensions"><a href="#u5982_u4F55_u4F7F_u7528Extensions" class="headerlink" title="如何使用Extensions"></a>如何使用Extensions</h3><p>下图中展示了一种情况，你现在有了<code>Albun</code>对象，然后你想把该对象中的数据展示在一个UITableView中：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-11.png" alt="pic"></p>
+<p>在该情况下，专辑的这些数据从哪来呢？很明显是从<code>Album</code>对象中获取，因为它是一个Model对象，而且它根本不关心它持有的数据要如何展现，展现在哪里。那么这时，你就要使用额外的代码让<code>Album</code>具备将数据按需归位的能力，并且不能直接修改该类。</p>
+<p>这就需要使用Extension机制了，你们将通过Extension机制扩展<code>Album</code>类，目的是给<code>Album</code>添加一个方法，并返回一个<code>UITableView</code>便于使用的数据结构。</p>
+<p>该数据结构图如下：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-12.png" alt="pic"></p>
+<p>接下来我们新建一个Swift文件，名为 <strong>AlbumExtensions</strong> ，然后打开 <strong>AlbumExtensions.swift</strong> 文件，添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Album</span> </span>&#123;</span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">ae_tableRepresentation</span><span class="params">()</span></span> -&gt; (titles:[<span class="type">String</span>], values:[<span class="type">String</span>]) &#123;</span><br><span class="line">    <span class="keyword">return</span> ([<span class="string">"Artist"</span>, <span class="string">"Album"</span>, <span class="string">"Genre"</span>, <span class="string">"Year"</span>], [artist, title, genre, year])</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里注意该方法名的开头<code>ae_</code>，它是<code>AlbumExtensions</code>的缩写。这是一个约定俗成的扩展方法名的写法，目的在于防止扩展方法与原生方法名产生冲突。</p>
+<blockquote>
+<p><strong>注意：</strong>通常类可以重写父类的方法或属性，但是在Extension中不可以。Extension中的方法名、属性名也不能和原生方法名、原生属性名相同。</p>
+</blockquote>
+<p>我们再来总结一下Extension机制：</p>
+<ul>
+<li>当<code>Album</code>被扩展后，直接使用<code>Album</code>访问扩展方法。</li>
+<li>你们通过扩展的方式已经给<code>Album</code>添加了新的能力，如果你们还想通过子类的方式，那么依然可以这么做。</li>
+<li>上面这个简单的扩展可以看出，你们不用对<code>Album</code>做任何改动，它就具备了可以返回适用于<code>UITableView</code>数据格式的能力。</li>
+</ul>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h3 id="Delegation"><a href="#Delegation" class="headerlink" title="Delegation"></a>Delegation</h3><p>另一个Decorator设计模式是Delegation，它是一种代表其他对象或协调其他对象的机制。</p>
+<p>比如当你使用<code>UITableView</code>时，你必须要实现<code>tableView(_:numberOfRowsInSection:)</code>方法，你不要期望<code>UITableView</code>会知道你希望每个Section里有多少行。因此，计算每个Section有多少行的任务就交给了<code>UITableView</code>的代理。这样就可以使<code>UITableView</code>显示与数据松耦合，独立开来。</p>
+<p>下图是<code>UITableView</code>和它的代理之间的运行关系示意图：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-13.png" alt="pic"></p>
+<p><code>UITableView</code>的工作是将一些信息展示在一个列表视图中。但是它只关注于展示，并不会持有需要展示的数据。那么这时就需要向它的代理询问获取相关的信息了。在Objective-C的代理模式中，代理或协议可以申明两种类型的方法，一种是必须类型，另一种是可选类型。前者是遵循该协议的类必须要实现的方法，后者是可以实现，也可以不实现的方法。你们在该教程中会实践到这些内容。</p>
+<p>这时大伙可能会有疑问了，为何我们要使用协议而不直接继承一个对象，然后重写需要的方法呢？这样不是更省事么？但是你们考虑一下，如果这样做，你们只能基于一个单独的父类去实现其子类，也就是说，该父类只能作为某一个对象的代理。如果想让一个对象成为多个对象的代理，那么用继承父类这种形式就行不通了。</p>
+<blockquote>
+<p><strong>注意：</strong>代理机制是一个很重要的模式。Apple在UIKit框架中大量应用了该模式，比如<code>UITableView</code>、<code>UITextView</code>、<code>UITextField</code>、<code>UIWebView</code>、<code>UIAlert</code>、<code>UIActionSheet</code>、<code>UICollectionView</code>、<code>UIPickerView</code>、<code>UIGestrueRecognizer</code>、<code>UIScrollView</code>等等。</p>
+</blockquote>
+<h2 id="u5982_u4F55_u4F7F_u7528Delegate_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528Delegate_u6A21_u5F0F" class="headerlink" title="如何使用Delegate模式"></a>如何使用Delegate模式</h2><p>打开<code>ViewController.swift</code>文件，然后添加以下私有属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> allAlbums = [<span class="type">Album</span>]()</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> currentAlbumData : (titles:[<span class="type">String</span>], values:[<span class="type">String</span>])?</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> currentAlbumIndex = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>然后重写<code>viewDidLoad</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">  <span class="comment">//1</span></span><br><span class="line">  <span class="keyword">self</span>.navigationController?.navigationBar.translucent = <span class="literal">false</span></span><br><span class="line">  currentAlbumIndex = <span class="number">0</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment">//2</span></span><br><span class="line">  allAlbums = <span class="type">LibraryAPI</span>.sharedInstance.getAlbums()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3</span></span><br><span class="line">  <span class="comment">// the uitableview that presents the album data</span></span><br><span class="line">  dataTable.delegate = <span class="keyword">self</span></span><br><span class="line">  dataTable.dataSource = <span class="keyword">self</span></span><br><span class="line">  dataTable.backgroundView = <span class="literal">nil</span></span><br><span class="line">  view.addSubview(dataTable!)       </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们对上述的代码来进行一一讲解：</p>
+<ol>
+<li>关闭导航栏的透明效果。</li>
+<li>通过API获取所有专辑的列表。这里要记住，要使用符合Facade模式的<code>LibraryAPI</code>而不是直接使用<code>PersisencyManager</code>。</li>
+<li>对<code>UITableView</code>进行相关设置，将它的delegate和datasource设置为当前的ViewController。这样一来<code>UITableView</code>所有对数据的请求都会由当前的ViewController响应并提供了。这里需要注意的是如果你们在Storeboard中创建<code>UIViewController</code>和<code>UITableView</code>，那么也可以在Storeboard中通过拖拽来设置delegate和datasource。</li>
+</ol>
+<p>接下来，在<code>ViewController.swift</code>中添加如下方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">showDataForAlbum</span><span class="params">(albumIndex: Int)</span></span> &#123;</span><br><span class="line">  <span class="comment">// 保证代码健壮性，确保专辑数至少大于0，避免数组下标越界的错误</span></span><br><span class="line">  <span class="keyword">if</span> (albumIndex &lt; allAlbums.<span class="built_in">count</span> &amp;&amp; albumIndex &gt; -<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="comment">//获取专辑对象</span></span><br><span class="line">    <span class="keyword">let</span> album = allAlbums[albumIndex]</span><br><span class="line">    <span class="comment">// 保存专辑的数据，用于一会在tableview中展现</span></span><br><span class="line">    currentAlbumData = album.ae_tableRepresentation()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    currentAlbumData = <span class="literal">nil</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 我们已经获取到了需要的数据，可以刷新tableview来显示数据了</span></span><br><span class="line">  dataTable!.reloadData()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>showDataForAlbum()</code>方法的作用是从专辑数组中获取到专辑的对象，然后请求并保存专辑的数据。当你想显示新的数据或有改变的数据时，你只需要调用<code>reloadData</code>方法即可。这样<code>UItableView</code>会重新请求它的代理获取相关数据，比如一共要显示多少个Section、每个Section里显示多少行、每行看起来是什么样的等等。</p>
+<p>我们在<code>viewDidLoad</code>方法中再加入一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">self</span>.showDataForAlbum(currentAlbumIndex)</span><br></pre></td></tr></table></figure>
+<p>该行代码让应用启动时就开始加载专辑数据。因为之前已经将<code>currentAlbumIndex</code>的值设为了0，所以从专辑数组中的第一个专辑开始显示。</p>
+<p>现在，是时候实现DataSource协议的方法了，你们可以将DataSource的方法直接写在ViewController里。也可以通过使用扩展的方式使代码保持整洁。</p>
+<p>如果使用扩展的方式，那么一定要确保它们是写在文件的最下面，并且要在ViewController类定义的大括号之外！</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">ViewController</span>: <span class="title">UITableViewDataSource</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">ViewController</span>: <span class="title">UITableViewDelegate</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这两行代码的含义就是ViewController通过扩展的方式遵循了Delegate和DataSource协议 – 你可以把协议想象成是与委托之间的约定，只要你实现了约定的方法，就算是实现了委托。在我们的代码中，ViewController需要遵守<code>UITableViewDataSource</code>和<code>UITableViewDelegate</code>这两个协议。这样 UITableView 才能明确的知道，需要用到的代理中的方法是由这个ViewController实现的。</p>
+<p>在遵循<code>UITableViewDataSource</code>协议的扩展中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, numberOfRowsInSection section: Int)</span></span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> albumData = currentAlbumData &#123;</span><br><span class="line">    <span class="keyword">return</span> albumData.titles.<span class="built_in">count</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> cell:<span class="type">UITableViewCell</span> = tableView.dequeueReusableCellWithIdentifier(<span class="string">"Cell"</span>, forIndexPath: indexPath) <span class="keyword">as</span> <span class="type">UITableViewCell</span></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> albumData = currentAlbumData &#123;</span><br><span class="line">    cell.textLabel?.text = albumData.titles[indexPath.row]</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> detailTextLabel = cell.detailTextLabel &#123;</span><br><span class="line">        detailTextLabel.text = albumData.values[indexPath.row]</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> cell</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>tableView(_:numberOfRowsInSection:)</code>方法返回每个Section中显示多少行内容，这里对应着专辑数据结构中的标题。</p>
+<p><code>tableView(_:cellForRowAtIndexPath:)</code>方法会逐个创建每行的内容，包括专辑标题和它的值。</p>
+<blockquote>
+<p><strong>注意：</strong>你们可以把这些协议的方法直接加在类声明里面，也可以放在扩展里，编译器不会去管DataSource的方法是放在扩展里还是类申明里，只要实现了必须的方法即可。而我们之所以这样写，是为了保证代码的整洁性和可读性。</p>
+</blockquote>
+<p>编译并运行你们的项目，你们的应用应该已经可以显示出专辑的基本信息了：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-14.png" alt="pic"></p>
+<p>未完待续……</p>
+<p>原文地址：<a href="http://www.raywenderlich.com/86477/introducing-ios-design-patterns-in-swift-part-1" target="_blank" rel="external">Introducing iOS Design Patterns in Swift</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/ios-design-pattern-in-swift-1/" itemprop="url">
+                  Swift中的iOS设计模式（一）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-01-05T00:00:00+08:00" content="2015-01-05">
+              2015-01-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/ios-design-pattern-in-swift-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/ios-design-pattern-in-swift-1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p><strong>iOS设计模式</strong> - 大伙应该都听说过，但是有多少人真正的了解他们呢？虽然大多数开发者都认同设计模式的重要性，但是在实际开发中却并不怎么注意使用设计模式，而且关于设计模式的文章也是凤毛麟角，这更使得开发者无从下手去学习设计模式。</p>
+<p>设计模式是一个处理软件设计中常见问题的解决方法，并可以重复使用。它向开发者提供了设计模板，使开发者更容易写出逻辑清晰、具有可复用性的代码。它还可以使代码具有松耦合性，能让开发者轻松的更新或替换项目中使用的组件。</p>
+<p>在本教程中，大伙要开发一个音乐仓库应用，能显示你们收藏的专辑以及相关信息。</p>
+<p>在开发过程中，大伙会逐渐掌握大多数通用的Cocoa设计模式：</p>
+<ul>
+<li><strong>构建设计模式：</strong>Singleton。</li>
+<li><strong>架构设计模式：</strong>MVC，Decorator，Adapter，Facade。</li>
+<li><strong>行为设计模式：</strong>Observer，Memento。</li>
+</ul>
+<p>千万不要认为该文章只是对设计模式理论上的讲解，大伙需要在你们的音乐仓库应用中运用到这些设计模式。你们的应用最终看起来大概是这个模样：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-1.png" alt="pic"></p>
+<h2 id="u51C6_u5907_u5F00_u59CB"><a href="#u51C6_u5907_u5F00_u59CB" class="headerlink" title="准备开始"></a>准备开始</h2><p>从这里下载<a href="http://cdn1.raywenderlich.com/wp-content/uploads/2014/11/BlueLibrarySwift-Starter.zip" target="_blank" rel="external">初始项目</a>，解压Zip文件，然后在Xcode中打开<strong>BlueLibrarySwift.xcodeproj</strong>工程。</p>
+<p>在开始之前，有三件事需要大伙注意：</p>
+<ul>
+<li>在<code>ViewController</code>中有两个<code>IBOutlet</code>连接着Storyboard中的TableView和Toolbar。</li>
+<li>在Storyboard中的<code>ViewController</code>里含有三个组件，并且设置了AutoLayout布局约束。最上面的组件用来显示音乐专辑的封面。中间是一个TableView，用来显示与该专辑相关的信息。最下面是两个Toolbar按钮，一个是撤销操作按钮，另一个是删除选中专辑的按钮。你们的Storyboard看起来应该是下面这个样子：</li>
+</ul>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-2.png" alt="pic"></p>
+<ul>
+<li>在工程里还有一个HTTP Client类（<code>HTTPClient</code>），这个类目前是空的，但是你们在之后会充实它。</li>
+</ul>
+<blockquote>
+<p><strong>注意：</strong>你们知道吗，当你们创建了一个新的Xcode项目后，你们所编写的代码其实就已经在遵循一定的设计模式了，Model-View-Controller, Delegate, Protocol, Singleton这些设计模式统统可以免费使用哦。</p>
+</blockquote>
+<p>在带你们深入了解第一个设计模式之前，你们需要创建两个类，用于存储和展示音乐专辑的数据。</p>
+<p>点击菜单 <strong>File\New\File…</strong> （或者按下 <strong>Command+N</strong> 快捷键）。选择 <strong>iOS > Cocoa Touch Class</strong> ，点击 <strong>Next</strong>。设置该类的名称为 <strong>Album</strong> ，并让它继承 <strong>NSObject</strong>。最后选择语言为 <strong>Swift</strong> 然后点击 <strong>Next</strong>，最后点击 <strong>Create</strong>。</p>
+<p>打开<strong>Album.swift</strong>文件，在<strong>Album</strong>类中定义如下属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> title : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> artist : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> genre : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> coverUrl : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> year : <span class="type">String</span>!</span><br></pre></td></tr></table></figure>
+<p>然后添加一个初始化方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">init</span>(title: <span class="type">String</span>, artist: <span class="type">String</span>, genre: <span class="type">String</span>, coverUrl: <span class="type">String</span>, year: <span class="type">String</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">self</span>.title = title</span><br><span class="line">  <span class="keyword">self</span>.artist = artist</span><br><span class="line">  <span class="keyword">self</span>.genre = genre</span><br><span class="line">  <span class="keyword">self</span>.coverUrl = coverUrl</span><br><span class="line">  <span class="keyword">self</span>.year = year</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码为<strong>Album</strong>类创建了一个初始化方法，当你要创建一个新的专辑时你要通过这个初始化方法，传入专辑名称、演唱者、风格、专辑封面图片的URL以及年份这些属性。</p>
+<p>接下来需要再添加一个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">description</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"title: <span class="subst">\(title)</span>"</span> +</span><br><span class="line">   <span class="string">"artist: <span class="subst">\(artist)</span>"</span> +</span><br><span class="line">   <span class="string">"genre: <span class="subst">\(genre)</span>"</span> +</span><br><span class="line">   <span class="string">"coverUrl: <span class="subst">\(coverUrl)</span>"</span> +</span><br><span class="line">   <span class="string">"year: <span class="subst">\(year)</span>"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>description()</code>方法将专辑的这些属性拼成一个字符串，并返回。</p>
+<p>我们再次通过刚才创建类的步骤创建一个名为<strong>AlibumView</strong>的类，注意该类要继承<strong>UIView</strong>。</p>
+<p>打开<strong>AlbumView.swift</strong>文件，在该类中添加两个属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> coverImage: <span class="type">UIImageView</span>! </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> indicator: <span class="type">UIActivityIndicatorView</span>!</span><br></pre></td></tr></table></figure>
+<p><code>coverImage</code>属性用来展示专辑封面，<code>indicator</code>是当正在下载封面图片时转动的菊花。</p>
+<p>大伙注意，这里的两个属性分配了<code>private</code>访问级别，也就是说这两个属性只能在<strong>AlbumView.swift</strong>文件中使用，因为其他的类压根没有必要知道这两个属性的存在。（译者：其实这里用不用private都无所谓，因为咱们写的又不是library或者framework。）</p>
+<p>接下来为<code>AlbumView</code>类添加初始化方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">required</span> <span class="keyword">init</span>(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>(coder: aDecoder)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">init</span>(frame: <span class="type">CGRect</span>, albumCover: <span class="type">String</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>(frame: frame)</span><br><span class="line">  backgroundColor = <span class="type">UIColor</span>.blackColor()</span><br><span class="line">  coverImage = <span class="type">UIImageView</span>(frame: <span class="type">CGRectMake</span>(<span class="number">5</span>, <span class="number">5</span>, frame.size.width - <span class="number">10</span>, frame.size.height - <span class="number">10</span>))</span><br><span class="line">  addSubview(coverImage)</span><br><span class="line">  indicator = <span class="type">UIActivityIndicatorView</span>()</span><br><span class="line">  indicator.center = center</span><br><span class="line">  indicator.activityIndicatorViewStyle = .<span class="type">WhiteLarge</span></span><br><span class="line">  indicator.startAnimating()</span><br><span class="line">  addSubview(indicator)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于<code>UIView</code>遵循了<code>NSCoding</code>，而<code>AlbumView</code>又继承了<code>UIView</code>，所以这里需要写一个<code>NSCoder</code>的初始化方法，但我们不会在这个方法中处理什么逻辑，所以调用<code>super.init</code>即可。</p>
+<p><code>AlbumView</code>真正的初始化方法是另外一个<code>init</code>方法，在这个方法中设置了一些默认的属性，比如将背景色设置为黑色、实例化了<code>coverImage</code>属性，并让它与父容器有5px的四周间距、实例化<code>indicator</code>并设置位置及风格。</p>
+<p>最后再添加一个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">highlightAlbum</span><span class="params">(#didHighlightView: Bool)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> didHighlightView == <span class="literal">true</span> &#123;</span><br><span class="line">    backgroundColor = <span class="type">UIColor</span>.whiteColor()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    backgroundColor = <span class="type">UIColor</span>.blackColor()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法是专辑封面高亮开关，高亮时专辑封面背景色为白色，否则为黑色。</p>
+<p>现在编译你们的工程，确保一切都没有问题，然后准备开始第一个设计模式的学习。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u8BBE_u8BA1_u6A21_u5F0F_u7684_u738B_u8005_-_MVC_u6A21_u5F0F"><a href="#u8BBE_u8BA1_u6A21_u5F0F_u7684_u738B_u8005_-_MVC_u6A21_u5F0F" class="headerlink" title="设计模式的王者 - MVC模式"></a>设计模式的王者 - MVC模式</h2><p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-3.png" alt="pic"></p>
+<p>Model-View-Controller (MVC)设计模式是Cocoa框架的基石，毋庸置疑它是开发者们最常用的设计模式没有之一。它把应用中的对象按它们的角色进行分类，并鼓励开发者按这种角色分类创建项目目录，将代码放置在合适的位置，保证项目结构清晰明确。</p>
+<p>顾名思义，MVC中有三种角色：</p>
+<ul>
+<li><strong>Model：</strong>这种对象保存应用程序的数据，并定义如何操作处理这些数据。比如之前你们创建的<code>Album</code>类就是一个Model对象。</li>
+<li><strong>View：</strong>这种对象主要负责Model对象的呈现，以及用户交互。基本上，由<code>UIView</code>衍生出的类都是View对象。在你们的音乐仓库应用中<code>AlbumView</code>就是一个View对象。</li>
+<li><strong>Controller：</strong>这种对象充当着应用程序的协调者，由它来协调所有的事情。它会访问Model对象的数据，然后展示在相应的View对象中；它也会监听用户在View对象上的交互，从而通知Model对象进行相应的数据操作等等。你们应用中的<code>ViewController</code>就是一个Controller对象。</li>
+</ul>
+<p>下图可以很好的说明Model对象和View对象是如何通过Controller对象进行通信的：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-4.png" alt="pic"></p>
+<p>当Model对象的数据发生改变时，它会通知Controller对象，然后Controller对象更新对应的View对象上展示的数据。当用户在View对象进行了交互操作时，View对象会通知Controller对象，然后Controller对象会更新对应的Model对象中的数据。</p>
+<p>你们可能会有这样的疑惑，为什么不把这些操作处理都写在Controller对象中呢，这样就不用通知来通知去的，不是更简单吗？</p>
+<p>我告诉你们两个概念，你们就明白这样做的目的了，那就是低耦合性和高复用性。我举个例子，在一个应用中每个界面中的数据大多数是来自于多个Model对象，如果把View对象和Model对象绑定死了，那么就没法处理这种情况了。</p>
+<p>拿咱们这个音乐仓库的应用来说，如果你们以后想做一个电影仓库或者图书仓库，你仍然可以使用<code>AlbumView</code>这个View对象来展示你的电影或者图书Model对象。假如你的电影仓库应用需要展示电影主题曲的一些信息，那么或许你就可以直接复用<code>Album</code>对象，因为<code>Album</code>对象不依赖于任何View对象。这就是MVC设计模式的强大之处。</p>
+<h2 id="u5982_u4F55_u4F7F_u7528MVC_u8BBE_u8BA1_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528MVC_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="如何使用MVC设计模式"></a>如何使用MVC设计模式</h2><p>首先，你要确保项目中每个类的功能，要么是Controller，要么是View，要么是Model。千万不要将两种角色混合于一个类，每个类只有单一的职责。不过，到目前为止，你们已经创建了标准的Model类<code>Album</code>和View类<code>AlbumView</code>。</p>
+<p>其次，为了使项目目录结构清晰明了，以及能够更感官的实行MVC模式，你们需要在工程中创建三个文件组，来区分开这三种角色的文件。</p>
+<p>通过<strong>File\New\Group</strong>（或同时按下<strong>Command+Option+N</strong>）在工程中创建一个名为 <strong>Model</strong> 的文件组，然后以同样的方式创建 <strong>View</strong> 文件组和 <strong>Model</strong> 文件组。</p>
+<p>最后将 <strong>Album.swift</strong> 文件拖进Model文件组，将 <strong>AlbumView.swift</strong>文件拖进View文件组，将 <strong>ViewController.swift</strong> 文件拖进Model文件组。</p>
+<p>此时，你们的项目目录结构应该是这样的：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-5.png" alt="pic"></p>
+<p>现在的项目结构看起来已然井然有序，当然你们还可以创建其他的文件组和类文件，但是要记住的是，Model、View、Controller这三个文件组是整个程序的核心所在。</p>
+<p>现在项目结构已经理清楚了，接下来的工作就需要从某个地方获取到专辑的相关数据。你们可以创建一个名为API的类，用于负责整个应用的数据管理工作。并且将拉开你们要了解的下一个设计模式 – Singleton。</p>
+<h2 id="Singleton_u8BBE_u8BA1_u6A21_u5F0F"><a href="#Singleton_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="Singleton设计模式"></a>Singleton设计模式</h2><p>单例模式使一个类在整个应用生命周期内只存在一个实例，并且有一个全局的方法来访问这个实例。在单例模式下，当第一次访问某个类的实例时，该类通常使用延迟加载的方式创建该类的单例。</p>
+<blockquote>
+<p><strong>注意：</strong> Apple在iOS和OSX中大量使用了单例模式，比如： <strong>NSUserDefaults.standardUserDefaults()</strong>， <strong>UIApplication.sharedApplication()</strong>， <strong>UIScreen.mainScreen()</strong>， <strong>NSFileManager.defaultManager()</strong>。</p>
+</blockquote>
+<p>你们可能会有疑问，为什么我们要这么在意一个类有一个或多个实例？代码和内存现在是如此的廉价，不是么？</p>
+<p>其实不然，有些情况下，确实只需要类实例化一次，且仅有一次。比如有这么一种情况，在一个应用的生命周期里，应用（Application）设备的主屏幕是只存在一份的，那么你当然希望应用和设备屏幕的实例有且只有一个。或者你需要一个全局的处理配置的类，这样能线程安全的访问配置文件，避免多个配置类同时访问一个配置文件。这些就是单例模式的好处所在。</p>
+<h2 id="u5982_u4F55_u4F7F_u7528Singleton_u8BBE_u8BA1_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528Singleton_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="如何使用Singleton设计模式"></a>如何使用Singleton设计模式</h2><p>先看看下面这张图：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-6.png" alt="pic"></p>
+<p>上图是Logger的类图，从图中可以看出，Logger有一个<code>instance</code>属性以及<code>sharedInstance</code>和<code>init</code>两个方法。</p>
+<p>当第一次调用<code>sharedInstance</code>方法时，<code>instance</code>属性还没有初始化，所以你会创建一个新的Logger类实例，并返回一个该实例的引用。</p>
+<p>当再次调用<code>sharedInstance</code>方法时，<code>instance</code>属性会立即返回，并且不需要再进行任何实例化操作。这个逻辑就保证了Logger类的实例有且仅有一份。</p>
+<p>你们将要通过Singleton设计模式，创建一个单例的类用于管理所有专辑的数据。</p>
+<p>你们应该注意到了，在项目的目录结构中，有一个文件组叫做API，这个文件组里存放的类基本都是为应用提供服务的类。我们在这个文件组中创建一个名为 <strong>LibraryAPI</strong> 的类。</p>
+<p>打开 <strong>LibraryAPI.swift</strong> 文件，添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//1</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">var</span> <span class="title">sharedInstance</span>: <span class="title">LibraryAPI</span> </span>&#123;</span><br><span class="line">  <span class="comment">//2</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="comment">//3</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">let</span> instance = <span class="type">LibraryAPI</span>()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//4</span></span><br><span class="line">  <span class="keyword">return</span> <span class="type">Singleton</span>.instance</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>创建一个类变量的计算属性。类变量类似Objective-C中的类方法，也就是说在任何时候你访问<code>sharedInstance</code>属性时，都不需要对<code>LibraryAPI</code>进行实例化，关于属性类型更多的知识请参阅Swift文档 – <a href="https://developer.apple.com/library/ios/documentation/swift/conceptual/swift_programming_language/Properties.html" target="_blank" rel="external">properties</a>。</li>
+<li>在类变量中内嵌一个结构体，名为<code>Singleton</code>。</li>
+<li><code>Singleton</code>中包含一个名为<code>instance</code>的静态常量属性。用<code>static</code>申明属性意味着该属性只能存在一份。这里要注意的是Swift中的静态属性都会延迟加载，也就是说只有<code>instance</code>被使用时，才会初始化它。还要注意的一点是，一旦<code>instance</code>被初始化了，那么它就是一个常量属性，不会有第二次初始化的机会了。这就是Singleton模式的精髓所在。</li>
+<li>返回该计算属性的值。</li>
+</ol>
+<blockquote>
+<p><strong>注意：</strong>如果想了解Swift中创建单例的其他方法请参阅这里：<a href="https://github.com/hpique/SwiftSingleton" target="_blank" rel="external">Github page</a>。</p>
+</blockquote>
+<p>你们现在已经有一个单例模式的对象，作为管理专辑数据的入口。接下来要更进一步，创建一个类，用于处理你们数据的持久性。</p>
+<p>继续在 <strong>API</strong> 这个文件组中创建一个类，名为<code>PersistencyManager</code>，并让它继承<code>NSObject</code>类。</p>
+<p>打开 <strong>PersistencyManager.swift</strong> 文件，申明一个属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> albums = [<span class="type">Album</span>]()</span><br></pre></td></tr></table></figure>
+<p>这里申明了一个private访问权限的变量属性，用于储存专辑数据。这个数组是可变数组，所以你们可以很轻松的增删专辑。</p>
+<p>接下来我们在该类中添加如下初始化方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">  <span class="comment">//Dummy list of albums</span></span><br><span class="line">  <span class="keyword">let</span> album1 = <span class="type">Album</span>(title: <span class="string">"Best of Bowie"</span>,</span><br><span class="line">         artist: <span class="string">"David Bowie"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_david%20bowie_best%20of%20bowie.png"</span>,</span><br><span class="line">         year: <span class="string">"1992"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album2 = <span class="type">Album</span>(title: <span class="string">"It's My Life"</span>,</span><br><span class="line">         artist: <span class="string">"No Doubt"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_no%20doubt_its%20my%20life%20%20bathwater.png"</span>,</span><br><span class="line">         year: <span class="string">"2003"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album3 = <span class="type">Album</span>(title: <span class="string">"Nothing Like The Sun"</span>,</span><br><span class="line">         artist: <span class="string">"Sting"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_sting_nothing%20like%20the%20sun.png"</span>,</span><br><span class="line">         year: <span class="string">"1999"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album4 = <span class="type">Album</span>(title: <span class="string">"Staring at the Sun"</span>,</span><br><span class="line">         artist: <span class="string">"U2"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_u2_staring%20at%20the%20sun.png"</span>,</span><br><span class="line">         year: <span class="string">"2000"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album5 = <span class="type">Album</span>(title: <span class="string">"American Pie"</span>,</span><br><span class="line">         artist: <span class="string">"Madonna"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_madonna_american%20pie.png"</span>,</span><br><span class="line">         year: <span class="string">"2000"</span>)</span><br><span class="line"> </span><br><span class="line">  albums = [album1, album2, album3, album4, album5]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在初始化方法中，你们可以构建一些专辑添加到<code>albums</code>数组中，这里我构建了5个专辑。</p>
+<p>然后再添加几个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAlbums</span><span class="params">()</span></span> -&gt; [<span class="type">Album</span>] &#123;</span><br><span class="line">  <span class="keyword">return</span> albums</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">addAlbum</span><span class="params">(album: Album, index: Int)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (albums.<span class="built_in">count</span> &gt;= index) &#123; </span><br><span class="line">    albums.insert(album, atIndex: index)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    albums.append(album)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">deleteAlbumAtIndex</span><span class="params">(index: Int)</span></span> &#123;</span><br><span class="line">  albums.removeAtIndex(index)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这些方法可以让你们方便的存、取、删除<code>album</code>数组中的专辑。</p>
+<p>然后编译你们的项目，确保编译通过。此时大伙也许又有了疑问，我们应该如何使用<code>PersistencyManager</code>类呢？别着急，在下一节里，会向大家介绍 <strong>Facade</strong> 设计模式，届时你们就会明白<code>LibraryAPI</code>与<code>PersistencyManager</code>之间的关系，以及如何使用<code>PersistencyManager</code>了。</p>
+<p>未完待续……</p>
+<p>原文地址：<a href="http://www.raywenderlich.com/86477/introducing-ios-design-patterns-in-swift-part-1" target="_blank" rel="external">Introducing iOS Design Patterns in Swift</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/text-kit-tutorial-in-swift-2/" itemprop="url">
                   如何在Swift中运用Text Kit框架（二）
                 </a>
@@ -708,252 +1110,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/helloworld-watchkit-app/" itemprop="url">
-                  Helloworld Apple Watch App
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-11-22T00:00:00+08:00" content="2014-11-22">
-              2014-11-22
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/helloworld-watchkit-app/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/helloworld-watchkit-app/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u4E0B_u8F7DXcode_6-2_Beta"><a href="#u4E0B_u8F7DXcode_6-2_Beta" class="headerlink" title="下载Xcode 6.2 Beta"></a>下载Xcode 6.2 Beta</h2><p>首先我们需要下载最新的<a href="https://developer.apple.com/xcode/downloads/" target="_blank" rel="external">Xcode 6.2 Beta</a>。</p>
-<h2 id="u521B_u5EFA_u4E00_u4E2A_u65B0_u9879_u76EE"><a href="#u521B_u5EFA_u4E00_u4E2A_u65B0_u9879_u76EE" class="headerlink" title="创建一个新项目"></a>创建一个新项目</h2><p>启动Xcode，选择<strong>Create a new Xcode project</strong>， 然后选择<strong>Single View Application</strong>创建一个单视图应用。</p>
-<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app1.png" alt="PIC">  </p>
-<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app2.png" alt="PIC"></p>
-<h2 id="u521B_u5EFAWatch_App_Target"><a href="#u521B_u5EFAWatch_App_Target" class="headerlink" title="创建Watch App Target"></a>创建Watch App Target</h2><p>选择菜单中的<strong>File -> New -> Target</strong>， 然后选择<strong>Apple Watch -> Watch App</strong>， 点击<strong>Next</strong>。  </p>
-<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app3.png" alt="PIC">  </p>
-<p>在Target的基本属性设置界面中不要勾选<strong>Include Notification Scene</strong> 和<strong>Include Glance Scene</strong>这两个选项，因为我们是在做一个<strong>Hello World</strong>， 最后点击<strong>Finish</strong>完成 <strong>Watch App Target</strong>的创建。  </p>
-<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app4.png" alt="PIC">  </p>
-<h2 id="u6DFB_u52A0Label"><a href="#u6DFB_u52A0Label" class="headerlink" title="添加Label"></a>添加Label</h2><p>打开<strong>HelloworldWatchKit Watch App</strong>目录下的 <strong>Interface.storyboard</strong>。</p>
-<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app5.png" alt="PIC">  </p>
-<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app6.png" alt="PIC">  </p>
-<p>然后将一个Label拖拽到<code>InterfaceController</code>中，在Label中输入文字“Hello，World!”，并将Label的<strong>Position</strong>属性设置为 <strong>Horizontal:Center，Vertical:Center</strong>，让Label居中。这里不再需要AutoLayout。</p>
-<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app7.png" alt="PIC">  </p>
-<h2 id="u8FD0_u884CApp"><a href="#u8FD0_u884CApp" class="headerlink" title="运行App"></a>运行App</h2><p>首先选择Active Scheme为<strong>HelloworldWatchKit Watch App</strong>， 然后选择任意型号的iPhone模拟器。</p>
-<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app8.png" alt="PIC"> </p>
-<p>运行应用，这时你可能还看不到Apple Watch模拟器，别着急，这里还需要一个设置。选择iPhone模拟器，在菜单中选择<strong>Hardware -> External Displays -> Apple Watch - 38mm | Apple Watch - 42mm</strong>。</p>
-<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app9.png" alt="PIC"> </p>
-<p>然后重新运行应用，你就会看到你的第一个Apple Watch App了！</p>
-<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app10.png" alt="PIC"> </p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/watchkit-initial-impressions/" itemprop="url">
-                  WatchKit初探
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-11-20T00:00:00+08:00" content="2014-11-20">
-              2014-11-20
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/watchkit-initial-impressions/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/watchkit-initial-impressions/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u6574_u4F53_u529F_u80FD_u9884_u89C8"><a href="#u6574_u4F53_u529F_u80FD_u9884_u89C8" class="headerlink" title="整体功能预览"></a>整体功能预览</h2><p>总体而言，WatchKit第一版SDK提供的功能远远超出了我的期望。因为我原本以为第一版WatchKit可能侧重于对iOS Today Extension功能的延伸，而不是真正开发Watch App。所以当知道真相后，我即惊讶又感到高兴，第一版WatchKit并不是我所想的那样，它可以为Watch App创建全新的交互界面，而且可以通过iOS App Extension去控制他们。</p>
-<p><img src="http://www.devtalking.com/postImages/watchkit-initial-impressions-1.jpg" alt="pic"></p>
-<p>所以我们能做的并不只是一个简单的所谓iOS Apple Watch Extension的玩意，而是有很多新的功能需要我们去挖掘。目前提供的比如特定的UI控制方式  、Glance、可自定义的Notification、和Handoff的深度结合、图片缓存等等，作为开发者，这些功能已经让我为之兴奋了。</p>
-<h2 id="Apple_Watch_u7684_u67B6_u6784"><a href="#Apple_Watch_u7684_u67B6_u6784" class="headerlink" title="Apple Watch的架构"></a>Apple Watch的架构</h2><p>WatchKit带给我的惊讶之一是它的架构。目前Watch App的运行是由两部分相互结合进行工作的:</p>
-<p><img src="http://www.devtalking.com/postImages/watchkit-initial-impressions-2.jpg" alt="pic"></p>
-<ul>
-<li><strong>你的Apple Watch</strong>主要包含用户界面元素文件（Storyboard文件和静态的图片文件）和处理用户的输入行为。并不会真正在Apple Watch中运行代码。换句话说，Apple Watch仅是一个“视图”容器。</li>
-<li><strong>你的iPhone</strong>包含所有的逻辑代码用于响应用户在Apple Watch上产生的诸如应用启动、点击按钮、滑动滑杆等行为。换言之，iPhone包含了控制器和模型。</li>
-</ul>
-<p>有趣的是Apple Watch和iPhone的这种交互是在幕后自动完成的。你要做的工作只是在Storyboard中设置好UI的Outlet，然后其他的事都由WatchKit SDK在幕后通过蓝牙技术自动进行交互。即使iPhone和Apple Watch是两个独立的设备，你也只需要关注你本地的代码以及Outlet的连接情况，这真是一件很酷的事情。</p>
-<h2 id="WatchKit_u5E03_u5C40"><a href="#WatchKit_u5E03_u5C40" class="headerlink" title="WatchKit布局"></a>WatchKit布局</h2><p>一个令我惊讶的是Watch App的UI布局方式，我们不能再用AutoLayout进行布局了。取而代之的是一种新的布局方式<strong>Group</strong>，你需要将界面元素比如按钮、Label添加到Group中，然后Group会自动为你添加的界面元素在其内部进行布局。</p>
-<p><img src="http://www.devtalking.com/postImages/watchkit-initial-impressions-3.jpg" alt="pic"></p>
-<p>你可以将一个Group嵌入到另一个Group中，用于实现较为复杂一点的界面布局，并在Group中还可以设置背景色、边距、圆角半径等属性。</p>
-<p>这让我想起了Java中的<a href="https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html" target="_blank" rel="external">BoxLayout</a>或者XAML中的<a href="http://msdn.microsoft.com/en-us/library/ms754152.aspx" target="_blank" rel="external">StackPanel</a>。</p>
-<h2 id="Glances_u548CNotifications"><a href="#Glances_u548CNotifications" class="headerlink" title="Glances和Notifications"></a>Glances和Notifications</h2><p>Watch App中最酷的功能我觉得就是Glances和Notifications了。我个人认为，Apple Watch的应用中最有用的功能之一就是能让用户很方便的（比如一抬手）就能看到自己感兴趣的事物的提醒通知，比如有人在Twitter中提及到了你或者比特币现在的价位等等。</p>
-<p><img src="http://www.devtalking.com/postImages/watchkit-initial-impressions-4.jpg" alt="pic"></p>
-<p>Glances和Notifications能为你带来什么呢？</p>
-<ul>
-<li><strong>Glances</strong>能让你在应用中快速预览信息，有点像iOS8中的Today Extension。</li>
-<li><strong>Notifications</strong>能让你在Apple Watch中接收到各类通知。Apple Watch中的通知分为两种级别。第一种是提示，只显示应用图标和简单的文本信息。当你抬起手腕或者点击屏幕时就会进入到第二种级别，你就可以看到该通知更多详细的信息，甚至有交互按钮。</li>
-</ul>
-<p>在Glance和Notification这两种情形下，你都可以点击屏幕进入到对应的Watch App中，并且使用Handoff。你甚至可以将特定的View Controller作为Glance或Notification的内容发送给用户。</p>
-<p>我预期在未来几个月我们会在Glance和Notification上面投入较大的时间。</p>
-<h2 id="u52A8_u753B"><a href="#u52A8_u753B" class="headerlink" title="动画"></a>动画</h2><p>Apple Watch中不支持动画，这多少让人觉得有点奇怪。如果你希望某个UI元素具有动画效果，你必须要生成一堆图片，这些图片的内容是连续动画每一帧的内容，然后循环显示这些图片，感觉又回到了GIF动画时代。所以在Apple Watch中不支持iOS中UIView或CALayer这种动画，只支持帧动画。</p>
-<p>举个例子，你们可以看看Apple的<a href="https://developer.apple.com/library/prerelease/ios/samplecode/Lister/Introduction/Intro.html" target="_blank" rel="external">Lister example</a>示例，你会发现Apple通过360张图片来实现一个画圆的动画效果。</p>
-<p><img src="http://www.devtalking.com/postImages/watchkit-initial-impressions-5.jpg" alt="pic"></p>
-<p>这显然是一个灾难性的工作量，不过如果需要，也可以借助某些工具去生成一个动画需要的所有图片。不过，因为Apple Watch的容量很悠闲，所以你要谨慎加入帧动画，因为需要大量图片占用内存，除非有画龙点睛的动画，否则还是尽量少使用动画。</p>
-<h2 id="u8BBE_u8BA1_u8D44_u6E90"><a href="#u8BBE_u8BA1_u8D44_u6E90" class="headerlink" title="设计资源"></a>设计资源</h2><p>如果你是一名设计者（或者对设计有浓厚的兴趣爱好），一下两点建议对你有很好的帮助：</p>
-<ol>
-<li>放下你手中所有的事情，阅读Apple提供的针对Apple Watch的<a href="https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/WatchHumanInterfaceGuidelines/index.html" target="_blank" rel="external">Human Interface Guidelines (HIG)</a>。里面有非常不错的指导和参考能帮助你理解Apple Watch UI设计中你有疑惑的地方，因为设计Apple Watch App是一个全新的世界。</li>
-<li>你一定要下载<a href="https://developer.apple.com/watchkit/#agreement" target="_blank" rel="external">Apple Watch Design Resources</a>。这里有大量关于设计Apple Watch App的PSD素材，比如UI控制模型、颜色、元素间距的指导、笔画粗细的指导等等，有很多有用的东西，给我留下了非常深刻的印象，这里强烈推荐。</li>
-</ol>
-<p>原文地址：<a href="http://www.raywenderlich.com/89473/watchkit-initial-impressions" target="_blank" rel="external">WatchKit: Initial Impressions</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -996,7 +1152,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">86</span>
+              <span class="site-state-item-count">88</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
