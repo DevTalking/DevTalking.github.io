@@ -1,0 +1,902 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+在这一篇笔记中我们来学习目前应用比较广泛的一个分类算法逻辑回归（Logistic Regression）。
+什么是逻辑回归首先大家应该有会有一个疑问，为什么既然叫逻辑回归，但是解决的却是分类问题呢。因为逻辑回归是将样本的特征和样本发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记十之逻辑回归、模型正则化">
+<meta property="og:url" content="http://www.devtalking.com/articles/machine-learning-10/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+在这一篇笔记中我们来学习目前应用比较广泛的一个分类算法逻辑回归（Logistic Regression）。
+什么是逻辑回归首先大家应该有会有一个疑问，为什么既然叫逻辑回归，但是解决的却是分类问题呢。因为逻辑回归是将样本的特征和样本发">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/7667662ed99feb578abdec79a31c667c.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/4292f2003870497bcae2c87e9f6e4485.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/f427c68e356b03469b66f870e0e9f00d.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/cffe527aa375d697fbbcc500da80f28a.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/a8e4252ec69d0c49709eaf37e6b6fd00.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/c9c81130b42d0ec7a1d9d13771791494.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/661c9948cbf818ba028f89db922b50eb.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/ee5c380438a6b086cbebbf6ade764dc5.jpg">
+<meta property="og:updated_time" content="2018-08-02T01:40:38.570Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记十之逻辑回归、模型正则化">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+在这一篇笔记中我们来学习目前应用比较广泛的一个分类算法逻辑回归（Logistic Regression）。
+什么是逻辑回归首先大家应该有会有一个疑问，为什么既然叫逻辑回归，但是解决的却是分类问题呢。因为逻辑回归是将样本的特征和样本发">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 机器学习笔记十之逻辑回归、模型正则化 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                机器学习笔记十之逻辑回归、模型正则化
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-04-15T00:00:00+08:00" content="2018-04-15">
+              2018-04-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-10/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-10/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>在这一篇笔记中我们来学习目前应用比较广泛的一个分类算法逻辑回归（Logistic Regression）。</p>
+<h2 id="u4EC0_u4E48_u662F_u903B_u8F91_u56DE_u5F52"><a href="#u4EC0_u4E48_u662F_u903B_u8F91_u56DE_u5F52" class="headerlink" title="什么是逻辑回归"></a>什么是逻辑回归</h2><p>首先大家应该有会有一个疑问，为什么既然叫逻辑回归，但是解决的却是分类问题呢。因为逻辑回归是将样本的特征和样本发生的概率联系起来，在拟合样本数据发生概率的时候，其实是在解决一个回归问题，当概率计算出来后，再根据概率进行分类处理。所以逻辑回归在解决分类问题时，其实中间还是进行了回归问题的处理，但是逻辑回归只能解决二分类问题，这一点要注意。</p>
+<p>逻辑回归在解决概率这个回归问题时，和线性回归、多项式回归有一个不同的地方，那就是后者训练出的模型，预测其他样本数据的目标值时值域理论上是在负无穷到正无穷的，换句话说也就是对值域是没有什么限制的。而对于表示概率的数而言，一般值域都是在0到1之间，真实世界中，概率不都是按从0%到100%表示嘛。所以这就引出了逻辑回归和线性回归的相似和不同处，继而体现在公式模型上。在第四篇笔记中，我们知道多元线性回归的公式模型是：<br>$$ \hat y = \theta ^T X_b  $$</p>
+<p>因为$\hat y$的值域为$(-\infty,+\infty)$，所以如果要在逻辑回顾中运用在求解概率的公式模型上就需要另外一个函数将其值域限定在$(0, 1)$，我们将这个函数称为<strong>Sigmoid</strong>函数：</p>
+<p>$$\hat p = \sigma(\theta ^T X_b)$$</p>
+<p>$$\sigma(t) = \frac 1 {1+e^{-t}}$$</p>
+<p>最终逻辑回归求解概率的模型为：</p>
+<p>$$\hat p = \frac 1 {1+e^{-\theta ^T X_b}}$$</p>
+<a id="more"></a>
+<h3 id="Sigmoid_u51FD_u6570"><a href="#Sigmoid_u51FD_u6570" class="headerlink" title="Sigmoid函数"></a>Sigmoid函数</h3><p>我们先来看看这个Sigmoid函数为什么将值域限定在$(0, 1)$，将这个函数绘制出来看一下：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义Sigmoid函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(t)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.exp(-t))</span><br><span class="line">	</span><br><span class="line"><span class="comment"># 构建向量x，随机生成500个数，范围从-10到10</span></span><br><span class="line">x = np.linspace(-<span class="number">10</span>, <span class="number">10</span>, <span class="number">500</span>)</span><br><span class="line"><span class="comment"># y值通过Sigmoid计算出</span></span><br><span class="line">y = sigmoid(x)</span><br><span class="line"></span><br><span class="line">plt.plot(x, y)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/7667662ed99feb578abdec79a31c667c.jpg" alt=""></p>
+<p>从曲线图可以看出，$y$的值最小不会小于0，最大不会大于1，表明了它的值域是$(0, 1)$，我将Sigmoid函数再写出来看一下：</p>
+<p>$$\sigma(t) = \frac 1 {1+e^{-t}}$$</p>
+<p>当$t$无穷大时，$e^{-t}$无穷小，那么当1除以无穷小时，它的值就无限接近于1。那么当$t$无穷小时，$e^{-t}$无穷大，那么当1除以无穷大时，它的值就无限接近于0。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/4292f2003870497bcae2c87e9f6e4485.jpg" alt=""></p>
+<p>我将坐标轴在Sigmoid曲线图上绘制出来，可以看到当$t &gt; 0$时，越接近0，概率$p$越接近0.5，$t$越远离0时，概率$p$越大于0.5，并且当$t$大到一定程度时，概率$p$基本稳定在1附近。当$t &lt; 0$时，越接近0，概率$p$越接近0.5。$t$越远离0时，概率$p$越小于0.5，并且当$t$小到一定程度时，概率$p$基本稳定在0附近。这就是Sigmoid函数在逻辑回归中的数学意义。</p>
+<h2 id="u903B_u8F91_u56DE_u5F52_u7684_u635F_u5931_u51FD_u6570"><a href="#u903B_u8F91_u56DE_u5F52_u7684_u635F_u5931_u51FD_u6570" class="headerlink" title="逻辑回归的损失函数"></a>逻辑回归的损失函数</h2><p>我们再将逻辑回归中计算概率的公式写出来：</p>
+<p>$$\hat p = \frac 1 {1+e^{-\theta ^T X_b}}$$</p>
+<p>现在的问题是我们如何求出上面的$\theta$值，也就是在逻辑回归问题中，损失函数如何定义。</p>
+<p>前面说过，逻辑回归只能解决二分类问题，既当概率估计值$\hat p$大于等于0.5时，我们记$\hat y$为1，当$\hat p$小于等于0.5时，记$\hat y$为0，既：</p>
+<p>$$\hat y =\left{<br>\begin{aligned}<br>1, \ \hat p \ge 0.5 \<br>0, \ \hat p \leq 0.5 \<br>\end{aligned}<br>\right.<br>$$</p>
+<p>那么我们先将损失函数也分为两种情况来看：</p>
+<p>$$cost = \left{<br>\begin{aligned}<br>如果y=1，p越小，cost越大（损失越大） \<br>如果y=0，p越大，cost越大（损失越大）\<br>\end{aligned}<br>\right.<br>$$</p>
+<p>也就是说，在真实的分类为1的情况下，如果概率越小，那么说明损失越大，因为概率越小，分类应该越趋向0。在真实的分类为0的情况下，如果概率越大，那么也说明损失越大，因为概率越大，分类应该越趋向1。</p>
+<p>上面我们只是根据逻辑回归分类的方式，定义出了逻辑回归损失函数的损失趋势和语言解释，那么我们需要在数学的海洋中找到符合这种趋势的数学工具，或者说函数。再次之前，我们先来回顾一下高中学过的数学知识<strong>对数</strong>。</p>
+<h3 id="u5BF9_u6570"><a href="#u5BF9_u6570" class="headerlink" title="对数"></a>对数</h3><p>在数学中，如果有$x=\alpha ^y$，$y$是$\alpha$的指数，那么可以说以$\alpha$为底$x$的对数是$y$，记为：</p>
+<p>$$y=log_{\alpha}x$$</p>
+<p>对数有一些简便的写法：</p>
+<ul>
+<li>如果底数为2，可以省略底数记为$log \ x$</li>
+<li>如果底数为10，可以省略底数记为$lg \ x$</li>
+<li>如果底数为$e$，可以省略底数记为$ln \ x$</li>
+</ul>
+<p>对数的主要作用是解幂比如：</p>
+<ul>
+<li>$log<em>{\theta} \ xy = log</em>{\theta} \ x + log_{\theta} \ y$</li>
+<li>$log<em>{\theta} \ \frac x y = log</em>{\theta} \ x - log_{\theta} \ y$</li>
+<li>$log<em>{\theta} \ x^y = y log</em>{\theta} \ x$</li>
+<li>$log<em>{\theta} \ \sqrt[y]{x} = \frac {log</em>{\theta} \ x} y$</li>
+</ul>
+<p>对数的存在使得求这种复杂幂的问题更快更方便。</p>
+<p>我们再来看看对数在几何意义上的曲线：<br><img src="http://paxigrdp0.bkt.clouddn.com/f427c68e356b03469b66f870e0e9f00d.jpg" alt="" title="对数曲线"><br>可以很容易的算出，对数的曲线始终是过$(1, 0)$点的。</p>
+<h3 id="u5B9A_u4E49_u635F_u5931_u51FD_u6570"><a href="#u5B9A_u4E49_u635F_u5931_u51FD_u6570" class="headerlink" title="定义损失函数"></a>定义损失函数</h3><p>回顾完对数后，我们再来看看逻辑回归的损失函数，没错，我们就是要使用对数的函数来表示：</p>
+<p>$$cost = \left{<br>\begin{aligned}<br>{如果y=1,那么损失函数为：-log(\hat p)\<br>如果y=0,那么损失函数为：-log(1-\hat p)}<br>\end{aligned}<br>\right.<br>$$</p>
+<p>我们来看看这两个函数为什么符合之前我们定义的损失函数的描述。首先$-log x$的曲线为：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/cffe527aa375d697fbbcc500da80f28a.jpg" alt=""></p>
+<p>之前说了，概率的值域在$(0,1)$之间，所以上图曲线的x轴以下的曲线是没有意义的，所以对于$-log (\hat p)$，它的曲线是：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/a8e4252ec69d0c49709eaf37e6b6fd00.jpg" alt=""></p>
+<p>从上面的曲线图可以很容易的发现，当$\hat p$趋近于0的时候，$-log (\hat p)$趋近于正无穷，这个正无穷其实就是一个很大的损失惩罚，因为当$\hat p$趋近于0时，$y$应该也是趋近于0，但是这里$y$定义的是1。当$\hat p$在不断趋近1的过程中，$-log (\hat p)$的值逐渐减小，既损失逐渐减小，当$\hat p$趋近于1时，$y$应该也是趋近于0，和这里定义的是一致的，所以$-log (\hat p)$的值是0，说明没有损失。</p>
+<p>下面再来看看$-log(1-x)$的曲线：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/c9c81130b42d0ec7a1d9d13771791494.jpg" alt=""></p>
+<p>同理因为概率的值域在$(0, 1)$之间，所以$-log(1-\hat p)$的曲线为：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/661c9948cbf818ba028f89db922b50eb.jpg" alt=""></p>
+<p>这条曲线同样可以解释我们之前定义的损失趋势。</p>
+<p>此时我们找到的损失函数还是根据不同的分类分成了两个，其实将其合成一个也很简单：</p>
+<p>$$cost=-ylog(\hat p)-(1-y)log(1-\hat p)$$</p>
+<p>如此一来，当$y=0$时，损失函数为$-log(1-\hat p)$，当$y=1$时，损失函数为$-log(\hat p)$。</p>
+<p>上面的公式，是针对一个样本数据的，那么如果有多个样本数据，其实就是将这些样本数据的损失值加起来然后在求一下平均值：</p>
+<p>$$\hat p = \frac 1 {1+e^{-\theta ^T X_b}}$$</p>
+<p>$$L(\theta)=-\frac 1 m \sum_{i=1}^my^{(i)}log(\hat p^{(i)})+(1-y^{(i)})log(1-\hat p^{(i)})$$</p>
+<p>下面我们要做的就是找到一组$\theta$值，使得上面的$L(\theta)$达到最小值。</p>
+<h2 id="u635F_u5931_u51FD_u6570_u7684_u68AF_u5EA6"><a href="#u635F_u5931_u51FD_u6570_u7684_u68AF_u5EA6" class="headerlink" title="损失函数的梯度"></a>损失函数的梯度</h2><p>上面的公式是没法像线性回归那样求出一个正规方程解的，所以我们需要使用梯度下降法来求得使$L(\theta)$最小的一组$\theta$。下面我们先把公式都列出来：</p>
+<ul>
+<li>多元线性回归公式：$ \hat y = X_b \theta $，注意这里的$X_b$是加上了值全部为1的一列的矩阵，而为了方便推导，这里的$\theta$是一个列向量，就不写成$\theta^T$了。</li>
+<li>Sigmoid函数：$\sigma(t) = \frac 1 {1+e^{-t}} $。</li>
+<li>逻辑回归概率公式：$\hat p = \sigma(X_b \theta) =\frac 1 {1+e^{-X_b \theta}} $</li>
+<li>逻辑回归损失函数：$L(\theta)=-\frac 1 m \sum_{i=1}^m(y^{(i)}log(\sigma(X_b^{(i)} \theta))+(1-y^{(i)})log(1-\sigma(X_b^{(i)} \theta))) $</li>
+</ul>
+<p>在第五篇笔记中我们知道，求损失函数的梯度就是对$\theta$这个列向量逐个元素求导：</p>
+<p>$$\nabla L(\theta)=\begin{bmatrix}<br>\frac {\partial L(\theta)} {\partial \theta_0} \<br>\frac {\partial L(\theta)} {\partial \theta_1} \<br>\frac {\partial L(\theta)} {\partial \theta_2} \<br>… \<br>\frac {\partial L(\theta)} {\partial \theta_n} \<br>\end{bmatrix}$$</p>
+<p>我们从里往外来看，先从Sigmoid函数求导入手。</p>
+<h3 id="Sigmoid_u51FD_u6570_u6C42_u5BFC"><a href="#Sigmoid_u51FD_u6570_u6C42_u5BFC" class="headerlink" title="Sigmoid函数求导"></a>Sigmoid函数求导</h3><p>先变换一下Sigmoid函数：</p>
+<p>$$\sigma(t)=\frac 1 {1+e^{-t}} = (1 + e^{-t})^{-1}$$</p>
+<p>然后对Sigmoid函数求导，这里遵循求导链式法则以及求导基本法则：</p>
+<ul>
+<li>复合函数 $(f\circ g)(x)$的导数$(f\circ g)’(x)$为：$(f\circ g)’(x)=f’(g(x))g’(x)$</li>
+<li>代数函数导数：$\frac {dx^n} {dx} = nx^{n-1} \ \ \ (x \neq 0)$</li>
+<li>数学常数的指数求导还是它自己：$\frac {de^x} {dx}=e^x$</li>
+</ul>
+<p>所以可得Sigmoid函数的导数为：<br>$$\sigma(t)^{‘} = (-1)(1+e^{-t})^{-2} \cdot e^{-t} \cdot (-1) =<br>(1+e^{-t})^{-2} \cdot e^{-t}<br>$$</p>
+<h3 id="Sigmoid_u51FD_u6570_u7684_u5BF9_u6570_u6C42_u5BFC"><a href="#Sigmoid_u51FD_u6570_u7684_u5BF9_u6570_u6C42_u5BFC" class="headerlink" title="Sigmoid函数的对数求导"></a>Sigmoid函数的对数求导</h3><p>下面再往外扩展，来看一下$log(\sigma(t))$的导数。这里遵循的导数法则为：</p>
+<ul>
+<li>对以2为底的对数求导：$\frac {dlogx} {dx} = \frac 1 x$</li>
+<li>复合函数 $(f\circ g)(x)$的导数$(f\circ g)’(x)$为：$(f\circ g)’(x)=f’(g(x))g’(x)$</li>
+</ul>
+<p>所以$log(\sigma(t))$的导数为：<br>$$log(\sigma(t))^{‘} = \frac 1 {\sigma(t)} \cdot \sigma(t)^{‘}=\<br>\frac 1 {(1+e^t)^{-1}} \cdot (1+e^{-t})^{-2} \cdot e^{-t} = \<br>(1+e^{-t})^{-1} \cdot e^{-t}=\frac {e^{-t}} {1+e^{-t}}=\<br>\frac {1+e^{-t}-1} {1+e^{-t}} = 1-\frac 1 {1+e^{-t}}=\<br>1-\sigma(t)<br>$$</p>
+<p>$log(1-\sigma(t))$的导数为：</p>
+<p>$$log(1-\sigma(t))^{‘}=\frac 1 {1-\sigma(t)} \cdot (-\sigma(t))^{‘}=\<br>\frac 1 {1- \frac 1 {1+e^{-t}}} \cdot (1+e^{-t})^{-2} \cdot e^{-t} \cdot -1=\<br>\frac {(1+e^{-t})^{-1}} {e^{-t}} \cdot e^{-t} \cdot -1 = \<br>-(1+e^{-t})^{-1} = -\sigma(t)<br>$$</p>
+<h3 id="u903B_u8F91_u56DE_u5F52_u635F_u5931_u51FD_u6570_u6C42_u5BFC"><a href="#u903B_u8F91_u56DE_u5F52_u635F_u5931_u51FD_u6570_u6C42_u5BFC" class="headerlink" title="逻辑回归损失函数求导"></a>逻辑回归损失函数求导</h3><p>当我们知道了Sigmoid函数和Sigmoid函数的对数的求导结果后，我们对逻辑回归损失函数求导就很容易了（这里对第$j$个$\theta$求导），先来看前半部分：<br>$$\frac {d(y^{(i)}log(\sigma(X_b^{(i)} \theta)))} {d\theta_j}=\<br>y^{(i)} \cdot (1-\sigma(X_b^{(i)} \theta)) \cdot X_j^{(i)}<br>$$</p>
+<p>最后的那个$X_j^{(i)}$是第$j$个$\theta$前面的系数，再来看后半部分：<br>$$\frac {d((1-y^{i})log(1-\sigma(X_b^{(i)} \theta)))} {d\theta_j}=\<br>(1-y^{(i)}) \cdot (-\sigma(X_b^{(i)} \theta)) \cdot X_j^{(i)}<br>$$</p>
+<p>此时对整个损失函数求导就是上面两部分相加：<br>$$\frac {d(L(\theta))} {d(\theta<em>j)}=-\frac 1 m \sum</em>{i=1}^m (y^{(i)} \cdot (1-\sigma(X_b^{(i)} \theta)) \cdot X_j^{(i)} + (1-y^{(i)}) \cdot (-\sigma(X_b^{(i)} \theta)) \cdot X<em>j^{(i)})=\<br>-\frac 1 m \sum</em>{i=1}^m(y^{(i)}X_j^{(i)}-y^{(i)}\sigma(X_b^{(i)} \theta) \cdot X_j^{(i)}-\sigma(X_b^{(i)} \theta) \cdot X_j^{(i)} + y^{(i)}\sigma(X_b^{(i)} \theta) \cdot X<em>j^{(i)})=\<br>-\frac 1 m \sum</em>{i=1}^m(y^{(i)}X_j^{(i)}-\sigma(X_b^{(i)} \theta) \cdot X<em>j^{(i)})=\<br>-\frac 1 m \sum</em>{i=1}^m(y^{(i)}-\sigma(X_b^{(i)} \theta)) \cdot X<em>j^{(i)})=\<br>\frac 1 m \sum</em>{i=1}^m(\sigma(X_b^{(i)} \theta)-y^{(i)})X_j^{(i)}<br>$$</p>
+<p>所以逻辑回归损失函数的梯度为：<br>$$\nabla L(\theta)=\frac 1 m \begin{bmatrix}<br>\sum_{i=1}^m(\sigma(X<em>b^{(i)} \theta)-y^{(i)}) \<br>\sum</em>{i=1}^m(\sigma(X_b^{(i)} \theta)-y^{(i)})X<em>1^{(i)} \<br>\sum</em>{i=1}^m(\sigma(X_b^{(i)} \theta)-y^{(i)})X<em>2^{(i)} \<br>… \<br>\sum</em>{i=1}^m(\sigma(X_b^{(i)} \theta)-y^{(i)})X_n^{(i)} \<br>\end{bmatrix}$$</p>
+<p>大家再来回顾一下第五篇笔记中线性回归的梯度：<br>$$\nabla L(\theta) = \frac 2 m\begin{bmatrix}<br>\sum_{i=1}^m (X<em>b^{(i)}\theta-y^{(i)})\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X<em>1^{(i)}\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X<em>2^{(i)}\<br>…\<br>\sum</em>{i=1}^m (X_b^{(i)}\theta-y^{(i)})X_n^{(i)}\<br> \end{bmatrix}$$</p>
+<p>可以发现这两个梯度在形态上是非常相似的，因为线性回归的梯度通过向量化可以优化为：<br>$$\nabla L(\theta) =\frac 2 m X_b^\top(X_b \theta - y)$$</p>
+<p>所以逻辑回归的梯度最终可以写为：<br>$$\nabla L(\theta) =\frac 1 m X_b^\top(\sigma(X_b \theta) - y)$$</p>
+<h2 id="u5B9E_u73B0_u903B_u8F91_u56DE_u5F52_u7B97_u6CD5"><a href="#u5B9E_u73B0_u903B_u8F91_u56DE_u5F52_u7B97_u6CD5" class="headerlink" title="实现逻辑回归算法"></a>实现逻辑回归算法</h2><p>因为逻辑回归拟合损失函数使用的是梯度下降法，所以我们封装逻辑回归算法时大部分都可以套用我们之前封装的线性回归梯度下降方法，需要修改的只是损失函数、预测和评分里的一些代码。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> .metrics <span class="keyword">import</span> accuracy_score</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LogisticRegression</span>:</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">		<span class="comment"># 截距theta0</span></span><br><span class="line">		self.intercept_ = <span class="keyword">None</span></span><br><span class="line">		<span class="comment"># 系数，theta1 ... thetaN</span></span><br><span class="line">		self.coef_ = <span class="keyword">None</span></span><br><span class="line">		<span class="comment"># theta列向量</span></span><br><span class="line">		self._theta = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">	<span class="comment"># 定义Sigmoid私有函数</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">_sigmoid</span><span class="params">(self, t)</span>:</span></span><br><span class="line">		<span class="keyword">return</span> <span class="number">1.</span> / (<span class="number">1.</span> + np.exp(-t))</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 使用批量梯度下降法，根据训练数据集X_train，y_train训练LogisticRegression模型</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self, X_train, y_train, is_debug=False, eta=<span class="number">0.01</span>, n_iters=<span class="number">1e4</span>)</span>:</span></span><br><span class="line">		<span class="keyword">assert</span> X_train.shape[<span class="number">0</span>] == y_train.shape[<span class="number">0</span>], \</span><br><span class="line">			<span class="string">"特征数据矩阵的行数要等于样本结果数据的行数"</span></span><br><span class="line"></span><br><span class="line">		<span class="comment"># 定义逻辑回归损失函数</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">L</span><span class="params">(theta, X_b, y)</span>:</span></span><br><span class="line">			<span class="comment"># 定义逻辑回归概率公式</span></span><br><span class="line">			y_hat = self._sigmoid(X_train.dot(theta))</span><br><span class="line"></span><br><span class="line">			<span class="keyword">try</span>:</span><br><span class="line">				<span class="keyword">return</span> -np.sum(y*np.log(y_hat)+(<span class="number">1</span>-y)*np.log(<span class="number">1</span>-y_hat)) / len(X_b)</span><br><span class="line">			<span class="keyword">except</span>:</span><br><span class="line">				<span class="keyword">return</span> float(<span class="string">'inf'</span>)</span><br><span class="line"></span><br><span class="line">		<span class="comment"># 定义逻辑回归梯度</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">dL</span><span class="params">(theta, X_b, y)</span>:</span></span><br><span class="line">			<span class="keyword">return</span> X_b.T.dot(self._sigmoid(X_b.dot(theta)) - y) / len(X_b)</span><br><span class="line"></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">dL_debug</span><span class="params">(theta, X_b, y, epsilon=<span class="number">0.01</span>)</span>:</span></span><br><span class="line">			<span class="comment"># 开辟大小与theta向量一致的向量空间</span></span><br><span class="line">			result = np.empty(len(theta))</span><br><span class="line">			<span class="comment"># 便利theta向量中的每一个theta</span></span><br><span class="line">			<span class="keyword">for</span> i <span class="keyword">in</span> range(len(theta)):</span><br><span class="line">				<span class="comment"># 复制一份theta向量</span></span><br><span class="line">				theta_1 = theta.copy()</span><br><span class="line">				<span class="comment"># 将第i个theta加上一个距离，既求该theta正方向的theta</span></span><br><span class="line">				theta_1[i] += epsilon</span><br><span class="line">				<span class="comment"># 在复制一份theta向量</span></span><br><span class="line">				theta_2 = theta.copy()</span><br><span class="line">				<span class="comment"># 将第i个theta减去同样的距离，既求该theta负方向的theta</span></span><br><span class="line">				theta_2[i] -= epsilon</span><br><span class="line">				<span class="comment"># 求出这两个点连线的斜率，既模拟该theta的导数</span></span><br><span class="line">				result[i] = (L(theta_1, X_b, y) - L(theta_2, X_b, y)) / (<span class="number">2</span> * epsilon)</span><br><span class="line">			<span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">		<span class="comment"># 实现批量梯度下降法</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">gradient_descent</span><span class="params">(X_b, y, initial_theta, eta, difference=<span class="number">1e-8</span>)</span>:</span></span><br><span class="line">			theta = initial_theta</span><br><span class="line">			i_iter = <span class="number">0</span></span><br><span class="line">			<span class="keyword">while</span> i_iter &lt; n_iters:</span><br><span class="line">				<span class="comment"># 当is_debug为True时走debug的求梯度的方法，反之走梯度公式的方法</span></span><br><span class="line">				<span class="keyword">if</span> is_debug:</span><br><span class="line">					gradient = dL_debug(theta, X_b, y)</span><br><span class="line">				<span class="keyword">else</span>:</span><br><span class="line">					gradient = dL(theta, X_b, y)</span><br><span class="line">				last_theta = theta</span><br><span class="line">				theta = theta - eta * gradient</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> (abs(L(theta, X_b, y) - L(last_theta, X_b, y)) &lt; difference):</span><br><span class="line">					<span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">				i_iter += <span class="number">1</span></span><br><span class="line">			<span class="keyword">return</span> theta</span><br><span class="line"></span><br><span class="line">		<span class="comment"># 构建X_b</span></span><br><span class="line">		X_b = np.hstack([np.ones((len(X_train), <span class="number">1</span>)), X_train])</span><br><span class="line">		<span class="comment"># 初始化theta向量为元素全为0的向量</span></span><br><span class="line">		initial_theta = np.zeros(X_b.shape[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">		self._theta = gradient_descent(X_b, y_train, initial_theta, eta)</span><br><span class="line">		self.intercept_ = self._theta[<span class="number">0</span>]</span><br><span class="line">		self.coef_ = self._theta[<span class="number">1</span>:]</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> self</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 计算概率，给定待预测数据集X_predict，返回表示X_predict的结果概率向量</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">predict_probability</span><span class="params">(self, X_predict)</span>:</span></span><br><span class="line">		<span class="keyword">assert</span> self.intercept_ <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">and</span> self.coef_ <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>, \</span><br><span class="line">		<span class="string">"截距和系数都不为空，表示已经经过了fit方法"</span></span><br><span class="line">		<span class="keyword">assert</span> X_predict.shape[<span class="number">1</span>] == len(self.coef_), \</span><br><span class="line">		<span class="string">"要预测的特征数据集列数要与theta的系数数量相等"</span></span><br><span class="line"></span><br><span class="line">		X_b = np.hstack([np.ones((len(X_predict), <span class="number">1</span>)), X_predict])</span><br><span class="line"></span><br><span class="line">		<span class="comment"># 返回0，1之间的浮点数</span></span><br><span class="line">		<span class="keyword">return</span> self._sigmoid(X_b.dot(self._theta))</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 给定待预测数据集X_predict，返回表示X_predict的结果向量</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, X_predict)</span>:</span></span><br><span class="line">		<span class="keyword">assert</span> self.intercept_ <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">and</span> self.coef_ <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>, \</span><br><span class="line">		<span class="string">"截距和系数都不为空，表示已经经过了fit方法"</span></span><br><span class="line">		<span class="keyword">assert</span> X_predict.shape[<span class="number">1</span>] == len(self.coef_), \</span><br><span class="line">		<span class="string">"要预测的特征数据集列数要与theta的系数数量相等"</span></span><br><span class="line"></span><br><span class="line">		probability = self.predict_probability(X_predict)</span><br><span class="line">		<span class="comment"># 将概率转换为0和1的向量，True对应1，False对应0</span></span><br><span class="line">		<span class="keyword">return</span> np.array(probability &gt;= <span class="number">0.5</span>, dtype=<span class="string">'int'</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 根据测试数据集X_test和y_test确定当前模型的准确度</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">score</span><span class="params">(self, X_test, y_test)</span>:</span></span><br><span class="line">		y_predict = self.predict(X_test)</span><br><span class="line">		<span class="keyword">return</span> accuracy_score(y_test, y_predict)</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></span><br><span class="line">		<span class="keyword">return</span> <span class="string">"LinearRegression()"</span></span><br></pre></td></tr></table></figure>
+<p>下面我们在Jupyter Notebook中使用Scikit Learn提供的鸢尾花数据验证我们封装的逻辑回归的方法：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">iris = datasets.load_iris()</span><br><span class="line">X = iris.data</span><br><span class="line">y = iris.target</span><br></pre></td></tr></table></figure>
+<p>因为鸢尾花数据中有三类鸢尾花，而逻辑回归在一开始就讲过是一个解决二分类问题的算法，所以我们只取前两类的鸢尾花数据来验证，并且只用每类鸢尾花的前两个特征，方便绘图：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 只取前两类的鸢尾花数据</span></span><br><span class="line">X = X[y&lt;<span class="number">2</span>, :<span class="number">2</span>]</span><br><span class="line">y = y[y&lt;<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'red'</span>)</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/ee5c380438a6b086cbebbf6ade764dc5.jpg" alt=""></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> myML.LogisticRegression <span class="keyword">import</span> LogisticRegression</span><br><span class="line"><span class="keyword">from</span> myML.modelSelection <span class="keyword">import</span> train_test_split</span><br><span class="line"></span><br><span class="line">X_train, y_train, X_test, y_test = train_test_split(X, y, seed=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line">log_reg = LogisticRegression()</span><br><span class="line">log_reg.fit(X_train, y_train)</span><br><span class="line">log_reg.score(X_test, y_test)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">1.0</span></span><br><span class="line"></span><br><span class="line">log_reg.predict_probability(X_test)</span><br><span class="line"><span class="comment"># 概率结果</span></span><br><span class="line">array([ <span class="number">0.92972035</span>,  <span class="number">0.98664939</span>,  <span class="number">0.14852024</span>,  <span class="number">0.17601199</span>,  <span class="number">0.0369836</span> ,</span><br><span class="line">		<span class="number">0.0186637</span> ,  <span class="number">0.04936918</span>,  <span class="number">0.99669244</span>,  <span class="number">0.97993941</span>,  <span class="number">0.74524655</span>,</span><br><span class="line">		<span class="number">0.04473194</span>,  <span class="number">0.00339285</span>,  <span class="number">0.26131273</span>,  <span class="number">0.0369836</span> ,  <span class="number">0.84192923</span>,</span><br><span class="line">		<span class="number">0.79892262</span>,  <span class="number">0.82890209</span>,  <span class="number">0.32358166</span>,  <span class="number">0.06535323</span>,  <span class="number">0.20735334</span>])</span><br><span class="line"></span><br><span class="line">log_reg.predict(X_test)</span><br><span class="line"><span class="comment"># 分类结果</span></span><br><span class="line">array([<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">y_test</span><br><span class="line"><span class="comment"># 测试数据结果</span></span><br><span class="line">array([<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<p>可以看到我们封装的逻辑回归算法对鸢尾花的分类是100%准确的，当然也是因为当前的数据比较简单。</p>
+<blockquote>
+<p>申明：本文为慕课网<a href="https://www.imooc.com/t/108955" target="_blank" rel="external">liuyubobobo</a>老师<a href="https://coding.imooc.com/learn/list/169.html" target="_blank" rel="external">《Python3入门机器学习 经典算法与应用》</a>课程的学习笔记，未经允许不得转载。</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/machine-learning-9/" rel="next" title="机器学习笔记九之交叉验证、模型正则化">
+                <i class="fa fa-chevron-left"></i> 机器学习笔记九之交叉验证、模型正则化
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/task-manage-omnifocus/" rel="prev" title="基于OmniFocus的任务系统">
+                基于OmniFocus的任务系统 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">89</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u4EC0_u4E48_u662F_u903B_u8F91_u56DE_u5F52"><span class="nav-number">1.</span> <span class="nav-text">什么是逻辑回归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Sigmoid_u51FD_u6570"><span class="nav-number">1.1.</span> <span class="nav-text">Sigmoid函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u903B_u8F91_u56DE_u5F52_u7684_u635F_u5931_u51FD_u6570"><span class="nav-number">2.</span> <span class="nav-text">逻辑回归的损失函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BF9_u6570"><span class="nav-number">2.1.</span> <span class="nav-text">对数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5B9A_u4E49_u635F_u5931_u51FD_u6570"><span class="nav-number">2.2.</span> <span class="nav-text">定义损失函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u635F_u5931_u51FD_u6570_u7684_u68AF_u5EA6"><span class="nav-number">3.</span> <span class="nav-text">损失函数的梯度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Sigmoid_u51FD_u6570_u6C42_u5BFC"><span class="nav-number">3.1.</span> <span class="nav-text">Sigmoid函数求导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sigmoid_u51FD_u6570_u7684_u5BF9_u6570_u6C42_u5BFC"><span class="nav-number">3.2.</span> <span class="nav-text">Sigmoid函数的对数求导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u903B_u8F91_u56DE_u5F52_u635F_u5931_u51FD_u6570_u6C42_u5BFC"><span class="nav-number">3.3.</span> <span class="nav-text">逻辑回归损失函数求导</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5B9E_u73B0_u903B_u8F91_u56DE_u5F52_u7B97_u6CD5"><span class="nav-number">4.</span> <span class="nav-text">实现逻辑回归算法</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/machine-learning-10/';
+      var disqus_title = '机器学习笔记十之逻辑回归、模型正则化';
+      var disqus_url = 'http://www.devtalking.com//articles/machine-learning-10/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

@@ -231,6 +231,128 @@
             
             
               
+                <a class="post-title-link" href="/articles/optionals-case-study/" itemprop="url">
+                  Swift中Optional类型的使用案例分析：valuesForKeys
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-08-29T00:00:00+08:00" content="2014-08-29">
+              2014-08-29
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/optionals-case-study/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/optionals-case-study/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这篇文章将带我们探索在Swift中如何使用<code>Optional</code>类型保证强类型的安全性。我们将创建一个Swift版本的Objective-C的API。虽然在Swift中这个API存在的意义不是很大，但是这将会是一个很有趣的例子。</p>
+<p>在Objective-C中，<code>NSDictionary</code>类有一个方法，名为<code>-objectsForKeys:notFoundMarker:</code>，它的作用是根据第一个<code>NSArray</code>类型参数中的值作为该字典的key，查找这些key对应的字典中的值，并放到一个新的<code>NSArray</code>中返回，如果找不到对应的值，那么就返回第二个参数指定的对象。在官方文档中对该方法有这么一句描述“返回的数组中的第N个对象，对应着第一个数组参数中的第N个值”。假如说以第一个数组参数中的第三个值作为key在字典中查不到值怎么办呢？这时候就需要<code>notFoundMarker</code>参数登场了。这种情况下就会返回<code>notFoundMarker</code>参数指定的对象了。在<code>Foundation</code>框架中还有专门针对该情况适用的一个类，那就是<code>NSNull</code>，就是当你也没有备选返回对象的时候，就可以返回<code>NSNull</code>对象。</p>
+<p>在Swift中，<code>Dictionary</code>类型并没有类似<code>objectsForKeys</code>的方法。所以接下来的练习中，我们将使用类型的扩展机制为<code>Dictionary</code>类型添加一个类似<code>objectsForKeys</code>的方法，为保持Swift的风格我们起名为<code>valuesForKeys:notFoundMarker:</code>。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [K], notFoundMarker: V)</span></span> -&gt; [<span class="type">V</span>] &#123;</span><br><span class="line">        <span class="comment">// To be implemented</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在Swift中实现该方法与Objective-C有点不同，因为Swift中强类型的特性使返回的数组中只能包含某一种类型的元素，也就是说我们不能在一个字符串数组中添加一个<code>NSNull</code>类型的元素，这就使<code>notFoundMarker</code>的参数类型显得非常尴尬。这怎么解决呢？别着急，在Swift中我们有更好的选择：我们可以返回一个<code>Optional</code>类型的数组。从<code>Dictionary</code>中查出的值全部被包在<code>Optional</code>类型中，这样当使用的key没有对应值的时候，我们就可以使用<code>nil</code>来替代<code>NSNull</code>类型了。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key])</span></span> -&gt; [<span class="type">Value</span>?] &#123;</span><br><span class="line">        <span class="keyword">var</span> result = [<span class="type">Value</span>?]()</span><br><span class="line">        result.reserveCapacity(keys.<span class="built_in">count</span>)</span><br><span class="line">        <span class="keyword">for</span> key <span class="keyword">in</span> keys &#123;</span><br><span class="line">            result.append(<span class="keyword">self</span>[key])</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：此时可能已经有人认为<code>Dictionary</code>类型中的这个方法可能没必要写的这么繁琐，你们可能已经想到了这种情形：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key])</span></span> -&gt; [<span class="type">Value</span>?] &#123;</span><br><span class="line">        <span class="keyword">return</span> keys.<span class="built_in">map</span> &#123; <span class="keyword">self</span>[$<span class="number">0</span>] &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码和上面那段代码的作用和结果是完全一样的，当<code>keys</code>调用<code>map</code>方法时，其实已经将查出的所有值都包在了<code>Optional</code>类型中了。这就足以说明了为什么Swift中类型的API都那么短小精干，因为实现复杂逻辑就像上述代码中直接调用<code>map</code>方法一样简单。</p>
+<p>现在我们可以试着用我们扩展的方法做一些例子：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> dict = [<span class="string">"A"</span>: <span class="string">"Amir"</span>, <span class="string">"B"</span>: <span class="string">"Bertha"</span>, <span class="string">"C"</span>: <span class="string">"Ching"</span>]</span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"A"</span>, <span class="string">"C"</span>])</span><br><span class="line"><span class="comment">// [Optional("Amir"), Optional("Ching")]</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>])</span><br><span class="line"><span class="comment">// [Optional("Bertha"), nil]</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([])</span><br><span class="line"><span class="comment">// []</span></span><br></pre></td></tr></table></figure>
+<h2 id="u5185_u5D4COptional_u7C7B_u578B"><a href="#u5185_u5D4COptional_u7C7B_u578B" class="headerlink" title="内嵌Optional类型"></a>内嵌Optional类型</h2><p>现在我们来看看使用<code>last</code>属性返回数组的最后一个元素会发生什么？</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"A"</span>, <span class="string">"C"</span>]).last</span><br><span class="line"><span class="comment">// Optional(Optional("Ching"))</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>]).last</span><br><span class="line"><span class="comment">// Optional(nil)</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([]).last</span><br><span class="line"><span class="comment">// nil</span></span><br></pre></td></tr></table></figure>
+<p>看着结果我们是不是觉得很奇怪呢？我们在上述代码的第一种情况下得到了嵌套的<code>Optional</code>类型，而在第二种情况下缺得到了包含<code>nil</code>的<code>Optional</code>类型，为什么得到的不是<code>Optional(&quot;Ching&quot;)</code>和<code>nil</code>呢？</p>
+<p>冷静下来，我们回忆一下<code>last</code>属性的是如何申明的：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> last: <span class="type">T</span>? &#123; <span class="keyword">get</span> &#125;</span><br></pre></td></tr></table></figure>
+<p>恍然大悟，原来<code>last</code>属性的类型是<code>Optional</code>类型，这也就是说如果<code>T</code>是<code>Optional</code>类型的话，那么<code>T?</code>自然就是<code>Optional(Optional)</code>了，也就是<code>T??</code>。所以上面的情况就很容易解释了，因为<code>T</code>的类型是<code>Optional(String)</code>，所以我们得到的结果就是<code>Optional(Optional(String))</code>。</p>
+<p>那么<code>Optional(nil)</code>这种情况如何解释呢？为什么不是<code>Optional(Optional(nil))</code>呢？</p>
+<p>我们现在Objective-C中执行一下上面那三种情况看一看：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">[dict valuesForKeys:@[@<span class="string">"A"</span>, @<span class="string">"C"</span>] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// @"Ching"</span></span><br><span class="line"></span><br><span class="line">[dict valuesForKeys:@[@<span class="string">"B"</span>, @<span class="string">"D"</span>] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// NSNull</span></span><br><span class="line"></span><br><span class="line">[dict valuesForKeys:@[] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// nil</span></span><br></pre></td></tr></table></figure>
+<p>我们看到，不论在Swift中还是在Objective-C中，当第一个参数的数组是空数组的时候，取最后一个元素的返回结果都是<code>nil</code>，意思就是“数组是空数组，那么最后一个元素肯定不存在啦”。那么在Swift中返回<code>Optional(nil)</code>和在Objective-C中返回<code>NSNull</code>的情况表明这个所谓的最后一个元素在数组中其实是存在的，只不过它就代表没有。当这种情况发生时，Objective-C只能用一个占位符对象来表示，而在Swift中就可以用一个系统类型来表示。</p>
+<h2 id="u63D0_u4F9B_u9ED8_u8BA4_u503C"><a href="#u63D0_u4F9B_u9ED8_u8BA4_u503C" class="headerlink" title="提供默认值"></a>提供默认值</h2><p>如果我们想当在<code>Dictionary</code>中查不到对应值的时候返回一个我们指定的默认值要怎么做呢？其实这也很简单：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key], notFoundMarker: Value)</span></span> -&gt; [<span class="type">Value</span>] &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.valuesForKeys(keys).<span class="built_in">map</span> &#123; $<span class="number">0</span> ?? notFoundMarker &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>], notFoundMarker: <span class="string">"Anonymous"</span>)</span><br><span class="line"><span class="comment">// ["Bertha", "Anonymous"]</span></span><br></pre></td></tr></table></figure>
+<p>当Objective-C只能用占位符对象来做到这一点的时候，Swift却可以使用系统类型来呈现，并且提供了丰富的语法支持多样化的返回结果。</p>
+<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=12" target="_blank" rel="external">Optionals Case Study: valuesForKeys</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/handling-common-scenarios/" itemprop="url">
                   常见问题的处理方案 -- iOS8/OS X v10.10应用扩展编程指南
                 </a>
@@ -917,113 +1039,6 @@ Boundary contact occurred - nil
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/implicitly-converting-functions-return-optionals/" itemprop="url">
-                  Swift中将函数的返回值隐式转换为Optional类型的特性
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-08-19T00:00:00+08:00" content="2014-08-19">
-              2014-08-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/implicitly-converting-functions-return-optionals/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/implicitly-converting-functions-return-optionals/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>一个函数A的参数是返回值为<code>Optional</code>类型的函数，如果你传入了一个返回值不是<code>Optional</code>的函数，那么函数A会自动将传入函数的返回值转换为<code>Optional</code>类型，来看代码示例：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 函数B的返回值为Int类型</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">()</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数A的参数是返回值为Optional(Int)类型</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把函数B作为参数传入函数A，输出结果为Optional(1)</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
-<p>更棒的是你还可以使用经过转换后的函数，比如：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 让函数A返回作为参数的函数</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?)-&gt;()-&gt;<span class="type">Int</span>? &#123;</span><br><span class="line">    <span class="keyword">return</span> fun;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line"><span class="keyword">let</span> j = &#123; ++i &#125;</span><br><span class="line"> </span><br><span class="line">j() <span class="comment">// returns 1</span></span><br><span class="line">j() <span class="comment">// returns 2</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> h = <span class="type">A</span>(j)</span><br><span class="line"> </span><br><span class="line">h() <span class="comment">// returns &#123;Some 3&#125;</span></span><br><span class="line">h() <span class="comment">// returns &#123;Some 4&#125;</span></span><br><span class="line">j() <span class="comment">// returns 5</span></span><br></pre></td></tr></table></figure>
-<p>这种特性只能作用于函数的返回值，如果是下面这种情况，就不好使了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">(i: Int)</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">(Int?)</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 编译失败，不能将B函数参数的Int类型隐式转换为Int?类型</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
-<p>这是因为函数B希望它的参数永远不能为nil，当接收到值为nil的参数后它就不知道该怎么办了。但如果函数B的参数为<code>Optional</code>类型，而函数A希望传入的函数参数为非<code>Optional</code>呢？我们来看看：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">(i: Int?)</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i ?? <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">(Int?)</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 编译成功，并做了隐式转换，</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
-<p>上面的特新其实可以理解为，编译器使用了一个闭包，调用了你传入的函数并进行了封包操作：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">()</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun());</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="type">A</span>( &#123; <span class="type">Optional</span>(<span class="type">B</span>()) &#125; );</span><br></pre></td></tr></table></figure>
-<p>这是Swift很有意思也很有用的一个特性。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1066,7 +1081,7 @@ Boundary contact occurred - nil
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">88</span>
+              <span class="site-state-item-count">89</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
