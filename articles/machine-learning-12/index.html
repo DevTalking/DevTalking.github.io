@@ -1,0 +1,931 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+机器学习算法中有一个重要环节就是评判算法的好坏，我们在之间的笔记中讲过多种评价回归算法的评测标准，比如均方误差（MSE）、均方根误差（RMSE）、平均绝对误差（MAE）、$R^2$（R Squared）。但是在分类问题中我们一直使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记十二之算法精准率、召回率、混淆矩阵">
+<meta property="og:url" content="http://www.devtalking.com/articles/machine-learning-12/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+机器学习算法中有一个重要环节就是评判算法的好坏，我们在之间的笔记中讲过多种评价回归算法的评测标准，比如均方误差（MSE）、均方根误差（RMSE）、平均绝对误差（MAE）、$R^2$（R Squared）。但是在分类问题中我们一直使用">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/c997c342900bf1764c1982113ad3e571.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/11d0bcf47d48fee84429d1f387b21847.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/c3d5ddc7046eae2076c334850889e4e8.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/9728167b52fe04a016ed59fdb15add2b.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/c7b2bfae1b3c119a87ae471c346b271e.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/3bd489890b33ecaa9670e6e651686969.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/dacb284241679250a45def7cdb71b20d.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/4c58ce92799ae9ae2ea93d82a60f3b2a.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/d709771df57fa17b98c3b2876ae09cf0.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/ba261865bdd68f808b0e8bc0b0485341.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/f6d1880cbbc985789de681fb45e86e7a.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/60696f6a0f96e52e334313400d73102d.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/74ba40d0f2b2d54a85890834ecaeb616.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/128711011f4a4e1249040612c72b62d4.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/947c72645b6d0aa3a5d2f2a4d39e1719.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/ee9c81360959e29c827b5d9f26f7e6dd.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/1e6cad586f860101d4a0a1fef57e28ce.jpg">
+<meta property="og:updated_time" content="2018-08-09T04:31:06.895Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记十二之算法精准率、召回率、混淆矩阵">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+机器学习算法中有一个重要环节就是评判算法的好坏，我们在之间的笔记中讲过多种评价回归算法的评测标准，比如均方误差（MSE）、均方根误差（RMSE）、平均绝对误差（MAE）、$R^2$（R Squared）。但是在分类问题中我们一直使用">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 机器学习笔记十二之算法精准率、召回率、混淆矩阵 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                机器学习笔记十二之算法精准率、召回率、混淆矩阵
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-05-15T00:00:00+08:00" content="2018-05-15">
+              2018-05-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-12/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-12/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>机器学习算法中有一个重要环节就是评判算法的好坏，我们在之间的笔记中讲过多种评价回归算法的评测标准，比如均方误差（MSE）、均方根误差（RMSE）、平均绝对误差（MAE）、$R^2$（R Squared）。但是在分类问题中我们一直使用分类准确度这一个指标，也就是预测对分类的样本数量除以总预测样本数量。但是这个方法存在很大的一个缺陷，所以这篇笔记主要介绍评价分类问题的方式方法。</p>
+<h2 id="u6781_u5EA6_u504F_u659C_u6570_u636E_uFF08Skewed_Data_uFF09"><a href="#u6781_u5EA6_u504F_u659C_u6570_u636E_uFF08Skewed_Data_uFF09" class="headerlink" title="极度偏斜数据（Skewed Data）"></a>极度偏斜数据（Skewed Data）</h2><p>为什么说分类准确度这个指标存在很大的一个缺陷呢。举个例子，假设有一个癌症预测系统，输入体检信息，判断是否患有癌症。我们知道世界上相对于其他病症，患癌症的比例还是很小，如果癌症产生的概率只有0.1%，那么有99.9%的人都不会患有癌症。这就意味着，就算癌症预测系统什么都不做，但凡有体检信息输入，就给出没有患癌症的结果，那准确率也是达到了99.9%。那此时这个分类准确度是真实的吗？所以当样本数据或领域的实际情况存在数据极度偏斜的时候，只使用分类准确度这个指标是远远不够的。</p>
+<h2 id="u6DF7_u6DC6_u77E9_u9635_uFF08Confusion_Matrix_uFF09"><a href="#u6DF7_u6DC6_u77E9_u9635_uFF08Confusion_Matrix_uFF09" class="headerlink" title="混淆矩阵（Confusion Matrix）"></a>混淆矩阵（Confusion Matrix）</h2><p>这一节介绍一个能进一步分析分类结果的工具，混淆矩阵。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/c997c342900bf1764c1982113ad3e571.jpg" alt=""></p>
+<p>上面这个表针对二分类问题，所有将类别就分为两类0和1，0表示Negative，类似医院上的阴性，1表示Positive，类似医学上的阳性。行代表真实值，列代表预测值。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/11d0bcf47d48fee84429d1f387b21847.jpg" alt=""></p>
+<p>如上图所示：</p>
+<ul>
+<li>(0, 0)格子真实值和预测值都为0，称为预测Negative正确，记作True Negative，简写为TN。</li>
+<li>(0, 1)格子真实值为0，但预测值为1，称为预测Positive错误，记作False Positive，简写为FP。</li>
+<li>(1, 0)格子真实值为1， 但预测值为0，称为预测Negative错误，记作False Negative，简写为FN。</li>
+<li>(1, 1)格子真实值和预测值都为1，称为预测Positive正确，记作True Positive，简写为TP。</li>
+</ul>
+<p>以上这个表格就叫做混淆矩阵。举个例子，如果对10000个人预测他们是否患癌症，通过混淆矩阵表示出的真实情况就是：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/c3d5ddc7046eae2076c334850889e4e8.jpg" alt=""></p>
+<p>解读一下：</p>
+<ul>
+<li>没有患癌症，系统也预测出没有患癌症的人为9978人（TN）。</li>
+<li>没有患癌症，但系统预测出患癌症的人为12人（FP）。</li>
+<li>患有癌症，但系统预测出没有患癌症的人为2人（FN）。</li>
+<li>患有癌症，系统也预测出患有癌症的人为8人（TP）。</li>
+</ul>
+<a id="more"></a>
+<h2 id="u7CBE_u51C6_u7387_uFF08Presicion_uFF09"><a href="#u7CBE_u51C6_u7387_uFF08Presicion_uFF09" class="headerlink" title="精准率（Presicion）"></a>精准率（Presicion）</h2><p>分类问题的精准率是建立在混淆矩阵的基础上的，那么精准率的公式为：</p>
+<p>$$precision = \frac {TP} {TP + FP}$$</p>
+<p>还是以预测10000人是否患癌症的例子来说明：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/9728167b52fe04a016ed59fdb15add2b.jpg" alt=""></p>
+<p>这个例子中，预测患癌的精准率是8 / (8+12) = 40%，既真实患癌并预测出患癌的人数在所有预测出患癌人数中的占比。</p>
+<h2 id="u53EC_u56DE_u7387_uFF08Recall_uFF09"><a href="#u53EC_u56DE_u7387_uFF08Recall_uFF09" class="headerlink" title="召回率（Recall）"></a>召回率（Recall）</h2><p>分类问题的召回率同样也是建立在混淆矩阵的基础上的，召回率的公式为：</p>
+<p>$$recall = \frac {TP} {TP + FN}$$</p>
+<p>以预测10000人是否患癌症的例子来说明：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/c7b2bfae1b3c119a87ae471c346b271e.jpg" alt=""></p>
+<p>这个例子中，预测患癌的召回率是8 / (8+2) = 80%，既真实患癌并预测出患癌的人数在真实患癌总人数中的占比。</p>
+<p>我们之前解释过分类准确度存在的缺陷，那么在这个例子中，我们通过混淆矩阵来直观的看一下这个缺陷。我们的前提是10000个人中患癌的人占比为0.1%，那么健康的人占比为99%，在这种情况下，有极大的可能出现分类准确度为99.9%，但是实际上一个患癌的人都没有预测出来。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/3bd489890b33ecaa9670e6e651686969.jpg" alt=""></p>
+<p>上面这个混淆矩阵就满足我们假定的这个情况，现在来看看分类准确度、精准率和召回率分别是多少：</p>
+<ul>
+<li>分类准确度：9990 / 10000 = 99.9%</li>
+<li>精准率：0 /  (0+0)，无意义，既为0</li>
+<li>召回率：0 / (10 +0) = 0</li>
+</ul>
+<p>现在可以很清晰的看出分类准确度存在的缺陷和混淆矩阵对分类评价的重要性了。</p>
+<h2 id="u5B9E_u73B0_u7CBE_u51C6_u7387_u548C_u53EC_u56DE_u7387"><a href="#u5B9E_u73B0_u7CBE_u51C6_u7387_u548C_u53EC_u56DE_u7387" class="headerlink" title="实现精准率和召回率"></a>实现精准率和召回率</h2><p>有了上面的定义，下面我们来实现一下混淆矩阵、精准率和召回率。首先我们使用手写数据作为样本数据，因为手写数据是多分类问题，所以还要对其做一下处理，转换为二分类问题，同时让其数据产生极度偏差：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用手写数据作为样本数据</span></span><br><span class="line">digits = datasets.load_digits()</span><br><span class="line">X = digits.data</span><br><span class="line">y = digits.target.copy()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将多分类问题转换为二分类问题，同时让样本数据产生极度偏斜，</span></span><br><span class="line"><span class="comment"># 也就是我们关注的数据占总数据的1/9</span></span><br><span class="line">y[digits.target == <span class="number">9</span>] = <span class="number">1</span></span><br><span class="line">y[digits.target != <span class="number">9</span>] = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>样本数据构建好后，我们先使用逻辑回归训练出模型，先看看分类准确度指标：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line">log_reg = LogisticRegression()</span><br><span class="line">log_reg.fit(X_train, y_train)</span><br><span class="line">log_reg.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.97555555555555551</span></span><br></pre></td></tr></table></figure>
+<p>下面我们来逐个实现混淆矩阵中的TN、FP、FN、TP：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 使用逻辑回归模型计算测试特征数据的预测目标值</span></span><br><span class="line">y_predict = log_reg.predict(X_test)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">TN</span><span class="params">(y_true, y_predict)</span>:</span></span><br><span class="line">	<span class="keyword">assert</span> len(y_true) == len(y_predict)</span><br><span class="line">	<span class="keyword">return</span> np.sum((y_true == <span class="number">0</span>) &amp; (y_predict == <span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">TN(y_test, y_predict)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">403</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">FP</span><span class="params">(y_true, y_predict)</span>:</span></span><br><span class="line">	<span class="keyword">assert</span> len(y_true) == len(y_predict)</span><br><span class="line">	<span class="keyword">return</span> np.sum((y_true == <span class="number">0</span>) &amp; (y_predict == <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">FP(y_test, y_predict)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">FN</span><span class="params">(y_true, y_predict)</span>:</span></span><br><span class="line">	<span class="keyword">assert</span> len(y_true) == len(y_predict)</span><br><span class="line">	<span class="keyword">return</span> np.sum((y_true == <span class="number">1</span>) &amp; (y_predict == <span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">FN(y_test, y_predict)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">9</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">TP</span><span class="params">(y_true, y_predict)</span>:</span></span><br><span class="line">	<span class="keyword">assert</span> len(y_true) == len(y_predict)</span><br><span class="line">	<span class="keyword">return</span> np.sum((y_true == <span class="number">1</span>) &amp; (y_predict == <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">TP(y_test, y_predict)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">36</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">confusion_matrix</span><span class="params">(y_true, y_predict)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> np.array([</span><br><span class="line">		[TN(y_test, y_predict), FP(y_test, y_predict)],</span><br><span class="line">		[FN(y_test, y_predict), TP(y_test, y_predict)]</span><br><span class="line">	])</span><br><span class="line"></span><br><span class="line">confusion_matrix(y_test, y_predict)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">403</span>,   <span class="number">2</span>],</span><br><span class="line">	   [  <span class="number">9</span>,  <span class="number">36</span>]])</span><br></pre></td></tr></table></figure>
+<p>我们通过上面的混淆矩阵来分析一下：</p>
+<ul>
+<li><code>y</code>被拆分后的测试数据量<code>y_test</code>为450，混淆矩阵中的四个熟总和为450。</li>
+<li>真值为0，但预测值为1有2个。</li>
+<li>真值为1，但预测值为0有9个。</li>
+<li>真值为1，预测值也为1有36个。</li>
+</ul>
+<p>也就是全部预测对的有439个，分类准确度为439 / 450 = 97.56%。下面来看看如何实现精准率和召回率：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 精准率</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">precision_score</span><span class="params">(y_true, y_predict)</span>:</span></span><br><span class="line">	tp = TP(y_test, y_predict)</span><br><span class="line">	fp = FP(y_test, y_predict)</span><br><span class="line">	<span class="keyword">try</span>:</span><br><span class="line">		<span class="keyword">return</span> tp / (tp + fp) <span class="comment"># 避免分母为0报错 </span></span><br><span class="line">	<span class="keyword">except</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0.0</span></span><br><span class="line">	</span><br><span class="line">precision_score(y_test, y_predict)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.94736842105263153</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 召回率</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">recall_score</span><span class="params">(y_true, y_predict)</span>:</span></span><br><span class="line">	tp = TP(y_test, y_predict)</span><br><span class="line">	fn = FN(y_test, y_predict)</span><br><span class="line">	<span class="keyword">try</span>:</span><br><span class="line">		<span class="keyword">return</span> tp / (tp + fn) <span class="comment"># 避免分母为0报错 </span></span><br><span class="line">	<span class="keyword">except</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0.0</span></span><br><span class="line">	</span><br><span class="line">recall_score(y_test, y_predict)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.80000000000000004</span></span><br></pre></td></tr></table></figure>
+<p>以上是我们根据定义自己实现的混淆矩阵和精准率、召回率。下面来看看Scikit Learn中封装的它们：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Scikit Learn 中的混淆矩阵</span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> confusion_matrix</span><br><span class="line">confusion_matrix(y_test, y_predict)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">403</span>,   <span class="number">2</span>],</span><br><span class="line">	   [  <span class="number">9</span>,  <span class="number">36</span>]])</span><br><span class="line"></span><br><span class="line"><span class="comment"># Scikit Learn中的精准率</span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> precision_score</span><br><span class="line">precision_score(y_test, y_predict)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.94736842105263153</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Scikit Learn中的召回率</span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> recall_score</span><br><span class="line">recall_score(y_test, y_predict)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.80000000000000004</span></span><br></pre></td></tr></table></figure>
+<h2 id="F1_Score"><a href="#F1_Score" class="headerlink" title="F1 Score"></a>F1 Score</h2><p>上一节介绍了精准率和召回率，那么如果在一个指标好，一个指标不好的情况下，如何确定一个模型的好坏呢？这就要分情况而视了。像预测股市的系统中，一般主要关注精准率，也就是关注在预测出要涨的股票中的准确程度。那么像医疗相关的系统中就会主要关注召回率，也就是关注在真正患病的人群中预测出的准确程度。如果两个指标都要关注的话，就要引入第三个指标了，那就是F1 Score。</p>
+<h3 id="F1_Score_u5B9A_u4E49"><a href="#F1_Score_u5B9A_u4E49" class="headerlink" title="F1 Score定义"></a>F1 Score定义</h3><p>我们看多个数的综合情况时，一般情况都会求这些数的平均值，称为算数平均值。但是在机器学习中，算数平均值是有缺陷的，因为它们是求和然后取平均，如果大多数数很大，个别几个数很小的话，平均值并不会被拉下来，但作为机器学习模型的评测标准，可能只要有一个指标不好，那么整个模型就不是一个好的模型。所以我们得使用调和平均值：</p>
+<p>$$\frac 1 {F1} = \frac 1 2 (\frac 1 {precision} + \frac 1 {recall})$$</p>
+<p>最后换算下来的最终F1 Score公式为：</p>
+<p>$$F1 = \frac {2 \cdot precision \cdot recall} {precision + recall}$$</p>
+<p>调和平均值的最大特点就是，精准率和召回率只要有一个比较小的话，整个F1 Score也会被拉下来，既避免了算数平均值在评估机器学习算法分类模型时的缺陷。</p>
+<h3 id="u5B9E_u73B0F1_Score"><a href="#u5B9E_u73B0F1_Score" class="headerlink" title="实现F1 Score"></a>实现F1 Score</h3><p>我们知道了F1 Score的定义后，实现它就很容易了：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f1_score</span><span class="params">(precision, recall)</span>:</span></span><br><span class="line">	<span class="keyword">try</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">2</span> * precision * recall / (precision + recall)</span><br><span class="line">	<span class="keyword">except</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">precision = <span class="number">0.5</span></span><br><span class="line">recall = <span class="number">0.5</span></span><br><span class="line">f1_score(precision, recall)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.5</span></span><br><span class="line"></span><br><span class="line">precision = <span class="number">0.1</span></span><br><span class="line">recall = <span class="number">0.9</span></span><br><span class="line">f1_score(precision, recall)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.18000000000000002</span></span><br></pre></td></tr></table></figure>
+<p>从结果可以看到，当两个指标相等时，F1的值也和它们相等。当其中一个指标比较小时，F1的值也会被拉的比较小。</p>
+<h3 id="Scikit_Learn__u4E2D_u7684_F1_Score"><a href="#Scikit_Learn__u4E2D_u7684_F1_Score" class="headerlink" title="Scikit Learn 中的 F1 Score"></a>Scikit Learn 中的 F1 Score</h3><p>Scikit Learn中也封装了F1 Score，但是它封装时传的参数和我们实现的不太一样，它只需要传入真值和预测值既可，精准率和召回率是在函数中计算的：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> f1_score</span><br><span class="line">f1_score(y_test, y_predict)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.86746987951807231</span></span><br></pre></td></tr></table></figure>
+<p>从结果可以看到上一小节中的手写数据的例子，虽然分类准确度达到了97.56%，但是F1 Score只有86.75%，而这个86.75%才是更能真正反应模型好坏程度的指标。</p>
+<h2 id="u7CBE_u51C6_u7387_u548C_u53EC_u56DE_u7387_u76F4_u63A5_u7684_u5E73_u8861"><a href="#u7CBE_u51C6_u7387_u548C_u53EC_u56DE_u7387_u76F4_u63A5_u7684_u5E73_u8861" class="headerlink" title="精准率和召回率直接的平衡"></a>精准率和召回率直接的平衡</h2><p>在上一篇笔记中，我们了解了逻辑回归的决策边界，比如在二分类问题中，决策边界公式为：</p>
+<p>$$\theta^T \cdot X_b = 0$$</p>
+<p>当$\theta^T \cdot X_b$大于0时，我们认为分类是1，当小于0时，我们认为分类为0。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/dacb284241679250a45def7cdb71b20d.jpg" alt=""></p>
+<p>如上图所示，黑色直线表示$\theta^T \cdot X_b$，橘黄色直线所在位置表示区分类别为1还是0的分界点，既大于0是蓝色点类型，小于0是红色点类型。那如果我们让$\theta^T \cdot X_b$不等于0，而等于一个阀值$threshold$呢？</p>
+<p>$$\theta^T \cdot X_b = threshold$$</p>
+<p>那上面的图就会是下面这样：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/4c58ce92799ae9ae2ea93d82a60f3b2a.jpg" alt=""></p>
+<p>从上面的图看，$threshold$是大于0的，这样就相当于调整了区别分类的分界点位置。那么会影响到什么呢？</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/d709771df57fa17b98c3b2876ae09cf0.jpg" alt=""></p>
+<p>从上图可以看到，当$threshold$为0时，示例中的精准率是0.86，召回率是0.75。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/ba261865bdd68f808b0e8bc0b0485341.jpg" alt=""></p>
+<p>当调整$threshold$大于0后，示例中的精准率是1，召回率是0.38。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/f6d1880cbbc985789de681fb45e86e7a.jpg" alt=""></p>
+<p>当调整$threshold$小于0后，示例中的精准率是0.7，召回率是0.88。</p>
+<p>从这三种情况可以看出，精准率和召回率是互相牵制的，精准率高了，召回率就低。召回率高，精准率就低。所以$threshold$就又是一个超参数，用来调节使精准率和召回率达到平衡。</p>
+<h3 id="u901A_u8FC7_u7A0B_u5E8F_u9A8C_u8BC1_u7CBE_u51C6_u7387_u548C_u53EC_u56DE_u7387_u7684_u5E73_u8861_u5173_u7CFB"><a href="#u901A_u8FC7_u7A0B_u5E8F_u9A8C_u8BC1_u7CBE_u51C6_u7387_u548C_u53EC_u56DE_u7387_u7684_u5E73_u8861_u5173_u7CFB" class="headerlink" title="通过程序验证精准率和召回率的平衡关系"></a>通过程序验证精准率和召回率的平衡关系</h3><p>我们还是使用手写数据的样本数据来验证：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"><span class="comment"># 使用手写数据作为样本数据</span></span><br><span class="line">digits = datasets.load_digits()</span><br><span class="line">X = digits.data</span><br><span class="line">y = digits.target.copy()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将多分类问题转换为二分类问题，同时让样本数据产生极度偏斜，</span></span><br><span class="line"><span class="comment"># 也就是我们关注的数据占总数据的1/9</span></span><br><span class="line">y[digits.target == <span class="number">9</span>] = <span class="number">1</span></span><br><span class="line">y[digits.target != <span class="number">9</span>] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line">log_reg = LogisticRegression()</span><br><span class="line">log_reg.fit(X_train, y_train)</span><br><span class="line">y_predict = log_reg.predict(X_test)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> f1_score</span><br><span class="line">f1_score(y_test, y_predict)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.86746987951807231</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> confusion_matrix</span><br><span class="line">confusion_matrix(y_test, y_predict)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">403</span>,   <span class="number">2</span>],</span><br><span class="line">	   [  <span class="number">9</span>,  <span class="number">36</span>]])</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> precision_score</span><br><span class="line">precision_score(y_test, y_predict)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.94736842105263153</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> recall_score</span><br><span class="line">recall_score(y_test, y_predict)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.80000000000000004</span></span><br></pre></td></tr></table></figure>
+<p>我们如何设置$threshold$呢，其实Scikit Learn中的逻辑回归提供了一个获取评判分数的函数，也就是上图中黑色直线的Score值：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">decision_score = log_reg.decision_function(X_test)</span><br><span class="line">decision_score.shape</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">(<span class="number">450</span>,)</span><br></pre></td></tr></table></figure>
+<p>Scikit Learn中的<code>confusion_matrix</code>、<code>precision_score</code>、<code>recall_score</code>函数都是基于$threshold$为0计算的，也就是判断<code>decision_score</code>中的所有值，如果大于0就分类为1，如果小于0就分类为0。那我们现在将$threshold$调大一点，比如将5作为区分1和0的分界点，那么我们的预测值就可以这样求：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">y_predict2 = np.array(decision_score &gt;= <span class="number">5</span>, dtype=<span class="string">'int'</span>)</span><br></pre></td></tr></table></figure>
+<p>然后我们再来看看精准率和召回率：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">precision_score(y_test, y_predict2)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.95999999999999996</span></span><br><span class="line"></span><br><span class="line">recall_score(y_test, y_predict2)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.53333333333333333</span></span><br></pre></td></tr></table></figure>
+<p>再将$threshold$调小看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">y_predict3 = np.array(decision_score &gt;= -<span class="number">5</span>, dtype=<span class="string">'int'</span>)</span><br><span class="line">precision_score(y_test, y_predict3)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.72727272727272729</span></span><br><span class="line"></span><br><span class="line">recall_score(y_test, y_predict3)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.88888888888888884</span></span><br></pre></td></tr></table></figure>
+<p>通过代码我们可以很明显的看到调节$threshold$后，精准率和召回率的变化。</p>
+<h2 id="PR_u66F2_u7EBF"><a href="#PR_u66F2_u7EBF" class="headerlink" title="PR曲线"></a>PR曲线</h2><p>通过上一小节我们知道精准率和召回率是相互牵制的，我也认识了一个新的超参数$threshold$，通过它能调节精准率和召回率。那么我们如何找到一个平衡点，使得精准率和召回率都在一个比较好的水平，换句话说也就是如何找到好的超参数$threshold$。</p>
+<p>这一小节就介绍一个工具，帮助我们更好的找到这个超参数，这就是PR曲线（Precision-Recall曲线）。我们直接来看看Scikit Learn中提供的函数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> precision_recall_curve</span><br><span class="line">precisions, recalls, thresholds = precision_recall_curve(y_test, decision_score)</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">plt.plot(thresholds, precisions[:-<span class="number">1</span>])</span><br><span class="line">plt.plot(thresholds, recalls[:-<span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/60696f6a0f96e52e334313400d73102d.jpg" alt=""></p>
+<p>上图的横轴是$threshold$值，蓝色曲线是精准率，黄色曲线是召回率，他们相交点的$threshold$值，就是PR达到平衡的点。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plt.plot(precisions, recalls)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/74ba40d0f2b2d54a85890834ecaeb616.jpg" alt=""></p>
+<p>上图中，横轴是精准率，纵轴是召回率。这个图反应了PR的总体趋势。通过这个PR曲线我们除了可以判断选择最优的$threshold$值，还可以判断不同模型的好坏程度。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/128711011f4a4e1249040612c72b62d4.jpg" alt=""></p>
+<p>比如上图中的模型A和模型B可以是通过不同的算法训练的出的模型，也可以是同一个算法，通过不同超参数组合训练出的模型。显然模型B要比模型A好，因为模型B无论是精准率还是召回率都要比模型A的高。</p>
+<h2 id="ROC_u66F2_u7EBF"><a href="#ROC_u66F2_u7EBF" class="headerlink" title="ROC曲线"></a>ROC曲线</h2><p>这一小节我们来看一个新的指标，ROC曲线，既接收者操作特征曲线，是Receiver Operation Characteristic Curve缩写，最早出现在信号检测理论中，后来被广泛应用在不同领域。在机器学习中，ROC用来描述分类模型的TPR和FPR之间的关心，从而确定分类模型的好坏。</p>
+<h3 id="FPR_u548CTPR"><a href="#FPR_u548CTPR" class="headerlink" title="FPR和TPR"></a>FPR和TPR</h3><p>FPR和TPR同样是基于混淆矩阵而来的，FPR的公式为：</p>
+<p>$$FPR=\frac {FP} {TN + FP}$$</p>
+<p>TPR的公式为：</p>
+<p>$$TPR = \frac {TP} {TP + FN}$$</p>
+<p>可以看到TPR其实就是Recall指标，而FPR是和TPR相反的指标。下面我们使用Scikit Learn中封装的方法来看看手写数据的TPR、FPR和ROC曲线：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_curve</span><br><span class="line">fprs, tprs, thresholds = roc_curve(y_test, decision_score)</span><br><span class="line"></span><br><span class="line">plt.plot(fprs, tprs)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/947c72645b6d0aa3a5d2f2a4d39e1719.jpg" alt=""></p>
+<p>从ROC曲线图可以看出，随着FPR的增大，TPR也是随之增大的。我们通过观察这根曲线下的面积大小来判断分类模型的好坏程度，面积越大，说明分类模型越好。Scikit Learn中也提供了计算这个面积的函数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_auc_score</span><br><span class="line">roc_auc_score(y_test, decision_score)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.98304526748971188</span></span><br></pre></td></tr></table></figure>
+<p>ROC曲线和PR曲线有一个不同之处是，ROC曲线对极度有偏的数据是不敏感的。所以如果样本数据有极度有偏的情况时，通常还是主要使用PR曲线来判断模型的好坏，ROC曲线辅助判断。</p>
+<h2 id="u591A_u5206_u7C7B_u95EE_u9898_u4E2D_u7684_u6DF7_u6DC6_u77E9_u9635"><a href="#u591A_u5206_u7C7B_u95EE_u9898_u4E2D_u7684_u6DF7_u6DC6_u77E9_u9635" class="headerlink" title="多分类问题中的混淆矩阵"></a>多分类问题中的混淆矩阵</h2><p>我们之前讲的混淆矩阵和精准、召回率都是在二分类问题的前提下。这篇笔记的最后来看看多分类问题中的混淆矩阵。我们同样使用手写数字数据，但这次不再对数据做极度有偏处理了：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">digits = datasets.load_digits()</span><br><span class="line">X = digits.data</span><br><span class="line">y = digits.target</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = <span class="number">0.8</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line">log_reg = LogisticRegression()</span><br><span class="line">log_reg.fit(X_train, y_train)</span><br><span class="line">log_reg.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.93949930458970787</span></span><br></pre></td></tr></table></figure>
+<p>Scikit Learn 的<code>precision_score</code>方法有一个<code>average</code>参数，默认值为<code>binary</code>，既默认计算二分类问题。如果要计算多分类问题，需要将<code>average</code>参数设置为<code>micro</code>：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> precision_score</span><br><span class="line"></span><br><span class="line">precision_score(y_test, y_predict, average=<span class="string">'micro'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.93949930458970787</span></span><br></pre></td></tr></table></figure>
+<p>下面来看看这个手写数字十分类问题的混淆矩阵：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> confusion_matrix</span><br><span class="line">confusion_matrix(y_test, y_predict)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">141</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">1</span>,   <span class="number">0</span>],</span><br><span class="line">	   [  <span class="number">0</span>, <span class="number">132</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">2</span>,   <span class="number">0</span>,   <span class="number">4</span>,   <span class="number">2</span>],</span><br><span class="line">	   [  <span class="number">0</span>,   <span class="number">2</span>, <span class="number">141</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>],</span><br><span class="line">	   [  <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">1</span>, <span class="number">131</span>,   <span class="number">0</span>,   <span class="number">5</span>,   <span class="number">1</span>,   <span class="number">0</span>,  <span class="number">10</span>,   <span class="number">0</span>],</span><br><span class="line">	   [  <span class="number">0</span>,   <span class="number">1</span>,   <span class="number">0</span>,   <span class="number">0</span>, <span class="number">136</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">1</span>,   <span class="number">1</span>,   <span class="number">4</span>],</span><br><span class="line">	   [  <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">1</span>,   <span class="number">0</span>,   <span class="number">0</span>, <span class="number">141</span>,   <span class="number">0</span>,   <span class="number">1</span>,   <span class="number">0</span>,   <span class="number">0</span>],</span><br><span class="line">	   [  <span class="number">0</span>,   <span class="number">2</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">1</span>,   <span class="number">0</span>, <span class="number">146</span>,   <span class="number">0</span>,   <span class="number">1</span>,   <span class="number">0</span>],</span><br><span class="line">	   [  <span class="number">0</span>,   <span class="number">1</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">0</span>, <span class="number">137</span>,   <span class="number">2</span>,   <span class="number">2</span>],</span><br><span class="line">	   [  <span class="number">0</span>,   <span class="number">9</span>,   <span class="number">3</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">4</span>,   <span class="number">4</span>,   <span class="number">1</span>, <span class="number">120</span>,   <span class="number">3</span>],</span><br><span class="line">	   [  <span class="number">0</span>,   <span class="number">1</span>,   <span class="number">0</span>,   <span class="number">6</span>,   <span class="number">0</span>,   <span class="number">1</span>,   <span class="number">0</span>,   <span class="number">0</span>,   <span class="number">9</span>, <span class="number">126</span>]])</span><br></pre></td></tr></table></figure>
+<p>看多分类问题的混淆矩阵和二分类问题的混淆矩阵方法一样，同样行表示真值，列表示预测值。从上面的结果可看到，混淆矩阵的对角线数值最大，这个对角线就是真值和预测值相同的TP值。我们将这个多分类混淆矩阵通过Matplotlib的<code>matshow</code>方法绘制出来，直观的看一下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">cfm = confusion_matrix(y_test, y_predict)</span><br><span class="line"><span class="comment"># cmap是colormap，既将绘制的矩阵的每个点映射成什么颜色，这里映射成灰度值</span></span><br><span class="line">plt.matshow(cfm, cmap=plt.cm.gray)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/ee9c81360959e29c827b5d9f26f7e6dd.jpg" alt=""></p>
+<p>上面这个图可以很清晰的看到TP值，但是我们希望能从图上直观的分析问题，既这个模型预测错误的数据。下面我们将混淆矩阵做一下转换，求出错误矩阵，既FP值矩阵：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 首先求出一个向量，这个向量的每个元素表示每个手写数字有多少个样本，也就是将混淆矩阵在列方向，将每行的数加起来。</span></span><br><span class="line">row_sums = np.sum(cfm, axis=<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 然后让混淆矩阵中的每个元素和它所在那一行的求和相除，既得到了每个数字的预测召回率</span></span><br><span class="line">err_matrix = cfm / row_sums</span><br><span class="line"><span class="comment"># 通过Numpy的fill_diagonal方法，将错误矩阵的对角线的值都替换成0，因为我们主要看FP，所以要消除掉最高的精准率</span></span><br><span class="line">np.fill_diagonal(err_matrix, <span class="number">0</span>)</span><br><span class="line"><span class="comment"># 最后同样用灰度值将错误矩阵绘制出来</span></span><br><span class="line">plt.matshow(err_matrix, cmap=plt.cm.gray)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/1e6cad586f860101d4a0a1fef57e28ce.jpg" alt=""></p>
+<p>上图中，颜色约亮的格子表示预测错误的数量越多，比如左上角那个白色的格子就表示真值为3，但是有不少样本数据被预测成了8。左下角的白色格子表示真值为8，但是有不少样本数据被预测成了1。所以从这个错误矩阵上可以很好的分析出具体的预测错误点，从而根据这些信息调整分类模型或者样本数据。</p>
+<blockquote>
+<p>申明：本文为慕课网<a href="https://www.imooc.com/t/108955" target="_blank" rel="external">liuyubobobo</a>老师<a href="https://coding.imooc.com/learn/list/169.html" target="_blank" rel="external">《Python3入门机器学习 经典算法与应用》</a>课程的学习笔记，未经允许不得转载。</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/task-manage-omnifocus/" rel="next" title="基于OmniFocus的任务系统">
+                <i class="fa fa-chevron-left"></i> 基于OmniFocus的任务系统
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">91</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u6781_u5EA6_u504F_u659C_u6570_u636E_uFF08Skewed_Data_uFF09"><span class="nav-number">1.</span> <span class="nav-text">极度偏斜数据（Skewed Data）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6DF7_u6DC6_u77E9_u9635_uFF08Confusion_Matrix_uFF09"><span class="nav-number">2.</span> <span class="nav-text">混淆矩阵（Confusion Matrix）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7CBE_u51C6_u7387_uFF08Presicion_uFF09"><span class="nav-number">3.</span> <span class="nav-text">精准率（Presicion）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u53EC_u56DE_u7387_uFF08Recall_uFF09"><span class="nav-number">4.</span> <span class="nav-text">召回率（Recall）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5B9E_u73B0_u7CBE_u51C6_u7387_u548C_u53EC_u56DE_u7387"><span class="nav-number">5.</span> <span class="nav-text">实现精准率和召回率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#F1_Score"><span class="nav-number">6.</span> <span class="nav-text">F1 Score</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#F1_Score_u5B9A_u4E49"><span class="nav-number">6.1.</span> <span class="nav-text">F1 Score定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5B9E_u73B0F1_Score"><span class="nav-number">6.2.</span> <span class="nav-text">实现F1 Score</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Scikit_Learn__u4E2D_u7684_F1_Score"><span class="nav-number">6.3.</span> <span class="nav-text">Scikit Learn 中的 F1 Score</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7CBE_u51C6_u7387_u548C_u53EC_u56DE_u7387_u76F4_u63A5_u7684_u5E73_u8861"><span class="nav-number">7.</span> <span class="nav-text">精准率和召回率直接的平衡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u901A_u8FC7_u7A0B_u5E8F_u9A8C_u8BC1_u7CBE_u51C6_u7387_u548C_u53EC_u56DE_u7387_u7684_u5E73_u8861_u5173_u7CFB"><span class="nav-number">7.1.</span> <span class="nav-text">通过程序验证精准率和召回率的平衡关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PR_u66F2_u7EBF"><span class="nav-number">8.</span> <span class="nav-text">PR曲线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ROC_u66F2_u7EBF"><span class="nav-number">9.</span> <span class="nav-text">ROC曲线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FPR_u548CTPR"><span class="nav-number">9.1.</span> <span class="nav-text">FPR和TPR</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u591A_u5206_u7C7B_u95EE_u9898_u4E2D_u7684_u6DF7_u6DC6_u77E9_u9635"><span class="nav-number">10.</span> <span class="nav-text">多分类问题中的混淆矩阵</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/machine-learning-12/';
+      var disqus_title = '机器学习笔记十二之算法精准率、召回率、混淆矩阵';
+      var disqus_url = 'http://www.devtalking.com//articles/machine-learning-12/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
