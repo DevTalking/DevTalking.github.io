@@ -231,6 +231,110 @@
             
             
               
+                <a class="post-title-link" href="/articles/read-concurrency-programming-guide-3/" itemprop="url">
+                  读 Concurrency Programming Guide 笔记（三）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-04-21T00:00:00+08:00" content="2016-04-21">
+              2016-04-21
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/read-concurrency-programming-guide-3/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/read-concurrency-programming-guide-3/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://geek.csdn.net/news/detail/69122">CSDN</a>，如需转载请与CSDN联系。</p>
+<h2 id="u901A_u8FC7Dispatch_Queue_u6267_u884C_u4EFB_u52A1"><a href="#u901A_u8FC7Dispatch_Queue_u6267_u884C_u4EFB_u52A1" class="headerlink" title="通过Dispatch Queue执行任务"></a>通过Dispatch Queue执行任务</h2><p>如果想让Dispatch Queue执行任务，首先就是得将任务放入队列中，我们可以异步的将任务加入队列，也可以同步的将任务加入队列，可以一个任务一个任务的加，也可以一组一组的加。这节我们就来看看将任务加入队列的那些事。</p>
+<h3 id="u5411_u961F_u5217_u6DFB_u52A0_u4EFB_u52A1"><a href="#u5411_u961F_u5217_u6DFB_u52A0_u4EFB_u52A1" class="headerlink" title="向队列添加任务"></a>向队列添加任务</h3><p>我们可以使用<code>dispatch_async</code>或者<code>dispatch_async_f</code>函数异步的向队列中添加任务，也就是说当我们添加完任务后该函数会立即返回，我们不需要等待任务执行完成，而且我们也不会知道队列到底何时开始执行任务。<code>dispatch_async</code>函数有两个参数，一个是目标队列，类型为<code>dispatch_queue_t</code>，另一个是闭包，类型为<code>dispatch_block_t</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> serialQueue = dispatch_queue_create(<span class="string">"com.example.MySerialQueue"</span>, <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">dispatch_async(serialQueue, &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Task in the queue..."</span>)</span><br><span class="line">        </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><code>dispatch_async_f</code>函数有三个参数，第一个是类型为<code>dispatch_queue_t</code>的目标队列，第二个是队列上下文指针，第三个是类型为<code>dispatch_function_t</code>的任务函数，队列上下文指针为该函数的唯一参数：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AddTaskToQueue</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> serialQueue = dispatch_queue_create(<span class="string">"com.example.MySerialQueue"</span>, <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">        dispatch_async(serialQueue, &#123;</span><br><span class="line">        </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Task in the queue..."</span>)</span><br><span class="line">        </span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">        dispatch_async_f(serialQueue, <span class="built_in">unsafeBitCast</span>(<span class="number">0</span>, <span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Int</span>&gt;.<span class="keyword">self</span>), taskFunction())</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">taskFunction</span><span class="params">()</span></span> -&gt; dispatch_function_t &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123; context <span class="keyword">in</span></span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Do some work with context..."</span>)</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> addTaskToQueue = <span class="type">AddTaskToQueue</span>()</span><br><span class="line">addTaskToQueue.launch()</span><br></pre></td></tr></table></figure>
+<p>除了这两个函数，我们还可以使用<code>dispatch_sync</code>和<code>dispatch_sync_f</code>函数同步的向队列中添加任务，并且我们要等待直到任务执行完成。这两个函数和上面的异步添加任务函数用法完全一致。</p>
+<p>那么什么时候用异步什么时候用同步呢，大多数情况下我们都是在主线程中使用GCD分派任务，为了避免阻塞主线程，影响用户体验，所以通常情况下我们都使用异步添加任务的方式。当然为了避免任务与主线程中产生资源竞争的问题，有时候酌情也会使用同步添加任务的方式。</p>
+<h3 id="Dispatch_Queue_u7684Completion_Block"><a href="#Dispatch_Queue_u7684Completion_Block" class="headerlink" title="Dispatch Queue的Completion Block"></a>Dispatch Queue的Completion Block</h3><p>还记得<code>NSOperation</code>的<code>completionBlock</code>属性吗，这个回调函数在任务执行完成后调用，用于处理有些后续工作或者消息通知。在Dispatch Queue中并没有类似的属性，但是我们可以通过其他方式来实现。举一个很常见的应用场景，我们在主线程中分派一个下载图片的任务，让其在二级线程中执行，当图片下载完成后通知主线程，并由主线程将图片显示出来，我们看看简单的代码片段：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DownloadImage</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">dispatchTaskInMainThread</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        dispatch_async(dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="number">0</span>), downloadImage())</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">downloadImage</span><span class="params">()</span></span> -&gt; (() -&gt; ()) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Downloading image in <span class="subst">\(NSThread.currentThread()</span>)"</span>)</span><br><span class="line">            </span><br><span class="line">            dispatch_async(dispatch_get_main_queue()) &#123;</span><br><span class="line">            </span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Handle image and display in <span class="subst">\(NSThread.currentThread()</span>)"</span>)</span><br><span class="line">            </span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们来看看上面代码都做了些什么，首先在<code>dispatchTaskInMainThread</code>方法中，我们使用<code>dispatch_get_global_queue</code>函数获取到全局并发队列，然后将<code>downloadImage</code>下载图片的方法作为任务添加到该全局队列中。在<code>downloadImage</code>方法里，当图片下载完成后通过<code>dispatch_get_main_queue</code>函数获取到主队列，也就是在主线程中对图片进行处理，这样我们就达到了Completion Block的效果。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/read-concurrency-programming-guide-3/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/read-concurrency-programming-guide-2/" itemprop="url">
                   读 Concurrency Programming Guide 笔记（二）
                 </a>
@@ -1144,251 +1248,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/read-threading-programming-guide-2/" itemprop="url">
-                  读 Threading Programming Guide 笔记（二）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-10T00:00:00+08:00" content="2016-02-10">
-              2016-02-10
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/read-threading-programming-guide-2/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/read-threading-programming-guide-2/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>本文首发<a href="http://geek.csdn.net/news/detail/55617" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<blockquote>
-<p>记得第一次读这个文档还是3年前，那时也只是泛读。如今关于iOS多线程的文章层出不穷，但我觉得若想更好的领会各个实践者的文章，应该先仔细读读官方的相关文档，打好基础，定会有更好的效果。文章中有对官方文档的翻译，也有自己的理解，官方文档中代码片段的示例在这篇文章中都进行了完整的重写，还有一些文档中没有的代码示例，并且都使用Swift完成，给大家一些Objc与Swift转换的参考。<br>官方文档地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Conceptual/Multithreading/Introduction/Introduction.html" target="_blank" rel="external">Threading Programming Guide</a></p>
-</blockquote>
-<h2 id="u7EBF_u7A0B_u5C5E_u6027_u914D_u7F6E"><a href="#u7EBF_u7A0B_u5C5E_u6027_u914D_u7F6E" class="headerlink" title="线程属性配置"></a>线程属性配置</h2><p>线程也是具有若干属性的，自然一些属性也是可配置的，在启动线程之前我们可以对其进行配置，比如线程占用的内存空间大小、线程持久层中的数据、设置线程类型、优先级等。</p>
-<h3 id="u914D_u7F6E_u7EBF_u7A0B_u7684_u6808_u7A7A_u95F4_u5927_u5C0F"><a href="#u914D_u7F6E_u7EBF_u7A0B_u7684_u6808_u7A7A_u95F4_u5927_u5C0F" class="headerlink" title="配置线程的栈空间大小"></a>配置线程的栈空间大小</h3><p>在前文中提到过线程对内存空间的消耗，其中一部分就是线程栈，我们可以对线程栈的大小进行配置：</p>
-<ul>
-<li>Cocoa框架：在OS X v10.5之后的版本和iOS2.0之后的版本中，我们可以通过修改<code>NSThread</code>类的<code>stackSize</code>属性，改变二级线程的线程栈大小，不过这里要注意的是该属性的单位是字节，并且设置的大小必须得是4KB的倍数。</li>
-<li>POSIX API：通过<code>pthread_attr_- setstacksize</code>函数给线程属性<code>pthread_attr_t</code>结构体设置线程栈大小，然后在使用<code>pthread_create</code>函数创建线程时将线程属性传入即可。</li>
-</ul>
-<blockquote>
-<p>注意：在使用Cocoa框架的前提下修改线程栈时，不能使用<code>NSThread</code>的<code>detachNewThreadSelector: toTarget:withObject:</code>方法，因为上文中说过，该方法先创建线程，即刻便启动了线程，所以根本没有机会修改线程属性。</p>
-</blockquote>
-<h3 id="u914D_u7F6E_u7EBF_u7A0B_u5B58_u50A8_u5B57_u5178"><a href="#u914D_u7F6E_u7EBF_u7A0B_u5B58_u50A8_u5B57_u5178" class="headerlink" title="配置线程存储字典"></a>配置线程存储字典</h3><p>每一个线程，在整个生命周期里都会有一个字典，以<code>key-value</code>的形式存储着在线程执行过程中你希望保存下来的各种类型的数据，比如一个常驻线程的运行状态，线程可以在任何时候访问该字典里的数据。</p>
-<p>在Cocoa框架中，可以通过<code>NSThread</code>类的<code>threadDictionary</code>属性，获取到<code>NSMutableDictionary</code>类型对象，然后自定义<code>key</code>值，存入任何里先储存的对象或数据。如果使用POSIX线程，可以使用<code>pthread_setspecific</code>和<code>pthread_getspecific</code>函数设置获取线程字典。</p>
-<h3 id="u914D_u7F6E_u7EBF_u7A0B_u7C7B_u578B"><a href="#u914D_u7F6E_u7EBF_u7A0B_u7C7B_u578B" class="headerlink" title="配置线程类型"></a>配置线程类型</h3><p>在上文中提到过，线程有Joinable和Detached类型，大多数非底层的线程默认都是Detached类型的，相比Joinable类型的线程来说，Detached类型的线程不用与其他线程结合，并且在执行完任务后可自动被系统回收资源，而且主线程不会因此而阻塞，这着实要方便许多。</p>
-<p>使用<code>NSThread</code>创建的线程默认都是Detached类型，而且似乎也不能将其设置为Joinable类型。而使用POSIX API创建的线程则默认为Joinable类型，而且这也是唯一创建Joinable类型线程的方式。通过POSIX API可以在创建线程前通过函数<code>pthread_attr_setdetachstate</code>更新线程属性，将其设置为不同的类型，如果线程已经创建，那么可以使用<code>pthread_detach</code>函数改变其类型。Joinable类型的线程还有一个特性，那就是在终止之前可以将数据传给与之相结合的线程，从而达到线程之间的交互。即将要终止的线程可以通过<code>pthread_exit</code>函数传递指针或者任务执行的结果，然后与之结合的线程可以通过<code>pthread_join</code>函数接受数据。</p>
-<p>虽然通过POSIX API创建的线程使用和管理起来较为复杂和麻烦，但这也说明这种方式更为灵活，更能满足不同的使用场景和需求。比如当执行一些关键的任务，不能被打断的任务，像执行I/O操作之类。</p>
-<h3 id="u8BBE_u7F6E_u7EBF_u7A0B_u4F18_u5148_u7EA7"><a href="#u8BBE_u7F6E_u7EBF_u7A0B_u4F18_u5148_u7EA7" class="headerlink" title="设置线程优先级"></a>设置线程优先级</h3><p>每一个新创建的二级线程都有它自己的默认优先级，内核会根据线程的各属性通过分配算法计算出线程的优先级。这里需要明确一个概念，高优先级的线程虽然会更早的运行，但这其中并没有执行时间效率的因素，也就是说高优先级的线程会更早的执行它的任务，但在执行任务的时间长短方面并没有特别之处。</p>
-<p>不论是通过<code>NSThread</code>创建线程还是通过POSIX API创建线程，他们都提供了设置线程优先级的方法。我们可以通过<code>NSThread</code>的类方法<code>setThreadPriority:</code>设置优先级，因为线程的优先级由0.0～1.0表示，所以设置优先级时也一样。我们也可以通过<code>pthread_setschedparam</code>函数设置线程优先级。</p>
-<blockquote>
-<p>注意：设置线程的优先级时可以在线程运行时设置。</p>
-</blockquote>
-<p>虽然我们可以调节线程的优先级，但不到必要时还是不建议调节线程的优先级。因为一旦调高了某个线程的优先级，与低优先级线程的优先等级差距太大，就有可能导致低优先级线程永远得不到运行的机会，从而产生性能瓶颈。比如说有两个线程A和B，起初优先级相差无几，那么在执行任务的时候都会相继无序的运行，如果将线程A的优先级调高，并且当线程A不会因为执行的任务而阻塞时，线程B就可能一直不能运行，此时如果线程A中执行的任务需要与线程B中任务进行数据交互，而迟迟得不到线程B中的结果，此时线程A就会被阻塞，那么程序的性能自然就会产生瓶颈。</p>
-<h2 id="u7EBF_u7A0B_u6267_u884C_u7684_u4EFB_u52A1"><a href="#u7EBF_u7A0B_u6267_u884C_u7684_u4EFB_u52A1" class="headerlink" title="线程执行的任务"></a>线程执行的任务</h2><p>在任何平台，线程存在的价值和意义都是一样的，那就是执行任务，不论是方法、函数或一段代码，除了依照语言语法正常编写外，还有一些额外需要大家注意的事项。</p>
-<h3 id="Autorelease_Pool"><a href="#Autorelease_Pool" class="headerlink" title="Autorelease Pool"></a>Autorelease Pool</h3><p>在Xcode4.3之前，我们都处在手动管理引用计数的时代，代码里满是<code>retain</code>和<code>release</code>的方法，所以那个时候，被线程执行的任务中，为了能自动处理大量对象的<code>retain</code>和<code>release</code>操作，都会使用<code>NSAutoreleasePool</code>类创建自动释放池，它的作用是将线程中要执行的任务都放在自动释放池中，自动释放池会捕获所有任务中的对象，在任务结束或线程关闭之时自动释放这些对象：</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)myThreadMainRoutine</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSAutoreleasePool</span> *pool = [[<span class="built_in">NSAutoreleasePool</span> alloc] init]; <span class="comment">// 顶层自动释放池</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 线程执行任务的逻辑代码</span></span><br><span class="line"></span><br><span class="line">    [pool release];</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>到了自动引用计数（ARC）时代，就不能使用<code>NSAutoreleasePool</code>进行自动释放池管理了，而是新加了<code>@autoreleasepool</code>代码块语法来创建自动释放池：</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)myThreadMainRoutine</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">     </span><br><span class="line">     <span class="comment">// 线程执行任务的逻辑代码</span></span><br><span class="line">     </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们知道每个应用程序都是运行在一个主线程里的，而线程都至少得有一个自动释放池，所以说整个应用其实是跑在一个自动释放池中的。大家都知道C系语言中，程序的入口函数都是<code>main</code>函数，当我们创建一个Objective－C的iOS应用后，Xcode会在<strong>Supporting Files</strong>目录下自动为我们创建一个<code>main.m</code>文件：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-2.png" alt="LearnThread-2"></p>
-<p>在<code>main.m</code>这个文件中就能证实上面说的那点：</p>
-<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIApplicationMain</span>(argc, argv, <span class="literal">nil</span>, <span class="built_in">NSStringFromClass</span>([AppDelegate class]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>以上都是在Objective－C中，但在Swift中，就有点不一样了，<code>NSAutoreleasePool</code>和<code>@autoreleasepool</code>都不能用了，取而代之的是Swift提供的一个方法<code>func autoreleasepool(code: () -&gt; ())</code>，接收的参数为一个闭包，我们可以这样使用：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performInBackground</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        autoreleasepool(&#123;</span><br><span class="line">        </span><br><span class="line">          <span class="comment">// 线程执行任务的逻辑代码</span></span><br><span class="line">          </span><br><span class="line">          <span class="built_in">print</span>(<span class="string">"I am a event, perform in Background Thread."</span>)  </span><br><span class="line">          </span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>根据尾随闭包的写法，还可以这样使用：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performInBackground</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">        autoreleasepool&#123;</span><br><span class="line">        </span><br><span class="line">          <span class="comment">// 线程执行任务的逻辑代码</span></span><br><span class="line">          </span><br><span class="line">          <span class="built_in">print</span>(<span class="string">"I am a event, perform in Background Thread."</span>)</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>有些人可能会问在ARC的时代下为什么还要用自动释放池呢？比如在SDWebImage中就大量使用了<code>@autoreleasepool</code>代码块，其原因就是为了避免内存峰值，大家都知道在MRC时代，除了<code>retain</code>和<code>release</code>方法外，还有一个常用的方法是<code>autorelease</code>，用来延迟释放对象，它释放对象的时机是当前runloop结束时。到了ARC时代，虽然不用我们手动管理内存了，但其自动管理的本质与MRC时是一样的，只不过由编译器帮我们在合适的地方加上了这三个方法，所以说如果在一个线程执行的任务中大量产生需要<code>autorelease</code>的对象时，因为不能及时释放对象，所以就很有可能产生内存峰值。那么在这种任务中在特定的时候使用<code>@autorelease</code>代码块，帮助释放对象，就可以有效的防止内存峰值的发生。</p>
-<h3 id="u8BBE_u7F6E_u5F02_u5E38_u5904_u7406"><a href="#u8BBE_u7F6E_u5F02_u5E38_u5904_u7406" class="headerlink" title="设置异常处理"></a>设置异常处理</h3><p>在线程执行任务的时候，难免会出现异常，如果不能及时捕获异常任由其抛出，就会导致整个应用程序退出。在Swift2.0中，Apple提供了新的<a href="http://www.devtalking.com/articles/what-is-new-in-swift/">异常控制处理机制</a>，让我们能像Java中一样形如流水的捕获处理异常。所以在线程执行的任务中，我们尽量使用异常处理机制，提高健壮性。</p>
-<h3 id="u521B_u5EFARunloop"><a href="#u521B_u5EFARunloop" class="headerlink" title="创建Runloop"></a>创建Runloop</h3><p>大家知道，一个线程只能执行一个任务，当任务结束后也就意味着这个线程也要结束，频繁的创建线程也是挺消耗资源的一件事，于是就有了常驻线程，前文介绍线程相关概念时也提到过：</p>
-<blockquote>
-<p>简单的来说，RunLoop用于管理和监听异步添加到线程中的事件，当有事件输入时，系统唤醒线程并将事件分派给RunLoop，当没有需要处理的事件时，RunLoop会让线程进入休眠状态。这样就能让线程常驻在进程中，而不会过多的消耗系统资源，达到有事做事，没事睡觉的效果。</p>
-</blockquote>
-<p>如果想要线程不结束，那就要被执行的任务不结束，让被执行的任务不结束显然不靠谱，那么就需要一个机制，能占着线程。该机制就是事件循环机制（Eventloop），体现在代码中就是一个<code>do-while</code>循环，不断的接收事件消息、处理事件、等待新事件消息，除非接收到一个让其退出的事件消息，否则它将一直这么循环着，线程自然就不会结束。Runloop就是管理消息和事件，并提供Eventloop函数的对象，线程执行的任务其实就是在Runloop对象的Eventloop函数里运行。关于Runloop更详细的知识及配置<br>操作在后文中会有讲述。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h3 id="u7EC8_u6B62_u7EBF_u7A0B"><a href="#u7EC8_u6B62_u7EBF_u7A0B" class="headerlink" title="终止线程"></a>终止线程</h3><p>打个不恰当的比方，人终有一死，或正常生老病死，或非正常出事故意外而亡，前者尚合情合理后者悲痛欲绝。线程也一样，有正常终止结束，也有非正常的强制结束，不管是线程本身还是应用程序都希望线程能正常结束，因为正常结束也就意味着被执行的任务正常执行完成，从而让线程处理完后事随即结束，如果在任务执行途中强制终止线程，会导致线程没有机会处理后事，也就是正常释放资源对象等，这样会给应用程序带来例如内存溢出这类潜在的问题，所以强烈不推荐强制终止线程的做法。</p>
-<p>如果确实有在任务执行途中终止线程的需求，那么可以使用Runloop，在任务执行过程中定期查看是否有收到终止任务的事件消息，这样一来可以在任务执行途中判断出终止任务的信号，然后进行终止任务的相关处理，比如保存数据等，二来可以让线程有充分的时间释放资源。</p>
-<h2 id="Run_Loop"><a href="#Run_Loop" class="headerlink" title="Run Loop"></a>Run Loop</h2><p>Run Loops是线程中的基础结构，在上文中也提到过，Run Loops其实是一个事件循环机制，用来分配、分派线程接受到的事件任务，同时可以让线程成为一个常驻线程，即有任务时处理任务，没任务时休眠，且不消耗资源。在实际应用时，Run Loop的生命周期并不全是自动完成的，还是需要人工进行配置，不论是Cocoa框架还是Core Foundation框架都提供了Run Loop的相关对象对其进行配置和管理。</p>
-<blockquote>
-<p>注：Core Foundation框架是一组C语言接口，它们为iOS应用程序提供基本数据管理和服务功能，比如线程和Run Loop、端口、Socket、时间日期等。</p>
-</blockquote>
-<p>在所有的线程中，不论是主线程还是二级线程，都不需要显示的创建Run Loop对象，这里的显示指的是通过任何<em>create</em>打头的方法创建Run Loop。对于主线程来说，当应用程序通过<code>UIApplicationMain</code>启动时，主线程中的Run Loop就已经创建并启动了，而且也配置好了。那么如果是二级线程，则需要我们手动先获取Run Loop，然后再手动进行配置并启动。下面的章节会向大家详细介绍Run Loop的知识。</p>
-<blockquote>
-<p>注：在二级线程中获取Run Loop有两种方式，通过<code>NSRunloop</code>的类方法<code>currentRunLoop</code>获取Run Loop对象（<code>NSRunLoop</code>），或者通过Core Foundation框架中的<code>CFRunLoopGetCurrent()</code>函数获取当前线程的Run Loop对象（<code>CFRunLoop</code>）。<code>NSRunLoop</code>是<code>CFRunLoop</code>的上层封装。</p>
-</blockquote>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> nsrunloop = <span class="type">NSRunLoop</span>.currentRunLoop()</span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> cfrunloop = <span class="type">CFRunLoopGetCurrent</span>()</span><br></pre></td></tr></table></figure>
-<h3 id="Run_Loop_u7684_u4E8B_u4EF6_u6765_u6E90"><a href="#Run_Loop_u7684_u4E8B_u4EF6_u6765_u6E90" class="headerlink" title="Run Loop的事件来源"></a>Run Loop的事件来源</h3><p>Run Loop有两个事件来源，一个是<strong>Input source</strong>，接收来自其他线程或应用程序（进程）的异步事件消息，并将消息分派给对应的事件处理方法。另一个是<strong>Timer source</strong>，接收定期循环执行或定时执行的同步事件消息，同样会将消息分派给对应的事件处理方法。</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-3.png" alt="LearnThread-3"></p>
-<p>上图展示了Run Loop的两类事件来源，以及在Input source中的两种不同的子类型，它们分别对应着Run Loop中不同的处理器。当不同的事件源接收到消息后，通过<code>NSRunLoop</code>的<code>runUntilDate:</code>方法启动运行Run Loop，将事件消息分派给对应的处理器执行，一直到指定的时间时退出Run Loop。</p>
-<h3 id="Run_Loop_u7684_u89C2_u5BDF_u8005"><a href="#Run_Loop_u7684_u89C2_u5BDF_u8005" class="headerlink" title="Run Loop的观察者"></a>Run Loop的观察者</h3><p>Run Loop的观察者可以理解为Run Loop自身运行状态的监听器，它可以监听Run Loop的下面这些运行状态：</p>
-<ul>
-<li>Run Loop准备开始运行时。</li>
-<li>当Run Loop准备要执行一个Timer Source事件时。</li>
-<li>当Run Loop准备要执行一个Input Source事件时。</li>
-<li>当Run Loop准备休眠时。</li>
-<li>当Run Loop被进入的事件消息唤醒并且还没有开始让处理器执行事件消息时。</li>
-<li>退出Run Loop时。</li>
-</ul>
-<p>Run Loop的观察者在<code>NSRunloop</code>中没有提供相关接口，所以我们需要通过Core Foundation框架使用它，可以通过<code>CFRunLoopObserverCreate</code>方法创建Run Loop的观察者，类型为<code>CFRunLoopObserverRef</code>，它其实是<code>CFRunLoopObserver</code>的重定义名称。上述的那些可以被监听的运行状态被封装在了<code>CFRunLoopActivity</code>结构体中，对应关系如下：</p>
-<ul>
-<li><code>CFRunLoopActivity.Entry</code></li>
-<li><code>CFRunLoopActivity.BeforeTimers</code></li>
-<li><code>CFRunLoopActivity.BeforeSources</code></li>
-<li><code>CFRunLoopActivity.BeforeWaiting</code></li>
-<li><code>CFRunLoopActivity.AfterWaiting</code></li>
-<li><code>CFRunLoopActivity.Exit</code></li>
-</ul>
-<p>Run Loop的观察者和Timer事件类似，可以只使用一次，也可以重复使用，在创建观察者时可以设置。如果只使用一次，那么当监听到对应的状态后会自行移除，如果是重复使用的，那么会留在Run Loop中多次监听Run Loop相同的运行状态。</p>
-<h3 id="Run_Loop_Modes"><a href="#Run_Loop_Modes" class="headerlink" title="Run Loop Modes"></a>Run Loop Modes</h3><p>Run Loop Modes可以称之为Run Loop模式，这个模式可以理解为对Run Loop各种设置项的不同组合，举个例子，iPhone手机运行的iOS有很多系统设置项，假设白天我打开蜂窝数据，晚上我关闭蜂窝数据，而打开无线网络，到睡觉时我关闭蜂窝数据和无线网络，而打开飞行模式。假设在这三个时段中其他的所有设置项都相同，而只有这三个设置项不同，那么就可以说我的手机有三种不同的设置模式，对应着不同的时间段。那么Run Loop的设置项是什么呢？那自然就是前文中提到的不同的事件来源以及观察者了，比如说，Run Loop的模式A（Mode A），只包含接收Timer Source事件源的事件消息以及监听Run Loop运行时的观察者，而模式B（Mode B）只包含接收Input Source事件源的事件消息以及监听Run Loop准备休眠时和退出Run Loop时的观察者，如下图所示：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread%EF%BC%8D7.png" alt="LearnThread-4"></p>
-<p>所以说，Run Loop的模式就是不同类型的数据源和不同观察者的集合，当Run Loop运行时要设置它的模式，也就是告知Run Loop只需要关心这个集合中的数据源类型和观察者，其他的一概不予理会。那么通过模式，就可以让Run Loop过滤掉它不关心的一些事件，以及避免被无关的观察者打扰。如果有不在当前模式中的数据源发来事件消息，那只能等Run Loop改为包含有该数据源类型的模式时，才能处理事件消息。</p>
-<p>在Cocoa框架和Core Foundation框架中，已经为我们预定义了一些Run Loop模式：</p>
-<ul>
-<li>默认模式：在<code>NSRunloop</code>中的定义为<code>NSDefaultRunLoopMode</code>，在<code>CFRunloop</code>中的定义为<code>kCFRunLoopDefaultMode</code>。该模式包含的事件源囊括了除网络链接操作的大多数操作以及时间事件，用于当前Run Loop处于空闲状态等待事件时，以及Run Loop开始运行时。</li>
-<li>NSConnectionReplyMode：该模式用于监听<code>NSConnection</code>相关对象的返回结果和状态，在系统内部使用，我们一般不会使用该模式。</li>
-<li>NSModalPanelRunLoopMode：该模式用于过滤在模态面板中处理的事件（Mac App）。</li>
-<li>NSEventTrackingRunLoopMode：该模式用于跟踪用户与界面交互的事件。</li>
-<li>模式集合：或者叫模式组，顾名思义就是将多个模式组成一个组，然后将模式组认为是一个模式设置给Run Loop，在<code>NSRunloop</code>中的定义为<code>NSRunLoopCommonModes</code>，在<code>CFRunloop</code>中的定义为<code>kCFRunLoopCommonModes</code>。系统提供的模式组名为Common Modes，它默认包含NSDefaultRunLoopMode、NSModalPanelRunLoopMode、NSEventTrackingRunLoopMode这三个模式。</li>
-</ul>
-<p>以上五种系统预定的模式中，前四种属于只读模式，也就是我们无法修改它们包含的事件源类型和观察者类型。而模式组我们可以通过Core Foundation框架提供的<code>CFRunLoopAddCommonMode(_ rl: CFRunLoop!, _ mode: CFString!)</code>方法添加新的模式，甚至是我们自定义的模式。这里需要注意的是，既然在使用时，模式组是被当作一个模式使用的，那么自然可以给它设置不同类型的事件源或观察者，当给模式组设置事件源或观察者时，实际是给该模式组包含的所有模式设置。比如说给模式组设置了一个监听Run Loop准备休眠时的观察者，那么该模式组里的所有模式都会被设置该观察者。</p>
-<h3 id="Input_Source"><a href="#Input_Source" class="headerlink" title="Input Source"></a>Input Source</h3><p>前文中说过，Input Sources接收到各种操作输入事件消息，然后异步的分派给对应事件处理方法。在Input Sources中又分两大类的事件源，一类是基于端口事件源（Port-based source），在<code>CFRunLoopSourceRef</code>的结构中为source1，主要通过监听应用程序的Mach端口接收事件消息并分派，该类型的事件源可以主动唤醒Run Loop。另一类是自定义事件源（Custom source），在<code>CFRunLoopSourceRef</code>的结构中为source0，一般是接收其他线程的事件消息并分派给当前线程的Run Loop，比如<code>performSwlwctor:onThread:...</code>系列方法，该类型的事件源无法自动唤醒Run Loop，而是需要手动将事件源设置为待执行的标记，然后再手动唤醒Run Loop。虽然这两种类型的事件源接收事件消息的方式不一样，但是当接收到消息后，对消息的分派机制是完全相同的。</p>
-<h4 id="Port-Based_Source"><a href="#Port-Based_Source" class="headerlink" title="Port-Based Source"></a>Port-Based Source</h4><p>Cocoa框架和Core Foundation框架都提供了相关的对象和函数用于创建基于端口的事件源。在Cocoa框架中，实现基于端口的事件源主要是通过<code>NSPort</code>类实现的，它代表了交流通道，也就是说在不同的线程的Run Loop中都存在<code>NSPort</code>，那么它们之间就可以通过发送与接收消息（<code>NSPortMessage</code>）互相通信。所以我们只需要通过<code>NSPort</code>类的类方法<code>port</code>创建对象实例，然后通过<code>NSRunloop</code>的方法将其添加到Run Loop中，或者在创建二级线程时将创建好的<code>NSPort</code>对象传入即可，无需我们再做消息、消息上下文、事件源等其他配置，都由Run Loop自行配置好了。而在Core Foundation框架中就比较麻烦一些，大多数配置都需要我们手动配置，在后面会详细举例说明。</p>
-<h4 id="Custom_Input_Source"><a href="#Custom_Input_Source" class="headerlink" title="Custom Input Source"></a>Custom Input Source</h4><p>Cocoa框架中没有提供创建自定义事件源的相关接口，我们只能通过Core Foundation框架中提供的对象和函数创建自定义事件源，手动配置事件源各个阶段要处理的逻辑，比如创建<code>CFRunLoopSourceRef</code>事件源对象，通过<code>CFRunLoopScheduleCallBack</code>回调函数配置事件源上下文并注册事件源，通过<code>CFRunLoopPerformCallBack</code>回调函数处理接收到事件消息后的逻辑，通过<code>CFRunLoopCancelCallBack</code>函数销毁事件源等等，在后文中会有详细举例说明。</p>
-<p>虽然Cocoa框架没有提供创建自定义事件源的相关对象和接口，但是它为我们预定义好了一些事件源，能让我们在当前线程、其他二级线程、主线程中执行我们希望被执行的方法，让我们看看<code>NSObject</code>中的这些方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSelectorOnMainThread</span><span class="params">(<span class="number">_</span> aSelector: Selector, withObject arg: AnyObject?, waitUntilDone wait: Bool)</span></span></span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSelectorOnMainThread</span><span class="params">(<span class="number">_</span> aSelector: Selector, withObject arg: AnyObject?, waitUntilDone wait: Bool, modes array: [String]?)</span></span></span><br></pre></td></tr></table></figure>
-<p>这两个方法允许我们将当前线程中对象的方法让主线程去执行，可以选择是否阻塞当前线程，以及希望被执行的方法作为事件消息被何种Run Loop模式监听。</p>
-<blockquote>
-<p>注：如果在主线程中使用该方法，当选择阻塞当前线程，那么发送的方法会立即被主线程执行，若选择不阻塞当前线程，那么被发送的方法将被排进主线程Run Loop的事件队列中，并等待执行。</p>
-</blockquote>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSelector</span><span class="params">(<span class="number">_</span> aSelector: Selector, withObject anArgument: AnyObject?, afterDelay delay: NSTimeInterval)</span></span></span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSelector</span><span class="params">(<span class="number">_</span> aSelector: Selector, withObject anArgument: AnyObject?, afterDelay delay: NSTimeInterval, inModes modes: [String])</span></span></span><br></pre></td></tr></table></figure>
-<p>这两个方法允许我们给当前线程发送事件消息，当前线程接收到消息后会依次加入Run Loop的事件消息队列中，等待Run Loop迭代执行。该方法还可以指定消息延迟发送时间及消息希望被何种Run Loop模式监听。</p>
-<blockquote>
-<p>注：该方法中的延迟时间并不是延迟Run Loop执行事件消息的事件，而是延迟向当前线程发送事件消息的时间。另外，即便不设置延迟时间，那么发送的事件消息也不一定立即被执行，因为在Run Loop的事件消息队列中可以已有若干等待执行的消息。</p>
-</blockquote>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSelector</span><span class="params">(<span class="number">_</span> aSelector: Selector, onThread thr: NSThread, withObject arg: AnyObject?, waitUntilDone wait: Bool)</span></span></span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSelector</span><span class="params">(<span class="number">_</span> aSelector: Selector, onThread thr: NSThread, withObject arg: AnyObject?, waitUntilDone wait: Bool, modes array: [String]?)</span></span></span><br></pre></td></tr></table></figure>
-<p>这两个方法允许我们给其他二级线程发送事件消息，前提是要取得目标二级线程的<code>NSThread</code>对象实例，该方法同样提供了是否阻塞当前线程的选项和设置Run Loop模式的选项。</p>
-<blockquote>
-<p>注：使用该方法给二级线程发送事件消息时要确保目标线程正在运行，换句话说就是目标线程要有启动着的Run Loop。并且保证目标线程执行的任务要在应用程序代理执行<code>applicationDidFinishLaunching:</code>方法前完成，否则主线程就结束了，目标线程自然也就结束了。</p>
-</blockquote>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performSelectorInBackground</span><span class="params">(<span class="number">_</span> aSelector: Selector, withObject arg: AnyObject?)</span></span></span><br></pre></td></tr></table></figure>
-<p>该方法允许我们在当前应用程序中创建一个二级线程，并将指定的事件消息发送给新创建的二级线程。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">cancelPreviousPerformRequestsWithTarget</span>(<span class="title">_</span> <span class="title">aTarget</span>: <span class="title">AnyObject</span>)</span><br><span class="line"></span><br><span class="line"><span class="title">class</span> <span class="title">func</span> <span class="title">cancelPreviousPerformRequestsWithTarget</span>(<span class="title">_</span> <span class="title">aTarget</span>: <span class="title">AnyObject</span>, <span class="title">selector</span> <span class="title">aSelector</span>: <span class="title">Selector</span>, <span class="title">object</span> <span class="title">anArgument</span>: <span class="title">AnyObject</span>?)</span></span><br></pre></td></tr></table></figure>
-<p>这两个方法是<code>NSObject</code>的类方法，第一个方法作用是在当前线程中取消Run Lop中某对象通过<code>performSelector:withObject:afterDelay:</code>方法发送的所有事件消息执行请求。第二个方法多了两个过滤参数，那就是方法名称和参数，取消指定方法名和参数的事件消息执行请求。</p>
-<h3 id="Timer_Source"><a href="#Timer_Source" class="headerlink" title="Timer Source"></a>Timer Source</h3><p>Timer Source顾名思义就是向Run Loop发送在将来某一时间执行或周期性重复执行的同步事件消息。当某线程不需要其他线程通知而需要自己通知自己执行任务时就可以用这种事件源。举个应用场景，在iOS应用中，我们经常会用到搜索功能，而且一些搜索框具有自动搜索的能力，也就是说不用我们点击搜索按钮，只需要输入完我想要搜索的内容就会自动搜索，大家想一想如果每输入一个字就开始立即搜索，不但没有意义，性能开销也大，用户体验自然也很糟糕，我们希望当输入完这句话，或至少输入一部分之后再开始搜索，所以我们就可以在开始输入内容时向执行搜索功能的线程发送定时搜索的事件消息，让其在若干时间后再执行搜索任务，这样就有缓冲时间输入搜索内容了。</p>
-<p>这里需要注意的是Timer Source发送给Run Loop的周期性执行任务的重复时间是相对时间。比如说给Run Loop发送了一个每隔5秒执行一次的任务，每次执行任务的正常时间为2秒，执行5次后终止，假设该任务被立即执行，那么当该任务终止时应该历时30秒，但当第一次执行时出现了问题，导致任务执行了20秒，那么该任务只能再执行一次就终止了，执行的这一次其实就是第5次，也就是说不论任务的执行时间延迟与否，Run Loop都会按照初始的时间间隔执行任务，并非按Finish-To-Finish去算的，所以一旦中间任务有延时，那么就会丢失任务执行次数。关于Timer Source的使用，在后文中会有详细举例说明。</p>
-<h3 id="Run_Loop_u5185_u90E8_u8FD0_u884C_u903B_u8F91"><a href="#Run_Loop_u5185_u90E8_u8FD0_u884C_u903B_u8F91" class="headerlink" title="Run Loop内部运行逻辑"></a>Run Loop内部运行逻辑</h3><p>在Run Loop的运行生命周期中，无时无刻都伴随着执行等待执行的各种任务以及在不同的运行状态时通知不同的观察者，下面我们看看Run Loop中的运行逻辑到底是怎样的：</p>
-<ol>
-<li>通知对应观察者Run Loop准备开始运行。</li>
-<li>通知对应观察者准备执行定时任务。</li>
-<li>通知对应观察者准备执行自定义事件源的任务。</li>
-<li>开始执行自定义事件源任务。</li>
-<li>如果有基于端口事件源的任务准备待执行，那么立即执行该任务。然后跳到步骤9继续运转。</li>
-<li>通知对应观察者线程进入休眠。</li>
-<li>如果有下面的事件发生，则唤醒线程：<ol>
-<li>接收到基于端口事件源的任务。</li>
-<li>定时任务到了该执行的时间点。</li>
-<li>Run Loop的超时时间到期。</li>
-<li>Run Loop被手动唤醒。</li>
-</ol>
-</li>
-<li>通知对应观察者线程被唤醒。</li>
-<li>执行等待执行的任务。<ol>
-<li>如果有定时任务已启动，执行定时任务并重启Run Loop。然后跳到步骤2继续运转。</li>
-<li>如果有非定时器事件源的任务待执行，那么分派执行该任务。</li>
-<li>如果Run Loop被手动唤醒，重启Run Loop。然后跳转到步骤2继续运转。</li>
-</ol>
-</li>
-<li>通知对应观察者已退出Run Loop。</li>
-</ol>
-<p>以上这些Run Loop中的步骤也不是每一步都会触发，举一个例子：<br>1.对应观察者接收到通知Run Loop准备开始运行 -> 3.对应观察者接收到通知Run Loop准备执行自定义事件源任务 -> 4.开始执行自定义事件源任务 -> 任务执行完毕且没有其他任务待执行 -> 6.线程进入休眠状态，并通知对应观察者 -> 7.接收到定时任务并唤醒线程 -> 8.通知对应观察者线程被唤醒 -> 9.执行定时任务并重启Run Loop -> 2.通知对应观察者准备执行定时任务 －> Run Loop执行定时任务，并在等待下次执行任务的间隔中线程休眠 -> 6.线程进入休眠状态，并通知对应观察者…</p>
-<p>这里需要注意的一点是从上面的运行逻辑中可以看出，当观察者接收到执行任务的通知时，Run Loop并没有真正开始执行任务，所以观察者接收到通知的时间与Run Loop真正执行任务的时间有时间差，一般情况下这点时间差影响不大，但如果你需要通过观察者知道Run Loop执行任务的确切时间，并根据这个时间要进行后续操作的话，那么就需要通过结合多个观察者接收到的通知共同确定了。一般通过监听准备执行任务的观察者、监听线程进入休眠的观察者、监听线程被唤醒的观察者共同确定执行任务的确切时间。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1431,7 +1290,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">91</span>
+              <span class="site-state-item-count">92</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

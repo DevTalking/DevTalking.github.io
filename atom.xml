@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.devtalking.com/"/>
-  <updated>2018-08-09T04:31:06.895Z</updated>
+  <updated>2018-08-15T08:38:05.931Z</updated>
   <id>http://www.devtalking.com/</id>
   
   <author>
@@ -13,6 +13,176 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[机器学习笔记十三之支撑向量机（SVM）]]></title>
+    <link href="http://www.devtalking.com//articles/machine-learning-13/"/>
+    <id>http://www.devtalking.com//articles/machine-learning-13/</id>
+    <published>2018-05-29T16:00:00.000Z</published>
+    <updated>2018-08-15T08:38:05.931Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这一篇笔记主要讲机器学习算法中一个重要的分类算法，支撑向量机（Support Vector Machine）。它背后有严格的数学理论和统计学理论支撑的，这里我们只对它的原理和应用做以介绍，更深层次的数学理论有兴趣可以查阅其他资料。</p>
+<h2 id="u4EC0_u4E48_u662FSVM"><a href="#u4EC0_u4E48_u662FSVM" class="headerlink" title="什么是SVM"></a>什么是SVM</h2><p><img src="http://paxigrdp0.bkt.clouddn.com/5142c26ba0e86429631a63609c314a97.jpg" alt=""></p>
+<p>上面的图展示的是一个二分类问题，在逻辑回归的笔记中，我们知道了决策边界，图中橘黄色的直线就是决策边界，它看似很好的将样本数据的不同分类区分开了。我们在多项式回归的笔记中，讲过模型泛化的问题，一个模型的好坏程度很大程度上是体现了模型泛化能力的好坏，也就是对未知样本的预测能力。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/b26d6614606ac304144b99549eeb390e.jpg" alt=""></p>
+<p>如果新来一个样本数据A，按照决策边界划分它是被分为了蓝色分类，可事实真的是如此吗，因为点A和红色分类的点非常近，很有可能点A是属于红色分类的。所以上图中的决策边界可能并不是最优的，那最优的决策边界应该是什么样的呢？</p>
+<p>上面的决策边界之所以有缺陷，是因为它和红色类别的点太近了，当然肯定也不能和蓝色的点太近了，所以我们希望这条决策边界离红色分类和蓝色分类都尽可能的远，才能很好的避免上面出现的问题。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/990fbea083569d4503be599d202b049d.jpg" alt=""></p>
+<p>想要决策边界离红蓝两个分类都尽可能的远，也就是红蓝分类两边离决策边界最近的点的距离要远，并且两边的点到决策边界的距离要相等，这才说明决策边界是不偏不倚的，如上图所示。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/d4642c6673e5e75023088be725dcd4f8.jpg" alt=""></p>
+<p>过红蓝两边离决策边界最近的点画两条直线，并且平行于决策边界，那么就确定了一个区域，在这个区域内不应该再有任何数据点出现。那么SVM就是尝试寻找这个区域中间那条最优的决策边界。这个区域边界上的点称为支撑向量，换句话说，是支撑向量定义出了这个区域，那么最优的决策边界也是由支撑向量决定的，这也是支撑向量机这个名称的由来。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/f5af760ed417acf74d79d065b437807d.jpg" alt=""></p>
+<p>如上图所示，由支撑向量确定的区域之间的距离称为Margin。那么SVM要做的事情就是最大化Margin，既将问题转化为了求最优解的问题。</p>
+<p>以上对SVM的解释是基于线性可分问题的基础上，也就是能确确实实找到一条直线作为决策边界，这种问题称为Hard Margin SVM，但是很多真实的情况是线性不可分的，这类问题称为Soft Margin SVM，这两类问题都是支撑向量机可以处理的，但基础还是Hard Margin SVM。</p>
+<a id="more"></a>
+<h2 id="SVM_u80CC_u540E_u7684_u6700_u4F18_u5316_u95EE_u9898"><a href="#SVM_u80CC_u540E_u7684_u6700_u4F18_u5316_u95EE_u9898" class="headerlink" title="SVM背后的最优化问题"></a>SVM背后的最优化问题</h2><p>从上面的示例图上可以看出，Margin其实就是二倍的$d$，$d$是支撑向量到决策边界的距离，那么求Margin的最大值就是求$d$的最大值。</p>
+<h3 id="u70B9_u5230_u76F4_u7EBF_u7684_u8DDD_u79BB"><a href="#u70B9_u5230_u76F4_u7EBF_u7684_u8DDD_u79BB" class="headerlink" title="点到直线的距离"></a>点到直线的距离</h3><p>在解析几何中我们学过，假设有条直线定义为$ax + by + c = 0$，有一点的坐标为$(x_0, y_0)$，那么该点到该条直线的距离为：</p>
+<p>$$d = \frac {|ax_0 + by_0 + c|} {\sqrt{a^2 + b^2}}$$</p>
+<p>那么如果扩展到高维空间中，点到直线的距离为：</p>
+<p>$$d = \frac {|ax_0 + by_0 + cz_0 + d|} {\sqrt{a^2 + b^2 + c^2}}$$</p>
+<p>上面公式中的$x_0$、$y_0$、$z_0$可以看作样本数据的特征，而$a$、$b$、$c$可以看作是特征系数。那么上面的公式可以写为：</p>
+<p>$$d = \frac {|ax_1 + bx_2 + cx_3 + d|} {\sqrt{a^2 + b^2 + c^2}}$$</p>
+<p>将$ax_1 + bx_2 + cx_3$向量化后，公式可写为：</p>
+<p>$$d = \frac {|w^Tx + d|} {\sqrt{a^2 + b^2 + c^2}}$$</p>
+<p>再根据向量的模的公式$||\vec v|| = \sqrt {v_1^2 + v_2^2 + … + v_n^2}$，上面的公式可继续转换为：</p>
+<p>$$d = \frac {|w^Tx + d|} {||w||}$$</p>
+<p>$w$为特征系数向量，$x$为特征向量。</p>
+<h3 id="u9650_u5B9A_u6761_u4EF6_u7684_u6700_u4F18_u5316_u95EE_u9898"><a href="#u9650_u5B9A_u6761_u4EF6_u7684_u6700_u4F18_u5316_u95EE_u9898" class="headerlink" title="限定条件的最优化问题"></a>限定条件的最优化问题</h3><p>有了上面的公式后，我们就可以假定决策边界直线的公式为$w^Tx + d = 0$，支撑向量到它的距离为$d = \frac {|w^Tx + d|} {||w||}$。那么除了支撑向量以外的点到决策边界的距离都应该大于$\frac {|w^Tx + d|} {||w||}$。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/9cb17884cae3c002e35a1cf7e3b3ba95.jpg" alt=""></p>
+<p>我们将上图中红色点定义为1类别，蓝色点定义为-1类别，那么就有：</p>
+<p>$$\left\{<br>\begin{aligned}<br>{\frac {w^Tx^{(i)} + d} {||w||} \ge d \ \ \ \ \ \ \forall y^{(i)} = 1 \\<br>\frac {w^Tx^{(i)} + d} {||w||} \le -d \ \ \ \ \ \ \forall y^{(i)} = -1}<br>\end{aligned}<br>\right.<br>$$</p>
+<p>既任意类别为1的红色点距离决策边界的距离要大于等于$d$。任意类别为-1的蓝色点距离决策边界的距离要小于等于$-d$。将上面的两个公式左右分别除以$d$得：</p>
+<p>$$\left\{<br>\begin{aligned}<br>{\frac {w^Tx^{(i)} + d} {||w||d} \ge 1 \ \ \ \ \ \ \forall y^{(i)} = 1 \\<br>\frac {w^Tx^{(i)} + d} {||w||d} \le -1 \ \ \ \ \ \ \forall y^{(i)} = -1}<br>\end{aligned}<br>\right.<br>$$</p>
+<p>下面来分析上面的公式，$||w||$是一个标量，$d$也是一个标量，所以分母$||w||d $也是一个标量。那么对于分子中的向量$w^T$除以一个标量仍然是一个向量，可以记为$w^T_d$。分子中的标量$d$除以一个标量自然也是一个标量，记为$d_d$。所以上面的公式又可以转换为：</p>
+<p>$$\left\{<br>\begin{aligned}<br>{w^T_dx^{(i)} + d_d \ge 1 \ \ \ \ \ \ \forall y^{(i)} = 1 \\<br>w^T_dx^{(i)} + d_d \le -1 \ \ \ \ \ \ \forall y^{(i)} = -1}<br>\end{aligned}<br>\right.<br>$$</p>
+<p>这样也就得出了由红色点支撑向量构成的直线公式为：</p>
+<p>$$w^Tx + d = 1$$</p>
+<p>由蓝色点支撑向量构成的直线公式为：</p>
+<p>$$w^Tx + d = -1$$</p>
+<p>在逻辑回归的笔记中我们知道通过一个技巧可以将上面两个公式通过一个公式表示出来，既公式左右两边都乘以$y^{(i)} $，得：</p>
+<p>$$y^{(i)}(w^T_d x^{(i)} + d_d) \ge 1$$</p>
+<p>为了书写方便，我们就将$w^T_d $和$d_d$命名为$w^T$和$d$。所以最终我们希望的是对于所有的样本数据点都满足下面的公式：</p>
+<p>$$y^{(i)}(w^T x^{(i)} + d) \ge 1$$</p>
+<p>那么上面这个公式就是SVM中最优化目标函数的限定条件，标识为$S.T.$（Such That）。</p>
+<h3 id="u76EE_u6807_u51FD_u6570"><a href="#u76EE_u6807_u51FD_u6570" class="headerlink" title="目标函数"></a>目标函数</h3><p>在这一节开始时我们就很明确我们的目标是求$d$的最大值，既：</p>
+<p>$$max \frac {|w^Tx + d|} {||w||}$$</p>
+<p>根据之前的推导我们知道，无论是红色点的支撑向量，还是蓝色点的支撑向量构成的直线公式取绝对值后都为1，所以我们的目标函数又可以写为：</p>
+<p>$$max \frac 1 {||w||}$$</p>
+<p>既：</p>
+<p>$$min ||w||$$</p>
+<p>为了方便求导，我们再将其转换一下，最终SVM的目标函数为：</p>
+<p>$$min \frac 1 2 ||w||^2$$</p>
+<p>那么最后SVM的最优化问题的两个函数为：</p>
+<p>$$\left\{<br>\begin{aligned}<br>{min \frac 1 2 ||w||^2 \\<br> S.T. \ \ \ y^{(i)}(w^T x^{(i)} + d) \ge 1}<br>\end{aligned}<br>\right.<br>$$</p>
+<p>也就是在$y^{(i)}(w^T x^{(i)} + d) \ge 1$这个限定条件下 ，求目标函数$min \frac 1 2 ||w||^2 $的最优解。</p>
+<p>这就和我们之前学习过的算法不一样了，之前不论是线性回归还是逻辑回归，在求最优化问题时都是求全局最优化问题，也就是没有限定条件的目标函数最优解问题，这类问题对目标函数求导让他等于0，然后相应的极值点就是最大值或最小值的位置。而SVM是有条件的最优化问题，此时求目标函数的极值就复杂了很多，这里就不对求解过程做详细阐述了。</p>
+<h2 id="Soft_Margin_SVM"><a href="#Soft_Margin_SVM" class="headerlink" title="Soft Margin SVM"></a>Soft Margin SVM</h2><p>在上一节介绍了Hard Margin SVM和Soft Margin SVM，并且在诠释SVM背后最优化问题的数学原理时也是基于Hard Margin SVM前提的。这一节我们来看看Soft Margin SVM。</p>
+<h3 id="Soft_Margin_SVM_u6982_u5FF5"><a href="#Soft_Margin_SVM_u6982_u5FF5" class="headerlink" title="Soft Margin SVM概念"></a>Soft Margin SVM概念</h3><p><img src="http://paxigrdp0.bkt.clouddn.com/9c7ae21a6ff46c774740afa4a2f7cb05.jpg" alt=""></p>
+<p>如上图所示，点A是一个蓝色分类的点，但是它离红色分类的点非常近，那么如果按Hard Margin SVM的思路，上图情况的决策边界很有可能是下图所示这样：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/d5668bb993d9a3b28bb2d2585a37f56e.jpg" alt=""></p>
+<p>这条决策边界直线看似很好的将蓝色和红色点完全区分开了，但是它的泛化能力是值得怀疑的，因为这条决策边界极大的受到了点A的影响，而点A可能是蓝色点中极为特殊的一个点，也有可能它根本就是一个错误的点。所以根据SVM的思想，比较合理的决策边界应该下图绿色的直线所示：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/766a45ecb9df58b5ab41525655347c87.jpg" alt=""></p>
+<p>虽然绿色直线的决策边界没有完全将红蓝点分开，但是如果将它放在生产数据中，可能预测准确度更高，也就是泛化能力更强。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/6b71f9d805f89f614fd9bd0a393b7890.jpg" alt=""></p>
+<p>再如上图中的情况，已经根本不可能有一条线性决策边界能将红蓝点分开了，所以我们希望决策边界具有一定的包容性或容错性，已降低分类准确度的代价换来更高的泛化能力。那么这种SVM就称为Soft Margin SVM。</p>
+<h3 id="Soft_Margin_SVM_u539F_u7406"><a href="#Soft_Margin_SVM_u539F_u7406" class="headerlink" title="Soft Margin SVM原理"></a>Soft Margin SVM原理</h3><p>在Hard Margin SVM最优化问题的两个函数中，限定条件$y^{(i)}(w^T x^{(i)} + d) \ge 1$表示在Margin区域内不会有任何点出现，但是在Soft Margin SVM中为了容错性，是允许在Margin区域内出现点的，也就是将Hard Margin SVM的限定条件加以宽松量，并且这个宽松量必须是正数：</p>
+<p>$$S.T. \ \ \ y^{(i)}(w^T x^{(i)} + d) \ge 1 - \zeta_i$$</p>
+<p>$$\zeta_i \ge 0$$</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/129d7835a23b0db515ef342d94810ca2.jpg" alt=""></p>
+<p>上图中有四条直线，其中橘黄色的三条是在讲Hard Margin SVM中得出的，如果我们将Hard Margin SVM中的限定条件加以宽松量的话，其实Margin的区域就会变小，也就是图中绿色虚线和决策边界构成的区域。而绿色虚线的方程为：</p>
+<p>$$w^Tx + d = 1 - \zeta$$</p>
+<p>那么Soft Margin SVM的限定条件我们就知道了。</p>
+<p>但是现在问题来了，如果当$\zeta$无穷大时会发生什么情况呢？那就意味着容错性无穷大，也就是可以将所有点都认为是同一类了，故而分不出类别。解决这个问题的思路我们之前已经了解过了，那就是模型正则化。</p>
+<p>我们知道Hard Margin SVM的优化目标函数为$min \frac 1 2 ||w||^2$，Soft Margin SVM也是基于Hard Margin SVM的思想演变的，所以我们将这个目标函数加一个正则模型，而这个正则模型又恰是Soft Margin SVM的宽松量，这样就达到了在Hard Margin SVM的思路下，增加宽松量从而实现Soft Margin SVM，所以 Soft Margin SVM的目标函数为：</p>
+<p>$$min \frac 1 2 ||w||^2 + C \sum_{i=1}^m\zeta_i$$</p>
+<p>公式里的$C$是模型正则化中的一个超参数，取值范围在0到1之间。用来权衡Hard Margin SVM目标函数和Soft Margin SVM宽松量两者之间的比例。如此一来也就限制了$\zeta$无穷大的问题，因为Soft Margin SVM的目标函数最优化要同时估计两部分，相互制约。</p>
+<p>我们在之前的笔记中学习过了$L_p$范数及$L<em>p$正则模型。这里的$C \sum\</em>{i=1}^m\zeta_i$就是$L_1$正则模型，而$L<em>2$正则模型是$C \sum\</em>{i=1}^m\zeta_i^2$。</p>
+<blockquote>
+<p>模型正则化的内容请参见<a href="http://www.devtalking.com/articles/machine-learning-9/"> 机器学习笔记九之交叉验证、模型正则化 </a>。</p>
+<h2 id="Scikit_Learn_u4E2D_u7684SVM"><a href="#Scikit_Learn_u4E2D_u7684SVM" class="headerlink" title="Scikit Learn中的SVM"></a>Scikit Learn中的SVM</h2><p>前面两小节介绍了SVM背后的数学原理，这一节来看看如何使用Scikit Learn中封装的SVM方法。我们还是使用之前使用过很多次的鸢尾花数据：</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">iris = datasets.load_iris();</span><br><span class="line"></span><br><span class="line">X = iris.data</span><br><span class="line">y = iris.target</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只取鸢尾花的两种类型，每种类型只取两个特征</span></span><br><span class="line"><span class="comment"># 我们先作用于二分类问题，并且为了绘图方便，所以先使用两个特征</span></span><br><span class="line">X = X[y &lt; <span class="number">2</span>, :<span class="number">2</span>]</span><br><span class="line">y = y[y &lt; <span class="number">2</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将数据绘制出来</span></span><br><span class="line">plt.scatter(X[y == <span class="number">0</span>, <span class="number">0</span>], X[y == <span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'red'</span>)</span><br><span class="line">plt.scatter(X[y == <span class="number">1</span>, <span class="number">0</span>], X[y == <span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/a44b5821f9b48dbcb9fd85051dab83e3.jpg" alt=""></p>
+<p>接下来我们使用Scikit Learn封装的SVM方法对样本数据进行分类：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> LinearSVC</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里的参数C就是在讲Soft Margin SVM中的那个超参数，这里将其取一个很大的值</span></span><br><span class="line">svc = LinearSVC(C=<span class="number">1e9</span>)</span><br><span class="line">svc.fit(X_sd, y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 仍然使用之前绘制决策边界的方法</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_decision_boundary</span><span class="params">(model, axis)</span>:</span></span><br><span class="line">	<span class="comment"># meshgrid函数用两个坐标轴上的点在平面上画格，返回坐标矩阵</span></span><br><span class="line">	X0, X1 = np.meshgrid(</span><br><span class="line">		<span class="comment"># 随机两组数，起始值和密度由坐标轴的起始值决定</span></span><br><span class="line">		np.linspace(axis[<span class="number">0</span>], axis[<span class="number">1</span>], int((axis[<span class="number">1</span>] - axis[<span class="number">0</span>]) * <span class="number">100</span>)).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">		np.linspace(axis[<span class="number">2</span>], axis[<span class="number">3</span>], int((axis[<span class="number">3</span>] - axis[<span class="number">2</span>]) * <span class="number">100</span>)).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">	)</span><br><span class="line">	<span class="comment"># ravel()方法将高维数组降为一维数组，c_[]将两个数组以列的形式拼接起来，形成矩阵</span></span><br><span class="line">	X_grid_matrix = np.c_[X0.ravel(), X1.ravel()]</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 通过训练好的逻辑回归模型，预测平面上这些点的分类</span></span><br><span class="line">	y_predict = model.predict(X_grid_matrix)</span><br><span class="line">	y_predict_matrix = y_predict.reshape(X0.shape)</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 设置色彩表</span></span><br><span class="line">	<span class="keyword">from</span> matplotlib.colors <span class="keyword">import</span> ListedColormap</span><br><span class="line">	my_colormap = ListedColormap([<span class="string">'#0000CD'</span>, <span class="string">'#40E0D0'</span>, <span class="string">'#FFFF00'</span>])</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 绘制等高线，并且填充等高区域的颜色</span></span><br><span class="line">	plt.contourf(X0, X1, y_predict_matrix, linewidth=<span class="number">5</span>, cmap=my_colormap)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(svc, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">0</span>, <span class="number">0</span>], X_sd[y == <span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'red'</span>)</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">1</span>, <span class="number">0</span>], X_sd[y == <span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/890c26515621cbce34e121af68d6f924.jpg" alt=""></p>
+<p>在上面的示例代码中，我将超参数$C$取了一个非常大的数，那么为了平衡$min \frac 1 2 ||w||^2 + C \sum_{i=1}^m\zeta_i$整个函数，$\zeta$就得等于0才能让最大限度的平衡正则模型和整个目标函数。所以宽松量为零，就成了Hard Margin SVM。并且从上图可以看出，离决策边界最近的点，无论是红色点还是蓝色点，也就是红蓝支撑向量到决策边界的距离都差不多。</p>
+<p>如果我们将超参数$C$的值取的小一些，那么整个问题就变成了Soft Margin SVM，来对比看看决策边界会有什么不同：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">svc2 = LinearSVC(C=<span class="number">0.01</span>)</span><br><span class="line">svc2.fit(X_sd, y)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(svc2, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">0</span>, <span class="number">0</span>], X_sd[y == <span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'red'</span>)</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">1</span>, <span class="number">0</span>], X_sd[y == <span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/26dc2972ed477705b9ef58d24ab96366.jpg" alt=""></p>
+<p>此时从上图可以看到，红蓝支撑向量到决策边界的距离已经不一样了，并且还有一个红色的点被划到蓝色点的范围内，那么我们知道这都是因为Soft Margin SVM中加了宽松量的缘故。</p>
+<h3 id="u7ED8_u5236_u652F_u6491_u5411_u91CF_u76F4_u7EBF"><a href="#u7ED8_u5236_u652F_u6491_u5411_u91CF_u76F4_u7EBF" class="headerlink" title="绘制支撑向量直线"></a>绘制支撑向量直线</h3><p>在上一小节，我们知道决策边界以及上下支撑向量构成的直线的公式分别是：</p>
+<ul>
+<li>决策边界：$w^Tx + d = 0$</li>
+<li>上支撑向量直线：$w^Tx + d = 1$</li>
+<li>下支撑向量直线：$w^Tx + d = -1$</li>
+</ul>
+<p>那么在鸢尾花的示例中，如何来求这三条直线呢？以决策边界直线为例，$w$和$d$其实我们已经知道了，就是特征系数和截距：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">svc.coef_</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[ <span class="number">4.03243252</span>, -<span class="number">2.49295032</span>]])</span><br><span class="line"></span><br><span class="line">svc.intercept_</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([ <span class="number">0.95364645</span>])</span><br></pre></td></tr></table></figure>
+<p>因为我们只用了鸢尾花的两个类型和两个特征，所以决策边界直线的公式可以展开为：</p>
+<p>$$w_0 <em> x_0 + w_1 </em> x_1 + d = 0$$</p>
+<p>将上面的公式转换为$y = ax + b$的形式：</p>
+<p>$$w_1 <em> x_1 = - w_0 </em> x_0 - d \<br>x_1 = - \frac {w_0 * x_0} {w_1} - \frac {d} {w_1}$$</p>
+<p>同理我们也可以将支撑向量直线的公式作以转换：</p>
+<p>$$x_1 = - \frac {w_0 * x_0} {w_1} - \frac {d} {w_1} + \frac 1 {w_1}$$</p>
+<p>$$x_1 = - \frac {w_0 * x_0} {w_1} - \frac {d} {w_1} - \frac 1 {w_1}$$<br>此时我们在给定的坐标系内，构建一组$x_0$，那么就可以求出一组$x_1$，然后将这些点连起来，就绘制出了决策边界的直线：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 构造一个绘制决策边界和上下支撑向量直线的方法</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_svc_decision_boundary</span><span class="params">(model, axis)</span>:</span></span><br><span class="line">	<span class="comment"># 因为SVM可以解决多分类问题，所以特征系数和截距都是数组，在二分类问题下取第0个元素</span></span><br><span class="line">	w = model.coef_[<span class="number">0</span>]</span><br><span class="line">	d = model.intercept_[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 构建200个在axis范围内的，有线性关系的点，既构建x0</span></span><br><span class="line">	plot_x = np.linspace(axis[<span class="number">0</span>], axis[<span class="number">1</span>], <span class="number">200</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 根据上面转换的公式，求出x1</span></span><br><span class="line">	y = - (w[<span class="number">0</span>] * plot_x)/w[<span class="number">1</span>] - d / w[<span class="number">1</span>]</span><br><span class="line">	up_y = - (w[<span class="number">0</span>] * plot_x)/w[<span class="number">1</span>] - d / w[<span class="number">1</span>] + <span class="number">1</span> / w[<span class="number">1</span>]</span><br><span class="line">	down_y = - (w[<span class="number">0</span>] * plot_x)/w[<span class="number">1</span>] - d / w[<span class="number">1</span>] - <span class="number">1</span> / w[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 对y轴的上下边界作以限制</span></span><br><span class="line">	y_index = (y &gt;= axis[<span class="number">2</span>]) &amp; (y &lt;= axis[<span class="number">3</span>])</span><br><span class="line">	up_y_index = (up_y &gt;= axis[<span class="number">2</span>]) &amp; (up_y &lt;= axis[<span class="number">3</span>])</span><br><span class="line">	down_y_index = (down_y &gt;= axis[<span class="number">2</span>]) &amp; (down_y &lt;= axis[<span class="number">3</span>])</span><br><span class="line"></span><br><span class="line">	plt.plot(plot_x[y_index], y[y_index], color=<span class="string">'black'</span>)</span><br><span class="line">	plt.plot(plot_x[up_y_index], up_y[up_y_index], color=<span class="string">'black'</span>)</span><br><span class="line">	plt.plot(plot_x[down_y_index], down_y[down_y_index], color=<span class="string">'black'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">plot_decision_boundary(svc, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plot_svc_decision_boundary(svc, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">0</span>, <span class="number">0</span>], X_sd[y == <span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'red'</span>)</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">1</span>, <span class="number">0</span>], X_sd[y == <span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/ecf8b9cd82f869204f83be40a2a396d3.jpg" alt=""></p>
+<p>从上图可以看到，是一个标准的Hard Margin SVM，Margin区域没有任何一个点，支撑向量一共有五个，红色点三个，蓝色点两个。</p>
+<p>我们再来看看Soft Margin SVM的情况：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plot_decision_boundary(svc2, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plot_svc_decision_boundary(svc2, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">0</span>, <span class="number">0</span>], X_sd[y == <span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'red'</span>)</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">1</span>, <span class="number">0</span>], X_sd[y == <span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/f890f7e814104e7b8581049811da361f.jpg" alt=""></p>
+<p>从上图中可以看出，Margin区域内有很多点，说明相比Hard Margin SVM，Soft Margin SVM增加了不少宽松量。</p>
+<blockquote>
+<p>申明：本文为慕课网<a href="https://www.imooc.com/t/108955" target="_blank" rel="external">liuyubobobo</a>老师<a href="https://coding.imooc.com/learn/list/169.html" target="_blank" rel="external">《Python3入门机器学习 经典算法与应用》</a>课程的学习笔记，未经允许不得转载。</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+]]></content>
+    <summary type="html">
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这一篇笔记主要讲机器学习算法中一个重要的分类算法，支撑向量机（Support Vector Machine）。它背后有严格的数学理论和统计学理论支撑的，这里我们只对它的原理和应用做以介绍，更深层次的数学理论有兴趣可以查阅其他资料。</p>
+<h2 id="u4EC0_u4E48_u662FSVM"><a href="#u4EC0_u4E48_u662FSVM" class="headerlink" title="什么是SVM"></a>什么是SVM</h2><p><img src="http://paxigrdp0.bkt.clouddn.com/5142c26ba0e86429631a63609c314a97.jpg" alt=""></p>
+<p>上面的图展示的是一个二分类问题，在逻辑回归的笔记中，我们知道了决策边界，图中橘黄色的直线就是决策边界，它看似很好的将样本数据的不同分类区分开了。我们在多项式回归的笔记中，讲过模型泛化的问题，一个模型的好坏程度很大程度上是体现了模型泛化能力的好坏，也就是对未知样本的预测能力。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/b26d6614606ac304144b99549eeb390e.jpg" alt=""></p>
+<p>如果新来一个样本数据A，按照决策边界划分它是被分为了蓝色分类，可事实真的是如此吗，因为点A和红色分类的点非常近，很有可能点A是属于红色分类的。所以上图中的决策边界可能并不是最优的，那最优的决策边界应该是什么样的呢？</p>
+<p>上面的决策边界之所以有缺陷，是因为它和红色类别的点太近了，当然肯定也不能和蓝色的点太近了，所以我们希望这条决策边界离红色分类和蓝色分类都尽可能的远，才能很好的避免上面出现的问题。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/990fbea083569d4503be599d202b049d.jpg" alt=""></p>
+<p>想要决策边界离红蓝两个分类都尽可能的远，也就是红蓝分类两边离决策边界最近的点的距离要远，并且两边的点到决策边界的距离要相等，这才说明决策边界是不偏不倚的，如上图所示。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/d4642c6673e5e75023088be725dcd4f8.jpg" alt=""></p>
+<p>过红蓝两边离决策边界最近的点画两条直线，并且平行于决策边界，那么就确定了一个区域，在这个区域内不应该再有任何数据点出现。那么SVM就是尝试寻找这个区域中间那条最优的决策边界。这个区域边界上的点称为支撑向量，换句话说，是支撑向量定义出了这个区域，那么最优的决策边界也是由支撑向量决定的，这也是支撑向量机这个名称的由来。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/f5af760ed417acf74d79d065b437807d.jpg" alt=""></p>
+<p>如上图所示，由支撑向量确定的区域之间的距离称为Margin。那么SVM要做的事情就是最大化Margin，既将问题转化为了求最优解的问题。</p>
+<p>以上对SVM的解释是基于线性可分问题的基础上，也就是能确确实实找到一条直线作为决策边界，这种问题称为Hard Margin SVM，但是很多真实的情况是线性不可分的，这类问题称为Soft Margin SVM，这两类问题都是支撑向量机可以处理的，但基础还是Hard Margin SVM。</p>]]>
+    
+    </summary>
+    
+      <category term="机器学习" scheme="http://www.devtalking.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[机器学习笔记十二之算法精准率、召回率、混淆矩阵]]></title>
@@ -3593,173 +3763,6 @@ Successfully installed shadowsocks-2.8.2
     </summary>
     
       <category term="ShadowSocks" scheme="http://www.devtalking.com/tags/ShadowSocks/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[读 Concurrency Programming Guide 笔记（三）]]></title>
-    <link href="http://www.devtalking.com//articles/read-concurrency-programming-guide-3/"/>
-    <id>http://www.devtalking.com//articles/read-concurrency-programming-guide-3/</id>
-    <published>2016-04-20T16:00:00.000Z</published>
-    <updated>2018-06-01T16:19:45.377Z</updated>
-    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>本文首发<a href="http://geek.csdn.net/news/detail/69122" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<h2 id="u901A_u8FC7Dispatch_Queue_u6267_u884C_u4EFB_u52A1"><a href="#u901A_u8FC7Dispatch_Queue_u6267_u884C_u4EFB_u52A1" class="headerlink" title="通过Dispatch Queue执行任务"></a>通过Dispatch Queue执行任务</h2><p>如果想让Dispatch Queue执行任务，首先就是得将任务放入队列中，我们可以异步的将任务加入队列，也可以同步的将任务加入队列，可以一个任务一个任务的加，也可以一组一组的加。这节我们就来看看将任务加入队列的那些事。</p>
-<h3 id="u5411_u961F_u5217_u6DFB_u52A0_u4EFB_u52A1"><a href="#u5411_u961F_u5217_u6DFB_u52A0_u4EFB_u52A1" class="headerlink" title="向队列添加任务"></a>向队列添加任务</h3><p>我们可以使用<code>dispatch_async</code>或者<code>dispatch_async_f</code>函数异步的向队列中添加任务，也就是说当我们添加完任务后该函数会立即返回，我们不需要等待任务执行完成，而且我们也不会知道队列到底何时开始执行任务。<code>dispatch_async</code>函数有两个参数，一个是目标队列，类型为<code>dispatch_queue_t</code>，另一个是闭包，类型为<code>dispatch_block_t</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> serialQueue = dispatch_queue_create(<span class="string">"com.example.MySerialQueue"</span>, <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">dispatch_async(serialQueue, &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Task in the queue..."</span>)</span><br><span class="line">        </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p><code>dispatch_async_f</code>函数有三个参数，第一个是类型为<code>dispatch_queue_t</code>的目标队列，第二个是队列上下文指针，第三个是类型为<code>dispatch_function_t</code>的任务函数，队列上下文指针为该函数的唯一参数：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AddTaskToQueue</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> serialQueue = dispatch_queue_create(<span class="string">"com.example.MySerialQueue"</span>, <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">        dispatch_async(serialQueue, &#123;</span><br><span class="line">        </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Task in the queue..."</span>)</span><br><span class="line">        </span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">        dispatch_async_f(serialQueue, <span class="built_in">unsafeBitCast</span>(<span class="number">0</span>, <span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Int</span>&gt;.<span class="keyword">self</span>), taskFunction())</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">taskFunction</span><span class="params">()</span></span> -&gt; dispatch_function_t &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123; context <span class="keyword">in</span></span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Do some work with context..."</span>)</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> addTaskToQueue = <span class="type">AddTaskToQueue</span>()</span><br><span class="line">addTaskToQueue.launch()</span><br></pre></td></tr></table></figure>
-<p>除了这两个函数，我们还可以使用<code>dispatch_sync</code>和<code>dispatch_sync_f</code>函数同步的向队列中添加任务，并且我们要等待直到任务执行完成。这两个函数和上面的异步添加任务函数用法完全一致。</p>
-<p>那么什么时候用异步什么时候用同步呢，大多数情况下我们都是在主线程中使用GCD分派任务，为了避免阻塞主线程，影响用户体验，所以通常情况下我们都使用异步添加任务的方式。当然为了避免任务与主线程中产生资源竞争的问题，有时候酌情也会使用同步添加任务的方式。</p>
-<h3 id="Dispatch_Queue_u7684Completion_Block"><a href="#Dispatch_Queue_u7684Completion_Block" class="headerlink" title="Dispatch Queue的Completion Block"></a>Dispatch Queue的Completion Block</h3><p>还记得<code>NSOperation</code>的<code>completionBlock</code>属性吗，这个回调函数在任务执行完成后调用，用于处理有些后续工作或者消息通知。在Dispatch Queue中并没有类似的属性，但是我们可以通过其他方式来实现。举一个很常见的应用场景，我们在主线程中分派一个下载图片的任务，让其在二级线程中执行，当图片下载完成后通知主线程，并由主线程将图片显示出来，我们看看简单的代码片段：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DownloadImage</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">dispatchTaskInMainThread</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        dispatch_async(dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="number">0</span>), downloadImage())</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">downloadImage</span><span class="params">()</span></span> -&gt; (() -&gt; ()) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Downloading image in <span class="subst">\(NSThread.currentThread()</span>)"</span>)</span><br><span class="line">            </span><br><span class="line">            dispatch_async(dispatch_get_main_queue()) &#123;</span><br><span class="line">            </span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Handle image and display in <span class="subst">\(NSThread.currentThread()</span>)"</span>)</span><br><span class="line">            </span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们来看看上面代码都做了些什么，首先在<code>dispatchTaskInMainThread</code>方法中，我们使用<code>dispatch_get_global_queue</code>函数获取到全局并发队列，然后将<code>downloadImage</code>下载图片的方法作为任务添加到该全局队列中。在<code>downloadImage</code>方法里，当图片下载完成后通过<code>dispatch_get_main_queue</code>函数获取到主队列，也就是在主线程中对图片进行处理，这样我们就达到了Completion Block的效果。</p>
-<a id="more"></a>
-<h3 id="u5728_u961F_u5217_u4E2D_u5FAA_u73AF_u6267_u884C_u4EFB_u52A1"><a href="#u5728_u961F_u5217_u4E2D_u5FAA_u73AF_u6267_u884C_u4EFB_u52A1" class="headerlink" title="在队列中循环执行任务"></a>在队列中循环执行任务</h3><p>在我们的日常开发中，经常会使用到for循环来处理一些任务，而且这些任务之间也并没有先后顺序的关联，每个任务相对比较独立。遇到这种情况，我们可以用<code>dispatch_apply</code>或<code>dispatch_apply_f</code>函数让任务在队列中循环执行，并且可以是并发执行，这样相比for循环的串行执行要更加效率：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// for循环</span></span><br><span class="line"><span class="keyword">let</span> arr = [<span class="string">"Swift"</span>, <span class="string">"Objective-C"</span>, <span class="string">"Java"</span>, <span class="string">"Delphi"</span>, <span class="string">"C++"</span>]</span><br><span class="line">        </span><br><span class="line"><span class="keyword">for</span> element <span class="keyword">in</span> arr &#123;</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Handle element. the element is <span class="subst">\(element)</span>"</span>)</span><br><span class="line">            </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// dispatch_apply</span></span><br><span class="line">dispatch_apply(arr.<span class="built_in">count</span>, dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="number">0</span>))&#123; index <span class="keyword">in</span></span><br><span class="line">            </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Handle element. the element is <span class="subst">\(arr[index])</span>. Current thread is <span class="subst">\(NSThread.currentThread()</span>)"</span>)</span><br><span class="line">            </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上面示例代码片段中可以看到，<code>dispatch_apply</code>函数有三个参数，第一个参数是循环次数，第二个参数是目标队列，第三个则是要执行的闭包任务，循环次数是该闭包的唯一参数。</p>
-<h3 id="u6682_u505C_u548C_u91CD_u542F_u961F_u5217"><a href="#u6682_u505C_u548C_u91CD_u542F_u961F_u5217" class="headerlink" title="暂停和重启队列"></a>暂停和重启队列</h3><p>在Dispatch Queue执行任务时，如果我们想暂停队列，可以使用<code>dispatch_suspend</code>函数，重新让队列执行任务可以使用<code>dispatch_resume</code>。这里要注意的是暂停队列只是让队列暂时停止执行下一个任务，而不是中断当前正在执行的任务。</p>
-<h3 id="Dispatch_Group_u7684_u4F7F_u7528"><a href="#Dispatch_Group_u7684_u4F7F_u7528" class="headerlink" title="Dispatch Group的使用"></a>Dispatch Group的使用</h3><p>在实际开发中，为了提升性能我们或许会经常使用<code>dispatch_async</code>异步的将任务添加进队列去执行，但有些时候需要之前队列中的多个任务都执行完成之后，才能获取到正确的或者说想要的结果供后续逻辑代码使用，遇到这种情况，就可以使用Dispatch Group，将多个任务在队列中归为一个组，并可以使用<code>dispatch_group_wait</code>函数让之后的逻辑代码等待，直到该组的任务都执行完成后再执行。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="built_in">count</span> = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> concurrentQueue = dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line">dispatch_async(concurrentQueue) &#123;</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Task1 in dispatchGroup..."</span>)</span><br><span class="line">            </span><br><span class="line">    sleep(<span class="number">2</span>)</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">count</span> += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">dispatch_async(concurrentQueue) &#123;</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Task2 in dispatchGroup..."</span>)</span><br><span class="line">            </span><br><span class="line">    sleep(<span class="number">3</span>)</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">count</span> += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">dispatch_async(concurrentQueue) &#123;</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Task3 in dispatchGroup..."</span>)</span><br><span class="line">            </span><br><span class="line">    sleep(<span class="number">1</span>)</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">count</span> += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line"><span class="built_in">print</span>(<span class="string">"I expect the count is 3, and the factual count is <span class="subst">\(<span class="built_in">count</span>)</span>"</span>)</span><br></pre></td></tr></table></figure>
-<p>上面的代码片段就是我刚才描述的场景，因为使用的是并发队列，也不好在每个任务里进行回调处理，所以我们永远不会得到正确的<code>count</code>。如果我们使用Dispatch Group事情就简单多了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="built_in">count</span> = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> concurrentQueue = dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> dispatchGroup = dispatch_group_create()</span><br><span class="line">        </span><br><span class="line">dispatch_group_async(dispatchGroup, concurrentQueue) &#123;</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Task1 in dispatchGroup..."</span>)</span><br><span class="line">            </span><br><span class="line">    sleep(<span class="number">2</span>)</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">count</span> += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">dispatch_group_async(dispatchGroup, concurrentQueue) &#123;</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Task2 in dispatchGroup..."</span>)</span><br><span class="line">            </span><br><span class="line">    sleep(<span class="number">3</span>)</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">count</span> += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">dispatch_group_async(dispatchGroup, concurrentQueue) &#123;</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Task3 in dispatchGroup..."</span>)</span><br><span class="line">            </span><br><span class="line">    sleep(<span class="number">1</span>)</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">count</span> += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line">dispatch_group_wait(dispatchGroup, <span class="type">DISPATCH_TIME_FOREVER</span>)</span><br><span class="line">        </span><br><span class="line"><span class="built_in">print</span>(<span class="string">"I expect the count is 3, and the factual count is <span class="subst">\(<span class="built_in">count</span>)</span>"</span>)</span><br></pre></td></tr></table></figure>
-<p>上面的代码中，先使用<code>dispatch_group_create</code>函数创建Dispatch Group，然后使用<code>dispatch_group_async</code>函数将任务分进组里，然后再添加进队列中。该函数有三个参数，分别是Dispatch Group、Dispatch Queue和要执行任务的闭包。当添加完任务后使用<code>dispatch_group_wait</code>函数等待，直到指定组的任务全部完成，才会继续执行后面的打印语句，该函数有两个参数，第一个是目标组，第二个是等待时间<code>DISPATCH_TIME_NOW</code>或<code>DISPATCH_TIME_FOREVER</code>。</p>
-<h2 id="Dispatch_Source"><a href="#Dispatch_Source" class="headerlink" title="Dispatch Source"></a>Dispatch Source</h2><p>前面的文章中介绍过Dispatch Source：</p>
-<blockquote>
-<p>Dispatch Source是GCD中的一个基本类型，从字面意思可称为调度源，它的作用是当有一些特定的较底层的系统事件发生时，调度源会捕捉到这些事件，然后可以做其他的逻辑处理，调度源有多种类型，分别监听对应类型的系统事件。我们来看看它都有哪些类型：</p>
-<ul>
-<li>Timer Dispatch Source：定时调度源。</li>
-<li>Signal Dispatch Source：监听UNIX信号调度源，比如监听代表挂起指令的SIGSTOP信号。</li>
-<li>Descriptor Dispatch Source：监听文件相关操作和Socket相关操作的调度源。</li>
-<li>Process Dispatch Source：监听进程相关状态的调度源。</li>
-<li>Mach port Dispatch Source：监听Mach相关事件的调度源。</li>
-<li>Custom Dispatch Source：监听自定义事件的调度源。</li>
-</ul>
-</blockquote>
-<p>这一节就来看看如何使用Dispatch Source。</p>
-<p>用通俗一点的话说就是用GCD的函数指定一个希望监听的系统事件类型，再指定一个捕获到事件后进行逻辑处理的闭包或者函数作为回调函数，然后再指定一个该回调函数执行的Dispatch Queue即可，当监听到指定的系统事件发生时会调用回调函数，将该回调函数作为一个任务放入指定的队列中执行。也就是说当监听到系统事件后就会触发一个任务，并自动将其加入队列执行，这里与之前手动添加任务的模式不同，一旦将Diaptach Source与Dispatch Queue关联后，只要监听到系统事件，Dispatch Source就会自动将任务（回调函数）添加到关联的队列中。</p>
-<p>有些时候回调函数执行的时间较长，在这段时间内Dispatch Source又监听到多个系统事件，理论上就会形成事件积压，但好在Dispatch Source有很好的机制解决这个问题，当有多个事件积压时会根据事件类型，将它们进行关联和结合，形成一个新的事件。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h3 id="u76D1_u542C_u4E8B_u4EF6_u7C7B_u578B"><a href="#u76D1_u542C_u4E8B_u4EF6_u7C7B_u578B" class="headerlink" title="监听事件类型"></a>监听事件类型</h3><p>Dispatch Source一共可以监听六类事件，分为11个类型，我们来看看都是什么：</p>
-<ul>
-<li><code>DISPATCH_SOURCE_TYPE_DATA_ADD</code>：属于自定义事件，可以通过<code>dispatch_source_get_data</code>函数获取事件变量数据，在我们自定义的方法中可以调用<code>dispatch_source_merge_data</code>函数向Dispatch Source设置数据，下文中会有详细的演示。</li>
-<li><code>DISPATCH_SOURCE_TYPE_DATA_OR</code>：属于自定义事件，用法同上面的类型一样。</li>
-<li><code>DISPATCH_SOURCE_TYPE_MACH_SEND</code>：Mach端口发送事件。</li>
-<li><code>DISPATCH_SOURCE_TYPE_MACH_RECV</code>：Mach端口接收事件。</li>
-<li><code>DISPATCH_SOURCE_TYPE_PROC</code>：与进程相关的事件。</li>
-<li><code>DISPATCH_SOURCE_TYPE_READ</code>：读文件事件。</li>
-<li><code>DISPATCH_SOURCE_TYPE_WRITE</code>：写文件事件。</li>
-<li><code>DISPATCH_SOURCE_TYPE_VNODE</code>：文件属性更改事件。</li>
-<li><code>DISPATCH_SOURCE_TYPE_SIGNAL</code>：接收信号事件。</li>
-<li><code>DISPATCH_SOURCE_TYPE_TIMER</code>：定时器事件。</li>
-<li><code>DISPATCH_SOURCE_TYPE_MEMORYPRESSURE</code>：内存压力事件。</li>
-</ul>
-<h3 id="u521B_u5EFADispatch_Source"><a href="#u521B_u5EFADispatch_Source" class="headerlink" title="创建Dispatch Source"></a>创建Dispatch Source</h3><p>我们可以使用<code>dispatch_source_create</code>函数创建Dispatch Source，该函数有四个参数：</p>
-<ul>
-<li><code>type</code>：第一个参数用于标识Dispatch Source要监听的事件类型，共有11个类型。</li>
-<li><code>handle</code>：第二个参数是取决于要监听的事件类型，比如如果是监听Mach端口相关的事件，那么该参数就是<code>mach_port_t</code>类型的Mach端口号，如果是监听事件变量数据类型的事件那么该参数就不需要，设置为0就可以了。</li>
-<li><code>mask</code>：第三个参数同样取决于要监听的事件类型，比如如果是监听文件属性更改的事件，那么该参数就标识文件的哪个属性，比如<code>DISPATCH_VNODE_RENAME</code>。</li>
-<li><code>queue</code>：第四个参数设置回调函数所在的队列。</li>
-</ul>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> dispatchQueue = dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> dispatchSource = dispatch_source_create(<span class="type">DISPATCH_SOURCE_TYPE_DATA_ADD</span>, <span class="number">0</span>, <span class="number">0</span>, dispatchQueue)</span><br></pre></td></tr></table></figure>
-<p>上面的代码就是创建Dispatch Source的简单示例。</p>
-<h3 id="u8BBE_u7F6E_u4E8B_u4EF6_u5904_u7406_u5668"><a href="#u8BBE_u7F6E_u4E8B_u4EF6_u5904_u7406_u5668" class="headerlink" title="设置事件处理器"></a>设置事件处理器</h3><p>前文中提到过，当Dispatch Source监听到事件时会调用指定的回调函数或闭包，该回调函数或闭包就是Dispatch Source的事件处理器。我们可以使用<code>dispatch_source_set_event_handler</code>或<code>dispatch_source_set_event_handler_f</code>函数给创建好的Dispatch Source设置处理器，前者是设置闭包形式的处理器，后者是设置函数形式的处理器：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">dispatch_source_set_event_handler(dispatchSource, &#123;</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Dispatch Source 事件处理器..."</span>)</span><br><span class="line">        </span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 根据闭包尾随的特性，还可以有下面的写法</span></span><br><span class="line"></span><br><span class="line">dispatch_source_set_event_handler(dispatchSource) &#123;</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Dispatch Source 事件处理器..."</span>)</span><br><span class="line">            </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上面示例代码中可以看到，该函数有两个参数，第一个是设置目标Dispatch Source，第二个参数就是设置处理器了。</p>
-<p>既然是事件处理器，那么肯定需要获取一些Dispatch Source的信息，GCD提供了三个在处理器中获取Dispatch Source相关信息的函数，比如<code>handle</code>、<code>mask</code>。而且针对不同类型的Dispatch Source，这三个函数返回数据的值和类型都会不一样，下面来看看这三个函数：</p>
-<ul>
-<li><code>dispatch_source_get_handle</code>：这个函数用于获取在创建Dispatch Source时设置的第二个参数<code>handle</code>。<ul>
-<li>如果是读写文件的Dispatch Source，返回的就是描述符。</li>
-<li>如果是信号类型的Dispatch Source，返回的是<code>int</code>类型的信号数。</li>
-<li>如果是进程类型的Dispatch Source，返回的是<code>pid_t</code>类型的进程id。</li>
-<li>如果是Mach端口类型的Dispatch Source，返回的是<code>mach_port_t</code>类型的Mach端口。</li>
-</ul>
-</li>
-<li><code>dispatch_source_get_data</code>：该函数用于获取Dispatch Source监听到事件的相关数据。<ul>
-<li>如果是读文件类型的Dispatch Source，返回的是读到文件内容的字节数。</li>
-<li>如果是写文件类型的Dispatch Source，返回的是文件是否可写的标识符，正数表示可写，负数表示不可写。</li>
-<li>如果是监听文件属性更改类型的Dispatch Source，返回的是监听到的有更改的文件属性，用常量表示，比如<code>DISPATCH_VNODE_RENAME</code>等。</li>
-<li>如果是进程类型的Dispatch Source，返回监听到的进程状态，用常量表示，比如<code>DISPATCH_PROC_EXIT</code>等。</li>
-<li>如果是Mach端口类型的Dispatch Source，返回Mach端口的状态，用常量表示，比如<code>DISPATCH_MACH_SEND_DEAD</code>等。</li>
-<li>如果是自定义事件类型的Dispatch Source，返回使用<code>dispatch_source_merge_data</code>函数设置的数据。</li>
-</ul>
-</li>
-<li><code>dispatch_source_get_mask</code>：该函数用于获取在创建Dispatch Source时设置的第三个参数<code>mask</code>。在进程类型，文件属性更改类型，Mach端口类型的Dispatch Source下该函数返回的结果与<code>dispatch_source_get_data</code>一样。</li>
-</ul>
-<h3 id="u6CE8_u518CCancellation_Handler"><a href="#u6CE8_u518CCancellation_Handler" class="headerlink" title="注册Cancellation Handler"></a>注册Cancellation Handler</h3><p>Cancellation Handler就是当Dispatch Source被释放时用来处理一些后续事情，比如关闭文件描述符或者释放Mach端口等。我们可以使用<code>dispatch_source_set_cancel_handler</code>函数或者<code>dispatch_source_set_cancel_handler_f</code>函数给Dispatch Source注册Cancellation Handler：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">dispatch_source_set_cancel_handler(dispatchSource) &#123;</span><br><span class="line">            </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"进行善后处理..."</span>)</span><br><span class="line">            </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>该函数有两个参数，第一个参数是目标Dispatch Source，第二个参数就是要进行善后处理的闭包或者函数。</p>
-<h3 id="u66F4_u6539Dispatch_Source_u7684_u76EE_u6807_u961F_u5217"><a href="#u66F4_u6539Dispatch_Source_u7684_u76EE_u6807_u961F_u5217" class="headerlink" title="更改Dispatch Source的目标队列"></a>更改Dispatch Source的目标队列</h3><p>在上文中，我们说过可以使用<code>dispatch_source_create</code>函数创建Dispatch Source，并且在创建时会指定回调函数执行的队列，那么如果事后想更改队列，比如说想更改队列的优先级，这时我们可以使用<code>dispatch_set_target_queue</code>函数实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> dispatchQueueDefaultPriority = dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> dispatchSource = dispatch_source_create(<span class="type">DISPATCH_SOURCE_TYPE_DATA_ADD</span>, <span class="number">0</span>, <span class="number">0</span>, dispatchQueueDefaultPriority)</span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> dispatchQueueLowPriority = dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_LOW</span>, <span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line">dispatch_set_target_queue(dispatchSource, dispatchQueueLowPriority)</span><br></pre></td></tr></table></figure>
-<p>这里需要注意的是，如果在更改目标队列时，Dispatch Source已经监听到相关事件，并且回调函数已经在之前的队列中执行了，那么会一直在旧的队列中执行完成，不会转移到新的队列中去。</p>
-<h3 id="u6682_u505C_u6062_u590DDispatch_Source"><a href="#u6682_u505C_u6062_u590DDispatch_Source" class="headerlink" title="暂停恢复Dispatch Source"></a>暂停恢复Dispatch Source</h3><p>暂停和恢复Dispatch Source与Dispatch Queue一样，都适用<code>dispatch_suspend</code>和<code>dispatch_resume</code>函数。这里需要注意的是刚创建好的Dispatch Source是处于暂停状态的，所以使用时需要用<code>dispatch_resume</code>函数将其启动。</p>
-<h3 id="u5E9F_u9664Dispatch_Source"><a href="#u5E9F_u9664Dispatch_Source" class="headerlink" title="废除Dispatch Source"></a>废除Dispatch Source</h3><p>如果我们不再需要使用某个Dispatch Source时，可以使用<code>dispatch_source_cancel</code>函数废除，该函数只有一个参数，那就是目标Dispatch Source。</p>
-<h3 id="Dispatch_Source_u5B9E_u8DF5"><a href="#Dispatch_Source_u5B9E_u8DF5" class="headerlink" title="Dispatch Source实践"></a>Dispatch Source实践</h3><p>说了这么多，这一节来看看Dispatch Source到底怎么用。</p>
-<h4 id="u7528Dispatch_Source_u76D1_u542C_u5B9A_u65F6_u5668"><a href="#u7528Dispatch_Source_u76D1_u542C_u5B9A_u65F6_u5668" class="headerlink" title="用Dispatch Source监听定时器"></a>用Dispatch Source监听定时器</h4><p>Dispatch Source能监听的事件中有一个类型就是定时器，我们来看看如何实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestDispatchSource</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> dispatchQueue = dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> timer = createTimerDispatchSource(dispatch_time(<span class="type">DISPATCH_TIME_NOW</span>, <span class="number">0</span>), interval: <span class="type">NSEC_PER_SEC</span> * <span class="number">5</span>, leeway: <span class="number">0</span>, queue: dispatchQueue) &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"处理定时任务，该任务每5秒执行一次..."</span>)</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        dispatch_resume(timer)</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">30</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">createTimerDispatchSource</span><span class="params">(startTime: dispatch_time_t, interval: UInt64, leeway: UInt64, queue: dispatch_queue_t, handler: dispatch_block_t)</span></span> -&gt; dispatch_source_t &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> timerDispatchSource = dispatch_source_create(<span class="type">DISPATCH_SOURCE_TYPE_TIMER</span>, <span class="number">0</span>, <span class="number">0</span>, queue)</span><br><span class="line">        </span><br><span class="line">        dispatch_source_set_timer(timerDispatchSource, startTime, interval, leeway)</span><br><span class="line">        </span><br><span class="line">        dispatch_source_set_event_handler(timerDispatchSource, handler)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> timerDispatchSource</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的代码示例中一个新的函数<code>dispatch_source_set_timer</code>，该函数的作用就是给监听事件类型为<code>DISPATCH_SOURCE_TYPE_TIMER</code>的Dispatch Source设置相关属性，该函数有四个参数：</p>
-<ul>
-<li><code>source</code>：该参数为目标Dispatch Source，类型为<code>dispatch_source_t</code>.</li>
-<li><code>start</code>：该参数为定时器的起始时间，类型为<code>dispatch_time_t</code>。</li>
-<li><code>interval</code>：该参数为定时器的间隔时间，类型为<code>UInt64</code>，间隔时间的单位是纳秒。</li>
-<li><code>leeway</code>：该参数为间隔时间的精度，类型为<code>UInt64</code>，时间单位也是纳秒。</li>
-</ul>
-<h4 id="u7528Dispatch_Source_u76D1_u542C_u81EA_u5B9A_u4E49_u4E8B_u4EF6"><a href="#u7528Dispatch_Source_u76D1_u542C_u81EA_u5B9A_u4E49_u4E8B_u4EF6" class="headerlink" title="用Dispatch Source监听自定义事件"></a>用Dispatch Source监听自定义事件</h4><p>Dispatch Source能监听的事件中有一个类型是自定义事件，下面我们来看看如何使用:</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestDispatchSource</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> totalProcess = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> dispatchSource = dispatch_source_create(<span class="type">DISPATCH_SOURCE_TYPE_DATA_ADD</span>, <span class="number">0</span>, <span class="number">0</span>, dispatch_get_main_queue())</span><br><span class="line">        </span><br><span class="line">        dispatch_source_set_event_handler(dispatchSource) &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">let</span> process = dispatch_source_get_data(dispatchSource)</span><br><span class="line">            </span><br><span class="line">            totalProcess += <span class="type">Int</span>(process)</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"这里可以在主线程更新UI，显示进度条...进度为<span class="subst">\(totalProcess)</span>%"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        dispatch_resume(dispatchSource)</span><br><span class="line">        </span><br><span class="line">        generateCustomEvent(dispatchSource)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">generateCustomEvent</span><span class="params">(dispatchSource: dispatch_source_t)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> queue = dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> <span class="number">0</span>...<span class="number">100</span> &#123;</span><br><span class="line">            </span><br><span class="line">            dispatch_sync(queue) &#123;</span><br><span class="line">                </span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"模拟自定义事件...进度为<span class="subst">\(index)</span>%"</span>)</span><br><span class="line">                </span><br><span class="line">                dispatch_source_merge_data(dispatchSource, <span class="number">1</span>)</span><br><span class="line">                </span><br><span class="line">                sleep(<span class="number">2</span>)</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们来看看<code>generateCustomEvent(dispatchSource: dispatch_source_t)</code>方法，该方法的作用的是模拟自定义事件，首先创建一个全局并发队列，然后循环让其执行任务，在执行的任务里调用<code>dispatch_source_merge_data</code>函数，就可以触发监听类型为<code>DISPATCH_SOURCE_TYPE_DATA_ADD</code>或者<code>DISPATCH_SOURCE_TYPE_DATA_OR</code>的Dispatch Source。该函数有两个参数，第一个参数是目标Dispatch Source，第二个参数的类型是无符号长整型，用于向目标Dispatch Source中的对应变量追加指定的数。</p>
-<p>我们再来看看如何监听自定义时间，首先创建类型为<code>DISPATCH_SOURCE_TYPE_DATA_ADD</code>的Dispatch Source，然后设置回调闭包，在闭包中使用<code>dispatch_source_get_data</code>获取追加的变量值，该函数只有一个参数，就是目标Dispatch Source，这里需要注意的是通过<code>dispatch_source_get_data</code>函数获取的变量值并不是累加值，而是每次调用<code>dispatch_source_merge_data</code>函数时设置的值，所以在上面的示例中用<code>totalProcess</code>变量累加每次获取到的值。</p>
-<p>上面的示例可以用来模拟后台进行下载，根据下载的数据量使用<code>dispatch_source_merge_data</code>函数给目标Dispatch Source设置相应的变量值，然后在主线程中监听到Dispatch Source的自定义事件，通过<code>dispatch_source_get_data</code>函数获取到变量，用于更新显示进度条的UI。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-]]></content>
-    <summary type="html">
-    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>本文首发<a href="http://geek.csdn.net/news/detail/69122">CSDN</a>，如需转载请与CSDN联系。</p>
-<h2 id="u901A_u8FC7Dispatch_Queue_u6267_u884C_u4EFB_u52A1"><a href="#u901A_u8FC7Dispatch_Queue_u6267_u884C_u4EFB_u52A1" class="headerlink" title="通过Dispatch Queue执行任务"></a>通过Dispatch Queue执行任务</h2><p>如果想让Dispatch Queue执行任务，首先就是得将任务放入队列中，我们可以异步的将任务加入队列，也可以同步的将任务加入队列，可以一个任务一个任务的加，也可以一组一组的加。这节我们就来看看将任务加入队列的那些事。</p>
-<h3 id="u5411_u961F_u5217_u6DFB_u52A0_u4EFB_u52A1"><a href="#u5411_u961F_u5217_u6DFB_u52A0_u4EFB_u52A1" class="headerlink" title="向队列添加任务"></a>向队列添加任务</h3><p>我们可以使用<code>dispatch_async</code>或者<code>dispatch_async_f</code>函数异步的向队列中添加任务，也就是说当我们添加完任务后该函数会立即返回，我们不需要等待任务执行完成，而且我们也不会知道队列到底何时开始执行任务。<code>dispatch_async</code>函数有两个参数，一个是目标队列，类型为<code>dispatch_queue_t</code>，另一个是闭包，类型为<code>dispatch_block_t</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> serialQueue = dispatch_queue_create(<span class="string">"com.example.MySerialQueue"</span>, <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">dispatch_async(serialQueue, &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Task in the queue..."</span>)</span><br><span class="line">        </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p><code>dispatch_async_f</code>函数有三个参数，第一个是类型为<code>dispatch_queue_t</code>的目标队列，第二个是队列上下文指针，第三个是类型为<code>dispatch_function_t</code>的任务函数，队列上下文指针为该函数的唯一参数：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AddTaskToQueue</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> serialQueue = dispatch_queue_create(<span class="string">"com.example.MySerialQueue"</span>, <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">        dispatch_async(serialQueue, &#123;</span><br><span class="line">        </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Task in the queue..."</span>)</span><br><span class="line">        </span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">        dispatch_async_f(serialQueue, <span class="built_in">unsafeBitCast</span>(<span class="number">0</span>, <span class="type">UnsafeMutablePointer</span>&lt;<span class="type">Int</span>&gt;.<span class="keyword">self</span>), taskFunction())</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">taskFunction</span><span class="params">()</span></span> -&gt; dispatch_function_t &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123; context <span class="keyword">in</span></span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Do some work with context..."</span>)</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> addTaskToQueue = <span class="type">AddTaskToQueue</span>()</span><br><span class="line">addTaskToQueue.launch()</span><br></pre></td></tr></table></figure>
-<p>除了这两个函数，我们还可以使用<code>dispatch_sync</code>和<code>dispatch_sync_f</code>函数同步的向队列中添加任务，并且我们要等待直到任务执行完成。这两个函数和上面的异步添加任务函数用法完全一致。</p>
-<p>那么什么时候用异步什么时候用同步呢，大多数情况下我们都是在主线程中使用GCD分派任务，为了避免阻塞主线程，影响用户体验，所以通常情况下我们都使用异步添加任务的方式。当然为了避免任务与主线程中产生资源竞争的问题，有时候酌情也会使用同步添加任务的方式。</p>
-<h3 id="Dispatch_Queue_u7684Completion_Block"><a href="#Dispatch_Queue_u7684Completion_Block" class="headerlink" title="Dispatch Queue的Completion Block"></a>Dispatch Queue的Completion Block</h3><p>还记得<code>NSOperation</code>的<code>completionBlock</code>属性吗，这个回调函数在任务执行完成后调用，用于处理有些后续工作或者消息通知。在Dispatch Queue中并没有类似的属性，但是我们可以通过其他方式来实现。举一个很常见的应用场景，我们在主线程中分派一个下载图片的任务，让其在二级线程中执行，当图片下载完成后通知主线程，并由主线程将图片显示出来，我们看看简单的代码片段：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DownloadImage</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">dispatchTaskInMainThread</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        dispatch_async(dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="number">0</span>), downloadImage())</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">downloadImage</span><span class="params">()</span></span> -&gt; (() -&gt; ()) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Downloading image in <span class="subst">\(NSThread.currentThread()</span>)"</span>)</span><br><span class="line">            </span><br><span class="line">            dispatch_async(dispatch_get_main_queue()) &#123;</span><br><span class="line">            </span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"Handle image and display in <span class="subst">\(NSThread.currentThread()</span>)"</span>)</span><br><span class="line">            </span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们来看看上面代码都做了些什么，首先在<code>dispatchTaskInMainThread</code>方法中，我们使用<code>dispatch_get_global_queue</code>函数获取到全局并发队列，然后将<code>downloadImage</code>下载图片的方法作为任务添加到该全局队列中。在<code>downloadImage</code>方法里，当图片下载完成后通过<code>dispatch_get_main_queue</code>函数获取到主队列，也就是在主线程中对图片进行处理，这样我们就达到了Completion Block的效果。</p>]]>
-    
-    </summary>
-    
-      <category term="Concurrency" scheme="http://www.devtalking.com/tags/Concurrency/"/>
-    
-      <category term="Swift" scheme="http://www.devtalking.com/tags/Swift/"/>
     
   </entry>
   
