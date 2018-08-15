@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.devtalking.com/"/>
-  <updated>2018-08-15T08:38:05.931Z</updated>
+  <updated>2018-08-15T08:49:48.811Z</updated>
   <id>http://www.devtalking.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://www.devtalking.com//articles/machine-learning-13/"/>
     <id>http://www.devtalking.com//articles/machine-learning-13/</id>
     <published>2018-05-29T16:00:00.000Z</published>
-    <updated>2018-08-15T08:38:05.931Z</updated>
+    <updated>2018-08-15T08:49:48.811Z</updated>
     <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -103,7 +103,7 @@
 <p>我们知道Hard Margin SVM的优化目标函数为$min \frac 1 2 ||w||^2$，Soft Margin SVM也是基于Hard Margin SVM的思想演变的，所以我们将这个目标函数加一个正则模型，而这个正则模型又恰是Soft Margin SVM的宽松量，这样就达到了在Hard Margin SVM的思路下，增加宽松量从而实现Soft Margin SVM，所以 Soft Margin SVM的目标函数为：</p>
 <p>$$min \frac 1 2 ||w||^2 + C \sum_{i=1}^m\zeta_i$$</p>
 <p>公式里的$C$是模型正则化中的一个超参数，取值范围在0到1之间。用来权衡Hard Margin SVM目标函数和Soft Margin SVM宽松量两者之间的比例。如此一来也就限制了$\zeta$无穷大的问题，因为Soft Margin SVM的目标函数最优化要同时估计两部分，相互制约。</p>
-<p>我们在之前的笔记中学习过了$L_p$范数及$L<em>p$正则模型。这里的$C \sum\</em>{i=1}^m\zeta_i$就是$L_1$正则模型，而$L<em>2$正则模型是$C \sum\</em>{i=1}^m\zeta_i^2$。</p>
+<p>我们在之前的笔记中学习过了$L_p$范数及$L_p$正则模型。这里的$C \sum_{i=1}^m\zeta_i$就是$L_1$正则模型，而$L_2$正则模型是$C \sum_{i=1}^m\zeta_i^2$。</p>
 <blockquote>
 <p>模型正则化的内容请参见<a href="http://www.devtalking.com/articles/machine-learning-9/"> 机器学习笔记九之交叉验证、模型正则化 </a>。</p>
 <h2 id="Scikit_Learn_u4E2D_u7684SVM"><a href="#Scikit_Learn_u4E2D_u7684SVM" class="headerlink" title="Scikit Learn中的SVM"></a>Scikit Learn中的SVM</h2><p>前面两小节介绍了SVM背后的数学原理，这一节来看看如何使用Scikit Learn中封装的SVM方法。我们还是使用之前使用过很多次的鸢尾花数据：</p>
