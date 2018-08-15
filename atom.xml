@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.devtalking.com/"/>
-  <updated>2018-08-15T08:58:26.565Z</updated>
+  <updated>2018-08-15T09:08:12.701Z</updated>
   <id>http://www.devtalking.com/</id>
   
   <author>
@@ -13,6 +13,163 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[机器学习笔记十四之核函数（Kernel Function）]]></title>
+    <link href="http://www.devtalking.com//articles/machine-learning-14/"/>
+    <id>http://www.devtalking.com//articles/machine-learning-14/</id>
+    <published>2018-06-14T16:00:00.000Z</published>
+    <updated>2018-08-15T09:08:12.701Z</updated>
+    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="SVM_u5904_u7406_u975E_u7EBF_u6027_u95EE_u9898"><a href="#SVM_u5904_u7406_u975E_u7EBF_u6027_u95EE_u9898" class="headerlink" title="SVM处理非线性问题"></a>SVM处理非线性问题</h2><p>我们在<a href="http://www.devtalking.com/articles/machine-learning-8/"> 机器学习笔记八之多项式回归、拟合程度、模型泛化 </a>中讲过线性回归通过多项式回归方法处理非线性问题，同样SVM也可以使用多项式方法处理非线性问题。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用datasets提供的方法构建非线性数据</span></span><br><span class="line">X, y = datasets.make_moons()</span><br></pre></td></tr></table></figure>
+<p>我们可以使用<code>datasets</code>提供的<code>make_moons()</code>函数生成非线性数据，默认为100行2列的矩阵，既100个样本数据，每个样本数据2个特征。可以使用<code>n_samples</code>参数指定样本数据数量。我们将其绘制出来看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/df044e91c5054a81223e83ab5e339d9d.jpg" alt=""></p>
+<p>可以看到<code>make_moons()</code>默认生成的数据绘制出的图像是两个规整的半月牙曲线。但是作为样本数据有点太规整了，所以我们可以使用<code>noise</code>参数给生成的数据增加一点噪音：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X, y = datasets.make_moons(noise=<span class="number">0.15</span>)</span><br><span class="line"></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/e1409e9a5bd253d605c321d1edf4aa9c.jpg" alt=""></p>
+<p>可以看到，增加了噪音后虽然数据点较之前的分布分散随机了许多，但整体仍然是两个半月牙形状。下面我们就在SVM的基础上使用多项式来看看对这个样本数据决策边界的计算：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures, StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> LinearSVC</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br></pre></td></tr></table></figure>
+<p>首先我们需要引入我们用到的几个类：</p>
+<ul>
+<li>多项式自然要用到之前讲过的<code>PolynomialFeatures</code>类。</li>
+<li>数据归一化需要用到<code>StandardScaler</code>类。</li>
+<li>同样需要用到Pipeline将多个过程封装在一个函数里，所以要用到<code>Pipeline</code>类。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 定义多项式SVM函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">PolynomialSVC</span><span class="params">(degree, C=<span class="number">1.0</span>)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> Pipeline([</span><br><span class="line">		(<span class="string">"poly"</span>, PolynomialFeatures(degree=degree)),</span><br><span class="line">		(<span class="string">"std_scaler"</span>, StandardScaler()),</span><br><span class="line">		(<span class="string">"linearSVC"</span>, LinearSVC(C=C))</span><br><span class="line">	])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用多项式SVM训练样本数据</span></span><br><span class="line">ploy_svc = PolynomialSVC(degree=<span class="number">3</span>)</span><br><span class="line">ploy_svc.fit(X, y)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_decision_boundary</span><span class="params">(model, axis)</span>:</span></span><br><span class="line">	<span class="comment"># meshgrid函数用两个坐标轴上的点在平面上画格，返回坐标矩阵</span></span><br><span class="line">	X0, X1 = np.meshgrid(</span><br><span class="line">		<span class="comment"># 随机两组数，起始值和密度由坐标轴的起始值决定</span></span><br><span class="line">		np.linspace(axis[<span class="number">0</span>], axis[<span class="number">1</span>], int((axis[<span class="number">1</span>] - axis[<span class="number">0</span>]) * <span class="number">100</span>)).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">		np.linspace(axis[<span class="number">2</span>], axis[<span class="number">3</span>], int((axis[<span class="number">3</span>] - axis[<span class="number">2</span>]) * <span class="number">100</span>)).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">	)</span><br><span class="line">	<span class="comment"># ravel()方法将高维数组降为一维数组，c_[]将两个数组以列的形式拼接起来，形成矩阵</span></span><br><span class="line">	X_grid_matrix = np.c_[X0.ravel(), X1.ravel()]</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 通过训练好的逻辑回归模型，预测平面上这些点的分类</span></span><br><span class="line">	y_predict = model.predict(X_grid_matrix)</span><br><span class="line">	y_predict_matrix = y_predict.reshape(X0.shape)</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 设置色彩表</span></span><br><span class="line">	<span class="keyword">from</span> matplotlib.colors <span class="keyword">import</span> ListedColormap</span><br><span class="line">	my_colormap = ListedColormap([<span class="string">'#0000CD'</span>, <span class="string">'#40E0D0'</span>, <span class="string">'#FFFF00'</span>])</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 绘制等高线，并且填充等高区域的颜色</span></span><br><span class="line">	plt.contourf(X0, X1, y_predict_matrix, linewidth=<span class="number">5</span>, cmap=my_colormap)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(ploy_svc, axis=[-<span class="number">1.5</span>, <span class="number">2.5</span>, -<span class="number">1.0</span>, <span class="number">1.5</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/2b40b1ec8ba7140788c9b4be1f463260.jpg" alt=""></p>
+<p>从上图可以看到决策边界的情况，很明显已经不是线性决策边界了，并且能较好的将两类点区分开。</p>
+<h2 id="u6838_u51FD_u6570_uFF08Kernel_Function_uFF09"><a href="#u6838_u51FD_u6570_uFF08Kernel_Function_uFF09" class="headerlink" title="核函数（Kernel Function）"></a>核函数（Kernel Function）</h2><p>核函数是机器学习算法中一个重要的概念。简单来讲，核函数就是样本数据点的转换函数。之所以在SVM这篇笔记中介绍核函数，是因为在SVM处理非线性的问题中除了上一节介绍的方法外，还有使用核函数的方式。而介绍核函数的切入点也是通过多项式这个知识点来讲的。</p>
+<h3 id="u4EC0_u4E48_u662F_u6838_u51FD_u6570"><a href="#u4EC0_u4E48_u662F_u6838_u51FD_u6570" class="headerlink" title="什么是核函数"></a>什么是核函数</h3><p>首先我们回顾一下多项式方法。对样本数据进行多项式转换并不是真正的增加了样本数据的特征数量，而且对原有的特征数据进行转换，构造出其他特征，这些新构造出的特征和原始特征都有强关联。</p>
+<p>比如如果将原本只有$x_1$、$x_2$两个特征的样本数据通过多项式转换为有10个特征的数据，那么转换后的这10个特征分别为：1，$x_1$，$x_2$，$x_1^2$，$x_2^2$，$x_1x_2$，$x_1^3$，$x_2^3$，$x_1^2x_2$，$x_1x_2^2$。</p>
+<p>假设某个机器学习算法的原始公式中含有$x_ix_j$（$x_i $和$x_j$为特征向量），如果是使用多项式的方法，那么首先需要将$x_i$和$x_j$转换为$x’_i$和$x’_j$，然后转换后的，具有10个元素的两个新特征向量再相乘。如果转换后的特征数量比较多的时候，新特征向量的计算复杂度就会变的很高，并且还需要占用大量内存在存储庞大的特征向量。</p>
+<p>那么核函数就是要解决上面的问题。所以多项式核函数就是有这样一个函数，将$x_i$和$x_j$作为参数传入，再指定要构造的特征数，然后该函数直接返回$x’_ix’_j$的值。该函数既可以模拟多项式构造特征的原理，又能将新特征向量的点乘计算出来，同时计算复杂度相对比较小，而且也不用存储庞大的新特征向量。</p>
+<p>下面就来看看多项式核函数：</p>
+<p>$$K(x,y)=(x \cdot y + 1)^2$$</p>
+<p>我们将上面的公式展开来看看：</p>
+<p>$$K(x,y)=(\sum_{i=1}^nx_iy_i + 1)$$</p>
+<p>应用任意次项和的展开式公式，上面的公式继续展开后得：</p>
+<p>$$K(x,y)=\sum_{i=1}^n(x_i^2)(y_i^2) + \sum_{i=2}^n\sum_{j=1}^{i-1}(\sqrt 2 x_ix_j)(\sqrt 2 y_iy_j) + \sum_{i=1}^n(\sqrt 2x_i)(\sqrt 2y_i) + 1$$</p>
+<p>上面的公式我们就可以看做是若干项相乘再相加，对于$x$来说：</p>
+<ul>
+<li>从$\sum_{i=1}^n(x_i^2)(y_i^2)$可以分析出共有$(x_n^2,…,x_1^2)$这么多项。</li>
+<li>从$\sum_{i=2}^n\sum_{j=1}^{i-1}(\sqrt 2 x_ix_j)(\sqrt 2 y_iy_j)$可以分析出共有$(\sqrt 2x_nx_{n-1},…,\sqrt 2x_2x_1)$这么多项。</li>
+<li>从$\sum_{i=1}^n(\sqrt 2x_i)(\sqrt 2y_i)$可以分析出共有$(\sqrt 2x_n,…,\sqrt 2x_1)$</li>
+</ul>
+<p>将上面的三个向量合起来其实就相当于将原始$x$特征向量根据多项式原理转换后的新的特征向量$x’$：</p>
+<p>$$x’= (x_n^2,…,x_1^2,\sqrt 2x_nx_{n-1},…,\sqrt 2x_2x_1,\sqrt 2x_n,…,\sqrt 2x_1,1)$$</p>
+<p>根据同样的道理，也可以得出新的$y’$。所以将$K(x,y)$展开后的公式就相当于$x’ \cdot y’$。</p>
+<p>综上多项式核函数的公式为：</p>
+<p>$$K(x,y) = (x \cdot y + c)^d$$</p>
+<p>$d$ 代表多项式中的degree，$c$代表Soft Margin SVM中的$C$，是两个超参数。</p>
+<p>以上是通过多项式核函数解释核函数的概念和数学原理，那么不同的机器学习算法里有很多不同的核函数，对应对原始样本数据不同的转换。</p>
+<h3 id="u901A_u8FC7_u6838_u51FD_u6570_u65B9_u5F0F_u4F7FSVM_u5904_u7406_u975E_u7EBF_u6027_u95EE_u9898"><a href="#u901A_u8FC7_u6838_u51FD_u6570_u65B9_u5F0F_u4F7FSVM_u5904_u7406_u975E_u7EBF_u6027_u95EE_u9898" class="headerlink" title="通过核函数方式使SVM处理非线性问题"></a>通过核函数方式使SVM处理非线性问题</h3><p>我们再回过头来看看SVM解决非线性的问题，之前我们使用常规的多项式方法，这节我们来看看如何使用核函数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">PolynomailKernelSVC</span><span class="params">(degree, C=<span class="number">1</span>)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> Pipeline([</span><br><span class="line">		(<span class="string">"std_scaler"</span>, StandardScaler()),</span><br><span class="line">		(<span class="string">"kernelSVC"</span>, SVC(kernel=<span class="string">"poly"</span>, degree=degree, C=C))</span><br><span class="line">	])</span><br><span class="line"></span><br><span class="line">poly_kernel_svc = PolynomailKernelSVC(degree=<span class="number">3</span>)</span><br><span class="line">poly_kernel_svc.fit(X, y)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(poly_kernel_svc, axis=[-<span class="number">1.5</span>, <span class="number">2.5</span>, -<span class="number">1.0</span>, <span class="number">1.5</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/98349c680b17d31f564214a7a949010b.jpg" alt=""></p>
+<p>Scikit Learn中使用了多项式核函数的SVM的类是<code>SVC</code>，它的<code>kernel</code>参数就表示要使用哪种核函数，上面示例中传入的<code>poly</code>就表示多项式核函数。</p>
+<h2 id="u9AD8_u65AF_u6838_u51FD_u6570"><a href="#u9AD8_u65AF_u6838_u51FD_u6570" class="headerlink" title="高斯核函数"></a>高斯核函数</h2><p>这一节我们来看看应用非常广泛的一个核函数，高斯核函数。它的名称比较多，以下名称指的都是高斯核函数：</p>
+<ul>
+<li>高斯核函数。</li>
+<li>RBF（Radial Basis Function Kernel）。</li>
+<li>径向基函数。</li>
+</ul>
+<p>对于多项式核函数而言，它的核心思想是将样本数据进行升维，从而使得原本线性不可分的数据线性可分。那么高斯核函数的核心思想是<strong>将每一个样本点映射到一个无穷维的特征空间</strong>，从而使得原本线性不可分的数据线性可分。</p>
+<p>我们先来回顾一下多项式特征，如下图所示，有一组一维数据，两个类别，明显是线性不可分的情况：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/16435fc028edde97071d1aef6bbbbe0c.jpg" alt=""></p>
+<p>然后通过多项式将样本数据再增加一个维度，假设就是$x^2$，样本数据就变成这样了：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/c79ce6560066eeec40ccd24ad7871cdb.jpg" alt=""></p>
+<p>此时原本线性不可分的样本数据，通过增加一个维度后就变成线性可分的状态。这就是多项式升维的意义。</p>
+<p>下面我们先来认识一下高斯核函数的公式：</p>
+<p>$$K(x, y) = e^{-\gamma||x-y||^2}$$</p>
+<p>上面公式中的$\gamma$就是高斯核函数的超参数。然后我们再来看看高斯核函数使线性不可分的数据线性可分的原理。</p>
+<p>为了方便可视化，我们将高斯核函数中的$y$取两个定值$l_1$核$l_2$，这类点称为地标（Land Mark）。那么高斯核函数升维过程就是假如有两个地标点，那么就将样本数据转换为二维，也就是将原本的每个$x$值通过高斯核函数和地标，将其转换为2个值，既：</p>
+<p>$$x \to (e^{-\gamma||x-l_1||^2}, e^{-\gamma||x-l_2||^2})$$</p>
+<p>下面我们用程序来实践一下这个过程：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建样本数据，x值从-4到5，每个数间隔为1</span></span><br><span class="line">x = np.arange(-<span class="number">4</span>, <span class="number">5</span>, <span class="number">1</span>)</span><br><span class="line">x</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([-<span class="number">4</span>, -<span class="number">3</span>, -<span class="number">2</span>, -<span class="number">1</span>,  <span class="number">0</span>,  <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># y构建为0，1向量，且是线性不可分的</span></span><br><span class="line">y = np.array((x &gt;= -<span class="number">2</span>) &amp; (x &lt;= <span class="number">2</span>), dtype=<span class="string">'int'</span>)</span><br><span class="line">y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制样本数据</span></span><br><span class="line">plt.scatter(x[y==<span class="number">0</span>], [<span class="number">0</span>]*len(x[y==<span class="number">0</span>]))</span><br><span class="line">plt.scatter(x[y==<span class="number">1</span>], [<span class="number">0</span>]*len(x[y==<span class="number">1</span>]))</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/bdea4696beca278092273b69240bceb0.jpg" alt=""></p>
+<p>可以看到我们构建的样本数据是明显线性不可分的状态。下面我们来定义高斯核函数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gaussian</span><span class="params">(x, l)</span>:</span></span><br><span class="line">	<span class="comment"># 这一节对gamma先不做探讨，先定为1</span></span><br><span class="line">	gamma = <span class="number">1.0</span></span><br><span class="line">	<span class="comment"># 这里x-l是一个数，不是向量，所以不需要取模</span></span><br><span class="line">	<span class="keyword">return</span> np.exp(-gamma * (x - l)**<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将每一个x值通过高斯核函数和l1，l2地标转换为2个值，构建成新的样本数据</span></span><br><span class="line">l1, l2 = -<span class="number">1</span>, <span class="number">1</span></span><br><span class="line">X_new = np.empty((len(x), <span class="number">2</span>))</span><br><span class="line"><span class="keyword">for</span> i, data <span class="keyword">in</span> enumerate(x):</span><br><span class="line">	X_new[i, <span class="number">0</span>] = gaussian(data, l1)</span><br><span class="line">	X_new[i, <span class="number">1</span>] = gaussian(data, l2)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制新的样本点</span></span><br><span class="line">plt.scatter(X_new[y==<span class="number">0</span>, <span class="number">0</span>], X_new[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X_new[y==<span class="number">1</span>, <span class="number">0</span>], X_new[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/bdb98677297d6e15f9eab2820cb46d19.jpg" alt=""></p>
+<p>可以看到通过高斯函数将原本的一维样本数据转换为二维后，新样本数据明显成为线性可分的状态。</p>
+<p>上面的示例中，我们将高斯核函数中的$y$取定了两个值$l_1$和$l_2$。在实际运用中，是需要真实的将每个$y$值带进去的，也就是每一个样本数据中的$y$都是一个地标，那么可想而知，原始样本数据的行数就是新样本数据的维数，既原始$m<em>n$的样本数据通过高斯核函数转换后成为$m</em>m$的数据。当样本数据行数非常多的话，转换后的新样本数据维度自然会非常高，这也就是为什么在这节开头会说高斯核函数的核心思想是将每一个样本点映射到一个无穷维的特征空间的原因。</p>
+<h3 id="u9AD8_u65AF_u6838_u51FD_u6570_u4E2D_u7684Gamma"><a href="#u9AD8_u65AF_u6838_u51FD_u6570_u4E2D_u7684Gamma" class="headerlink" title="高斯核函数中的Gamma"></a>高斯核函数中的Gamma</h3><p>在看高斯核函数中的$\gamma$之前，我们先来探讨一个问题，我们以前有学过正态分布，它是一个非常常见的连续概率分布，最关键的是它又名<strong>高斯分布</strong>，我们再来看看高斯分布的函数：</p>
+<p>$$f(x) = \frac 1 {\sigma \sqrt {2 \pi}} e^{-\frac {(x-\mu)^2} {2\sigma^2}}$$</p>
+<p>仔细看这个函数就能发现，它和高斯核函数的公式在形态上是一致的：</p>
+<ul>
+<li>高斯函数$e$前的系数是$\frac 1 {\sigma \sqrt {2 \pi}} $，$e$指数的系数是$-\frac 1 {2\sigma^2}$。</li>
+<li>高斯核函数$e$前的系数是1，$e$指数的系数是$-\gamma$。</li>
+</ul>
+<p>所以高斯核函数的曲线其实也是一个高斯分布图。</p>
+<p>下面再来看看高斯分布图以及$\mu$和$\sigma$对分布图的影响：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/26e4e54cdb28d00546112e369065db63.jpg" alt=""></p>
+<p>上图是维基百科对高斯分布解释中的分布图，从图中可以看到：</p>
+<ul>
+<li>高斯分布曲线的形状都是相似的钟形图。</li>
+<li>$\mu$决定分布图中心的偏移情况。</li>
+<li>$\sigma$决定分布图峰值的高低，或者说钟形的胖瘦程度。</li>
+</ul>
+<p>因为高斯函数中的$\sigma$和高斯核函数中$\gamma$成倒数关系。所以：</p>
+<ul>
+<li>高斯函数中$\sigma$越大、高斯分布峰值越小。$\sigma$越小、高斯分布峰值越大。</li>
+<li>高斯核函数中$\gamma$越大、高斯分布峰值越大，既钟形越窄。$\gamma$越小、高斯分布峰值越小，既钟形越宽。</li>
+</ul>
+<h3 id="Scikit_Learn_u4E2D_u7684RBF_SVM"><a href="#Scikit_Learn_u4E2D_u7684RBF_SVM" class="headerlink" title="Scikit Learn中的RBF SVM"></a>Scikit Learn中的RBF SVM</h3><p>这一小节来看看如果使用Scikit Learn中封装的RBF SVM。首先还是先构建样本数据，我们使用和多项式SVM相同的数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">X, y = datasets.make_moons(noise=<span class="number">0.15</span>, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/042cdeddff35d8657edbbccd2fe453a7.jpg" alt=""></p>
+<p>然后通过RBF SVM训练数据并绘制决策边界：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">RBFKernelSVC</span><span class="params">(gamma = <span class="number">1.0</span>)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> Pipeline([</span><br><span class="line">		(<span class="string">"std_scaler"</span>, StandardScaler()),</span><br><span class="line">		(<span class="string">"svc"</span>, SVC(kernel=<span class="string">"rbf"</span>, gamma=gamma))</span><br><span class="line">	])</span><br><span class="line"></span><br><span class="line">rbf_svc = RBFKernelSVC(gamma=<span class="number">1</span>)</span><br><span class="line">rbf_svc.fit(X, y)</span><br></pre></td></tr></table></figure>
+<p>使用RBF SVM和使用多项式SVM其实基本一样，只是将<code>SVC</code>中的<code>kernel</code>参数由之前的<code>poly</code>变更为<code>rbf</code>，然后传入该核函数需要的超参数既可。</p>
+<p>接下来绘制决策边界：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_decision_boundary</span><span class="params">(model, axis)</span>:</span></span><br><span class="line">	<span class="comment"># meshgrid函数用两个坐标轴上的点在平面上画格，返回坐标矩阵</span></span><br><span class="line">	X0, X1 = np.meshgrid(</span><br><span class="line">		<span class="comment"># 随机两组数，起始值和密度由坐标轴的起始值决定</span></span><br><span class="line">		np.linspace(axis[<span class="number">0</span>], axis[<span class="number">1</span>], int((axis[<span class="number">1</span>] - axis[<span class="number">0</span>]) * <span class="number">100</span>)).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">		np.linspace(axis[<span class="number">2</span>], axis[<span class="number">3</span>], int((axis[<span class="number">3</span>] - axis[<span class="number">2</span>]) * <span class="number">100</span>)).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">	)</span><br><span class="line">	<span class="comment"># ravel()方法将高维数组降为一维数组，c_[]将两个数组以列的形式拼接起来，形成矩阵</span></span><br><span class="line">	X_grid_matrix = np.c_[X0.ravel(), X1.ravel()]</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 通过训练好的逻辑回归模型，预测平面上这些点的分类</span></span><br><span class="line">	y_predict = model.predict(X_grid_matrix)</span><br><span class="line">	y_predict_matrix = y_predict.reshape(X0.shape)</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 设置色彩表</span></span><br><span class="line">	<span class="keyword">from</span> matplotlib.colors <span class="keyword">import</span> ListedColormap</span><br><span class="line">	my_colormap = ListedColormap([<span class="string">'#0000CD'</span>, <span class="string">'#40E0D0'</span>, <span class="string">'#FFFF00'</span>])</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 绘制等高线，并且填充等高区域的颜色</span></span><br><span class="line">	plt.contourf(X0, X1, y_predict_matrix, linewidth=<span class="number">5</span>, cmap=my_colormap)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(rbf_svc, axis=[-<span class="number">1.5</span>, <span class="number">2.5</span>, -<span class="number">1.0</span>, <span class="number">1.5</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/91ee9feeb0a6a58eb20695434783ab93.jpg" alt=""></p>
+<p>上图就是当$\gamma$为1时，RBF SVM训练样本数据后的决策边界，我们先来解释一下它的高斯分布有什么关系。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/3054e67f350f04826ace4379db777a8a.jpg" alt=""></p>
+<p>如上图所示，蓝色虚线表示等高线，橘黄色点表示一个样本点，所以上面的图其实是俯视以橘黄色样本点为峰值点的高斯分布图。</p>
+<p>对于每个样本点都有围绕它的一个高斯分布图，所以连起来就形成了一片区域，然后形成了决策区域和决策边界：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/6d96b78336d261269b68a73e06b24350.jpg" alt=""></p>
+<p>可以看到当$\gamma$取1时，RBF SVM训练样本数据后的决策边界和多项式SVM的几乎一致。下面我们尝试变化超参数$\gamma$来看看决策边界会有怎样的变化。</p>
+<p>先来看看将$\gamma$取较大值后的决策边界：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将gamma取100</span></span><br><span class="line">rbf_svc100 = RBFKernelSVC(gamma=<span class="number">100</span>)</span><br><span class="line">rbf_svc100.fit(X, y)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(rbf_svc100, axis=[-<span class="number">1.5</span>, <span class="number">2.5</span>, -<span class="number">1.0</span>, <span class="number">1.5</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/67a1776dbbf2d2167969985d08cd533d.jpg" alt=""></p>
+<p>从上图可以看到，决策边界几乎就是围绕着蓝色点的区域，这也印证了高斯核函数中$\gamma$越大、高斯分布峰值越大，既钟形越窄的定义。因为钟形比较窄，所以不足以连成大片区域，就呈现出了上图中的情况。</p>
+<p>我们再来看看将$\gamma$取较小值后的决策边界：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">rbf_svc01 = RBFKernelSVC(gamma=<span class="number">0.1</span>)</span><br><span class="line">rbf_svc01.fit(X, y)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(rbf_svc01, axis=[-<span class="number">1.5</span>, <span class="number">2.5</span>, -<span class="number">1.0</span>, <span class="number">1.5</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/e9bfc098b31af59f61370c3eeae326fd.jpg" alt=""></p>
+<p>可以看到当$\gamma$取0.1后，决策边界几乎成了线性决策边界，说明每个样本点的高斯分布钟形太宽了。所以我们得出结论，当$\gamma$取值比较大时，数据训练结果趋于过拟合，当$\gamma$取值比较小时，数据训练结果趋于欠拟合。</p>
+<h3 id="SVM_u89E3_u51B3_u56DE_u5F52_u95EE_u9898"><a href="#SVM_u89E3_u51B3_u56DE_u5F52_u95EE_u9898" class="headerlink" title="SVM解决回归问题"></a>SVM解决回归问题</h3><p>SVM解决回归问题的思路和解决分类问题的思路正好是相反的。我们回忆一下，在Hard Margin SVM中，我们希望在Margin区域中一个样本点都没有，即便在Soft Margin SVM中也是希望Margin区域中的样本点越少越好。</p>
+<p>而在SVM解决回归问题时，是希望Margin区域中的点越多越好：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/d18d230fe810996874d6f1b078a8fd8a.jpg" alt=""></p>
+<p>也就是找到一条拟合直线，使得这条直线的Margin区域中的样本点越多，说明拟合的越好，反之依然。Margin边界到拟合直线的距离称为$\epsilon$是SVM解决回归问题的一个超参数。</p>
+<p>在Scikit Learn中有<code>LinearSVR</code>和<code>SVR</code>两个类，前者就是使用SVM线性方式解决回归问题的类，后者是SVM使用核函数方式解决回归问题的类。用法和<code>LinearSVC</code>及<code>SVC</code>的一致，只不过需要传入$\epsilon$这个超参数既可。</p>
+<blockquote>
+<p>申明：本文为慕课网<a href="https://www.imooc.com/t/108955" target="_blank" rel="external">liuyubobobo</a>老师<a href="https://coding.imooc.com/learn/list/169.html" target="_blank" rel="external">《Python3入门机器学习 经典算法与应用》</a>课程的学习笔记，未经允许不得转载。</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+]]></content>
+    <summary type="html">
+    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" ]]>
+    </summary>
+    
+      <category term="机器学习" scheme="http://www.devtalking.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[机器学习笔记十三之支撑向量机（SVM）]]></title>
@@ -3636,133 +3793,6 @@
       <category term="AngularJS" scheme="http://www.devtalking.com/tags/AngularJS/"/>
     
       <category term="Javascript" scheme="http://www.devtalking.com/tags/Javascript/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[使用ShadowSocks科学上网及突破公司内网]]></title>
-    <link href="http://www.devtalking.com//articles/shadowsocks-guide/"/>
-    <id>http://www.devtalking.com//articles/shadowsocks-guide/</id>
-    <published>2016-08-18T16:00:00.000Z</published>
-    <updated>2018-06-01T16:19:01.473Z</updated>
-    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<h1 id="u4EC0_u4E48_u662FShadowSocks"><a href="#u4EC0_u4E48_u662FShadowSocks" class="headerlink" title="什么是ShadowSocks"></a>什么是ShadowSocks</h1><p>ShadowSocks是基于Socks5协议，使用类似SSH隧道的方式收发网络请求的一款开源软件，该软件由<a href="https://twitter.com/clowwindy" title="clowwindy" target="_blank" rel="external"> @clowwindy </a>开发，最初只有Python版本，随后出现C++、C#、Go等多语言版本。ShadowSocks最大的特点是可以保护网络流量、加密数据传输，可有效防止GFW（Great Firewall of China）封杀网络请求。</p>
-<h1 id="u7528ShadowSocks_u79D1_u5B66_u4E0A_u7F51_u7684_u6982_u5FF5"><a href="#u7528ShadowSocks_u79D1_u5B66_u4E0A_u7F51_u7684_u6982_u5FF5" class="headerlink" title="用ShadowSocks科学上网的概念"></a>用ShadowSocks科学上网的概念</h1><p>在以前，我们访问互联网的资源都是简单而直接的，用户的请求发送到资源服务方，比如Google、Facebook等，然后资源服务方直接将内容响应给用户，世界多么美好。</p>
-<p> <img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-9.png" alt=""></p>
-<p>但是，在1998年时候，中国创建了互联网边界审查系统，称之为中国国家防火墙（GFW），这堵墙横在了用户和互联网资源服务方之间，用于监控和过滤互联网国际出口上的内容，监控国际网关的通讯，对认为不匹配国家官方要求的传输内容，进行干扰、阻断、屏蔽。</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shaodwsocksss-10.png" alt=""></p>
-<p>从此之后好多有价值的网站就被堵在了墙后。</p>
-<p>但是由于对知识的渴望，人们想到了绕过GFW的办法，那就是在境外搭建一个国内用户的代理，国内用户与代理之间建立加密的通道，由境外代理请求被墙的网络资源，再通过加密通道返回给国内用户。代理的类型也有多种，像HTTP、Socks、VPN、SSH等。以SSH隧道为例：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-11.png" alt=""></p>
-<p>因为SSH本身基于RSA加密技术，所以GFW就无法对数据传输过程加密的数据进行分析，从而避免被重置链接、阻断、屏蔽等问题。</p>
-<p>但是GFW也不会懵B一世，人家也会学习，由于在创建SSH隧道的过程中有较为明显的特性，所以GFW还是可以通过分析连接的特性进行干扰。此时ShadowSocks横空出世，先看看图示：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-12.png" alt=""></p>
-<p>简单来说，ShadowSocks分为客户端和服务端，用户发出的请求基于Socks5协议与ShadowSocks客户端进行通信，一般情况下SS客户端都在本机，通过ShadowSocksX、GoAgentX等应用启动，所以这一步是不会经过GFW的，然后ShadowSocks提供了多种加密方式供客户端和服务端之间进行通信，并且在经过GFW时是普通的TCP协议数据包，没有明显的特征，而且GFW也无法解密分析，从而实现绕墙访问资源。</p>
-<a id="more"></a>
-<h1 id="u642D_u5EFAShadowSocks_u670D_u52A1_u5668"><a href="#u642D_u5EFAShadowSocks_u670D_u52A1_u5668" class="headerlink" title="搭建ShadowSocks服务器"></a>搭建ShadowSocks服务器</h1><p>根据上文描述的ShadowSocks的实现原理，我们首先需要搭建一个境外的ShadowSocks服务器，这部分也是唯一需要我们花点小钱的地方。</p>
-<blockquote>
-<p>以下文章内容均在MacOS下实践。</p>
-</blockquote>
-<h2 id="u8D2D_u4E70VPS"><a href="#u8D2D_u4E70VPS" class="headerlink" title="购买VPS"></a>购买VPS</h2><p>我使用的是<a href="http://www.vultr.com" target="_blank" rel="external">Vultr</a>的VPS，他家的VPS可选的地域较为丰富，而且有日本东京，这对于家里是联通网络的比较亲和，速度较好：<br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-1.png" alt="" title="Server Location"><br>在系统和应用方面Vultr提供的种类也比较丰富：<br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-2.png" alt="" title="Server Type"><br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-3.png" alt="" title="Application"><br>在价格方面，Vultr提供的最低价格为每月5美元，对应的性能足够满足ShadowSocks服务端的需求：<br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-4.png" alt="" title="Server Price"><br>注册Vultr账号，绑定信用卡，选择自己中意的系统和价格后立即就会为你部署好VPS：<br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-5.png" alt=""><br>当VPS的状态为Running后，就表示VPS已经启动了，然后为该VPS配置我们的SSH公钥：<br> <img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-6.png" alt=""><br>大家可以看看北京联通ping东京VPS的速度，还是很给力的：<br> <img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-7.png" alt=""></p>
-<blockquote>
-<p>使用该<a href="http://www.vultr.com/?ref=6955175-3B" target="_blank" rel="external">链接</a>注册可获得20美元的优惠卷。</p>
-</blockquote>
-<h2 id="u5B89_u88C5ShadowSocks"><a href="#u5B89_u88C5ShadowSocks" class="headerlink" title="安装ShadowSocks"></a>安装ShadowSocks</h2><p>我们使用Python版的ShadowSocks进行安装，首先需要下载<a href="https://pypi.python.org/pypi/pip#downloads" target="_blank" rel="external">pip-8.1.2.tar.gz</a>，然后使用工具将其上传至VPS，我使用的是Commander One，通过SFTP连接VPS：<br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-8.png" alt=""><br>使用Terminal连接VPS，一步一步输入以下命令解压安装pip：</p>
-<pre><code>tar -xzvf pip-8.1.2.tar.gz
-cd pip-8.1.2
-python setup.py install
-</code></pre><p>然后通过pip安装ShadowSocks：</p>
-<pre><code>pip install shadowsocks
-</code></pre><p>成功后可以看到如下信息：</p>
-<pre><code>Collecting shadowsocks
-  Downloading shadowsocks-2.8.2.tar.gz
-Installing collected packages: shadowsocks
-  Running setup.py install for shadowsocks ... done
-Successfully installed shadowsocks-2.8.2
-</code></pre><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<h2 id="u914D_u7F6EShadowSocks"><a href="#u914D_u7F6EShadowSocks" class="headerlink" title="配置ShadowSocks"></a>配置ShadowSocks</h2><p>进入到etc目录下，创建shadowsocks.json文件，并添加如下内容：</p>
-<pre><code>{
-    &quot;server&quot;:&quot;你的VPS的IP&quot;,
-    &quot;server_port&quot;:8388,
-    &quot;local_port&quot;:1080,
-    &quot;password&quot;:&quot;设置一个连接密码&quot;,
-    &quot;timeout&quot;:600,
-    &quot;method&quot;:&quot;aes-256-cfb&quot;,
-    &quot;auth&quot;: true
-}
-</code></pre><p>该文件就是ShadowSocks的配置文件。<br>然后输入如下命令启动ShadowSocks服务：</p>
-<pre><code>ssserver -c /etc/shadowsocks.json -d start
-</code></pre><p>最后清空防火墙规则：</p>
-<pre><code>iptables -F
-</code></pre><p>至此ShadowSocks服务端就配置完成并可以使用了。</p>
-<h1 id="ShadowSocks_u5BA2_u6237_u7AEF"><a href="#ShadowSocks_u5BA2_u6237_u7AEF" class="headerlink" title="ShadowSocks客户端"></a>ShadowSocks客户端</h1><p>Mac上ShadowSocks客户端的选择无非就是ShadowSocksX、GoAgentX、Surge这三个，前两者配置起来都大同小异，ShadowSocksX本身就是专门开启SS客户端服务的应用：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-14.png" alt=""></p>
-<p>GoAgentX提供的服务类型更多，包括SS服务：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-13.png" alt=""></p>
-<p>配置项都是一样的，把ShadowSocks服务端的配置信息一一对应就可以了。</p>
-<p>Surge启SS服务的方式有点不同，因为应用在界面操作上没有提供创建SS服务的选项，但其实它是支持SS服务的，可能因为怕被请喝茶吧。所以需要在Surge的配置文件里添加SS服务相关的信息，如何配置网上有很多，这里就不再累赘了。</p>
-<p>至此就打通了ShadowSocks客户端与服务端的通道，可以畅游墙外的世界了。</p>
-<h1 id="u7A81_u7834_u516C_u53F8_u5185_u7F51"><a href="#u7A81_u7834_u516C_u53F8_u5185_u7F51" class="headerlink" title="突破公司内网"></a>突破公司内网</h1><p>一般情况在家我们在本机启着ShadowSocks客户端就可以了，但是如果在公司上外网需要走HTTP代理的话就不行了，因为ShadowSocks客户端需要走公司提供的代理才能连接到服务端，而上文中的客户端应用统统不支持额外代理功能，所以此时就需要用到另外一个工具<a href="https://www.proxifier.com" target="_blank" rel="external">Proxifier</a>，该工具的作用就是接管运行中的所有应用发出的所有请求，然后通过代理进行转发，这样就可以让不支持代理的应用也可以走代理了。</p>
-<p>打开Proxifier，选择Proxies选项卡设置公司的HTTP代理以及本地Socks5代理：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-15.png" alt=""><br><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-16.png" alt=""></p>
-<p>然后启动ShadowSocks客户端，比如启动GoAgentX，此时选择Proxifier的Rules选项卡，就会发现Proxifier自动捕获到了名为ss-local的应用，就是由GoAgentX开启的SS客户端，将其的代理规则设置为之前创建好的公司代理：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-17.png" alt=""></p>
-<p>然后将Default的代理规则设置为之前创建好的本地Socks5代理：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-18.png" alt=""></p>
-<p>这样就可以让ShadowSocks客户端通过公司代理连接服务端了：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-19.png" alt=""></p>
-<p>你还可以设置其他的规则，让特定的应用走特定的代理，比如我让Git还是走了公司代理，这样Git服务就会从Default规则里剔除掉，相当于加了走SS服务的例外。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<p><link rel="stylesheet" href="http://7xpp8a.com1.z0.glb.clouddn.com/tomorrow.css"></p>
-<script src="http://7xpp8a.com1.z0.glb.clouddn.com/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-]]></content>
-    <summary type="html">
-    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<h1 id="u4EC0_u4E48_u662FShadowSocks"><a href="#u4EC0_u4E48_u662FShadowSocks" class="headerlink" title="什么是ShadowSocks"></a>什么是ShadowSocks</h1><p>ShadowSocks是基于Socks5协议，使用类似SSH隧道的方式收发网络请求的一款开源软件，该软件由<a href="https://twitter.com/clowwindy" title="clowwindy"> @clowwindy </a>开发，最初只有Python版本，随后出现C++、C#、Go等多语言版本。ShadowSocks最大的特点是可以保护网络流量、加密数据传输，可有效防止GFW（Great Firewall of China）封杀网络请求。</p>
-<h1 id="u7528ShadowSocks_u79D1_u5B66_u4E0A_u7F51_u7684_u6982_u5FF5"><a href="#u7528ShadowSocks_u79D1_u5B66_u4E0A_u7F51_u7684_u6982_u5FF5" class="headerlink" title="用ShadowSocks科学上网的概念"></a>用ShadowSocks科学上网的概念</h1><p>在以前，我们访问互联网的资源都是简单而直接的，用户的请求发送到资源服务方，比如Google、Facebook等，然后资源服务方直接将内容响应给用户，世界多么美好。</p>
-<p> <img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-9.png" alt=""></p>
-<p>但是，在1998年时候，中国创建了互联网边界审查系统，称之为中国国家防火墙（GFW），这堵墙横在了用户和互联网资源服务方之间，用于监控和过滤互联网国际出口上的内容，监控国际网关的通讯，对认为不匹配国家官方要求的传输内容，进行干扰、阻断、屏蔽。</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shaodwsocksss-10.png" alt=""></p>
-<p>从此之后好多有价值的网站就被堵在了墙后。</p>
-<p>但是由于对知识的渴望，人们想到了绕过GFW的办法，那就是在境外搭建一个国内用户的代理，国内用户与代理之间建立加密的通道，由境外代理请求被墙的网络资源，再通过加密通道返回给国内用户。代理的类型也有多种，像HTTP、Socks、VPN、SSH等。以SSH隧道为例：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-11.png" alt=""></p>
-<p>因为SSH本身基于RSA加密技术，所以GFW就无法对数据传输过程加密的数据进行分析，从而避免被重置链接、阻断、屏蔽等问题。</p>
-<p>但是GFW也不会懵B一世，人家也会学习，由于在创建SSH隧道的过程中有较为明显的特性，所以GFW还是可以通过分析连接的特性进行干扰。此时ShadowSocks横空出世，先看看图示：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-12.png" alt=""></p>
-<p>简单来说，ShadowSocks分为客户端和服务端，用户发出的请求基于Socks5协议与ShadowSocks客户端进行通信，一般情况下SS客户端都在本机，通过ShadowSocksX、GoAgentX等应用启动，所以这一步是不会经过GFW的，然后ShadowSocks提供了多种加密方式供客户端和服务端之间进行通信，并且在经过GFW时是普通的TCP协议数据包，没有明显的特征，而且GFW也无法解密分析，从而实现绕墙访问资源。</p>]]>
-    
-    </summary>
-    
-      <category term="ShadowSocks" scheme="http://www.devtalking.com/tags/ShadowSocks/"/>
     
   </entry>
   
