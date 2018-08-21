@@ -231,6 +231,114 @@
             
             
               
+                <a class="post-title-link" href="/articles/failable-initializers/" itemprop="url">
+                  可失败构造器（Failable Initializers）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-10-21T00:00:00+08:00" content="2014-10-21">
+              2014-10-21
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/failable-initializers/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/failable-initializers/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p><a href="https://developer.apple.com/xcode/downloads/" target="_blank" rel="external">Xcode6.1</a>中Swift的最新版本是1.1，在该版本中引入了一个新的特性：可失败构造器。通过构造器初始化实际上是给<code>class</code>或<code>struct</code>的每一个存储属性（参数）提供初始值，进行对象实例化的过程。在一些情况下，初始化的过程是有可能失败的。比如，实例化一个对象，在实例化的过程中需要访问资源文件，就像从文件中加载图片一样：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSImage</span>(contentsOfFile: <span class="string">"swift.png"</span>)</span><br></pre></td></tr></table></figure>
+<p>如果该文件不存在或者因为某种原因不允许访问，那么<code>NSImage</code>的初始化过程就会失败。在Swift 1.1版本中，像这种情况可以通过可失败构造器进行捕获。如果在构造一个对象时使用可失败构造器，那么当对象构造成功时返回该对象，当对象构造失败时则返回<code>nil</code>。因此可以直接用条件判断语句使用可失败构造器来实例化对象：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> image = <span class="type">NSImage</span>(contentsOfFile: <span class="string">"swift.png"</span>) &#123;</span><br><span class="line">    <span class="comment">// loaded the image successfully</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// could not load the image</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>init</code>初始化方法可以通过在<code>init</code>关键字后面加上<code>?</code>或<code>!</code>将其变为可失败初始化方法，这样就表示某对象的初始化方法会产生两种结果。比如，将<code>Int</code>类型的<code>init</code>初始化方法变为可失败初始化方法，然后执行<code>String</code>类型转换：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Int</span> </span>&#123;</span><br><span class="line">    <span class="keyword">init</span>?(fromString: <span class="type">String</span>) &#123; </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> i = fromString.toInt() &#123;</span><br><span class="line">            <span class="comment">// Initialize</span></span><br><span class="line">            <span class="keyword">self</span> = i</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">            <span class="comment">// return nil, discarding self is implied</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在可失败构造器或可失败初始化方法中，一旦返回<code>nil</code>就代表构造失败或初始化失败，不会再返回其他的值。在上述的示例中，当<code>String</code>不能解析为<code>Integer</code>时会导致初始化失败，返回<code>nil</code>，否则返回解析成功后的值。</p>
+<p>可失败构造器/初始化方法解决了以前在Swift中只能通过工厂方法捕获构造或初始化失败情况的问题。比如，一个枚举，通过<code>fromRaw</code>工厂方法通过一个原始值来寻找它所对应的枚举成员，返回类型为可选枚举类型。即如果该原始值对应的枚举成员存在，那么返回该枚举成员，如果不存在则返回<code>nil</code>。现在，Swift编译器结合可失败构造器，通过可失败的初始化方法用<code>switch</code>语句判断原始值对应的枚举成员，如果没有对应的则返回<code>nil</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Color</span> : <span class="title">Int</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Red</span> = <span class="number">0</span>, <span class="type">Green</span> = <span class="number">1</span>, <span class="type">Blue</span> = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// implicitly synthesized</span></span><br><span class="line">    <span class="keyword">var</span> rawValue: <span class="type">Int</span> &#123; <span class="comment">/* returns raw value for current case */</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// implicitly synthesized</span></span><br><span class="line">    <span class="keyword">init</span>?(rawValue: <span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">switch</span> rawValue &#123; </span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>: <span class="keyword">self</span> = .<span class="type">Red</span></span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>: <span class="keyword">self</span> = .<span class="type">Green</span></span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>: <span class="keyword">self</span> = .<span class="type">Blue</span></span><br><span class="line">            <span class="keyword">default</span>: <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用可失败构造器可极大程度的统一Swift中的构造对象语法，消除了构造器与工厂方法之间混乱、重复的冗余语法，使Swift更加简洁。随着可失败构造器这一特性的加入，Swift将对大多数Cocoa中带<code>NSError</code>参数的工厂初始化方法进行调整，从而加强Swift中构造对象语法的统一性，给开发者带来更好的开发体验。</p>
+<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=17" target="_blank" rel="external">Failable Initializers</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/adaptive-layout-for-iphone6-2/" itemprop="url">
                   为iPhone6设计自适应布局（二）
                 </a>
@@ -977,142 +1085,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/tuple-in-swift/" itemprop="url">
-                  Swift中的元组（Tuples）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-10-08T00:00:00+08:00" content="2014-10-08">
-              2014-10-08
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/tuple-in-swift/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/tuple-in-swift/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u521B_u5EFA_u5143_u7EC4"><a href="#u521B_u5EFA_u5143_u7EC4" class="headerlink" title="创建元组"></a>创建元组</h2><p>在Swift中创建元组的方式很简单，它的语法有点类似数组，但是需要把方括号替换为圆括号：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> firstHighScore = (<span class="string">"Mary"</span>, <span class="number">9001</span>)</span><br></pre></td></tr></table></figure>
-<p>与数组不同的是，元组中的元素可以是任意类型。上面代码中<code>firstHighScore</code>元组就包含一个<code>String</code>类型的元素和一个<code>Int</code>类型的元素。</p>
-<p>另外，在创建元组时你还可以给元组中的元素命名：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> secondHighScore = (name: <span class="string">"James"</span>, score: <span class="number">4096</span>)</span><br></pre></td></tr></table></figure>
-<p>这样可以让我们在使用元组的时候明确的指定某个元素，非常有用。在后面的文章中大家可以看到给元素命名的好处。</p>
-<p>以上就是创建元组的两种方式，非常简单和简洁。你不需要像创建<code>struct</code>一样写出它的结构和内部属性，也不需要像创建<code>class</code>一样要写初始化方法。你只需要把你想用的、任何类型的值放在圆括号内，用逗号隔开即可。如果你愿意你还可以给每个元素命名，提高元组使用效率。</p>
-<h2 id="u4ECE_u5143_u7EC4_u4E2D_u8BFB_u5143_u7D20"><a href="#u4ECE_u5143_u7EC4_u4E2D_u8BFB_u5143_u7D20" class="headerlink" title="从元组中读元素"></a>从元组中读元素</h2><p>从元组中读取元素有几种方式，但一般我们会选择最适合当前应用场景的方式，并且确保选择的方式是在当前情况下最简单的一种。</p>
-<h3 id="u5143_u7EC4_u5143_u7D20_u6CA1_u6709_u547D_u540D"><a href="#u5143_u7EC4_u5143_u7D20_u6CA1_u6709_u547D_u540D" class="headerlink" title="元组元素没有命名"></a>元组元素没有命名</h3><p>如果我们没有给元组的元素命名，我们可以用点语法，通过定义好的元组变量或常量获取它的第1个到第n个元素：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> firstHighScore = (<span class="string">"Mary"</span>, <span class="number">9001</span>)</span><br><span class="line">firstHighScore.<span class="number">0</span>            <span class="comment">// Mary</span></span><br><span class="line">firstHighScore.<span class="number">1</span>        <span class="comment">// 9001</span></span><br></pre></td></tr></table></figure>
-<p>如果你觉得上述这种方法会造成语义的不明确，那么我们还可以将元组赋值给一个带有元素名称的元组（元素名称个数要对应）：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> (firstName, firstScore) = firstHighScore</span><br><span class="line">firstName       <span class="comment">// Mary</span></span><br><span class="line">firstScore      <span class="comment">// 9001</span></span><br></pre></td></tr></table></figure>
-<p>如果你只想读取<code>firstHighScore</code>元组中的分数，那么你可以这样写：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> (<span class="number">_</span>, firstScore) = firstHighScore</span><br><span class="line">firstScore      <span class="comment">// 9001</span></span><br></pre></td></tr></table></figure>
-<h3 id="u5143_u7EC4_u5143_u7D20_u6709_u547D_u540D"><a href="#u5143_u7EC4_u5143_u7D20_u6709_u547D_u540D" class="headerlink" title="元组元素有命名"></a>元组元素有命名</h3><p>如果我们已经给元组中的元素命名了名称，那么我们可以这样写：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> secondName = secondHighScore.name</span><br><span class="line"><span class="keyword">let</span> secondScore = secondHighScore.score</span><br><span class="line">secondName      <span class="comment">// James</span></span><br><span class="line">secondScore     <span class="comment">// 4096</span></span><br></pre></td></tr></table></figure>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u5C06_u5143_u7EC4_u4F5C_u4E3A_u51FD_u6570_u8FD4_u56DE_u503C"><a href="#u5C06_u5143_u7EC4_u4F5C_u4E3A_u51FD_u6570_u8FD4_u56DE_u503C" class="headerlink" title="将元组作为函数返回值"></a>将元组作为函数返回值</h2><p>我们可以将元组作为函数的返回值，下面这个函数的返回值就是我们之前定义过的<code>secondHighScore</code>元组：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAHighScore</span><span class="params">()</span></span> -&gt; (name: <span class="type">String</span>, score: <span class="type">Int</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">let</span> theName = <span class="string">"Patricia"</span></span><br><span class="line">    <span class="keyword">let</span> theScore = <span class="number">3894</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> (theName, theScore)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>为什么说上述函数的返回值是<code>secondHighScore</code>元组呢？因为<code>getAHighScore</code>函数返回的元组元素个数、元素名称、元素类型均和<code>secondHighScore</code>相同。</p>
-<p>其实将元组作为函数的返回值时也可以不必对元素进行命名，只要你明白每个元素代表的含义即可：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAHighScore</span><span class="params">()</span></span> -&gt; (<span class="type">String</span>, <span class="type">Int</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">let</span> theName = <span class="string">"Patricia"</span></span><br><span class="line">    <span class="keyword">let</span> theScore = <span class="number">3894</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> (theName, theScore)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果你不确定返回的元组一定不为<code>nil</code>，那么你可以返回一个可选的元组类型：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">maybeGetHighScore</span><span class="params">()</span></span> -&gt; (<span class="type">String</span>, <span class="type">Int</span>)?</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>因为是可选的元组类型，所以当返回的元组不为<code>nil</code>时，你需要对元组进行解包：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> possibleScore = maybeGetHighScore()</span><br><span class="line">&#123;</span><br><span class="line">    possibleScore.<span class="number">0</span></span><br><span class="line">    possibleScore.<span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">println</span>(<span class="string">"Nothing Here"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注意：当你定义了一个没有返回值的函数时，其实该函数是返回一个空的元组<code>()</code>。</p>
-</blockquote>
-<h2 id="u5143_u7EC4_u7684_u8BBF_u95EE_u7EA7_u522B"><a href="#u5143_u7EC4_u7684_u8BBF_u95EE_u7EA7_u522B" class="headerlink" title="元组的访问级别"></a>元组的访问级别</h2><p>元组的访问级别取决于它包含的元素。比如元组里的元素都是<code>private</code>级别的，那么该元组也是<code>private</code>级别的。但这里有一个遵循最小的原则，也就是说如果一个元组中有两个元素，一个为<code>private</code>级别，另一个为<code>public</code>级别，那么该元组遵循最小原则，它的访问级别为<code>private</code>。</p>
-<h2 id="u5143_u7EC4_u662F_u503C_u7C7B_u578B"><a href="#u5143_u7EC4_u662F_u503C_u7C7B_u578B" class="headerlink" title="元组是值类型"></a>元组是值类型</h2><p>关于值类型和引用类型的知识这里不再累赘，我们通过一个代码示例来看看元组是哪种类型：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> someScore = (<span class="string">"John"</span>, <span class="number">55</span>)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> anotherScore = someScore</span><br><span class="line">anotherScore.<span class="number">0</span> = <span class="string">"Robert"</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(anotherScore.<span class="number">0</span>)  <span class="comment">//Outputs:  "Robert"</span></span><br><span class="line"><span class="built_in">println</span>(someScore.<span class="number">0</span>)     <span class="comment">//Outputs:  "John"</span></span><br></pre></td></tr></table></figure>
-<p>通过上述的代码示例可以看出，我把<code>someScore</code>元组赋值给了<code>anotherScore</code>，然后修改了<code>anotherScore</code>的第1个元素的值，最后分别打印了<code>someScore</code>和<code>anotherScore</code>第1个元素的值。<code>someScore</code>元组第一个元素的值为<code>Robert</code>，而<code>anotherScore</code>元组第一个元素的值仍然为<code>John</code>。由此可见元组是值类型。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1155,7 +1127,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">94</span>
+              <span class="site-state-item-count">95</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

@@ -1,0 +1,870 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这篇笔记我们来看看决策树的另一种划分方式基尼系数和决策树中的超参数，以及决策树的缺陷。
+基尼系数在一开始我们使用Scikit Learn中提供的决策树分类器时，DecisionTreeClassifier有一个参数criterion">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记十六之基尼系数、CART">
+<meta property="og:url" content="http://www.devtalking.com/articles/machine-learning-16/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这篇笔记我们来看看决策树的另一种划分方式基尼系数和决策树中的超参数，以及决策树的缺陷。
+基尼系数在一开始我们使用Scikit Learn中提供的决策树分类器时，DecisionTreeClassifier有一个参数criterion">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/bd5cc9311e40f765b64194f49538ceb3.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/d39713171c7b11bb167b07a5f6b6be9f.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/531a8cefcbfb14d809ff7ec71cd31ce8.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/64bb0b9e97043f2a2f8433575ce973cd.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/6f85167f913255c7f76e81c1bb017865.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/8b12c5d67fef11675afec389a5543297.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/b80637514c0594b18bdf840a331ed7eb.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/02172dbea2507b7d0abf5f5107c86dfc.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/ea52f77ca640de25f81e9c5f2030be33.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/7d071b1897316f224733e8d528fa03da.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/ad4993998fc46677ffbfbba0b6e485a8.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/92145d7d0e9fb92d40efe2a4f684710f.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/db2d20d13c6768910a3a3e90dcff0413.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/88a63811729dd486eb8498ca3dd53020.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/9b2316f2e266fc14fbe65c230e781766.jpg">
+<meta property="og:updated_time" content="2018-08-21T03:45:18.228Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记十六之基尼系数、CART">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这篇笔记我们来看看决策树的另一种划分方式基尼系数和决策树中的超参数，以及决策树的缺陷。
+基尼系数在一开始我们使用Scikit Learn中提供的决策树分类器时，DecisionTreeClassifier有一个参数criterion">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 机器学习笔记十六之基尼系数、CART | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                机器学习笔记十六之基尼系数、CART
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-07-15T00:00:00+08:00" content="2018-07-15">
+              2018-07-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-16/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-16/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这篇笔记我们来看看决策树的另一种划分方式基尼系数和决策树中的超参数，以及决策树的缺陷。</p>
+<h2 id="u57FA_u5C3C_u7CFB_u6570"><a href="#u57FA_u5C3C_u7CFB_u6570" class="headerlink" title="基尼系数"></a>基尼系数</h2><p>在一开始我们使用Scikit Learn中提供的决策树分类器时，<code>DecisionTreeClassifier</code>有一个参数<code>criterion</code>，我们之前传入了<code>entropy</code>，也就是表示此时决策树使用信息熵方式。由此可知，决策树应该不止信息熵一种方式，所以这一节来看看决策树的另一种方式，基尼系数。</p>
+<p>其实基尼系数和信息熵的思路基本是一致的，只是判定数据随机性度量的公式不一样，那么基尼系数的公式为：</p>
+<p>$$G = 1 - \sum_{i=1}^k p_i^2$$</p>
+<p>同样用之前的例子代入公式看一下：</p>
+<p>$$\{\frac 1 3,\frac 1 3,\frac 1 3\}$$</p>
+<p>将上面的数据类别占比信息代入公式后可得：</p>
+<p>$$G = 1-(\frac 1 3)^2-(\frac 1 3)^2-(\frac 1 3)^2=0.6666$$</p>
+<p>再换一组数据类别占比信息：</p>
+<p>$$\{\frac 1 {10},\frac 2 {10},\frac 7 {10}\}$$</p>
+<p>代入公式后可得：</p>
+<p>$$G = 1-(\frac 1 {10})^2-(\frac 2 {10})^2-(\frac 7 {10})^2=0.46$$</p>
+<p>可见基尼系数同样反应了数据不确定性的度量。这里就不再使用代码对基尼系数的方式进行模拟了，其实只需要将信息熵的公式换成基尼系数的既可。</p>
+<a id="more"></a>
+<h2 id="u4FE1_u606F_u71B5_u548C_u57FA_u5C3C_u7CFB_u6570_u7684_u6BD4_u8F83"><a href="#u4FE1_u606F_u71B5_u548C_u57FA_u5C3C_u7CFB_u6570_u7684_u6BD4_u8F83" class="headerlink" title="信息熵和基尼系数的比较"></a>信息熵和基尼系数的比较</h2><p>信息熵和基尼系数都是决策树中根节点划分的依据，本质上这两种方式没有太大的差别，具体的比较在这列一下：</p>
+<ul>
+<li>信息熵的计算比基尼系数的稍慢一些，因为信息熵的公式里是要求$log$的，而基尼系数公式中只是平方求和而已。</li>
+<li>Scikit Learn中的决策树默认使用基尼系数方式，所以当我们不传入<code>criterion</code>参数时，默认使用<code>gini</code>方式。</li>
+<li>信息熵和基尼系数没有特别的效果优劣。只是大家需要了解决策树根节点划分的方式原理。</li>
+</ul>
+<h2 id="u51B3_u7B56_u6811_u4E2D_u7684_u8D85_u53C2_u6570"><a href="#u51B3_u7B56_u6811_u4E2D_u7684_u8D85_u53C2_u6570" class="headerlink" title="决策树中的超参数"></a>决策树中的超参数</h2><p>在信息熵那一节中，我们使用代码模拟了决策树的根节点划分过程，从中可以可知道决策树最极端的就是每个叶子节点的不确定性都为0，也就是每个叶子节点都是包含一种类别的数据。这样一来虽然对样本数据的分类准确度非常高，但是却是典型的过拟合情况，或者说模型的泛化能力非常差。</p>
+<p>另外一点是如果做到极端情况，那么模型训练过程的时间复杂度也会非常高，达到了$O(n<em>m</em>logm)$，$m$是样本数据行数，$n$是样本数据特征数。</p>
+<p>综上，我们期望训练出的模型泛化能力要好，并且训练时间复杂度要适中，所以关键就是要对决策树剪枝，从而降低复杂度，解决过拟合问题。这就需要用到决策树的超参数。</p>
+<p>在之前我们使用Scikit Learn中的决策树时用到了一个参数<code>max_depth</code>，既决策树深度，就是限定了决策数的层数，这就是一种可以剪枝的超参数。除此之外，还有一些超参数可以达到剪枝作用，我们一一来看一看。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建样本数据</span></span><br><span class="line">X, y = datasets.make_moons(noise=<span class="number">0.25</span>, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制样本数据</span></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/bd5cc9311e40f765b64194f49538ceb3.jpg" alt=""></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不传入任何参数，既criterion默认使用gini，决策树深度划分到不能划分为止</span></span><br><span class="line">dt_clf = DecisionTreeClassifier()</span><br><span class="line">dt_clf.fit(X, y)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_decision_boundary</span><span class="params">(model, axis)</span>:</span></span><br><span class="line">	<span class="comment"># meshgrid函数用两个坐标轴上的点在平面上画格，返回坐标矩阵</span></span><br><span class="line">	X0, X1 = np.meshgrid(</span><br><span class="line">		<span class="comment"># 随机两组数，起始值和密度由坐标轴的起始值决定</span></span><br><span class="line">		np.linspace(axis[<span class="number">0</span>], axis[<span class="number">1</span>], int((axis[<span class="number">1</span>] - axis[<span class="number">0</span>]) * <span class="number">100</span>)).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">		np.linspace(axis[<span class="number">2</span>], axis[<span class="number">3</span>], int((axis[<span class="number">3</span>] - axis[<span class="number">2</span>]) * <span class="number">100</span>)).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">	)</span><br><span class="line">	<span class="comment"># ravel()方法将高维数组降为一维数组，c_[]将两个数组以列的形式拼接起来，形成矩阵</span></span><br><span class="line">	X_grid_matrix = np.c_[X0.ravel(), X1.ravel()]</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 通过训练好的逻辑回归模型，预测平面上这些点的分类</span></span><br><span class="line">	y_predict = model.predict(X_grid_matrix)</span><br><span class="line">	y_predict_matrix = y_predict.reshape(X0.shape)</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 设置色彩表</span></span><br><span class="line">	<span class="keyword">from</span> matplotlib.colors <span class="keyword">import</span> ListedColormap</span><br><span class="line">	my_colormap = ListedColormap([<span class="string">'#EF9A9A'</span>, <span class="string">'#40E0D0'</span>, <span class="string">'#FFFF00'</span>])</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 绘制等高线，并且填充等高区域的颜色</span></span><br><span class="line">	plt.contourf(X0, X1, y_predict_matrix, linewidth=<span class="number">5</span>, cmap=my_colormap)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制决策边界</span></span><br><span class="line">plot_decision_boundary(dt_clf, axis=[-<span class="number">1.5</span>, <span class="number">2.5</span>, -<span class="number">1.0</span>, <span class="number">1.5</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/d39713171c7b11bb167b07a5f6b6be9f.jpg" alt=""></p>
+<p>从上图的决策边界可以看出，模型是明显处于过拟合的状态，既能为了个别点就开辟出分界区域，泛化能力是很差的。下面当我们对决策树的深度做限制后看看效果是怎样的：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 限定决策树深度为2</span></span><br><span class="line">dt_clf2 = DecisionTreeClassifier(max_depth=<span class="number">2</span>)</span><br><span class="line">dt_clf2.fit(X, y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制决策边界</span></span><br><span class="line">plot_decision_boundary(dt_clf2, axis=[-<span class="number">1.5</span>, <span class="number">2.5</span>, -<span class="number">1.0</span>, <span class="number">1.5</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/531a8cefcbfb14d809ff7ec71cd31ce8.jpg" alt=""></p>
+<p>可以看到当限定了决策树深度后，模型的过拟合情况明显得到了改善，泛化能力有明显提高。下面再来看看其他几个超参数。</p>
+<p>我们可以指定每个节点当它至少有多少个数据时才继续拆分下去：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 每个节点至少有10个数据时才会继续拆分下去</span></span><br><span class="line">dt_clf3 = DecisionTreeClassifier(min_samples_split=<span class="number">10</span>)</span><br><span class="line">dt_clf3.fit(X, y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制决策边界</span></span><br><span class="line">plot_decision_boundary(dt_clf3, axis=[-<span class="number">1.5</span>, <span class="number">2.5</span>, -<span class="number">1.0</span>, <span class="number">1.5</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/64bb0b9e97043f2a2f8433575ce973cd.jpg" alt=""></p>
+<p>我们还可以指定划分后决策树每个叶子节点至少要多少个样本数据：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 每个叶子节点至少要有6个样本数据</span></span><br><span class="line">dt_clf4 = DecisionTreeClassifier(min_samples_leaf=<span class="number">6</span>)</span><br><span class="line">dt_clf4.fit(X, y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制决策边界</span></span><br><span class="line">plot_decision_boundary(dt_clf4, axis=[-<span class="number">1.5</span>, <span class="number">2.5</span>, -<span class="number">1.0</span>, <span class="number">1.5</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/6f85167f913255c7f76e81c1bb017865.jpg" alt=""></p>
+<p>对于一棵决策树而言，叶子节点越多，决策树肯定约复杂。所以我们也可以指定最大叶子节点个数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 决策树的最大叶子节点个数为4</span></span><br><span class="line">dt_clf5 = DecisionTreeClassifier(max_leaf_nodes=<span class="number">4</span>)</span><br><span class="line">dt_clf5.fit(X, y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制决策边界</span></span><br><span class="line">plot_decision_boundary(dt_clf5, axis=[-<span class="number">1.5</span>, <span class="number">2.5</span>, -<span class="number">1.0</span>, <span class="number">1.5</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/8b12c5d67fef11675afec389a5543297.jpg" alt=""></p>
+<p>决策树还有许多超参数，这里我们只是举了几个例子，大家可以去Scikit Learn官网去看看<a href="http://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html#sklearn.tree.DecisionTreeClassifier" target="_blank" rel="external">DecisionTreeClassifier</a>的其他超参数，然后使用网格搜索方式选出最优超参数的组合，使得模型达到最优效果。</p>
+<h2 id="CART"><a href="#CART" class="headerlink" title="CART"></a>CART</h2><p>CART是Classification And Regression Tree的缩写，字面意思已经很明确了，分类和回归树，说明我们这篇笔记中介绍的基于信息熵和基尼系数划分方式的决策树既可以解决分类问题，还可以解决回归问题。Scikit Learn中封装的决策树也是CART，当然还有一些其他实现方式的决策树，大家有兴趣可以在网上查阅ID3，C4.5，C5.0等实现方式的决策树。</p>
+<p>下面我们来看看Scikit Learn中封装的解决回归问题的决策树：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用波士顿房价数据</span></span><br><span class="line">boston = datasets.load_boston()</span><br><span class="line">X = boston.data</span><br><span class="line">y = boston.target</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeRegressor</span><br><span class="line">dt_reg = DecisionTreeRegressor()</span><br><span class="line">dt_reg.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line">dt_reg.score(X_test, y_test)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.59192423637607194</span></span><br></pre></td></tr></table></figure>
+<p>可以看到Scikit Learn中提供了决策树回归器<code>DecisionTreeRegressor</code>，虽然模型的评分不是很高，但是可以通过超参数来调节，提升评分。<code>DecisionTreeRegressor</code>和超参数和<code>DecisionTreeClassifier</code>的超参数基本是一样的。</p>
+<h2 id="u51B3_u7B56_u6811_u7684_u7F3A_u9677"><a href="#u51B3_u7B56_u6811_u7684_u7F3A_u9677" class="headerlink" title="决策树的缺陷"></a>决策树的缺陷</h2><p>这一小节来看看决策树存在的两个缺陷。</p>
+<h3 id="u51B3_u7B56_u8FB9_u754C_u7684_u5C40_u9650_u6027"><a href="#u51B3_u7B56_u8FB9_u754C_u7684_u5C40_u9650_u6027" class="headerlink" title="决策边界的局限性"></a>决策边界的局限性</h3><p>因为决策树的根节点，也就是划分节点的判断条件都是在某个维度，判断小于或大于某个阈值，所以每个根节点的决策边界必然都是平行于某个维度的，对于二维数据来说，决策边界不是平行于横轴就是平行于纵轴的。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/b80637514c0594b18bdf840a331ed7eb.jpg" alt=""></p>
+<p>比如上图显示的示例，如果使用逻辑回归训练模型，绘制出的决策边界应该是上图中的斜虚线。但如果是使用决策树训练模型，那么绘制出的决策边界应该首先是从中间进行划分：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/02172dbea2507b7d0abf5f5107c86dfc.jpg" alt=""></p>
+<p>此时上半部分的信息熵为0，因全部是蓝色点，然后会从中间再分一下：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/ea52f77ca640de25f81e9c5f2030be33.jpg" alt=""></p>
+<p>所以最终决策边界为：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/7d071b1897316f224733e8d528fa03da.jpg" alt=""></p>
+<p>那么这样的横平竖直的决策边界有什么局限性呢？我们再来看一个示例：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/ad4993998fc46677ffbfbba0b6e485a8.jpg" alt=""></p>
+<p>如果是上图显示的样本数据，使用决策树训练的模型绘制出的决策边界是一个阶梯状，中间的阶梯部分划分倒是问题不大，但问题出在两头于横轴平行的部分。如果我们再来一个样本点，看看会被划分到哪一类：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/92145d7d0e9fb92d40efe2a4f684710f.jpg" alt=""></p>
+<p>假如新来一个样本点A，它是蓝色点，但是按照决策树的决策边界就被归为了红色点。但如果是逻辑回归模型绘制出的决策边界，点A就能被正确的分类：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/db2d20d13c6768910a3a3e90dcff0413.jpg" alt=""></p>
+<p>这就是决策树决策边界的局限性所在。</p>
+<h3 id="u5BF9_u6570_u636E_u654F_u611F"><a href="#u5BF9_u6570_u636E_u654F_u611F" class="headerlink" title="对数据敏感"></a>对数据敏感</h3><p>决策树的另一个缺陷是对样本数据中的个别数据非常敏感，这个敏感体现在如果对样本数据进行少许改动，决策边界都会发生巨大改变。我们来举例看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line"><span class="comment"># 还是使用鸢尾花数据</span></span><br><span class="line">iris = datasets.load_iris()</span><br><span class="line">X = iris.data[:, <span class="number">2</span>:]</span><br><span class="line">y = iris.target</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line">dt_clf = DecisionTreeClassifier(max_depth=<span class="number">2</span>, criterion=<span class="string">"entropy"</span>)</span><br><span class="line">dt_clf.fit(X, y)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(dt_clf, axis=[<span class="number">0.5</span>, <span class="number">7.5</span>, <span class="number">0</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">2</span>, <span class="number">0</span>], X[y==<span class="number">2</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/88a63811729dd486eb8498ca3dd53020.jpg" alt=""></p>
+<p>然后我们删除一个鸢尾花数据，再来看看决策边界：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 删除样本数据中索引为138的数据</span></span><br><span class="line">X_new = np.delete(X, <span class="number">138</span>, axis=<span class="number">0</span>)</span><br><span class="line">y_new = np.delete(y, <span class="number">138</span>)</span><br><span class="line"></span><br><span class="line">dt_clf2 = DecisionTreeClassifier(max_depth=<span class="number">2</span>, criterion=<span class="string">"entropy"</span>)</span><br><span class="line">dt_clf2.fit(X_new, y_new)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(dt_clf2, axis=[<span class="number">0.5</span>, <span class="number">7.5</span>, <span class="number">0</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">2</span>, <span class="number">0</span>], X[y==<span class="number">2</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/9b2316f2e266fc14fbe65c230e781766.jpg" alt=""></p>
+<p>可以看到当删除了一个数据后，决策边界发生了巨大的变化。不过对于样本数据中的个别数据很敏感这也是非参数机器学习算法的通病，都比较依赖于调参，才能得到一个比较好的模型。</p>
+<p>但是决策树的更多的体现在集成学习中，在下一篇笔记中大家将会看到决策树在集成学习和随机森林里的作用。</p>
+<blockquote>
+<p>申明：本文为慕课网<a href="https://www.imooc.com/t/108955" target="_blank" rel="external">liuyubobobo</a>老师<a href="https://coding.imooc.com/learn/list/169.html" target="_blank" rel="external">《Python3入门机器学习 经典算法与应用》</a>课程的学习笔记，未经允许不得转载。</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/machine-learning-15/" rel="next" title="机器学习笔记十五之决策树、信息熵">
+                <i class="fa fa-chevron-left"></i> 机器学习笔记十五之决策树、信息熵
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">95</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u57FA_u5C3C_u7CFB_u6570"><span class="nav-number">1.</span> <span class="nav-text">基尼系数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4FE1_u606F_u71B5_u548C_u57FA_u5C3C_u7CFB_u6570_u7684_u6BD4_u8F83"><span class="nav-number">2.</span> <span class="nav-text">信息熵和基尼系数的比较</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u51B3_u7B56_u6811_u4E2D_u7684_u8D85_u53C2_u6570"><span class="nav-number">3.</span> <span class="nav-text">决策树中的超参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CART"><span class="nav-number">4.</span> <span class="nav-text">CART</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u51B3_u7B56_u6811_u7684_u7F3A_u9677"><span class="nav-number">5.</span> <span class="nav-text">决策树的缺陷</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u51B3_u7B56_u8FB9_u754C_u7684_u5C40_u9650_u6027"><span class="nav-number">5.1.</span> <span class="nav-text">决策边界的局限性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BF9_u6570_u636E_u654F_u611F"><span class="nav-number">5.2.</span> <span class="nav-text">对数据敏感</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/machine-learning-16/';
+      var disqus_title = '机器学习笔记十六之基尼系数、CART';
+      var disqus_url = 'http://www.devtalking.com//articles/machine-learning-16/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
