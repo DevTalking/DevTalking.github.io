@@ -1,0 +1,873 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这篇笔记我们来看看机器学习中一个重要的非参数学习算法，决策树。
+什么是决策树
+上图是一个向银行申请信用卡的示例，图中的树状图展示了申请人需要在银行过几道关卡后才能成功申请到一张信用卡的流程图。在图中树状图的根节点是申请人输入的信息，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记十五之决策树、信息熵">
+<meta property="og:url" content="http://www.devtalking.com/articles/machine-learning-15/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这篇笔记我们来看看机器学习中一个重要的非参数学习算法，决策树。
+什么是决策树
+上图是一个向银行申请信用卡的示例，图中的树状图展示了申请人需要在银行过几道关卡后才能成功申请到一张信用卡的流程图。在图中树状图的根节点是申请人输入的信息，">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/84205d722c59ef40b62804d2672f9435.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/8ba5000e2b864692e02f12e153e1d220.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/88a63811729dd486eb8498ca3dd53020.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/85a1b8f21073e15f99d2a2f015762392.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/662595f933f20b24d3dbefb277f3cae3.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/88a63811729dd486eb8498ca3dd53020.jpg">
+<meta property="og:updated_time" content="2018-08-21T03:34:27.294Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记十五之决策树、信息熵">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这篇笔记我们来看看机器学习中一个重要的非参数学习算法，决策树。
+什么是决策树
+上图是一个向银行申请信用卡的示例，图中的树状图展示了申请人需要在银行过几道关卡后才能成功申请到一张信用卡的流程图。在图中树状图的根节点是申请人输入的信息，">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 机器学习笔记十五之决策树、信息熵 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                机器学习笔记十五之决策树、信息熵
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-06-30T00:00:00+08:00" content="2018-06-30">
+              2018-06-30
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-15/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-15/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这篇笔记我们来看看机器学习中一个重要的非参数学习算法，决策树。</p>
+<h2 id="u4EC0_u4E48_u662F_u51B3_u7B56_u6811"><a href="#u4EC0_u4E48_u662F_u51B3_u7B56_u6811" class="headerlink" title="什么是决策树"></a>什么是决策树</h2><p><img src="http://paxigrdp0.bkt.clouddn.com/84205d722c59ef40b62804d2672f9435.jpg" alt=""></p>
+<p>上图是一个向银行申请信用卡的示例，图中的树状图展示了申请人需要在银行过几道关卡后才能成功申请到一张信用卡的流程图。在图中树状图的根节点是申请人输入的信息，叶子节点是银行作出的决策，也就相当于是对申请者输入信息作出的分类决策。从第一个根节点到最后一个叶子节点经过的根节点数量称为树状图的深度（depth）。上图示例中的树状图从第一个根节点<strong>申请人是否办理过信用卡</strong>，到最后一个<strong>发放信用卡</strong>叶子节点共经过了三个根节点，所以深度为3。那么像这样使用树状图对输入信息一步步分类的方式就称为决策树方式。</p>
+<p>我们再来看一个问题，上图中每一个根节点的输入信息都可以用<strong>是</strong>或<strong>否</strong>来做判断分类，但是机器学习的样本数据都是数字，那么此时如果做判断呢？我们先来使用Scikit Learn中提供的决策树直观的看一下通过决策树对样本数据的分类过程和分类结果。</p>
+<a id="more"></a>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 我们使用Scikit Learn提供的鸢尾花数据集</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为了绘图方便，我们只使用鸢尾花数据的后两个特征</span></span><br><span class="line">iris = datasets.load_iris()</span><br><span class="line">X = iris.data[:, <span class="number">2</span>:]</span><br><span class="line">y = iris.target</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将样本点绘制出来</span></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">2</span>, <span class="number">0</span>], X[y==<span class="number">2</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/8ba5000e2b864692e02f12e153e1d220.jpg" alt=""></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 引入Scikit Learn中的决策树分类器</span></span><br><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line"></span><br><span class="line"><span class="comment"># max_depth参数是决策树深度，criterion参数这里我们先不用管</span></span><br><span class="line">dt_clf = DecisionTreeClassifier(max_depth=<span class="number">2</span>, criterion=<span class="string">"entropy"</span>)</span><br><span class="line">dt_clf.fit(X, y)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_decision_boundary</span><span class="params">(model, axis)</span>:</span></span><br><span class="line">	<span class="comment"># meshgrid函数用两个坐标轴上的点在平面上画格，返回坐标矩阵</span></span><br><span class="line">	X0, X1 = np.meshgrid(</span><br><span class="line">		<span class="comment"># 随机两组数，起始值和密度由坐标轴的起始值决定</span></span><br><span class="line">		np.linspace(axis[<span class="number">0</span>], axis[<span class="number">1</span>], int((axis[<span class="number">1</span>] - axis[<span class="number">0</span>]) * <span class="number">100</span>)).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">		np.linspace(axis[<span class="number">2</span>], axis[<span class="number">3</span>], int((axis[<span class="number">3</span>] - axis[<span class="number">2</span>]) * <span class="number">100</span>)).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">	)</span><br><span class="line">	<span class="comment"># ravel()方法将高维数组降为一维数组，c_[]将两个数组以列的形式拼接起来，形成矩阵</span></span><br><span class="line">	X_grid_matrix = np.c_[X0.ravel(), X1.ravel()]</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 通过训练好的逻辑回归模型，预测平面上这些点的分类</span></span><br><span class="line">	y_predict = model.predict(X_grid_matrix)</span><br><span class="line">	y_predict_matrix = y_predict.reshape(X0.shape)</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 设置色彩表</span></span><br><span class="line">	<span class="keyword">from</span> matplotlib.colors <span class="keyword">import</span> ListedColormap</span><br><span class="line">	my_colormap = ListedColormap([<span class="string">'#EF9A9A'</span>, <span class="string">'#40E0D0'</span>, <span class="string">'#FFFF00'</span>])</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 绘制等高线，并且填充等高区域的颜色</span></span><br><span class="line">	plt.contourf(X0, X1, y_predict_matrix, linewidth=<span class="number">5</span>, cmap=my_colormap)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(dt_clf, axis=[<span class="number">0.5</span>, <span class="number">7.5</span>, <span class="number">0</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">2</span>, <span class="number">0</span>], X[y==<span class="number">2</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/88a63811729dd486eb8498ca3dd53020.jpg" alt=""></p>
+<p>从决策边界图中可以看到决策树分类器将鸢尾花的数据较好的进行的归类区分。那么再回到刚才的问题，那就是在对样本数据进行决策树分类时，根节点是怎么做判断的呢？</p>
+<p>我们仔细看上图，假设我们将横轴表示的特征记为$x$，纵轴表示的特征记为$y$，那么红色的区域就是$x&lt;2.4$的区域，所以第一个根节点就直接可定义为$x$是否小于2.4，既样本数据的某一个特征数值是否小于2.4，如果小于2.4，那么将该样本点判定为蓝色分类的点。</p>
+<p>然后再来看纵轴，观察可得，$y=1.8$是蓝色和黄色区域的分界点，所以可将$y&lt;1.8$作为第二层的根节点，如果样本数据的另一个特征数值小于1.8，则判定为黄色分类的点，大于1.8则判定为绿色分类的点。那么此时的决策树为：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/85a1b8f21073e15f99d2a2f015762392.jpg" alt=""></p>
+<p>也就是决策树在对样本数据分类时，会先选定一个维度，或者说一个特征，再选定和这个维度想对应阈值构成一个根节点，既判断条件。</p>
+<p>通过上面的示例，大家应该什么是决策树有了直观的了解，并且也能看出来决策树的一些特点：</p>
+<ul>
+<li>决策树算法是非参数学习算法。</li>
+<li>决策树算法可以解决分类问题。</li>
+<li>决策树算法可以天然解决多分类问题。</li>
+<li>决策树算法处理样本数据的结果具有非常好的可解释性。</li>
+</ul>
+<p>了解了决策树后，那么问题来了，对于决策树来说核心的工作是确定根节点，那么这个根节点该如何确定呢？在哪个维度做划分？某个维度在哪个值上做划分？我们往后看。</p>
+<h2 id="u4FE1_u606F_u71B5"><a href="#u4FE1_u606F_u71B5" class="headerlink" title="信息熵"></a>信息熵</h2><p>这一节我们先来看看什么是信息熵。其实信息熵的概念很简单，<strong>熵在信息论中代表随机变量不确定的度量</strong>。</p>
+<ul>
+<li>熵越大，数据的不确定性越高。</li>
+<li>熵越小，数据的不确定性越低。</li>
+</ul>
+<h3 id="u4FE1_u606F_u71B5_u7684_u516C_u5F0F"><a href="#u4FE1_u606F_u71B5_u7684_u516C_u5F0F" class="headerlink" title="信息熵的公式"></a>信息熵的公式</h3><p>上面解释了信息熵的定义，那么这一小节我们使用信息熵的公式来解释它的定义。</p>
+<p>$$H = - \sum_{i=1}^k p_i log(p_i)$$</p>
+<p>上面的公式就是香农提出的信息熵的公式。逐个解释一下：</p>
+<ul>
+<li>假如一组数据有k类信息，那么每一个信息所占的比例就是$p_i$。比如鸢尾花数据包含三种鸢尾花的数据，那么每种鸢尾花所占的比例就是$\frac 1 3$，那么$p_1$、$p_2$、$p_3$就分别为$\frac 1 3$。</li>
+<li>因为$p_i$只可能是小于1的，所以$log(p_i)$始终是负数。所以需要在公式最前面加负号，让整个熵的值大于0。</li>
+</ul>
+<p>我们来举几个例子看一下，首先用鸢尾花的例子，三种鸢尾花各占$\frac 1 3$：</p>
+<p>$${\frac 1 3,\frac 1 3,\frac 1 3}$$</p>
+<p>那么代入信息熵的公式可得：</p>
+<p>$$H=-\frac 1 3 log(\frac 1 3)-\frac 1 3log(\frac 1 3)-\frac 1 3log(\frac 1 3)=1.0986$$</p>
+<p>再来看一个例子：</p>
+<p>$${\frac 1 {10},\frac 2 {10},\frac 7 {10}}$$</p>
+<p>代入公式可得：</p>
+<p>$$H=-\frac 1 {10} log(\frac 1 {10})-\frac 2 {10}log(\frac 2 {10})-\frac 7 {10}log(\frac 7 {10})=0.8018$$</p>
+<p>从上面两个例子可以看出，第二个例子的信息熵比一个例子的小，那么意味着第二个示例的数据不确定性要低于第一个示例的数据。其实从数据中也能看出，其中有一类信息占全部信息的$\frac 7 {10}$，所以大多数据是能确定在某一类中的，故而不确定性低。而第一个示例中每类信息都占了全部信息的$\frac 1 3$，所以数据不能很明确的确定是哪类，故而不确定性高。</p>
+<p>再来看一个极端的例子，${1,0,0}$，将其代入信息熵公式后得到的值是0。因为整个数据中就一种类型的数据，所以不确定性达到了最低，既信息熵的最小值为0。</p>
+<h3 id="u4FE1_u606F_u71B5_u66F2_u7EBF"><a href="#u4FE1_u606F_u71B5_u66F2_u7EBF" class="headerlink" title="信息熵曲线"></a>信息熵曲线</h3><p>这一小节我们在Jupyter Notebook中将信息熵的曲线绘制出来再让大家感性的理解一下。假设一组信息中有两个类别，那么当一个类别所占比例为$x$时，另一个类别的所占比例肯定是$1-x$，将其代入信息熵的公式展开后可得：</p>
+<p>$$H=-xlog(x)-(1-x)log(1-x)$$</p>
+<p>下面我们用代码来绘制一下这个曲线：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">entropy</span><span class="params">(p)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> -p * np.log(p) - (<span class="number">1</span>-p) * np.log(<span class="number">1</span>-p)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建不同的比例，这里避免log(0)的计算，所以要避免p=0和1-p=0</span></span><br><span class="line">x = np.linspace(<span class="number">0.01</span>, <span class="number">0.99</span>, <span class="number">200</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将不同比例和不同信息熵的值绘制出来</span></span><br><span class="line">plt.plot(x, entropy(x))</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/662595f933f20b24d3dbefb277f3cae3.jpg" alt=""></p>
+<p>从图中可以看到，曲线是以横轴0.5为中心的抛物线。当比例$x$为0.5时，纵轴达到最大值，也就是信息熵达到了最大值，表示此时变量不确定性最大。因为两个类别各以0.5的比例出现，很难确定是哪个类型，所以不确定性大。</p>
+<p>当以0.5为中心向两边延展后，可以看到信息熵在逐渐减小，意味着不确定性在减小。因为此时要么有一个比例在减小，要么有一个比例在增大。这两种情况都可以表明其中一种类别的比例在增大，所以更容易确定是哪种类别，故而不确定性减小。</p>
+<h2 id="u4F7F_u7528_u4FE1_u606F_u71B5_u5BFB_u627E_u6700_u4F18_u5212_u5206"><a href="#u4F7F_u7528_u4FE1_u606F_u71B5_u5BFB_u627E_u6700_u4F18_u5212_u5206" class="headerlink" title="使用信息熵寻找最优划分"></a>使用信息熵寻找最优划分</h2><p>之前我们有带着两个问题进入到了信息熵小节。那么这一节就来解答这两个问题：</p>
+<ul>
+<li>决策树每个节点在哪个维度做划分？</li>
+<li>某个维度在哪个值上做划分？</li>
+</ul>
+<p>那么我们要做的事情就是找到一个维度和一个阈值，使得通过该维度和阈值划分后的信息熵最低，此时这个划分才是最好的划分。</p>
+<p>用大白话解释一下就是，我们在所有数据中寻找到信息熵最低的维度和阈值，然后将数据划分为多个部分，再寻找划分后每部分信息熵最低的维度和阈值，继续划分下去，最终形成完整的决策树。这一节就来看看如何使用信息熵寻找最优划分。</p>
+<h3 id="u5212_u5206_u51FD_u6570"><a href="#u5212_u5206_u51FD_u6570" class="headerlink" title="划分函数"></a>划分函数</h3><p>我们先定义一个划分函数，也就是相当于构建决策树根节点的作用：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="comment"># 四个参数分别为样本特征数据、样本目标数据、维度、阈值</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">split</span><span class="params">(X, y, d, v)</span>:</span></span><br><span class="line">	<span class="comment"># 划分后左侧和右侧的索引数组</span></span><br><span class="line">	index_l = (X[:, d] &lt;= v)</span><br><span class="line">	index_r = (X[:, d] &gt; v)</span><br><span class="line">	<span class="keyword">return</span> X[index_l], X[index_r], y[index_l], y[index_r]</span><br></pre></td></tr></table></figure>
+<p>举个例子来看看上面的划分函数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 构建一个五行四列的样本数据</span></span><br><span class="line">X = np.linspace(<span class="number">1</span>, <span class="number">10</span>, <span class="number">20</span>)</span><br><span class="line">X = X.reshape(<span class="number">5</span>, <span class="number">4</span>)</span><br><span class="line">y = <span class="number">2</span> * X + <span class="number">3</span></span><br><span class="line"></span><br><span class="line">X</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[  <span class="number">1.</span>        ,   <span class="number">1.47368421</span>,   <span class="number">1.94736842</span>,   <span class="number">2.42105263</span>],</span><br><span class="line">	   [  <span class="number">2.89473684</span>,   <span class="number">3.36842105</span>,   <span class="number">3.84210526</span>,   <span class="number">4.31578947</span>],</span><br><span class="line">	   [  <span class="number">4.78947368</span>,   <span class="number">5.26315789</span>,   <span class="number">5.73684211</span>,   <span class="number">6.21052632</span>],</span><br><span class="line">	   [  <span class="number">6.68421053</span>,   <span class="number">7.15789474</span>,   <span class="number">7.63157895</span>,   <span class="number">8.10526316</span>],</span><br><span class="line">	   [  <span class="number">8.57894737</span>,   <span class="number">9.05263158</span>,   <span class="number">9.52631579</span>,  <span class="number">10.</span>        ]])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 期望以第1个维度，既第1列特征为划分维度，以5为划分阈值</span></span><br><span class="line">X_l, X_r, y_l, y_r = split(X, y, <span class="number">1</span>, <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">X_l</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[ <span class="number">1.</span>        ,  <span class="number">1.47368421</span>,  <span class="number">1.94736842</span>,  <span class="number">2.42105263</span>],</span><br><span class="line">	   [ <span class="number">2.89473684</span>,  <span class="number">3.36842105</span>,  <span class="number">3.84210526</span>,  <span class="number">4.31578947</span>]])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果以第0个维度，既第0列特征为划分维度，以5为划分阈值，那么X_l为三行四列矩阵，因为第0列的第三行值也小于5</span></span><br><span class="line">X_l, X_r, y_l, y_r = split(X, y, <span class="number">0</span>, <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">X_l</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[ <span class="number">1.</span>        ,  <span class="number">1.47368421</span>,  <span class="number">1.94736842</span>,  <span class="number">2.42105263</span>],</span><br><span class="line">	   [ <span class="number">2.89473684</span>,  <span class="number">3.36842105</span>,  <span class="number">3.84210526</span>,  <span class="number">4.31578947</span>],</span><br><span class="line">	   [ <span class="number">4.78947368</span>,  <span class="number">5.26315789</span>,  <span class="number">5.73684211</span>,  <span class="number">6.21052632</span>]])</span><br></pre></td></tr></table></figure>
+<h3 id="u8BA1_u7B97_u4FE1_u606F_u71B5_u51FD_u6570"><a href="#u8BA1_u7B97_u4FE1_u606F_u71B5_u51FD_u6570" class="headerlink" title="计算信息熵函数"></a>计算信息熵函数</h3><p>然后定义计算信息熵的函数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> log</span><br><span class="line"><span class="comment"># 计算信息熵时不关心样本特征，只关心样本目标数据的类别和每个类别的数量</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">entropy</span><span class="params">(y)</span>:</span></span><br><span class="line">	<span class="comment"># 使用Counter生成字典，key为y的值，value为等于该值的元素数量</span></span><br><span class="line">	counter_y = Counter(y)</span><br><span class="line">	entropy_result = <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> num <span class="keyword">in</span> counter_y.values():</span><br><span class="line">		p = num / len(y)</span><br><span class="line">		<span class="comment"># 将所有类别的占比加起来，得到信息熵</span></span><br><span class="line">		entropy_result += -p * log(p)</span><br><span class="line">		</span><br><span class="line">	<span class="keyword">return</span> entropy_result</span><br></pre></td></tr></table></figure>
+<p>举个例子验证一下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">test_y = np.array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">test_y1 = np.array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># test_y信息熵应该比较大，因为有4种类别</span></span><br><span class="line">entropy(test_y)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">1.3421257227487469</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># test_y1信息熵应该比较小，因为有2种类别</span></span><br><span class="line">entropy(test_y1)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.5982695885852573</span></span><br></pre></td></tr></table></figure>
+<h3 id="u5BFB_u627E_u7EF4_u5EA6_u548C_u9608_u503C_u51FD_u6570"><a href="#u5BFB_u627E_u7EF4_u5EA6_u548C_u9608_u503C_u51FD_u6570" class="headerlink" title="寻找维度和阈值函数"></a>寻找维度和阈值函数</h3><p>最后我们来定义寻找最优信息熵、维度、阈值的函数，该函数的最基本思路就是遍历样本数据的每个维度，对该维度中每两个相邻的值求均值作为阈值，然后求出信息熵，最终找到最小的信息熵，此时计算出该信息熵的维度和阈值既是最优维度和最优阈值：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 寻找最优信息熵</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">try_split</span><span class="params">(X, y)</span>:</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 最优信息熵初始取无穷大</span></span><br><span class="line">	best_entropy = float(<span class="string">'inf'</span>)</span><br><span class="line">	<span class="comment"># 最优维度和最优阈值，初始值为-1</span></span><br><span class="line">	best_d, best_v = -<span class="number">1</span>, -<span class="number">1</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 对样本特征数据的每个维度，既每个特征进行搜索</span></span><br><span class="line">	<span class="keyword">for</span> d <span class="keyword">in</span> range(X.shape[<span class="number">1</span>]):</span><br><span class="line">		<span class="comment"># 在d这个维度上，将每两个样本点中间的值作为阈值</span></span><br><span class="line">		<span class="comment"># 对样本数据在d这个维度上进行排序，返回排序索引</span></span><br><span class="line">		sorted_index = np.argsort(X[:, d])</span><br><span class="line">		<span class="comment"># 遍历每行样本数据，注意从第一行开始，因为需要用上一行的值和该行的值求均值</span></span><br><span class="line">		<span class="keyword">for</span> row <span class="keyword">in</span> range(<span class="number">1</span>, len(X)):</span><br><span class="line">			<span class="comment"># 如果两个值相等，那么均值无法区分这两个值，所以忽略这种情况</span></span><br><span class="line">			<span class="keyword">if</span> X[sorted_index[row-<span class="number">1</span>], d] != X[sorted_index[row], d]:</span><br><span class="line">				v = (X[sorted_index[row-<span class="number">1</span>], d] + X[sorted_index[row], d]) / <span class="number">2</span></span><br><span class="line">				<span class="comment"># 使用split()函数做划分</span></span><br><span class="line">				X_l, X_r, y_l, y_r = split(X, y, d, v)</span><br><span class="line">				<span class="comment"># 求划分后两部分的信息熵</span></span><br><span class="line">				e = entropy(y_l) + entropy(y_r)</span><br><span class="line">				<span class="comment"># 保存最优信息熵、维度、阈值</span></span><br><span class="line">				<span class="keyword">if</span> e &lt; best_entropy:</span><br><span class="line">					best_entropy, best_d, best_v = e, d, v</span><br><span class="line">					</span><br><span class="line">	<span class="keyword">return</span> best_entropy, best_d, best_v</span><br></pre></td></tr></table></figure>
+<p>我们同样使用鸢尾花的数据进行验证，在验证之前，我们先将之前通过Scikit Learn的决策树求出的鸢尾花决策边界的图贴出来，做以对比：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/88a63811729dd486eb8498ca3dd53020.jpg" alt=""></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line">iris = datasets.load_iris()</span><br><span class="line">X = iris.data[:, <span class="number">2</span>:]</span><br><span class="line">y = iris.target</span><br><span class="line"></span><br><span class="line">best_entropy, best_d, best_v = try_split(X, y)</span><br><span class="line">print(<span class="string">"best_entropy = "</span>, best_entropy)</span><br><span class="line">print(<span class="string">"best_d = "</span>, best_d)</span><br><span class="line">print(<span class="string">"best_v = "</span>, best_v)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">best_entropy =  <span class="number">0.6931471805599453</span></span><br><span class="line">best_d =  <span class="number">0</span></span><br><span class="line">best_v =  <span class="number">2.45</span></span><br></pre></td></tr></table></figure>
+<p>此时样本数据的第一个根节点的判断条件就求出来了，从上面的决策边界图中可以看到，第一次划分确实是从第0个维度，既横轴开始，以2.4左右为阈值进行的。我们来看看通过这个根节点划分后的数据是什么样的：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X_l1, X_r1, y_l1, y_r1 = split(X, y, best_d, best_v)</span><br><span class="line">entropy(y_l1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">entropy(y_r1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.6931471805599453</span></span><br></pre></td></tr></table></figure>
+<p>从上面结果可以看到，经过第一个根节点划分后，对左侧数据求信息熵的结果为0，说明左侧的数据现在只有一个类型了。从上图也可以清晰的看到，以横轴2.4往左的区域全部是蓝色的点。那么对右侧而言，它的信息熵是0.69，说明对右侧还可以继续划分：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">best_entropy2, best_d2, best_v2 = try_split(X_r1, y_r1)</span><br><span class="line">print(<span class="string">"best_entropy2 = "</span>, best_entropy2)</span><br><span class="line">print(<span class="string">"best_d2 = "</span>, best_d2)</span><br><span class="line">print(<span class="string">"best_v2 = "</span>, best_v2)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">best_entropy2 =  <span class="number">0.4132278899361904</span></span><br><span class="line">best_d2 =  <span class="number">1</span></span><br><span class="line">best_v2 =  <span class="number">1.75</span></span><br></pre></td></tr></table></figure>
+<p>第二次划分以第一个维度上的1.75为阈值进行，这和上图中的纵轴的划分界限基本是一致的。再来看看划分后的结果：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X_l2, X_r2, y_l2, y_r2 = split(X_r1, y_r1, best_d2, best_v2)</span><br><span class="line">entropy(y_l2)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.30849545083110386</span></span><br><span class="line"></span><br><span class="line">entropy(y_r2)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.10473243910508653</span></span><br></pre></td></tr></table></figure>
+<p>可以看到第二次划分后，两部分的信息熵都不为零，其实还可以对每部分再进行划分。不过在之前使用Scikit Learn的决策树划分时，我们将深度设为了2，所以就只划分到了目前的阶段，如果将深度设的更大的话，那么就会继续划分下去。在我们模拟寻找最优划分的过程中，就不再继续划分下去了，大家理解了划分过程就可以了。</p>
+<blockquote>
+<p>申明：本文为慕课网<a href="https://www.imooc.com/t/108955" target="_blank" rel="external">liuyubobobo</a>老师<a href="https://coding.imooc.com/learn/list/169.html" target="_blank" rel="external">《Python3入门机器学习 经典算法与应用》</a>课程的学习笔记，未经允许不得转载。</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/machine-learning-14/" rel="next" title="机器学习笔记十四之核函数（Kernel Function）">
+                <i class="fa fa-chevron-left"></i> 机器学习笔记十四之核函数（Kernel Function）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">94</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u4EC0_u4E48_u662F_u51B3_u7B56_u6811"><span class="nav-number">1.</span> <span class="nav-text">什么是决策树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4FE1_u606F_u71B5"><span class="nav-number">2.</span> <span class="nav-text">信息熵</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u4FE1_u606F_u71B5_u7684_u516C_u5F0F"><span class="nav-number">2.1.</span> <span class="nav-text">信息熵的公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u4FE1_u606F_u71B5_u66F2_u7EBF"><span class="nav-number">2.2.</span> <span class="nav-text">信息熵曲线</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u4F7F_u7528_u4FE1_u606F_u71B5_u5BFB_u627E_u6700_u4F18_u5212_u5206"><span class="nav-number">3.</span> <span class="nav-text">使用信息熵寻找最优划分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5212_u5206_u51FD_u6570"><span class="nav-number">3.1.</span> <span class="nav-text">划分函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8BA1_u7B97_u4FE1_u606F_u71B5_u51FD_u6570"><span class="nav-number">3.2.</span> <span class="nav-text">计算信息熵函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5BFB_u627E_u7EF4_u5EA6_u548C_u9608_u503C_u51FD_u6570"><span class="nav-number">3.3.</span> <span class="nav-text">寻找维度和阈值函数</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/machine-learning-15/';
+      var disqus_title = '机器学习笔记十五之决策树、信息熵';
+      var disqus_url = 'http://www.devtalking.com//articles/machine-learning-15/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
