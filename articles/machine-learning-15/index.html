@@ -106,7 +106,7 @@
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/85a1b8f21073e15f99d2a2f015762392.jpg">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/662595f933f20b24d3dbefb277f3cae3.jpg">
 <meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/88a63811729dd486eb8498ca3dd53020.jpg">
-<meta property="og:updated_time" content="2018-08-21T03:34:27.294Z">
+<meta property="og:updated_time" content="2018-08-21T03:38:57.098Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记十五之决策树、信息熵">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -346,15 +346,15 @@
 <li>因为$p_i$只可能是小于1的，所以$log(p_i)$始终是负数。所以需要在公式最前面加负号，让整个熵的值大于0。</li>
 </ul>
 <p>我们来举几个例子看一下，首先用鸢尾花的例子，三种鸢尾花各占$\frac 1 3$：</p>
-<p>$${\frac 1 3,\frac 1 3,\frac 1 3}$$</p>
+<p>$$\{\frac 1 3,\frac 1 3,\frac 1 3\}$$</p>
 <p>那么代入信息熵的公式可得：</p>
 <p>$$H=-\frac 1 3 log(\frac 1 3)-\frac 1 3log(\frac 1 3)-\frac 1 3log(\frac 1 3)=1.0986$$</p>
 <p>再来看一个例子：</p>
-<p>$${\frac 1 {10},\frac 2 {10},\frac 7 {10}}$$</p>
+<p>$$\{\frac 1 {10},\frac 2 {10},\frac 7 {10}\}$$</p>
 <p>代入公式可得：</p>
 <p>$$H=-\frac 1 {10} log(\frac 1 {10})-\frac 2 {10}log(\frac 2 {10})-\frac 7 {10}log(\frac 7 {10})=0.8018$$</p>
 <p>从上面两个例子可以看出，第二个例子的信息熵比一个例子的小，那么意味着第二个示例的数据不确定性要低于第一个示例的数据。其实从数据中也能看出，其中有一类信息占全部信息的$\frac 7 {10}$，所以大多数据是能确定在某一类中的，故而不确定性低。而第一个示例中每类信息都占了全部信息的$\frac 1 3$，所以数据不能很明确的确定是哪类，故而不确定性高。</p>
-<p>再来看一个极端的例子，${1,0,0}$，将其代入信息熵公式后得到的值是0。因为整个数据中就一种类型的数据，所以不确定性达到了最低，既信息熵的最小值为0。</p>
+<p>再来看一个极端的例子，$\{1,0,0\}$，将其代入信息熵公式后得到的值是0。因为整个数据中就一种类型的数据，所以不确定性达到了最低，既信息熵的最小值为0。</p>
 <h3 id="u4FE1_u606F_u71B5_u66F2_u7EBF"><a href="#u4FE1_u606F_u71B5_u66F2_u7EBF" class="headerlink" title="信息熵曲线"></a>信息熵曲线</h3><p>这一小节我们在Jupyter Notebook中将信息熵的曲线绘制出来再让大家感性的理解一下。假设一组信息中有两个类别，那么当一个类别所占比例为$x$时，另一个类别的所占比例肯定是$1-x$，将其代入信息熵的公式展开后可得：</p>
 <p>$$H=-xlog(x)-(1-x)log(1-x)$$</p>
 <p>下面我们用代码来绘制一下这个曲线：</p>
