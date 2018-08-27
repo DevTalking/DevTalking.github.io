@@ -231,6 +231,208 @@
             
             
               
+                <a class="post-title-link" href="/articles/calayer-animation-loading-lndicator/" itemprop="url">
+                  CALayer Animation - Loading Indicator
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-09-07T00:00:00+08:00" content="2015-09-07">
+              2015-09-07
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/calayer-animation-loading-lndicator/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/calayer-animation-loading-lndicator/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://www.csdn.net/article/2015-09-07/2825633" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+<h2 id="View_vs-_Layer"><a href="#View_vs-_Layer" class="headerlink" title="View vs. Layer"></a>View vs. Layer</h2><p>这篇文章通过两个加载动画向大家介绍CALayer的动画。按照面向对象的思想说，Layer其实就是一个模型类，像Java里的POJO类一样，它包含若干属性，并没有任何处理逻辑的方法，这些属性影响着显示在Layer中的内容。我们先来看看UIView和CALayer之间有什么区别和联系。</p>
+<ul>
+<li>联系：Layer是View背后的那个女人。每一个UIView后面都有对应的CALayer，大家看到的在UIView中显示的内容其实是在CALayer中。</li>
+<li>区别：<ul>
+<li>View有复杂的、各种组合的布局机制。Layer只有极简单的布局。</li>
+<li>View可以响应用户交互。Layer不能响应用户交互。</li>
+<li>View中的绘画逻辑有CPU执行。Layer中的绘画直接有GPU执行。</li>
+<li>View有丰富的、功能强大的子类。Layer只有很少的几个子类。</li>
+<li>View动画属性较少，局限性较大。Layer由于更底层、动画属性更多，所以可以实现出更灵活、更丰富的动画。</li>
+</ul>
+</li>
+</ul>
+<h2 id="u7B2C_u4E00_u4E2ACALayer_u52A8_u753B"><a href="#u7B2C_u4E00_u4E2ACALayer_u52A8_u753B" class="headerlink" title="第一个CALayer动画"></a>第一个CALayer动画</h2><p>Layer动画系列的文章，我不准备系统的从简单到复杂的知识进行讲解，我会通过各种实战示例，示例中用到什么知识点就讲什么知识点。</p>
+<p>第一个动画让我们来实现Google Chrome浏览器加载时页签上的等待动画：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-1.gif" alt="GoogleLoadingAnimation-1"></p>
+<p>新建项目<strong>GoogleLoading</strong>，打开<code>Main.storyboard</code>，拖拽一个UIView到ViewController中，添加好约束，自行设置ViewController和UIView的背景色，这里UIView的背景色我设置为无色：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-2.png" alt="GoogleLoadingAnimation-2"></p>
+<p>然后添加该View的Outlet到<code>ViewController</code>中，这个UIView就是要展示加载动画的View：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">weak</span> <span class="keyword">var</span> loadingView: <span class="type">UIView</span>!</span><br></pre></td></tr></table></figure>
+<p>打开<code>ViewController.swift</code>，申明一个常量属性<code>ovalShapleLayer</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> ovalShapeLayer: <span class="type">CAShapeLayer</span> = <span class="type">CAShapeLayer</span>()</span><br></pre></td></tr></table></figure>
+<p><code>ovalShapleLayer</code>的类型是<code>CAShapleLayer</code>，它是<code>CALayer</code>的为数不多的子类之一。它的作用是在屏幕上画出各种形状，不论是简单的圆形、方形还是复杂的五角星或不规则图形都难不住它。<code>CAShapeLayer</code>有如下一些主要属性：</p>
+<ul>
+<li>strokeColor：笔画颜色。</li>
+<li>strokeStart：笔画开始位置。</li>
+<li>strokeEnd：笔画结束位置。</li>
+<li>fillColor：图形填充颜色。</li>
+<li>lineWidth：笔画宽度，即笔画的粗细程度。</li>
+<li>lineDashPattern：虚线模式。</li>
+<li>path：图形的路径。</li>
+<li>lineCap：笔画未闭合位置的形状。</li>
+</ul>
+<p>我们之所要申明一个<code>CAShapeLayer</code>，是因为要用它在屏幕上画出一个圆形。下面在<code>viewDidLoad()</code>方法中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ovalShapeLayer.strokeColor = <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span></span><br><span class="line">ovalShapeLayer.fillColor = <span class="type">UIColor</span>.clearColor().<span class="type">CGColor</span></span><br><span class="line">ovalShapeLayer.lineWidth = <span class="number">7</span></span><br></pre></td></tr></table></figure>
+<p>这几个属性刚才已经向大家介绍过了，这三行代码的意思是我们画出的圆形笔画颜色是白色，没有填充色，笔画的宽度为7。接着我们申明这个圆形的半径，使这个圆形的大小为容纳它视图大小的80%：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> ovalRadius = loadingView.frame.size.height/<span class="number">2</span> * <span class="number">0.8</span></span><br></pre></td></tr></table></figure>
+<p>最后我们设置<code>ovalShapeLayer</code>的路径，这是最关键的一步，因为你要告知<code>CAShapeLayer</code>按照什么路径绘制图形，让我们接着添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ovalShapeLayer.path = <span class="type">UIBezierPath</span>(ovalInRect: <span class="type">CGRect</span>(x: loadingView.frame.size.width/<span class="number">2</span> - ovalRadius, y: loadingView.frame.size.height/<span class="number">2</span> - ovalRadius, width: ovalRadius * <span class="number">2</span>, height: ovalRadius * <span class="number">2</span>)).<span class="type">CGPath</span></span><br></pre></td></tr></table></figure>
+<p>这里出现了新面孔<code>UIBezierPath</code>，它可以创建基于矢量的路径，是Core Graphics框架关于path的封装。<code>UIBezierPath</code>可以定义简单的形状路径，如椭圆、矩形，或者有多个直线和曲线段组成的形状。在这里我们要使用它的初始化方法<code>init(ovalInRect rect: CGRect)</code>定义一个正圆的路径。设置完路径后，将<code>ovalShapeLayer</code>添加到<code>loadingView</code>视图的Layer中，它就可以按照设定好的路径在<code>loadingView</code>中绘制图形了：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">loadingView.layer.addSublayer(ovalShapeLayer)</span><br></pre></td></tr></table></figure>
+<p>编译运行看看效果：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-3.png" alt="GoogleLoadingAnimation-3"></p>
+<p>完美的一个圆形。接下来我们要做的是让这个圆只显示一部分，因为Google的加载动画只有大概五分之二的圆形轮廓。让我们继续将目光集中在<code>viewDidLoad()</code>方法中，在<code>loadingView.layer.addSublayer(ovalShapeLayer)</code>这行代码上面添加另一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ovalShapeLayer.strokeEnd = <span class="number">0.4</span></span><br></pre></td></tr></table></figure>
+<p>上面的代码将<code>ovalShapeLayer</code>的<code>strokeEnd</code>属性设置为0.4，意思是<code>ovalShapeLayer</code>在绘制圆形时只画整个圆形的五分之二，即笔画结束的位置在整个圆形轮廓的五分之二处。编译运行看看效果：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-4.png" alt="GoogleLoadingAnimation-4"></p>
+<p>看来是我们想要的效果，但是仍有一处细节需要我们完善，看看Google的加载动画，蓝色的部分圆形轮廓两头是圆形的，而我们的圆形轮廓两头是方形的。这个问题很好解决，仍然在<code>loadingView.layer.addSublayer(ovalShapeLayer)</code>这行代码上面添加一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ovalShapeLayer.lineCap = kCALineCapRound</span><br></pre></td></tr></table></figure>
+<p>这行代码的意思是将笔画两头的形状设置为圆形，对应的还有两个常量<code>kCALineCapButt</code>，<code>kCALineCapSquare</code>，大家可以试试。再次编译运行看看效果：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-5.png" alt="GoogleLoadingAnimation-5"></p>
+<p>到目前为止，我们通过CALayer绘制出了动画的主体，接下来要让它动起来。在<code>ViewController.swift</code>中添加<code>beginSimpleAnimate()</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">beginSimpleAnimation</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">let</span> rotate = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"transform.rotation"</span>)</span><br><span class="line">    rotate.duration = <span class="number">1.5</span></span><br><span class="line">    rotate.fromValue = <span class="number">0</span></span><br><span class="line">    rotate.toValue = <span class="number">2</span> * <span class="type">M_PI</span></span><br><span class="line">    rotate.repeatCount = <span class="type">HUGE</span></span><br><span class="line">    loadingView.layer.addAnimation(rotate, forKey: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>在这个方法中，我们又看到了新面孔<code>CABasicAnimation</code>，该类提供了基本的、单关键帧的Layer属性动画，通过<code>animationWithKeyPath:</code>初始化方法，根据<code>keyPath</code>创建不同的<code>CAPropertyAnimation</code>实例。常用的<code>keyPath</code>有如下一些：</p>
+<ul>
+<li><code>transform.rotation</code>：旋转动画。</li>
+<li><code>transform.ratation.x</code>：按x轴旋转动画。</li>
+<li><code>transform.ratation.y</code>：按y轴旋转动画。</li>
+<li><code>transform.ratation.z</code>：按z轴旋转动画。</li>
+<li><code>transform.scale</code>：按比例放大缩小动画。</li>
+<li><code>transform.scale.x</code>：在x轴按比例放大缩小动画。</li>
+<li><code>transform.scale.y</code>：在y轴按比例放大缩小动画。</li>
+<li><code>transform.scale.z</code>：在z轴按比例放大缩小动画。</li>
+<li><code>position</code>：移动位置动画。</li>
+<li><code>opacity</code>：透明度动画。</li>
+</ul>
+<p>以上只是一部分常用的动画<code>keyPath</code>，更多的希望大家在实际运用中去挖掘。在<code>beginSimpleAnimation()</code>方法中，我们使用了<code>transform.rotation</code>，创建了一个旋转动画的实例，然后给该动画设置了四个属性：</p>
+<ul>
+<li><code>duration</code>：动画持续时间。</li>
+<li><code>fromValue</code>：动画起始值。</li>
+<li><code>toValue</code>：动画结束值。</li>
+<li><code>repeatCount</code>：重复次数。</li>
+</ul>
+<p>该方法设置这几个属性的含义为使动画主体不停的旋转，旋转一圈的时间为1.5秒。以上这几个概念在UIView的动画中同样存在，大家应该都已经比较熟悉了。然后使用Layer的<code>addAnimation(anim: CAAnimation, forKey key: String?)</code>方法将旋转动画实例添加到目标Layer中，该方法的<code>key</code>是用来标示添加的动画，便于以后重复使用时能方便的检索，如果没有需求可以传值<code>nil</code>。最后<code>viewWillAppear</code>方法中调用<code>beginSimpleAnimation()</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewWillAppear</span><span class="params">(animated: Bool)</span></span> &#123;</span><br><span class="line">    beginSimpleAnimation()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译运行看看效果：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-6.gif" alt="GoogleLoadingAnimation-6"></p>
+<p>至此我们的第一个简单的CALayer动画就完成了，在下一节我们一起实现一个更加有意思的加载动画，从而向大家介绍新的动画类型及动画组合。</p>
+<h2 id="Stroke_Animation_u4E0EAnimation_Group"><a href="#Stroke_Animation_u4E0EAnimation_Group" class="headerlink" title="Stroke Animation与Animation Group"></a>Stroke Animation与Animation Group</h2><p>让我们先看看要实现的效果：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-7.gif" alt="GoogleLoadingAnimation-7"></p>
+<p>这种加载动画在很多应用中都出现过，比如网易新闻、Win版的谷歌浏览器中都有使用。下面就让我们一步一步来实现吧，首先打开<code>Main.storyboard</code>，新添加一个UIView，在<code>ViewController.swift</code>中添加Outlet：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-8.png" alt="GoogleLoadingAnimation-8"></p>
+<p>然后定义一个新的CAShapeLayer：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> anotherOvalShapeLayer: <span class="type">CAShapeLayer</span> = <span class="type">CAShapeLayer</span>()</span><br></pre></td></tr></table></figure>
+<p>在<code>viewDidLoad()</code>方法中对它进行设置，并将其添加到刚才创建的<code>complexLoadingView</code>中：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">anotherOvalShapeLayer.strokeColor = <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span></span><br><span class="line">anotherOvalShapeLayer.fillColor = <span class="type">UIColor</span>.clearColor().<span class="type">CGColor</span></span><br><span class="line">anotherOvalShapeLayer.lineWidth = <span class="number">7</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> anotherOvalRadius = complexLoadingView.frame.size.height/<span class="number">2</span> * <span class="number">0.8</span></span><br><span class="line">anotherOvalShapeLayer.path = <span class="type">UIBezierPath</span>(ovalInRect: <span class="type">CGRect</span>(x: complexLoadingView.frame.size.width/<span class="number">2</span> - anotherOvalRadius, y: complexLoadingView.frame.size.height/<span class="number">2</span> - anotherOvalRadius, width: anotherOvalRadius * <span class="number">2</span>, height: anotherOvalRadius * <span class="number">2</span>)).<span class="type">CGPath</span></span><br><span class="line">anotherOvalShapeLayer.lineCap = kCALineCapRound</span><br><span class="line">        </span><br><span class="line">complexLoadingView.layer.addSublayer(anotherOvalShapeLayer)</span><br></pre></td></tr></table></figure>
+<p>这些操作在上一个动画都已经做过一遍了，这里就不再解释。编译运行看看是否屏幕上又出现了一个圆圈呢：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-9.gif" alt="GoogleLoadingAnimation-9"></p>
+<p>接下来在<code>ViewController.swift</code>中添加一个方法<code>beginComplexAnimation()</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> strokeStartAnimate = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"strokeStart"</span>)</span><br><span class="line">strokeStartAnimate.fromValue = -<span class="number">0.5</span></span><br><span class="line">strokeStartAnimate.toValue = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> strokeEndAnimate = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"strokeEnd"</span>)</span><br><span class="line">strokeEndAnimate.fromValue = <span class="number">0.0</span></span><br><span class="line">strokeEndAnimate.toValue = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> strokeAnimateGroup = <span class="type">CAAnimationGroup</span>()</span><br><span class="line">strokeAnimateGroup.duration = <span class="number">1.5</span></span><br><span class="line">strokeAnimateGroup.repeatCount = <span class="type">HUGE</span></span><br><span class="line">strokeAnimateGroup.animations = [strokeStartAnimate, strokeEndAnimate]</span><br><span class="line">anotherOvalShapeLayer.addAnimation(strokeAnimateGroup, forKey: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>这里出现了两个新的动画类型，笔画开始动画和笔画结束动画，我们虽然使用CAShapeLayer绘制了一个圆圈，但是它也存在笔画起始位置和笔画终止位置，只不过它俩在同一个位置而已，笔画动画的位置取值在0-1之间，0代表绘制路径的起始位置，1代表绘制路径的终止位置。所以<code>strokeStartAnimate</code>动画让绘制圆圈的笔画起始位置从-0.5开始，目的是让笔画起始绘制时等待一段时间，也就是起始位置延迟绘制。而<code>strokeEndAnimate</code>动画让绘制圆圈的笔画终止位置正常的从0绘制到1。这样一来笔画两头绘制的时间就会不一样，会有一个时间差，这样就有圆圈不断绘制又不断被擦除的效果。</p>
+<p><code>strokeStartAnimate</code>和<code>strokeEndAnimate</code>是两个动画，如何作用于一个Layer上呢？这时就要用到<code>CAAnimationGroup</code>，顾名思义它是将多个动画组成一个组，在一个动画组里，子动画会同时进行。动画组可以设置动画持续时间、重复次数以及子动画数组。最后将动画组加在Layer上即可。</p>
+<p>最后在<code>viewWillAppear()</code>方法中调用<code>beginComplexAnimation()</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewWillAppear</span><span class="params">(animated: Bool)</span></span> &#123;</span><br><span class="line">    beginSimpleAnimation()</span><br><span class="line">    beginComplexAnimation()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译运行看看效果：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-10.gif" alt="GoogleLoadingAnimation-10"></p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>CALayer动画可以实现比UIView动画更丰富、更底层、效率更高的动画。但是在实际的应用开发中，我们应该按需所用，能用UIView动画实现的我们就可以不用CALayer动画，它俩没有谁优谁劣之分。这篇文章只是CALayer动画的引子，让大家对CALayer动画有初步的了解和认识，之后我在文章中会通过更多的实例帮大家更深入的认识CALayer动画，从而提升自己应用的用户体验。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/uistackview/" itemprop="url">
                   UIStackView小窥
                 </a>
@@ -932,171 +1134,11 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/uiview-spring-animation/" itemprop="url">
-                  iOS UIView Animation - Spring
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-07-02T00:00:00+08:00" content="2015-07-02">
-              2015-07-02
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/uiview-spring-animation/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/uiview-spring-animation/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<blockquote>
-<p>本文首发<a href="http://www.csdn.net/article/2015-07-03/2825122-ios-uiview-animation-2" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-</blockquote>
-<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>通过上一篇文章，大家应该学会了如何使用<code>UIKit</code>创建最基本的视图动画，包括如何指定视图某属性的起始值和结束值，以及动画持续时间、动画延迟时间、动画选项等概念。</p>
-<p>但是目前大家实现的动画不论是位置移动还是大小改变都是以一个单一的方向在运动，比如位置从A点到B点，大小半径从1到2:</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/SpringAnimation-1.png" alt="图1"></p>
-<p>在这篇文章中，大家会学到更复杂一点的动画，让视图在一次动画中的运动轨迹像弹簧一样，有多次不同方向的运动，最后停止在终点：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/SpringAnimation-2.png" alt="图2"></p>
-<p>如果给位置移动的动画添加弹簧效果，那么视图的运动轨迹应该像下图中展现的一样：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/SpringAnimation-3.png" alt="图3"></p>
-<p>这会使你的动画看起来更逼真、更真实、更贴近现实。在某些情况下带给用户更好的用户体验。那么让我们开始学习吧。</p>
-<h2 id="Spring_u52A8_u753B"><a href="#Spring_u52A8_u753B" class="headerlink" title="Spring动画"></a>Spring动画</h2><p>我们还是以上一篇文章中的登录页面为例，大家应该发现了那个呆板的登录按钮吧，我们今天就让它Q弹起来。</p>
-<p>打开<code>ViewController.swift</code>，在<code>viewWillAppear()</code>方法的底部添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">self</span>.loginButton.center.y += <span class="number">30</span></span><br><span class="line"><span class="keyword">self</span>.loginButton.alpha = <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p>让登录按钮在屏幕呈现之前位置下移30，并且让它透明。然后在<code>viewDidAppear()</code>方法的底部添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">0.5</span>, usingSpringWithDamping: <span class="number">0.5</span>, initialSpringVelocity: <span class="number">0</span>, options: .<span class="type">AllowUserInteraction</span>, animations: &#123;</span><br><span class="line">     <span class="keyword">self</span>.loginButton.center.y -= <span class="number">30</span></span><br><span class="line">     <span class="keyword">self</span>.loginButton.alpha = <span class="number">1</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>上述的代码大家是不是似曾相识，没错，依然是<code>UIView</code>的类方法，不过又多了两个参数：</p>
-<ul>
-<li><code>usingSpringWithDamping</code>：弹簧动画的阻尼值，也就是相当于摩擦力的大小，该属性的值从0.0到1.0之间，越靠近0，阻尼越小，弹动的幅度越大，反之阻尼越大，弹动的幅度越小，如果大道一定程度，会出现弹不动的情况。</li>
-<li><code>initialSpringVelocity</code>：弹簧动画的速率，或者说是动力。值越小弹簧的动力越小，弹簧拉伸的幅度越小，反之动力越大，弹簧拉伸的幅度越大。这里需要注意的是，如果设置为0，表示忽略该属性，由动画持续时间和阻尼计算动画的效果。</li>
-</ul>
-<p>下面我们先来看看不同动力的效果：</p>
-<ul>
-<li>持续时间为3秒，阻尼为0.5，动力为1：</li>
-</ul>
-<iframe src="https://player.vimeo.com/video/132389962?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<ul>
-<li>持续时间为3秒，阻尼为0.5，动力为20：</li>
-</ul>
-<iframe src="https://player.vimeo.com/video/132389963?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>当<code>initialSpringVelocity</code>的值为1时，登录按钮上下弹力并不是很强劲，当设置为20时，登录按钮直接冲过了密码输入框，这就是动力的效果。</p>
-<p>然后我们再看看不同阻尼的效果：</p>
-<ul>
-<li>持续时间为3秒，阻尼为0.1，动力为0：</li>
-</ul>
-<iframe src="https://player.vimeo.com/video/132389964?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<ul>
-<li>持续时间为3秒，阻尼为1，动力为0：</li>
-</ul>
-<iframe src="https://player.vimeo.com/video/132389966?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>当<code>usingSpringWithDamping</code>属性值为0.1时，表示阻尼很小，虽然没有动力因素的影响，但登录按钮弹动的幅度依然比较大，相当于在冰面滑行一样。当该属性为1时，表示阻尼非常大，可以看到登录按钮几乎是没有什么弹动的幅度。这就是阻尼的效果。</p>
-<p>大家需要注意的一点是，弹簧动画并不只作用于位置的变化，它可以作用于所有动画属性的变化，比如我们在<code>animations</code>的闭包中除了位置的变化外，还有透明度的变化，它也同样有弹簧动画的效果，只不过它没有位置变化那么明显和贴近真实，它会表现出一闪一闪的效果：</p>
-<iframe src="https://player.vimeo.com/video/132389969?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>大家可以尝试这几个属性不同值的组合，选出一个自己觉得满意的弹簧效果即可。</p>
-<h2 id="u5C06_u52A8_u753B_u8FD0_u7528_u5230_u4EBA_u673A_u4EA4_u4E92"><a href="#u5C06_u52A8_u753B_u8FD0_u7528_u5230_u4EBA_u673A_u4EA4_u4E92" class="headerlink" title="将动画运用到人机交互"></a>将动画运用到人机交互</h2><p>上一节讲的弹簧动画的确可以让我们的UI变得鲜活起来，但这仅仅是看在眼里的，对于用户的操作却并没有什么响应和反馈。在这节会教大家如何让视图在用户进行点击操作时以动画的形式给予响应和反馈。</p>
-<p>在<code>ViewController.swift</code>中有一个名为<code>login()</code>的方法，关联了登录按钮的<strong>Touch Up Inside</strong>事件，在该方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, delay: <span class="number">0.0</span>, usingSpringWithDamping: <span class="number">0.2</span>, initialSpringVelocity: <span class="number">0.0</span>, options: .<span class="type">AllowUserInteraction</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.loginButton.bounds.size.width += <span class="number">25</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>此时每当我们点击登录按钮一次，它就会变胖一些。编译运行看一下效果：</p>
-<iframe src="https://player.vimeo.com/video/132390547?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>我们可以再组合一个效果，使点击登录按钮时不仅让它变胖，还有轻微的向下弹跳效果。在<code>login()</code>方法底部添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.3</span>, delay: <span class="number">0.0</span>, usingSpringWithDamping: <span class="number">0.6</span>, initialSpringVelocity: <span class="number">0.0</span>, options: .<span class="type">AllowUserInteraction</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.loginButton.center.y += <span class="number">10</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>编译运行看一下效果：</p>
-<iframe src="https://player.vimeo.com/video/132390546?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>以上只是两个简单的将动画运用到人机交互的例子，大家可以在自己的项目中将一些用户的操作加上视图的动画反馈，让你的应用鲜活起来。</p>
-<h2 id="u7ED3_u675F_u8BED"><a href="#u7ED3_u675F_u8BED" class="headerlink" title="结束语"></a>结束语</h2><p>这一篇文章向大家讲解了<code>UIView</code>的Spring动画，以及将动画运用到人机交互中，使提升应用的用户体验，大家可以多多尝试Spring动画的各个属性，以及结合<a href="http://www.devtalking.com/articles/uiview-first-animation/">上一篇文章</a>的知识，组合出更美妙的动画效果。下一篇文章会给大家介绍<code>UIView</code>的Transition动画，敬请期待。</p>
-<p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1134,7 +1176,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">95</span>
+              <span class="site-state-item-count">96</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

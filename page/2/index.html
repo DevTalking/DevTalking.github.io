@@ -231,6 +231,121 @@
             
             
               
+                <a class="post-title-link" href="/articles/machine-learning-12/" itemprop="url">
+                  机器学习笔记十二之算法精准率、召回率、混淆矩阵
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-05-15T00:00:00+08:00" content="2018-05-15">
+              2018-05-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-12/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-12/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>机器学习算法中有一个重要环节就是评判算法的好坏，我们在之间的笔记中讲过多种评价回归算法的评测标准，比如均方误差（MSE）、均方根误差（RMSE）、平均绝对误差（MAE）、$R^2$（R Squared）。但是在分类问题中我们一直使用分类准确度这一个指标，也就是预测对分类的样本数量除以总预测样本数量。但是这个方法存在很大的一个缺陷，所以这篇笔记主要介绍评价分类问题的方式方法。</p>
+<h2 id="u6781_u5EA6_u504F_u659C_u6570_u636E_uFF08Skewed_Data_uFF09"><a href="#u6781_u5EA6_u504F_u659C_u6570_u636E_uFF08Skewed_Data_uFF09" class="headerlink" title="极度偏斜数据（Skewed Data）"></a>极度偏斜数据（Skewed Data）</h2><p>为什么说分类准确度这个指标存在很大的一个缺陷呢。举个例子，假设有一个癌症预测系统，输入体检信息，判断是否患有癌症。我们知道世界上相对于其他病症，患癌症的比例还是很小，如果癌症产生的概率只有0.1%，那么有99.9%的人都不会患有癌症。这就意味着，就算癌症预测系统什么都不做，但凡有体检信息输入，就给出没有患癌症的结果，那准确率也是达到了99.9%。那此时这个分类准确度是真实的吗？所以当样本数据或领域的实际情况存在数据极度偏斜的时候，只使用分类准确度这个指标是远远不够的。</p>
+<h2 id="u6DF7_u6DC6_u77E9_u9635_uFF08Confusion_Matrix_uFF09"><a href="#u6DF7_u6DC6_u77E9_u9635_uFF08Confusion_Matrix_uFF09" class="headerlink" title="混淆矩阵（Confusion Matrix）"></a>混淆矩阵（Confusion Matrix）</h2><p>这一节介绍一个能进一步分析分类结果的工具，混淆矩阵。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/c997c342900bf1764c1982113ad3e571.jpg" alt=""></p>
+<p>上面这个表针对二分类问题，所有将类别就分为两类0和1，0表示Negative，类似医院上的阴性，1表示Positive，类似医学上的阳性。行代表真实值，列代表预测值。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/11d0bcf47d48fee84429d1f387b21847.jpg" alt=""></p>
+<p>如上图所示：</p>
+<ul>
+<li>(0, 0)格子真实值和预测值都为0，称为预测Negative正确，记作True Negative，简写为TN。</li>
+<li>(0, 1)格子真实值为0，但预测值为1，称为预测Positive错误，记作False Positive，简写为FP。</li>
+<li>(1, 0)格子真实值为1， 但预测值为0，称为预测Negative错误，记作False Negative，简写为FN。</li>
+<li>(1, 1)格子真实值和预测值都为1，称为预测Positive正确，记作True Positive，简写为TP。</li>
+</ul>
+<p>以上这个表格就叫做混淆矩阵。举个例子，如果对10000个人预测他们是否患癌症，通过混淆矩阵表示出的真实情况就是：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/c3d5ddc7046eae2076c334850889e4e8.jpg" alt=""></p>
+<p>解读一下：</p>
+<ul>
+<li>没有患癌症，系统也预测出没有患癌症的人为9978人（TN）。</li>
+<li>没有患癌症，但系统预测出患癌症的人为12人（FP）。</li>
+<li>患有癌症，但系统预测出没有患癌症的人为2人（FN）。</li>
+<li>患有癌症，系统也预测出患有癌症的人为8人（TP）。</li>
+</ul>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/machine-learning-12/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/task-manage-omnifocus/" itemprop="url">
                   基于OmniFocus的任务系统
                 </a>
@@ -653,119 +768,11 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/machine-learning-8/" itemprop="url">
-                  机器学习笔记八之多项式回归、拟合程度、模型泛化
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2018-03-15T00:00:00+08:00" content="2018-03-15">
-              2018-03-15
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-8/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-8/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>在前面的笔记中，我们使用的样本数据都是具有一定线性关系的，我们使用简单线性回归或者多元线性回归来拟合这些数据。但是这种具有强假设的数据集在实际应用中是比较少的，大多数的样本数据都没有明显的线性关系，那么这一节主要来看看如何对非线性关系的样本数据进行处理并预测。</p>
-<h2 id="u591A_u9879_u5F0F_u56DE_u5F52"><a href="#u591A_u9879_u5F0F_u56DE_u5F52" class="headerlink" title="多项式回归"></a>多项式回归</h2><p>多项式回归就是我们要使用的方法，其本质上还是基于线性回归的数学原理，只不过是对损失函数进行巧妙的改变使得原本我们用线性回归求得一条直线，变为求得一条曲线。</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/ba54b737f3717cf2fec01814463c4a4c.jpg" alt=""><br>在线性回归的问题中，对于这些数据（蓝色点），我们是要寻找一条直线，让这条直线尽可能的拟合这些数据，如果数据只有一个特征的话，我们的模型就是：</p>
-<p>$$ y=ax + b $$</p>
-<p>$x$就是数据的已知特征，$a$和$b$是我们的模型需要求出的参数。</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/f6a83a4e5b65ca84c17ff6d5468c63e2.jpg" alt=""></p>
-<p>那如果我们的数据是像上图这种分布形态呢？显然红色那条直线无法拟合这些数据，而黄色那条曲线能更好的拟合这些数据。在样本数据特征数量不变的情况下，这条黄色曲线的模型其实就是一个一元二次方程：</p>
-<p>$$y = ax^2+bx+c$$</p>
-<p>我们抛开这个方程表示的坐标系形态来看，假设将$x^2$看作$x_1$，将$x$看作$x_2$，那么方式就可以写为：</p>
-<p>$$y=ax_1+bx_2+c$$</p>
-<p>这就变成了具有两个特征的样本数据的线性回归问题。现在大家就可以理解在本节开头所说的对损失函数进行巧妙改变的含义了吧。</p>
-<p>所以对与多项式回归而言，就是需要我们为样本数据增加一个特征，使之可以用线性回归的原理更好的拟合样本数据，但是求出的是对于原始样本而言的非线性的曲线。</p>
-<h3 id="u5B9E_u73B0_u591A_u9879_u5F0F_u56DE_u5F52"><a href="#u5B9E_u73B0_u591A_u9879_u5F0F_u56DE_u5F52" class="headerlink" title="实现多项式回归"></a>实现多项式回归</h3><p>这一节我们在Jupyter Notebook中看看如何实现多项式回归：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建样本数据，从-3到3的100个随机数</span></span><br><span class="line">x = np.random.uniform(-<span class="number">3</span>, <span class="number">3</span>, size=<span class="number">100</span>)</span><br><span class="line"><span class="comment"># 转换为100行1列的矩阵，既样本数据只有一个特征</span></span><br><span class="line">X = x.reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 求y的方程</span></span><br><span class="line">y = <span class="number">0.5</span> * x**<span class="number">2</span> + x + <span class="number">2</span> + np.random.normal(<span class="number">0</span>, <span class="number">1</span>, size=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将样本数据绘制出来</span></span><br><span class="line">plt.scatter(x, y)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/ccfd43e57d544b2be620023d01b3cf2a.jpg" alt=""></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-8/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -803,7 +810,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">95</span>
+              <span class="site-state-item-count">96</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

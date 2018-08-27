@@ -231,6 +231,231 @@
             
             
               
+                <a class="post-title-link" href="/articles/read-threading-programming-guide-1/" itemprop="url">
+                  读 Threading Programming Guide 笔记（一）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-02-01T00:00:00+08:00" content="2016-02-01">
+              2016-02-01
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/read-threading-programming-guide-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/read-threading-programming-guide-1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://geek.csdn.net/news/detail/54092" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+<blockquote>
+<p>记得第一次读这个文档还是3年前，那时也只是泛读。如今关于iOS多线程的文章层出不穷，但我觉得若想更好的领会各个实践者的文章，应该先仔细读读官方的相关文档，打好基础，定会有更好的效果。文章中有对官方文档的翻译，也有自己的理解，官方文档中代码片段的示例在这篇文章中都进行了完整的重写，还有一些文档中没有的代码示例，并且都使用Swift完成，给大家一些Objc与Swift转换的参考。<br>官方文档地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Conceptual/Multithreading/Introduction/Introduction.html" target="_blank" rel="external">Threading Programming Guide</a></p>
+</blockquote>
+<h2 id="u4EC0_u4E48_u662F_u7EBF_u7A0B"><a href="#u4EC0_u4E48_u662F_u7EBF_u7A0B" class="headerlink" title="什么是线程"></a>什么是线程</h2><p>我们设想在应用程序中，每行代码的执行都有一个执行路径并对应一个执行容器。线程，可以让应用程序中的代码通过多个执行路径执行，从而达到多个代码块同时在不同的执行路径下执行运算，即多任务同时执行。</p>
+<p>在系统中，每个程序都是并行状态的，但是并不是一直持续着活跃状态，而是由系统根据程序的需要适时的分配执行时间和内存。在每个程序中，或许存在多个线程，执行着不同的任务，那么系统对程序执行的管理实际上就是对程序中线程的管理，比如适时的将某个线程安排到负载较小的内核中执行，或者阻止正在运行的优先级较低的线程，给优先级较高的线程让路等。所以说线程的运转需要内核级别和应用程序级别相互协调，即内核级别负责将事件分发给不同的线程，并将线程安排在合理的内核上执行以及管理线程的优先级，而应用程序级别是通过代码管理和操控线程的属性及状态。</p>
+<h3 id="u4E3A_u4EC0_u4E48_u8981_u4F7F_u7528_u7EBF_u7A0B"><a href="#u4E3A_u4EC0_u4E48_u8981_u4F7F_u7528_u7EBF_u7A0B" class="headerlink" title="为什么要使用线程"></a>为什么要使用线程</h3><p>回到iOS，我们开发的App至少都有一个线程，称之为主线程，线程中执行方法或函数的原则是先进先出原则，一个接一个的执行。假设在我们的App中有从远程下载图片的功能，并且该功能放在主线程中执行，那么当下载一个1080p高清图片时，就会需要耗费较长的时间，如果主线程中下载功能后面还有其他待执行的方法，那么只能等待下载功能完成之后，才能继续执行。所以此时对于用户来说，得不到任何来自App的响应，那么很容易认为是你的App出问题了，如此糟糕的用户体验，足以让用户将你的App打入冷宫甚至删除。</p>
+<p>如果我们使用另外一个线程专门处理下载功能，那么该线程和主线程同时执行，对于用户而言，此时可以由主线程对用户做出合适的响应，而下载在另一个线程中同时进行着。所以使用线程对提高程序的用户体验、性能无疑是最好的方法。</p>
+<h3 id="u4F7F_u7528_u7EBF_u7A0B_u4F1A_u5BFC_u81F4_u7684_u95EE_u9898"><a href="#u4F7F_u7528_u7EBF_u7A0B_u4F1A_u5BFC_u81F4_u7684_u95EE_u9898" class="headerlink" title="使用线程会导致的问题"></a>使用线程会导致的问题</h3><p>俗话说天下没有免费的午餐，诚然多线程能提高程序的性能、用户体验，但是在光鲜的背后还是要承担一定风险的。使用多线程势必会增加开发人员写代码花费的时间，因为代码的复杂度变高了，开发人员斟酌的频率就会变高，线程与线程之间有交互，容错率就会降低，开发人员调试的时间就会变多。由于多线程依然共享内存，所以会发生两个线程同时对某个数据进行操作，这样很容易使程序的执行结果发生错误。总而言之，多线程好，但使用时要知其根本，做到佩弦自急。</p>
+<h2 id="u5B9E_u73B0_u591A_u4EFB_u52A1_u5E76_u53D1_u6267_u884C_u4EFB_u52A1_u7684_u89E3_u51B3_u65B9_u6848"><a href="#u5B9E_u73B0_u591A_u4EFB_u52A1_u5E76_u53D1_u6267_u884C_u4EFB_u52A1_u7684_u89E3_u51B3_u65B9_u6848" class="headerlink" title="实现多任务并发执行任务的解决方案"></a>实现多任务并发执行任务的解决方案</h2><p>因为线程本身相对比较低层，它实现程序中并发执行任务功能的方式也较为复杂，所以我们如果想使用好线程，那么就必须要真正理解线程，要明白在我们的程序中使用线程之后会带来哪些潜在的风险，所谓知己知彼方能百战不殆。同时，我们也不能滥用线程，该用的时候用，不该用的时候就不要画蛇添足。毕竟，使用线程会增加内存的消耗以及CPU得运算时间，要避免物极必反。在真正理解线程之前，我们先看看在OS X和iOS中提供的不那么底层的实现多任务并发执行的解决方案：</p>
+<ul>
+<li><p>Operation object：该技术出现在OS X 10.5中，通过将要执行的任务封装成操作对象的方式实现任务在多线程中执行。任务可以理解为你要想执行的一段代码。在这个操作对象中不光包含要执行的任务，还包含线程管理的内容，使用时通常与操作队列对象联合使用，操作队列对象会管理操作对象如何使用线程，所以我们只需要关心要执行的任务本身即可。</p>
+</li>
+<li><p>GCD：该技术出现在OS X 10.6中，它与Operation Object的初衷类似，就是让开发者只关注要执行的任务本身，而不需要去关注线程的管理。你只需要创建好任务，然后将任务添加到一个工作队列里即可，该工作队列会根据当前CPU性能及内核的负载情况，将任务安排到合适的线程中去执行。</p>
+</li>
+<li><p>Idle-time notification：该技术主要用于处理优先级相对比较低、执行时间比较短的任务，让应用程序在空闲的时候执行这类任务。Cocoa框架提供<code>NSNotificationQueue</code>对象处理空闲时间通知，通过使用<code>NSPostWhenIdle</code>选项，向队列发送空闲时间通知的请求。</p>
+</li>
+<li><p>Asynchronous functions：系统中有一些支持异步的函数，可以自动让你的代码并行执行。这些异步函数可能通过应用程序的守护进程或者自定义的线程执行你的代码，与主进程或主线程分离，达到并行执行任务的功能。</p>
+</li>
+<li><p>Timers：我们也可以在应用程序主线程中使用定时器去执行一些比较轻量级的、有一定周期性的任务。</p>
+</li>
+<li><p>Separate processes：虽然通过另起一个进程比线程更加重量级，但是在某些情况下要比使用线程更好一些，比如你需要的执行的任务和你的应用程序在展现数据和使用方面没有什么关系，但是可以优化你的应用程序的运行环境，或者提高应用程序获取数据的效率等。</p>
+</li>
+</ul>
+<h2 id="u521D_u8BC6_u7EBF_u7A0B_u6982_u5FF5"><a href="#u521D_u8BC6_u7EBF_u7A0B_u6982_u5FF5" class="headerlink" title="初识线程概念"></a>初识线程概念</h2><h3 id="u7EBF_u7A0B_u6280_u672F"><a href="#u7EBF_u7A0B_u6280_u672F" class="headerlink" title="线程技术"></a>线程技术</h3><p>说到OS X和iOS中的线程技术，就不得不说GNU Mach。Apple操作系统中的线程技术是基于Mach线程技术实现的，所以本身就带有线程基本的特性，比如PEM。Mach线程我们几乎不会用到，一般编程中我们可能会使用POSIX API创建线程。</p>
+<blockquote>
+<p>GNU Mach：GNU是一个类UNIX操作系统，它采用GNU Hurd作为操作系统内核，而GNU Mach是基于GNU Hurd内核技术的微内核。<br>POSIX：可移植操作系统接口（Portable Operating System Interface of UNIX），它定义了操作系统应该为应用程序提供的接口标准， 是IEEE为要在各种UNIX操作系统上运行的软件而定义的一系列API标准的总称。<br>PEM：Preemptive Execution Model，以任务的优先级决定立即执行还是延后执行，或者安排至不同的内核执行。</p>
+</blockquote>
+<p>我们来看看OS X和iOS中主要的两种线程技术：</p>
+<ul>
+<li>Cocoa Threads：Cocoa框架中提供了<code>NSThread</code>和<code>NSObject</code>类供我们进行线程相关的操作。</li>
+<li>POSIX Threads：POSIX的线程API实际是基于C语言的线程接口，这些接口在使用线程和配置线程方面更加容易和灵活。</li>
+</ul>
+<p>在应用程序层面，不管是什么平台，线程的运行方式都是大体相同的，在线程的运行过程中一般都会经历三种状态，即运行中、准备运行、阻塞。如果某个线程在当前处于不活跃状态，也即是非运行中状态，那么它有可能是处于阻塞状态并在等待执行任务的输入。也有可能已经有任务输入，处于准备运行状态，只是在等待被分派。当我们终止线程后，它会永久性的被系统回收，因为毕竟线程会占用一定的系统内存和CPU运算时间，所以一般情况下，我们放入二级线程（非主线程）中的任务都是比较重要和有意义的任务。</p>
+<h3 id="RunLoops"><a href="#RunLoops" class="headerlink" title="RunLoops"></a>RunLoops</h3><p>上一节提到当线程终止后就会永久被系统收回，如果你还有任务需要另起线程执行，就要重新创建线程以及配置，但这也不是必须的，我们可以让线程在空闲的时候休眠，当有任务需要执行时唤醒，就像主线程一样，此时就要用到RunLoop。</p>
+<p>简单的来说，RunLoop用于管理和监听异步添加到线程中的事件，当有事件输入时，系统唤醒线程并将事件分派给RunLoop，当没有需要处理的事件时，RunLoop会让线程进入休眠状态。这样就能让线程常驻在进程中，而不会过多的消耗系统资源，达到有事做事，没事睡觉的效果。</p>
+<p>主线程中的RunLoop系统已经自动帮我们配置好了，但是我们自己创建的线程，还需要对RunLoop配置一番才可以使用，在后面的章节中都会有详细介绍。</p>
+<h3 id="u540C_u6B65_u7B56_u7565"><a href="#u540C_u6B65_u7B56_u7565" class="headerlink" title="同步策略"></a>同步策略</h3><p>诚然，使用线程好处多多，但是之前也提到过，使用线程也是会存在一定问题的，那就是资源竞争，当两个线程在同一时间操作同一个变量时，就会产生问题。一种解决方案是让不同的线程拥有各自独有的变量，虽然可以解决问题，但不是最优方案。较为优雅一些的方案则是使用线程中的同步策略来解决该问题。</p>
+<p>常用的同步策略有线程锁、状态位、原子操作。线程锁较为简单粗暴，简单的说当一个线程在操作变量时会挂上一把互斥锁，如果另一个线程先要操作该变量，它就得获得这把锁，但是锁只有一个，必须等第一个线程释放互斥锁后，才可以被其他线程获取，所以这样就解决了资源竞争的问题。状态位策略是通过线程或任务的执行情况生成一个状态，这个状态即像门卫又像协管员，一是阻止线程进行，二是以合适的执行顺序安排协调各个任务。第三个策略则是原子操作，相对前两个策略要更轻量级一些，它能通过硬件指令保证变量在更新完成之后才能被其他线程访问。</p>
+<h3 id="u7EBF_u7A0B_u4E4B_u95F4_u7684_u4EA4_u4E92"><a href="#u7EBF_u7A0B_u4E4B_u95F4_u7684_u4EA4_u4E92" class="headerlink" title="线程之间的交互"></a>线程之间的交互</h3><p>虽然我们尽量让每个线程完成独立的任务，但是有些时候我们需要将二级线程中任务的执行结果发送到主线程中进一步进行操作，那么线程之间的交互就不可避免的发生，幸运的是进程中的线程是共享进程空间的，所以实现线程之间的交互也不是那么困难，比如通过发送messages、全局变量、同步策略等都可以实现，在后面的章节中都会有详细介绍。</p>
+<h2 id="u4F7F_u7528_u7EBF_u7A0B_u65F6_u9700_u8981_u6CE8_u610F_u7684_u4E8B_u9879"><a href="#u4F7F_u7528_u7EBF_u7A0B_u65F6_u9700_u8981_u6CE8_u610F_u7684_u4E8B_u9879" class="headerlink" title="使用线程时需要注意的事项"></a>使用线程时需要注意的事项</h2><p>无规矩不成方圆，做任何事如果乱来，那必定会出现各种问题。因为线程相对比较底层，所以当我们对线程理解的不是特别透彻时直接创建线程，并手动管理线程，势必会出现正确性和性能上的各种问题，所以就有了这节对使用线程的一些建议。</p>
+<h3 id="u907F_u514D_u76F4_u63A5_u521B_u5EFA_u7EBF_u7A0B"><a href="#u907F_u514D_u76F4_u63A5_u521B_u5EFA_u7EBF_u7A0B" class="headerlink" title="避免直接创建线程"></a>避免直接创建线程</h3><p>创建并管理线程在代码层面相对比较复杂和繁琐，一个不留神就会产生一些潜在的问题。OS X和iOS都提供了较为上层的创建使用线程的API，就是前面提到一些多任务并发执行的解决方案，比如GCD、Operation objects。使用它们可以帮我们规避在管理线程和处理线程性能方面可能出现的问题，提高多线程操作时的性能和健壮性。</p>
+<h3 id="u8BA9_u7EBF_u7A0B_u6267_u884C_u6709_u4EF7_u503C_u7684_u4EFB_u52A1"><a href="#u8BA9_u7EBF_u7A0B_u6267_u884C_u6709_u4EF7_u503C_u7684_u4EFB_u52A1" class="headerlink" title="让线程执行有价值的任务"></a>让线程执行有价值的任务</h3><p>前文中提到过，线程消耗的系统资源不容小视，所以当我们手动创建和管理线程时，尤其要注意这一点。要保证另起线程执行的任务是有意义的、重要的任务，而且该终止的线程要终止，不要让线程有任何空闲时间，以保证系统资源的最优利用。</p>
+<h3 id="u907F_u514D_u8D44_u6E90_u7ADE_u4E89"><a href="#u907F_u514D_u8D44_u6E90_u7ADE_u4E89" class="headerlink" title="避免资源竞争"></a>避免资源竞争</h3><p>进程中的线程是共享该进程空间的，所以很容易出现多个线程对同一个变量进行操作从而导致程序执行结果错误的情况。如果为每个线程都提供一份变量的拷贝，的确是可以解决这个问题，但是在开发中这样会造成更大的弊端，所以前文中提到了一些同步策略，能帮助我们达到线程交互及解决资源竞争的目的。但是在理论上还是会有出错的可能，比如让线程在指定的顺序下对某个变量依次进行操作。所以在程序设计阶段应该尽量避免线程之间的资源竞争及减少线程之间的交互。</p>
+<h3 id="u7528_u6237_u754C_u9762_u4E0E_u7EBF_u7A0B"><a href="#u7528_u6237_u754C_u9762_u4E0E_u7EBF_u7A0B" class="headerlink" title="用户界面与线程"></a>用户界面与线程</h3><p>用户界面的更新、对用户事件的响应都应该放在主线程中，避免线程不安全的情况，以及能方便的管理UI界面。目前Cocoa框架默认对UI的操作都要在主线程中完成，即使不强制要求，我们也应该这样做。但是有一些情况比较特殊，比如对图片的处理，因为处理图片的过程并不是显性的，所以处理的过程可以放在二级线程中，当处理完成后，再在主线程中显示结果。这样可以有效的提升应用的性能。</p>
+<h3 id="u6E05_u695A_u5F53_u7EBF_u7A0B_u7ED3_u675F_u65F6_u5E94_u8BE5_u505A_u4EC0_u4E48"><a href="#u6E05_u695A_u5F53_u7EBF_u7A0B_u7ED3_u675F_u65F6_u5E94_u8BE5_u505A_u4EC0_u4E48" class="headerlink" title="清楚当线程结束时应该做什么"></a>清楚当线程结束时应该做什么</h3><p>当用户退出应用后，理论上该应用进程中的所有线程都会立即被结束。但是如果此时正好有一个二级线程在后台处理其他任务，比如说下载或者正在存储一些数据。那么此时就要判断正在处理的这些任务是否要保留，如果要丢弃，那么直接结束所有线程即可，但是如果要保留，那么就需要主线程等待正在处理任务的二级线程，从而延迟应用退出。</p>
+<p>这里处理时有两种情况，如果自行创建的线程并手动管理，那么要使用POSIX API创建具有<strong>joinable</strong>特性的二级线程，使主线程与之相关联。如果是使用Cocoa框架，那么可以使用<code>applicationShouldTerminate:</code>代理方法延迟应用关闭，当二级线程处理完任务后回调<code>replyToApplicationShouldTerminate:</code>通知到主线程，然后关闭应用。</p>
+<h3 id="u5F02_u5E38_u5904_u7406"><a href="#u5F02_u5E38_u5904_u7406" class="headerlink" title="异常处理"></a>异常处理</h3><p>每个线程都有捕获当前任务在执行时产生的异常的责任，不论是主线程还是二级线程。如果二级线程产生的异常需要交由主线程处理是也不能任由其抛出，而是先将其捕获，然后向主线程发送消息，告知主线程当前的情况。当消息发出后二级线程可根据需求选择继续处理其他的任务还是终止线程。</p>
+<h3 id="u5C3D_u53EF_u80FD_u5C11_u7684_u4F7F_u7528_u5E38_u9A7B_u7EBF_u7A0B"><a href="#u5C3D_u53EF_u80FD_u5C11_u7684_u4F7F_u7528_u5E38_u9A7B_u7EBF_u7A0B" class="headerlink" title="尽可能少的使用常驻线程"></a>尽可能少的使用常驻线程</h3><p>前文中提到过，可以为一些经常需要执行的、具有周期性的、量级较小的任务创建常驻线程，以减少创建关闭线程的资源消耗，但是不能滥用常驻线程。理论上，一个线程执行完任务后就应该关闭，并且关闭线程的最佳时机是执行完任务的后一秒。目的是为了避免空闲线程占用过多的资源从而导致一些潜在的问题。</p>
+<h3 id="u786E_u4FDD_u7C7B_u5E93_u7684_u7EBF_u7A0B_u5B89_u5168"><a href="#u786E_u4FDD_u7C7B_u5E93_u7684_u7EBF_u7A0B_u5B89_u5168" class="headerlink" title="确保类库的线程安全"></a>确保类库的线程安全</h3><p>如果我们在开发应用的相关功能，我们完全可以控制这块功能是否需要多线程去完成，但是当我们在开发一个供别人使用的类库时，就没法灵活的控制了。所以只能假设使用我们的类库必定会在多线程的环境中使用，这样我们可以通过锁机制确保线程安全。但是如果我们的类库没有在多线程环境中使用呢？那就会白白浪费掉对锁进行操作的相关资源，只能说使用锁机制可以保证类库线程安全的万无一失，但性能方面会大打折扣。</p>
+<p>另一种方式是让使用我们类库的应用要对类库进行明确地初始化，不管是主线程还是二级线程，换句话说也就是让每个线程都有一份我们类库的内容，这样也可以有效的保证类库线程安全。在Cocoa框架中，还有一种可选的方式，就是可以为<code>NSWillBecomeMultiThreadedNotification</code>注册一个观察者，目的是当应用变为多线程环境时可以通知到我们的类库，从而采取相关措施，但这种方式不保险，有可能当类库已经被多线程环境中的代码使用后才收到通知。总而言之，如果开发类库，那么务必要确保其线程安全。</p>
+<h2 id="u7EBF_u7A0B_u7684_u8D44_u6E90_u6D88_u8017"><a href="#u7EBF_u7A0B_u7684_u8D44_u6E90_u6D88_u8017" class="headerlink" title="线程的资源消耗"></a>线程的资源消耗</h2><p>在OS X和iOS中，每个应用其实就是一个进程，一个进程中由一个或多个线程组成，每个线程代表了所属应用中代码的执行路径。通常情况下应用始于主线程中的主函数，当需要有其他功能在二级线程中与主线程并行执行时，便可以创建其他二级线程。</p>
+<p>一旦二级线程被创建，那么它就是一个独立的实体，线程与线程之间是没有任何关联的，它们有各自的执行堆栈，由内核单独为每个线程分派运行时的执行任务。虽然每个线程是独立实体，但是它们之间是可以相互交互的，在实际的应用中，这类需求是很常见的，因为它们共享所属进程的内存空间，并且拥有相同的读写权，所以也很容易实现线程之间的交互。既然一个应用中可能会有多个线程协作完成功能，所以管理线程就是重中之重了，这一章节会从线程的资源消耗、创建、配置、使用、关闭这几个关键点梳理实际运用中的线程管理。</p>
+<p>线程的资源消耗主要分为三类，一类是内存空间的消耗、一类是创建线程消耗的时间、另一类是对开发人员开发成本的消耗。</p>
+<p>内存空间的消耗又分为两部分，一部分是内核内存空间，另一部分是应用程序使用的内存空间，每个线程在创建时就会申请这两部分的内存空间。申请内核内存空间是用来存储管理和协调线程的核心数据结构的，而申请应用程序的内存空间是用来存储线程栈和一些初始化数据的。对于用户级别的二级线程来说，对应用程序内存空间的消耗是可以配置的，比如线程栈的空间大小等。下面是两种内存空间通常的消耗情况：</p>
+<ul>
+<li>内核内存空间：主要存储线程的核心数据结构，每个线程大约会占用1KB的空间。</li>
+<li>应用程序内存空间：主要存储线程栈和初始化数据，主线程在OS X中大约占8MB空间，在iOS中大约占1MB。二级线程在两种系统中通常占大约512KB，但是上面提到二级线程在这块是可以配置的，所以可配置的最小空间为16KB，而且配置的空间大小必须是4KB的倍数。</li>
+</ul>
+<blockquote>
+<p>注意：二级线程在创建时只是申请了内存程序空间，但还并没有真正分配给二级线程，只有当二级线程执行代码需要空间时才会真正分配。</p>
+</blockquote>
+<p>线程的创建时间取决于机器硬件的性能，但通常大约在90毫秒，虽然在我们看来90毫秒很短，但当频繁的创建线程时就会影响到CPU处理其他任务的时间。所以现在往往都会使用线程池，避免频繁的创建全新的线程。</p>
+<p>前文中提到过设计和开发多线程的应用较单线程要复杂的多，要注意的事项在上文中就提出了八条，针对每条注意事项，都要花费不少时间去设计代码和测试。所以总体来说如果涉及到多线程，务必会增加开发人员的开发测试时间，但是换来的是应用程序具有更好的健壮性和高性能，所谓慢工出细活。</p>
+<h2 id="u521B_u5EFA_u7EBF_u7A0B"><a href="#u521B_u5EFA_u7EBF_u7A0B" class="headerlink" title="创建线程"></a>创建线程</h2><p>说到创建线程，就得说说线程的两种类型，<strong>Joinable</strong>和<strong>Detach</strong>。Joinable类型的线程可以被其他线程回收其资源和终止。举个例子，如果一个Joinable的线程与主线程结合，那么当主线程准备结束而该二级线程还没有结束的时候，主线程会被阻塞等待该二级线程，当二级线程结束后由主线程回收其占用资源并将其关闭。如果在主线程还没有结束时，该二级线程结束了，那么它不但不会关闭，而且资源也不会被系统收回，只是等待主线程处理。而Detach的线程则相反，会自行结束关闭线程并且有系统回收其资源。</p>
+<p>在OS X和iOS系统中有多种创建线程的方法，不同方法创建出的线程可能会有不同的线程属性，但就线程本身来说并没有什么差异。下面来看看创建线程的不同方法。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h3 id="u4F7F_u7528NSThread_u521B_u5EFA_u7EBF_u7A0B"><a href="#u4F7F_u7528NSThread_u521B_u5EFA_u7EBF_u7A0B" class="headerlink" title="使用NSThread创建线程"></a>使用NSThread创建线程</h3><p>使用<code>NSThread</code>创建线程有两种方式：</p>
+<ul>
+<li><code>detachNewThreadSelector:toTarget:withObject:</code>：该方法是一个类方法，适用于OS X所有的版本和iOS2.0之后的版本。该方法其实完成了两个动作，先是创建线程，然后启动线程。通过方法名称就可以得知，该方法创建的线程为Detach类型的线程。</li>
+<li>创建<code>NSThread</code>对象：这种方法适用于OS X 10.5之后的版本和iOS2.0之后的版本。该方法通过创建<code>NSThread</code>对象，使用它的<code>start()</code>方法启动线程，该方法的好处是可以在启动前通过<code>NSThread</code>对象的各个属性进行配置，待配置妥当后再调用<code>start()</code>方法启动线程。该方法创建的线程也是Detach类型的线程。</li>
+</ul>
+<h4 id="detachNewThreadSelector_3AtoTarget_3AwithObject_3A"><a href="#detachNewThreadSelector_3AtoTarget_3AwithObject_3A" class="headerlink" title="detachNewThreadSelector:toTarget:withObject:"></a>detachNewThreadSelector:toTarget:withObject:</h4><p>该方法有三个参数：</p>
+<ul>
+<li>selector：发送给线程的消息，或者说是让线程执行的任务。这里需要注意的是该任务最多只能有一个参数，并且不能有返回值。</li>
+<li>target：在新的线程中接收消息的对象。</li>
+<li>object：传给target对象的参数，也就是传入selector中的参数。</li>
+</ul>
+<p>下面来看一个简单示例：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"First event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="type">NSThread</span>.detachNewThreadSelector(<span class="string">"methodInSecondaryThread:"</span>, toTarget: <span class="keyword">self</span>, withObject: <span class="string">"I am a argument"</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Second event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">methodInSecondaryThread</span><span class="params">(arg: String)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(arg)</span> of event in Secondary Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testThread = <span class="type">TestThread</span>()</span><br><span class="line">testThread.launch()</span><br></pre></td></tr></table></figure>
+<p>上述代码定义了一个类<code>TestThread</code>，包含两个方法<code>launch()</code>和<code>methodInSecondaryThread()</code>，<code>lanch()</code>方法中用<code>print()</code>函数模拟事件，在两个事件中创建一个二级线程，用于执行<code>methodInSecondaryThread()</code>方法，在该方法中执行其他事件。执行看看结果如何：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">Terminating</span> app due to uncaught exception '<span class="type">NSInvalidArgumentException'</span>, reason: '*** -[<span class="type">NSThread</span> initWithTarget:selector:object:]: target does not implement selector (*** -[<span class="type">LearnThread</span>.<span class="type">TestThread</span> methodInSecondaryThread])'</span><br></pre></td></tr></table></figure>
+<p>结果很不幸，报错了，原因很简单，因为我们的代码是Swift，而<code>NSThread</code>继承了<code>NSObject</code>是Objective-C世界的东西，所以需要对代码进行修改，有两种方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1. 让NSTread继承NSObject</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 在methodInSecondaryThread()方法前添加@objc</span></span><br><span class="line"><span class="preprocessor">@objc</span> <span class="func"><span class="keyword">func</span> <span class="title">methodInSecondaryThread</span><span class="params">(arg: String)</span></span> &#123;</span><br></pre></td></tr></table></figure>
+<p>我习惯让类继承<code>NSObject</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"First event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="type">NSThread</span>.detachNewThreadSelector(<span class="string">"methodInSecondaryThread:"</span>, toTarget: <span class="keyword">self</span>, withObject: <span class="string">"I am a argument"</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Second event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">methodInSecondaryThread</span><span class="params">(arg: String)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(arg)</span> of event in Secondary Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testThread = <span class="type">TestThread</span>()</span><br><span class="line">testThread.launch()</span><br></pre></td></tr></table></figure>
+<p>继续运行看看效果：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">First</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">Second</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br></pre></td></tr></table></figure>
+<p>运行成功了，但似乎少点什么东西，<code>methodInSecondaryThread()</code>方法中的内容并没有打印出来，难道线程没有执行吗？我们通过Instruments可以看到，在运行过程中二级线程是创建过的：</p>
+<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-1.png" alt="LearnThread-1"></p>
+<p>导致这个问题的原因和上文介绍的线程类型有关系。因为主线程运行很快，快到当主线程结束时我们创建的二级线程还没来得及执行<code>methodInSecondaryThread()</code>方法，而通过<code>detachNewThreadSelector:toTarget:withObject:</code>创建的二级线程是Detach类型的，没有与主线程结合，所以主线程也不会等待，当主线程结束，进程结束，二级线程自然也结束了。解决这个问题的办法就是让二级线程有执行任务的时间，所以我们可以让主线程停顿几秒，让二级线程完成它的任务：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"First event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="type">NSThread</span>.detachNewThreadSelector(<span class="string">"methodInSecondaryThread:"</span>, toTarget: <span class="keyword">self</span>, withObject: <span class="string">"I am a argument"</span>)</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Second event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">methodInSecondaryThread</span><span class="params">(arg: String)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(arg)</span> of event in Secondary Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testThread = <span class="type">TestThread</span>()</span><br><span class="line">testThread.launch()</span><br></pre></td></tr></table></figure>
+<p>再运行就可以看到正确地结果了：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">First</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">I</span> am a argument of event <span class="keyword">in</span> <span class="type">Secondary</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">Second</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br></pre></td></tr></table></figure>
+<h4 id="u521B_u5EFANSThread_u5BF9_u8C61"><a href="#u521B_u5EFANSThread_u5BF9_u8C61" class="headerlink" title="创建NSThread对象"></a>创建NSThread对象</h4><p>我们可以通过<code>initWithTarget:selector:object:</code>方法实例化一个<code>NSThread</code>对象，该方法的三个参数其实与<code>detachNewThreadSelector:toTarget:withObject:</code>方法的参数一样，只是顺序不一样而已：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"First event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> secondaryThread = <span class="type">NSThread</span>(target: <span class="keyword">self</span>, selector: <span class="string">"methodInSecondaryThread:"</span>, object: <span class="string">"I am a argument"</span>)</span><br><span class="line">        </span><br><span class="line">        secondaryThread.start()</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Second event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">methodInSecondaryThread</span><span class="params">(arg: String)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(arg)</span> of event in Secondary Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testThread = <span class="type">TestThread</span>()</span><br><span class="line">testThread.launch()</span><br></pre></td></tr></table></figure>
+<p>上述的代码的运行结果自然也是一样的：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">First</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">I</span> am a argument of event <span class="keyword">in</span> <span class="type">Secondary</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">Second</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br></pre></td></tr></table></figure>
+<p>这种方法依然只能在二级线程中执行最多只有一个参数的函数或方法，如果想要执行多参数的任务，可以将参数放入集合中传递，当然被执行的任务得能正确接收到参数集合。或者可以通过另外一种方法，那就是通过创建继承<code>NSThread</code>的类，然后重写<code>main()</code>方法来实现：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CustomThread</span>: <span class="title">NSThread</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> arg1: <span class="type">String</span>!</span><br><span class="line">    <span class="keyword">var</span> arg2: <span class="type">String</span>!</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(arg1: <span class="type">String</span>, arg2: <span class="type">String</span>) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">self</span>.arg1 = arg1</span><br><span class="line">        <span class="keyword">self</span>.arg2 = arg2</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(<span class="keyword">self</span>.arg1)</span>, <span class="subst">\(<span class="keyword">self</span>.arg2)</span>, we are the arguments in Secondary Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"First event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> customThread = <span class="type">CustomThread</span>(arg1: <span class="string">"I am arg1"</span>, arg2: <span class="string">"I am arg2"</span>)</span><br><span class="line">        </span><br><span class="line">        customThread.start()</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Second event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">methodInSecondaryThread</span><span class="params">(arg: String)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(arg)</span> of event in Secondary Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testThread = <span class="type">TestThread</span>()</span><br><span class="line">testThread.launch()</span><br></pre></td></tr></table></figure>
+<p>如上述代码所示，我们创建了<code>CustomThread</code>类，并继承了<code>NSThread</code>，然后通过初始化方法传参，再重写<code>main()</code>方法处理相关任务。执行结果如下：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">First</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">I</span> am arg1, <span class="type">I</span> am arg2, we are the arguments <span class="keyword">in</span> <span class="type">Secondary</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">Second</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br></pre></td></tr></table></figure>
+<h3 id="u4F7F_u7528NSObject_u521B_u5EFA_u7EBF_u7A0B"><a href="#u4F7F_u7528NSObject_u521B_u5EFA_u7EBF_u7A0B" class="headerlink" title="使用NSObject创建线程"></a>使用NSObject创建线程</h3><p>在OS X和iOS中，<code>NSObject</code>对象本身就具有创建线程的能力，所以只要是继承了<code>NSObject</code>的类自然也具备这个能力：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"First event in Main Thread."</span>)</span><br><span class="line"></span><br><span class="line">        performSelectorInBackground(<span class="string">"performInBackground"</span>, withObject: <span class="literal">nil</span>)</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Second event in Main Thread."</span>)</span><br><span class="line">  </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">performInBackground</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"I am a event, perform in Background Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testThread = <span class="type">TestThread</span>()</span><br><span class="line">testThread.launch()</span><br></pre></td></tr></table></figure>
+<p>上述代码中的<code>TestThread</code>类继承了<code>NSObject</code>类，那么就可以通过<code>performSelectorInBackground:withObject:</code>方法创建二级线程，该方法只有两个参数：</p>
+<ul>
+<li>selector：发送给线程的消息，或者说是让线程执行的任务。这里需要注意的是该任务最多只能有一个参数，并且不能有返回值。</li>
+<li>object：传给target对象的参数，也就是传入selector中的参数。</li>
+</ul>
+<p>该方法创建的线程也是Detach类型的。以上这几种方式都是基于Cocoa框架实现的，大家可以使用<code>NSThread</code>的类方法<code>isMultiThreaded</code>去检验，在合适的地方插入这行代码<code>print(NSThread.isMultiThreaded())</code>，看看程序的线程状态。</p>
+<h3 id="u4F7F_u7528POSIX_API_u521B_u5EFA_u7EBF_u7A0B"><a href="#u4F7F_u7528POSIX_API_u521B_u5EFA_u7EBF_u7A0B" class="headerlink" title="使用POSIX API创建线程"></a>使用POSIX API创建线程</h3><p>在OS X和iOS中，可以通过POSIX API创建线程，上文中提到过，POSIX的线程API实际是基于C语言的线程接口，这些接口在使用线程和配置线程方面更加容易和灵活，移植性也比较强，但由于相对较为底层，如果不熟悉C语言，上手成本会比较高,<code>NSThread</code>就是基于POSIX线程API封装而成的。</p>
+<p>POSIX API通过<code>int pthread_create(pthread_t *restrict thread, const pthread_attr_t *restrict attr, void *(*start_routine)(void *), void *restrict arg);</code>函数创建线程：</p>
+<ul>
+<li>thread：线程标识符。</li>
+<li>attr：线程属性设置。</li>
+<li>start_routine：线程函数的起始地址。</li>
+<li>arg：传递给start_routine的参数。</li>
+<li>返回值：成功返回0，出错返回-1。</li>
+</ul>
+<p>大体的参数其实和使用<code>NSThread</code>创建线程基本一致，不过需要注意的是通过<code>pthread_create()</code>创建的线程是Joinable类型的，如果要将新线程设置为Detach类型，需要在创建前使用<code>pthread_attr_setdetachstate(&amp;attr, PTHREAD_CREATE_DETACHED);</code>函数设置其线程属性。</p>
+<p>在Cocoa框架中，上文提到的那些同步机制，比如线程锁，当二级线程创建后才就会自动生成。如果在程序中使用POSIX API创建线程，那么Cocoa框架是无法得知当前程序已处于多线程状态的，所以就不会自动开启相关的同步机制，而当我们又没有通过POSIX API手动控制的话，就有可能导致应用程序崩溃的情况。另外要注意的一点是Cocoa框架中的线程锁是不能操作通过POSIX API创建的线程的，反之亦然。所以当Cocoa框架与POSIX API混用的时候，在同步机制方面一定要配套使用。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/develop-tvos-app-with-tvml/" itemprop="url">
                   用TVML开发tvOS应用教程
                 </a>
@@ -1033,213 +1258,11 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/calayer-animation-loading-lndicator/" itemprop="url">
-                  CALayer Animation - Loading Indicator
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-09-07T00:00:00+08:00" content="2015-09-07">
-              2015-09-07
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/calayer-animation-loading-lndicator/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/calayer-animation-loading-lndicator/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>本文首发<a href="http://www.csdn.net/article/2015-09-07/2825633" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<h2 id="View_vs-_Layer"><a href="#View_vs-_Layer" class="headerlink" title="View vs. Layer"></a>View vs. Layer</h2><p>这篇文章通过两个加载动画向大家介绍CALayer的动画。按照面向对象的思想说，Layer其实就是一个模型类，像Java里的POJO类一样，它包含若干属性，并没有任何处理逻辑的方法，这些属性影响着显示在Layer中的内容。我们先来看看UIView和CALayer之间有什么区别和联系。</p>
-<ul>
-<li>联系：Layer是View背后的那个女人。每一个UIView后面都有对应的CALayer，大家看到的在UIView中显示的内容其实是在CALayer中。</li>
-<li>区别：<ul>
-<li>View有复杂的、各种组合的布局机制。Layer只有极简单的布局。</li>
-<li>View可以响应用户交互。Layer不能响应用户交互。</li>
-<li>View中的绘画逻辑有CPU执行。Layer中的绘画直接有GPU执行。</li>
-<li>View有丰富的、功能强大的子类。Layer只有很少的几个子类。</li>
-<li>View动画属性较少，局限性较大。Layer由于更底层、动画属性更多，所以可以实现出更灵活、更丰富的动画。</li>
-</ul>
-</li>
-</ul>
-<h2 id="u7B2C_u4E00_u4E2ACALayer_u52A8_u753B"><a href="#u7B2C_u4E00_u4E2ACALayer_u52A8_u753B" class="headerlink" title="第一个CALayer动画"></a>第一个CALayer动画</h2><p>Layer动画系列的文章，我不准备系统的从简单到复杂的知识进行讲解，我会通过各种实战示例，示例中用到什么知识点就讲什么知识点。</p>
-<p>第一个动画让我们来实现Google Chrome浏览器加载时页签上的等待动画：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-1.gif" alt="GoogleLoadingAnimation-1"></p>
-<p>新建项目<strong>GoogleLoading</strong>，打开<code>Main.storyboard</code>，拖拽一个UIView到ViewController中，添加好约束，自行设置ViewController和UIView的背景色，这里UIView的背景色我设置为无色：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-2.png" alt="GoogleLoadingAnimation-2"></p>
-<p>然后添加该View的Outlet到<code>ViewController</code>中，这个UIView就是要展示加载动画的View：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">weak</span> <span class="keyword">var</span> loadingView: <span class="type">UIView</span>!</span><br></pre></td></tr></table></figure>
-<p>打开<code>ViewController.swift</code>，申明一个常量属性<code>ovalShapleLayer</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> ovalShapeLayer: <span class="type">CAShapeLayer</span> = <span class="type">CAShapeLayer</span>()</span><br></pre></td></tr></table></figure>
-<p><code>ovalShapleLayer</code>的类型是<code>CAShapleLayer</code>，它是<code>CALayer</code>的为数不多的子类之一。它的作用是在屏幕上画出各种形状，不论是简单的圆形、方形还是复杂的五角星或不规则图形都难不住它。<code>CAShapeLayer</code>有如下一些主要属性：</p>
-<ul>
-<li>strokeColor：笔画颜色。</li>
-<li>strokeStart：笔画开始位置。</li>
-<li>strokeEnd：笔画结束位置。</li>
-<li>fillColor：图形填充颜色。</li>
-<li>lineWidth：笔画宽度，即笔画的粗细程度。</li>
-<li>lineDashPattern：虚线模式。</li>
-<li>path：图形的路径。</li>
-<li>lineCap：笔画未闭合位置的形状。</li>
-</ul>
-<p>我们之所要申明一个<code>CAShapeLayer</code>，是因为要用它在屏幕上画出一个圆形。下面在<code>viewDidLoad()</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ovalShapeLayer.strokeColor = <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span></span><br><span class="line">ovalShapeLayer.fillColor = <span class="type">UIColor</span>.clearColor().<span class="type">CGColor</span></span><br><span class="line">ovalShapeLayer.lineWidth = <span class="number">7</span></span><br></pre></td></tr></table></figure>
-<p>这几个属性刚才已经向大家介绍过了，这三行代码的意思是我们画出的圆形笔画颜色是白色，没有填充色，笔画的宽度为7。接着我们申明这个圆形的半径，使这个圆形的大小为容纳它视图大小的80%：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> ovalRadius = loadingView.frame.size.height/<span class="number">2</span> * <span class="number">0.8</span></span><br></pre></td></tr></table></figure>
-<p>最后我们设置<code>ovalShapeLayer</code>的路径，这是最关键的一步，因为你要告知<code>CAShapeLayer</code>按照什么路径绘制图形，让我们接着添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ovalShapeLayer.path = <span class="type">UIBezierPath</span>(ovalInRect: <span class="type">CGRect</span>(x: loadingView.frame.size.width/<span class="number">2</span> - ovalRadius, y: loadingView.frame.size.height/<span class="number">2</span> - ovalRadius, width: ovalRadius * <span class="number">2</span>, height: ovalRadius * <span class="number">2</span>)).<span class="type">CGPath</span></span><br></pre></td></tr></table></figure>
-<p>这里出现了新面孔<code>UIBezierPath</code>，它可以创建基于矢量的路径，是Core Graphics框架关于path的封装。<code>UIBezierPath</code>可以定义简单的形状路径，如椭圆、矩形，或者有多个直线和曲线段组成的形状。在这里我们要使用它的初始化方法<code>init(ovalInRect rect: CGRect)</code>定义一个正圆的路径。设置完路径后，将<code>ovalShapeLayer</code>添加到<code>loadingView</code>视图的Layer中，它就可以按照设定好的路径在<code>loadingView</code>中绘制图形了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">loadingView.layer.addSublayer(ovalShapeLayer)</span><br></pre></td></tr></table></figure>
-<p>编译运行看看效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-3.png" alt="GoogleLoadingAnimation-3"></p>
-<p>完美的一个圆形。接下来我们要做的是让这个圆只显示一部分，因为Google的加载动画只有大概五分之二的圆形轮廓。让我们继续将目光集中在<code>viewDidLoad()</code>方法中，在<code>loadingView.layer.addSublayer(ovalShapeLayer)</code>这行代码上面添加另一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ovalShapeLayer.strokeEnd = <span class="number">0.4</span></span><br></pre></td></tr></table></figure>
-<p>上面的代码将<code>ovalShapeLayer</code>的<code>strokeEnd</code>属性设置为0.4，意思是<code>ovalShapeLayer</code>在绘制圆形时只画整个圆形的五分之二，即笔画结束的位置在整个圆形轮廓的五分之二处。编译运行看看效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-4.png" alt="GoogleLoadingAnimation-4"></p>
-<p>看来是我们想要的效果，但是仍有一处细节需要我们完善，看看Google的加载动画，蓝色的部分圆形轮廓两头是圆形的，而我们的圆形轮廓两头是方形的。这个问题很好解决，仍然在<code>loadingView.layer.addSublayer(ovalShapeLayer)</code>这行代码上面添加一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ovalShapeLayer.lineCap = kCALineCapRound</span><br></pre></td></tr></table></figure>
-<p>这行代码的意思是将笔画两头的形状设置为圆形，对应的还有两个常量<code>kCALineCapButt</code>，<code>kCALineCapSquare</code>，大家可以试试。再次编译运行看看效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-5.png" alt="GoogleLoadingAnimation-5"></p>
-<p>到目前为止，我们通过CALayer绘制出了动画的主体，接下来要让它动起来。在<code>ViewController.swift</code>中添加<code>beginSimpleAnimate()</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">beginSimpleAnimation</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">let</span> rotate = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"transform.rotation"</span>)</span><br><span class="line">    rotate.duration = <span class="number">1.5</span></span><br><span class="line">    rotate.fromValue = <span class="number">0</span></span><br><span class="line">    rotate.toValue = <span class="number">2</span> * <span class="type">M_PI</span></span><br><span class="line">    rotate.repeatCount = <span class="type">HUGE</span></span><br><span class="line">    loadingView.layer.addAnimation(rotate, forKey: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>在这个方法中，我们又看到了新面孔<code>CABasicAnimation</code>，该类提供了基本的、单关键帧的Layer属性动画，通过<code>animationWithKeyPath:</code>初始化方法，根据<code>keyPath</code>创建不同的<code>CAPropertyAnimation</code>实例。常用的<code>keyPath</code>有如下一些：</p>
-<ul>
-<li><code>transform.rotation</code>：旋转动画。</li>
-<li><code>transform.ratation.x</code>：按x轴旋转动画。</li>
-<li><code>transform.ratation.y</code>：按y轴旋转动画。</li>
-<li><code>transform.ratation.z</code>：按z轴旋转动画。</li>
-<li><code>transform.scale</code>：按比例放大缩小动画。</li>
-<li><code>transform.scale.x</code>：在x轴按比例放大缩小动画。</li>
-<li><code>transform.scale.y</code>：在y轴按比例放大缩小动画。</li>
-<li><code>transform.scale.z</code>：在z轴按比例放大缩小动画。</li>
-<li><code>position</code>：移动位置动画。</li>
-<li><code>opacity</code>：透明度动画。</li>
-</ul>
-<p>以上只是一部分常用的动画<code>keyPath</code>，更多的希望大家在实际运用中去挖掘。在<code>beginSimpleAnimation()</code>方法中，我们使用了<code>transform.rotation</code>，创建了一个旋转动画的实例，然后给该动画设置了四个属性：</p>
-<ul>
-<li><code>duration</code>：动画持续时间。</li>
-<li><code>fromValue</code>：动画起始值。</li>
-<li><code>toValue</code>：动画结束值。</li>
-<li><code>repeatCount</code>：重复次数。</li>
-</ul>
-<p>该方法设置这几个属性的含义为使动画主体不停的旋转，旋转一圈的时间为1.5秒。以上这几个概念在UIView的动画中同样存在，大家应该都已经比较熟悉了。然后使用Layer的<code>addAnimation(anim: CAAnimation, forKey key: String?)</code>方法将旋转动画实例添加到目标Layer中，该方法的<code>key</code>是用来标示添加的动画，便于以后重复使用时能方便的检索，如果没有需求可以传值<code>nil</code>。最后<code>viewWillAppear</code>方法中调用<code>beginSimpleAnimation()</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewWillAppear</span><span class="params">(animated: Bool)</span></span> &#123;</span><br><span class="line">    beginSimpleAnimation()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>编译运行看看效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-6.gif" alt="GoogleLoadingAnimation-6"></p>
-<p>至此我们的第一个简单的CALayer动画就完成了，在下一节我们一起实现一个更加有意思的加载动画，从而向大家介绍新的动画类型及动画组合。</p>
-<h2 id="Stroke_Animation_u4E0EAnimation_Group"><a href="#Stroke_Animation_u4E0EAnimation_Group" class="headerlink" title="Stroke Animation与Animation Group"></a>Stroke Animation与Animation Group</h2><p>让我们先看看要实现的效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-7.gif" alt="GoogleLoadingAnimation-7"></p>
-<p>这种加载动画在很多应用中都出现过，比如网易新闻、Win版的谷歌浏览器中都有使用。下面就让我们一步一步来实现吧，首先打开<code>Main.storyboard</code>，新添加一个UIView，在<code>ViewController.swift</code>中添加Outlet：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-8.png" alt="GoogleLoadingAnimation-8"></p>
-<p>然后定义一个新的CAShapeLayer：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> anotherOvalShapeLayer: <span class="type">CAShapeLayer</span> = <span class="type">CAShapeLayer</span>()</span><br></pre></td></tr></table></figure>
-<p>在<code>viewDidLoad()</code>方法中对它进行设置，并将其添加到刚才创建的<code>complexLoadingView</code>中：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">anotherOvalShapeLayer.strokeColor = <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span></span><br><span class="line">anotherOvalShapeLayer.fillColor = <span class="type">UIColor</span>.clearColor().<span class="type">CGColor</span></span><br><span class="line">anotherOvalShapeLayer.lineWidth = <span class="number">7</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> anotherOvalRadius = complexLoadingView.frame.size.height/<span class="number">2</span> * <span class="number">0.8</span></span><br><span class="line">anotherOvalShapeLayer.path = <span class="type">UIBezierPath</span>(ovalInRect: <span class="type">CGRect</span>(x: complexLoadingView.frame.size.width/<span class="number">2</span> - anotherOvalRadius, y: complexLoadingView.frame.size.height/<span class="number">2</span> - anotherOvalRadius, width: anotherOvalRadius * <span class="number">2</span>, height: anotherOvalRadius * <span class="number">2</span>)).<span class="type">CGPath</span></span><br><span class="line">anotherOvalShapeLayer.lineCap = kCALineCapRound</span><br><span class="line">        </span><br><span class="line">complexLoadingView.layer.addSublayer(anotherOvalShapeLayer)</span><br></pre></td></tr></table></figure>
-<p>这些操作在上一个动画都已经做过一遍了，这里就不再解释。编译运行看看是否屏幕上又出现了一个圆圈呢：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-9.gif" alt="GoogleLoadingAnimation-9"></p>
-<p>接下来在<code>ViewController.swift</code>中添加一个方法<code>beginComplexAnimation()</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> strokeStartAnimate = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"strokeStart"</span>)</span><br><span class="line">strokeStartAnimate.fromValue = -<span class="number">0.5</span></span><br><span class="line">strokeStartAnimate.toValue = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> strokeEndAnimate = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"strokeEnd"</span>)</span><br><span class="line">strokeEndAnimate.fromValue = <span class="number">0.0</span></span><br><span class="line">strokeEndAnimate.toValue = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> strokeAnimateGroup = <span class="type">CAAnimationGroup</span>()</span><br><span class="line">strokeAnimateGroup.duration = <span class="number">1.5</span></span><br><span class="line">strokeAnimateGroup.repeatCount = <span class="type">HUGE</span></span><br><span class="line">strokeAnimateGroup.animations = [strokeStartAnimate, strokeEndAnimate]</span><br><span class="line">anotherOvalShapeLayer.addAnimation(strokeAnimateGroup, forKey: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>这里出现了两个新的动画类型，笔画开始动画和笔画结束动画，我们虽然使用CAShapeLayer绘制了一个圆圈，但是它也存在笔画起始位置和笔画终止位置，只不过它俩在同一个位置而已，笔画动画的位置取值在0-1之间，0代表绘制路径的起始位置，1代表绘制路径的终止位置。所以<code>strokeStartAnimate</code>动画让绘制圆圈的笔画起始位置从-0.5开始，目的是让笔画起始绘制时等待一段时间，也就是起始位置延迟绘制。而<code>strokeEndAnimate</code>动画让绘制圆圈的笔画终止位置正常的从0绘制到1。这样一来笔画两头绘制的时间就会不一样，会有一个时间差，这样就有圆圈不断绘制又不断被擦除的效果。</p>
-<p><code>strokeStartAnimate</code>和<code>strokeEndAnimate</code>是两个动画，如何作用于一个Layer上呢？这时就要用到<code>CAAnimationGroup</code>，顾名思义它是将多个动画组成一个组，在一个动画组里，子动画会同时进行。动画组可以设置动画持续时间、重复次数以及子动画数组。最后将动画组加在Layer上即可。</p>
-<p>最后在<code>viewWillAppear()</code>方法中调用<code>beginComplexAnimation()</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewWillAppear</span><span class="params">(animated: Bool)</span></span> &#123;</span><br><span class="line">    beginSimpleAnimation()</span><br><span class="line">    beginComplexAnimation()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>编译运行看看效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-10.gif" alt="GoogleLoadingAnimation-10"></p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>CALayer动画可以实现比UIView动画更丰富、更底层、效率更高的动画。但是在实际的应用开发中，我们应该按需所用，能用UIView动画实现的我们就可以不用CALayer动画，它俩没有谁优谁劣之分。这篇文章只是CALayer动画的引子，让大家对CALayer动画有初步的了解和认识，之后我在文章中会通过更多的实例帮大家更深入的认识CALayer动画，从而提升自己应用的用户体验。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1277,7 +1300,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">95</span>
+              <span class="site-state-item-count">96</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

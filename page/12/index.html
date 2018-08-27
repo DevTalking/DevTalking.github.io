@@ -231,6 +231,204 @@
             
             
               
+                <a class="post-title-link" href="/articles/adaptive-layout-1/" itemprop="url">
+                  Swift自适应布局（Adaptive Layout）教程（一）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-10-11T00:00:00+08:00" content="2014-10-11">
+              2014-10-11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/adaptive-layout-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/adaptive-layout-1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2 id="u901A_u7528_u7684Storyboard"><a href="#u901A_u7528_u7684Storyboard" class="headerlink" title="通用的Storyboard"></a>通用的Storyboard</h2><p>通用的<code>stroyboard</code>文件是通向自适应布局光明大道的第一步。在一个<code>storyboard</code>文件中适配iPad和iPhone的布局在iOS8中已不再是梦想。我们不必再为不同尺寸的Apple移动设备创建不同的<code>storyboard</code>文件，不用再苦逼的同步若干个<code>storyboard</code>文件中的内容。这真是一件美好的事情。</p>
+<p>我们打开Xcode，新建一个项目： </p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-1.png" alt="图片"></p>
+<p>选择<code>iOS\Application\Single View Application</code>创建一个单视图应用：  </p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-2.png" alt="图片"></p>
+<p>设置项目名称<strong>AdaptiveWeather</strong>，语言选择<strong>Swift</strong>，设备选择<strong>Universal</strong>：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-3.png" alt="图片"></p>
+<p>创建好项目后，我们在项目目录结构中可以看到只存在一个<code>storyboard</code>文件：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-4.png" alt="图片"></p>
+<p><strong>Main.storyboard</strong>文件就是一个通用的<code>storyboard</code>文件，它可以适配目前所有屏幕尺寸的Apple移动设备。打开该文件，同学们会看到一个View Controller，以及一个我们不太熟悉的界面尺寸：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-5.png" alt="图片"></p>
+<p>同学们不要吃惊，没错，你们看到的就是一个简单的、有点大的正方形！大伙都知道，在上一个版本的Xcode中，<code>storyboard</code>里的屏幕尺寸都对应着我们所选的目标设备的尺寸，但是这样无法让我们达到“用一个<code>storyboard</code>搞定所有设备”的宏伟目标。所以在iOS8中，Apple将<code>storyboard</code>中屏幕的尺寸进行了抽象处理，也就是说我们看到的这个正方形是一个抽象的屏幕尺寸。</p>
+<p>我们接着往下走，选中<code>Main.storyboard</code>文件，然后在右侧工具栏中选择<strong>File Inspector</strong>页签，然后勾选<strong>Use Size Classes</strong>选项：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-6.png" alt="图片"></p>
+<p>在新的iOS8项目中，该选项默认是勾选的。但当你使用老版本的项目创建新的<code>storyboard</code>文件时就需要你手动进行勾选了。</p>
+<h3 id="u8BBE_u7F6E_u4F60_u7684Storyboard_u6587_u4EF6"><a href="#u8BBE_u7F6E_u4F60_u7684Storyboard_u6587_u4EF6" class="headerlink" title="设置你的Storyboard文件"></a>设置你的Storyboard文件</h3><p>首先，我们打开<code>Main.storyboard</code>文件，从组件库（Object Library）中选择<strong>Image View</strong>拖拽到View Controller中。选中刚刚拖入的Image View，在右侧工具栏选择<strong>Size Inspector</strong>页签，设置<strong>X</strong>坐标为150，<strong>Y</strong>坐标为20，<strong>宽</strong>为300，<strong>高</strong>为265。</p>
+<p>然后再拖入一个<strong>View</strong>组件，设置<strong>X</strong>坐标为150，<strong>Y</strong>坐标为315，<strong>宽</strong>为300，<strong>高</strong>为265。</p>
+<p>选择你刚才拖入的View，在右侧工具栏中选择<strong>Identity Inspector</strong>页签，在<strong>Document</strong>面板中的<strong>Label</strong>属性输入框中输入<strong>TextContainer</strong>。这个属性的作用就是给View起一个名字，方便我们辨认。这里要注意一下，<strong>Document</strong>面板有可能是隐藏的，我们需要点击它后面的 <strong>Show</strong>按钮来显示它。我们拖入的这个View最后是显示城市和温度Label的容器。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-7.png" alt="图片"></p>
+<p>完成上面的设置后，同学们可能会发现刚才拖入的View貌似看不到，这是因为它的背景色和View Controller的背景色是相同的，都是白色，所以我们不太容易辨别。我们来解决这个问题，选中View Controller的View，然后在右侧工具栏中选择<strong>Attribute Inspector</strong>页签，设置背景色为 <strong>红：74，绿：171，蓝：247</strong>。然后再选择TextContainer，就是我们拖入的View，设置背景色为 <strong>红：55，绿：128，蓝：186</strong>。此时<code>Main.storyboard</code>文件中应该是这番景象：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-8.png" alt="图片"></p>
+<p>到目前为止，我们在View Controller中添加了两个组件Image View和View，这也是仅有的两个组件，接下来我们就要给它们添加一些布局约束了。</p>
+<h3 id="u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F"><a href="#u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="添加布局约束"></a>添加布局约束</h3><p>选择image view，点击底部自动布局工具栏中的<strong>Align</strong>按钮，勾选<strong>Horizontal Center in Container</strong>选项，将后面的值设置为0，点击 <strong>Add 1 Constraint</strong>按钮添加第一个约束。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-9.png" alt="图片"></p>
+<p>这个约束的意思是让image view在它的容器（View Controller的View）中保持居中。</p>
+<p>然后再点击底部自动布局工具栏中的<strong>Pin</strong>按钮，添加一个image view顶部与容器顶部间距的约束，我们设置为0：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-10.png" alt="图片"></p>
+<p>上面这两个约束使image view处于容器居中的位置，并且它的顶部与容器顶部有一个固定的间距。现在我们需要添加image view和text container view之间的约束。同学们先选中image view，然后按住<strong>Ctrl</strong>键和鼠标左键，从image view往text container view移动鼠标：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-11.png" alt="图片"></p>
+<p>松开鼠标左键后会弹出一个约束菜单，我们选择<strong>Vertical Spacing</strong>：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-12.png" alt="图片"></p>
+<p>这个约束决定了image view底部和text container view顶部之间的距离。</p>
+<p>现在选中image view然后点击右侧工具栏中的<strong>Size Inspector</strong>页签，同学们会发现这里在Xcode6中和之前的Xcode版本有所不同：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-13.png" alt="图片"></p>
+<p>你会看到之前添加的三个布局约束，你可以在<strong>Size Inspector</strong>中很方便的修改这些布局约束。比如点击<strong>Bottom Space To: TextContainer</strong>约束后的 <strong>Edit</strong>按钮，会弹出约束属性编辑框，我们让<strong>Constant</strong>的值等于20：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-14.png" alt="图片"></p>
+<p>然后点击该弹出框之外的任意地方关闭该弹出框。</p>
+<p>你先已经将TextContainer view顶部与image view底部的间距调整到了20，我们还需要添加TextContainer view另外三个边的间距约束。</p>
+<p>继续选择TextContainer view，点击底部的<strong>Pin</strong>按钮弹出 <strong>Add New Constraints</strong>窗口，在 <strong>Spacing to nearest neighbor</strong>面板中设置左、右、底部的约束，将值设置为0，然后点击<strong>Add 3 Constraints</strong>按钮添加约束。这里要注意的是，在设置约束时要将 <strong>Constrain to margins</strong>选项的勾去掉，这样可以避免TextContainer view产生内边距：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-15.png" alt="图片"></p>
+<p>这三个约束会让TextContainer view的左、右、底部三个边与容器的左、右、底部的间距始终为0。</p>
+<p>现在<strong>Main.storyboard</strong>中应该是这番景象：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-16.png" alt="图片"></p>
+<p>此时同学们应该会注意到在view上有几个橘黄色的约束线，这意味着还有一些约束上的问题需要我们注意。不过在运行时<code>storyboard</code>会自动更新view的大小来满足它与容器的约束条件。我们也可以点击底部 <strong>Resolve Auto Layout Issues</strong> 按钮，在弹出框中选择 <strong>All Views in View Controller/Update Frames</strong> 来修复提示的约束问题，但是如果我们这样做，那么image view的尺寸就会压缩成零，也就是会看不到image view。</p>
+<p>这是因为我们的image view还有没有任何内容，但是它有一个缺省的高和宽，并且值为0。进行自动布局的时候，如果被约束的view没有实际的高和宽，那么会依照缺省的高和宽来满足约束条件。</p>
+<p>我们接着学习，在项目结构中打开 <strong>Images.xcassets</strong> ，然后点击左下角的 <strong>+</strong>号，在弹出菜单中选择 <strong>New Image Set</strong>：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-17.png" alt="图片"></p>
+<p>双击左上角的 <strong>Image</strong> 标题将其改为 <strong>cloud</strong> ：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-18.png" alt="图片"></p>
+<p>我们刚才新建的这个image set其实就是若干图片文件的一个集合，其中的每一个图片都会对应一个特定的应用场景，也就是针对与不同分辨率的Apple移动设备。比如说，一个图片集合可能会包含针对非视网膜、视网膜、视网膜高清三种分辨率的图片。自从Xcode中的资源库与UIKit完美结合后，在代码中引入图片时我们只需要写图片的名称，程序在运行时会根据当前运行的设备自动选择对应分辨率的图片。</p>
+<blockquote>
+<p>注意：如果你以前使用过通过资源库管理图片，那么你可能会发现在Xcode6中会有所不同。那就是3x图片是怎么回事？</p>
+<p>这个新的分片率是专为iPhone 6 Plus提供的。这意味着每一个点是由3个像素点组成，也就是说3x的图片比1x图片的像素多9倍。</p>
+</blockquote>
+<p>目前你的图片集合中还是空的，同学们可以在这里下载需要的图片<a href="http://cdn2.raywenderlich.com/wp-content/uploads/2014/09/cloud_images.zip" target="_blank" rel="external">cloud_images.zip </a>，然后将图片拖入刚才创建的名为cloud的图片集合中，将 <strong>cloud_small.png</strong>图片拖到 <strong>1x</strong>图片区域：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-19.png" alt="图片"></p>
+<p>由于我们的图片背景颜色是透明的，所以在图片集合中看到的都是白色的图片。你可以选中某一个图片，然后按下空格键来预览图片。比如选中 <strong>1x</strong> 图片，按下空格：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-20.png" alt="图片"></p>
+<p>现在将 <strong>cloud_small@2x.png</strong> 图片拖至 <strong>2x</strong> 图片区域，将 <strong>cloud_small@3x.png</strong> 图片拖至 <strong>3x</strong> 图片区域。和之前情况一样，我们看到的只是白色的图片，但我们可以通过空格键来预览图片集合中的图片。</p>
+<p>现在你就可以在image view中设置图片了。我们回到 <strong>Main.storyboard</strong> 中，选中image view，在右侧工具栏中选择 <strong>Attribute Inspector</strong> 页签，将 <strong>Image View</strong> 面板中的 <strong>Image</strong> 属性设置为 <strong>cloud</strong>，然后将 <strong>View</strong> 面板中的 <strong>Mode</strong> 属性设置为 <strong>Aspect Fit</strong> ：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-21.png" alt="图片"></p>
+<p>现在你的<strong>Main.storyboard</strong>中应该是这番景象：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-22.png" alt="图片"></p>
+<p>我们看到<code>storyboard</code>中一直有橘黄色的约束提示，是时候让我们来修复它们了。首先选中view controller的view：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-23.png" alt="图片"></p>
+<p>然后点击底部的 <strong>Resolve Auto Layout Issues</strong> 按钮，在弹出菜单的 <strong>All Views in View Controller</strong> 面板中选择 <strong>Update Frames</strong> ：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-24.png" alt="图片"></p>
+<p>这时，<code>storyboard</code>会自动根据约束条件重新计算view的大小以满足约束：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-25.png" alt="图片"></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h3 id="u9884_u89C8_u52A9_u624B_u7F16_u8F91_u5668_uFF08Preview_Assistant_Editor_uFF09"><a href="#u9884_u89C8_u52A9_u624B_u7F16_u8F91_u5668_uFF08Preview_Assistant_Editor_uFF09" class="headerlink" title="预览助手编辑器（Preview Assistant Editor）"></a>预览助手编辑器（Preview Assistant Editor）</h3><p>一般情况下，在这个时候我们应该会在iPad、iPhone4s、iPhone5s、iPhone6、iPhone6 Plus这几个不同尺寸的设备上编译运行程序，以便测试通用的<code>storyboard</code>是否能在不同尺寸的设备上正确的自适应。但这确实是个体力活，一遍一遍的更改设备、编译、运行，多么苦逼。但上天总是会眷顾我们这些苦逼的程序员，Xcode6提供了Preview Assistant Editor，能在一个界面上显示出不同尺寸设备的程序运行情况，是否有问题一目了然。</p>
+<p>我们打开 <strong>Main.storyboard</strong> ，然后选择 <strong>View\Assistant Editor\Show Assistant Editor</strong> ，这时编辑区会分隔为两部分。再点击顶部导航栏中的 <strong>Automatic</strong> ，在弹出菜单中选择 <strong>Preview</strong> ，最后选择 <strong>Main.storyboard (Preview)</strong> ：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-26.png" alt="图片"></p>
+<p>现在在 <strong>Assistant Editor</strong> 区域会显示一个4寸的界面：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-27.png" alt="图片"></p>
+<p>我们还可以点击预览界面底部，名字（比如图中的iPhone 4-inch）旁边的地方让屏幕翻转为横屏：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-28.png" alt="图片"></p>
+<p>这无疑是针对检查不同尺寸设备的自适应情况的一项重大改进，但还远远不止于此！点击预览界面左下角的 <strong>+</strong> 按钮，会弹出当前<code>storyboard</code>文件支持的各种尺寸的设备，可供我们预览：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-29.png" alt="图片"></p>
+<p>分别选择iPhone 5.5-inch和iPad，此时我们在预览界面就可以同时显示三种尺寸的屏幕：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-30.png" alt="图片"></p>
+<p>此时同学们是否注意到4寸的横屏显示有点别扭呢？没错，它的那朵元太大了，我们可以通过对image view添加其他的约束条件来改善这个问题。</p>
+<p>回到 <strong>Main.storyboard</strong> ，选择image view，然后按住 <strong>Ctrl</strong>建和鼠标左键，拖动鼠标到View Controller的View上，松开鼠标后会弹出一个菜单，我们选择 <strong>Equal Heights</strong> ：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-31.png" alt="图片"></p>
+<p>这时会出现一些红色的约束提示，这是因为我们刚才加的这个约束条件与之前加过的约束条件有冲突。因为之前我们添加过image view和TextContainer view之间的垂直间距（Vertical Margins）约束，所以image view的高度不可能等于它容器（View Controller的View）的高度。</p>
+<p>让我们来修复该问题，首先在<code>storyboard</code>的结构目录中选择我们刚才添加的 <strong>Equal Heights</strong> 约束，然后选择右侧工具栏中的 <strong>Attribute Inspect</strong> 页签，如果 <strong>First Item</strong> 属性不是 <strong>cloud.Height</strong> ，那么在下拉菜单中选择 <strong>Reverse First and Second Item</strong> 这一项让 <strong>First Item</strong> 的值成为 <strong>cloud.Height</strong> ：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-32.png" alt="图片"></p>
+<p>接下来将 <strong>Relation</strong> 属性的值设置为 <strong>Less Than or Equal</strong> ，将 <strong>Multiplier</strong> 的值设置为 <strong>0.4</strong> ：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-33.png" alt="图片"></p>
+<p>这一系列设置的作用是让cloud这张图片的高度要么等于它自身的高度，要么等于屏幕高度的40%，最后呈现的效果选择这两者中较小的一个高度。</p>
+<p>现在你应该注意到了在预览面板中，4寸的横屏显示即时的对你刚才的约束改动做出了响应：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-34.png" alt="图片"></p>
+<p>你看看其他尺寸的预览自动更新了么？答案那是必须的，所以说 <strong>Preview Assistant Editor</strong> 确实是一项重大改进，是程序员和设计人员的福音！</p>
+<p>由于本文的示例是一个天气应用，所以光有天气图标不行，我们还得加上城市和温度才行。</p>
+<p>未完待续……</p>
+<p>原文地址：<a href="http://www.raywenderlich.com/83276/beginning-adaptive-layout-tutorial" target="_blank" rel="external">Beginning Adaptive Layout Tutorial</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/tuple-in-swift/" itemprop="url">
                   Swift中的元组（Tuples）
                 </a>
@@ -809,134 +1007,11 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/swift-required/" itemprop="url">
-                  Swift中的required修饰符（Xcode 6 GM）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-09-12T00:00:00+08:00" content="2014-09-12">
-              2014-09-12
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/swift-required/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-required/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u666E_u901A_u5B50_u7C7B"><a href="#u666E_u901A_u5B50_u7C7B" class="headerlink" title="普通子类"></a>普通子类</h2><p>通常情况下，一说到<code>required</code>修饰符，我们最先想到的应该就是普通类（class）的<code>init()</code>方法了。比如下面这个类：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当我们定义一个<code>MyClass</code>的子类（subclass）并实例化这个子类时，我们一般会如何做呢？没错，通常情况下都会是这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">MySubClass</span>(str:<span class="string">"Hello Swift"</span>)</span><br></pre></td></tr></table></figure>
-<p>大伙应该已经注意到了，在实例化<code>MySubClass</code>时，其实是继承了它父类<code>MyClass</code>的<code>init()</code>方法。那我们再来看看子类的初始化方法。</p>
-<h2 id="u5B50_u7C7B_u7684_u521D_u59CB_u5316_u65B9_u6CD5"><a href="#u5B50_u7C7B_u7684_u521D_u59CB_u5316_u65B9_u6CD5" class="headerlink" title="子类的初始化方法"></a>子类的初始化方法</h2><p>如果我们在子类中添加一个<code>init()</code>方法，像这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str:str)</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">MySubClass</span>(str:<span class="string">"Hello Swift"</span>)</span><br></pre></td></tr></table></figure>
-<p>那么我们首先要在<code>init()</code>方法前加上<code>override</code>修饰符，表示<code>MySubClass</code>重写了其父类的<code>init()</code>方法，然后还要调用父类的<code>init()</code>方法，并将参数一并传给父类的方法。</p>
-<p>在实际运用中，也有另外一种情况，当子类的初始化方法参数类型与父类的初始化方法参数类型不同时，我们就不必在子类的初始化方法前加<code>override</code>修饰符了，但是要把子类初始化方法的参数类型转换为符合父类初始化方法的参数类型，然后传给父类的初始化方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">init</span>(i:<span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str:<span class="type">String</span>(i))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">MySubClass</span>(i: <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="required_u4FEE_u9970_u7B26"><a href="#required_u4FEE_u9970_u7B26" class="headerlink" title="required修饰符"></a>required修饰符</h2><p>我们给父类的<code>init()</code>方法加上<code>required</code>修饰符后会发生什么呢，我们来看看：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">init</span>(i:<span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str:<span class="type">String</span>(i))</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="comment">// 编译错误</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">MySubClass</span>(i: <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
-<p>我们可以看到上面的代码在编译会发生错误，因为我们没有实现父类中要去必须要实现的方法。我们应该这样写：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str: str)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span>(i:<span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str:<span class="type">String</span>(i))</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">MySubClass</span>(i: <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
-<p>从上面的代码示例中不难看出，如果子类需要添加异于父类的初始化方法时，必须先要实现父类中使用<code>required</code>修饰符修饰过的初始化方法，并且也要使用<code>required</code>修饰符而不是<code>override</code>。</p>
-<p>如果子类中不需要添加任何初始化方法，我们则可以忽略父类的<code>required</code>初始化方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span></span><br><span class="line"></span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">MySubClass</span>(str: <span class="string">"hello swift"</span>)</span><br></pre></td></tr></table></figure>
-<p>在这种情况下，编译器不会报错，因为如果子类没有任何初始化方法时，Swift会默认使用父类的初始化方法。在<a href="https://developer.apple.com/library/prerelease/mac/documentation/Swift/Conceptual/Swift_Programming_Language/Initialization.html#//apple_ref/doc/uid/TP40014097-CH18-XID_339" target="_blank" rel="external">Apple的文档</a>中也有相关描述：</p>
-<blockquote>
-<p>You do not have to provide an explicit implementation of a required initializer if you can satisfy the requirement with an inherited initialiser.</p>
-</blockquote>
-<h2 id="required_u4FEE_u9970_u7B26_u7684_u4F7F_u7528_u89C4_u5219"><a href="#required_u4FEE_u9970_u7B26_u7684_u4F7F_u7528_u89C4_u5219" class="headerlink" title="required修饰符的使用规则"></a>required修饰符的使用规则</h2><ol>
-<li><code>required</code>修饰符只能用于修饰类初始化方法。</li>
-<li>当子类含有异于父类的初始化方法时（初始化方法参数类型和数量异于父类），子类必须要实现父类的<code>required</code>初始化方法，并且也要使用<code>required</code>修饰符而不是<code>override</code>。</li>
-<li>当子类没有初始化方法时，可以不用实现父类的<code>required</code>初始化方法。</li>
-</ol>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -974,7 +1049,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">95</span>
+              <span class="site-state-item-count">96</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

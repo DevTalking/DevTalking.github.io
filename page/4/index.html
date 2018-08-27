@@ -231,6 +231,111 @@
             
             
               
+                <a class="post-title-link" href="/articles/machine-learning-3/" itemprop="url">
+                  机器学习笔记三之NumPy、Matplotlib、kNN算法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-01-20T00:00:00+08:00" content="2018-01-20">
+              2018-01-20
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-3/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-3/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="NumPy"><a href="#NumPy" class="headerlink" title="NumPy"></a>NumPy</h2><p>NumPy是Python中的一个类库，它支持高阶维度数组（矩阵）的创建及各种操作、运算，是我们在机器学习中经常会使用的一个类库。这一节再看一些NumPy的矩阵用法。</p>
+<h3 id="numpy-random"><a href="#numpy-random" class="headerlink" title="numpy.random"></a>numpy.random</h3><p>NumPy也提供了生成随机数和随机元素数组的方法，我们来看一下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 生成从0到10之间的随机数</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成元素从0到10，一共4个随机元素的数组</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=<span class="number">4</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([<span class="number">4</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成元素随机从0到10，3行5列的矩阵</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=(<span class="number">3</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">6</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">9</span>],</span><br><span class="line">	   [<span class="number">7</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">8</span>],</span><br><span class="line">	   [<span class="number">4</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">2</span>]])</span><br></pre></td></tr></table></figure>
+<p>如果我们希望每次使用随机方法生成的结果都是一样的，一般调试时候有这个需求，此时NumPy的<code>random()</code>方法也提供了方便简单的方式，既随机种子的概念：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 生成随机矩阵前给定一个种子</span></span><br><span class="line">np.random.seed(<span class="number">123</span>)</span><br><span class="line"><span class="comment"># 然后生成随机矩阵</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=(<span class="number">4</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">2</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>]])</span><br><span class="line">	   </span><br><span class="line"><span class="comment"># 再次生成随机矩阵时，只要传入相同的种子，就可以得到相同结果的矩阵</span></span><br><span class="line">np.random.seed(<span class="number">123</span>)</span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=(<span class="number">4</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">2</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>]])</span><br><span class="line">	   </span><br><span class="line"><span class="comment"># 默认范围是从0.0到1.0，返回值为float型</span></span><br><span class="line">np.random.random()</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.18249173045349998</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 传入的参数是数组的大小</span></span><br><span class="line">np.random.random(<span class="number">10</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([ <span class="number">0.17545176</span>,  <span class="number">0.53155137</span>,  <span class="number">0.53182759</span>,  <span class="number">0.63440096</span>,  <span class="number">0.84943179</span>,</span><br><span class="line">		<span class="number">0.72445532</span>,  <span class="number">0.61102351</span>,  <span class="number">0.72244338</span>,  <span class="number">0.32295891</span>,  <span class="number">0.36178866</span>])</span><br><span class="line">		</span><br><span class="line"><span class="comment"># 创建4行5列，元素值的范围从0.0到1.0的矩阵</span></span><br><span class="line">np.random.random((<span class="number">4</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[ <span class="number">0.22826323</span>,  <span class="number">0.29371405</span>,  <span class="number">0.63097612</span>,  <span class="number">0.09210494</span>,  <span class="number">0.43370117</span>],</span><br><span class="line">	   [ <span class="number">0.43086276</span>,  <span class="number">0.4936851</span> ,  <span class="number">0.42583029</span>,  <span class="number">0.31226122</span>,  <span class="number">0.42635131</span>],</span><br><span class="line">	   [ <span class="number">0.89338916</span>,  <span class="number">0.94416002</span>,  <span class="number">0.50183668</span>,  <span class="number">0.62395295</span>,  <span class="number">0.1156184</span> ],</span><br><span class="line">	   [ <span class="number">0.31728548</span>,  <span class="number">0.41482621</span>,  <span class="number">0.86630916</span>,  <span class="number">0.25045537</span>,  <span class="number">0.48303426</span>]])</span><br></pre></td></tr></table></figure>
+<h3 id="u6307_u5B9A_u5747_u503C_u548C_u6807_u51C6_u5DEE_u751F_u6210_u968F_u673A_u6570_u6570_u7EC4_u6216_u77E9_u9635"><a href="#u6307_u5B9A_u5747_u503C_u548C_u6807_u51C6_u5DEE_u751F_u6210_u968F_u673A_u6570_u6570_u7EC4_u6216_u77E9_u9635" class="headerlink" title="指定均值和标准差生成随机数数组或矩阵"></a>指定均值和标准差生成随机数数组或矩阵</h3><p>我们先来看看均值、方差、标准差的概念。均值很好理解，就是所有样本数据的平均值，描述了样本集合的中间点：</p>
+<p>$$ \overline X=\frac{\sum_{i=1}^nX_i}n $$</p>
+<p>方差是衡量样本点和样本期望值相差的度量值：</p>
+<p>$$ S^2 = \frac{\sum_{i=1}^n(X_i-\overline X)^2} n $$</p>
+<p>标准差描述的是样本集合的各个样本点到均值的距离之平均：</p>
+<p>$$ S = \sqrt {\frac{\sum_{i=1}^n(X_i-\overline X)^2} n } $$</p>
+<p>标准差也就是对方差开根号。举个例子，<code>[0, 8, 12, 20]</code>和<code>[8, 9, 11, 12]</code>，两个集合的均值都是10，但显然两个集合的差别是很大的，计算两者的标准差，前者是8.3后者是1.8，显然后者较为集中，标准差描述的就是这种散布度或者叫做波动大小。综上，方差的意义在于描述随机变量稳定与波动、集中与分散的状况。标准差则体现随机变量取值与其期望值的偏差。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/machine-learning-3/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/machine-learning-2/" itemprop="url">
                   机器学习笔记二之矩阵、环境搭建、NumPy
                 </a>
@@ -669,124 +774,11 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/talk-about-tech/" itemprop="url">
-                  《当我们聊技术实力的时候，我们到底在聊什么》笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2017-01-02T00:00:00+08:00" content="2017-01-02">
-              2017-01-02
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/talk-about-tech/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/talk-about-tech/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>技术实力的本质和基本原则：</p>
-<ul>
-<li>不存在放之四海皆准的技术</li>
-<li>技术要能解决具体问题才有价值</li>
-<li>问题的复杂度决定技术实力的高度</li>
-</ul>
-<p>在技术实力的基本原则前提下，将技术实力分为两大类，六个小分类。</p>
-<h2 id="u786C_u5B9E_u529B"><a href="#u786C_u5B9E_u529B" class="headerlink" title="硬实力"></a>硬实力</h2><p>硬实力有四个等级，从低到高为点、线、面、体，对应的解决问题的复杂度也越来越高。</p>
-<h3 id="u6280_u672F_u70B9"><a href="#u6280_u672F_u70B9" class="headerlink" title="技术点"></a>技术点</h3><p>技术点是一个个颗粒性小，且相互较为独立的技术的使用方式和其原理认知。比如使用Java多线程的方式方法和解决的具体问题，使用Java进行I/O操作的方式方法和解决的具体问题。<strong>掌握了技术点，就可以开始基本的业务能力开发了</strong>。</p>
-<h3 id="u6280_u672F_u7EBF"><a href="#u6280_u672F_u7EBF" class="headerlink" title="技术线"></a>技术线</h3><p>技术线是由若干个技术点串联起来的，该条技术线能解决某一类相关问题。比如一个常规的Web应用流程，用户发起请求，经过负载均衡路由，到达业务Controller进行业务逻辑处理，过程中对数据库的操作，对缓存的操作，然后返回结果给用户等。这就是由若干个技术点组成的一条技术线，这条技术线能支撑起来Web应用开发中实现业务功能的全过程。<strong>掌握了技术线，就能完成业务功能的全流程设计和开发了</strong>。</p>
-<h3 id="u6280_u672F_u9762"><a href="#u6280_u672F_u9762" class="headerlink" title="技术面"></a>技术面</h3><p>技术面是由若干技术线排列交织而成。比如Web应用开发，性能优化，数据库维护等都属于技术面。<strong>掌握技术面，表明已经是某个领域的专家了</strong>。</p>
-<h3 id="u6280_u672F_u4F53"><a href="#u6280_u672F_u4F53" class="headerlink" title="技术体"></a>技术体</h3><p>技术体既多个技术面的综合。最小的技术体也得有三个技术面组成。最常见的就是架构师，对于一个大型业务系统的架构师而言，需要掌握多个技术面，然后站在全局的角度进行系统，架构的设计和取舍，比如一个后端的架构师需要掌握Java开发的技术面，数据的技术面，网络的技术面，包括专业业务领域的技术面。<strong>掌握了技术面，表明已经是某个领域的资深架构师或专家了，可以解决领域级的复杂问题</strong>。</p>
-<h2 id="u8F6F_u5B9E_u529B"><a href="#u8F6F_u5B9E_u529B" class="headerlink" title="软实力"></a>软实力</h2><p>软实力既不是很容易量化的一种能力，但是更能体现技术实力。</p>
-<h3 id="u53D1_u73B0_u95EE_u9898"><a href="#u53D1_u73B0_u95EE_u9898" class="headerlink" title="发现问题"></a>发现问题</h3><p>发现问题是一个很重要的软实力，当系统出现问题后，大多数问题可以很容易的定位，但是就有个别问题找不出是因为哪个环节引起的问题，而往往这些找不出原因的问题都是优先级比较高或者比较严重的问题。还有一种场景是系统三天两头出问题，出一个问题解决一个问题，但是都是治标不治本，找不出反复引起问题的根本原因。所以发现隐藏很深很细节的问题和发现根源问题是彰显技术实力的一个软实力，这个能力主要来源于经验，有成功的经验，也有踩坑的经验，也有参考别人的经验。所以需要多思考、多总结、多学习、多交流。</p>
-<h3 id="u6280_u672F_u521B_u65B0"><a href="#u6280_u672F_u521B_u65B0" class="headerlink" title="技术创新"></a>技术创新</h3><p>要达到这一项软实力其实比较难，比如在Google开创出大数据的大神，亚马逊开创出云计算的大神。但是这是我们为之努力的目标之一。</p>
-<p>阅读文章：<a href="http://www.infoq.com/cn/articles/talk-about-technology" target="_blank" rel="external">《当我们聊技术实力的时候，我们到底在聊什么》</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -824,7 +816,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">95</span>
+              <span class="site-state-item-count">96</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

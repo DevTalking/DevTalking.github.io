@@ -1,0 +1,874 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+到目前为止，我们已经学习了大概有八种机器学习的算法，其中有解决分类问题的，有解决回归问题的。这些算法其实没有谁是最好的，谁不好之说，反而应该将这些算法集合起来，发挥他们的最大价值。比如我们买东西或看电影之前，多少都会咨询身边的朋友，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记十七之集成学习、随机森林">
+<meta property="og:url" content="http://www.devtalking.com/articles/machine-learning-17/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+到目前为止，我们已经学习了大概有八种机器学习的算法，其中有解决分类问题的，有解决回归问题的。这些算法其实没有谁是最好的，谁不好之说，反而应该将这些算法集合起来，发挥他们的最大价值。比如我们买东西或看电影之前，多少都会咨询身边的朋友，">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/9c07fb9e783815c1557d2a2e01163bd9.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/dc245dddc9e81012b48a1edc4ef88f9e.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/906458322308a046b8ed9a5054bea0ee.jpg">
+<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/5694b519f162aa165a3c99ba2b0d8e39.jpg">
+<meta property="og:updated_time" content="2018-08-27T01:40:29.711Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习笔记十七之集成学习、随机森林">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+到目前为止，我们已经学习了大概有八种机器学习的算法，其中有解决分类问题的，有解决回归问题的。这些算法其实没有谁是最好的，谁不好之说，反而应该将这些算法集合起来，发挥他们的最大价值。比如我们买东西或看电影之前，多少都会咨询身边的朋友，">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 机器学习笔记十七之集成学习、随机森林 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                机器学习笔记十七之集成学习、随机森林
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-08-01T00:00:00+08:00" content="2018-08-01">
+              2018-08-01
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-17/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-17/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>到目前为止，我们已经学习了大概有八种机器学习的算法，其中有解决分类问题的，有解决回归问题的。这些算法其实没有谁是最好的，谁不好之说，反而应该将这些算法集合起来，发挥他们的最大价值。比如我们买东西或看电影之前，多少都会咨询身边的朋友，或去网上看看买家的评价，然后我们才会根据口碑好坏，或评价好坏决定买还是不买，看还是不看。在机器学习中，同样有这样的思路，这就是重要的集成学习。</p>
+<h2 id="u96C6_u6210_u5B66_u4E60"><a href="#u96C6_u6210_u5B66_u4E60" class="headerlink" title="集成学习"></a>集成学习</h2><p>机器学习中的集成学习就是将选择若干算法，针对同一样本数据训练模型，然后看看结果，使用投票机制，少数服从多数，用多数算法给出的结果当作最终的决策依据，这就是集成学习的核心思路。下面我们先手动模拟一个使用集成学习解决回归问题的的示例：</p>
+<a id="more"></a>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建500个点的样本数据</span></span><br><span class="line">X, y = datasets.make_moons(n_samples=<span class="number">500</span>, noise=<span class="number">0.3</span>, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制样本数据</span></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/9c07fb9e783815c1557d2a2e01163bd9.jpg" alt=""></p>
+<p>分别使用逻辑回归、SVM、决策树针对上面的样本数据训练模型：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 拆分样本数据</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用逻辑回归</span></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line">log_clf = LogisticRegression()</span><br><span class="line">log_clf.fit(X_train, y_train)</span><br><span class="line">log_clf.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.872</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用SVM</span></span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line">svc_clf = SVC()</span><br><span class="line">svc_clf.fit(X_train, y_train)</span><br><span class="line">svc_clf.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.89600000000000002</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用决策树</span></span><br><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line">dt_clf = DecisionTreeClassifier()</span><br><span class="line">dt_clf.fit(X_train, y_train)</span><br><span class="line">dt_clf.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.85599999999999998</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，使用三种不同的分类算法训练出的模型，最后的$R^2$评分都不尽相同。下面我们使用投票的方式，选择出最终预测值，具体思路是先求出三种模型对测试数据的预测结果，将三个结果向量相加，得到新的结果向量，因为分类只有0和1，所以新的结果向量里的值最大为3，最小为0。然后通过Fancy Index的方式，求出三种模型预测中至少有2种预测为1的，才真正认为是1的分类，那么也就是新结果向量里大于等于2的结果，其余小于2的都认为是0的分类：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 求出三种模型对测试数据的预测结果</span></span><br><span class="line">y_predict1 = log_clf.predict(X_test)</span><br><span class="line">y_predict2 = svc_clf.predict(X_test)</span><br><span class="line">y_predict3 = dt_clf.predict(X_test)</span><br><span class="line"></span><br><span class="line">y_predict = np.array((y_predict1 + y_predict2 + y_predict3) &gt;= <span class="number">2</span>, dtype=<span class="string">'int'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算最终的评分</span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score</span><br><span class="line">accuracy_score(y_test, y_predict)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.88800000000000001</span></span><br></pre></td></tr></table></figure>
+<p>上面的示例是我们手动使用三种算法的结果通过投票方式求得了最终的决策依据。其实Scikit Learn中已经为我们封装了这种方式，名为<code>VotingClassifier</code>，既投票分类器：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 引入投票分类器</span></span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> VotingClassifier</span><br><span class="line"></span><br><span class="line"><span class="comment"># VotingClassifier和Pipeline的用法非常类似，这里的voting="hard"可以先忽略</span></span><br><span class="line">voting_clf = VotingClassifier(estimators=[</span><br><span class="line">	(<span class="string">"log_clf"</span>, LogisticRegression()),</span><br><span class="line">	(<span class="string">"svm_clf"</span>, SVC()),</span><br><span class="line">	(<span class="string">"dt_clf"</span>, DecisionTreeClassifier(random_state=<span class="number">666</span>))</span><br><span class="line">], voting=<span class="string">"hard"</span>)</span><br><span class="line"></span><br><span class="line">voting_clf.fit(X_train, y_train)</span><br><span class="line">voting_clf.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.88800000000000001</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，使用<code>VotingClassifier</code>最后的评分和我们手动模拟的是一致的。</p>
+<h2 id="Soft_Voting"><a href="#Soft_Voting" class="headerlink" title="Soft Voting"></a>Soft Voting</h2><p>在上一节中，Scikit Learn提供的<code>VotingClassifier</code>有一个参数<code>voting</code>，我们传了<code>hard</code>这个值。其实这个参数就表示投票的方式，<code>hard</code>代表的就是少数服从多数的机制。</p>
+<p>但是，其实在很多时候少数服从多数得到的结果并不是正确的，这个在日常生活中其实很常见，所谓真理掌握在少数人手里就是这个意思。所以更合理的投票机制应该是对投票人加以权重值，投票人越专业，越权威，那么权重值就应该高一些。就好比歌唱比赛，评委有三类人，第一类是音乐制作人，特点是人少，但权重值高，第二类是职业歌手，人数次之，权重值也次之，第三类是普通观众，这类人人数最多，但是权重值也最低。那么决定选手去留还是掌握在少数的音乐制作人和职业歌手这些评委。这个思路其实就是Soft Voting。</p>
+<p>再举一个示例，假设有5个模型，针对同一个二分类问题，将每种类别都计算出了概率：</p>
+<ul>
+<li>模型1 A-99%，B-1%</li>
+<li>模型2 A-49%，B-51%</li>
+<li>模型3 A-40%，B-60%</li>
+<li>模型4 A-90%，B-10%</li>
+<li>模型5 A-30%，B-70%</li>
+</ul>
+<p>从上面的数据，明显可以得到，整体的分类应该B，因为模型2、模型3、模型5的结论都是B，所以按照Hard Voting方式，少数服从多数，那整体的类别会定为B。</p>
+<p>但是我们可以换个角度去看问题，模型1和模型4对判定为类别A的概率都在90%以上，说明非常笃定。而模型2、模型3、模型5虽然结论为类别B，但是类别A和类别B的判定概率相差并不是很大。而我们将五种模型对类别A、类别B的概率加起来就可以明显的看到，判定为类别A的总概率为：</p>
+<p>$$\frac {(0.99 + 0.49 + 0.4 + 0.9 + 0.3)} 5 = 0.616$$</p>
+<p>而判定为类别B的总概率为：</p>
+<p>$$\frac {(0.01 + 0.51 + 0.6 + 0.1 + 0.7)} 5 = 0.384$$</p>
+<p>显然判定为类别A的总概率要远高于类别B，那么整体类别应该是A。</p>
+<p>以上模型判定类别的概率其实就可以理解为权重值。所以Soft Voting要求集合里的每一个模型都能估计出类别的概率。那么我们来看看我们已经了解过的机器学习算法哪些是支持概率的：</p>
+<ul>
+<li>逻辑回归算法本身就是基于概率模型的，通过Sigmoid函数计算概率。</li>
+<li>kNN算法也是支持估计概率的，如果和预测点相邻的3个点，有2个点是红色，1个是蓝色，那么可以很容计算出红色类别的概率是$\frac 2 3$，蓝色类别的概率是$\frac 1 3$。</li>
+<li>决策树算法也是支持估计概率的，它的思路和kNN的很相近，每个叶子节点中如果信息熵或基尼系数不为0，那么就肯定至少包含2种以上的类别，那么用一个类别的数量除以所有类别的数据就能得到概率。</li>
+<li>SVM算法本身是不能够天然支持估计概率的。不过Scikit Learn中提供的<code>SVC</code>通过其他方式实现了估计概率的能力，代价就是增加了算法的时间复杂度和训练时间。它有一个<code>probability</code>参数，默认为<code>false</code>既不支持估计概率，如果显示传入<code>true</code>，那么就会启用估计概率的能力。</li>
+</ul>
+<p>下面来看看Soft Voting如何使用：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 还是使用上一节的数据，同样构建VotingClassifier，voiting参数传入soft。这里注意SVC要显示传入probability=True</span></span><br><span class="line">voting_clf1 = VotingClassifier(estimators=[</span><br><span class="line">	(<span class="string">"log_clf"</span>, LogisticRegression()),</span><br><span class="line">	(<span class="string">"svm_clf"</span>, SVC(probability=<span class="keyword">True</span>)),</span><br><span class="line">	(<span class="string">"dt_clf"</span>, DecisionTreeClassifier(random_state=<span class="number">666</span>))</span><br><span class="line">], voting=<span class="string">"soft"</span>)</span><br><span class="line"></span><br><span class="line">voting_clf1.fit(X_train, y_train)</span><br><span class="line">voting_clf1.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.89600000000000002</span></span><br></pre></td></tr></table></figure>
+<p>可以看到Soft Voting相比较Hard Voting，预测评分是有提高的。</p>
+<h2 id="Bagging"><a href="#Bagging" class="headerlink" title="Bagging"></a>Bagging</h2><p>上两节主要介绍了集成学习的原理。那么就这个原理而言，它的好坏是有一个基本的先决条件的。对于投票机制而言，5个人投票和1000个人投票得到的结果，毫无疑问是后者更具有说服力。所以前两节我们只使用了三个机器学习算法训练的模型去投票是不具有很强的说服力的。那么问题来了，我们如何能有更多的模型，来作为投票者呢？这就是这一节要说的取样问题。</p>
+<p>我们知道机器学习算法是有限的，有几十个就顶破天了，所以用不同的算法这条路是行不通的，那么我们就从同一种算法的不同模型这个思路入手。基本思路就是使用一种机器学习算法，创建更多的子模型，然后集成这些子模型的意见进行投票，有个前提是子模型之间不能一致，要有差异性。这一点大家应该很好理解，模型之间的差异性越大，投票才有意义。</p>
+<p>那么如何创建子模型的差异性呢？通常的做法是训练每个子模型时只看样本数据的一部分，比如一共有1000个样本数据，每个子模型只看100个样本数据，因为样本数据有差异性，所以训练出的子模型之间就自然存在差异性了。这时问题又来了，训练子模型时只这么少的样本数据，那么每个子模型的准确率自然会比较低。此时就应征了，人多力量大，一把筷子折不断的道理。</p>
+<p>假设有三个子模型，每个子模型的准确率只有51%，为什么要用51%作为示例呢，因为投硬币的概率都有50%，所以比它只高一点，算是很低的准确率了。那么整体的准确率为：</p>
+<p>$$0.51^3 + C_3^2 \cdot 0.51^2 \cdot 0.49 = 0.515$$</p>
+<p>三个准确率为51%的子模型，可以使整体的准确率提高至51.5%。那如果是500个子模型，整体的准确率会提升至：</p>
+<p>$$\sum_{i=251}^{500}C_{500}^i \cdot 0.51^i \cdot 0.49^{500-i} = 0.656$$</p>
+<p>可见当子模型的数量增加时，同时会增加整体的准确率。所以其实子模型并不需要太高的准确率。</p>
+<h3 id="u5B50_u6A21_u578B_u53D6_u6837_u65B9_u5F0F"><a href="#u5B50_u6A21_u578B_u53D6_u6837_u65B9_u5F0F" class="headerlink" title="子模型取样方式"></a>子模型取样方式</h3><p>子模型的取样方式有两种：</p>
+<ul>
+<li>放回取样：每次取完训练子模型的部分样本数据后，再放回样本数据池里，训练下一个子模型使用同样的方式。这样的方式，训练不同的子模型会可能会用到小部分相同的样本数据。</li>
+<li>不放回取样：每次取完训练子模型的部分样本数据后，这部分样本数据不再放回样本数据池里，训练下一个子模型使用同样的方式。这样的方式，训练不同的子模型的样本数据不会重复。</li>
+</ul>
+<p>通常使用放回取样的方式更多，举个例子，假如有500个样本数据，训练子模型时使用50条数据，那么使用不放回取样只能训练出10个子模型。而如果使用放回取样的话，理论上可以训练出成千上万个子模型。在机器学习中，将取样称为Bagging。而在统计学中，放回取样称为Bootstrap。</p>
+<p>下面我们用代码来看看如何使用取样的方式训练子模型：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 还是使用之前构造的样本数据</span></span><br><span class="line"><span class="comment"># 我们使用决策树这个算法，然后导入BaggingClassifier</span></span><br><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> BaggingClassifier</span><br><span class="line"></span><br><span class="line"><span class="comment"># BaggingClassifier的第一个参数是给定一个算法类型</span></span><br><span class="line"><span class="comment"># n_estimators参数是创建多少个子模型</span></span><br><span class="line"><span class="comment"># max_samples参数是每个子模型使用多少样本数据训练</span></span><br><span class="line"><span class="comment"># bootstrap为True表示为放回取样方式，为False表示为不放回取样方式</span></span><br><span class="line">bagging_clf = BaggingClassifier(</span><br><span class="line">	DecisionTreeClassifier(), n_estimators=<span class="number">500</span>, max_samples=<span class="number">100</span>, bootstrap=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">bagging_clf.fit(X_train, y_train)</span><br><span class="line">bagging_clf.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.88</span></span><br></pre></td></tr></table></figure>
+<h3 id="OOB"><a href="#OOB" class="headerlink" title="OOB"></a>OOB</h3><p>使用放回取样方式虽然可以构建更多的子模型，但是它有一个问题，那就是在有限次的放回取样过程中，有一部分样本数据可能根本没有取到，按严格的数学计算，这个比例大概是37%。这个情况称为OOB（Out of Bag）换个思路思考，这37%根本没有被用到的样本数据恰好可以作为测试数据来用，所以在使用这种方式时，我们可以不用<code>train_test_split</code>对样本数据进行拆分，直接使用没有被用到的这37%的样本数据既可。来看看<code>BaggingClassifier</code>如何使用OOB：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> BaggingClassifier</span><br><span class="line"></span><br><span class="line"><span class="comment"># 多加一个参数oob_score，True为使用OOB，既记住哪些样本取过，哪些没取过</span></span><br><span class="line">bagging_clf = BaggingClassifier(</span><br><span class="line">	DecisionTreeClassifier(), </span><br><span class="line">	n_estimators=<span class="number">500</span>, </span><br><span class="line">	max_samples=<span class="number">100</span>, </span><br><span class="line">	bootstrap=<span class="keyword">True</span>,</span><br><span class="line">	oob_score=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">bagging_clf.fit(X, y)</span><br><span class="line"><span class="comment"># 使用没取过样本作为测试数据</span></span><br><span class="line">bagging_clf.oob_score_</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.91000000000000003</span></span><br></pre></td></tr></table></figure>
+<p>可以看到准确率是有所提高的。</p>
+<h3 id="u5E76_u53D1_u53D6_u6837"><a href="#u5E76_u53D1_u53D6_u6837" class="headerlink" title="并发取样"></a>并发取样</h3><p>按照Bagging的思路，因为不需要保证每次取样的唯一性，所以每次取样是可以并行处理的。我们可以使用<code>n_jobs</code>指定运行的CPU核数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 先看看之前的训练时间</span></span><br><span class="line">%%time</span><br><span class="line">bagging_clf = BaggingClassifier(</span><br><span class="line">	DecisionTreeClassifier(), </span><br><span class="line">	n_estimators=<span class="number">500</span>, </span><br><span class="line">	max_samples=<span class="number">100</span>, </span><br><span class="line">	bootstrap=<span class="keyword">True</span>,</span><br><span class="line">	oob_score=<span class="keyword">True</span>)</span><br><span class="line">bagging_clf.fit(X, y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">CPU times: user <span class="number">717</span> ms, sys: <span class="number">6.41</span> ms, total: <span class="number">724</span> ms</span><br><span class="line">Wall time: <span class="number">723</span> ms</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再看看加了n_jobs参数后的训练时间，n_jobs=-1表示使用电脑的所有CPU核数</span></span><br><span class="line">%%time</span><br><span class="line">bagging_clf = BaggingClassifier(</span><br><span class="line">	DecisionTreeClassifier(), </span><br><span class="line">	n_estimators=<span class="number">500</span>, </span><br><span class="line">	max_samples=<span class="number">100</span>, </span><br><span class="line">	bootstrap=<span class="keyword">True</span>,</span><br><span class="line">	oob_score=<span class="keyword">True</span>,</span><br><span class="line">	n_jobs=-<span class="number">1</span>)</span><br><span class="line">bagging_clf.fit(X, y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">CPU times: user <span class="number">264</span> ms, sys: <span class="number">57.6</span> ms, total: <span class="number">322</span> ms</span><br><span class="line">Wall time: <span class="number">571</span> ms</span><br></pre></td></tr></table></figure>
+<p>可以看到，训练时间缩短了150多毫秒。</p>
+<blockquote>
+<p>在<a href="http://www.devtalking.com/articles/machine-learning-4/"> 机器学习笔记四之kNN算法、超参数、数据归一化 </a>中的网格搜索超参数一节介绍过n_jobs参数。</p>
+</blockquote>
+<h3 id="u7279_u5F81_u53D6_u6837"><a href="#u7279_u5F81_u53D6_u6837" class="headerlink" title="特征取样"></a>特征取样</h3><p>我们之前讲的都是对样本数据条数进行随机取样，<code>BaggingClassifier</code>还可以对特征进行随机取样，这样更能增加子模型的差异性，称为Random Subspaces。另外还有既对样本条数取样，又针对特征随机取样的方式，称为Random Patches。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># max_features 表示随机取几个特征</span></span><br><span class="line"><span class="comment"># bootstrap_features为True表示对特征取样是放回取样方式</span></span><br><span class="line">random_subspaces_clf = BaggingClassifier(</span><br><span class="line">	DecisionTreeClassifier(), </span><br><span class="line">	n_estimators=<span class="number">500</span>, </span><br><span class="line">	max_samples=<span class="number">500</span>, </span><br><span class="line">	bootstrap=<span class="keyword">True</span>,</span><br><span class="line">	oob_score=<span class="keyword">True</span>,</span><br><span class="line">	n_jobs=-<span class="number">1</span>,</span><br><span class="line">	max_features=<span class="number">1</span>,</span><br><span class="line">	bootstrap_features=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">random_subspaces_clf.fit(X, y)</span><br><span class="line">random_subspaces_clf.oob_score_</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.82999999999999996</span></span><br></pre></td></tr></table></figure>
+<p>首先将<code>max_samples</code>设置为500，意在取消对样本数据条数随机取样，因为一共有500个样本数据，要创建500个子模型，如果每个子模型都使用500个样本数据，那相当于对样本条数取样是没有意义的。又因为我们的样本特征只有2个，所以<code>max_features</code>设置为1。</p>
+<p>如果将<code>max_samples</code>设回100的话，那就是既对样本条数随机取样，又对特征随机取样：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">random_patches_clf = BaggingClassifier(</span><br><span class="line">	DecisionTreeClassifier(), </span><br><span class="line">	n_estimators=<span class="number">100</span>, </span><br><span class="line">	max_samples=<span class="number">500</span>, </span><br><span class="line">	bootstrap=<span class="keyword">True</span>,</span><br><span class="line">	oob_score=<span class="keyword">True</span>,</span><br><span class="line">	n_jobs=-<span class="number">1</span>,</span><br><span class="line">	max_features=<span class="number">1</span>,</span><br><span class="line">	bootstrap_features=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">random_patches_clf.fit(X, y)</span><br><span class="line">random_patches_clf.oob_score_</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.79400000000000004</span></span><br></pre></td></tr></table></figure>
+<h2 id="u968F_u673A_u68EE_u6797"><a href="#u968F_u673A_u68EE_u6797" class="headerlink" title="随机森林"></a>随机森林</h2><p>前面几个章节介绍了集成学习的原理。在集成学习中，如果使用决策树，通过取样的方式创建子模型，这些子模型就是一个个随机的决策树。我们管这种方式形象的称为随机森林。在Scikit Learn中，也为我们封装好了随机森林的类，它的原理和上一小节示例中通过<code>BaggingClassifier</code>和<code>DecisionTreeClassifier</code>构建的分类器基本是一样的。我们来看看如何使用：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</span><br><span class="line"></span><br><span class="line">rf_clf = RandomForestClassifier(n_estimators=<span class="number">500</span>, oob_score=<span class="keyword">True</span>, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 还是使用之前构建的样本数据</span></span><br><span class="line">rf_clf.fit(X, y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">RandomForestClassifier(bootstrap=<span class="keyword">True</span>, class_weight=<span class="keyword">None</span>, criterion=<span class="string">'gini'</span>,</span><br><span class="line">			max_depth=<span class="keyword">None</span>, max_features=<span class="string">'auto'</span>, max_leaf_nodes=<span class="keyword">None</span>,</span><br><span class="line">			min_impurity_decrease=<span class="number">0.0</span>, min_impurity_split=<span class="keyword">None</span>,</span><br><span class="line">			min_samples_leaf=<span class="number">1</span>, min_samples_split=<span class="number">2</span>,</span><br><span class="line">			min_weight_fraction_leaf=<span class="number">0.0</span>, n_estimators=<span class="number">500</span>, n_jobs=<span class="number">1</span>,</span><br><span class="line">			oob_score=<span class="keyword">True</span>, random_state=<span class="number">666</span>, verbose=<span class="number">0</span>, warm_start=<span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line">rf_clf.oob_score_</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.89200000000000002</span></span><br></pre></td></tr></table></figure>
+<p><code>fit</code>之后，从返回结果里可以看到，<code>RandomForestClassifier</code>的参数综合了<code>BaggingClassifier</code>及<code>DecisionTreeClassifier</code>的参数。我们可以对不同的参数进行调优，训练出更好的模型。</p>
+<h2 id="Boosting"><a href="#Boosting" class="headerlink" title="Boosting"></a>Boosting</h2><p>我们之前介绍的集成学习中子模型之间是相互独立的，差异越大越好。那么集成学习中还有一种创建子模型的方式，就是每个子模型之间有关联，都在尝试增强整体的效果。这种方式称为Boosting方式。</p>
+<h3 id="Ada_Boosting"><a href="#Ada_Boosting" class="headerlink" title="Ada Boosting"></a>Ada Boosting</h3><p>在Boosting方式中，有一种方式称为Ada Boosting，我们用网络上的一幅解决回归问题的图来做以解释：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/dc245dddc9e81012b48a1edc4ef88f9e.jpg" alt=""></p>
+<p>我们先来看第一个齿轮上下连接的图，下面的图是原始样本数据，每个样本点的权重值都是一样的，上面的图是第一个子模型预测出的结果，那势必会有没有被准确预测的样本点，将这些样本点的权重值加大。</p>
+<p>第二列下图中展示的深色点就是权重值增大的样本点，浅色点是上一个子模型预测出的样本点。那么训练第二个子模型时会优先考虑权重大的样本点进行拟合，拟合出的结果如第二列上图所示。</p>
+<p>然后再将第二个子模型没有预测出的样本点的权重值增大，如第三列下图所示，在训练第三个子模型时优先考虑第二个子模型没有预测出的样本点进行拟合。以此类推，这样就可以训练出很多子模型，不同于取样方式，Boosting方式的所有子模型使用全量的样本数据进行训练，不过样本数据有权重值的概念，而且后一个子模型是在完善上一个子模型的错误，从而所有子模型达到增强整体的作用。这就是Ada Boosting的原理。</p>
+<p>下面来看看Scikit Learn为我们提供的<code>AdaBoostClassifier</code>如何使用：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> AdaBoostClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line"></span><br><span class="line">ada_clf = AdaBoostClassifier(DecisionTreeClassifier(max_depth=<span class="number">2</span>), n_estimators=<span class="number">50</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Boosting方式没有OOB的概念，所以还是需要使用拆分后的样本数据</span></span><br><span class="line">ada_clf.fit(X_train, y_train)</span><br><span class="line">ada_clf.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.86399999999999999</span></span><br></pre></td></tr></table></figure>
+<h3 id="Gradient_Boosting"><a href="#Gradient_Boosting" class="headerlink" title="Gradient Boosting"></a>Gradient Boosting</h3><p>还有一种Boosting的方式称为Gradient Boosting。它的原理是我们训练第一个子模型M1，它肯定会有没有准确预测到的样本，我们称为错误E1。然后我们将E1这些样本点作为训练第二个子模型的样本数据，训练出第二个子模型M2，然后它必然还会产生错误E2。那么再将E2作为训练第三个子模型的样本数据，产生错误E3，以此类推，训练出多个子模型。最终预测的结果是M1+M2+M3+…的结果。</p>
+<p>下面来看看Scikit Learn为我们提供的<code>GradientBoostingClassifier</code>如何使用：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> GradientBoostingClassifier</span><br><span class="line"></span><br><span class="line"><span class="comment"># GradientBoostingClassifier本身就是使用决策树作为算法实现的，所以不再需要传入算法实例</span></span><br><span class="line">gd_clf = GradientBoostingClassifier(max_depth=<span class="number">2</span>, n_estimators=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Boosting方式没有OOB的概念，所以还是需要使用拆分后的样本数据</span></span><br><span class="line">gd_clf.fit(X_train, y_train)</span><br><span class="line">gd_clf.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.90400000000000003</span></span><br></pre></td></tr></table></figure>
+<h2 id="Stacking"><a href="#Stacking" class="headerlink" title="Stacking"></a>Stacking</h2><p>这一小节我们再来认识一个集成学习创建子模型的思路，Stacking。</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/906458322308a046b8ed9a5054bea0ee.jpg" alt=""></p>
+<p>上图也是网络上的一幅图，我们先看中间那层，Subset1和Subset2是将原始样本数据分成两部分后的数据，我们先使用Subset1训练出三个子模型，这三个子模型会产生错误，既没有预测到的样本数据。然后将这三个子模型的三个错误结果和Subset2组成新的样本数据，训练出第四个子模型。整体的预测结果以第四个子模型的结果为准。这就是Stacking的基本原理，通过Stacking方式可以构建出比较复杂的子模型关系网：</p>
+<p><img src="http://paxigrdp0.bkt.clouddn.com/5694b519f162aa165a3c99ba2b0d8e39.jpg" alt=""></p>
+<p>上图有三层，一共7个子模型，就需要将原始样本数据分成三份，第一份作为训练第一层三个子模型的样本数据，第二份作为训练第二层子模型的样本数据其中一部分，以此类推。</p>
+<p>不过在Scikit Learn中没有提供任何Stacking的类供我们使用，Stacking的原理已经有神经网络的雏形了，里面涉及到的调参环节非常多，大家有兴趣可以自己尝试实现Stacking算法。</p>
+<blockquote>
+<p>申明：本文为慕课网<a href="https://www.imooc.com/t/108955" target="_blank" rel="external">liuyubobobo</a>老师<a href="https://coding.imooc.com/learn/list/169.html" target="_blank" rel="external">《Python3入门机器学习 经典算法与应用》</a>课程的学习笔记，未经允许不得转载。</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/machine-learning-16/" rel="next" title="机器学习笔记十六之基尼系数、CART">
+                <i class="fa fa-chevron-left"></i> 机器学习笔记十六之基尼系数、CART
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">96</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u96C6_u6210_u5B66_u4E60"><span class="nav-number">1.</span> <span class="nav-text">集成学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Soft_Voting"><span class="nav-number">2.</span> <span class="nav-text">Soft Voting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bagging"><span class="nav-number">3.</span> <span class="nav-text">Bagging</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5B50_u6A21_u578B_u53D6_u6837_u65B9_u5F0F"><span class="nav-number">3.1.</span> <span class="nav-text">子模型取样方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OOB"><span class="nav-number">3.2.</span> <span class="nav-text">OOB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5E76_u53D1_u53D6_u6837"><span class="nav-number">3.3.</span> <span class="nav-text">并发取样</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7279_u5F81_u53D6_u6837"><span class="nav-number">3.4.</span> <span class="nav-text">特征取样</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u968F_u673A_u68EE_u6797"><span class="nav-number">4.</span> <span class="nav-text">随机森林</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Boosting"><span class="nav-number">5.</span> <span class="nav-text">Boosting</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Ada_Boosting"><span class="nav-number">5.1.</span> <span class="nav-text">Ada Boosting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient_Boosting"><span class="nav-number">5.2.</span> <span class="nav-text">Gradient Boosting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stacking"><span class="nav-number">6.</span> <span class="nav-text">Stacking</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/machine-learning-17/';
+      var disqus_title = '机器学习笔记十七之集成学习、随机森林';
+      var disqus_url = 'http://www.devtalking.com//articles/machine-learning-17/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
