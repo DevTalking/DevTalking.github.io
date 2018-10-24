@@ -701,15 +701,15 @@
 
 <h1 id="u4EC0_u4E48_u662FShadowSocks"><a href="#u4EC0_u4E48_u662FShadowSocks" class="headerlink" title="什么是ShadowSocks"></a>什么是ShadowSocks</h1><p>ShadowSocks是基于Socks5协议，使用类似SSH隧道的方式收发网络请求的一款开源软件，该软件由<a href="https://twitter.com/clowwindy" title="clowwindy"> @clowwindy </a>开发，最初只有Python版本，随后出现C++、C#、Go等多语言版本。ShadowSocks最大的特点是可以保护网络流量、加密数据传输，可有效防止GFW（Great Firewall of China）封杀网络请求。</p>
 <h1 id="u7528ShadowSocks_u79D1_u5B66_u4E0A_u7F51_u7684_u6982_u5FF5"><a href="#u7528ShadowSocks_u79D1_u5B66_u4E0A_u7F51_u7684_u6982_u5FF5" class="headerlink" title="用ShadowSocks科学上网的概念"></a>用ShadowSocks科学上网的概念</h1><p>在以前，我们访问互联网的资源都是简单而直接的，用户的请求发送到资源服务方，比如Google、Facebook等，然后资源服务方直接将内容响应给用户，世界多么美好。</p>
-<p> <img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-9.png" alt=""></p>
+<p> <img src="https://devtalking.oss-cn-beijing.aliyuncs.com/shadowsocksss-9.png" alt=""></p>
 <p>但是，在1998年时候，中国创建了互联网边界审查系统，称之为中国国家防火墙（GFW），这堵墙横在了用户和互联网资源服务方之间，用于监控和过滤互联网国际出口上的内容，监控国际网关的通讯，对认为不匹配国家官方要求的传输内容，进行干扰、阻断、屏蔽。</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shaodwsocksss-10.png" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/shaodwsocksss-10.png" alt=""></p>
 <p>从此之后好多有价值的网站就被堵在了墙后。</p>
 <p>但是由于对知识的渴望，人们想到了绕过GFW的办法，那就是在境外搭建一个国内用户的代理，国内用户与代理之间建立加密的通道，由境外代理请求被墙的网络资源，再通过加密通道返回给国内用户。代理的类型也有多种，像HTTP、Socks、VPN、SSH等。以SSH隧道为例：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-11.png" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/shadowsocksss-11.png" alt=""></p>
 <p>因为SSH本身基于RSA加密技术，所以GFW就无法对数据传输过程加密的数据进行分析，从而避免被重置链接、阻断、屏蔽等问题。</p>
 <p>但是GFW也不会懵B一世，人家也会学习，由于在创建SSH隧道的过程中有较为明显的特性，所以GFW还是可以通过分析连接的特性进行干扰。此时ShadowSocks横空出世，先看看图示：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/shadowsocksss-12.png" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/shadowsocksss-12.png" alt=""></p>
 <p>简单来说，ShadowSocks分为客户端和服务端，用户发出的请求基于Socks5协议与ShadowSocks客户端进行通信，一般情况下SS客户端都在本机，通过ShadowSocksX、GoAgentX等应用启动，所以这一步是不会经过GFW的，然后ShadowSocks提供了多种加密方式供客户端和服务端之间进行通信，并且在经过GFW时是普通的TCP协议数据包，没有明显的特征，而且GFW也无法解密分析，从而实现绕墙访问资源。</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/articles/shadowsocks-guide/#more" rel="contents">
