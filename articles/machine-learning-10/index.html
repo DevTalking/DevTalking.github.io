@@ -98,15 +98,15 @@
 
 在这一篇笔记中我们来学习目前应用比较广泛的一个分类算法逻辑回归（Logistic Regression）。
 什么是逻辑回归首先大家应该有会有一个疑问，为什么既然叫逻辑回归，但是解决的却是分类问题呢。因为逻辑回归是将样本的特征和样本发">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/7667662ed99feb578abdec79a31c667c.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/4292f2003870497bcae2c87e9f6e4485.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/f427c68e356b03469b66f870e0e9f00d.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/cffe527aa375d697fbbcc500da80f28a.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/a8e4252ec69d0c49709eaf37e6b6fd00.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/c9c81130b42d0ec7a1d9d13771791494.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/661c9948cbf818ba028f89db922b50eb.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/ee5c380438a6b086cbebbf6ade764dc5.jpg">
-<meta property="og:updated_time" content="2018-08-27T02:33:25.810Z">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/7667662ed99feb578abdec79a31c667c.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/4292f2003870497bcae2c87e9f6e4485.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/f427c68e356b03469b66f870e0e9f00d.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/cffe527aa375d697fbbcc500da80f28a.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/a8e4252ec69d0c49709eaf37e6b6fd00.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/c9c81130b42d0ec7a1d9d13771791494.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/661c9948cbf818ba028f89db922b50eb.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/ee5c380438a6b086cbebbf6ade764dc5.jpg">
+<meta property="og:updated_time" content="2018-11-18T14:23:33.695Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记十之逻辑回归">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -345,11 +345,11 @@
 <p>$$\hat p = \frac 1 {1+e^{-\theta ^T X_b}}$$</p>
 <a id="more"></a>
 <h3 id="Sigmoid_u51FD_u6570"><a href="#Sigmoid_u51FD_u6570" class="headerlink" title="Sigmoid函数"></a>Sigmoid函数</h3><p>我们先来看看这个Sigmoid函数为什么将值域限定在$(0, 1)$，将这个函数绘制出来看一下：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义Sigmoid函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(t)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + np.exp(-t))</span><br><span class="line">	</span><br><span class="line"><span class="comment"># 构建向量x，随机生成500个数，范围从-10到10</span></span><br><span class="line">x = np.linspace(-<span class="number">10</span>, <span class="number">10</span>, <span class="number">500</span>)</span><br><span class="line"><span class="comment"># y值通过Sigmoid计算出</span></span><br><span class="line">y = sigmoid(x)</span><br><span class="line"></span><br><span class="line">plt.plot(x, y)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure></p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/7667662ed99feb578abdec79a31c667c.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/7667662ed99feb578abdec79a31c667c.jpg" alt=""></p>
 <p>从曲线图可以看出，$y$的值最小不会小于0，最大不会大于1，表明了它的值域是$(0, 1)$，我将Sigmoid函数再写出来看一下：</p>
 <p>$$\sigma(t) = \frac 1 {1+e^{-t}}$$</p>
 <p>当$t$无穷大时，$e^{-t}$无穷小，那么当1除以无穷小时，它的值就无限接近于1。那么当$t$无穷小时，$e^{-t}$无穷大，那么当1除以无穷大时，它的值就无限接近于0。</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/4292f2003870497bcae2c87e9f6e4485.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/4292f2003870497bcae2c87e9f6e4485.jpg" alt=""></p>
 <p>我将坐标轴在Sigmoid曲线图上绘制出来，可以看到当$t &gt; 0$时，越接近0，概率$p$越接近0.5，$t$越远离0时，概率$p$越大于0.5，并且当$t$大到一定程度时，概率$p$基本稳定在1附近。当$t &lt; 0$时，越接近0，概率$p$越接近0.5。$t$越远离0时，概率$p$越小于0.5，并且当$t$小到一定程度时，概率$p$基本稳定在0附近。这就是Sigmoid函数在逻辑回归中的数学意义。</p>
 <h2 id="u903B_u8F91_u56DE_u5F52_u7684_u635F_u5931_u51FD_u6570"><a href="#u903B_u8F91_u56DE_u5F52_u7684_u635F_u5931_u51FD_u6570" class="headerlink" title="逻辑回归的损失函数"></a>逻辑回归的损失函数</h2><p>我们再将逻辑回归中计算概率的公式写出来：</p>
 <p>$$\hat p = \frac 1 {1+e^{-\theta ^T X_b}}$$</p>
@@ -376,18 +376,18 @@
 <li>$log_{\theta} \ \sqrt[y]{x} = \frac {log_{\theta} \ x} y$</li>
 </ul>
 <p>对数的存在使得求这种复杂幂的问题更快更方便。</p>
-<p>我们再来看看对数在几何意义上的曲线：<br><img src="http://paxigrdp0.bkt.clouddn.com/f427c68e356b03469b66f870e0e9f00d.jpg" alt="" title="对数曲线"><br>可以很容易的算出，对数的曲线始终是过$(1, 0)$点的。</p>
+<p>我们再来看看对数在几何意义上的曲线：<br><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/f427c68e356b03469b66f870e0e9f00d.jpg" alt="" title="对数曲线"><br>可以很容易的算出，对数的曲线始终是过$(1, 0)$点的。</p>
 <h3 id="u5B9A_u4E49_u635F_u5931_u51FD_u6570"><a href="#u5B9A_u4E49_u635F_u5931_u51FD_u6570" class="headerlink" title="定义损失函数"></a>定义损失函数</h3><p>回顾完对数后，我们再来看看逻辑回归的损失函数，没错，我们就是要使用对数的函数来表示：</p>
 <p>$$cost = \left\{<br>\begin{aligned}<br>{如果y=1,那么损失函数为：-log(\hat p) \\<br>如果y=0,那么损失函数为：-log(1-\hat p)}<br>\end{aligned}<br>\right.<br>$$</p>
 <p>我们来看看这两个函数为什么符合之前我们定义的损失函数的描述。首先$-log x$的曲线为：</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/cffe527aa375d697fbbcc500da80f28a.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/cffe527aa375d697fbbcc500da80f28a.jpg" alt=""></p>
 <p>之前说了，概率的值域在$(0,1)$之间，所以上图曲线的x轴以下的曲线是没有意义的，所以对于$-log (\hat p)$，它的曲线是：</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/a8e4252ec69d0c49709eaf37e6b6fd00.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/a8e4252ec69d0c49709eaf37e6b6fd00.jpg" alt=""></p>
 <p>从上面的曲线图可以很容易的发现，当$\hat p$趋近于0的时候，$-log (\hat p)$趋近于正无穷，这个正无穷其实就是一个很大的损失惩罚，因为当$\hat p$趋近于0时，$y$应该也是趋近于0，但是这里$y$定义的是1。当$\hat p$在不断趋近1的过程中，$-log (\hat p)$的值逐渐减小，既损失逐渐减小，当$\hat p$趋近于1时，$y$应该也是趋近于0，和这里定义的是一致的，所以$-log (\hat p)$的值是0，说明没有损失。</p>
 <p>下面再来看看$-log(1-x)$的曲线：</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/c9c81130b42d0ec7a1d9d13771791494.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/c9c81130b42d0ec7a1d9d13771791494.jpg" alt=""></p>
 <p>同理因为概率的值域在$(0, 1)$之间，所以$-log(1-\hat p)$的曲线为：</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/661c9948cbf818ba028f89db922b50eb.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/661c9948cbf818ba028f89db922b50eb.jpg" alt=""></p>
 <p>这条曲线同样可以解释我们之前定义的损失趋势。</p>
 <p>此时我们找到的损失函数还是根据不同的分类分成了两个，其实将其合成一个也很简单：</p>
 <p>$$cost=-ylog(\hat p)-(1-y)log(1-\hat p)$$</p>
@@ -436,7 +436,7 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">iris = datasets.load_iris()</span><br><span class="line">X = iris.data</span><br><span class="line">y = iris.target</span><br></pre></td></tr></table></figure>
 <p>因为鸢尾花数据中有三类鸢尾花，而逻辑回归在一开始就讲过是一个解决二分类问题的算法，所以我们只取前两类的鸢尾花数据来验证，并且只用每类鸢尾花的前两个特征，方便绘图：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 只取前两类的鸢尾花数据</span></span><br><span class="line">X = X[y&lt;<span class="number">2</span>, :<span class="number">2</span>]</span><br><span class="line">y = y[y&lt;<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'red'</span>)</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/ee5c380438a6b086cbebbf6ade764dc5.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ee5c380438a6b086cbebbf6ade764dc5.jpg" alt=""></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> myML.LogisticRegression <span class="keyword">import</span> LogisticRegression</span><br><span class="line"><span class="keyword">from</span> myML.modelSelection <span class="keyword">import</span> train_test_split</span><br><span class="line"></span><br><span class="line">X_train, y_train, X_test, y_test = train_test_split(X, y, seed=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line">log_reg = LogisticRegression()</span><br><span class="line">log_reg.fit(X_train, y_train)</span><br><span class="line">log_reg.score(X_test, y_test)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">1.0</span></span><br><span class="line"></span><br><span class="line">log_reg.predict_probability(X_test)</span><br><span class="line"><span class="comment"># 概率结果</span></span><br><span class="line">array([ <span class="number">0.92972035</span>,  <span class="number">0.98664939</span>,  <span class="number">0.14852024</span>,  <span class="number">0.17601199</span>,  <span class="number">0.0369836</span> ,</span><br><span class="line">		<span class="number">0.0186637</span> ,  <span class="number">0.04936918</span>,  <span class="number">0.99669244</span>,  <span class="number">0.97993941</span>,  <span class="number">0.74524655</span>,</span><br><span class="line">		<span class="number">0.04473194</span>,  <span class="number">0.00339285</span>,  <span class="number">0.26131273</span>,  <span class="number">0.0369836</span> ,  <span class="number">0.84192923</span>,</span><br><span class="line">		<span class="number">0.79892262</span>,  <span class="number">0.82890209</span>,  <span class="number">0.32358166</span>,  <span class="number">0.06535323</span>,  <span class="number">0.20735334</span>])</span><br><span class="line"></span><br><span class="line">log_reg.predict(X_test)</span><br><span class="line"><span class="comment"># 分类结果</span></span><br><span class="line">array([<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">y_test</span><br><span class="line"><span class="comment"># 测试数据结果</span></span><br><span class="line">array([<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>])</span><br></pre></td></tr></table></figure>
 <p>可以看到我们封装的逻辑回归算法对鸢尾花的分类是100%准确的，当然也是因为当前的数据比较简单。</p>
 <blockquote>

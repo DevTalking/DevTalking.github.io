@@ -96,23 +96,23 @@
 
 
 这一篇笔记主要讲机器学习算法中一个重要的分类算法，支撑向量机（Support Vector Machine）。它背后有严格的数学理论和统计学理论支撑的，这里我们只对它的原理和应用做以介绍，更深层次的数学理论有兴趣可以查阅其他资料。">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/5142c26ba0e86429631a63609c314a97.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/b26d6614606ac304144b99549eeb390e.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/990fbea083569d4503be599d202b049d.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/d4642c6673e5e75023088be725dcd4f8.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/f5af760ed417acf74d79d065b437807d.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/9cb17884cae3c002e35a1cf7e3b3ba95.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/9c7ae21a6ff46c774740afa4a2f7cb05.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/d5668bb993d9a3b28bb2d2585a37f56e.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/766a45ecb9df58b5ab41525655347c87.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/6b71f9d805f89f614fd9bd0a393b7890.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/129d7835a23b0db515ef342d94810ca2.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/a44b5821f9b48dbcb9fd85051dab83e3.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/890c26515621cbce34e121af68d6f924.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/26dc2972ed477705b9ef58d24ab96366.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/ecf8b9cd82f869204f83be40a2a396d3.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/f890f7e814104e7b8581049811da361f.jpg">
-<meta property="og:updated_time" content="2018-08-27T02:36:32.567Z">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/5142c26ba0e86429631a63609c314a97.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/b26d6614606ac304144b99549eeb390e.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/990fbea083569d4503be599d202b049d.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/d4642c6673e5e75023088be725dcd4f8.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/f5af760ed417acf74d79d065b437807d.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/9cb17884cae3c002e35a1cf7e3b3ba95.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/9c7ae21a6ff46c774740afa4a2f7cb05.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/d5668bb993d9a3b28bb2d2585a37f56e.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/766a45ecb9df58b5ab41525655347c87.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/6b71f9d805f89f614fd9bd0a393b7890.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/129d7835a23b0db515ef342d94810ca2.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/a44b5821f9b48dbcb9fd85051dab83e3.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/890c26515621cbce34e121af68d6f924.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/26dc2972ed477705b9ef58d24ab96366.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/ecf8b9cd82f869204f83be40a2a396d3.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/f890f7e814104e7b8581049811da361f.jpg">
+<meta property="og:updated_time" content="2018-11-18T14:08:59.092Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记十三之支撑向量机（SVM）">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -341,16 +341,16 @@
 
 
 <p>这一篇笔记主要讲机器学习算法中一个重要的分类算法，支撑向量机（Support Vector Machine）。它背后有严格的数学理论和统计学理论支撑的，这里我们只对它的原理和应用做以介绍，更深层次的数学理论有兴趣可以查阅其他资料。</p>
-<h2 id="u4EC0_u4E48_u662FSVM"><a href="#u4EC0_u4E48_u662FSVM" class="headerlink" title="什么是SVM"></a>什么是SVM</h2><p><img src="http://paxigrdp0.bkt.clouddn.com/5142c26ba0e86429631a63609c314a97.jpg" alt=""></p>
+<h2 id="u4EC0_u4E48_u662FSVM"><a href="#u4EC0_u4E48_u662FSVM" class="headerlink" title="什么是SVM"></a>什么是SVM</h2><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/5142c26ba0e86429631a63609c314a97.jpg" alt=""></p>
 <p>上面的图展示的是一个二分类问题，在逻辑回归的笔记中，我们知道了决策边界，图中橘黄色的直线就是决策边界，它看似很好的将样本数据的不同分类区分开了。我们在多项式回归的笔记中，讲过模型泛化的问题，一个模型的好坏程度很大程度上是体现了模型泛化能力的好坏，也就是对未知样本的预测能力。</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/b26d6614606ac304144b99549eeb390e.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/b26d6614606ac304144b99549eeb390e.jpg" alt=""></p>
 <p>如果新来一个样本数据A，按照决策边界划分它是被分为了蓝色分类，可事实真的是如此吗，因为点A和红色分类的点非常近，很有可能点A是属于红色分类的。所以上图中的决策边界可能并不是最优的，那最优的决策边界应该是什么样的呢？</p>
 <p>上面的决策边界之所以有缺陷，是因为它和红色类别的点太近了，当然肯定也不能和蓝色的点太近了，所以我们希望这条决策边界离红色分类和蓝色分类都尽可能的远，才能很好的避免上面出现的问题。</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/990fbea083569d4503be599d202b049d.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/990fbea083569d4503be599d202b049d.jpg" alt=""></p>
 <p>想要决策边界离红蓝两个分类都尽可能的远，也就是红蓝分类两边离决策边界最近的点的距离要远，并且两边的点到决策边界的距离要相等，这才说明决策边界是不偏不倚的，如上图所示。</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/d4642c6673e5e75023088be725dcd4f8.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/d4642c6673e5e75023088be725dcd4f8.jpg" alt=""></p>
 <p>过红蓝两边离决策边界最近的点画两条直线，并且平行于决策边界，那么就确定了一个区域，在这个区域内不应该再有任何数据点出现。那么SVM就是尝试寻找这个区域中间那条最优的决策边界。这个区域边界上的点称为支撑向量，换句话说，是支撑向量定义出了这个区域，那么最优的决策边界也是由支撑向量决定的，这也是支撑向量机这个名称的由来。</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/f5af760ed417acf74d79d065b437807d.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/f5af760ed417acf74d79d065b437807d.jpg" alt=""></p>
 <p>如上图所示，由支撑向量确定的区域之间的距离称为Margin。那么SVM要做的事情就是最大化Margin，既将问题转化为了求最优解的问题。</p>
 <p>以上对SVM的解释是基于线性可分问题的基础上，也就是能确确实实找到一条直线作为决策边界，这种问题称为Hard Margin SVM，但是很多真实的情况是线性不可分的，这类问题称为Soft Margin SVM，这两类问题都是支撑向量机可以处理的，但基础还是Hard Margin SVM。</p>
 <a id="more"></a>
@@ -367,7 +367,7 @@
 <p>$$d = \frac {|w^Tx + d|} {||w||}$$</p>
 <p>$w$为特征系数向量，$x$为特征向量。</p>
 <h3 id="u9650_u5B9A_u6761_u4EF6_u7684_u6700_u4F18_u5316_u95EE_u9898"><a href="#u9650_u5B9A_u6761_u4EF6_u7684_u6700_u4F18_u5316_u95EE_u9898" class="headerlink" title="限定条件的最优化问题"></a>限定条件的最优化问题</h3><p>有了上面的公式后，我们就可以假定决策边界直线的公式为$w^Tx + d = 0$，支撑向量到它的距离为$d = \frac {|w^Tx + d|} {||w||}$。那么除了支撑向量以外的点到决策边界的距离都应该大于$\frac {|w^Tx + d|} {||w||}$。</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/9cb17884cae3c002e35a1cf7e3b3ba95.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/9cb17884cae3c002e35a1cf7e3b3ba95.jpg" alt=""></p>
 <p>我们将上图中红色点定义为1类别，蓝色点定义为-1类别，那么就有：</p>
 <p>$$\left\{<br>\begin{aligned}<br>{\frac {w^Tx^{(i)} + d} {||w||} \ge d \ \ \ \ \ \ \forall y^{(i)} = 1 \\<br>\frac {w^Tx^{(i)} + d} {||w||} \le -d \ \ \ \ \ \ \forall y^{(i)} = -1}<br>\end{aligned}<br>\right.<br>$$</p>
 <p>既任意类别为1的红色点距离决策边界的距离要大于等于$d$。任意类别为-1的蓝色点距离决策边界的距离要小于等于$-d$。将上面的两个公式左右分别除以$d$得：</p>
@@ -396,18 +396,18 @@
 <p>也就是在$y^{(i)}(w^T x^{(i)} + d) \ge 1$这个限定条件下 ，求目标函数$min \frac 1 2 ||w||^2 $的最优解。</p>
 <p>这就和我们之前学习过的算法不一样了，之前不论是线性回归还是逻辑回归，在求最优化问题时都是求全局最优化问题，也就是没有限定条件的目标函数最优解问题，这类问题对目标函数求导让他等于0，然后相应的极值点就是最大值或最小值的位置。而SVM是有条件的最优化问题，此时求目标函数的极值就复杂了很多，这里就不对求解过程做详细阐述了。</p>
 <h2 id="Soft_Margin_SVM"><a href="#Soft_Margin_SVM" class="headerlink" title="Soft Margin SVM"></a>Soft Margin SVM</h2><p>在上一节介绍了Hard Margin SVM和Soft Margin SVM，并且在诠释SVM背后最优化问题的数学原理时也是基于Hard Margin SVM前提的。这一节我们来看看Soft Margin SVM。</p>
-<h3 id="Soft_Margin_SVM_u6982_u5FF5"><a href="#Soft_Margin_SVM_u6982_u5FF5" class="headerlink" title="Soft Margin SVM概念"></a>Soft Margin SVM概念</h3><p><img src="http://paxigrdp0.bkt.clouddn.com/9c7ae21a6ff46c774740afa4a2f7cb05.jpg" alt=""></p>
+<h3 id="Soft_Margin_SVM_u6982_u5FF5"><a href="#Soft_Margin_SVM_u6982_u5FF5" class="headerlink" title="Soft Margin SVM概念"></a>Soft Margin SVM概念</h3><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/9c7ae21a6ff46c774740afa4a2f7cb05.jpg" alt=""></p>
 <p>如上图所示，点A是一个蓝色分类的点，但是它离红色分类的点非常近，那么如果按Hard Margin SVM的思路，上图情况的决策边界很有可能是下图所示这样：</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/d5668bb993d9a3b28bb2d2585a37f56e.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/d5668bb993d9a3b28bb2d2585a37f56e.jpg" alt=""></p>
 <p>这条决策边界直线看似很好的将蓝色和红色点完全区分开了，但是它的泛化能力是值得怀疑的，因为这条决策边界极大的受到了点A的影响，而点A可能是蓝色点中极为特殊的一个点，也有可能它根本就是一个错误的点。所以根据SVM的思想，比较合理的决策边界应该下图绿色的直线所示：</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/766a45ecb9df58b5ab41525655347c87.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/766a45ecb9df58b5ab41525655347c87.jpg" alt=""></p>
 <p>虽然绿色直线的决策边界没有完全将红蓝点分开，但是如果将它放在生产数据中，可能预测准确度更高，也就是泛化能力更强。</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/6b71f9d805f89f614fd9bd0a393b7890.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/6b71f9d805f89f614fd9bd0a393b7890.jpg" alt=""></p>
 <p>再如上图中的情况，已经根本不可能有一条线性决策边界能将红蓝点分开了，所以我们希望决策边界具有一定的包容性或容错性，已降低分类准确度的代价换来更高的泛化能力。那么这种SVM就称为Soft Margin SVM。</p>
 <h3 id="Soft_Margin_SVM_u539F_u7406"><a href="#Soft_Margin_SVM_u539F_u7406" class="headerlink" title="Soft Margin SVM原理"></a>Soft Margin SVM原理</h3><p>在Hard Margin SVM最优化问题的两个函数中，限定条件$y^{(i)}(w^T x^{(i)} + d) \ge 1$表示在Margin区域内不会有任何点出现，但是在Soft Margin SVM中为了容错性，是允许在Margin区域内出现点的，也就是将Hard Margin SVM的限定条件加以宽松量，并且这个宽松量必须是正数：</p>
 <p>$$S.T. \ \ \ y^{(i)}(w^T x^{(i)} + d) \ge 1 - \zeta_i$$</p>
 <p>$$\zeta_i \ge 0$$</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/129d7835a23b0db515ef342d94810ca2.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/129d7835a23b0db515ef342d94810ca2.jpg" alt=""></p>
 <p>上图中有四条直线，其中橘黄色的三条是在讲Hard Margin SVM中得出的，如果我们将Hard Margin SVM中的限定条件加以宽松量的话，其实Margin的区域就会变小，也就是图中绿色虚线和决策边界构成的区域。而绿色虚线的方程为：</p>
 <p>$$w^Tx + d = 1 - \zeta$$</p>
 <p>那么Soft Margin SVM的限定条件我们就知道了。</p>
@@ -421,14 +421,14 @@
 <h2 id="Scikit_Learn_u4E2D_u7684SVM"><a href="#Scikit_Learn_u4E2D_u7684SVM" class="headerlink" title="Scikit Learn中的SVM"></a>Scikit Learn中的SVM</h2><p>前面两小节介绍了SVM背后的数学原理，这一节来看看如何使用Scikit Learn中封装的SVM方法。我们还是使用之前使用过很多次的鸢尾花数据：</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">iris = datasets.load_iris();</span><br><span class="line"></span><br><span class="line">X = iris.data</span><br><span class="line">y = iris.target</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只取鸢尾花的两种类型，每种类型只取两个特征</span></span><br><span class="line"><span class="comment"># 我们先作用于二分类问题，并且为了绘图方便，所以先使用两个特征</span></span><br><span class="line">X = X[y &lt; <span class="number">2</span>, :<span class="number">2</span>]</span><br><span class="line">y = y[y &lt; <span class="number">2</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将数据绘制出来</span></span><br><span class="line">plt.scatter(X[y == <span class="number">0</span>, <span class="number">0</span>], X[y == <span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'red'</span>)</span><br><span class="line">plt.scatter(X[y == <span class="number">1</span>, <span class="number">0</span>], X[y == <span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/a44b5821f9b48dbcb9fd85051dab83e3.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/a44b5821f9b48dbcb9fd85051dab83e3.jpg" alt=""></p>
 <p>接下来我们使用Scikit Learn封装的SVM方法对样本数据进行分类：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> LinearSVC</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里的参数C就是在讲Soft Margin SVM中的那个超参数，这里将其取一个很大的值</span></span><br><span class="line">svc = LinearSVC(C=<span class="number">1e9</span>)</span><br><span class="line">svc.fit(X_sd, y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 仍然使用之前绘制决策边界的方法</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_decision_boundary</span><span class="params">(model, axis)</span>:</span></span><br><span class="line">	<span class="comment"># meshgrid函数用两个坐标轴上的点在平面上画格，返回坐标矩阵</span></span><br><span class="line">	X0, X1 = np.meshgrid(</span><br><span class="line">		<span class="comment"># 随机两组数，起始值和密度由坐标轴的起始值决定</span></span><br><span class="line">		np.linspace(axis[<span class="number">0</span>], axis[<span class="number">1</span>], int((axis[<span class="number">1</span>] - axis[<span class="number">0</span>]) * <span class="number">100</span>)).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">		np.linspace(axis[<span class="number">2</span>], axis[<span class="number">3</span>], int((axis[<span class="number">3</span>] - axis[<span class="number">2</span>]) * <span class="number">100</span>)).reshape(-<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">	)</span><br><span class="line">	<span class="comment"># ravel()方法将高维数组降为一维数组，c_[]将两个数组以列的形式拼接起来，形成矩阵</span></span><br><span class="line">	X_grid_matrix = np.c_[X0.ravel(), X1.ravel()]</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 通过训练好的逻辑回归模型，预测平面上这些点的分类</span></span><br><span class="line">	y_predict = model.predict(X_grid_matrix)</span><br><span class="line">	y_predict_matrix = y_predict.reshape(X0.shape)</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 设置色彩表</span></span><br><span class="line">	<span class="keyword">from</span> matplotlib.colors <span class="keyword">import</span> ListedColormap</span><br><span class="line">	my_colormap = ListedColormap([<span class="string">'#0000CD'</span>, <span class="string">'#40E0D0'</span>, <span class="string">'#FFFF00'</span>])</span><br><span class="line">	</span><br><span class="line">	<span class="comment"># 绘制等高线，并且填充等高区域的颜色</span></span><br><span class="line">	plt.contourf(X0, X1, y_predict_matrix, linewidth=<span class="number">5</span>, cmap=my_colormap)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(svc, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">0</span>, <span class="number">0</span>], X_sd[y == <span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'red'</span>)</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">1</span>, <span class="number">0</span>], X_sd[y == <span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/890c26515621cbce34e121af68d6f924.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/890c26515621cbce34e121af68d6f924.jpg" alt=""></p>
 <p>在上面的示例代码中，我将超参数$C$取了一个非常大的数，那么为了平衡$min \frac 1 2 ||w||^2 + C \sum_{i=1}^m\zeta_i$整个函数，$\zeta$就得等于0才能让最大限度的平衡正则模型和整个目标函数。所以宽松量为零，就成了Hard Margin SVM。并且从上图可以看出，离决策边界最近的点，无论是红色点还是蓝色点，也就是红蓝支撑向量到决策边界的距离都差不多。</p>
 <p>如果我们将超参数$C$的值取的小一些，那么整个问题就变成了Soft Margin SVM，来对比看看决策边界会有什么不同：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">svc2 = LinearSVC(C=<span class="number">0.01</span>)</span><br><span class="line">svc2.fit(X_sd, y)</span><br><span class="line"></span><br><span class="line">plot_decision_boundary(svc2, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">0</span>, <span class="number">0</span>], X_sd[y == <span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'red'</span>)</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">1</span>, <span class="number">0</span>], X_sd[y == <span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/26dc2972ed477705b9ef58d24ab96366.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/26dc2972ed477705b9ef58d24ab96366.jpg" alt=""></p>
 <p>此时从上图可以看到，红蓝支撑向量到决策边界的距离已经不一样了，并且还有一个红色的点被划到蓝色点的范围内，那么我们知道这都是因为Soft Margin SVM中加了宽松量的缘故。</p>
 <h3 id="u7ED8_u5236_u652F_u6491_u5411_u91CF_u76F4_u7EBF"><a href="#u7ED8_u5236_u652F_u6491_u5411_u91CF_u76F4_u7EBF" class="headerlink" title="绘制支撑向量直线"></a>绘制支撑向量直线</h3><p>在上一小节，我们知道决策边界以及上下支撑向量构成的直线的公式分别是：</p>
 <ul>
@@ -446,11 +446,11 @@
 <p>$$x_1 = - \frac {w_0 * x_0} {w_1} - \frac {d} {w_1} + \frac 1 {w_1}$$</p>
 <p>$$x_1 = - \frac {w_0 * x_0} {w_1} - \frac {d} {w_1} - \frac 1 {w_1}$$<br>此时我们在给定的坐标系内，构建一组$x_0$，那么就可以求出一组$x_1$，然后将这些点连起来，就绘制出了决策边界的直线：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 构造一个绘制决策边界和上下支撑向量直线的方法</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_svc_decision_boundary</span><span class="params">(model, axis)</span>:</span></span><br><span class="line">	<span class="comment"># 因为SVM可以解决多分类问题，所以特征系数和截距都是数组，在二分类问题下取第0个元素</span></span><br><span class="line">	w = model.coef_[<span class="number">0</span>]</span><br><span class="line">	d = model.intercept_[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 构建200个在axis范围内的，有线性关系的点，既构建x0</span></span><br><span class="line">	plot_x = np.linspace(axis[<span class="number">0</span>], axis[<span class="number">1</span>], <span class="number">200</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 根据上面转换的公式，求出x1</span></span><br><span class="line">	y = - (w[<span class="number">0</span>] * plot_x)/w[<span class="number">1</span>] - d / w[<span class="number">1</span>]</span><br><span class="line">	up_y = - (w[<span class="number">0</span>] * plot_x)/w[<span class="number">1</span>] - d / w[<span class="number">1</span>] + <span class="number">1</span> / w[<span class="number">1</span>]</span><br><span class="line">	down_y = - (w[<span class="number">0</span>] * plot_x)/w[<span class="number">1</span>] - d / w[<span class="number">1</span>] - <span class="number">1</span> / w[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 对y轴的上下边界作以限制</span></span><br><span class="line">	y_index = (y &gt;= axis[<span class="number">2</span>]) &amp; (y &lt;= axis[<span class="number">3</span>])</span><br><span class="line">	up_y_index = (up_y &gt;= axis[<span class="number">2</span>]) &amp; (up_y &lt;= axis[<span class="number">3</span>])</span><br><span class="line">	down_y_index = (down_y &gt;= axis[<span class="number">2</span>]) &amp; (down_y &lt;= axis[<span class="number">3</span>])</span><br><span class="line"></span><br><span class="line">	plt.plot(plot_x[y_index], y[y_index], color=<span class="string">'black'</span>)</span><br><span class="line">	plt.plot(plot_x[up_y_index], up_y[up_y_index], color=<span class="string">'black'</span>)</span><br><span class="line">	plt.plot(plot_x[down_y_index], down_y[down_y_index], color=<span class="string">'black'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">plot_decision_boundary(svc, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plot_svc_decision_boundary(svc, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">0</span>, <span class="number">0</span>], X_sd[y == <span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'red'</span>)</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">1</span>, <span class="number">0</span>], X_sd[y == <span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/ecf8b9cd82f869204f83be40a2a396d3.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ecf8b9cd82f869204f83be40a2a396d3.jpg" alt=""></p>
 <p>从上图可以看到，是一个标准的Hard Margin SVM，Margin区域没有任何一个点，支撑向量一共有五个，红色点三个，蓝色点两个。</p>
 <p>我们再来看看Soft Margin SVM的情况：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plot_decision_boundary(svc2, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plot_svc_decision_boundary(svc2, axis=[-<span class="number">3</span>, <span class="number">3</span>, -<span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">0</span>, <span class="number">0</span>], X_sd[y == <span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'red'</span>)</span><br><span class="line">plt.scatter(X_sd[y == <span class="number">1</span>, <span class="number">0</span>], X_sd[y == <span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/f890f7e814104e7b8581049811da361f.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/f890f7e814104e7b8581049811da361f.jpg" alt=""></p>
 <p>从上图中可以看出，Margin区域内有很多点，说明相比Hard Margin SVM，Soft Margin SVM增加了不少宽松量。</p>
 <blockquote>
 <p>申明：本文为慕课网<a href="https://www.imooc.com/t/108955" target="_blank" rel="external">liuyubobobo</a>老师<a href="https://coding.imooc.com/learn/list/169.html" target="_blank" rel="external">《Python3入门机器学习 经典算法与应用》</a>课程的学习笔记，未经允许不得转载。</p>
