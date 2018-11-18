@@ -96,11 +96,11 @@
 
 
 到目前为止，我们已经学习了大概有八种机器学习的算法，其中有解决分类问题的，有解决回归问题的。这些算法其实没有谁是最好的，谁不好之说，反而应该将这些算法集合起来，发挥他们的最大价值。比如我们买东西或看电影之前，多少都会咨询身边的朋友，">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/9c07fb9e783815c1557d2a2e01163bd9.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/dc245dddc9e81012b48a1edc4ef88f9e.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/906458322308a046b8ed9a5054bea0ee.jpg">
-<meta property="og:image" content="http://paxigrdp0.bkt.clouddn.com/5694b519f162aa165a3c99ba2b0d8e39.jpg">
-<meta property="og:updated_time" content="2018-08-27T02:38:01.918Z">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/9c07fb9e783815c1557d2a2e01163bd9.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/dc245dddc9e81012b48a1edc4ef88f9e.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/906458322308a046b8ed9a5054bea0ee.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/5694b519f162aa165a3c99ba2b0d8e39.jpg">
+<meta property="og:updated_time" content="2018-11-18T13:35:38.046Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习笔记十七之集成学习、随机森林">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -332,7 +332,7 @@
 <h2 id="u96C6_u6210_u5B66_u4E60"><a href="#u96C6_u6210_u5B66_u4E60" class="headerlink" title="集成学习"></a>集成学习</h2><p>机器学习中的集成学习就是将选择若干算法，针对同一样本数据训练模型，然后看看结果，使用投票机制，少数服从多数，用多数算法给出的结果当作最终的决策依据，这就是集成学习的核心思路。下面我们先手动模拟一个使用集成学习解决回归问题的的示例：</p>
 <a id="more"></a>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建500个点的样本数据</span></span><br><span class="line">X, y = datasets.make_moons(n_samples=<span class="number">500</span>, noise=<span class="number">0.3</span>, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制样本数据</span></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/9c07fb9e783815c1557d2a2e01163bd9.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/9c07fb9e783815c1557d2a2e01163bd9.jpg" alt=""></p>
 <p>分别使用逻辑回归、SVM、决策树针对上面的样本数据训练模型：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 拆分样本数据</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=<span class="number">666</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用逻辑回归</span></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line">log_clf = LogisticRegression()</span><br><span class="line">log_clf.fit(X_train, y_train)</span><br><span class="line">log_clf.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.872</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用SVM</span></span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line">svc_clf = SVC()</span><br><span class="line">svc_clf.fit(X_train, y_train)</span><br><span class="line">svc_clf.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.89600000000000002</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用决策树</span></span><br><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line">dt_clf = DecisionTreeClassifier()</span><br><span class="line">dt_clf.fit(X_train, y_train)</span><br><span class="line">dt_clf.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.85599999999999998</span></span><br></pre></td></tr></table></figure>
 <p>可以看到，使用三种不同的分类算法训练出的模型，最后的$R^2$评分都不尽相同。下面我们使用投票的方式，选择出最终预测值，具体思路是先求出三种模型对测试数据的预测结果，将三个结果向量相加，得到新的结果向量，因为分类只有0和1，所以新的结果向量里的值最大为3，最小为0。然后通过Fancy Index的方式，求出三种模型预测中至少有2种预测为1的，才真正认为是1的分类，那么也就是新结果向量里大于等于2的结果，其余小于2的都认为是0的分类：</p>
@@ -401,7 +401,7 @@
 <p><code>fit</code>之后，从返回结果里可以看到，<code>RandomForestClassifier</code>的参数综合了<code>BaggingClassifier</code>及<code>DecisionTreeClassifier</code>的参数。我们可以对不同的参数进行调优，训练出更好的模型。</p>
 <h2 id="Boosting"><a href="#Boosting" class="headerlink" title="Boosting"></a>Boosting</h2><p>我们之前介绍的集成学习中子模型之间是相互独立的，差异越大越好。那么集成学习中还有一种创建子模型的方式，就是每个子模型之间有关联，都在尝试增强整体的效果。这种方式称为Boosting方式。</p>
 <h3 id="Ada_Boosting"><a href="#Ada_Boosting" class="headerlink" title="Ada Boosting"></a>Ada Boosting</h3><p>在Boosting方式中，有一种方式称为Ada Boosting，我们用网络上的一幅解决回归问题的图来做以解释：</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/dc245dddc9e81012b48a1edc4ef88f9e.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/dc245dddc9e81012b48a1edc4ef88f9e.jpg" alt=""></p>
 <p>我们先来看第一个齿轮上下连接的图，下面的图是原始样本数据，每个样本点的权重值都是一样的，上面的图是第一个子模型预测出的结果，那势必会有没有被准确预测的样本点，将这些样本点的权重值加大。</p>
 <p>第二列下图中展示的深色点就是权重值增大的样本点，浅色点是上一个子模型预测出的样本点。那么训练第二个子模型时会优先考虑权重大的样本点进行拟合，拟合出的结果如第二列上图所示。</p>
 <p>然后再将第二个子模型没有预测出的样本点的权重值增大，如第三列下图所示，在训练第三个子模型时优先考虑第二个子模型没有预测出的样本点进行拟合。以此类推，这样就可以训练出很多子模型，不同于取样方式，Boosting方式的所有子模型使用全量的样本数据进行训练，不过样本数据有权重值的概念，而且后一个子模型是在完善上一个子模型的错误，从而所有子模型达到增强整体的作用。这就是Ada Boosting的原理。</p>
@@ -411,9 +411,9 @@
 <p>下面来看看Scikit Learn为我们提供的<code>GradientBoostingClassifier</code>如何使用：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> GradientBoostingClassifier</span><br><span class="line"></span><br><span class="line"><span class="comment"># GradientBoostingClassifier本身就是使用决策树作为算法实现的，所以不再需要传入算法实例</span></span><br><span class="line">gd_clf = GradientBoostingClassifier(max_depth=<span class="number">2</span>, n_estimators=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Boosting方式没有OOB的概念，所以还是需要使用拆分后的样本数据</span></span><br><span class="line">gd_clf.fit(X_train, y_train)</span><br><span class="line">gd_clf.score(X_test, y_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.90400000000000003</span></span><br></pre></td></tr></table></figure>
 <h2 id="Stacking"><a href="#Stacking" class="headerlink" title="Stacking"></a>Stacking</h2><p>这一小节我们再来认识一个集成学习创建子模型的思路，Stacking。</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/906458322308a046b8ed9a5054bea0ee.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/906458322308a046b8ed9a5054bea0ee.jpg" alt=""></p>
 <p>上图也是网络上的一幅图，我们先看中间那层，Subset1和Subset2是将原始样本数据分成两部分后的数据，我们先使用Subset1训练出三个子模型，这三个子模型会产生错误，既没有预测到的样本数据。然后将这三个子模型的三个错误结果和Subset2组成新的样本数据，训练出第四个子模型。整体的预测结果以第四个子模型的结果为准。这就是Stacking的基本原理，通过Stacking方式可以构建出比较复杂的子模型关系网：</p>
-<p><img src="http://paxigrdp0.bkt.clouddn.com/5694b519f162aa165a3c99ba2b0d8e39.jpg" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/5694b519f162aa165a3c99ba2b0d8e39.jpg" alt=""></p>
 <p>上图有三层，一共7个子模型，就需要将原始样本数据分成三份，第一份作为训练第一层三个子模型的样本数据，第二份作为训练第二层子模型的样本数据其中一部分，以此类推。</p>
 <p>不过在Scikit Learn中没有提供任何Stacking的类供我们使用，Stacking的原理已经有神经网络的雏形了，里面涉及到的调参环节非常多，大家有兴趣可以自己尝试实现Stacking算法。</p>
 <blockquote>
