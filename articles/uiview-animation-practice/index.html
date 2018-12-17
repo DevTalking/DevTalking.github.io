@@ -100,13 +100,13 @@
  本文首发CSDN，如需转载请与CSDN联系。
 
 前言上三篇关于UIView Animation的文章向大家介绍了基础的UIView动画，包括移动位置、改变大小、旋转、弹簧动画、过渡动画。这些虽然看起来很简单，但是如果我们仔细分析、">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-1.gif">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-1.png">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-2.png">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-4.gif">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-5.gif">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-6.png">
-<meta property="og:updated_time" content="2018-08-27T03:32:10.622Z">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-1.gif">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-1.png">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-2.png">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-4.gif">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-5.gif">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-6.png">
+<meta property="og:updated_time" content="2018-12-17T08:50:28.181Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS UIView Animation - Practice">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -339,7 +339,7 @@
 <p> 本文首发<a href="http://www.csdn.net/article/2015-07-20/2825255-ios-uiview-animation-4-practice/1" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 </blockquote>
 <h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>上三篇关于UIView Animation的文章向大家介绍了基础的UIView动画，包括移动位置、改变大小、旋转、弹簧动画、过渡动画。这些虽然看起来很简单，但是如果我们仔细分析、分解一个复杂动画时，就会发现这些复杂的动画其实是由若干基础的动画组合而成的。今天这篇文章是实践篇，我选择了Raywenderlich <a href="http://www.raywenderlich.com/73286/top-5-ios-7-animations" target="_blank" rel="external">Top 5 iOS 7 Animations</a>这篇文章中的一个动画效果，带大家一起实现。要实现这个动画效果，除了用到我们上三篇介绍过的知识点以外，还有两个知识点在这篇会介绍给大家，我们先看看实现的效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-1.gif" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-1.gif" alt=""></p>
 <p>这个动画示例实现的是一个展示航班信息的应用，左右滑动显示不同的航班信息。我们可以分析一下都用到了哪些动画：</p>
 <ul>
 <li>淡入淡出：起飞地和目的地、起飞地和目的地下面的横线、底部的航班时间都使用了该动画。</li>
@@ -350,18 +350,18 @@
 </ul>
 <p>前三个动画我们之前已经介绍过了，现在我们来介绍后两个动画。</p>
 <h2 id="u4F2A3D_u52A8_u753B_u6548_u679C"><a href="#u4F2A3D_u52A8_u753B_u6548_u679C" class="headerlink" title="伪3D动画效果"></a>伪3D动画效果</h2><p>这个伪3D的效果模拟的是一个立体长方形由一面翻转到另一面。因为这不是真正的3D效果，所以我们可以分析一下它是如何模拟的，以上面动画中从下往上翻的效果为例。首先显示的是一个<code>UILabel</code>，当开始进行翻转时，当前显示的<code>UILabel</code>的高度开始慢慢变矮：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-1.png" alt="Practice-1"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-1.png" alt="Practice-1"></p>
 <p>我们看看用代码怎么实现：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.transform = <span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.5</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 <p>我们可以使用一个转换动画，使用<code>CGAffineTransformMakeScale</code>，它的第一个参数是x坐标的比例，第二个参数是y坐标的比例，这两个值的范围是1.0到0之间。上面的代码用白话文翻译出来就是在1秒内，<code>devtalkingLabel</code>的宽度不变，高度减少一半，减少的过程会自动生成补间动画。</p>
 <p>我们接着来分析，在<code>UILabel</code>高度减少的同时，它的位置也会向上移动，我们可以用另外一个转换的动画：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.transform = <span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.5</span>)</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.transform = <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, -<span class="keyword">self</span>.devtalkingLabel.frame.height / <span class="number">2</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 <p><code>CGFffineTransformMakeTranslation</code>这个转换动画可以移动UIView的位置，这里需要注意它是以初始位置为基础进行移动的，所以上述代码在字面上的意思是<code>devtalkingLabel</code>在高度变小的同时向上移动它初始宽度一半的距离：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-2.png" alt="Practice-2"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-2.png" alt="Practice-2"></p>
 <p>但是当我们编译运行后发现事与愿违，转换动画不像动画属性动画那样可以在<code>animations</code>闭包中写多个进行组合，而是由另一个组合转换动画来实现：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.transform = <span class="type">CGAffineTransformConcat</span>(<span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.5</span>), <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, -<span class="keyword">self</span>.devtalkingLabel.frame.height / <span class="number">2</span>))</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.alpha = <span class="number">0</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 <p>来看看效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-4.gif" alt="Practice-4"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-4.gif" alt="Practice-4"></p>
 <p>此时，3D翻转效果的一个面已经成型了，也就是当前显示的这一面被向上翻转到顶部去了。接下来我们要实现底部的面翻转到当前显示的这一面。很明显这需要两个面，但我们只有一个<code>UILabel</code>，所以在执行整个翻转效果前需要先复制一个当前<code>UILabel</code>：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> devtalkingLabelCopy = <span class="type">UILabel</span>(frame: <span class="keyword">self</span>.devtalkingLabel.frame)</span><br><span class="line">devtalkingLabelCopy.alpha = <span class="number">0</span></span><br><span class="line">devtalkingLabelCopy.text = <span class="keyword">self</span>.devtalkingLabel.text</span><br><span class="line">devtalkingLabelCopy.font = <span class="keyword">self</span>.devtalkingLabel.font</span><br><span class="line">devtalkingLabelCopy.textAlignment = <span class="keyword">self</span>.devtalkingLabel.textAlignment</span><br><span class="line">devtalkingLabelCopy.textColor = <span class="keyword">self</span>.devtalkingLabel.textColor</span><br><span class="line">devtalkingLabelCopy.backgroundColor = <span class="type">UIColor</span>.clearColor()</span><br></pre></td></tr></table></figure>
 <p>这样我们就复制了一个<code>devtalkingLabel</code>，这个复制品将作为底部的那一面，而且在一开始它的透明度是零，因为底面是看不到的。我们可以想象一下底面向上翻转的效果，其实就是底面的高度从很小慢慢变大，位置从下慢慢向上移动，然后有一个淡入的效果，所以我们在复制出<code>devtalkingLabelCopy</code>后，要调整它的高度和位置，然后添加到父视图中：</p>
@@ -369,13 +369,13 @@
 <p>上述代码将<code>devtalkingLabelCopy</code>的高度减小到原本的十分之一，位置向下移动半个高度的位置，然后在之前的<code>animateWithDuration</code>方法的<code>animations</code>闭包中添加如下两行代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">devtalkingLabelCopy.alpha = <span class="number">1</span></span><br><span class="line">devtalkingLabelCopy.transform = <span class="type">CGAffineTransformIdentity</span></span><br></pre></td></tr></table></figure>
 <p><code>CGAffineTransformIdentity</code>的作用是将<code>UIView</code>的<code>transform</code>恢复到初始状态，然后将透明度设为1。编译运行代码我们会看到<code>devtalkingLabel</code>的高度会慢慢变小，位置慢慢上移，最后淡出，<code>devtalkingLabelCopy</code>的高度慢慢变大，位置慢慢上移，最后淡入，整个效果看上去就像一个长方体在向上翻转，达到3D的效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-5.gif" alt="Practice-5"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-5.gif" alt="Practice-5"></p>
 <h2 id="u66FF_u6362UIView_u8FC7_u6E21_u52A8_u753B"><a href="#u66FF_u6362UIView_u8FC7_u6E21_u52A8_u753B" class="headerlink" title="替换UIView过渡动画"></a>替换UIView过渡动画</h2><p>在要实现的动画示例中，背景图做了淡入淡出的图片替换过渡动画，这个动画很简单，我们来看看这段伪代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(backgroundImageView, duration: <span class="number">2</span>, options: .<span class="type">TransitionCrossDissolve</span>, animations: &#123;</span><br><span class="line">    backgroundImageView.image = <span class="type">UIImage</span>(named: <span class="string">"imageName"</span>)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
 <p>这个方法在上一篇文章中已经介绍过，我们只需要设置动画选项为<code>.TransitionCrossDissolve</code>，在<code>animations</code>闭包中给目标<code>UIImageView</code>设置要过渡的图片即可。</p>
 <h2 id="u793A_u4F8B_u52A8_u753B"><a href="#u793A_u4F8B_u52A8_u753B" class="headerlink" title="示例动画"></a>示例动画</h2><p>至此，示例动画中用到的动画知识点都向大家介绍过了，在这一节我会将示例动画中主要的效果的伪代码贴出来给大家说说。关于左右滑动的手势以及<code>PageControl</code>在这里就不在累赘了。</p>
 <h3 id="u6570_u636E_u6E90"><a href="#u6570_u636E_u6E90" class="headerlink" title="数据源"></a>数据源</h3><p>为了方便，我们创建一个<code>Flight.plist</code>文件作为数据源：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/UIViewAnimation-Practice-6.png" alt="Practice-6"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-6.png" alt="Practice-6"></p>
 <p>我们定义一个延迟加载的属性<code>flight</code>：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">lazy</span> <span class="keyword">var</span> flight: <span class="type">NSArray</span> = &#123;</span><br><span class="line">    <span class="keyword">let</span> path = <span class="type">NSBundle</span>.mainBundle().pathForResource(<span class="string">"Flight"</span>, ofType: <span class="string">"plist"</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="type">NSArray</span>(contentsOfFile: path!)!</span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>

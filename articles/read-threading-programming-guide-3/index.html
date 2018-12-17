@@ -100,9 +100,9 @@
 本文首发CSDN，如需转载请与CSDN联系。
 
 记得第一次读这个文档还是3年前，那时也只是泛读。如今关于iOS多线程的文章层出不穷，但我觉得若想更好的领会各个实践者的文章，应该先仔细读读官方的相关文档，打好基础，定会有更好的效果。文">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-5.gif">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-6-new.png">
-<meta property="og:updated_time" content="2018-08-27T03:29:09.249Z">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/LearnThread-5.gif">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/LearnThread-6-new.png">
+<meta property="og:updated_time" content="2018-12-17T08:37:57.841Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="读 Threading Programming Guide 笔记（三）">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -464,9 +464,9 @@
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">CFRunLoopRemoveSource</span><span class="params">(<span class="number">_</span> rl: CFRunLoop!, <span class="number">_</span> source: CFRunLoopSource!, <span class="number">_</span> mode: CFString!)</span></span></span><br><span class="line"></span><br><span class="line">void <span class="type">CFRunLoopRemoveSource</span>(<span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFStringRef</span> modeName) &#123;</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    __CFRunLoopSourceCancel(rls, rl, rlm);</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> void __CFRunLoopSourceCancel(<span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopModeRef</span> rlm) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> == rls-&gt;_context.version0.version) &#123;</span><br><span class="line">          <span class="keyword">if</span> (<span class="type">NULL</span> != rls-&gt;_context.version0.cancel) &#123;</span><br><span class="line">              rls-&gt;_context.version0.cancel(rls-&gt;_context.version0.info, rl, rlm-&gt;_name);</span><br><span class="line">          &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>从上述代码片段可以看出，当我们调用了<code>CFRunLoopRemoveSource</code>方法后，其实是执行了Run Loop事件源上下文中的<code>cancel</code>回调函数。</p>
 <h3 id="u81EA_u5B9A_u4E49Run_Loop_u4E8B_u4EF6_u6E90_u7684_u5B9E_u9645_u8FD0_u7528"><a href="#u81EA_u5B9A_u4E49Run_Loop_u4E8B_u4EF6_u6E90_u7684_u5B9E_u9645_u8FD0_u7528" class="headerlink" title="自定义Run Loop事件源的实际运用"></a>自定义Run Loop事件源的实际运用</h3><p>在讲解示例之前，我们先来看看示例Demo的效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-5.gif" alt="LearnThread-5"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/LearnThread-5.gif" alt="LearnThread-5"></p>
 <p>在这个示例中，创建了两个自定义事件源，一个添加到主线程中，另一个添加到二级线程中。主线程给二级线程中的自定义事件源发送事件消息，目的是让其改变所有<code>UICollectionViewCell</code>的透明度，当二级线程收到事件消息后执行计算每个<code>UICollectionViewCell</code>透明度的任务，然后再给主线程的自定义事件源发送事件消息，让其更新<code>UICollectionViewCell</code>的透明度并显示。下面来看看类图：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-6-new.png" alt="LearnThread-6"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/LearnThread-6-new.png" alt="LearnThread-6"></p>
 <p>整个工程一共就这六个类：</p>
 <ul>
 <li><code>MainCollectionViewController</code>：程序主控制器，启动程序、展示UI及计算<code>UICollectionViewCell</code>透明度的相关方法。</li>

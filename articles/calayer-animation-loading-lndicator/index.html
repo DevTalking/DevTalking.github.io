@@ -98,17 +98,17 @@ View vs. Layer这篇文章通过两个加载动画向大家介绍CALayer的动�
 
 本文首发CSDN，如需转载请与CSDN联系。
 View vs. Layer这篇文章通过两个加载动画向大家介绍CALayer的动画。按照面向对象的思想说，Layer其实就是一个模型类，像Java里的POJO类一样，它包含若干属性，并没">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-1.gif">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-2.png">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-3.png">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-4.png">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-5.png">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-6.gif">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-7.gif">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-8.png">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-9.gif">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-10.gif">
-<meta property="og:updated_time" content="2018-08-27T03:19:05.795Z">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-1.gif">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-2.png">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-3.png">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-4.png">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-5.png">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-6.gif">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-7.gif">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-8.png">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-9.gif">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-10.gif">
+<meta property="og:updated_time" content="2018-12-17T08:48:16.053Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CALayer Animation - Loading Indicator">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -352,9 +352,9 @@ View vs. Layer这篇文章通过两个加载动画向大家介绍CALayer的动�
 </ul>
 <h2 id="u7B2C_u4E00_u4E2ACALayer_u52A8_u753B"><a href="#u7B2C_u4E00_u4E2ACALayer_u52A8_u753B" class="headerlink" title="第一个CALayer动画"></a>第一个CALayer动画</h2><p>Layer动画系列的文章，我不准备系统的从简单到复杂的知识进行讲解，我会通过各种实战示例，示例中用到什么知识点就讲什么知识点。</p>
 <p>第一个动画让我们来实现Google Chrome浏览器加载时页签上的等待动画：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-1.gif" alt="GoogleLoadingAnimation-1"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-1.gif" alt="GoogleLoadingAnimation-1"></p>
 <p>新建项目<strong>GoogleLoading</strong>，打开<code>Main.storyboard</code>，拖拽一个UIView到ViewController中，添加好约束，自行设置ViewController和UIView的背景色，这里UIView的背景色我设置为无色：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-2.png" alt="GoogleLoadingAnimation-2"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-2.png" alt="GoogleLoadingAnimation-2"></p>
 <p>然后添加该View的Outlet到<code>ViewController</code>中，这个UIView就是要展示加载动画的View：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">weak</span> <span class="keyword">var</span> loadingView: <span class="type">UIView</span>!</span><br></pre></td></tr></table></figure>
 <p>打开<code>ViewController.swift</code>，申明一个常量属性<code>ovalShapleLayer</code>：</p>
@@ -379,15 +379,15 @@ View vs. Layer这篇文章通过两个加载动画向大家介绍CALayer的动�
 <p>这里出现了新面孔<code>UIBezierPath</code>，它可以创建基于矢量的路径，是Core Graphics框架关于path的封装。<code>UIBezierPath</code>可以定义简单的形状路径，如椭圆、矩形，或者有多个直线和曲线段组成的形状。在这里我们要使用它的初始化方法<code>init(ovalInRect rect: CGRect)</code>定义一个正圆的路径。设置完路径后，将<code>ovalShapeLayer</code>添加到<code>loadingView</code>视图的Layer中，它就可以按照设定好的路径在<code>loadingView</code>中绘制图形了：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">loadingView.layer.addSublayer(ovalShapeLayer)</span><br></pre></td></tr></table></figure>
 <p>编译运行看看效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-3.png" alt="GoogleLoadingAnimation-3"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-3.png" alt="GoogleLoadingAnimation-3"></p>
 <p>完美的一个圆形。接下来我们要做的是让这个圆只显示一部分，因为Google的加载动画只有大概五分之二的圆形轮廓。让我们继续将目光集中在<code>viewDidLoad()</code>方法中，在<code>loadingView.layer.addSublayer(ovalShapeLayer)</code>这行代码上面添加另一行代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ovalShapeLayer.strokeEnd = <span class="number">0.4</span></span><br></pre></td></tr></table></figure>
 <p>上面的代码将<code>ovalShapeLayer</code>的<code>strokeEnd</code>属性设置为0.4，意思是<code>ovalShapeLayer</code>在绘制圆形时只画整个圆形的五分之二，即笔画结束的位置在整个圆形轮廓的五分之二处。编译运行看看效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-4.png" alt="GoogleLoadingAnimation-4"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-4.png" alt="GoogleLoadingAnimation-4"></p>
 <p>看来是我们想要的效果，但是仍有一处细节需要我们完善，看看Google的加载动画，蓝色的部分圆形轮廓两头是圆形的，而我们的圆形轮廓两头是方形的。这个问题很好解决，仍然在<code>loadingView.layer.addSublayer(ovalShapeLayer)</code>这行代码上面添加一行代码：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ovalShapeLayer.lineCap = kCALineCapRound</span><br></pre></td></tr></table></figure>
 <p>这行代码的意思是将笔画两头的形状设置为圆形，对应的还有两个常量<code>kCALineCapButt</code>，<code>kCALineCapSquare</code>，大家可以试试。再次编译运行看看效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-5.png" alt="GoogleLoadingAnimation-5"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-5.png" alt="GoogleLoadingAnimation-5"></p>
 <p>到目前为止，我们通过CALayer绘制出了动画的主体，接下来要让它动起来。在<code>ViewController.swift</code>中添加<code>beginSimpleAnimate()</code>方法：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">beginSimpleAnimation</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">let</span> rotate = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"transform.rotation"</span>)</span><br><span class="line">    rotate.duration = <span class="number">1.5</span></span><br><span class="line">    rotate.fromValue = <span class="number">0</span></span><br><span class="line">    rotate.toValue = <span class="number">2</span> * <span class="type">M_PI</span></span><br><span class="line">    rotate.repeatCount = <span class="type">HUGE</span></span><br><span class="line">    loadingView.layer.addAnimation(rotate, forKey: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -421,18 +421,18 @@ View vs. Layer这篇文章通过两个加载动画向大家介绍CALayer的动�
 <p>该方法设置这几个属性的含义为使动画主体不停的旋转，旋转一圈的时间为1.5秒。以上这几个概念在UIView的动画中同样存在，大家应该都已经比较熟悉了。然后使用Layer的<code>addAnimation(anim: CAAnimation, forKey key: String?)</code>方法将旋转动画实例添加到目标Layer中，该方法的<code>key</code>是用来标示添加的动画，便于以后重复使用时能方便的检索，如果没有需求可以传值<code>nil</code>。最后<code>viewWillAppear</code>方法中调用<code>beginSimpleAnimation()</code>方法：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewWillAppear</span><span class="params">(animated: Bool)</span></span> &#123;</span><br><span class="line">    beginSimpleAnimation()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>编译运行看看效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-6.gif" alt="GoogleLoadingAnimation-6"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-6.gif" alt="GoogleLoadingAnimation-6"></p>
 <p>至此我们的第一个简单的CALayer动画就完成了，在下一节我们一起实现一个更加有意思的加载动画，从而向大家介绍新的动画类型及动画组合。</p>
 <h2 id="Stroke_Animation_u4E0EAnimation_Group"><a href="#Stroke_Animation_u4E0EAnimation_Group" class="headerlink" title="Stroke Animation与Animation Group"></a>Stroke Animation与Animation Group</h2><p>让我们先看看要实现的效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-7.gif" alt="GoogleLoadingAnimation-7"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-7.gif" alt="GoogleLoadingAnimation-7"></p>
 <p>这种加载动画在很多应用中都出现过，比如网易新闻、Win版的谷歌浏览器中都有使用。下面就让我们一步一步来实现吧，首先打开<code>Main.storyboard</code>，新添加一个UIView，在<code>ViewController.swift</code>中添加Outlet：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-8.png" alt="GoogleLoadingAnimation-8"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-8.png" alt="GoogleLoadingAnimation-8"></p>
 <p>然后定义一个新的CAShapeLayer：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> anotherOvalShapeLayer: <span class="type">CAShapeLayer</span> = <span class="type">CAShapeLayer</span>()</span><br></pre></td></tr></table></figure>
 <p>在<code>viewDidLoad()</code>方法中对它进行设置，并将其添加到刚才创建的<code>complexLoadingView</code>中：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">anotherOvalShapeLayer.strokeColor = <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span></span><br><span class="line">anotherOvalShapeLayer.fillColor = <span class="type">UIColor</span>.clearColor().<span class="type">CGColor</span></span><br><span class="line">anotherOvalShapeLayer.lineWidth = <span class="number">7</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> anotherOvalRadius = complexLoadingView.frame.size.height/<span class="number">2</span> * <span class="number">0.8</span></span><br><span class="line">anotherOvalShapeLayer.path = <span class="type">UIBezierPath</span>(ovalInRect: <span class="type">CGRect</span>(x: complexLoadingView.frame.size.width/<span class="number">2</span> - anotherOvalRadius, y: complexLoadingView.frame.size.height/<span class="number">2</span> - anotherOvalRadius, width: anotherOvalRadius * <span class="number">2</span>, height: anotherOvalRadius * <span class="number">2</span>)).<span class="type">CGPath</span></span><br><span class="line">anotherOvalShapeLayer.lineCap = kCALineCapRound</span><br><span class="line">        </span><br><span class="line">complexLoadingView.layer.addSublayer(anotherOvalShapeLayer)</span><br></pre></td></tr></table></figure>
 <p>这些操作在上一个动画都已经做过一遍了，这里就不再解释。编译运行看看是否屏幕上又出现了一个圆圈呢：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-9.gif" alt="GoogleLoadingAnimation-9"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-9.gif" alt="GoogleLoadingAnimation-9"></p>
 <p>接下来在<code>ViewController.swift</code>中添加一个方法<code>beginComplexAnimation()</code>：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> strokeStartAnimate = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"strokeStart"</span>)</span><br><span class="line">strokeStartAnimate.fromValue = -<span class="number">0.5</span></span><br><span class="line">strokeStartAnimate.toValue = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> strokeEndAnimate = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"strokeEnd"</span>)</span><br><span class="line">strokeEndAnimate.fromValue = <span class="number">0.0</span></span><br><span class="line">strokeEndAnimate.toValue = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> strokeAnimateGroup = <span class="type">CAAnimationGroup</span>()</span><br><span class="line">strokeAnimateGroup.duration = <span class="number">1.5</span></span><br><span class="line">strokeAnimateGroup.repeatCount = <span class="type">HUGE</span></span><br><span class="line">strokeAnimateGroup.animations = [strokeStartAnimate, strokeEndAnimate]</span><br><span class="line">anotherOvalShapeLayer.addAnimation(strokeAnimateGroup, forKey: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
 <p>这里出现了两个新的动画类型，笔画开始动画和笔画结束动画，我们虽然使用CAShapeLayer绘制了一个圆圈，但是它也存在笔画起始位置和笔画终止位置，只不过它俩在同一个位置而已，笔画动画的位置取值在0-1之间，0代表绘制路径的起始位置，1代表绘制路径的终止位置。所以<code>strokeStartAnimate</code>动画让绘制圆圈的笔画起始位置从-0.5开始，目的是让笔画起始绘制时等待一段时间，也就是起始位置延迟绘制。而<code>strokeEndAnimate</code>动画让绘制圆圈的笔画终止位置正常的从0绘制到1。这样一来笔画两头绘制的时间就会不一样，会有一个时间差，这样就有圆圈不断绘制又不断被擦除的效果。</p>
@@ -440,7 +440,7 @@ View vs. Layer这篇文章通过两个加载动画向大家介绍CALayer的动�
 <p>最后在<code>viewWillAppear()</code>方法中调用<code>beginComplexAnimation()</code>方法：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewWillAppear</span><span class="params">(animated: Bool)</span></span> &#123;</span><br><span class="line">    beginSimpleAnimation()</span><br><span class="line">    beginComplexAnimation()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>编译运行看看效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/GoogleLoadingAnimation-10.gif" alt="GoogleLoadingAnimation-10"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-10.gif" alt="GoogleLoadingAnimation-10"></p>
 <h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>CALayer动画可以实现比UIView动画更丰富、更底层、效率更高的动画。但是在实际的应用开发中，我们应该按需所用，能用UIView动画实现的我们就可以不用CALayer动画，它俩没有谁优谁劣之分。这篇文章只是CALayer动画的引子，让大家对CALayer动画有初步的了解和认识，之后我在文章中会通过更多的实例帮大家更深入的认识CALayer动画，从而提升自己应用的用户体验。</p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->

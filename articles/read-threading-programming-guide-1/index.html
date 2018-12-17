@@ -100,8 +100,8 @@
 本文首发CSDN，如需转载请与CSDN联系。
 
 记得第一次读这个文档还是3年前，那时也只是泛读。如今关于iOS多线程的文章层出不穷，但我觉得若想更好的领会各个实践者的文章，应该先仔细读读官方的相关文档，打好基础，定会有更好的效果。文">
-<meta property="og:image" content="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-1.png">
-<meta property="og:updated_time" content="2018-08-27T03:28:58.933Z">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/LearnThread-1.png">
+<meta property="og:updated_time" content="2018-12-17T08:40:09.456Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="读 Threading Programming Guide 笔记（一）">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -427,7 +427,7 @@
 <p>继续运行看看效果：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">First</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br><span class="line"><span class="type">Second</span> event <span class="keyword">in</span> <span class="type">Main</span> <span class="type">Thread</span>.</span><br></pre></td></tr></table></figure>
 <p>运行成功了，但似乎少点什么东西，<code>methodInSecondaryThread()</code>方法中的内容并没有打印出来，难道线程没有执行吗？我们通过Instruments可以看到，在运行过程中二级线程是创建过的：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-1.png" alt="LearnThread-1"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/LearnThread-1.png" alt="LearnThread-1"></p>
 <p>导致这个问题的原因和上文介绍的线程类型有关系。因为主线程运行很快，快到当主线程结束时我们创建的二级线程还没来得及执行<code>methodInSecondaryThread()</code>方法，而通过<code>detachNewThreadSelector:toTarget:withObject:</code>创建的二级线程是Detach类型的，没有与主线程结合，所以主线程也不会等待，当主线程结束，进程结束，二级线程自然也结束了。解决这个问题的办法就是让二级线程有执行任务的时间，所以我们可以让主线程停顿几秒，让二级线程完成它的任务：</p>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span>: <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">launch</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"First event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="type">NSThread</span>.detachNewThreadSelector(<span class="string">"methodInSecondaryThread:"</span>, toTarget: <span class="keyword">self</span>, withObject: <span class="string">"I am a argument"</span>)</span><br><span class="line">        </span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Second event in Main Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">methodInSecondaryThread</span><span class="params">(arg: String)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(arg)</span> of event in Secondary Thread."</span>)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testThread = <span class="type">TestThread</span>()</span><br><span class="line">testThread.launch()</span><br></pre></td></tr></table></figure>
 <p>再运行就可以看到正确地结果了：</p>

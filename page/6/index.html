@@ -1141,9 +1141,9 @@
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">CFRunLoopRemoveSource</span><span class="params">(<span class="number">_</span> rl: CFRunLoop!, <span class="number">_</span> source: CFRunLoopSource!, <span class="number">_</span> mode: CFString!)</span></span></span><br><span class="line"></span><br><span class="line">void <span class="type">CFRunLoopRemoveSource</span>(<span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFStringRef</span> modeName) &#123;</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">    __CFRunLoopSourceCancel(rls, rl, rlm);</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> void __CFRunLoopSourceCancel(<span class="type">CFRunLoopSourceRef</span> rls, <span class="type">CFRunLoopRef</span> rl, <span class="type">CFRunLoopModeRef</span> rlm) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> == rls-&gt;_context.version0.version) &#123;</span><br><span class="line">          <span class="keyword">if</span> (<span class="type">NULL</span> != rls-&gt;_context.version0.cancel) &#123;</span><br><span class="line">              rls-&gt;_context.version0.cancel(rls-&gt;_context.version0.info, rl, rlm-&gt;_name);</span><br><span class="line">          &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    .....</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>从上述代码片段可以看出，当我们调用了<code>CFRunLoopRemoveSource</code>方法后，其实是执行了Run Loop事件源上下文中的<code>cancel</code>回调函数。</p>
 <h3 id="u81EA_u5B9A_u4E49Run_Loop_u4E8B_u4EF6_u6E90_u7684_u5B9E_u9645_u8FD0_u7528"><a href="#u81EA_u5B9A_u4E49Run_Loop_u4E8B_u4EF6_u6E90_u7684_u5B9E_u9645_u8FD0_u7528" class="headerlink" title="自定义Run Loop事件源的实际运用"></a>自定义Run Loop事件源的实际运用</h3><p>在讲解示例之前，我们先来看看示例Demo的效果：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-5.gif" alt="LearnThread-5"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/LearnThread-5.gif" alt="LearnThread-5"></p>
 <p>在这个示例中，创建了两个自定义事件源，一个添加到主线程中，另一个添加到二级线程中。主线程给二级线程中的自定义事件源发送事件消息，目的是让其改变所有<code>UICollectionViewCell</code>的透明度，当二级线程收到事件消息后执行计算每个<code>UICollectionViewCell</code>透明度的任务，然后再给主线程的自定义事件源发送事件消息，让其更新<code>UICollectionViewCell</code>的透明度并显示。下面来看看类图：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-6-new.png" alt="LearnThread-6"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/LearnThread-6-new.png" alt="LearnThread-6"></p>
 <p>整个工程一共就这六个类：</p>
 <ul>
 <li><code>MainCollectionViewController</code>：程序主控制器，启动程序、展示UI及计算<code>UICollectionViewCell</code>透明度的相关方法。</li>
@@ -1328,7 +1328,7 @@
 <p>到了自动引用计数（ARC）时代，就不能使用<code>NSAutoreleasePool</code>进行自动释放池管理了，而是新加了<code>@autoreleasepool</code>代码块语法来创建自动释放池：</p>
 <figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)myThreadMainRoutine</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">     </span><br><span class="line">     <span class="comment">// 线程执行任务的逻辑代码</span></span><br><span class="line">     </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们知道每个应用程序都是运行在一个主线程里的，而线程都至少得有一个自动释放池，所以说整个应用其实是跑在一个自动释放池中的。大家都知道C系语言中，程序的入口函数都是<code>main</code>函数，当我们创建一个Objective－C的iOS应用后，Xcode会在<strong>Supporting Files</strong>目录下自动为我们创建一个<code>main.m</code>文件：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-2.png" alt="LearnThread-2"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/LearnThread-2.png" alt="LearnThread-2"></p>
 <p>在<code>main.m</code>这个文件中就能证实上面说的那点：</p>
 <figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIApplicationMain</span>(argc, argv, <span class="literal">nil</span>, <span class="built_in">NSStringFromClass</span>([AppDelegate class]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>以上都是在Objective－C中，但在Swift中，就有点不一样了，<code>NSAutoreleasePool</code>和<code>@autoreleasepool</code>都不能用了，取而代之的是Swift提供的一个方法<code>func autoreleasepool(code: () -&gt; ())</code>，接收的参数为一个闭包，我们可以这样使用：</p>
@@ -1362,7 +1362,7 @@
 </blockquote>
 <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> nsrunloop = <span class="type">NSRunLoop</span>.currentRunLoop()</span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> cfrunloop = <span class="type">CFRunLoopGetCurrent</span>()</span><br></pre></td></tr></table></figure>
 <h3 id="Run_Loop_u7684_u4E8B_u4EF6_u6765_u6E90"><a href="#Run_Loop_u7684_u4E8B_u4EF6_u6765_u6E90" class="headerlink" title="Run Loop的事件来源"></a>Run Loop的事件来源</h3><p>Run Loop有两个事件来源，一个是<strong>Input source</strong>，接收来自其他线程或应用程序（进程）的异步事件消息，并将消息分派给对应的事件处理方法。另一个是<strong>Timer source</strong>，接收定期循环执行或定时执行的同步事件消息，同样会将消息分派给对应的事件处理方法。</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread-3.png" alt="LearnThread-3"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/LearnThread-3.png" alt="LearnThread-3"></p>
 <p>上图展示了Run Loop的两类事件来源，以及在Input source中的两种不同的子类型，它们分别对应着Run Loop中不同的处理器。当不同的事件源接收到消息后，通过<code>NSRunLoop</code>的<code>runUntilDate:</code>方法启动运行Run Loop，将事件消息分派给对应的处理器执行，一直到指定的时间时退出Run Loop。</p>
 <h3 id="Run_Loop_u7684_u89C2_u5BDF_u8005"><a href="#Run_Loop_u7684_u89C2_u5BDF_u8005" class="headerlink" title="Run Loop的观察者"></a>Run Loop的观察者</h3><p>Run Loop的观察者可以理解为Run Loop自身运行状态的监听器，它可以监听Run Loop的下面这些运行状态：</p>
 <ul>
@@ -1384,7 +1384,7 @@
 </ul>
 <p>Run Loop的观察者和Timer事件类似，可以只使用一次，也可以重复使用，在创建观察者时可以设置。如果只使用一次，那么当监听到对应的状态后会自行移除，如果是重复使用的，那么会留在Run Loop中多次监听Run Loop相同的运行状态。</p>
 <h3 id="Run_Loop_Modes"><a href="#Run_Loop_Modes" class="headerlink" title="Run Loop Modes"></a>Run Loop Modes</h3><p>Run Loop Modes可以称之为Run Loop模式，这个模式可以理解为对Run Loop各种设置项的不同组合，举个例子，iPhone手机运行的iOS有很多系统设置项，假设白天我打开蜂窝数据，晚上我关闭蜂窝数据，而打开无线网络，到睡觉时我关闭蜂窝数据和无线网络，而打开飞行模式。假设在这三个时段中其他的所有设置项都相同，而只有这三个设置项不同，那么就可以说我的手机有三种不同的设置模式，对应着不同的时间段。那么Run Loop的设置项是什么呢？那自然就是前文中提到的不同的事件来源以及观察者了，比如说，Run Loop的模式A（Mode A），只包含接收Timer Source事件源的事件消息以及监听Run Loop运行时的观察者，而模式B（Mode B）只包含接收Input Source事件源的事件消息以及监听Run Loop准备休眠时和退出Run Loop时的观察者，如下图所示：</p>
-<p><img src="http://7xpp8a.com1.z0.glb.clouddn.com/LearnThread%EF%BC%8D7.png" alt="LearnThread-4"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/LearnThread%EF%BC%8D7.png" alt="LearnThread-4"></p>
 <p>所以说，Run Loop的模式就是不同类型的数据源和不同观察者的集合，当Run Loop运行时要设置它的模式，也就是告知Run Loop只需要关心这个集合中的数据源类型和观察者，其他的一概不予理会。那么通过模式，就可以让Run Loop过滤掉它不关心的一些事件，以及避免被无关的观察者打扰。如果有不在当前模式中的数据源发来事件消息，那只能等Run Loop改为包含有该数据源类型的模式时，才能处理事件消息。</p>
 <p>在Cocoa框架和Core Foundation框架中，已经为我们预定义了一些Run Loop模式：</p>
 <ul>
