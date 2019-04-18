@@ -241,6 +241,357 @@
             
             
               
+                <a class="post-title-link" href="/articles/kafka-practice-4/" itemprop="url">
+                  Kafka从上手到实践-庖丁解牛：Producer
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2018-10-01T00:00:00+08:00" content="2018-10-01">
+              2018-10-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/kafka-practice-4/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-4/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>通过上一章节，我们知道了Kafka的Message是如何持久化的，知道了保证高可用性、稳定性的策略。这一节来看看Kafka中如何生产Message以及相关的策略。</p>
+<h2 id="Producer"><a href="#Producer" class="headerlink" title="Producer"></a>Producer</h2><p>简而言之，Producer就负责往Topic里发送数据，或者说写入数据。换言之，就是往组成这个Topic的一至多个Partition里写入数据。这里有三点需要注意：</p>
+<ul>
+<li>我们只需要通过Producer产生数据，往Topic里塞既可。Producer会自动去选择正确的、合适的Broker和Partition持久化数据。</li>
+<li>Producer默认采用轮询的机制选择Broker往Partition里持久化数据的。</li>
+<li>如果其中有一个Broker挂了，当它再恢复时，Producer会自动接纳它。</li>
+</ul>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/18/1545090560721.png" alt=""></p>
+<h3 id="Message_keys"><a href="#Message_keys" class="headerlink" title="Message keys"></a>Message keys</h3><p>Producer默认采用轮询的机制选择Broker往Partition里持久化数据。但当我们需要根据数据中的某个字段按Partition进行分组或者排序时，就需要在每条Message里添加Key，这个Key可以是数字，也可以是字符串等等。然后相同Key的Message永远会持久化到同一个Partition。</p>
+<h3 id="Acks"><a href="#Acks" class="headerlink" title="Acks"></a>Acks</h3><p>Producer在发送生产出的数据给Broker时，可以选择三种模式，称为acks，它是Acknowledgment的缩写。意思是Broker对Producer即将发送来的数据采用何种确认方式。</p>
+<h4 id="acks_3D0"><a href="#acks_3D0" class="headerlink" title="acks=0"></a>acks=0</h4><p>在该模式下，Producer不会等待Broker的确认反馈，即不关心Broker是否正确的将发送来的数据持久化，所以在这种模式下，很有可能会丢失数据。因为如果Broker挂了，Producer不会被通知到，所以还会不停的发送数据导致数据丢失。在对数据完整性需求不强烈的场景下，这种模式可以提高性能。</p>
+<h4 id="acks_3D1"><a href="#acks_3D1" class="headerlink" title="acks=1"></a>acks=1</h4><p>默认采用的模式，该模式下Producer会等待Leader Broker的确认反馈，当Broker确实将数据持久化到至少一个Partition中后，给予Producer确认反馈，Producer才会继续发送数据。该模式下有几点需要注意：</p>
+<ul>
+<li>不保证Replicas也持久化了数据。</li>
+<li>当Producer没有收到Broker的确认反馈时，Producer会尝试重新发送数据。</li>
+<li>当Leader Broker挂了，但是Replicas又没有持久化数据时，还是会丢失数据。</li>
+<li>该模式只能说是可以有效防止数据丢失。</li>
+</ul>
+<h4 id="acks_3Dall"><a href="#acks_3Dall" class="headerlink" title="acks=all"></a>acks=all</h4><p>该模式下，Producer同样需要等待Broker的确认，但是确认更为严格，需要所有的Partition（Leader + Replicas）都持久化数据后才返回确认信息。这种模式下，只要Replicas足够多，数据基本不会丢失。</p>
+<p>在该模式下，还有一个重要的参数<code>min.insync.replicas</code>需要配置。该参数的意思是当<code>acks=all</code>时，至少有多少个Replicas需要确认已成功持久化数据，这个Replicas数量也包括Leader。</p>
+<p>举个例子，假设有三个Broker，参数为<code>min.insync.replicas=2</code>、<code>replication.factor=3</code>、<code>acks=all</code>，那么Producer每次发送Message时，都需要至少2个Broker给予确认反馈，换句话说，在这个Kafka集群中，只能允许一个Broker挂掉。如果<code>min.insync.replicas=3</code>，那么一个Broker都不能挂，否则Producer在发送Message时会收到<code>NOT_ENOUGH_REPLICAS</code>的异常。</p>
+<h3 id="Retry"><a href="#Retry" class="headerlink" title="Retry"></a>Retry</h3><p>有时候Producer发送Message失败可能并不是因为Broker挂了，可能是因为网络问题，没有连接到Broker等等。这种问题可能在很短暂的时间内就会自动修复，那么在这种情况下，我们希望Producer在发送失败后能重新尝试发送。这里就需要设置<code>retries</code>这个参数，意思就是重试的次数，默认是0次，可以根据实际业务情况设置。</p>
+<p>但是当设置了<code>retries</code>参数大于0后，有可能会带来新的问题。假如我们需要相同Key的Message进入特定的Partition，并且是要严格按照Producer生产Message的顺序排序。那么此时如果第一条Message发送失败，第二条Message发送成功了，第一条通过重试发送成功了，那Message的顺序就发生了变化。</p>
+<p>这里又会引出一个参数<code>max.in.flight.requests.per.connection</code>，这个参数默认是5，意思是在被Broker阻止前，未通过acks确认的发送请求最大数，也就是在Broker处排队等待acks确认的Message数量。所以刚才那个场景，第一条和第二条Message都在Broker那排队等待确认放行，这时第一条失败了，等重试的第一条Message再来排队时，第二条早都通过进去了，所以排序就乱了。</p>
+<p>如果想在设置了<code>retries</code>还要严格控制Message顺序，可以把<code>max.in.flight.requests.per.connection</code>设置为1。让Broker处永远只有一条Message在排队，就可以严格控制顺序了。但是这样做会严重影响性能（接收Message的吞吐量）。</p>
+<h3 id="Idempotent_Producer"><a href="#Idempotent_Producer" class="headerlink" title="Idempotent Producer"></a>Idempotent Producer</h3><p>在实际情况中，经常会遇到一个现象，那就是当Broker给Producer返回acks确认时，网络出异常了，导致Producer没有收到ack确认，于是，Producer进行重试。如果Consumer的Offset策略（在后续章节会介绍）是<code>at least once</code>或者是<code>exactly once</code>，那么第一次对Message就已经进行了处理，比如入库。那么第二次会对相同的Message再做一次处理，对相同数据进行重复处理，势必会引起业务上的错误。整个过程如下图所示：</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/26/1545807972109.png" alt=""></p>
+<p>所以这就需要幂等Producer来保证我们处理数据的唯一性。Kafka在0.11版本之后，就为我们提供了定义幂等Producer的能力，可以通过将<code>enable.idempotence.config</code>参数设置为<code>true</code>来定义幂等Producer。将Producer定义为幂等后，还要设置其他对应的参数：</p>
+<ul>
+<li><code>retries=Integer.MAX_VALUE</code></li>
+<li><code>max.in.flight.requests.per.connection=1 (Kafka &gt;= v0.11 &amp; &lt; v1.1)</code></li>
+<li><code>max.in.flight.requests.per.connection=5 (Kafka &gt;= v1.1)</code></li>
+<li><code>acks=all</code></li>
+</ul>
+<p>如此设置后，可以有效防止重复消费Message，整个过程就会如下图所示：</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/26/1545808307901.png" alt=""></p>
+<h3 id="Message_Compression"><a href="#Message_Compression" class="headerlink" title="Message Compression"></a>Message Compression</h3><p>消息压缩的作用不言而喻：</p>
+<ul>
+<li>加快网络传输速度，减少消息延迟。</li>
+<li>更有效的利用磁盘空间。</li>
+<li>加快消息吞吐率。</li>
+</ul>
+<p>只需要设置<code>compression.type</code>参数，该参数默认是<code>none</code>，可选项有<code>gzip</code>、<code>lz4</code>、<code>snappy</code>。建议使用<code>lz4</code>或者<code>snappy</code>。</p>
+<h3 id="Message_Batch"><a href="#Message_Batch" class="headerlink" title="Message Batch"></a>Message Batch</h3><p>上面介绍了<code>max.in.flight.requests.per.connection</code>参数，默认会在Broker那排队5条Message，那么如果第六条来了怎么办呢？这时候Kafka会自动开启批量处理Message的模式，将这6条Message作为一个批次进行处理。这一个批次可以看作是一次Message处理请求。</p>
+<p>开启批量模式后，会引出两个参数：</p>
+<ul>
+<li><code>linger.ms</code>：每次批量处理的间隔时间。如果设为5，那么就是每5毫秒对Message进行一次批量处理。</li>
+<li><code>batch.size</code>：每个批次的最大字节数，默认是16KB，可以设置为32KB或者64KB，可以提高性能。</li>
+</ul>
+<p>过程如下图所示：</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/26/1545814677871.png" alt=""></p>
+<h3 id="Producer_Buffer"><a href="#Producer_Buffer" class="headerlink" title="Producer Buffer"></a>Producer Buffer</h3><p>在大多数情况下，Consumer消费Message的速率是远不如Producer生产Message的速率的。所以Producer有一个缓存机制，将Broker还没来得及接收的Message缓存在内存中。缓存的大小可以通过<code>buffer.memory</code>配置，默认大小是32MB。默认存储时间为7天，这个时间可以通过设置Broker的<code>offset.retention.minutes</code>属性改变。</p>
+<p>如果Producer的缓存被打满后，Producer会被阻塞，阻塞的最大时间可以通过<code>max.block.ms</code>配置，默认大小是60秒。</p>
+<p>概括一下，就是当Producer生产Message的速率大于Broker接收Message（Consumer消费数据）的速率时，Producer会把Broker还没来得及接收的Message存在缓存里（内存），当存满设置的缓存大小后，Producer将不再发送Message给Broker，也就是进入阻塞状态，如果在设置的阻塞时间内，缓存还没有被释放出有用空间，那么Producer将抛出异常。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>这一章节我们了解了Kafka的Producer，介绍很重要的Acks机制、Retry机制、幂等机制以及消息批次机制等。这些和我们满足性能方面的需求息息相关，同时我们也进一步了解了Kafka是如何保证业务层面的高可用性的。希望能给小伙伴们带来帮助。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/kafka-practice-3/" itemprop="url">
+                  Kafka从上手到实践-庖丁解牛：Partition
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2018-09-15T00:00:00+08:00" content="2018-09-15">
+              2018-09-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/kafka-practice-3/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-3/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>了解了Kafka的窗户和内核之后，我们深入Broker中，看看Topic和Broker之间的关系，它们之间到底是用什么联系起来的。Broker对Message的持久化是如何处理的。</p>
+<h2 id="Partition"><a href="#Partition" class="headerlink" title="Partition"></a>Partition</h2><p>Kafka的Partition是分区的概念，在Kafka中，一个Topic可以有多个Partition，换句话说，就是一个Topic中的内容是被多个Partition分割的。对于Partition，我们需要注意以下几个要点：</p>
+<ul>
+<li>一个Topic下的所有Partition是有顺序的，或者说在创建Topic和Partition时，Partition的顺序就已经是确定了的。</li>
+<li>每条进入Partition中的Message都会获得一个自增的ID，这个ID称为Offset（消息的偏移量）。</li>
+<li>通常在说Message的Offset时，只是针对该条Message所在的Partition而言。举个例子，Partition-0中Offset为3的Message和Partition-1中Offset为3的Message没有任何关系。</li>
+<li>当说到Message的顺序时，通常有两种解读：<ul>
+<li>业务语义上的Message顺序，如下图所示，1至4条Message之间是有语义顺序的，可以理解为是消息生产者生产消息时的顺序。</li>
+<li>Partition中的Message顺序，如下图所示，Partition-1中的Message如果按照Offset的顺序，那么第一条和第二条Message其实是语义上的第一条和第三条Message。</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/kafka-message-order.png" alt=""></p>
+<ul>
+<li>当Message进入Partition后，它的Offset和内容就无法再修改了。</li>
+<li>Message默认是随机存储在一个Topic下的不同的Partition中的，如上图。除非显示的指定Partition。</li>
+<li>存储在Partition中的Message是有时效性的，默认是保存一周，可以通过配置更改（后续章节会介绍）。</li>
+</ul>
+<p>在Kafka中，一个Partition对应物理机器上的一个文件夹，文件夹命名会以Topic名称加序号表示。换句话说，Partition在Broker中以文件夹的形式存在。每个Partition文件夹中会有多个大小相等的日志段文件（Segment File），消息生产者生产的消息发送到Broker后就会以追加到日志文件末尾的方式持久化到Partition中。</p>
+<h3 id="Replication"><a href="#Replication" class="headerlink" title="Replication"></a>Replication</h3><p>我们再来看一个和Partition相关的概念，Replication。从字面意思就可以看出，这是Partition副本的意思。Replication Factor决定了将Partition复制几份，也就是将数据复制几份。Partition的副本也是会随机被分配到任意Broker中。下图展示了它们之间的关系：</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/17/1545061968721.png" alt=""></p>
+<p>从上图中可以看出，如果Broker 102挂掉了，是不会影响我们的Kafka集群的运转的，因为我们的数据并没有丢失，Broker 101和Broker 103中任何持久化着Topic-A的数据。这就是Replication的作用，它可以有效保证数据在Kafka系统中的完整性和有效性。</p>
+<h3 id="Leader_for_Partition"><a href="#Leader_for_Partition" class="headerlink" title="Leader for Partition"></a>Leader for Partition</h3><p>当Partition有多个副本时，又会引出一个概念，那就是Partition的Leader Broker。关于Partition的Leader有以下几个要点：</p>
+<ul>
+<li>在任何时候，只有一个Broker会成为某个Partition的Leader。</li>
+<li>只有作为Leader的Broker才会为Partition接收和处理数据。其他持有Partition副本的Broker只是从Leader Broker同步数据。</li>
+<li>每个Partition只有一个Leader Broker，但可以有多个随从Broker，或者说是ISR（in-sync replica）。</li>
+</ul>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/18/1545064328376.png" alt=""></p>
+<p>上图所示，Broker 101是Topic-A Partition 0的Leader Broker。Broker 102是Topic-A Partition 1的Leader Broker。如果Broker 101挂掉了，那么Broker 102会自动被选举为新的Topic-A Partition 0的Leader Broker。当Broker 101恢复后，会重新将Leader交还给Broker 101。选举Leader Broker的工作由Zookeeper帮Kafka完成，这里暂做了解。</p>
+<h3 id="Partition_Count_and_Replication_Factor_Convention"><a href="#Partition_Count_and_Replication_Factor_Convention" class="headerlink" title="Partition Count  and Replication Factor Convention"></a>Partition Count  and Replication Factor Convention</h3><p>在通常情况下，设置Topic的Partition数量和Replication数量有一些惯例可以参照。</p>
+<p><strong>首先这两个参数是非常非常重要的，直接关系到Kafka集群的性能、高可用问题。在创建Topic之前，一定要先思考如何设置Partition数量和Replication数量。并且尽量不要在之后调整Partition数量和Replication数量。</strong></p>
+<p>前文中讲过，如果在Kafka运行时调整Topic的Partition数量，会直接影响Message根据Key的顺序问题。如果调整Replication数量，会给集群带来较大的性能压力，因为涉及到Zookeeper要重新选举Leader一系列操作。</p>
+<p>所以在较小的Kafka集群中（小于6个Broker），一般每个Topic的Partition数量为Broker数量的两倍。在较大的Kafka集群中（大于12个Broker），一般每个Topic的Partition数量等于Broker的数量。介于这两者之间的可以根据具体业务和IaaS的情况，设置两倍于Broker或等于Broker数量。</p>
+<p><strong>Replication数量最少为2，通常为3，最大也就设置到4</strong>。前文中说过，Replication的数量关系到我们可以容忍有几个Broker挂掉（N -1个）。而且如果<code>acks=all</code>，Replication太多会影响效率，并且会增加磁盘空间。所以综上，一般将Replication Factor设置为3，比较合理。</p>
+<h3 id="Segment_File"><a href="#Segment_File" class="headerlink" title="Segment File"></a>Segment File</h3><p>我们已经知道了Topic是由Partition构成的。再来说说构成Partition的Segment文件。</p>
+<p>进入<code>kafka_2.12-2.0.0/data/kafka</code>这个目录后（这里的目录暂做了解，后续在Kafka搭建小节里会讲到），可以看到一些以<code>Topic name-index</code>这种格式命名的文件夹，这些就是Partition：</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/29/1546053528484.png" alt=""></p>
+<p>进入<code>first_topic-0</code>这个Partition后，可以看到有一些文件，<code>*.log</code>就是Partition的Segment文件：</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/29/1546053710199.png" alt=""></p>
+<p>Partition的Segment文件涉及到两个参数：</p>
+<ul>
+<li><code>log.segment.bytes</code>：设置每个Segment文件的大小，默认是1GB。</li>
+<li><code>log.segment.ms</code>：设置每个Segment文件允许写入的时间，默认是一周。</li>
+</ul>
+<p>上面两个参数说明了，Partition的Segment文件可以有多个，当一个Segment的大小达到<code>log.segment.bytes</code>参数设置的大小后，关闭（不允许写入）这个Segment文件，并自动开启下一个Segment文件。如果一个Segment文件在<code>log.segment.ms</code>参数设置的时间内没有写满，那么也将自动关闭，并开启新的Segment文件。所以始终只会有一个处于活跃状态的Segment文件可以被写入。</p>
+<p><code>log.segment.bytes</code>设置的越小，Partition的Segment文件数就越多，对关闭的<code>*.log</code>文件压缩操作就越频繁。<code>log.segment.ms</code>的值也同样影响文件压缩的频率。所以这两个参数要根据业务实际情况，对吞吐量的需求去合理设置。</p>
+<p>在上图中，还看到<code>*.index</code>和<code>*.timeindex</code>两个文件，这两个都是帮助Kafka查找Message的索引文件：</p>
+<ul>
+<li><code>*.index</code>：这个文件记录了Message Offset，可以让Kafka通过Message Offset快速定位到Message。</li>
+<li><code>*.timeindex</code>：这个文件记录了Message的时间戳，可以让Kafka通过绝对时间定位到Message。</li>
+</ul>
+<p>这三个文件的名称是一样的，整个名称的长度为20位数字，第一个Segment文件从0开始，后续每个Segment文件的名称为上一个<code>*.log</code>文件中最后一条Message Offset，其他位数用0填充，比如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0000000000000000000.index&#10;0000000000000000000.log&#10;0000000000000037489.index&#10;0000000000000037489.log&#10;0000000000005467283.index&#10;0000000000005467283.log</span><br></pre></td></tr></table></figure>
+<p>用一张图来概括Partition和Segment文件的关系：</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/29/1546055197464.png" alt=""></p>
+<h3 id="Delete_Cleanup_Policy"><a href="#Delete_Cleanup_Policy" class="headerlink" title="Delete Cleanup Policy"></a>Delete Cleanup Policy</h3><p>Kafka的Message既然是存在磁盘上的，那么必然会有数据回收或者数据清理的机制，这里涉及到一个参数<code>log.cleanup.policy</code>如果将值设置为<code>delete</code>，那么Partition中的Message会基于规则在一段时间后被删除。这里的规则有两个，一个是基于时间的，一个是基于Partition大小的。</p>
+<h4 id="log-retention-hours"><a href="#log-retention-hours" class="headerlink" title="log.retention.hours"></a>log.retention.hours</h4><p><code>log.retention.hours</code>参数的值默认是168小时，既1周时间，也就是Partition中的未处于活跃状态的Segment文件只保留一周，一周后会被自动删除。</p>
+<p>这个参数如果设置的比较大，那么意味着Topic的历史数据会保留较长时间，Consumer丢失数据的容错率会高一些。同时会占用更多磁盘空间。如果设置的比较小，意味着Topic的历史数据保留的时间较短，Consumer丢失数据的潜在风险较大，但是占用的磁盘空间较小。所以该值需要根据实际情况设置。</p>
+<h4 id="log-retention-bytes"><a href="#log-retention-bytes" class="headerlink" title="log.retention.bytes"></a>log.retention.bytes</h4><p><code>log.retention.bytes</code>参数的值默认是-1，也就是指Partition的大小是无穷大的，既不考虑Partition的大小。如果将其设置为524288000，那么就表示当Partition大小超过500MB时，会删除未处于活跃状态的Segment文件。</p>
+<p>通常情况下，使用默认配置就好，既不考虑Partition大小，历史数据保留一周。但也可以根据业务自行设置，灵活组合。但有一点需要注意的是，这两个规则只要达到一个，就会启动清理数据的任务。</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/31/1546267108235.png" alt=""></p>
+<h3 id="Compaction_Cleanup_Policy"><a href="#Compaction_Cleanup_Policy" class="headerlink" title="Compaction Cleanup Policy"></a>Compaction Cleanup Policy</h3><p>另外一个策略是压缩策略，<code>__consumer_offset</code>这个Topic默认采用的就是这种策略，我们先看一张图：</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2019/1/1/1546353684917.png" alt=""></p>
+<p>上图表示的应该比较清楚了，压缩模式就是把相同Key的旧数据删了，每个Key只留下最近的数据。这种模式相对DELETE策略，至少每个Key都会有数据，但是历史数据会丢失。</p>
+<p>当<code>log.cleanup.policy=compact</code>时，有以下相关的一些参数需要我们注意：</p>
+<ul>
+<li><code>segment.ms</code>：该参数会使用默认的值，默认为7天。该参数表示等待关闭活跃状态Segment文件的时间。</li>
+<li><code>segment.bytes</code>：每个Segment文件的大小，默认为1G。</li>
+<li><code>min.compaction.lag.ms</code>：当Message可以被压缩的时候，要等待的时长，也就是延迟压缩的时间，默认是0。</li>
+<li><code>delete.retention.ms</code>：当Message被标记为需要压缩到删除它之间的时间，默认为24小时。</li>
+<li><code>min.cleanable.dirty.ratio</code>：压缩率，默认为0.5。</li>
+</ul>
+<h4 id="Cleanup_Frequency"><a href="#Cleanup_Frequency" class="headerlink" title="Cleanup Frequency"></a>Cleanup Frequency</h4><p>不论是删除策略还是压缩策略，都是针对Partition的Segment文件进行的，根本还是磁盘IO操作，所以这种清理工作不应该过于频繁，否则会对整个Broker造成性能方面的影响。对Segment文件的大小也要把控在合理的范围内。太小，太多的Segment文件肯定会使清理工作更加频繁。</p>
+<p>另外还可以对<code>log.cleaner.backoff.ms</code>参数进行设置来控制清理频率，这个参数控制检测是否需要清理的时间，默认是15秒检查一次。将其设大一点，也可以降低清理频率。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>这一章节通过对Partition、Replication、Segment File的介绍可以了解Broker中对Message持久化的方式。通过对Partition Leader、Relipcation Factor、Message的处理策略的介绍了解了Kafka保证可用性和稳定性的基本策略。这些概念是之后我们进行实践时的基础。希望能给小伙伴们带来帮助。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/kafka-practice-2/" itemprop="url">
                   Kafka从上手到实践-庖丁解牛：Topic&Broker
                 </a>
@@ -584,239 +935,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/machine-learning-16/" itemprop="url">
-                  机器学习笔记十六之基尼系数、CART
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2018-07-15T00:00:00+08:00" content="2018-07-15">
-              2018-07-15
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-16/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-16/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>这篇笔记我们来看看决策树的另一种划分方式基尼系数和决策树中的超参数，以及决策树的缺陷。</p>
-<h2 id="u57FA_u5C3C_u7CFB_u6570"><a href="#u57FA_u5C3C_u7CFB_u6570" class="headerlink" title="基尼系数"></a>基尼系数</h2><p>在一开始我们使用Scikit Learn中提供的决策树分类器时，<code>DecisionTreeClassifier</code>有一个参数<code>criterion</code>，我们之前传入了<code>entropy</code>，也就是表示此时决策树使用信息熵方式。由此可知，决策树应该不止信息熵一种方式，所以这一节来看看决策树的另一种方式，基尼系数。</p>
-<p>其实基尼系数和信息熵的思路基本是一致的，只是判定数据随机性度量的公式不一样，那么基尼系数的公式为：</p>
-<p>$$G = 1 - \sum_{i=1}^k p_i^2$$</p>
-<p>同样用之前的例子代入公式看一下：</p>
-<p>$$\{\frac 1 3,\frac 1 3,\frac 1 3\}$$</p>
-<p>将上面的数据类别占比信息代入公式后可得：</p>
-<p>$$G = 1-(\frac 1 3)^2-(\frac 1 3)^2-(\frac 1 3)^2=0.6666$$</p>
-<p>再换一组数据类别占比信息：</p>
-<p>$$\{\frac 1 {10},\frac 2 {10},\frac 7 {10}\}$$</p>
-<p>代入公式后可得：</p>
-<p>$$G = 1-(\frac 1 {10})^2-(\frac 2 {10})^2-(\frac 7 {10})^2=0.46$$</p>
-<p>可见基尼系数同样反应了数据不确定性的度量。这里就不再使用代码对基尼系数的方式进行模拟了，其实只需要将信息熵的公式换成基尼系数的既可。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-16/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/machine-learning-15/" itemprop="url">
-                  机器学习笔记十五之决策树、信息熵
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2018-06-30T00:00:00+08:00" content="2018-06-30">
-              2018-06-30
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-15/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-15/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>这篇笔记我们来看看机器学习中一个重要的非参数学习算法，决策树。</p>
-<h2 id="u4EC0_u4E48_u662F_u51B3_u7B56_u6811"><a href="#u4EC0_u4E48_u662F_u51B3_u7B56_u6811" class="headerlink" title="什么是决策树"></a>什么是决策树</h2><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/84205d722c59ef40b62804d2672f9435.jpg" alt=""></p>
-<p>上图是一个向银行申请信用卡的示例，图中的树状图展示了申请人需要在银行过几道关卡后才能成功申请到一张信用卡的流程图。在图中树状图的根节点是申请人输入的信息，叶子节点是银行作出的决策，也就相当于是对申请者输入信息作出的分类决策。从第一个根节点到最后一个叶子节点经过的根节点数量称为树状图的深度（depth）。上图示例中的树状图从第一个根节点<strong>申请人是否办理过信用卡</strong>，到最后一个<strong>发放信用卡</strong>叶子节点共经过了三个根节点，所以深度为3。那么像这样使用树状图对输入信息一步步分类的方式就称为决策树方式。</p>
-<p>我们再来看一个问题，上图中每一个根节点的输入信息都可以用<strong>是</strong>或<strong>否</strong>来做判断分类，但是机器学习的样本数据都是数字，那么此时如果做判断呢？我们先来使用Scikit Learn中提供的决策树直观的看一下通过决策树对样本数据的分类过程和分类结果。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-15/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -859,7 +977,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">98</span>
+              <span class="site-state-item-count">100</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -873,7 +991,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">92</span>
+              <span class="site-state-item-count">93</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
