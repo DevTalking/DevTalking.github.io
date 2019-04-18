@@ -241,8 +241,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/machine-learning-2/" itemprop="url">
-                  机器学习笔记二之矩阵、环境搭建、NumPy
+                <a class="post-title-link" href="/articles/machine-learning-16/" itemprop="url">
+                  机器学习笔记十六之基尼系数、CART
                 </a>
               
             
@@ -252,8 +252,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-01-13T00:00:00+08:00" content="2018-01-13">
-              2018-01-13
+            <time itemprop="dateCreated" datetime="2018-07-15T00:00:00+08:00" content="2018-07-15">
+              2018-07-15
             </time>
           </span>
 
@@ -278,8 +278,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-2/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-2/" itemprop="commentsCount"></span>
+              <a href="/articles/machine-learning-16/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-16/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -310,16 +310,21 @@
 </script>
 
 
-<h2 id="u77E9_u9635"><a href="#u77E9_u9635" class="headerlink" title="矩阵"></a>矩阵</h2><p>因为在机器学习中，一些概念、算法都涉及到矩阵的知识，比如训练数据集通常都是以矩阵的方式存在，所以在这里首先介绍一下矩阵的概念。</p>
-<h3 id="u57FA_u672C_u6982_u5FF5"><a href="#u57FA_u672C_u6982_u5FF5" class="headerlink" title="基本概念"></a>基本概念</h3><p>在数学概念中，一个$m \times n$的矩阵指的是一个由$m$行$n$列元素排列而成的矩形阵列。用大白话解释就是将一些元素排列成若干行，每行放上相同数量的元素，就是一个矩阵。矩阵里的元素可以是数字、符号或数学式，比如下面这个$A$矩阵就是一个四行两列的矩阵：<br>$$ A=\begin{bmatrix}<br> 1&amp;2\\<br> 3&amp;4\\<br> 5&amp;6\\<br> 7&amp;8\\<br>\end{bmatrix}$$</p>
-<p>一个矩阵$A$从左上角数起的第$i$行第$j$列上的元素称为第$i$，$j$项，通常记为$A_{i,j}$、$A_{ij}$或者$A_{[i,j]}$，那么上面的$A$矩阵中$A_{3,2}=6$。如果我们不知道矩阵$A$的具体元素，通常将其表示为$A=[a_{ij}]_{m \times n}$，如果$A$的元素可以写成与行$i$和列$j$有关的统一函数$f$，那么也可以用$A=[f(i,j)]_{m \times n}$来表示。</p>
-<h3 id="u77E9_u9635_u7684_u57FA_u672C_u8FD0_u7B97"><a href="#u77E9_u9635_u7684_u57FA_u672C_u8FD0_u7B97" class="headerlink" title="矩阵的基本运算"></a>矩阵的基本运算</h3><p>矩阵的最基本运算包括矩阵加（减）法、数乘、转置、矩阵乘法运算。</p>
-<h4 id="u52A0_u51CF_u6CD5_u8FD0_u7B97"><a href="#u52A0_u51CF_u6CD5_u8FD0_u7B97" class="headerlink" title="加减法运算"></a>加减法运算</h4><p>$m \times n$矩阵$A$和$B$的和（差）$A \pm B$也是一个$m \times n$矩阵，其中每个元素是$A$和$B$相应元素的和（差），即$ (A \pm B)_{ij}=A_{ij} \pm B_{ij} $，其中$1 \le i \le m$，$1 \le j \le n$。举个例子：</p>
-<p>$$ \begin{bmatrix}<br>1&amp;2&amp;3\\<br>4&amp;5&amp;6\\<br>\end{bmatrix} + \begin{bmatrix}<br>6&amp;5&amp;4\\<br>3&amp;2&amp;1\\<br>\end{bmatrix} = \begin{bmatrix}<br>1+6 &amp; 2+5 &amp; 3+4 \\<br>4+3 &amp; 5+2 &amp; 6+1 \\<br>\end{bmatrix}=\begin{bmatrix}<br>7&amp;7&amp;7\\<br>7&amp;7&amp;7\\<br>\end{bmatrix}<br> $$</p>
-<h4 id="u6570_u4E58_u8FD0_u7B97"><a href="#u6570_u4E58_u8FD0_u7B97" class="headerlink" title="数乘运算"></a>数乘运算</h4><p> 标量$c$与$m \times n$的矩阵$A$的数乘也是一个$m \times n$的矩阵$cA$，它的每个元素是矩阵$A$的相应元素与$c$的乘积$(cA)_{ij}=c \cdot A_{ij}$，举个例子：</p>
-<p> $$<br> 2 \cdot \begin{bmatrix}<br> 1&amp;2&amp;3\\<br> 4&amp;5&amp;6\\<br> \end{bmatrix}=\begin{bmatrix}<br> 2 \cdot 1 &amp; 2 \cdot 2 &amp; 2 \cdot 3 \\<br> 2 \cdot 4 &amp; 2 \cdot 5 &amp; 2 \cdot 6 \\<br> \end{bmatrix}=\begin{bmatrix}<br> 2&amp;4&amp;6\\<br> 8&amp;10&amp;12\\<br> \end{bmatrix}<br>  $$</p>
+<p>这篇笔记我们来看看决策树的另一种划分方式基尼系数和决策树中的超参数，以及决策树的缺陷。</p>
+<h2 id="u57FA_u5C3C_u7CFB_u6570"><a href="#u57FA_u5C3C_u7CFB_u6570" class="headerlink" title="基尼系数"></a>基尼系数</h2><p>在一开始我们使用Scikit Learn中提供的决策树分类器时，<code>DecisionTreeClassifier</code>有一个参数<code>criterion</code>，我们之前传入了<code>entropy</code>，也就是表示此时决策树使用信息熵方式。由此可知，决策树应该不止信息熵一种方式，所以这一节来看看决策树的另一种方式，基尼系数。</p>
+<p>其实基尼系数和信息熵的思路基本是一致的，只是判定数据随机性度量的公式不一样，那么基尼系数的公式为：</p>
+<p>$$G = 1 - \sum_{i=1}^k p_i^2$$</p>
+<p>同样用之前的例子代入公式看一下：</p>
+<p>$$\{\frac 1 3,\frac 1 3,\frac 1 3\}$$</p>
+<p>将上面的数据类别占比信息代入公式后可得：</p>
+<p>$$G = 1-(\frac 1 3)^2-(\frac 1 3)^2-(\frac 1 3)^2=0.6666$$</p>
+<p>再换一组数据类别占比信息：</p>
+<p>$$\{\frac 1 {10},\frac 2 {10},\frac 7 {10}\}$$</p>
+<p>代入公式后可得：</p>
+<p>$$G = 1-(\frac 1 {10})^2-(\frac 2 {10})^2-(\frac 7 {10})^2=0.46$$</p>
+<p>可见基尼系数同样反应了数据不确定性的度量。这里就不再使用代码对基尼系数的方式进行模拟了，其实只需要将信息熵的公式换成基尼系数的既可。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-2/#more" rel="contents">
+            <a class="btn" href="/articles/machine-learning-16/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -357,8 +362,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/machine-learning-1/" itemprop="url">
-                  机器学习笔记一之机器学习定义、导数、最小二乘
+                <a class="post-title-link" href="/articles/machine-learning-15/" itemprop="url">
+                  机器学习笔记十五之决策树、信息熵
                 </a>
               
             
@@ -368,8 +373,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-01-06T00:00:00+08:00" content="2018-01-06">
-              2018-01-06
+            <time itemprop="dateCreated" datetime="2018-06-30T00:00:00+08:00" content="2018-06-30">
+              2018-06-30
             </time>
           </span>
 
@@ -394,8 +399,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-1/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-1/" itemprop="commentsCount"></span>
+              <a href="/articles/machine-learning-15/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-15/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -426,31 +431,12 @@
 </script>
 
 
-<h2 id="u673A_u5668_u5B66_u4E60_u7684_u5B9A_u4E49"><a href="#u673A_u5668_u5B66_u4E60_u7684_u5B9A_u4E49" class="headerlink" title="机器学习的定义"></a>机器学习的定义</h2><ul>
-<li>非正式定义：在不直接针对问题进行编程的情况下，赋予计算机学习能力的一个研究领域。</li>
-<li>正式定义：对于一个计算机程序来讲，给他一个任务T和一个性能测量方法P，如果在经验E的影响下P对T的测量结果得到了改进，那么就说该程序从E中得到了学习。</li>
-</ul>
-<p>举个机器下棋的例子，经验E对应着程序不断和自己下棋的经历，任务T是下棋，性能测量方法P可以是它在和人类棋手对弈的胜率。如果说机器与人类棋手对应的胜率不断提高，那说明机器从自己和自己下棋的过程中得到了学习。</p>
-<h2 id="u673A_u5668_u5B66_u4E60_u56DB_u5927_u5185_u5BB9_u7B80_u8FF0"><a href="#u673A_u5668_u5B66_u4E60_u56DB_u5927_u5185_u5BB9_u7B80_u8FF0" class="headerlink" title="机器学习四大内容简述"></a>机器学习四大内容简述</h2><ul>
-<li>监督学习（Supervised Learning）</li>
-<li>学习理论（Learning Theory）</li>
-<li>无监督学习（Unsupervised Learning）</li>
-<li>强化学习（Reinforcement Learning）</li>
-</ul>
-<h3 id="u76D1_u7763_u5B66_u4E60_uFF08Supervised_Learning_uFF09"><a href="#u76D1_u7763_u5B66_u4E60_uFF08Supervised_Learning_uFF09" class="headerlink" title="监督学习（Supervised Learning）"></a>监督学习（Supervised Learning）</h3><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/34576cd0bbd2b3d3905c4c9f5a4db346.jpg" alt=""><br>如上图所示，描述了假定城市区域的房屋面积与售价的关系。横坐标是房屋面积，纵坐标是售价。如果我想在横轴随意取一个面积，就希望知道它的售价，那么就需要一个方法通过面积确定售价。图中的方法是通过一条标准线来找到对应的售价。那么这条线要如何得来呢？</p>
-<p>在这个示例中，我们已经给出了若干房屋面积和售价的数据集，即已经告知了机器若干问题和答案。机器通过这些数据集中面积和售价的关系，自我学习从而得出这条线，这种学习类型就属于监督学习类型。</p>
-<p>因为这种场景中的数据集取值都是连续的，所以这类问题都可以归为线性回归的问题。<br><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/da9d63e45fa11a781128bc64bb78ae92.jpg" alt=""></p>
-<p>如上图所示，描述了肿瘤大小与恶性良性的关系。横坐标是肿瘤的大小，纵坐标表示恶性或良性，与连续的房屋售价不同的是，这里的纵坐标只有两个值0或1。</p>
-<p>这个示例中，我们同样给出了一组肿瘤大小与恶性良性的数据集，我们希望机器通过这组答案数据集自我学习然后有能力通过肿瘤大小判断出恶性或良性。当然这里只是示例，实际中会有很多其他的横轴指标值用于判断学习。</p>
-<p>该示例中这种离散的数值问题可以归为分类的问题。</p>
-<h3 id="u5B66_u4E60_u7406_u8BBA_uFF08Learning_Theory_uFF09"><a href="#u5B66_u4E60_u7406_u8BBA_uFF08Learning_Theory_uFF09" class="headerlink" title="学习理论（Learning Theory）"></a>学习理论（Learning Theory）</h3><p>任何具体的方式方法背后都有一个或多个理论进行支撑，机器学习也不例外。</p>
-<p>这一大块的内容贯穿整个机器学习，包括人工智能和机器学习正式诞生之前的定理证明，理解为什么学习型算法是有效的。每种学习型算法需要多少训练数据，比如上面的房屋售价示例到底需要多少房屋的样本。以及机器学习渗透在我们生活中的真实应用场景等等。</p>
-<h3 id="u65E0_u76D1_u7763_u5B66_u4E60_uFF08Unsupervised_Learning_uFF09"><a href="#u65E0_u76D1_u7763_u5B66_u4E60_uFF08Unsupervised_Learning_uFF09" class="headerlink" title="无监督学习（Unsupervised Learning）"></a>无监督学习（Unsupervised Learning）</h3><p>如果我现在有一组不知道任何信息的数据集，然后需要机器进行分析然后给出这组数据集中的几种共性或者相似的结构，将其聚类，这个方式就称之为无监督学习。即我们不会提供机器问题和答案，只提供数据，需要机器自我学习和分析找出共性进行聚类。</p>
-<p>无监督学习的应用场景很多，当下流行的各种P图软件都或多或少的用到了这类算法，比如图的修复功能，抠图功能，像素化等一些滤镜都是对像素的聚类。还有声音驳杂功能，从嘈杂的声音中提取出有用的声音等。</p>
-<h3 id="u5F3A_u5316_u5B66_u4E60_uFF08Reinforcement_Learning_uFF09"><a href="#u5F3A_u5316_u5B66_u4E60_uFF08Reinforcement_Learning_uFF09" class="headerlink" title="强化学习（Reinforcement Learning）"></a>强化学习（Reinforcement Learning）</h3><p>强化学习是机器学习的精髓，更贴近机器的自我学习，用在不能通过一次决策下定论的情形中，比如分析病人肿瘤病情的例子，通过监督学习，我们给定了确切的答案，不是良性就是恶性，即我们做的决策要么对，要么错。但在强化学习中，在一段时间内会机器做出一系列决策。比如我们编写一个程序让一架无人机做出一系列特技表演动作，这种场景就不是一次决策能实现的了的。</p>
-<p>那么强化学习究竟是什么？在它背后有一个称为回报函数的概念。比如我们训练宠物狗坐下、握手等行为，每当小狗做出的正确的行为，我们都会给小狗奖励，比如摸摸头进行鼓励或者给一块小骨头。渐渐的小狗就知道做出怎样的行为有奖励，怎样的行为没有奖励，即学会了坐下和握手的行为。这就很类似强化学习的理论，我们需要找到一种方式，来定义我们想要什么，如何定义一个好的行为和一个坏的行为，然后就需要一个合适的学习型算法来获得更多的回报和更少的惩罚。</p>
+<p>这篇笔记我们来看看机器学习中一个重要的非参数学习算法，决策树。</p>
+<h2 id="u4EC0_u4E48_u662F_u51B3_u7B56_u6811"><a href="#u4EC0_u4E48_u662F_u51B3_u7B56_u6811" class="headerlink" title="什么是决策树"></a>什么是决策树</h2><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/84205d722c59ef40b62804d2672f9435.jpg" alt=""></p>
+<p>上图是一个向银行申请信用卡的示例，图中的树状图展示了申请人需要在银行过几道关卡后才能成功申请到一张信用卡的流程图。在图中树状图的根节点是申请人输入的信息，叶子节点是银行作出的决策，也就相当于是对申请者输入信息作出的分类决策。从第一个根节点到最后一个叶子节点经过的根节点数量称为树状图的深度（depth）。上图示例中的树状图从第一个根节点<strong>申请人是否办理过信用卡</strong>，到最后一个<strong>发放信用卡</strong>叶子节点共经过了三个根节点，所以深度为3。那么像这样使用树状图对输入信息一步步分类的方式就称为决策树方式。</p>
+<p>我们再来看一个问题，上图中每一个根节点的输入信息都可以用<strong>是</strong>或<strong>否</strong>来做判断分类，但是机器学习的样本数据都是数字，那么此时如果做判断呢？我们先来使用Scikit Learn中提供的决策树直观的看一下通过决策树对样本数据的分类过程和分类结果。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-1/#more" rel="contents">
+            <a class="btn" href="/articles/machine-learning-15/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -488,8 +474,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/testng-powermock/" itemprop="url">
-                  基于TestNG和PowerMock的单元测试指南
+                <a class="post-title-link" href="/articles/machine-learning-14/" itemprop="url">
+                  机器学习笔记十四之核函数（Kernel Function）
                 </a>
               
             
@@ -499,8 +485,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2017-01-19T00:00:00+08:00" content="2017-01-19">
-              2017-01-19
+            <time itemprop="dateCreated" datetime="2018-06-15T00:00:00+08:00" content="2018-06-15">
+              2018-06-15
             </time>
           </span>
 
@@ -509,8 +495,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/测试/" itemprop="url" rel="index">
-                    <span itemprop="name">测试</span>
+                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习算法</span>
                   </a>
                 </span>
 
@@ -525,8 +511,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/testng-powermock/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/testng-powermock/" itemprop="commentsCount"></span>
+              <a href="/articles/machine-learning-14/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-14/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -557,36 +543,24 @@
 </script>
 
 
-<h2 id="u4EC0_u4E48_u662FTestNG"><a href="#u4EC0_u4E48_u662FTestNG" class="headerlink" title="什么是TestNG"></a>什么是TestNG</h2><p>TestNG是一套开源测试框架，是从JUnit继承而来，TestNG意为test next generation。它的优势如下：</p>
+<h2 id="SVM_u5904_u7406_u975E_u7EBF_u6027_u95EE_u9898"><a href="#SVM_u5904_u7406_u975E_u7EBF_u6027_u95EE_u9898" class="headerlink" title="SVM处理非线性问题"></a>SVM处理非线性问题</h2><p>我们在<a href="http://www.devtalking.com/articles/machine-learning-8/"> 机器学习笔记八之多项式回归、拟合程度、模型泛化 </a>中讲过线性回归通过多项式回归方法处理非线性问题，同样SVM也可以使用多项式方法处理非线性问题。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用datasets提供的方法构建非线性数据</span></span><br><span class="line">X, y = datasets.make_moons()</span><br></pre></td></tr></table></figure>
+<p>我们可以使用<code>datasets</code>提供的<code>make_moons()</code>函数生成非线性数据，默认为100行2列的矩阵，既100个样本数据，每个样本数据2个特征。可以使用<code>n_samples</code>参数指定样本数据数量。我们将其绘制出来看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/df044e91c5054a81223e83ab5e339d9d.jpg" alt=""></p>
+<p>可以看到<code>make_moons()</code>默认生成的数据绘制出的图像是两个规整的半月牙曲线。但是作为样本数据有点太规整了，所以我们可以使用<code>noise</code>参数给生成的数据增加一点噪音：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X, y = datasets.make_moons(noise=<span class="number">0.15</span>)</span><br><span class="line"></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/e1409e9a5bd253d605c321d1edf4aa9c.jpg" alt=""></p>
+<p>可以看到，增加了噪音后虽然数据点较之前的分布分散随机了许多，但整体仍然是两个半月牙形状。下面我们就在SVM的基础上使用多项式来看看对这个样本数据决策边界的计算：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures, StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> LinearSVC</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br></pre></td></tr></table></figure>
+<p>首先我们需要引入我们用到的几个类：</p>
 <ul>
-<li>支持注解。</li>
-<li>可以在任意的大线程池中，使用各种策略运行测试（所有方法都可以拥有自己的线程或者每个测试类拥有一个线程等等）。</li>
-<li>代码多线程安全测试。</li>
-<li>灵活的测试配置。</li>
-<li>支持数据驱动测试(@DataProvider)。</li>
-<li>支持参数。</li>
-<li>强大的执行模型（不再用TestSuite）。</li>
-<li>支持各种工具和插件（Eclipse、IDEA、Maven等）。</li>
-<li>可以更灵活地嵌入BeanShell。</li>
-<li>默认JDK运行时功能和日志记录（无依赖关系）。</li>
-<li>依赖应用服务测试的方式。</li>
-</ul>
-<h2 id="TestNG_u7684_u6700_u7B80_u5355_u793A_u4F8B"><a href="#TestNG_u7684_u6700_u7B80_u5355_u793A_u4F8B" class="headerlink" title="TestNG的最简单示例"></a>TestNG的最简单示例</h2><p>我们先来看一个TestNG最简单的示例：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.junit.AfterClass;</span><br><span class="line"><span class="keyword">import</span> org.junit.BeforeClass;</span><br><span class="line"><span class="keyword">import</span> org.testng.annotations.Test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"> <span class="annotation">@BeforeClass</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">beforeClass</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	System.out.println(<span class="string">"this is before class"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="annotation">@Test</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestHelloWorld</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	System.out.println(<span class="string">"this is HelloWorld test case"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="annotation">@AfterClass</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterClass</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	System.out.println(<span class="string">"this is after class"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从面上的简单示例中可以看出TestNG的生命周期，并且可以看到TestNG是使用注解来控制生命周期的。下面我们来看看TestNG支持的各种注解。</p>
-<h2 id="TestNG_u7684_u6CE8_u89E3"><a href="#TestNG_u7684_u6CE8_u89E3" class="headerlink" title="TestNG的注解"></a>TestNG的注解</h2><p>TestNG的注解大部分用在方法级别上，一共有六大类注解。</p>
-<h3 id="Before_u7C7B_u522B_u548CAfter_u7C7B_u522B_u6CE8_u89E3"><a href="#Before_u7C7B_u522B_u548CAfter_u7C7B_u522B_u6CE8_u89E3" class="headerlink" title="Before类别和After类别注解"></a>Before类别和After类别注解</h3><ul>
-<li>@BeforeSuite：被注解的方法将会在所有测试类执行之前运行。</li>
-<li>@AfterSuite：被注解的方法将会在所有测试类执行之后运行。</li>
-<li>@BeforeTest：被注解的方法将会在当前测试类中的所有测试方法执行之前运行。</li>
-<li>@AfterTest：被注解的方法将会在当前测试类中的所有测试方法执行之后运行。</li>
-<li>@BeforeClass：被注解的方法将会在当前测试类中的第一个测试方法执行之前运行。</li>
-<li>@AfterClass：被注解的方法将会在当前测试类中的最后一个测试方法执行之后运行。</li>
-<li>@BeforeMethod：被注解的方法将会在当前测试类中的每个测试方法执行之前运行。</li>
-<li>@AfterMethod：被注解的方法将会在当前测试类中的每个测试方法执行之后运行。<br>我们可以根据不同的场景来使用不同的注解。</li>
+<li>多项式自然要用到之前讲过的<code>PolynomialFeatures</code>类。</li>
+<li>数据归一化需要用到<code>StandardScaler</code>类。</li>
+<li>同样需要用到Pipeline将多个过程封装在一个函数里，所以要用到<code>Pipeline</code>类。</li>
 </ul>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/testng-powermock/#more" rel="contents">
+            <a class="btn" href="/articles/machine-learning-14/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -624,8 +598,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/google-web-tech/" itemprop="url">
-                  《Google力推的那些前端技术，最近有何进展？》笔记
+                <a class="post-title-link" href="/articles/machine-learning-13/" itemprop="url">
+                  机器学习笔记十三之支撑向量机（SVM）
                 </a>
               
             
@@ -635,8 +609,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2017-01-09T00:00:00+08:00" content="2017-01-09">
-              2017-01-09
+            <time itemprop="dateCreated" datetime="2018-05-30T00:00:00+08:00" content="2018-05-30">
+              2018-05-30
             </time>
           </span>
 
@@ -645,8 +619,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/前端/" itemprop="url" rel="index">
-                    <span itemprop="name">前端</span>
+                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习算法</span>
                   </a>
                 </span>
 
@@ -661,8 +635,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/google-web-tech/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/google-web-tech/" itemprop="commentsCount"></span>
+              <a href="/articles/machine-learning-13/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-13/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -693,31 +667,21 @@
 </script>
 
 
-<p>Google是一个伟大的公司，有很多伟大的产品。从Google一直不做桌面系统和对Chrome的大力发展来看，Google对前端事业是非常热衷的。</p>
-<h2 id="Angular"><a href="#Angular" class="headerlink" title="Angular"></a>Angular</h2><p>Angular、React、Vue是目前前端框架的三驾马车。我在16年9月写过一篇文章<a href="http://www.devtalking.com/articles/angularjs1x-guide/">《温故而知新-AngularJS 1.x 小记》</a>，当时还叫AngularJS，版本是1.X，那时已经很惊艳了，把前端解释性的脚本语言封装成了面向对象的编程模式，另外对HTML的元素维护提供了便利的方式方法。当时我负责的BPM产品，Process Builder的前端架构果断更新为了AngularJS。时隔两年多，Angular 6都已经发布了，如果我还有机会做前端产品的话，我应该还是会果断选择Angular。</p>
-<blockquote>
-<p>Angular 6 添加了ng update和ng add这样的新功能，让你的应用程序保持最新的状态，帮助Angular开发者加快创新的步伐。渲染器Project Ivy也有很大的改进，它能使Angular调试更容易，以更快地速度编译和运行，它还可以与现有的应用程序一起使用，Angular团队还在小型Hello World应用程序做了演示，不使用的Angular功能将自动从应用的JavaScript bundle自动删除。</p>
-</blockquote>
-<h2 id="PWA"><a href="#PWA" class="headerlink" title="PWA"></a>PWA</h2><p>在移动的世界里，Application是重中之重，是构建移动生态的核心。那么构建Mobile App的方式的问题就来了。</p>
-<ul>
-<li>Native App：既用iOS的原生语言OC、Swift或Android原生语言Java构建的App。</li>
-<li>Web App：既使用前端框架和技术（Angular、React、Vue，HTML 5，CSS 3等）构建的，在移动设备上运行展现的App。</li>
-<li>Native &amp; Web App：原生语言和Web技术混搭构建的App。这类App还孕育出了像React Native这种使用前端语言解析为原生语言的框架。</li>
-</ul>
-<p>以上三种类型各有利弊：</p>
-<ul>
-<li>Native App给用户的体验是最好的，交互动画效果平滑，可以基于硬件的性能做优化等。但是研发周期比较长，并且因为iOS和Android应用的审核机制，导致版本更新周期比较长，修复完问题或有新需求增加后无法做到及时更系用户设备上的App。</li>
-<li>Web App可以做到版本的热更新，研发周期短，Web端和移动端可共享研发资源。但是用户体验比较差，一些需要使用到硬件功能不好实现。</li>
-<li>Native &amp; Web App则致力于综合他们的优点，规避他们的缺点。</li>
-</ul>
-<p>Progressive Web App（<a href="https://lavas.baidu.com/pwa">PWA</a>）就是Google推出的提升Web App体验，给用户原生应用体验的框架。主要特点包括：</p>
-<ul>
-<li>可靠 - 即使在不稳定的网络环境下，也能瞬间加载并展现。</li>
-<li>体验 - 快速响应，并且有平滑的动画响应用户的操作</li>
-<li>粘性 - 像设备上的原生应用，具有沉浸式的用户体验，用户可以添加到桌面<br>目前已支持Android，iOS 11.3以后版本，Safari，Chrome，MS Edge。</li>
-</ul>
+<p>这一篇笔记主要讲机器学习算法中一个重要的分类算法，支撑向量机（Support Vector Machine）。它背后有严格的数学理论和统计学理论支撑的，这里我们只对它的原理和应用做以介绍，更深层次的数学理论有兴趣可以查阅其他资料。</p>
+<h2 id="u4EC0_u4E48_u662FSVM"><a href="#u4EC0_u4E48_u662FSVM" class="headerlink" title="什么是SVM"></a>什么是SVM</h2><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/5142c26ba0e86429631a63609c314a97.jpg" alt=""></p>
+<p>上面的图展示的是一个二分类问题，在逻辑回归的笔记中，我们知道了决策边界，图中橘黄色的直线就是决策边界，它看似很好的将样本数据的不同分类区分开了。我们在多项式回归的笔记中，讲过模型泛化的问题，一个模型的好坏程度很大程度上是体现了模型泛化能力的好坏，也就是对未知样本的预测能力。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/b26d6614606ac304144b99549eeb390e.jpg" alt=""></p>
+<p>如果新来一个样本数据A，按照决策边界划分它是被分为了蓝色分类，可事实真的是如此吗，因为点A和红色分类的点非常近，很有可能点A是属于红色分类的。所以上图中的决策边界可能并不是最优的，那最优的决策边界应该是什么样的呢？</p>
+<p>上面的决策边界之所以有缺陷，是因为它和红色类别的点太近了，当然肯定也不能和蓝色的点太近了，所以我们希望这条决策边界离红色分类和蓝色分类都尽可能的远，才能很好的避免上面出现的问题。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/990fbea083569d4503be599d202b049d.jpg" alt=""></p>
+<p>想要决策边界离红蓝两个分类都尽可能的远，也就是红蓝分类两边离决策边界最近的点的距离要远，并且两边的点到决策边界的距离要相等，这才说明决策边界是不偏不倚的，如上图所示。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/d4642c6673e5e75023088be725dcd4f8.jpg" alt=""></p>
+<p>过红蓝两边离决策边界最近的点画两条直线，并且平行于决策边界，那么就确定了一个区域，在这个区域内不应该再有任何数据点出现。那么SVM就是尝试寻找这个区域中间那条最优的决策边界。这个区域边界上的点称为支撑向量，换句话说，是支撑向量定义出了这个区域，那么最优的决策边界也是由支撑向量决定的，这也是支撑向量机这个名称的由来。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/f5af760ed417acf74d79d065b437807d.jpg" alt=""></p>
+<p>如上图所示，由支撑向量确定的区域之间的距离称为Margin。那么SVM要做的事情就是最大化Margin，既将问题转化为了求最优解的问题。</p>
+<p>以上对SVM的解释是基于线性可分问题的基础上，也就是能确确实实找到一条直线作为决策边界，这种问题称为Hard Margin SVM，但是很多真实的情况是线性不可分的，这类问题称为Soft Margin SVM，这两类问题都是支撑向量机可以处理的，但基础还是Hard Margin SVM。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/google-web-tech/#more" rel="contents">
+            <a class="btn" href="/articles/machine-learning-13/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -755,8 +719,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/talk-about-tech/" itemprop="url">
-                  《当我们聊技术实力的时候，我们到底在聊什么》笔记
+                <a class="post-title-link" href="/articles/machine-learning-12/" itemprop="url">
+                  机器学习笔记十二之算法精准率、召回率、混淆矩阵
                 </a>
               
             
@@ -766,8 +730,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2017-01-02T00:00:00+08:00" content="2017-01-02">
-              2017-01-02
+            <time itemprop="dateCreated" datetime="2018-05-15T00:00:00+08:00" content="2018-05-15">
+              2018-05-15
             </time>
           </span>
 
@@ -776,8 +740,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/技术杂文/" itemprop="url" rel="index">
-                    <span itemprop="name">技术杂文</span>
+                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习算法</span>
                   </a>
                 </span>
 
@@ -792,8 +756,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/talk-about-tech/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/talk-about-tech/" itemprop="commentsCount"></span>
+              <a href="/articles/machine-learning-12/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-12/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -813,42 +777,44 @@
 
       
         
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
 
-<p>技术实力的本质和基本原则：</p>
+<p>机器学习算法中有一个重要环节就是评判算法的好坏，我们在之间的笔记中讲过多种评价回归算法的评测标准，比如均方误差（MSE）、均方根误差（RMSE）、平均绝对误差（MAE）、$R^2$（R Squared）。但是在分类问题中我们一直使用分类准确度这一个指标，也就是预测对分类的样本数量除以总预测样本数量。但是这个方法存在很大的一个缺陷，所以这篇笔记主要介绍评价分类问题的方式方法。</p>
+<h2 id="u6781_u5EA6_u504F_u659C_u6570_u636E_uFF08Skewed_Data_uFF09"><a href="#u6781_u5EA6_u504F_u659C_u6570_u636E_uFF08Skewed_Data_uFF09" class="headerlink" title="极度偏斜数据（Skewed Data）"></a>极度偏斜数据（Skewed Data）</h2><p>为什么说分类准确度这个指标存在很大的一个缺陷呢。举个例子，假设有一个癌症预测系统，输入体检信息，判断是否患有癌症。我们知道世界上相对于其他病症，患癌症的比例还是很小，如果癌症产生的概率只有0.1%，那么有99.9%的人都不会患有癌症。这就意味着，就算癌症预测系统什么都不做，但凡有体检信息输入，就给出没有患癌症的结果，那准确率也是达到了99.9%。那此时这个分类准确度是真实的吗？所以当样本数据或领域的实际情况存在数据极度偏斜的时候，只使用分类准确度这个指标是远远不够的。</p>
+<h2 id="u6DF7_u6DC6_u77E9_u9635_uFF08Confusion_Matrix_uFF09"><a href="#u6DF7_u6DC6_u77E9_u9635_uFF08Confusion_Matrix_uFF09" class="headerlink" title="混淆矩阵（Confusion Matrix）"></a>混淆矩阵（Confusion Matrix）</h2><p>这一节介绍一个能进一步分析分类结果的工具，混淆矩阵。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/c997c342900bf1764c1982113ad3e571.jpg" alt=""></p>
+<p>上面这个表针对二分类问题，所有将类别就分为两类0和1，0表示Negative，类似医院上的阴性，1表示Positive，类似医学上的阳性。行代表真实值，列代表预测值。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/11d0bcf47d48fee84429d1f387b21847.jpg" alt=""></p>
+<p>如上图所示：</p>
 <ul>
-<li>不存在放之四海皆准的技术</li>
-<li>技术要能解决具体问题才有价值</li>
-<li>问题的复杂度决定技术实力的高度</li>
+<li>(0, 0)格子真实值和预测值都为0，称为预测Negative正确，记作True Negative，简写为TN。</li>
+<li>(0, 1)格子真实值为0，但预测值为1，称为预测Positive错误，记作False Positive，简写为FP。</li>
+<li>(1, 0)格子真实值为1， 但预测值为0，称为预测Negative错误，记作False Negative，简写为FN。</li>
+<li>(1, 1)格子真实值和预测值都为1，称为预测Positive正确，记作True Positive，简写为TP。</li>
 </ul>
-<p>在技术实力的基本原则前提下，将技术实力分为两大类，六个小分类。</p>
-<h2 id="u786C_u5B9E_u529B"><a href="#u786C_u5B9E_u529B" class="headerlink" title="硬实力"></a>硬实力</h2><p>硬实力有四个等级，从低到高为点、线、面、体，对应的解决问题的复杂度也越来越高。</p>
-<h3 id="u6280_u672F_u70B9"><a href="#u6280_u672F_u70B9" class="headerlink" title="技术点"></a>技术点</h3><p>技术点是一个个颗粒性小，且相互较为独立的技术的使用方式和其原理认知。比如使用Java多线程的方式方法和解决的具体问题，使用Java进行I/O操作的方式方法和解决的具体问题。<strong>掌握了技术点，就可以开始基本的业务能力开发了</strong>。</p>
-<h3 id="u6280_u672F_u7EBF"><a href="#u6280_u672F_u7EBF" class="headerlink" title="技术线"></a>技术线</h3><p>技术线是由若干个技术点串联起来的，该条技术线能解决某一类相关问题。比如一个常规的Web应用流程，用户发起请求，经过负载均衡路由，到达业务Controller进行业务逻辑处理，过程中对数据库的操作，对缓存的操作，然后返回结果给用户等。这就是由若干个技术点组成的一条技术线，这条技术线能支撑起来Web应用开发中实现业务功能的全过程。<strong>掌握了技术线，就能完成业务功能的全流程设计和开发了</strong>。</p>
-<h3 id="u6280_u672F_u9762"><a href="#u6280_u672F_u9762" class="headerlink" title="技术面"></a>技术面</h3><p>技术面是由若干技术线排列交织而成。比如Web应用开发，性能优化，数据库维护等都属于技术面。<strong>掌握技术面，表明已经是某个领域的专家了</strong>。</p>
-<h3 id="u6280_u672F_u4F53"><a href="#u6280_u672F_u4F53" class="headerlink" title="技术体"></a>技术体</h3><p>技术体既多个技术面的综合。最小的技术体也得有三个技术面组成。最常见的就是架构师，对于一个大型业务系统的架构师而言，需要掌握多个技术面，然后站在全局的角度进行系统，架构的设计和取舍，比如一个后端的架构师需要掌握Java开发的技术面，数据的技术面，网络的技术面，包括专业业务领域的技术面。<strong>掌握了技术面，表明已经是某个领域的资深架构师或专家了，可以解决领域级的复杂问题</strong>。</p>
-<h2 id="u8F6F_u5B9E_u529B"><a href="#u8F6F_u5B9E_u529B" class="headerlink" title="软实力"></a>软实力</h2><p>软实力既不是很容易量化的一种能力，但是更能体现技术实力。</p>
-<h3 id="u53D1_u73B0_u95EE_u9898"><a href="#u53D1_u73B0_u95EE_u9898" class="headerlink" title="发现问题"></a>发现问题</h3><p>发现问题是一个很重要的软实力，当系统出现问题后，大多数问题可以很容易的定位，但是就有个别问题找不出是因为哪个环节引起的问题，而往往这些找不出原因的问题都是优先级比较高或者比较严重的问题。还有一种场景是系统三天两头出问题，出一个问题解决一个问题，但是都是治标不治本，找不出反复引起问题的根本原因。所以发现隐藏很深很细节的问题和发现根源问题是彰显技术实力的一个软实力，这个能力主要来源于经验，有成功的经验，也有踩坑的经验，也有参考别人的经验。所以需要多思考、多总结、多学习、多交流。</p>
-<h3 id="u6280_u672F_u521B_u65B0"><a href="#u6280_u672F_u521B_u65B0" class="headerlink" title="技术创新"></a>技术创新</h3><p>要达到这一项软实力其实比较难，比如在Google开创出大数据的大神，亚马逊开创出云计算的大神。但是这是我们为之努力的目标之一。</p>
-<p>阅读文章：<a href="http://www.infoq.com/cn/articles/talk-about-technology" target="_blank" rel="external">《当我们聊技术实力的时候，我们到底在聊什么》</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
+<p>以上这个表格就叫做混淆矩阵。举个例子，如果对10000个人预测他们是否患癌症，通过混淆矩阵表示出的真实情况就是：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/c3d5ddc7046eae2076c334850889e4e8.jpg" alt=""></p>
+<p>解读一下：</p>
+<ul>
+<li>没有患癌症，系统也预测出没有患癌症的人为9978人（TN）。</li>
+<li>没有患癌症，但系统预测出患癌症的人为12人（FP）。</li>
+<li>患有癌症，但系统预测出没有患癌症的人为2人（FN）。</li>
+<li>患有癌症，系统也预测出患有癌症的人为8人（TP）。</li>
+</ul>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/machine-learning-12/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -871,7 +837,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -909,7 +875,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">100</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

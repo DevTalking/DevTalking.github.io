@@ -102,7 +102,7 @@ Producer简而言之，Producer就负责往Topic里发送数">
 <meta property="og:image" content="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/26/1545807972109.png">
 <meta property="og:image" content="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/26/1545808307901.png">
 <meta property="og:image" content="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/26/1545814677871.png">
-<meta property="og:updated_time" content="2019-04-18T07:54:54.852Z">
+<meta property="og:updated_time" content="2019-04-18T07:58:26.726Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka从上手到实践-庖丁解牛：Producer">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -340,6 +340,7 @@ Producer简而言之，Producer就负责往Topic里发送数">
 </ul>
 <p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/18/1545090560721.png" alt=""></p>
 <h3 id="Message_keys"><a href="#Message_keys" class="headerlink" title="Message keys"></a>Message keys</h3><p>Producer默认采用轮询的机制选择Broker往Partition里持久化数据。但当我们需要根据数据中的某个字段按Partition进行分组或者排序时，就需要在每条Message里添加Key，这个Key可以是数字，也可以是字符串等等。然后相同Key的Message永远会持久化到同一个Partition。</p>
+<a id="more"></a>
 <h3 id="Acks"><a href="#Acks" class="headerlink" title="Acks"></a>Acks</h3><p>Producer在发送生产出的数据给Broker时，可以选择三种模式，称为acks，它是Acknowledgment的缩写。意思是Broker对Producer即将发送来的数据采用何种确认方式。</p>
 <h4 id="acks_3D0"><a href="#acks_3D0" class="headerlink" title="acks=0"></a>acks=0</h4><p>在该模式下，Producer不会等待Broker的确认反馈，即不关心Broker是否正确的将发送来的数据持久化，所以在这种模式下，很有可能会丢失数据。因为如果Broker挂了，Producer不会被通知到，所以还会不停的发送数据导致数据丢失。在对数据完整性需求不强烈的场景下，这种模式可以提高性能。</p>
 <h4 id="acks_3D1"><a href="#acks_3D1" class="headerlink" title="acks=1"></a>acks=1</h4><p>默认采用的模式，该模式下Producer会等待Leader Broker的确认反馈，当Broker确实将数据持久化到至少一个Partition中后，给予Producer确认反馈，Producer才会继续发送数据。该模式下有几点需要注意：</p>
@@ -415,6 +416,10 @@ Producer简而言之，Producer就负责往Topic里发送数">
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/kafka-practice-5/" rel="prev" title="Kafka从上手到实践-庖丁解牛：Consumer">
+                Kafka从上手到实践-庖丁解牛：Consumer <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -508,7 +513,7 @@ Producer简而言之，Producer就负责往Topic里发送数">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">100</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

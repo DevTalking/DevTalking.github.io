@@ -241,8 +241,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/develop-tvos-app-with-tvml/" itemprop="url">
-                  用TVML开发tvOS应用教程
+                <a class="post-title-link" href="/articles/machine-learning-2/" itemprop="url">
+                  机器学习笔记二之矩阵、环境搭建、NumPy
                 </a>
               
             
@@ -252,8 +252,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-12-31T00:00:00+08:00" content="2015-12-31">
-              2015-12-31
+            <time itemprop="dateCreated" datetime="2018-01-13T00:00:00+08:00" content="2018-01-13">
+              2018-01-13
             </time>
           </span>
 
@@ -262,8 +262,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS-macOS-tvOS-watchOS/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS & macOS & tvOS & watchOS</span>
+                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习算法</span>
                   </a>
                 </span>
 
@@ -278,8 +278,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/develop-tvos-app-with-tvml/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/develop-tvos-app-with-tvml/" itemprop="commentsCount"></span>
+              <a href="/articles/machine-learning-2/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-2/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -299,226 +299,30 @@
 
       
         
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
 
-<p>作者：<a href="http://www.raywenderlich.com/u/Kelvin%20Lau" target="_blank" rel="external">Kelvin Lau</a> 原文地址：<a href="http://www.raywenderlich.com/114886/beginning-tvos-development-with-tvml-tutorial" target="_blank" rel="external">Beginning tvOS Development with TVML Tutorial</a></p>
-<p>在2015年9月9日的产品发布会中，Apple宣布了新一代的Apple TV以及tvOS，并且在tvOS中集成了App Store。这使得我们多年以来想在Apple TV上开发专属应用的梦想成真了。</p>
-<p>我和其他教程团队的成员已经开始深入研究tvOS SDK，并且正在努力为你们准备一些有价值的tvOS教程。在你开这篇文章之前，Chris Wagner已经写了一篇关于tvOS初步印象的<a href="http://www.raywenderlich.com/114313/tvos-initial-impressions" target="_blank" rel="external">文章</a>，我也基于这篇文章，设计了第一个tvOS的教程。</p>
-<blockquote>
-<p>译者注：可参阅Chris Wagner文章的中译版<a href="http://www.devtalking.com/articles/tvOS-initial-impression/">一个iOS开发者对tvOS SDK的初探</a>。</p>
-</blockquote>
-<p>在这篇教程中，你将会使用TVML开发你的第一款tvOS应用。信不信由你，你将会使用JavaScript管理你应用的逻辑以及创建TVML模板来展现你应用的UI。</p>
-<p>当教程结束后，你应该可以基本理解如果通过TVML和TVJS管理、控制tvOS应用。现在就我们开始吧。</p>
-<blockquote>
-<p>注意：该教程需要Xcode7.1或更高的版本，你们可以在这里<a href="https://developer.apple.com/xcode/download/" target="_blank" rel="external">下载</a>。虽然你们可以跟着该教程一步一步的进行操作，但我还是建议你们能储备一些基本的JavaScript知识。</p>
-</blockquote>
-<h2 id="u9009_u62E9_u5F00_u53D1_u65B9_u5F0F"><a href="#u9009_u62E9_u5F00_u53D1_u65B9_u5F0F" class="headerlink" title="选择开发方式"></a>选择开发方式</h2><p>Apple为开发tvOS应用提供了两种方式：</p>
-<ol>
-<li><strong>TVML Apps</strong>：这类应用是使用完整的新开发技术开发的，比如TVML、TVJS、TVMLKit。在稍后我会解释这些简称的含义以及如何使用它们。</li>
-<li><strong>Custom Apps</strong>：这类应用是使用我们已经比较熟悉的开发技术进行开发的，比如大家熟知的一些iOS框架和特性，像Storyboard、UIKit、Auto Layout等。</li>
-</ol>
-<p>这两种方式没有孰优孰劣之分，都是Apple推荐的方法，只是按需所取，以及你更想尝试哪种方式。</p>
-<p>在这篇教程中，你们的目标是开发以个能播放<a href="http://www.rwdevcon.com/" target="_blank" rel="external">RWDevCon</a>讨论视频的tvOS应用：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-1.gif" alt="tvOS-1"></p>
-<p>虽然用上述两种方式都可以开发这个应用，但是使用TVML会更加容易一些。所以这就是你在这篇教程中要学和要做的东西。</p>
-<h2 id="u4EC0_u4E48_u662FTVML_uFF1F"><a href="#u4EC0_u4E48_u662FTVML_uFF1F" class="headerlink" title="什么是TVML？"></a>什么是TVML？</h2><p>正如我刚才提到的，第一种开发tvOS应用的方式是通过TVML、TVJS和TVMLKit这些新的技术实现的。如果你们对这些简称比较陌生，不要惊慌，因为他们本就是新鲜玩意。这里我简单解释一下：</p>
-<ul>
-<li><strong>TVML</strong>是一种XML格式，基于“Television Markup Language”。</li>
-<li><strong>TVJS</strong>是基于JavaScript APIs的脚本语言，它可以根据TVML中定义的内容展示应用。</li>
-<li><strong>TVMLKit</strong>是连接TVML、TVJS和原生tvOS应用的工具包。</li>
-</ul>
-<p>如果你是一名经常使用原生API开发原生iOS应用的开发者，那么看到这些类似前端的技术可能会有点退缩。但希望你能保持一颗学习的心，学习了解这些新的强大的特性。</p>
-<p>我在这列举一个非常典型的Apple TV的应用场景。大家可以想象一下：你们想把一些内容或信息展现给用户，这些内容和信息储存在你们的服务器上，并且这些内容的格式、查询方式都服务于iPhone或iPad中的应用，那么你肯定会希望你的tvOS中的应用也能方便的使用这些内容，并做到与iOS中应用有相似的展现、查询、导航方式。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-2.jpg" alt="tvOS-2"></p>
-<p>上述的这个场景恰恰是我们这片教程中的场景。我们已经有<a href="http://www.rwdevcon.com/" target="_blank" rel="external">RWDevCon</a>网站，上面有许多技术讨论视频，所以运用TVML模板应该很容易实现。并且我们也没有很严格的用户界面的需求，所以我们可以简单方便的使用Apple提供的UI<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/TextboxTemplate.html#//apple_ref/doc/uid/TP40015064-CH2-SW8" target="_blank" rel="external">模板</a>。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-3.jpg" alt="tvOS-3"></p>
-<p>简而言之：</p>
-<ul>
-<li><strong>开发TVML App</strong>：如果你主要是通过tvOS应用展现一些内容，不论是音频、视频、文本、图片，并且你已经有服务器存储这些资源。那么使用TVML开发是不错的选择。</li>
-<li><strong>开发Custom App</strong>：如果你希望用户不只是被动的通过你的tvOS应用观看或收听内容，而是希望用户与应用有更多的交互，给用户高质量的用户体验。那么你应该选择使用iOS的相关技术开发自定义的应用。</li>
-</ul>
-<p>现在你们已经大概了解了TVML是如何工作的，以及我们为什么要在这篇教程中使用TVML开发tvOS应用。想要更深入的了解，最好的办法就是由你们在实践中去学习、理解了。让我们开始动手吧！</p>
-<h2 id="u51C6_u5907_u5DE5_u4F5C"><a href="#u51C6_u5907_u5DE5_u4F5C" class="headerlink" title="准备工作"></a>准备工作</h2><p>首先你们要确保已经下载并安装了Xcode7.1或更高版本。</p>
-<p>然后通过 <strong>File\New\Project</strong> 创建新工程，在侧边栏选择 <strong>tvOS\Application\Single View Application</strong> 模板，然后点击 <strong>Next</strong>：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-4.png" alt="tvOS-4"></p>
-<p>项目名称输入 <strong>RWDevCon</strong> ,语言选择 <strong>Swift</strong> ，确保下面的两个复选框为未选中状态，也就是不使用Core Data和单元测试，然后点击 <strong>Next</strong>：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-5.png" alt="tvOS-5"></p>
-<p>选择一个目录，点击 <strong>Save</strong> 保存你的项目。Xcode会为你创建一个带有Storyboard的空工程（如果你开发自定义UI的tvOS应用，那么你需要使用Storyboard）。</p>
-<p>然而在该教程中你不需要使用Storybard，因为我们会使用TVML来展示应用的UI，而不是用Storybard去设计UI。所以将 <strong>Main.storyboard</strong> 和 <strong>ViewController.swift</strong> 删去，在提示框中选择 <strong>Move To Trash</strong> 彻底删除。</p>
-<p>接着打开 <strong>Info.plist</strong> 文件，删掉<code>Main storybaord file base name</code>属性。最后添加新的属性<code>App Transport Security Settings</code>（区分大小写），以及它的子属性<code>Allow Arbitrary Loads</code>，并将其值设为<code>YES</code>。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-6.png" alt="tvOS-6"></p>
-<blockquote>
-<p>注意：在iOS9中，Apple不允许应用链接非HHTPS协议的服务，所以刚才的操作是很有必要的，因为在该教程中，你们将会以HTTP协议访问本地的服务器，所以你需要在Info.plist中添加上述属性以便允许应用通过HTTP协议访问服务器。</p>
-</blockquote>
-<h2 id="u52A0_u8F7D_u4F60_u7684TVML"><a href="#u52A0_u8F7D_u4F60_u7684TVML" class="headerlink" title="加载你的TVML"></a>加载你的TVML</h2><p>tvOS应用的生命周期开始于AppDelegate。在这里，你将创建<code>TVApplicationController</code>以及应用上下文，并将它们传给主要的JavaScript文件。</p>
-<p>打开<strong>AppDelegate.swift</strong>并做下面这些事：</p>
-<ul>
-<li>删除所有的方法。</li>
-<li>导入<code>TVMLKit</code>。</li>
-<li>使AppDelegate遵循<code>TVApplicationControllerDelegate</code>协议。</li>
-</ul>
-<p>当完成这些事后，你的<strong>AppDelegate.swift</strong>看起来应该像这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"><span class="keyword">import</span> TVMLKit</span><br><span class="line"> </span><br><span class="line"><span class="preprocessor">@UIApplicationMain</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AppDelegate</span>: <span class="title">UIResponder</span>, <span class="title">UIApplicationDelegate</span>, <span class="title">TVApplicationControllerDelegate</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">var</span> window: <span class="type">UIWindow</span>?</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>接着添加下面这些属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> appController: <span class="type">TVApplicationController</span>?</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">let</span> <span class="type">TVBaseURL</span> = <span class="string">"http://localhost:9001/"</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">let</span> <span class="type">TVBootURL</span> = <span class="string">"<span class="subst">\(AppDelegate.TVBaseURL)</span>js/application.js"</span></span><br></pre></td></tr></table></figure>
-<p><code>TVApplicationController</code>是<code>TVMLKit</code>中的一个类，它负责与你的服务器的交互。<code>TVBaseURL</code>和<code>TVBootURL</code>包含了你的服务器的地址和JavaScript文件的地址，该JavaScript文件稍后会运行在你的服务器中。</p>
-<p>接在在AppDelegate中添加如下方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">application</span><span class="params">(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?)</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">  window = <span class="type">UIWindow</span>(frame: <span class="type">UIScreen</span>.mainScreen().bounds)</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 1</span></span><br><span class="line">  <span class="keyword">let</span> appControllerContext = <span class="type">TVApplicationControllerContext</span>()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 2</span></span><br><span class="line">  <span class="keyword">guard</span> <span class="keyword">let</span> javaScriptURL = <span class="type">NSURL</span>(string: <span class="type">AppDelegate</span>.<span class="type">TVBootURL</span>) <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">fatalError</span>(<span class="string">"unable to create NSURL"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  appControllerContext.javaScriptApplicationURL = javaScriptURL</span><br><span class="line">  appControllerContext.launchOptions[<span class="string">"BASEURL"</span>] = <span class="type">AppDelegate</span>.<span class="type">TVBaseURL</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3</span></span><br><span class="line">  appController = <span class="type">TVApplicationController</span>(context: appControllerContext, window: window, delegate: <span class="keyword">self</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这些代码相对还是比较容易理解的：</p>
-<ol>
-<li>这里你首先创建了一个应用上下文<code>TVApplicationControllerContext</code>的实例，用于稍后初始化你的<code>TVApplicationController</code>。你可以理解为给一个简单的对象设置了一些属性，比如服务器的URL，然后该对象又作为属性设置给了另一个对象。</li>
-<li>给应用上下文这个对象实例设置了两个简单的属性：主JavaScript文件的路径和服务器的地址。</li>
-<li>通过你刚才设置好的应用上下文初始化<code>TVApplicationController</code>。此时就完全由Apple代码来接管了，他会加载到你的主JavaScript文件，并开始执行其内容。</li>
-</ol>
-<p>所以到目前为止，是时候让Xcode休息一会了，因为接下来你们将要编写JavaScript了。</p>
-<h2 id="The_JavaScript"><a href="#The_JavaScript" class="headerlink" title="The JavaScript"></a>The JavaScript</h2><p>在客户端-服务端这类的tvOS应用中，你的JavaScript文件通常在应用连接的服务器中。在该教程中，你们将会在Mac上搭建一个简单的服务器。</p>
-<h3 id="u5BA2_u6237_u7AEF_u4EE3_u7801"><a href="#u5BA2_u6237_u7AEF_u4EE3_u7801" class="headerlink" title="客户端代码"></a>客户端代码</h3><p>为了方便起见，我们把JavaScript文件放在桌面，在你们的 <strong>桌面</strong> 文件夹中新建一个文件夹名为 <strong>client</strong> 。在client文件夹中再新建一个文件夹名为 <strong>js</strong> 。该文件夹将作为你的JavaScript文件的容器。</p>
-<p>通过你使用的编辑JavaScript的IDE，新建一个JavaScript文件，名为 <strong>application.js</strong> ，将它保存在你刚才新建的 <strong>js</strong> 文件夹中。然后在 <strong>application.js</strong> 中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">App</span>.onLaunch = function(options) &#123;</span><br><span class="line">  <span class="comment">// 1</span></span><br><span class="line">  <span class="keyword">var</span> alert = createAlert(<span class="string">"Hello World"</span>, <span class="string">""</span>); <span class="comment">//第二个参数传入空字符串</span></span><br><span class="line">  navigationDocument.presentModal(alert);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="keyword">var</span> createAlert = function(title, description) &#123;</span><br><span class="line">  <span class="keyword">var</span> alertString = `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">    &lt;document&gt;</span><br><span class="line">      &lt;alertTemplate&gt;</span><br><span class="line">        &lt;title&gt;$&#123;title&#125;&lt;/title&gt;</span><br><span class="line">        &lt;description&gt;$&#123;description&#125;&lt;/description&gt;</span><br><span class="line">      &lt;/alertTemplate&gt;</span><br><span class="line">    &lt;/document&gt;`</span><br><span class="line">    <span class="keyword">var</span> parser = new <span class="type">DOMParser</span>();</span><br><span class="line">    <span class="keyword">var</span> alertDoc = parser.parseFromString(alertString, <span class="string">"application/xml"</span>);</span><br><span class="line">    <span class="keyword">return</span> alertDoc</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>App.onLaunch</code>是处理JavaScript文件的入口方法。之前在 <strong>AppDelegate.swift</strong> 中已经初始化好的<code>TVApplicationController</code>会将<code>TVApplicationControllerContext</code>传到这。之后你会使用到上下文中的内容，但是现在，我们只创建一个简单的提示界面并显示在屏幕上。</p>
-<ol>
-<li>通过下面定义的<code>createAlert</code>函数，我们获得到了为我们展现界面的TVML文件。<code>navigationDocument</code>类似于iOS中的<code>UINavigationController</code>，它提供像栈一样的方式，可以推出或压进展现界面的TVML文件。</li>
-<li><code>createAlert</code>是一个返回TVML文件的函数，你可以将它看作类似iOS中的<code>UIAlertController</code>。</li>
-</ol>
-<p>写到这顺便提一下，Apple已经提供了18种TVML模板供我们使用，你们可以在该<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/TextboxTemplate.html#//apple_ref/doc/uid/TP40015064-CH2-SW8" target="_blank" rel="external">Apple TV Markup Language Reference</a>中查阅完成的模板列表。</p>
-<p>上述代码中的 <strong>alertTemplate</strong> 就是这18个模板中的其中一个，它的主要用于展示重要信息，比如通过一段消息提示用户在继续操作之前需要执行其他的操作等。此时，距离你们编译运行你们的第一个tvOS应用已为时不远了。</p>
-<h3 id="u914D_u7F6E_u670D_u52A1_u5668"><a href="#u914D_u7F6E_u670D_u52A1_u5668" class="headerlink" title="配置服务器"></a>配置服务器</h3><p>打开 <strong>Terminal</strong> 输入如下命令：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">cd ~/<span class="type">Desktop</span>/client</span><br><span class="line">python -m <span class="type">SimpleHTTPServer</span> <span class="number">9001</span></span><br></pre></td></tr></table></figure>
-<p>这两行命令的作用是在先前创建的client目录中开启一个基于Python的web服务器。现在，你们可以准备起飞了！</p>
-<p>回到你的Xcode项目中编译运行程序。你应该可以看到你的第一个tvOS TVML应用了！</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-7.png" alt="tvOS-7"></p>
-<p>我不知道你们的感觉如何，但是当我第一次运行成功后，我的感受就像下面这个家伙一样：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-8.png" alt="tvOS-8"></p>
-<p>在继续进行教程之前，我想花点时间对你们目前已经完成的工作作以总结：</p>
-<ol>
-<li>你们创建了<code>TVApplicationController</code>实例。它用于管理JavaScript代码。</li>
-<li>你们创建了<code>TVApplicationControllerContext</code>实例，并在创建<code>TVApplicationController</code>时将其与之关联。应用上下文有一个<code>launchOption</code>属性，用来构建我们的<code>BASEURL</code>，也就是服务器的地址。该应用上下文也用于配置tvOS应用与哪个服务器连接。</li>
-<li>控制器被传到了JavaScript代码中。<code>App.onLaunch</code>作为整个JavaScript文件的入口方法，你们定义了<code>createAlert</code>函数，返回TVML提示信息模板文件，并由<code>navigationDocument</code>管理并展现界面。最后将“Hello World”显示在屏幕上。</li>
-</ol>
-<p>即使现在你们使用的服务器是运行在本机的，但是你们仍然可以连接一个真实的远程的服务器，可能是一个连着数据库的服务器。你们感受并想象一下应用场景，应该会很酷，对吧？</p>
-<h2 id="u5B8C_u5584TVML_u6A21_u677F"><a href="#u5B8C_u5584TVML_u6A21_u677F" class="headerlink" title="完善TVML模板"></a>完善TVML模板</h2><p>我之前提到过，<code>createAlert</code>是一个返回TVML模板文件的函数。有很多属性可由我们在TVML文件中编辑修改，作为一个实验性质的小例子，你们将会在当前的 <strong>alertTemplate</strong> 中添加一个按钮。回到你们的JavaScript代码中，将目光聚焦在<code>createAlert</code>函数上，在模板中添加一个按钮：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> alertString = `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">  &lt;document&gt;</span><br><span class="line">    &lt;alertTemplate&gt;</span><br><span class="line">      &lt;title&gt;$&#123;title&#125;&lt;/title&gt;</span><br><span class="line">      &lt;description&gt;$&#123;description&#125;&lt;/description&gt;</span><br><span class="line">      &lt;button&gt;</span><br><span class="line">        &lt;text&gt;<span class="type">OK</span>&lt;/text&gt;</span><br><span class="line">      &lt;/button&gt;</span><br><span class="line">    &lt;/alertTemplate&gt;</span><br><span class="line">  &lt;/document&gt;`</span><br></pre></td></tr></table></figure>
-<p>这里解释一下上述代码：</p>
-<ol>
-<li>一个TVML文件的第一级标签是<code>&lt;document&gt;</code>，也就是整个模板内容是由<code>&lt;document&gt;</code>和<code>&lt;/document&gt;</code>包起来的。</li>
-<li>接着你们开始定义模板。使用Apple提供的 <strong>alertTemplate</strong> 模板，通过<code>createAlert</code>函数将其返回。</li>
-<li>在该模板里，根据Apple的<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/TextboxTemplate.html#//apple_ref/doc/uid/TP40015064-CH2-SW8" target="_blank" rel="external">Apple TV Markup Language Reference</a>文档规范，添加了按钮、标题、描述三个标签。</li>
-</ol>
-<p>保存你们刚才编辑的JavaScript文件，再次编译运行。你们看到在提示信息下面出现了一个按钮。瞧，TVML是不是将构建tvOS UI变得很简单！</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-9.png" alt="tvOS-9"></p>
-<blockquote>
-<p>注意：在一个模板中，你能添加的元素数量和类型基于这个的模板的类型。比如，一个 <strong>loading Template</strong> 就不允许有任何按钮出现。此外，你可以自定义字体、颜色和其他一些属性。但是这些知识已经超越了该教程的范畴。你们可以查阅<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/index.html#//apple_ref/doc/uid/TP40015064-CH41-SW1" target="_blank" rel="external">Apple TV Markup Language Reference</a>文档去了解更多TVML模板的信息。</p>
-</blockquote>
-<h2 id="u4E30_u5BCCJavaScript_u5BA2_u6237_u7AEF"><a href="#u4E30_u5BCCJavaScript_u5BA2_u6237_u7AEF" class="headerlink" title="丰富JavaScript客户端"></a>丰富JavaScript客户端</h2><p>到目前为止，你们已经完成了一些工作，并且正按照我们的指引一步一步达成目标。在这一节中，你们将要花一点时间在不同的JavaScript文件中将一些逻辑抽象出来，便于能更好的重用。</p>
-<p>在 <strong>client/js</strong> 文件夹中新建一个JavaScript文件，名为 <strong>Presenter.js</strong> 。在该文件中，你们将定义<code>Presenter</code>类用于处理导航各个界面，或者说各个TVML模板文件，并且处理事件响应。在 <strong>Presenter.js</strong> 中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Presenter</span> = &#123;</span><br><span class="line">  <span class="comment">// 1</span></span><br><span class="line">  makeDocument: function(resource) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="type">Presenter</span>.parser) &#123;</span><br><span class="line">      <span class="type">Presenter</span>.parser = new <span class="type">DOMParser</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> doc = <span class="type">Presenter</span>.parser.parseFromString(resource, <span class="string">"application/xml"</span>);</span><br><span class="line">    <span class="keyword">return</span> doc;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 2</span></span><br><span class="line">  modalDialogPresenter: function(xml) &#123;</span><br><span class="line">    navigationDocument.presentModal(xml);</span><br><span class="line">  &#125;,</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3</span></span><br><span class="line">  pushDocument: function(xml) &#123;</span><br><span class="line">    navigationDocument.pushDocument(xml);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>让我们解释一下上述代码：</p>
-<ol>
-<li>还记得你们在之前<code>createAlert</code>函数中用过的<code>DOMParser</code>类么，它可以将TVML字符串转换为可用于展示的TVML模板对象。因为该类不需要多次创建实例，所以采用单例模式创建它。然后通过<code>DOMParser</code>的<code>parseFormString()</code>方法将TVML字符串转为模板对象。</li>
-<li><code>modalDialogPresenter</code>方法通过传入的TVML模板文件，将其模态的展现在屏幕上。</li>
-<li><code>pushDocument</code>方法是在导航栈中推送一个TVML模板文件，相当于在iOS中push出一个界面。</li>
-</ol>
-<p>在之后，你们还会用到<code>Presenter</code>类管理选中处理操作。现在，让我们使用<code>Presenter</code>类对之前的JavaScript代码进行重构。将<code>App.onLaunch</code>中的代码替换为如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">App</span>.onLaunch = function(options) &#123;</span><br><span class="line">  <span class="comment">// 1</span></span><br><span class="line">  <span class="keyword">var</span> javascriptFiles = [</span><br><span class="line">    `$&#123;options.<span class="type">BASEURL</span>&#125;js/<span class="type">Presenter</span>.js`</span><br><span class="line">  ];</span><br><span class="line">  <span class="comment">// 2</span></span><br><span class="line">  evaluateScripts(javascriptFiles, function(success) &#123;</span><br><span class="line">    <span class="keyword">if</span>(success) &#123;</span><br><span class="line">      <span class="keyword">var</span> alert = createAlert(<span class="string">"Hello World!"</span>, <span class="string">""</span>);</span><br><span class="line">      <span class="type">Presenter</span>.modalDialogPresenter(alert);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 3 Handle the error CHALLENGE!//inside else statement of evaluateScripts. </span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这些代码相对还是比较容易理解的，我们来看一下：</p>
-<ol>
-<li>首先创建一个新的JavaScript文件的数组。然后通过<code>options</code>参数获取到<code>BASEURL</code>属性，并组装<code>Presenter.js</code>的路径。这里的<code>options</code>就是之前我们在<code>AppDelegate</code>类中创建的<code>TVApplicationControllerContext</code>，<code>BASEURL</code>自然也是那时我们设置的。</li>
-<li><code>evaluateScripts</code>将加载JavaScript文件。</li>
-<li>这里，你应该处理异常信息，稍后我们完善这里。</li>
-</ol>
-<p>在继续进行之前，编译运行程序，确保JavaScript文件修改过之后程序仍能正常运行。此时，我们通过<code>Presenter</code>类对JavaScript代码的重构有了一个良好的开端：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-10.png" alt="tvOS-10"></p>
-<p>现在，看看上面代码中被注释的那行，你们能否自行完成对异常处理的挑战呢。如果<code>evaluateScripts</code>处理失败，可能是因为JavaScript文件的路径写错了，那么你可能会希望在此时显示一个提示消息给用户。<strong>提示：</strong> 之所以在这里出现了异常，是因为<code>Presenter</code>类加载失败导致，所以在这里你不能使用<code>Presenter</code>类显示提示信息的界面。</p>
-<p>你应该通过之前所学到的知识来解决该问题。如果你们觉得有困难，那么可以参照下面的代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//将这两行代码插入evaluateScripts的else代码块中. </span></span><br><span class="line"><span class="keyword">var</span> errorDoc = createAlert(<span class="string">"Evaluate Scripts Error"</span>, <span class="string">"Error attempting to evaluate external JavaScript files."</span>);</span><br><span class="line">navigationDocument.presentModal(errorDoc);</span><br></pre></td></tr></table></figure>
-<p>想要测试错误信息，你们可以修改一下JavaScript文件的路径，比如把<code>Presenter.js</code>改为<code>Presentr.js</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">$&#123;options.<span class="type">BASEURL</span>&#125;js/<span class="type">Presentr</span>.js</span><br></pre></td></tr></table></figure>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u4F7F_u7528CatalogTemplate"><a href="#u4F7F_u7528CatalogTemplate" class="headerlink" title="使用CatalogTemplate"></a>使用CatalogTemplate</h2><p><strong>catalogTemplate</strong>模板同样也是Apple提供的18个模板中的一个。它的作用是以分组的形式展现内容，用它来展示你们最喜欢的RWDevCon视频最好不过了！ <strong>catalogTemplate</strong>有许多有意思的元素：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-11.jpg" alt="tvOS-11"></p>
-<h3 id="u590D_u5408_u5143_u7D20_u548C_u7B80_u5355_u5143_u7D20"><a href="#u590D_u5408_u5143_u7D20_u548C_u7B80_u5355_u5143_u7D20" class="headerlink" title="复合元素和简单元素"></a>复合元素和简单元素</h3><p>该模板中的<code>banner</code>元素在应用顶部，用于展示应用基本信息，比如名称、标题等。它本身是一个 <strong>复合元素</strong> ，也就是说它是由多个 <strong>简单元素</strong> 组合而成。比如，在<code>banner</code>中很显然有标题，那么该标题就是一个简单的<code>title</code>元素，并且在<code>title</code>背后还有背景图片，这又是另外一个简单元素<code>background</code>。所以<code>banner</code>是由两个简单元素组合而成。</p>
-<p>让我们来试试这个模板吧。打开 <strong>client</strong> 文件夹，在 <strong>js</strong> 文件夹的同级目录新建两个文件夹，分别命名为 <strong>images</strong> 和 <strong>templates</strong> 。此时你的 <strong>client</strong> 文件夹里的内容应该是这样的：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-12.png" alt="tvOS-12"></p>
-<p>你们会需要图片构建模板中的Cells，在我们这个场景中就是一个一个的视频，图片自然就是视频的封面了。我已经为你们准备好了封面图片，你们可以从<a href="/cdn3.raywenderlich.com/wp-content/uploads/2015/09/images.zip">这里下载</a>。下载成功后，将他们解压放在刚才你们创建的 <strong>images</strong> 文件夹中。</p>
-<p>现在，你们即将要做的工作是在屏幕中显示图片!新建一个JavaScript文件，命名为 <strong>RWDevConTemplate.xml.js</strong> ，将其存在 <strong>templates</strong> 文件夹中。</p>
-<p>打开 <strong>RWDevConTemplate.xml.js</strong> ，添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Template</span> = function() &#123; <span class="keyword">return</span> `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">  &lt;document&gt;</span><br><span class="line">    &lt;catalogTemplate&gt;</span><br><span class="line">      &lt;banner&gt;</span><br><span class="line">        &lt;title&gt;<span class="type">RWDevConHighlights</span>&lt;/title&gt;</span><br><span class="line">      &lt;/banner&gt;</span><br><span class="line">    &lt;/catalogTemplate&gt;</span><br><span class="line">  &lt;/document&gt;`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>现在，我们试图通过<code>catalogTemplate</code>模板显示一个Banner条。但在使用只包含模板信息的JavaScript文件之前，我们需要通过某种方法让其他的JavaScript文件知道该文件的存在并能加载其模板信息，因为当前它没有通过任何方式向其他JavaScript文件暴露过。所以我们要创建的最后一个JavaScript文件： <strong>ResourceLoader.js</strong> 就是用来解决该问题的！</p>
-<h3 id="ResourceLoader"><a href="#ResourceLoader" class="headerlink" title="ResourceLoader"></a>ResourceLoader</h3><p>新建一个JavaScript文件，命名为 <strong>ResourceLoader.js</strong> ，保存在 <strong>js</strong> 文件夹中，和 <strong>application.js</strong> 、 <strong>Presenter.js</strong> 一起。打开 <strong>ResourceLoader.js</strong> 添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">function <span class="type">ResourceLoader</span>(baseurl) &#123;</span><br><span class="line">  this.<span class="type">BASEURL</span> = baseurl;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="type">ResourceLoader</span>.prototype.loadResource = function(resource, callback) &#123;</span><br><span class="line">  <span class="keyword">var</span> <span class="keyword">self</span> = this;</span><br><span class="line">  evaluateScripts([resource], function(success) &#123;</span><br><span class="line">    <span class="keyword">if</span>(success) &#123;</span><br><span class="line">      <span class="keyword">var</span> resource = <span class="type">Template</span>.call(<span class="keyword">self</span>);</span><br><span class="line">      callback.call(<span class="keyword">self</span>, resource);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">var</span> title = <span class="string">"Resource Loader Error"</span>,</span><br><span class="line">          description = `<span class="type">Error</span> loading resource '$&#123;resource&#125;'. \n\n <span class="type">Try</span> again later.`,</span><br><span class="line">          alert = createAlert(title, description);</span><br><span class="line">      navigationDocument.presentModal(alert);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>不用过于担心看不懂这些代码逐行的含义，你们只要清楚这些代码的作用是加载其他模板文件就可以了。</p>
-<p>之前我们的主屏显示的是“Hello World”的提示信息模板，现在试着将它换成我们创建的<code>RWDevConTemplate</code>。打开 <strong>application.js</strong> 文件，根据如下代码修改之前的代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="keyword">var</span> resourceLoader;</span><br><span class="line"> </span><br><span class="line"><span class="type">App</span>.onLaunch = function(options) &#123;</span><br><span class="line">  <span class="comment">// 2</span></span><br><span class="line">  <span class="keyword">var</span> javascriptFiles = [</span><br><span class="line">    `$&#123;options.<span class="type">BASEURL</span>&#125;js/<span class="type">ResourceLoader</span>.js`, </span><br><span class="line">    `$&#123;options.<span class="type">BASEURL</span>&#125;js/<span class="type">Presenter</span>.js`</span><br><span class="line">  ];</span><br><span class="line"> </span><br><span class="line">  evaluateScripts(javascriptFiles, function(success) &#123;</span><br><span class="line">    <span class="keyword">if</span>(success) &#123;</span><br><span class="line">      <span class="comment">// 3</span></span><br><span class="line">      resourceLoader = new <span class="type">ResourceLoader</span>(options.<span class="type">BASEURL</span>);</span><br><span class="line">      resourceLoader.loadResource(`$&#123;options.<span class="type">BASEURL</span>&#125;templates/<span class="type">RWDevConTemplate</span>.xml.js`, function(resource) &#123;</span><br><span class="line">        <span class="keyword">var</span> doc = <span class="type">Presenter</span>.makeDocument(resource);</span><br><span class="line">        <span class="type">Presenter</span>.pushDocument(doc);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">var</span> errorDoc = createAlert(<span class="string">"Evaluate Scripts Error"</span>, <span class="string">"Error attempting to evaluate external JavaScript files."</span>);</span><br><span class="line">      navigationDocument.presentModal(errorDoc);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 先不管createAlert函数</span></span><br></pre></td></tr></table></figure>
-<p>此时你们已经对之前的代码进行了三处的修改：</p>
-<ol>
-<li>申明了一个<code>resourceLoader</code>变量。</li>
-<li>将 <strong>ResourceLoader.js</strong> 文件添加到JavaScript文件数组中。</li>
-<li>使用<code>resourceLoader</code>加载TVML模板，然后使用<code>Presenter</code>展现在屏幕上。</li>
-</ol>
-<p>编译运行程序，你们应该会看到如下界面：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-13.png" alt="tvOS-13"></p>
-<p>恭喜你们，现在你们已经可以通过更好的方式从JavaScript文件中加载TVML模板信息了，而不再使用硬编码写死在代码里！</p>
-<h3 id="u5B8C_u5584catalogTemplate"><a href="#u5B8C_u5584catalogTemplate" class="headerlink" title="完善catalogTemplate"></a>完善catalogTemplate</h3><p>你管你们信不信，我们要做的tvOS应用马上要接近尾声了。通过TVML开发tvOS应用最优雅的一件事就是添加界面元素非常之简单。</p>
-<p>打开 <strong>RWDevConTemplate.xml.js</strong> 文件，按照如下代码更新之前代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Template</span> = function() &#123; <span class="keyword">return</span> `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">  &lt;document&gt;</span><br><span class="line">    &lt;catalogTemplate&gt; </span><br><span class="line">      &lt;banner&gt; </span><br><span class="line">        &lt;title&gt;<span class="type">RWDevConHighlights</span>&lt;/title&gt;</span><br><span class="line">      &lt;/banner&gt;</span><br><span class="line">      <span class="comment">//add stuff here</span></span><br><span class="line">      <span class="comment">//1.</span></span><br><span class="line">      &lt;list&gt; </span><br><span class="line">        &lt;section&gt; </span><br><span class="line">          <span class="comment">//2.</span></span><br><span class="line">      &lt;listItemLockup&gt; </span><br><span class="line">        &lt;title&gt;<span class="type">Inspiration</span> <span class="type">Videos</span>&lt;/title&gt;</span><br><span class="line">        &lt;decorationLabel&gt;<span class="number">13</span>&lt;/decorationLabel&gt;</span><br><span class="line">      &lt;/listItemLockup&gt;</span><br><span class="line">        &lt;/section&gt;</span><br><span class="line">      &lt;/list&gt;</span><br><span class="line">    &lt;/catalogTemplate&gt;</span><br><span class="line">  &lt;/document&gt;`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>在上面的代码中，新定义了一个list标签，该标签中的内容就是显示在屏幕上除了Banner以外的全部内容。</li>
-<li><code>listItemLockup</code>代表一个组，它以<code>listItemLockup</code>标签开头。在该标签中，通过<code>title</code>标签定义了它的名称“Inspiration Videos”，然后通过<code>decorationLabel</code>标签定义了该组中包含内容的数量。</li>
-</ol>
-<p>编译运行程序，在模拟器中你们会看到如下界面：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-14.png" alt="tvOS-14"></p>
-<p>看着还不赖吧！</p>
-<h3 id="u5B8C_u6210catalogTemplate"><a href="#u5B8C_u6210catalogTemplate" class="headerlink" title="完成catalogTemplate"></a>完成catalogTemplate</h3><p>最后，我们准备在模板中添加cell，用于展示每一个视频。打开 <strong>RWDevConTemplate.xml.js</strong> 添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Template</span> = function() &#123; <span class="keyword">return</span> `&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;</span><br><span class="line">  &lt;document&gt;</span><br><span class="line">    &lt;catalogTemplate&gt; </span><br><span class="line">      &lt;banner&gt; </span><br><span class="line">        &lt;title&gt;<span class="type">RWDevConHighlights</span>&lt;/title&gt;</span><br><span class="line">      &lt;/banner&gt;</span><br><span class="line">      &lt;list&gt; </span><br><span class="line">        &lt;section&gt; </span><br><span class="line">      &lt;listItemLockup&gt; </span><br><span class="line">        &lt;title&gt;<span class="type">Inspiration</span> <span class="type">Videos</span>&lt;/title&gt;</span><br><span class="line">        &lt;decorationLabel&gt;<span class="number">13</span>&lt;/decorationLabel&gt;</span><br><span class="line">            <span class="comment">//1. add from here</span></span><br><span class="line">        &lt;relatedContent&gt; </span><br><span class="line">          &lt;grid&gt;</span><br><span class="line">            &lt;section&gt; </span><br><span class="line">                  <span class="comment">//2</span></span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ray-Wenderlich-Teamwork.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ray.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;</span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ryan-Nystrom-Contributing.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ryan.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">              &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Matthijs-Hollemans-Math-Isnt-Scary.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/matthijs.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Vicki-Wenderlich-Identity.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/vicki.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">              &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Alexis-Gallagher-Identity.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/alexis.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">              &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Marin-Todorov-RW-Folklore.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/marin.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Chris-Wagner-Craftsmanship.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/chris.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">              &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Cesare-Rocchi-Cognition.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/cesare.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Ellen-Shapiro-Starting-Over.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/ellen.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Jake-Gundersen-Opportunity.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/jake.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Kim-Pedersen-Finishing.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/kim.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">              &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Tammy-Coron-Possible.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/tammy.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;                                 </span><br><span class="line">          &lt;lockup videoURL=<span class="string">"http://www.rwdevcon.com/videos/Saul-Mora-NSBrief.mp4"</span>&gt;</span><br><span class="line">            &lt;img src=<span class="string">"$&#123;this.BASEURL&#125;images/saul.png"</span> width=<span class="string">"500"</span> height=<span class="string">"308"</span> /&gt;</span><br><span class="line">          &lt;/lockup&gt;     </span><br><span class="line">        &lt;/section&gt;</span><br><span class="line">          &lt;/grid&gt;</span><br><span class="line">        &lt;/relatedContent&gt;</span><br><span class="line">      &lt;/listItemLockup&gt;</span><br><span class="line">        &lt;/section&gt;</span><br><span class="line">      &lt;/list&gt;</span><br><span class="line">    &lt;/catalogTemplate&gt;</span><br><span class="line">  &lt;/document&gt;`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>从上述代码中可以看到，在<code>listItemLockup</code>标签中添加了<code>relatedContent</code>，该标签是的作用是显示图中红色圆圈区域的：</li>
-</ol>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-15.png" alt="tvOS-15"></p>
-<ol>
-<li>每个<code>lockup</code>代表一个视频，每个该标签中都有<code>videoURL</code>的属性，它的值就是 <strong>RWDevCon</strong> 网站上视频的地址。对于之后播放视频至关重要。</li>
-</ol>
-<p>编译运行程序，会看到被你赋予新生命力的应用：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-16.png" alt="tvOS-16"></p>
-<p>现在，我们已经在“Inspiration Videos”这个组里添加了若干视频。让我们打开遥控器的模拟器，选中模拟器，在菜单栏中选择 <strong>Hardware\Show Apple TV Remote</strong> 。你可以通过遥控器中的 <strong>option</strong> 键选择不同的视频。</p>
-<h2 id="u64AD_u653E_u89C6_u9891"><a href="#u64AD_u653E_u89C6_u9891" class="headerlink" title="播放视频"></a>播放视频</h2><p>到目前为止，我们已经构建好了应用的页面，看起来还是不错的。此时，你们可以再想想如果用iOS框架完成你们现在已经完成的布局，应该如何做。Apple把一些UI的细节全都抽象了出来，通过一个个模板提供给我们使用，可以让我们简单方便的通过模板创建出完美的界面，不得不说Apple做的太棒了。</p>
-<p>接下来让我们完成最后两个遗留的功能：选择视频和播放视频。</p>
-<h3 id="u9009_u62E9_u4E8B_u4EF6"><a href="#u9009_u62E9_u4E8B_u4EF6" class="headerlink" title="选择事件"></a>选择事件</h3><p>你们可能已经注意到了，当按下 <strong>enter</strong> 键或者在 <strong>Apple TV Remote</strong> 选择视频时并没有什么反应，所以是时候来实现选择视频的功能了。</p>
-<p>打开<code>Presenter</code>，添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">load: function(event) &#123;</span><br><span class="line">  <span class="comment">//1</span></span><br><span class="line">  <span class="keyword">var</span> <span class="keyword">self</span> = this,</span><br><span class="line">  ele = event.target,</span><br><span class="line">  videoURL = ele.getAttribute(<span class="string">"videoURL"</span>)</span><br><span class="line">  <span class="keyword">if</span>(videoURL) &#123;</span><br><span class="line">    <span class="comment">//2</span></span><br><span class="line">    <span class="keyword">var</span> player = new <span class="type">Player</span>();</span><br><span class="line">    <span class="keyword">var</span> playlist = new <span class="type">Playlist</span>();</span><br><span class="line">    <span class="keyword">var</span> mediaItem = new <span class="type">MediaItem</span>(<span class="string">"video"</span>, videoURL);</span><br><span class="line"> </span><br><span class="line">    player.playlist = playlist;</span><br><span class="line">    player.playlist.push(mediaItem);</span><br><span class="line">    player.present();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-<ol>
-<li><code>load</code>函数用来处理视频选择事件。它相当于iOS中的<code>@IBAction</code>，该函数的<code>event</code>参数相当于<code>sender</code>参数。每个<code>event</code>都有一个<code>target</code>，每个<code>target</code>关联着模板中的<code>lockup</code>元素。一个<code>lockup</code>代表应用中的一个视频，它里面有视频封面的属性，以及视频地址<code>videoURL</code>属性。</li>
-<li>播放视频非常简单。<code>Player</code>是 <strong>TVJS</strong> 框架提供的一个类，负责所有视频播放的相关功能。你们所要做的只是添加一个播放列表<code>playlist</code>，然后将要播放的项目<code>mediaItem</code>添加到播放列表里。最后通过<code>player.present()</code>方法就可以播放视频了。</li>
-</ol>
-<p>现在你们已经实现了选择视频后的响应事件。是时候将选择事件与每个视频关联在一起了。打开 <strong>application.js</strong> 文件，在<code>App.onLaunch</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">App</span>.onLaunch = function(options) &#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">  <span class="comment">//在resourceLoader.loadResource中...</span></span><br><span class="line">  <span class="keyword">var</span> doc = <span class="type">Presenter</span>.makeDocument(resource);</span><br><span class="line">  doc.addEventListener(<span class="string">"select"</span>, <span class="type">Presenter</span>.load.bind(<span class="type">Presenter</span>)); <span class="comment">//add this line</span></span><br><span class="line">  <span class="type">Presenter</span>.pushDocument(doc);</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上述代码中的<code>addEventListener</code>方法相当于iOS中按钮的<code>@IBAction</code>。编译运行程序，选择一个视频播放，你会看到一个完美的视频播放应用：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS-app-development-17.gif" alt="tvOS-17"></p>
-<p>大家可以在这里下载教程中的完整项目：<a href="http://cdn5.raywenderlich.com/wp-content/uploads/2015/09/client.zip" target="_blank" rel="external">client</a>和<a href="http://cdn5.raywenderlich.com/wp-content/uploads/2015/09/RWDevCon.zip" target="_blank" rel="external">RWDevCon</a>。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
+<h2 id="u77E9_u9635"><a href="#u77E9_u9635" class="headerlink" title="矩阵"></a>矩阵</h2><p>因为在机器学习中，一些概念、算法都涉及到矩阵的知识，比如训练数据集通常都是以矩阵的方式存在，所以在这里首先介绍一下矩阵的概念。</p>
+<h3 id="u57FA_u672C_u6982_u5FF5"><a href="#u57FA_u672C_u6982_u5FF5" class="headerlink" title="基本概念"></a>基本概念</h3><p>在数学概念中，一个$m \times n$的矩阵指的是一个由$m$行$n$列元素排列而成的矩形阵列。用大白话解释就是将一些元素排列成若干行，每行放上相同数量的元素，就是一个矩阵。矩阵里的元素可以是数字、符号或数学式，比如下面这个$A$矩阵就是一个四行两列的矩阵：<br>$$ A=\begin{bmatrix}<br> 1&amp;2\\<br> 3&amp;4\\<br> 5&amp;6\\<br> 7&amp;8\\<br>\end{bmatrix}$$</p>
+<p>一个矩阵$A$从左上角数起的第$i$行第$j$列上的元素称为第$i$，$j$项，通常记为$A_{i,j}$、$A_{ij}$或者$A_{[i,j]}$，那么上面的$A$矩阵中$A_{3,2}=6$。如果我们不知道矩阵$A$的具体元素，通常将其表示为$A=[a_{ij}]_{m \times n}$，如果$A$的元素可以写成与行$i$和列$j$有关的统一函数$f$，那么也可以用$A=[f(i,j)]_{m \times n}$来表示。</p>
+<h3 id="u77E9_u9635_u7684_u57FA_u672C_u8FD0_u7B97"><a href="#u77E9_u9635_u7684_u57FA_u672C_u8FD0_u7B97" class="headerlink" title="矩阵的基本运算"></a>矩阵的基本运算</h3><p>矩阵的最基本运算包括矩阵加（减）法、数乘、转置、矩阵乘法运算。</p>
+<h4 id="u52A0_u51CF_u6CD5_u8FD0_u7B97"><a href="#u52A0_u51CF_u6CD5_u8FD0_u7B97" class="headerlink" title="加减法运算"></a>加减法运算</h4><p>$m \times n$矩阵$A$和$B$的和（差）$A \pm B$也是一个$m \times n$矩阵，其中每个元素是$A$和$B$相应元素的和（差），即$ (A \pm B)_{ij}=A_{ij} \pm B_{ij} $，其中$1 \le i \le m$，$1 \le j \le n$。举个例子：</p>
+<p>$$ \begin{bmatrix}<br>1&amp;2&amp;3\\<br>4&amp;5&amp;6\\<br>\end{bmatrix} + \begin{bmatrix}<br>6&amp;5&amp;4\\<br>3&amp;2&amp;1\\<br>\end{bmatrix} = \begin{bmatrix}<br>1+6 &amp; 2+5 &amp; 3+4 \\<br>4+3 &amp; 5+2 &amp; 6+1 \\<br>\end{bmatrix}=\begin{bmatrix}<br>7&amp;7&amp;7\\<br>7&amp;7&amp;7\\<br>\end{bmatrix}<br> $$</p>
+<h4 id="u6570_u4E58_u8FD0_u7B97"><a href="#u6570_u4E58_u8FD0_u7B97" class="headerlink" title="数乘运算"></a>数乘运算</h4><p> 标量$c$与$m \times n$的矩阵$A$的数乘也是一个$m \times n$的矩阵$cA$，它的每个元素是矩阵$A$的相应元素与$c$的乘积$(cA)_{ij}=c \cdot A_{ij}$，举个例子：</p>
+<p> $$<br> 2 \cdot \begin{bmatrix}<br> 1&amp;2&amp;3\\<br> 4&amp;5&amp;6\\<br> \end{bmatrix}=\begin{bmatrix}<br> 2 \cdot 1 &amp; 2 \cdot 2 &amp; 2 \cdot 3 \\<br> 2 \cdot 4 &amp; 2 \cdot 5 &amp; 2 \cdot 6 \\<br> \end{bmatrix}=\begin{bmatrix}<br> 2&amp;4&amp;6\\<br> 8&amp;10&amp;12\\<br> \end{bmatrix}<br>  $$</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/machine-learning-2/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -553,8 +357,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/calayer-animation-gradient-animation/" itemprop="url">
-                  CALayer Animation - Gradient Animation
+                <a class="post-title-link" href="/articles/machine-learning-1/" itemprop="url">
+                  机器学习笔记一之机器学习定义、导数、最小二乘
                 </a>
               
             
@@ -564,8 +368,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-09-22T00:00:00+08:00" content="2015-09-22">
-              2015-09-22
+            <time itemprop="dateCreated" datetime="2018-01-06T00:00:00+08:00" content="2018-01-06">
+              2018-01-06
             </time>
           </span>
 
@@ -574,8 +378,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
+                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习算法</span>
                   </a>
                 </span>
 
@@ -590,8 +394,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/calayer-animation-gradient-animation/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/calayer-animation-gradient-animation/" itemprop="commentsCount"></span>
+              <a href="/articles/machine-learning-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-1/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -611,89 +415,45 @@
 
       
         
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
 
-<p>本文首发<a href="http://www.csdn.net/article/2015-09-22/2825765" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<p>在很多人的心目中iPhone的经典机型应该是iPhone4，精湛的工艺、完美的屏幕配上暗色的锁屏壁纸，看着屏幕底部闪烁的<strong>slide to unlock</strong>字样，高逼格彰显无遗。时至今日无论iPhone机身样式如何改变，屏幕尺寸如何改变，iOS系统如何改变，唯有锁屏底部闪烁的<strong>滑动来解锁</strong>不变。它的动画效果是如何实现的呢，这篇文章会告诉你们答案。</p>
-<h2 id="CAGradientLayer"><a href="#CAGradientLayer" class="headerlink" title="CAGradientLayer"></a>CAGradientLayer</h2><p>新建一个应用名为<strong>GradientAnimation</strong>，打开<code>Main.storyboard</code>，将ViewController的View背景色设置为灰黑色，拖一个UIView到ViewController中，将其颜色设置为无色并设置好布局约束：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-1.png" alt="GradientAnimation - 1"></p>
-<p>接着我们拖一个UILabel到刚才拖入的UIView中，设置高宽等同于它的父视图：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-2.png" alt="GradientAnimation - 2"></p>
-<p>我对该UILabel的属性设置如下：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-4.png" alt="GradientAnimation - 4"></p>
-<p>之后，我们在<code>ViewController</code>中添加UIView和UILabel的Outlet：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-5.png" alt="GradientAnimation - 5"></p>
-<p>接下来回到<code>ViewController.swift</code>，我们添加一个常量属性<code>gradientLayer</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> gradientLayer = <span class="type">CAGradientLayer</span>()</span><br></pre></td></tr></table></figure>
-<p>这里出现了CALayer的另一个子类CAGradientLayer，这个类的作用就是能在Layer上绘制出渐变颜色的效果，然后在<code>viewDidLoad()</code>中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">gradientLayer.bounds = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: backgroundView.frame.size.width, height: backgroundView.frame.size.height)</span><br><span class="line">gradientLayer.position = <span class="type">CGPoint</span>(x: backgroundView.frame.size.width/<span class="number">2</span>, y: backgroundView.frame.size.height/<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-<p>上述两行的代码是设置Layer的大小及位置，这在上两篇文章中已经讲过，这里就不再累赘了。接着我们继续添加两行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">gradientLayer.startPoint = <span class="type">CGPoint</span>(x: <span class="number">0</span>, y: <span class="number">0.5</span>)</span><br><span class="line">gradientLayer.endPoint = <span class="type">CGPoint</span>(x: <span class="number">1</span>, y: <span class="number">0.5</span>)</span><br></pre></td></tr></table></figure>
-<p>既然CAGradientLayer可以绘制出渐变颜色的效果，那自然有颜色渐变的方向，所以这两行代码的作用就是设置颜色渐变的起始点和结束点，这两个属性共同决定了颜色渐变的方向：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-3.png" alt="GradientAnimation - 3"></p>
-<p>从上面的示意图中可以看出，CAGradientLayer是通过起始点和结束点的坐标位置来决定颜色渐变的方向的，起始点的默认值是(0.5, 0)，结束点的默认值是(0.5, 1)，也就是说默认的颜色渐变方向是沿垂直中线从上往下渐变的，我们在这里将它改成了沿水平中线从左往右渐变。</p>
-<p>接下来我们设置CAGradientLayer的渐变颜色，接着添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">gradientLayer.colors = [</span><br><span class="line">    <span class="type">UIColor</span>.blackColor().<span class="type">CGColor</span>,</span><br><span class="line">    <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span>,</span><br><span class="line">    <span class="type">UIColor</span>.blackColor().<span class="type">CGColor</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<p>CAGradientLayer的<code>colors</code>属性类型是一个数组<code>[AnyObject]</code>，这就意味着我们可以实现多个颜色的渐变效果，并且可以规定各个颜色的顺序。不过在我们这个示例中我们只需要两种颜色，不过需要注意的是虽然颜色只有两种，但是整个颜色渐变的过程中有三个原色点，那就是黑、白、黑，所以我们在这个数组中也需要按照原色点的数量和顺序添加相应的颜色，哪怕颜色都是一样的。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>我们既然设置了渐变的三个原色，那么就要对这原色出现的位置进行设置，接着添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">gradientLayer.locations = [<span class="number">0.2</span>, <span class="number">0.5</span>, <span class="number">0.8</span>]</span><br></pre></td></tr></table></figure>
-<p>从上述代码中不难看出，我们将第一个黑色原色出现的位置设置在了整个Layer长度的十分之二的位置，第二个白色原色在中间，第三个黑色原色在十分之八的位置：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-6.png" alt="GradientAnimation - 6"></p>
-<p>设置完CAGradientLayer的相关属性后，我们将<code>gradientLayer</code>添加到<code>backgroundView</code>的Layer中：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">backgroundView.layer.addSublayer(gradientLayer)</span><br></pre></td></tr></table></figure>
-<p>现在我们编译运行一下代码看看效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-7.png" alt="GradientAnimation - 7"></p>
-<p>接下来我们需要让颜色渐变动起来，先创建一个方法<code>gradinetAnimate()</code>，在方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> gradient = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"locations"</span>)</span><br><span class="line">gradient.fromValue = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0.25</span>]</span><br><span class="line">gradient.toValue = [<span class="number">0.75</span>, <span class="number">1</span>, <span class="number">1</span>]</span><br><span class="line">gradient.duration = <span class="number">2.5</span></span><br><span class="line">gradient.repeatCount = <span class="type">HUGE</span></span><br><span class="line">gradientLayer.addAnimation(gradient, forKey: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>首先，创建了一个<code>locations</code>类型的动画实例<code>gradient</code>，将<code>fromValue</code>属性，也就是起始位置的属性设置为<code>[0, 0, 0.25]</code>，它的意思是动画开始前，黑色、白色这两个原色的位置在整个Layer的最前端，第二个黑色原色在0.25的位置：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-8.png" alt="GradientAnimation - 8"></p>
-<p>而结束位置<code>toValue</code>，将白色和第二个黑色原色位置设置在整个Layer的末端，第一个黑色原色在0.75的位置：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-9.png" alt="GradientAnimation - 9"></p>
-<p>从图中可以看出，此时整个Layer都变成了黑色。也就是说，在整个动画中，第一个黑色原色从0移动到0.75的位置，白色原色从0移动到1的位置，第二个黑色原色从0.25移动到1的位置。然后设置动画时间为2.5秒，无线重复次数，最后将<code>gradient</code>动画添加到<code>gradientLayer</code>中。我们在<code>viewDidAppear()</code>方法中调用该动画方法<code>gradientAnimate()</code>，编译运行看看效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-10.gif" alt="GradientAnimation - 10"></p>
-<p>动画效果还不赖，但是如何将颜色渐变的动画作用在UILabel的文字上呢？其实非常简单，就是让UILabel上的文字称为CAGradientLayer的遮罩即可，我们先在<code>ViewController</code>中定义一个常量：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> text = <span class="string">"DevTalking"</span></span><br></pre></td></tr></table></figure>
-<p>然后在<code>viewDidAppear()</code>中的<code>gradientAnimate()</code>方法之前添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">textLabel.text = text</span><br><span class="line">gradientLayer.mask = textLabel.layer</span><br></pre></td></tr></table></figure>
-<p>我们再编译运行代码看看效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-11.gif" alt="GradientAnimation - 11"></p>
-<p>到目前为止，锁屏中<strong>滑动来解锁</strong>的动画效果就完成了，这个动画效果在Facebook的Paper应用中也有使用。下一节，我们在该动画的基础上对文字再加点小动画。</p>
-<h2 id="Text_Animation"><a href="#Text_Animation" class="headerlink" title="Text Animation"></a>Text Animation</h2><p>首先我们打开<code>AppDelegate.swift</code>，在<code>import UIKit</code>下面添加一个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">delay</span><span class="params">(seconds seconds: Double, completion:<span class="params">()</span></span></span>-&gt;()) &#123;</span><br><span class="line">    <span class="keyword">let</span> intervalTime = dispatch_time(<span class="type">DISPATCH_TIME_NOW</span>, <span class="type">Int64</span>( <span class="type">Double</span>(<span class="type">NSEC_PER_SEC</span>) * seconds ))</span><br><span class="line">    </span><br><span class="line">    dispatch_after(intervalTime, dispatch_get_main_queue(), &#123;</span><br><span class="line">        completion()</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个方法的作用如其名称一样，是一个延迟方法，该方法的第一个参数是想要延迟的时间，第二个参数是一个闭包，也就是延迟的主体。这个方法用到了GCD的知识，<code>dispatch_time</code>主要是用于创建一个类型为<code>dispatch_time_t</code>的相对时间，它的第一个参数指的是起始时间，一般都是用预定义的<code>DISPATCH_TIME_NOW</code>作为第一个参数的值，代表当前的时间。第二个参数代表时间间隔，注意这个参数需要的时间单位是纳秒，所以我们使用预定义的<code>NSEC_PER_SEC</code>纳秒单位乘以希望间隔的秒数。</p>
-<p><code>dispatch_after</code>用于在队列中定时执行任务，当你想在一段时间后执行一个任务，那么就可以用这个函数。该函数的第一个参数指定延迟的时间，第二个参数指定一个队列，用于添加任务，第三个参数是一个闭包，也就是要执行的任务。</p>
-<p>然后回到<code>ViewController.swift</code>，添加如下方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">textAnimate</span><span class="params">(text: String)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> text.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">        textLabel.text = <span class="string">"<span class="subst">\(textLabel.text!)</span><span class="subst">\(text.substringToIndex(text.startIndex.successor()</span>))"</span></span><br><span class="line">        delay(seconds: <span class="number">0.4</span>, completion: &#123;</span><br><span class="line">            <span class="keyword">self</span>.textAnimate(text.substringFromIndex(text.startIndex.successor()))</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>该方法的参数<code>text</code>就是UILabel中要显示的文字内容。<code>substringToIndex(_ to: Int)</code>方法的作用是从字符串的开头一直截取到指定的位置，但不包括该指定位置的字符。<code>text.startIndex.successor()</code>这句意思是从<code>text</code>的起始位置开始取后面的一个字符。<code>substringFromIndex(_ from: Int)</code>方法的作用是以指定位置并包括指定位置的字符开始，一直截取之后的全部字符。所以整个方法的作用是每隔0.4秒显示一个字符，直到将整个字符串显示完。最后在<code>viewDidAppear()</code>中注释掉<code>textLabel.text = text</code>这行代码，并在方法最后调用<code>textAnimate(text)</code>方法。编译运行代码看看最终效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-12.gif" alt="GradientAnimation - 12"></p>
-<p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-
-            
-          </span>
+<h2 id="u673A_u5668_u5B66_u4E60_u7684_u5B9A_u4E49"><a href="#u673A_u5668_u5B66_u4E60_u7684_u5B9A_u4E49" class="headerlink" title="机器学习的定义"></a>机器学习的定义</h2><ul>
+<li>非正式定义：在不直接针对问题进行编程的情况下，赋予计算机学习能力的一个研究领域。</li>
+<li>正式定义：对于一个计算机程序来讲，给他一个任务T和一个性能测量方法P，如果在经验E的影响下P对T的测量结果得到了改进，那么就说该程序从E中得到了学习。</li>
+</ul>
+<p>举个机器下棋的例子，经验E对应着程序不断和自己下棋的经历，任务T是下棋，性能测量方法P可以是它在和人类棋手对弈的胜率。如果说机器与人类棋手对应的胜率不断提高，那说明机器从自己和自己下棋的过程中得到了学习。</p>
+<h2 id="u673A_u5668_u5B66_u4E60_u56DB_u5927_u5185_u5BB9_u7B80_u8FF0"><a href="#u673A_u5668_u5B66_u4E60_u56DB_u5927_u5185_u5BB9_u7B80_u8FF0" class="headerlink" title="机器学习四大内容简述"></a>机器学习四大内容简述</h2><ul>
+<li>监督学习（Supervised Learning）</li>
+<li>学习理论（Learning Theory）</li>
+<li>无监督学习（Unsupervised Learning）</li>
+<li>强化学习（Reinforcement Learning）</li>
+</ul>
+<h3 id="u76D1_u7763_u5B66_u4E60_uFF08Supervised_Learning_uFF09"><a href="#u76D1_u7763_u5B66_u4E60_uFF08Supervised_Learning_uFF09" class="headerlink" title="监督学习（Supervised Learning）"></a>监督学习（Supervised Learning）</h3><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/34576cd0bbd2b3d3905c4c9f5a4db346.jpg" alt=""><br>如上图所示，描述了假定城市区域的房屋面积与售价的关系。横坐标是房屋面积，纵坐标是售价。如果我想在横轴随意取一个面积，就希望知道它的售价，那么就需要一个方法通过面积确定售价。图中的方法是通过一条标准线来找到对应的售价。那么这条线要如何得来呢？</p>
+<p>在这个示例中，我们已经给出了若干房屋面积和售价的数据集，即已经告知了机器若干问题和答案。机器通过这些数据集中面积和售价的关系，自我学习从而得出这条线，这种学习类型就属于监督学习类型。</p>
+<p>因为这种场景中的数据集取值都是连续的，所以这类问题都可以归为线性回归的问题。<br><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/da9d63e45fa11a781128bc64bb78ae92.jpg" alt=""></p>
+<p>如上图所示，描述了肿瘤大小与恶性良性的关系。横坐标是肿瘤的大小，纵坐标表示恶性或良性，与连续的房屋售价不同的是，这里的纵坐标只有两个值0或1。</p>
+<p>这个示例中，我们同样给出了一组肿瘤大小与恶性良性的数据集，我们希望机器通过这组答案数据集自我学习然后有能力通过肿瘤大小判断出恶性或良性。当然这里只是示例，实际中会有很多其他的横轴指标值用于判断学习。</p>
+<p>该示例中这种离散的数值问题可以归为分类的问题。</p>
+<h3 id="u5B66_u4E60_u7406_u8BBA_uFF08Learning_Theory_uFF09"><a href="#u5B66_u4E60_u7406_u8BBA_uFF08Learning_Theory_uFF09" class="headerlink" title="学习理论（Learning Theory）"></a>学习理论（Learning Theory）</h3><p>任何具体的方式方法背后都有一个或多个理论进行支撑，机器学习也不例外。</p>
+<p>这一大块的内容贯穿整个机器学习，包括人工智能和机器学习正式诞生之前的定理证明，理解为什么学习型算法是有效的。每种学习型算法需要多少训练数据，比如上面的房屋售价示例到底需要多少房屋的样本。以及机器学习渗透在我们生活中的真实应用场景等等。</p>
+<h3 id="u65E0_u76D1_u7763_u5B66_u4E60_uFF08Unsupervised_Learning_uFF09"><a href="#u65E0_u76D1_u7763_u5B66_u4E60_uFF08Unsupervised_Learning_uFF09" class="headerlink" title="无监督学习（Unsupervised Learning）"></a>无监督学习（Unsupervised Learning）</h3><p>如果我现在有一组不知道任何信息的数据集，然后需要机器进行分析然后给出这组数据集中的几种共性或者相似的结构，将其聚类，这个方式就称之为无监督学习。即我们不会提供机器问题和答案，只提供数据，需要机器自我学习和分析找出共性进行聚类。</p>
+<p>无监督学习的应用场景很多，当下流行的各种P图软件都或多或少的用到了这类算法，比如图的修复功能，抠图功能，像素化等一些滤镜都是对像素的聚类。还有声音驳杂功能，从嘈杂的声音中提取出有用的声音等。</p>
+<h3 id="u5F3A_u5316_u5B66_u4E60_uFF08Reinforcement_Learning_uFF09"><a href="#u5F3A_u5316_u5B66_u4E60_uFF08Reinforcement_Learning_uFF09" class="headerlink" title="强化学习（Reinforcement Learning）"></a>强化学习（Reinforcement Learning）</h3><p>强化学习是机器学习的精髓，更贴近机器的自我学习，用在不能通过一次决策下定论的情形中，比如分析病人肿瘤病情的例子，通过监督学习，我们给定了确切的答案，不是良性就是恶性，即我们做的决策要么对，要么错。但在强化学习中，在一段时间内会机器做出一系列决策。比如我们编写一个程序让一架无人机做出一系列特技表演动作，这种场景就不是一次决策能实现的了的。</p>
+<p>那么强化学习究竟是什么？在它背后有一个称为回报函数的概念。比如我们训练宠物狗坐下、握手等行为，每当小狗做出的正确的行为，我们都会给小狗奖励，比如摸摸头进行鼓励或者给一块小骨头。渐渐的小狗就知道做出怎样的行为有奖励，怎样的行为没有奖励，即学会了坐下和握手的行为。这就很类似强化学习的理论，我们需要找到一种方式，来定义我们想要什么，如何定义一个好的行为和一个坏的行为，然后就需要一个合适的学习型算法来获得更多的回报和更少的惩罚。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/machine-learning-1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -728,8 +488,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/tvOS-initial-impression/" itemprop="url">
-                   一个iOS开发者对tvOS SDK的初探
+                <a class="post-title-link" href="/articles/testng-powermock/" itemprop="url">
+                  基于TestNG和PowerMock的单元测试指南
                 </a>
               
             
@@ -739,8 +499,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-09-17T00:00:00+08:00" content="2015-09-17">
-              2015-09-17
+            <time itemprop="dateCreated" datetime="2017-01-19T00:00:00+08:00" content="2017-01-19">
+              2017-01-19
             </time>
           </span>
 
@@ -749,8 +509,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS-macOS-tvOS-watchOS/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS & macOS & tvOS & watchOS</span>
+                  <a href="/categories/测试/" itemprop="url" rel="index">
+                    <span itemprop="name">测试</span>
                   </a>
                 </span>
 
@@ -765,8 +525,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/tvOS-initial-impression/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/tvOS-initial-impression/" itemprop="commentsCount"></span>
+              <a href="/articles/testng-powermock/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/testng-powermock/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -786,117 +546,50 @@
 
       
         
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
 
-<p>作者：<a href="http://www.raywenderlich.com/u/cwagdev" target="_blank" rel="external">Chris Wagner</a>  原文地址：<a href="http://www.raywenderlich.com/114313/tvos-initial-impressions" target="_blank" rel="external">tvOS SDK: An iOS Developer’s Initial Impressions</a></p>
-<p>在Walter Isaacson编写的《Steve Jobs》的最后一章中，Steve说过“我最终实现并让它拥有了你们能想象到的最简单的用户界面”。当时他指的就是Apple TV。</p>
-<p>Steve不幸离世已经过去很久了，但是人们一直翘首以盼着这款产品。就在昨天2015年9月9日，超过四个春秋的期盼，我们终于等来了这个礼物，虽然可能与Steve对这款产品的愿景和理想有所差距，但是革命的步伐已经坚实的迈出了第一步。</p>
-<p>作为一名iOS开发者，昨天的产品发布会让我心潮澎湃，因为Apple宣布，新的Apple TV集成了App Store，这就意味着我们可以为它开发专有的应用，并且会让我们重新认知已了解的iOS知识，以及会开启更多新的展现想法、创意的机会。</p>
-<p>我和其他教程团队的成员已经开始深入研究tvOS SDK，并且正在努力准备一些有价值的tvOS教程（通宵达旦！），在此同时，我想从一个iOS开发者的视角与大家分享我对tvOS的初步印象。</p>
-<p>让我们一探究竟吧！</p>
-<h2 id="u57FA_u672C_u6982_u5FF5"><a href="#u57FA_u672C_u6982_u5FF5" class="headerlink" title="基本概念"></a>基本概念</h2><p>老款的Apple TV其实类似一个机顶盒，主要提供的功能是让用户通过及其简单的操作界面导航或浏览视频内容。昨天发布的新Apple TV在此基础上进一步的扩充功能，使一些成熟的应用能在Apple TV中运行，比如购物应用，甚至是游戏。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_02-457x320.jpg" alt="tvOS-1"></p>
-<p>让我们来看看以下这些信息：</p>
+<h2 id="u4EC0_u4E48_u662FTestNG"><a href="#u4EC0_u4E48_u662FTestNG" class="headerlink" title="什么是TestNG"></a>什么是TestNG</h2><p>TestNG是一套开源测试框架，是从JUnit继承而来，TestNG意为test next generation。它的优势如下：</p>
 <ul>
-<li><strong>硬件规格：</strong> 值得一说规格是64位 A8处理器，32G或64G的存储空间，2G的内存，1080p的分辨率以及支持HDMI，Siri远程遥控，新的Apple TV遥控器。</li>
-<li><strong>价格：</strong> 新Apple TV的定价为32G 149美元，64G 199美元。这样的定价出乎大多人的以外，原以为新Apple TV的价格会更高一些。</li>
-<li><strong>发售时间：</strong> Apple在发布会上给出了一个非常模糊和不确定的发售时间“十月下旬”，但是Apple在发布会之后就立即向开发者们提供了tvOS SDK。现在离正式发售已时日不多，如果大家有针对新Apple TV好的想法，我建议你们要抓紧时间了。</li>
-<li><strong>开发硬件：</strong> Apple已经宣布了一个开发者计划允许已经注册的开发者们请求<a href="https://developer.apple.com/tvos/developer-kit/" target="_blank" rel="external">Apple TV Developer Kit</a>。该计划可以让开发者们提前对Apple TV进行开发测试。这看起来似乎是一件很美好的事，但是如果你真的要加入该开发者计划，那么仔细看看下面的建议：</li>
+<li>支持注解。</li>
+<li>可以在任意的大线程池中，使用各种策略运行测试（所有方法都可以拥有自己的线程或者每个测试类拥有一个线程等等）。</li>
+<li>代码多线程安全测试。</li>
+<li>灵活的测试配置。</li>
+<li>支持数据驱动测试(@DataProvider)。</li>
+<li>支持参数。</li>
+<li>强大的执行模型（不再用TestSuite）。</li>
+<li>支持各种工具和插件（Eclipse、IDEA、Maven等）。</li>
+<li>可以更灵活地嵌入BeanShell。</li>
+<li>默认JDK运行时功能和日志记录（无依赖关系）。</li>
+<li>依赖应用服务测试的方式。</li>
 </ul>
-<p>-> <strong>注意：</strong> 众所周知，iOS、OSX的开发者计划都是收费的，tvOS的开发者计划应该也不例外，不过之前对于该计划的收费信息是非常含糊不清的，但是现在我们通过Apple员工在开发者论坛上发的帖子中<a href="https://forums.developer.apple.com/thread/16984#51332" target="_blank" rel="external">确认</a>了该计划只需要话费1美元即可加入。如果大家有意为tvOS贡献一份力量，或者需要编写教程材料的话，强烈建议你们加入该开发计划。</p>
-<h2 id="u5F00_u53D1_tvOS__u5E94_u7528"><a href="#u5F00_u53D1_tvOS__u5E94_u7528" class="headerlink" title="开发 tvOS 应用"></a>开发 tvOS 应用</h2><p>啰嗦完一堆后，显然最重要的事就是怎样为新Apple TV开发应用，这应该也是大家最感兴趣的事！</p>
-<p>为新Apple TV开发应用实际就是在为tvOS开发应用，当然tvOS这个名字是由Apple根据不同设备而创造的。tvOS仍然是基于iOS开发的，所以有很多框架大家都应该非常熟悉了。</p>
-<p>如果要为tvOS开发应用，大家必须要从开发者中心下载<a href="https://developer.apple.com/xcode/download/" target="_blank" rel="external">Xcode7.1</a>进行开发。该版本是Xcode新的beta版，目前只有该版本支持tvOS以及提供tvOS的模拟器。如果你有需要的话，也可同时下载Xcode7 GM版本，他们可以共存于你们的电脑中。</p>
-<p>Apple提供了两种在tvOS上开发应用的方法：</p>
-<ol>
-<li><strong>TVML Apps：</strong> 这类应用是使用完整的新开发技术开发的，比如TVML、TVJS、TVMLKit。这对我们来说是一个巨大的惊喜，我们会在之后有较详细的介绍。</li>
-<li><strong>Custom Apps：</strong> 这类应用是使用我们已经比较熟悉的开发技术进行开发的，比如大家熟知的一些iOS框架，Storyboard、UIKit、Auto Layout等。</li>
-</ol>
-<p>当你们在为Apple TV开发应用时，你们会发现Xcode中会出现单独的程序目标（这意味着用户将会单独购买的形式购买tvOS应用）。虽然Apple在发布会上说Apple TV中的应用支持通用购买模式，也就是针对iOS和tvOS都支持的应用，用户只需要购买一次即可同时在iPhone和Apple TV上使用。但是从目前的情况来看，我们还不确定Apple是如何实现的，或许在Itunes Connect中支持连接两个程序目标的功能即将来临？</p>
-<h3 id="TVML_Apps"><a href="#TVML_Apps" class="headerlink" title="TVML Apps"></a>TVML Apps</h3><p>先前我提过，为tvOS开发应用有两种方式，第一种就是通过TVML、TVJS和TVMLKit技术。如果这些缩写对于你们来说非常陌生，那么不要着急，这就告诉你们他们都是什么：</p>
-<ul>
-<li><strong>TVML</strong>是一种基于“Television Markup Language”的XML格式。</li>
-<li><strong>TVJS</strong>是基于JavaScript APIs的脚本语言，它可以根据TVML中定义的内容展示应用。</li>
-<li><strong>TVMLKit</strong>是连接TVML、TVJS和原生tvOS应用的工具包。</li>
+<h2 id="TestNG_u7684_u6700_u7B80_u5355_u793A_u4F8B"><a href="#TestNG_u7684_u6700_u7B80_u5355_u793A_u4F8B" class="headerlink" title="TestNG的最简单示例"></a>TestNG的最简单示例</h2><p>我们先来看一个TestNG最简单的示例：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.junit.AfterClass;</span><br><span class="line"><span class="keyword">import</span> org.junit.BeforeClass;</span><br><span class="line"><span class="keyword">import</span> org.testng.annotations.Test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"> <span class="annotation">@BeforeClass</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">beforeClass</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	System.out.println(<span class="string">"this is before class"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="annotation">@Test</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestHelloWorld</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	System.out.println(<span class="string">"this is HelloWorld test case"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="annotation">@AfterClass</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterClass</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	System.out.println(<span class="string">"this is after class"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从面上的简单示例中可以看出TestNG的生命周期，并且可以看到TestNG是使用注解来控制生命周期的。下面我们来看看TestNG支持的各种注解。</p>
+<h2 id="TestNG_u7684_u6CE8_u89E3"><a href="#TestNG_u7684_u6CE8_u89E3" class="headerlink" title="TestNG的注解"></a>TestNG的注解</h2><p>TestNG的注解大部分用在方法级别上，一共有六大类注解。</p>
+<h3 id="Before_u7C7B_u522B_u548CAfter_u7C7B_u522B_u6CE8_u89E3"><a href="#Before_u7C7B_u522B_u548CAfter_u7C7B_u522B_u6CE8_u89E3" class="headerlink" title="Before类别和After类别注解"></a>Before类别和After类别注解</h3><ul>
+<li>@BeforeSuite：被注解的方法将会在所有测试类执行之前运行。</li>
+<li>@AfterSuite：被注解的方法将会在所有测试类执行之后运行。</li>
+<li>@BeforeTest：被注解的方法将会在当前测试类中的所有测试方法执行之前运行。</li>
+<li>@AfterTest：被注解的方法将会在当前测试类中的所有测试方法执行之后运行。</li>
+<li>@BeforeClass：被注解的方法将会在当前测试类中的第一个测试方法执行之前运行。</li>
+<li>@AfterClass：被注解的方法将会在当前测试类中的最后一个测试方法执行之后运行。</li>
+<li>@BeforeMethod：被注解的方法将会在当前测试类中的每个测试方法执行之前运行。</li>
+<li>@AfterMethod：被注解的方法将会在当前测试类中的每个测试方法执行之后运行。<br>我们可以根据不同的场景来使用不同的注解。</li>
 </ul>
-<p>如果你是一名经常使用原生APIs开发原生iOS应用的开发者，那么看到这些类似前端的技术可能会有点退缩。但希望你能保持一颗学习的心，学习了解这些新的强大的特性。</p>
-<p>我在这列举一个非常典型的Apple TV的应用场景。大家可以想象一下：你们想把一些内容或信息展现给用户，这些内容和信息储存在你们的服务器上，并且这些内容的格式、查询方式都服务于iPhone或iPad中的应用，那么你肯定会希望你的tvOS中的应用也能方便的使用这些内容，并做到与iOS中应用有相似的展现、查询、导航方式。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_03-700x296.jpg" alt="tvOS-2"></p>
-<p>如果我列举的这个例子正好是你们tvOS应用的需求，那么你可能需要考虑如何使用TVMLKit工具包。Apple已经为我们开发者完成了一些主要的工作，比如提供了许多可重用的tvOS界面展示模板，这些模板大都与iOS应用的界面神似，所以用户们并不会感到陌生，这些模板大概有18种之多。大多数模板都可以让你创建出脱凡的、非常适合家中电视展示的界面。大家可以访问Apple的<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/TextboxTemplate.html#//apple_ref/doc/uid/TP40015064-CH2-SW8" target="_blank" rel="external">文档</a>查看这些我们强烈推荐使用的模板。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_04-700x296.jpg" alt="tvOS-3"></p>
-<p>我也推荐大家在tvOS模拟器运行<a href="https://developer.apple.com/library/prerelease/tvos/samplecode/TVMLCatalog/Introduction/Intro.html#//apple_ref/doc/uid/TP40016505" target="_blank" rel="external">TVML Catalog sample app</a>去查看每个模板。同时你需要启动一个本地的web服务器，便于tvOS应用通过模板展示内容时访问，所以你需要仔细查阅<strong>README.md</strong>文件去了解相关内容。</p>
-<p>诚然TVMLKit还有许多知识点，如果你希望基于它开发一款tvOS应用，那么我提到的一些文档是非常值得你们去查阅参考的。这里我着重推荐大家首先看看如何使用菜单导航类的模板，比如<strong>menuBarTemplate</strong>、<strong>mainTemplate</strong>、<strong>searchTemplate</strong>等。然而，如果你希望用户不只是被动的通过你的tvOS应用观看或收听内容，而是希望用户与应用有更多的交互，给用户高质量的用户体验，那么你们就需要了解如何开发完整的自定义的tvOS应用。</p>
-<h3 id="Custom_Apps"><a href="#Custom_Apps" class="headerlink" title="Custom Apps"></a>Custom Apps</h3><p>你所知道的大多数iOS框架，比如UIKit、Core Graphics、CloudKit等等都可以在tvOS中使用。你可以在Apple提供的这个<a href="https://developer.apple.com/library/prerelease/tvos/releasenotes/General/tvOS90APIDiffs/index.html#//apple_ref/doc/uid/TP40016577" target="_blank" rel="external">文档</a>中查看哪些框架可以用，哪些不可以使用。如果你现在正是一名iOS开发者，那么会对这个文档中的列表非常熟悉。而且不管使用Swift还是Objective-C或者C都可以开发tvOS应用。</p>
-<p>尽管如此，如果想开发自定义的tvOS应用，还是有许多新的知识需要我们学习，作为一名iOS开发者，也应该掌握甚至精通这些新的知识。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="Focus_Engine"><a href="#Focus_Engine" class="headerlink" title="Focus Engine"></a>Focus Engine</h2><p>其中一个对于iOS开发者比较陌生的概念是用户输入/选择方法。在使用Apple TV的过程中，用户不会用手指去按压或滑动屏幕，取而代之的是使用Apple提供的遥控器或者是一些游戏控制器。</p>
-<p>tvOS采用了一个被称为<strong>Focus Engine</strong>的引擎系统，它在整个tvOS中有且只有一个。该引擎负责响应当用户使用遥控器上的手势操作或按键操作对菜单或内容进行上下左右的选择。</p>
-<p>Focus Engine会自动根据用户的选择决定要聚焦或展示的视图，你不需要在代码中做任何类似选中或导航的处理。比如说，此时展示的界面是你已经在Storyboard中设计好的视图布局，其中有一个视图是当前聚焦状态，那么当用户通过手势往右滑动时，Focus Engine会自动根据当前聚焦的视图找到与之相邻的左边的视图，并将其选中和聚焦。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_05-700x328.jpg" alt="tvOS-4"></p>
-<p>作为一个开发者，你必须要学习与Focus Engine相关的API，比如当聚焦的视图发生变化时如何获取通知、如何通过编码触发聚焦视图的改变扥等。更多关于Focus Engine的API可以参阅App Programming Guide for tvOS文档中的<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/WorkingwiththeAppleTVRemote.html#//apple_ref/doc/uid/TP40015241-CH5-SW14" target="_blank" rel="external"> Supporting Focus Within Your App</a>章节。</p>
-<h2 id="TVServices"><a href="#TVServices" class="headerlink" title="TVServices"></a>TVServices</h2><p>虽然iOS开发者在tvOS应用的开发过程中，主要使用的是一些已经比较熟悉的iOS框架，但是也有一些tvOS特有的框架需要开发者们去了解掌握，比如像新加入的<code>TVServices</code>框架。</p>
-<p><code>TVServices</code>的主要作用是描述你的应用的内容，以便tvOS在首页的顶部栏位显示。在首页顶部栏位显示的应用都是用户自己设置的，用户可以将他们认为最为常用的或最为重要的应用放在首页顶部栏位，便于快速打开或浏览其中主要信息。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_06-478x320.jpg" alt="tvOS-5"></p>
-<p>你们的应用可以在用户不进入应用的情况下，向用户提供简短的、感兴趣的信息，这就会使你的应用有了额外价值，使用<code>TVServices</code>无疑是提高你的应用下载量的绝佳手段。比如一个游戏应用，通过<code>TVServices</code>显示游戏存档，那么用户就可以直接从首页通过游戏存档进入游戏。如果是一个社交应用，那么就可以在首页显示社交动态信息，如果是一个照片分享应用，那么就可以显示近期朋友和家人分享的照片。</p>
-<p>更多关于<code>TVServices</code>的信息可以查阅<a href="https://developer.apple.com/library/prerelease/tvos/documentation/TVServices/Reference/TVServices_Ref/index.html#//apple_ref/doc/uid/TP40016412" target="_blank" rel="external">TVServices Framework Reference</a>文档。使用好它对你的应用非常有益。</p>
-<h2 id="Parallax_Images"><a href="#Parallax_Images" class="headerlink" title="Parallax Images"></a>Parallax Images</h2><p>还有一件会让你疑惑的可能就是在发布会的Keynote中，Apple着重强调了图片和应用图标的视差效果。这是一个非常棒的视图效果，但是为什么这个特性会被放在Keynote中提及，它为什么这么重要呢？</p>
-<p>如果你使用了tvOS模拟器，你就会明白为什么这个特性如此重要。当移动聚焦视图时，你需要向左或向右滑动，但如果你只滑动了一点，Apple会对当前聚焦的视图做一个轻微的旋转处理，目的是让用户知道现在正在作以操作（但是还需要继续滑动来改变聚焦视图）。这是一个着眼于细节但又非常有用的特性。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_07.jpg" alt="tvOS-6"></p>
-<p>Apple把视差效果看做tvOS设计中的一个关键组成部分，并强烈建议应用图标和电影海报使用该特性。不过感谢Apple在App Programming Guide for tvOS文档中提供了<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/CreatingParallaxArtwork.html#//apple_ref/doc/uid/TP40015241-CH19-SW1" target="_blank" rel="external">Creating Parallax Artwork</a>章节，帮助我们创建视差特性的图片资源，以及为我们提供了视察图片资源的预览应用。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_08.jpg" alt="tvOS-7"></p>
-<h2 id="Controllers"><a href="#Controllers" class="headerlink" title="Controllers"></a>Controllers</h2><p>每一个购买了新Apple TV的用户，都会收到一个功能强大的新版遥控器。上一代只能上下左右简单选择方位以及只有几个简单导航按键的遥控器，而新一代的Apple TV遥控器增加了更多令人激动的新特性：</p>
-<ul>
-<li><strong>玻璃触控板：</strong>位于遥控器的顶部，可以让用户在其上面进行一些手势操作，比如滑动、轻拍、点击。</li>
-<li><strong>麦克风：</strong>可以让用户通过遥控器访问Siri（Siri有使用国家的限制）以及可以通过语音控制电视的音量。</li>
-<li><strong>陀螺仪：</strong>结合动作传感器可以为用户提供非常棒的游戏体验。用户可以通过倾斜遥控器在游戏中控制方向盘开车，或者控制英雄奔跑穿越山洞。</li>
-</ul>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_09.jpg" alt="tvOS-8"></p>
-<p>你可以使用你知道的处理手势操作的API去监听滑动或轻点，还有一些新的API去监听遥控器上不同的按钮，比如<code>pressesBegan()</code>、<code>pressesEnded()</code>、<code>pressesChanged()</code>和<code>pressesCancelled()</code>。</p>
-<p>遥控器通过蓝牙技术与Apple TV主机交互，这意味着为蓝牙游戏控制器敞开的大门（恕我直言，用Apple的遥控器玩游戏并不是很好的选择）。Apple已经宣布<a href="https://steelseries.com/gaming-controllers/nimbus" target="_blank" rel="external">Nimbus Steelseries Controller</a>将会支持新Apple TV。想了解更多关于这方面的信息请查阅<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/WorkingwithGameControllers.html#//apple_ref/doc/uid/TP40015241-CH18-SW1" target="_blank" rel="external">Working with Game Controllers</a>。</p>
-<h2 id="tvOS_and_Games"><a href="#tvOS_and_Games" class="headerlink" title="tvOS and Games"></a>tvOS and Games</h2><p>我们衷心的希望游戏能在tvOS上火起来，Apple似乎是直接瞄准了任天堂漠不关心的一个游戏市场。</p>
-<p>tvOS有很健壮的游戏技术作为支撑，SpriteKit和SceneKit都可以在tvOS中正常工作，在Keynote中Crossy Roads开发者展示了他们的tvOS游戏，该游戏使用Unity开发，所以这也暗示着在不久的将来tvOS也会支持Unity开发的游戏。</p>
-<p>大多数用SceneKit开发的游戏都可以无缝移植到新Apple TV中。比如Ray就将教程中介绍过的Zombie Conga游戏移植到了新Apple TV中，花费时间还不到10分钟，几乎不需要修改任何代码。</p>
-<p>-> 注：游戏视频可前往原文查看，但需要科学上网。</p>
-<h2 id="Limitations"><a href="#Limitations" class="headerlink" title="Limitations"></a>Limitations</h2><p>或许目前关于tvOS比较有疑惑的两点就是本地存储和应用大小的限制。</p>
-<h3 id="Limitation_3A_Local_Storage"><a href="#Limitation_3A_Local_Storage" class="headerlink" title="Limitation: Local Storage"></a>Limitation: Local Storage</h3><p>关于本地存储，基本确定是没有！如果你的应用需要持久化用户的数据，那么你需要使用iCloud、CloudKit或者自己的备份服务去实现。任何试图存在Apple TV中的数据都不保证在下次打开应用时还嫩存在。如果你想同步不同设置之间的数据，那么你就需要将数据线存在某个地方，但绝不是Apple TV中。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_10-480x313.jpg" alt="tvOS-9"></p>
-<p>一定要牢记这点，它对于你设计tvOS应用的结构时很关键。这里列出了一些规则：</p>
-<ul>
-<li><strong>如果你需要存储的数据量小于1MB</strong>，iCloud的key-value存储方式是一个可以选择的方案。但是要切记，iCloud KVS严格限制了只能有所属者才可以访问数据，并且不能共享给其他用户。</li>
-<li><strong>如果你需要分享事件或者数据给其他用户</strong>，CloudKit是一个不错的选择方案。</li>
-<li><strong>如果你开发的是一个跨平台的应用或者有特殊的需求</strong>，你就得使用你自己的备份服务了。</li>
-</ul>
-<h3 id="Limitation_3A_App_Size"><a href="#Limitation_3A_App_Size" class="headerlink" title="Limitation: App Size"></a>Limitation: App Size</h3><p>另一个限制是关于应用大小的限制，规定不能超过200MB。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/FlipTable-250x228.png" alt="tvOS-10"></p>
-<p>在你们掀桌之前，请回顾一下WWDC2015以及介绍过的“On-Demand Resources”相关API。这几乎像是Apple为tvOS提前铺垫的。</p>
-<p>这些API通过按需下载资源文件减小应用初始安装时的大小。开发者可以在Xcode中给多媒体资源文件用标签进行标记，将应用提交后，App Store会自动根据标记将多媒体资源文件拆分为一个一个下载包。当用户在使用应用时如果需要用到某类标记的资源文件，就可以请求下载该标记的资源文件。当然你得有预期的判断，要先于用户使用资源前开始下载他们需要的资源，这样对于用户来说他们根本不会感受到因为下载资源带来的不好的用户体验。</p>
-<p>举一个简单的例子，比如你有一款游戏应用有10个关卡。在用户安装该游戏时可以只包含两个关卡的多媒体资源文件。一旦用户完成了第一个关卡，你应该发送一个下载请求，下载第三个关卡的多媒体资源文件。当用户完成了第二个关卡时，第三个关卡需要的资源文件早已下载好准备妥当。在用户的整个游戏过程中，你就可以运用该机制一步一步去下载所需的资源文件。</p>
-<p>虽然这种机制对于开发者来说无疑增加了工作量，但是这对用户来说是一件非常愉悦的事情。你试想一下，用户是愿意等待下载一个1GB大小的游戏呢，还是更愿意下载一个100MB大小的游戏并立即开始游戏呢。不过该机制也存在一个隐患，如果用户的网络条件很差，他们一般都更愿意在晚上挂着下载。那么如果用户在白天玩你的游戏，然后同时用龟速的网络下载后面关卡的资源文件，这简直是令人发指的用户体验。不幸的是作为tvOS开发者，在这种情形下目前也无能为力。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/testng-powermock/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -931,8 +624,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/calayer-animation-replicator-animation/" itemprop="url">
-                  CALayer Animation - Replicator Animation
+                <a class="post-title-link" href="/articles/google-web-tech/" itemprop="url">
+                  《Google力推的那些前端技术，最近有何进展？》笔记
                 </a>
               
             
@@ -942,8 +635,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-09-09T00:00:00+08:00" content="2015-09-09">
-              2015-09-09
+            <time itemprop="dateCreated" datetime="2017-01-09T00:00:00+08:00" content="2017-01-09">
+              2017-01-09
             </time>
           </span>
 
@@ -952,8 +645,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
                   </a>
                 </span>
 
@@ -968,8 +661,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/calayer-animation-replicator-animation/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/calayer-animation-replicator-animation/" itemprop="commentsCount"></span>
+              <a href="/articles/google-web-tech/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/google-web-tech/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -989,102 +682,45 @@
 
       
         
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
 
-<p>本文首发<a href="http://www.csdn.net/article/2015-09-09/2825659" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<p>上一篇文章通过两个动画示例带大家了解和认识了CALayer动画，包括如何使用CAShapeLayer、CABasicAnimation、CAAnimationGroup等。在这篇文章中，依然会通过两个示例向大家讲解更多CALayer动画的知识。</p>
-<p>老规矩，先让我们看看最终要实现的动画效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-17.gif" alt="ReplicatorAnimation-17"></p>
-<p>经常听音乐的人对第一个动画效果肯定有会觉得很眼熟，类似播放音乐时音频高低起伏的动画，这种动画在应用中常被用作标识正在播放音乐或广播。第二个动画依然是一个等待加载的动画，在我的印象中肯定是有应用使用过，具体的已经记不清了。下面就让我们来实现这两个动画吧。</p>
-<h2 id="Replicator_Animation"><a href="#Replicator_Animation" class="headerlink" title="Replicator Animation"></a>Replicator Animation</h2><p>新建一个项目，名为ReplicatorAnimation，打开<code>Main.storyboard</code>，添加一个UIView，颜色位置按大家喜好设定：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-1.png" alt="ReplicatorAnimation-1"></p>
-<p>添加该UIView在<code>ViewController.swift</code>中的Outlet：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-2.png" alt="ReplicatorAnimation-2"></p>
-<p>接下来我们在<code>ViewController.swift</code>中添加一个方法<code>firstReplicatorAnimation()</code>，在该方法中编写如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> replicatorLayer = <span class="type">CAReplicatorLayer</span>()</span><br><span class="line">replicatorLayer.bounds = <span class="type">CGRect</span>(x: replicatorAnimationView.frame.origin.x, y: replicatorAnimationView.frame.origin.y, width: replicatorAnimationView.frame.size.width, height: replicatorAnimationView.frame.size.height)</span><br><span class="line">replicatorLayer.anchorPoint = <span class="type">CGPoint</span>(x: <span class="number">0</span>, y: <span class="number">0</span>)</span><br><span class="line">replicatorLayer.backgroundColor = <span class="type">UIColor</span>.lightGrayColor().<span class="type">CGColor</span></span><br><span class="line">replicatorAnimationView.layer.addSublayer(replicatorLayer)</span><br></pre></td></tr></table></figure>
-<p>这里出现的CAReplicatorLayer是一个新面孔，它也是CALayer的子类，正如它的名称一样，CAReplicatorLayer可以对它自己的子Layer进行复制操作。创建了CAReplicatorLayer实例后，设置了它的尺寸大小、位置、锚点位置、背景色，并且将它添加到了<code>replicatorAnimationView</code>的Layer中:</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-4.png" alt="ReplicatorAnimation-4"></p>
-<p>这里要啰嗦几句，Layer的默认锚点坐标是(0.5, 0.5)，也就是Layer的中心点位置，而Layer的<code>position</code>又是根据锚点计算的，所以如果你设置Layer的<code>position</code>属性为(10, 10)，就相当于设置了Layer的中心位置为(10, 10)，并不是你期望的左上角位置。所以如果Layer想使用它父视图的坐标位置，就需要将锚点位置设置为(0, 0)，这样一来Layer的<code>position</code>属性标识的就是Layer左上角的位置：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-3.png" alt="ReplicatorAnimation-3"></p>
-<p>然后我们继续在<code>firstReplicatorAnimation()</code>方法中添加代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> rectangle = <span class="type">CALayer</span>()</span><br><span class="line">rectangle.bounds = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: <span class="number">30</span>, height: <span class="number">90</span>)</span><br><span class="line">rectangle.anchorPoint = <span class="type">CGPoint</span>(x: <span class="number">0</span>, y: <span class="number">0</span>)</span><br><span class="line">rectangle.position = <span class="type">CGPoint</span>(x: replicatorAnimationView.frame.origin.x + <span class="number">10</span>, y: replicatorAnimationView.frame.origin.y + <span class="number">110</span>)</span><br><span class="line">rectangle.cornerRadius = <span class="number">2</span></span><br><span class="line">rectangle.backgroundColor = <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span></span><br><span class="line">replicatorLayer.addSublayer(rectangle)</span><br></pre></td></tr></table></figure>
-<p>通过上面的代码，再次创建了一个Layer，这次使用的是CALayer，因为我们只需要一个很普通的Layer，为其设置位置、尺寸、背景色、圆角属性，然后添加在<code>replicatorLayer</code>中：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-5.png" alt="ReplicatorAnimation-5"></p>
-<p>动画的主体之一已经绘制好了，下面我们让它动起来。在上述代码后面，接着添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> moveRectangle = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"position.y"</span>)</span><br><span class="line">moveRectangle.toValue = rectangle.position.y - <span class="number">70</span></span><br><span class="line">moveRectangle.duration = <span class="number">0.7</span></span><br><span class="line">moveRectangle.autoreverses = <span class="literal">true</span></span><br><span class="line">moveRectangle.repeatCount = <span class="type">HUGE</span></span><br><span class="line">rectangle.addAnimation(moveRectangle, forKey: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>首先我们创建了按Y轴移动的动画实例，然后设置了移动的目标位置，动画持续时间，重复次数设置为无限大。这里有一个属性大家可能比较陌生，那就是<code>autoreverses</code>，这个属性为Bool类型，设置为true时，开启自动反向执行动画，比如示例中的白色长方形的移动动画为向上移动50个像素，如过<code>autoreverses</code>设置为false，那么动画结束后，会根据重复次数，白色长方形重新回到初始位置，继续向上移动，如果<code>autoreverses</code>设置为true，则当动画结束后，白色长方形会继续向下移动至初始位置，然后再开始第二次的向上移动动画。</p>
-<p>编译运行看看效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-6.gif" alt="ReplicatorAnimation-6"></p>
-<p>至此，大家应该也已经看出来了，这个白色的长方形就是动画中第一个上下移动的白色长方形，那么后两个如何创建呢？还需要再写两遍上面的代码吗？请大家在下面的文章中寻找答案。</p>
-<p>在上述代码下面再添加一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceCount = <span class="number">3</span></span><br></pre></td></tr></table></figure>
-<p>显而易见，这是CAReplicatorLayer的能力了，这行代码的意思是将<code>replicatorLayer</code>的子Layer复制3份，复制Layer与原Layer的大小、位置、颜色、Layer上的动画等等所有属性都一模一样，所以这时编译运行代码我们看不到任何不同的效果，因为三个白色长方形是重合在一起的，所以我们需要设置每个白色长方形的间隔：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceTransform = <span class="type">CATransform3DMakeTranslation</span>(<span class="number">40</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-<p>这行代码涉及到CAReplicatorLayer的另一个属性<code>instanceTransform</code>，它的作用是设置每个子Layer如何变化。<code>CATransform3DMakeTranslation</code>这个类的含义是使Layer根据X、Y、Z轴进行平移。现在再编译运行看看效果如何：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-7.gif" alt="ReplicatorAnimation-7"></p>
-<p>现在三个白色长方形的运动轨迹和时刻都是一直的，这显然不是我们想要的结果，我们需要三个白色长方形有上下起伏的视觉效果，所以我们继续添加一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceDelay = <span class="number">0.3</span></span><br></pre></td></tr></table></figure>
-<p><code>instanceDelay</code>这个属性使CAReplicatorLayer中的每个子Layer的动画起始时间逐个递增。这里我们设置为0.3秒，也就是第一个长方形先执行动画，过0.3秒后第二个开始执行动画，再过0.3秒后第三个开始执行动画。我们编译运行看看效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-8.gif" alt="ReplicatorAnimation-8"></p>
-<p>显然我们只想显示<code>replicatorLayer</code>区域里的内容，我们并不想看到超出它边界的内容，所以我们再添加一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.masksToBounds = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-<p><code>masksToBounds</code>是CALayer的属性，作用是将Layer视为一个遮罩，只显示遮罩区域内的内容。最后我们回到初始化<code>replicatorLayer</code>的地方，找到这行代码<code>replicatorLayer.backgroundColor = UIColor.lightGrayColor().CGColor</code>，将<code>replicatorLayer</code>的背景色改为无色<code>replicatorLayer.backgroundColor = UIColor.clearColor().CGColor</code>。再次编译运行看看最终效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-9.gif" alt="ReplicatorAnimation-9"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="Replicator_Indicator_Animation"><a href="#Replicator_Indicator_Animation" class="headerlink" title="Replicator Indicator Animation"></a>Replicator Indicator Animation</h2><p>CAReplicatorLayer的功能是很强大的，这一节将通过另一个加载动画的实例向大家介绍它的其他特性。</p>
-<p>首先打开<code>Main.storyboard</code>，拖进一个新的UIView，位置颜色随大家喜好：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-10.png" alt="ReplicatorAnimation-10"></p>
-<p>随后添加该UIView在<code>ViewController.swift</code>中的Outlet <code>activityIndicatorView</code>：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-11.png" alt="ReplicatorAnimation-11"></p>
-<p>然后在<code>ViewController.swift</code>中添加一个方法<code>activityIndicatorAnimation</code>，和上一个动画示例一样，我们先创建一个CAReplicatorLayer：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> replicatorLayer = <span class="type">CAReplicatorLayer</span>()</span><br><span class="line">replicatorLayer.bounds = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: activityIndicatorView.frame.size.width, height: activityIndicatorView.frame.size.height)</span><br><span class="line">replicatorLayer.position = <span class="type">CGPoint</span>(x: activityIndicatorView.frame.size.width/<span class="number">2</span>, y: activityIndicatorView.frame.size.height/<span class="number">2</span>)</span><br><span class="line">replicatorLayer.backgroundColor = <span class="type">UIColor</span>.lightGrayColor().<span class="type">CGColor</span></span><br><span class="line">activityIndicatorView.layer.addSublayer(replicatorLayer)</span><br></pre></td></tr></table></figure>
-<p>上述代码和上个示例中的差不多，唯一不同的就是<code>replicatorLayer</code>的锚点使用的是默认值，即锚点就是中点，<code>position</code>属性代表亦是中点，所以将<code>position</code>属性设置为父视图的中点即可。这里意在让大家多多理解CALayer中<code>anchorPoint</code>与<code>position</code>属性。接下来添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> circle = <span class="type">CALayer</span>()</span><br><span class="line">circle.bounds = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: <span class="number">15</span>, height: <span class="number">15</span>)</span><br><span class="line">circle.position = <span class="type">CGPoint</span>(x: activityIndicatorView.frame.size.width/<span class="number">2</span>, y: activityIndicatorView.frame.size.height/<span class="number">2</span> - <span class="number">55</span>)</span><br><span class="line">circle.cornerRadius = <span class="number">7.5</span></span><br><span class="line">circle.backgroundColor = <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span></span><br><span class="line">replicatorLayer.addSublayer(circle)</span><br></pre></td></tr></table></figure>
-<p>上述代码的目的是用CALayer创建一个圆形，其实CALayer创建出的形状默认是矩形，但是把四个角的弧度设置为边宽的一半，矩形就变成了圆形。将这个圆形的位置设置在父Layer的中间靠上位置，背景色设置为白色。此时该圆形就是文章开头效果图中第二个动画里的主体了：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-12.png" alt="ReplicatorAnimation-12"></p>
-<p>不过在动画中我们看到有许多个小圆形组成一个大圆，如果重复上面的代码，一个一个设置位置，那绝对是令人发指的行为，好在我们有CAReplicatorLayer帮助我们实现，下面就来看看如何使用CAReplicatorLayer复制子Layer，并让子Layer形成一个圆形。让我们接着添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceCount = <span class="number">15</span></span><br><span class="line"><span class="keyword">let</span> angle = <span class="type">CGFloat</span>(<span class="number">2</span> * <span class="type">M_PI</span>) / <span class="type">CGFloat</span>(<span class="number">15</span>)</span><br><span class="line">replicatorLayer.instanceTransform = <span class="type">CATransform3DMakeRotation</span>(angle, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<p>上述的代码中，首先对子Layer，也就是白色圆形复制了15份。然后将360°除以15份，算出每一个圆形针对它前一个圆形应该偏移的角度。最后我们用到了<code>CATransform3DMakeRotation</code>，它同样是<code>CATransform3D</code>的一个结构，含义是使Layer在X、Y、Z轴根据给定的角度旋转。这样我们复制的15份圆形就会按照我们计算的角度排列，并形成一个大圆：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-13.png" alt="ReplicatorAnimation-13"></p>
-<p>接下来让我们分析一下这个动画，整体看上去感觉像一颗流星拖着尾巴在不停的转圈，但细看每一个小圆点，其实是在不停的进行放大缩小的动画，只不过每个小圆点的动画对于它前一个小圆点的动画有一定的延迟。所以首先我们需要实现小圆点放大缩小的动画，在上述代码后面接着添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> scale = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"transform.scale"</span>)</span><br><span class="line">scale.fromValue = <span class="number">1</span></span><br><span class="line">scale.toValue = <span class="number">0.1</span></span><br><span class="line">scale.duration = <span class="number">1</span></span><br><span class="line">scale.repeatCount = <span class="type">HUGE</span></span><br><span class="line">circle.addAnimation(scale, forKey: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>首先创建一个按比例缩放类型的动画，设置起始比例为1，也就是当前大小。再设置希望缩放到的比例为0.1。动画持续时间为1秒，重复无限次。最后将该动画添加在小圆点中。编译运行看看效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-14.gif" alt="ReplicatorAnimation-14"></p>
-<p>目前每个小圆点是同时执行动画，我们需要设置小圆点的动画延迟时间，接着添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceDelay = <span class="number">1</span>/<span class="number">15</span></span><br></pre></td></tr></table></figure>
-<p>这里为什么是1/15呢，因为整个动画的时间是由每个小圆点的动画时间决定的，这里也就是1秒，所有小圆点的延迟时间加起来要等于整个动画的持续时间，所以这里就是用1秒除以小圆点的数量15。编译运行看看效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-15.gif" alt="ReplicatorAnimation-15"></p>
-<p>从效果图中可以看到，刚开始的动画不是很自然，那是因为小圆点的初始比例是1，所以一开始会先看到小圆点，然后才会慢慢开始正常的动画。这个问题很好解决，我们让小圆点的初始比例为0.1，也就是刚开始看不到小圆点，这样就可以避免这个情况了，我们接着加一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">circle.transform = <span class="type">CATransform3DMakeScale</span>(<span class="number">0.01</span>, <span class="number">0.01</span>, <span class="number">0.01</span>)</span><br></pre></td></tr></table></figure>
-<p>同时将<code>replicatorLayer</code>的背景色改为无色，再次编译运行看看效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-16.gif" alt="ReplicatorAnimation-16"></p>
-<p>展现在我们眼前的是一个完美的加载动画。</p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>今天主要给大家介绍了CAReplicatorLayer的用法，大家领悟其核心功能复制、延迟后也可以尝试实现其他有趣的动画效果。下篇文章我会向大家介绍CALayer另一个子类的用法，敬请期待吧。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
+<p>Google是一个伟大的公司，有很多伟大的产品。从Google一直不做桌面系统和对Chrome的大力发展来看，Google对前端事业是非常热衷的。</p>
+<h2 id="Angular"><a href="#Angular" class="headerlink" title="Angular"></a>Angular</h2><p>Angular、React、Vue是目前前端框架的三驾马车。我在16年9月写过一篇文章<a href="http://www.devtalking.com/articles/angularjs1x-guide/">《温故而知新-AngularJS 1.x 小记》</a>，当时还叫AngularJS，版本是1.X，那时已经很惊艳了，把前端解释性的脚本语言封装成了面向对象的编程模式，另外对HTML的元素维护提供了便利的方式方法。当时我负责的BPM产品，Process Builder的前端架构果断更新为了AngularJS。时隔两年多，Angular 6都已经发布了，如果我还有机会做前端产品的话，我应该还是会果断选择Angular。</p>
+<blockquote>
+<p>Angular 6 添加了ng update和ng add这样的新功能，让你的应用程序保持最新的状态，帮助Angular开发者加快创新的步伐。渲染器Project Ivy也有很大的改进，它能使Angular调试更容易，以更快地速度编译和运行，它还可以与现有的应用程序一起使用，Angular团队还在小型Hello World应用程序做了演示，不使用的Angular功能将自动从应用的JavaScript bundle自动删除。</p>
+</blockquote>
+<h2 id="PWA"><a href="#PWA" class="headerlink" title="PWA"></a>PWA</h2><p>在移动的世界里，Application是重中之重，是构建移动生态的核心。那么构建Mobile App的方式的问题就来了。</p>
+<ul>
+<li>Native App：既用iOS的原生语言OC、Swift或Android原生语言Java构建的App。</li>
+<li>Web App：既使用前端框架和技术（Angular、React、Vue，HTML 5，CSS 3等）构建的，在移动设备上运行展现的App。</li>
+<li>Native &amp; Web App：原生语言和Web技术混搭构建的App。这类App还孕育出了像React Native这种使用前端语言解析为原生语言的框架。</li>
+</ul>
+<p>以上三种类型各有利弊：</p>
+<ul>
+<li>Native App给用户的体验是最好的，交互动画效果平滑，可以基于硬件的性能做优化等。但是研发周期比较长，并且因为iOS和Android应用的审核机制，导致版本更新周期比较长，修复完问题或有新需求增加后无法做到及时更系用户设备上的App。</li>
+<li>Web App可以做到版本的热更新，研发周期短，Web端和移动端可共享研发资源。但是用户体验比较差，一些需要使用到硬件功能不好实现。</li>
+<li>Native &amp; Web App则致力于综合他们的优点，规避他们的缺点。</li>
+</ul>
+<p>Progressive Web App（<a href="https://lavas.baidu.com/pwa">PWA</a>）就是Google推出的提升Web App体验，给用户原生应用体验的框架。主要特点包括：</p>
+<ul>
+<li>可靠 - 即使在不稳定的网络环境下，也能瞬间加载并展现。</li>
+<li>体验 - 快速响应，并且有平滑的动画响应用户的操作</li>
+<li>粘性 - 像设备上的原生应用，具有沉浸式的用户体验，用户可以添加到桌面<br>目前已支持Android，iOS 11.3以后版本，Safari，Chrome，MS Edge。</li>
+</ul>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/google-web-tech/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -1119,8 +755,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/calayer-animation-loading-lndicator/" itemprop="url">
-                  CALayer Animation - Loading Indicator
+                <a class="post-title-link" href="/articles/talk-about-tech/" itemprop="url">
+                  《当我们聊技术实力的时候，我们到底在聊什么》笔记
                 </a>
               
             
@@ -1130,8 +766,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-09-07T00:00:00+08:00" content="2015-09-07">
-              2015-09-07
+            <time itemprop="dateCreated" datetime="2017-01-02T00:00:00+08:00" content="2017-01-02">
+              2017-01-02
             </time>
           </span>
 
@@ -1140,8 +776,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
+                  <a href="/categories/技术杂文/" itemprop="url" rel="index">
+                    <span itemprop="name">技术杂文</span>
                   </a>
                 </span>
 
@@ -1156,8 +792,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/calayer-animation-loading-lndicator/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/calayer-animation-loading-lndicator/" itemprop="commentsCount"></span>
+              <a href="/articles/talk-about-tech/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/talk-about-tech/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -1187,111 +823,22 @@
 </script>
 
 
-<p>本文首发<a href="http://www.csdn.net/article/2015-09-07/2825633" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-<h2 id="View_vs-_Layer"><a href="#View_vs-_Layer" class="headerlink" title="View vs. Layer"></a>View vs. Layer</h2><p>这篇文章通过两个加载动画向大家介绍CALayer的动画。按照面向对象的思想说，Layer其实就是一个模型类，像Java里的POJO类一样，它包含若干属性，并没有任何处理逻辑的方法，这些属性影响着显示在Layer中的内容。我们先来看看UIView和CALayer之间有什么区别和联系。</p>
+<p>技术实力的本质和基本原则：</p>
 <ul>
-<li>联系：Layer是View背后的那个女人。每一个UIView后面都有对应的CALayer，大家看到的在UIView中显示的内容其实是在CALayer中。</li>
-<li>区别：<ul>
-<li>View有复杂的、各种组合的布局机制。Layer只有极简单的布局。</li>
-<li>View可以响应用户交互。Layer不能响应用户交互。</li>
-<li>View中的绘画逻辑有CPU执行。Layer中的绘画直接有GPU执行。</li>
-<li>View有丰富的、功能强大的子类。Layer只有很少的几个子类。</li>
-<li>View动画属性较少，局限性较大。Layer由于更底层、动画属性更多，所以可以实现出更灵活、更丰富的动画。</li>
+<li>不存在放之四海皆准的技术</li>
+<li>技术要能解决具体问题才有价值</li>
+<li>问题的复杂度决定技术实力的高度</li>
 </ul>
-</li>
-</ul>
-<h2 id="u7B2C_u4E00_u4E2ACALayer_u52A8_u753B"><a href="#u7B2C_u4E00_u4E2ACALayer_u52A8_u753B" class="headerlink" title="第一个CALayer动画"></a>第一个CALayer动画</h2><p>Layer动画系列的文章，我不准备系统的从简单到复杂的知识进行讲解，我会通过各种实战示例，示例中用到什么知识点就讲什么知识点。</p>
-<p>第一个动画让我们来实现Google Chrome浏览器加载时页签上的等待动画：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-1.gif" alt="GoogleLoadingAnimation-1"></p>
-<p>新建项目<strong>GoogleLoading</strong>，打开<code>Main.storyboard</code>，拖拽一个UIView到ViewController中，添加好约束，自行设置ViewController和UIView的背景色，这里UIView的背景色我设置为无色：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-2.png" alt="GoogleLoadingAnimation-2"></p>
-<p>然后添加该View的Outlet到<code>ViewController</code>中，这个UIView就是要展示加载动画的View：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">weak</span> <span class="keyword">var</span> loadingView: <span class="type">UIView</span>!</span><br></pre></td></tr></table></figure>
-<p>打开<code>ViewController.swift</code>，申明一个常量属性<code>ovalShapleLayer</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> ovalShapeLayer: <span class="type">CAShapeLayer</span> = <span class="type">CAShapeLayer</span>()</span><br></pre></td></tr></table></figure>
-<p><code>ovalShapleLayer</code>的类型是<code>CAShapleLayer</code>，它是<code>CALayer</code>的为数不多的子类之一。它的作用是在屏幕上画出各种形状，不论是简单的圆形、方形还是复杂的五角星或不规则图形都难不住它。<code>CAShapeLayer</code>有如下一些主要属性：</p>
-<ul>
-<li>strokeColor：笔画颜色。</li>
-<li>strokeStart：笔画开始位置。</li>
-<li>strokeEnd：笔画结束位置。</li>
-<li>fillColor：图形填充颜色。</li>
-<li>lineWidth：笔画宽度，即笔画的粗细程度。</li>
-<li>lineDashPattern：虚线模式。</li>
-<li>path：图形的路径。</li>
-<li>lineCap：笔画未闭合位置的形状。</li>
-</ul>
-<p>我们之所要申明一个<code>CAShapeLayer</code>，是因为要用它在屏幕上画出一个圆形。下面在<code>viewDidLoad()</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ovalShapeLayer.strokeColor = <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span></span><br><span class="line">ovalShapeLayer.fillColor = <span class="type">UIColor</span>.clearColor().<span class="type">CGColor</span></span><br><span class="line">ovalShapeLayer.lineWidth = <span class="number">7</span></span><br></pre></td></tr></table></figure>
-<p>这几个属性刚才已经向大家介绍过了，这三行代码的意思是我们画出的圆形笔画颜色是白色，没有填充色，笔画的宽度为7。接着我们申明这个圆形的半径，使这个圆形的大小为容纳它视图大小的80%：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> ovalRadius = loadingView.frame.size.height/<span class="number">2</span> * <span class="number">0.8</span></span><br></pre></td></tr></table></figure>
-<p>最后我们设置<code>ovalShapeLayer</code>的路径，这是最关键的一步，因为你要告知<code>CAShapeLayer</code>按照什么路径绘制图形，让我们接着添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ovalShapeLayer.path = <span class="type">UIBezierPath</span>(ovalInRect: <span class="type">CGRect</span>(x: loadingView.frame.size.width/<span class="number">2</span> - ovalRadius, y: loadingView.frame.size.height/<span class="number">2</span> - ovalRadius, width: ovalRadius * <span class="number">2</span>, height: ovalRadius * <span class="number">2</span>)).<span class="type">CGPath</span></span><br></pre></td></tr></table></figure>
-<p>这里出现了新面孔<code>UIBezierPath</code>，它可以创建基于矢量的路径，是Core Graphics框架关于path的封装。<code>UIBezierPath</code>可以定义简单的形状路径，如椭圆、矩形，或者有多个直线和曲线段组成的形状。在这里我们要使用它的初始化方法<code>init(ovalInRect rect: CGRect)</code>定义一个正圆的路径。设置完路径后，将<code>ovalShapeLayer</code>添加到<code>loadingView</code>视图的Layer中，它就可以按照设定好的路径在<code>loadingView</code>中绘制图形了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">loadingView.layer.addSublayer(ovalShapeLayer)</span><br></pre></td></tr></table></figure>
-<p>编译运行看看效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-3.png" alt="GoogleLoadingAnimation-3"></p>
-<p>完美的一个圆形。接下来我们要做的是让这个圆只显示一部分，因为Google的加载动画只有大概五分之二的圆形轮廓。让我们继续将目光集中在<code>viewDidLoad()</code>方法中，在<code>loadingView.layer.addSublayer(ovalShapeLayer)</code>这行代码上面添加另一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ovalShapeLayer.strokeEnd = <span class="number">0.4</span></span><br></pre></td></tr></table></figure>
-<p>上面的代码将<code>ovalShapeLayer</code>的<code>strokeEnd</code>属性设置为0.4，意思是<code>ovalShapeLayer</code>在绘制圆形时只画整个圆形的五分之二，即笔画结束的位置在整个圆形轮廓的五分之二处。编译运行看看效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-4.png" alt="GoogleLoadingAnimation-4"></p>
-<p>看来是我们想要的效果，但是仍有一处细节需要我们完善，看看Google的加载动画，蓝色的部分圆形轮廓两头是圆形的，而我们的圆形轮廓两头是方形的。这个问题很好解决，仍然在<code>loadingView.layer.addSublayer(ovalShapeLayer)</code>这行代码上面添加一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ovalShapeLayer.lineCap = kCALineCapRound</span><br></pre></td></tr></table></figure>
-<p>这行代码的意思是将笔画两头的形状设置为圆形，对应的还有两个常量<code>kCALineCapButt</code>，<code>kCALineCapSquare</code>，大家可以试试。再次编译运行看看效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-5.png" alt="GoogleLoadingAnimation-5"></p>
-<p>到目前为止，我们通过CALayer绘制出了动画的主体，接下来要让它动起来。在<code>ViewController.swift</code>中添加<code>beginSimpleAnimate()</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">beginSimpleAnimation</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">let</span> rotate = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"transform.rotation"</span>)</span><br><span class="line">    rotate.duration = <span class="number">1.5</span></span><br><span class="line">    rotate.fromValue = <span class="number">0</span></span><br><span class="line">    rotate.toValue = <span class="number">2</span> * <span class="type">M_PI</span></span><br><span class="line">    rotate.repeatCount = <span class="type">HUGE</span></span><br><span class="line">    loadingView.layer.addAnimation(rotate, forKey: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>在这个方法中，我们又看到了新面孔<code>CABasicAnimation</code>，该类提供了基本的、单关键帧的Layer属性动画，通过<code>animationWithKeyPath:</code>初始化方法，根据<code>keyPath</code>创建不同的<code>CAPropertyAnimation</code>实例。常用的<code>keyPath</code>有如下一些：</p>
-<ul>
-<li><code>transform.rotation</code>：旋转动画。</li>
-<li><code>transform.ratation.x</code>：按x轴旋转动画。</li>
-<li><code>transform.ratation.y</code>：按y轴旋转动画。</li>
-<li><code>transform.ratation.z</code>：按z轴旋转动画。</li>
-<li><code>transform.scale</code>：按比例放大缩小动画。</li>
-<li><code>transform.scale.x</code>：在x轴按比例放大缩小动画。</li>
-<li><code>transform.scale.y</code>：在y轴按比例放大缩小动画。</li>
-<li><code>transform.scale.z</code>：在z轴按比例放大缩小动画。</li>
-<li><code>position</code>：移动位置动画。</li>
-<li><code>opacity</code>：透明度动画。</li>
-</ul>
-<p>以上只是一部分常用的动画<code>keyPath</code>，更多的希望大家在实际运用中去挖掘。在<code>beginSimpleAnimation()</code>方法中，我们使用了<code>transform.rotation</code>，创建了一个旋转动画的实例，然后给该动画设置了四个属性：</p>
-<ul>
-<li><code>duration</code>：动画持续时间。</li>
-<li><code>fromValue</code>：动画起始值。</li>
-<li><code>toValue</code>：动画结束值。</li>
-<li><code>repeatCount</code>：重复次数。</li>
-</ul>
-<p>该方法设置这几个属性的含义为使动画主体不停的旋转，旋转一圈的时间为1.5秒。以上这几个概念在UIView的动画中同样存在，大家应该都已经比较熟悉了。然后使用Layer的<code>addAnimation(anim: CAAnimation, forKey key: String?)</code>方法将旋转动画实例添加到目标Layer中，该方法的<code>key</code>是用来标示添加的动画，便于以后重复使用时能方便的检索，如果没有需求可以传值<code>nil</code>。最后<code>viewWillAppear</code>方法中调用<code>beginSimpleAnimation()</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewWillAppear</span><span class="params">(animated: Bool)</span></span> &#123;</span><br><span class="line">    beginSimpleAnimation()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>编译运行看看效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-6.gif" alt="GoogleLoadingAnimation-6"></p>
-<p>至此我们的第一个简单的CALayer动画就完成了，在下一节我们一起实现一个更加有意思的加载动画，从而向大家介绍新的动画类型及动画组合。</p>
-<h2 id="Stroke_Animation_u4E0EAnimation_Group"><a href="#Stroke_Animation_u4E0EAnimation_Group" class="headerlink" title="Stroke Animation与Animation Group"></a>Stroke Animation与Animation Group</h2><p>让我们先看看要实现的效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-7.gif" alt="GoogleLoadingAnimation-7"></p>
-<p>这种加载动画在很多应用中都出现过，比如网易新闻、Win版的谷歌浏览器中都有使用。下面就让我们一步一步来实现吧，首先打开<code>Main.storyboard</code>，新添加一个UIView，在<code>ViewController.swift</code>中添加Outlet：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-8.png" alt="GoogleLoadingAnimation-8"></p>
-<p>然后定义一个新的CAShapeLayer：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> anotherOvalShapeLayer: <span class="type">CAShapeLayer</span> = <span class="type">CAShapeLayer</span>()</span><br></pre></td></tr></table></figure>
-<p>在<code>viewDidLoad()</code>方法中对它进行设置，并将其添加到刚才创建的<code>complexLoadingView</code>中：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">anotherOvalShapeLayer.strokeColor = <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span></span><br><span class="line">anotherOvalShapeLayer.fillColor = <span class="type">UIColor</span>.clearColor().<span class="type">CGColor</span></span><br><span class="line">anotherOvalShapeLayer.lineWidth = <span class="number">7</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> anotherOvalRadius = complexLoadingView.frame.size.height/<span class="number">2</span> * <span class="number">0.8</span></span><br><span class="line">anotherOvalShapeLayer.path = <span class="type">UIBezierPath</span>(ovalInRect: <span class="type">CGRect</span>(x: complexLoadingView.frame.size.width/<span class="number">2</span> - anotherOvalRadius, y: complexLoadingView.frame.size.height/<span class="number">2</span> - anotherOvalRadius, width: anotherOvalRadius * <span class="number">2</span>, height: anotherOvalRadius * <span class="number">2</span>)).<span class="type">CGPath</span></span><br><span class="line">anotherOvalShapeLayer.lineCap = kCALineCapRound</span><br><span class="line">        </span><br><span class="line">complexLoadingView.layer.addSublayer(anotherOvalShapeLayer)</span><br></pre></td></tr></table></figure>
-<p>这些操作在上一个动画都已经做过一遍了，这里就不再解释。编译运行看看是否屏幕上又出现了一个圆圈呢：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-9.gif" alt="GoogleLoadingAnimation-9"></p>
-<p>接下来在<code>ViewController.swift</code>中添加一个方法<code>beginComplexAnimation()</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> strokeStartAnimate = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"strokeStart"</span>)</span><br><span class="line">strokeStartAnimate.fromValue = -<span class="number">0.5</span></span><br><span class="line">strokeStartAnimate.toValue = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> strokeEndAnimate = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"strokeEnd"</span>)</span><br><span class="line">strokeEndAnimate.fromValue = <span class="number">0.0</span></span><br><span class="line">strokeEndAnimate.toValue = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">let</span> strokeAnimateGroup = <span class="type">CAAnimationGroup</span>()</span><br><span class="line">strokeAnimateGroup.duration = <span class="number">1.5</span></span><br><span class="line">strokeAnimateGroup.repeatCount = <span class="type">HUGE</span></span><br><span class="line">strokeAnimateGroup.animations = [strokeStartAnimate, strokeEndAnimate]</span><br><span class="line">anotherOvalShapeLayer.addAnimation(strokeAnimateGroup, forKey: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>这里出现了两个新的动画类型，笔画开始动画和笔画结束动画，我们虽然使用CAShapeLayer绘制了一个圆圈，但是它也存在笔画起始位置和笔画终止位置，只不过它俩在同一个位置而已，笔画动画的位置取值在0-1之间，0代表绘制路径的起始位置，1代表绘制路径的终止位置。所以<code>strokeStartAnimate</code>动画让绘制圆圈的笔画起始位置从-0.5开始，目的是让笔画起始绘制时等待一段时间，也就是起始位置延迟绘制。而<code>strokeEndAnimate</code>动画让绘制圆圈的笔画终止位置正常的从0绘制到1。这样一来笔画两头绘制的时间就会不一样，会有一个时间差，这样就有圆圈不断绘制又不断被擦除的效果。</p>
-<p><code>strokeStartAnimate</code>和<code>strokeEndAnimate</code>是两个动画，如何作用于一个Layer上呢？这时就要用到<code>CAAnimationGroup</code>，顾名思义它是将多个动画组成一个组，在一个动画组里，子动画会同时进行。动画组可以设置动画持续时间、重复次数以及子动画数组。最后将动画组加在Layer上即可。</p>
-<p>最后在<code>viewWillAppear()</code>方法中调用<code>beginComplexAnimation()</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewWillAppear</span><span class="params">(animated: Bool)</span></span> &#123;</span><br><span class="line">    beginSimpleAnimation()</span><br><span class="line">    beginComplexAnimation()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>编译运行看看效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GoogleLoadingAnimation-10.gif" alt="GoogleLoadingAnimation-10"></p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>CALayer动画可以实现比UIView动画更丰富、更底层、效率更高的动画。但是在实际的应用开发中，我们应该按需所用，能用UIView动画实现的我们就可以不用CALayer动画，它俩没有谁优谁劣之分。这篇文章只是CALayer动画的引子，让大家对CALayer动画有初步的了解和认识，之后我在文章中会通过更多的实例帮大家更深入的认识CALayer动画，从而提升自己应用的用户体验。</p>
+<p>在技术实力的基本原则前提下，将技术实力分为两大类，六个小分类。</p>
+<h2 id="u786C_u5B9E_u529B"><a href="#u786C_u5B9E_u529B" class="headerlink" title="硬实力"></a>硬实力</h2><p>硬实力有四个等级，从低到高为点、线、面、体，对应的解决问题的复杂度也越来越高。</p>
+<h3 id="u6280_u672F_u70B9"><a href="#u6280_u672F_u70B9" class="headerlink" title="技术点"></a>技术点</h3><p>技术点是一个个颗粒性小，且相互较为独立的技术的使用方式和其原理认知。比如使用Java多线程的方式方法和解决的具体问题，使用Java进行I/O操作的方式方法和解决的具体问题。<strong>掌握了技术点，就可以开始基本的业务能力开发了</strong>。</p>
+<h3 id="u6280_u672F_u7EBF"><a href="#u6280_u672F_u7EBF" class="headerlink" title="技术线"></a>技术线</h3><p>技术线是由若干个技术点串联起来的，该条技术线能解决某一类相关问题。比如一个常规的Web应用流程，用户发起请求，经过负载均衡路由，到达业务Controller进行业务逻辑处理，过程中对数据库的操作，对缓存的操作，然后返回结果给用户等。这就是由若干个技术点组成的一条技术线，这条技术线能支撑起来Web应用开发中实现业务功能的全过程。<strong>掌握了技术线，就能完成业务功能的全流程设计和开发了</strong>。</p>
+<h3 id="u6280_u672F_u9762"><a href="#u6280_u672F_u9762" class="headerlink" title="技术面"></a>技术面</h3><p>技术面是由若干技术线排列交织而成。比如Web应用开发，性能优化，数据库维护等都属于技术面。<strong>掌握技术面，表明已经是某个领域的专家了</strong>。</p>
+<h3 id="u6280_u672F_u4F53"><a href="#u6280_u672F_u4F53" class="headerlink" title="技术体"></a>技术体</h3><p>技术体既多个技术面的综合。最小的技术体也得有三个技术面组成。最常见的就是架构师，对于一个大型业务系统的架构师而言，需要掌握多个技术面，然后站在全局的角度进行系统，架构的设计和取舍，比如一个后端的架构师需要掌握Java开发的技术面，数据的技术面，网络的技术面，包括专业业务领域的技术面。<strong>掌握了技术面，表明已经是某个领域的资深架构师或专家了，可以解决领域级的复杂问题</strong>。</p>
+<h2 id="u8F6F_u5B9E_u529B"><a href="#u8F6F_u5B9E_u529B" class="headerlink" title="软实力"></a>软实力</h2><p>软实力既不是很容易量化的一种能力，但是更能体现技术实力。</p>
+<h3 id="u53D1_u73B0_u95EE_u9898"><a href="#u53D1_u73B0_u95EE_u9898" class="headerlink" title="发现问题"></a>发现问题</h3><p>发现问题是一个很重要的软实力，当系统出现问题后，大多数问题可以很容易的定位，但是就有个别问题找不出是因为哪个环节引起的问题，而往往这些找不出原因的问题都是优先级比较高或者比较严重的问题。还有一种场景是系统三天两头出问题，出一个问题解决一个问题，但是都是治标不治本，找不出反复引起问题的根本原因。所以发现隐藏很深很细节的问题和发现根源问题是彰显技术实力的一个软实力，这个能力主要来源于经验，有成功的经验，也有踩坑的经验，也有参考别人的经验。所以需要多思考、多总结、多学习、多交流。</p>
+<h3 id="u6280_u672F_u521B_u65B0"><a href="#u6280_u672F_u521B_u65B0" class="headerlink" title="技术创新"></a>技术创新</h3><p>要达到这一项软实力其实比较难，比如在Google开创出大数据的大神，亚马逊开创出云计算的大神。但是这是我们为之努力的目标之一。</p>
+<p>阅读文章：<a href="http://www.infoq.com/cn/articles/talk-about-technology" target="_blank" rel="external">《当我们聊技术实力的时候，我们到底在聊什么》</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -1324,7 +871,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1362,7 +909,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">100</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -241,8 +241,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/gojs-links/" itemprop="url">
-                  GOJS教程 -- 如何使用Links
+                <a class="post-title-link" href="/articles/access-control-and-protected/" itemprop="url">
+                  Swift中的访问控制与protected
                 </a>
               
             
@@ -252,8 +252,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-07-22T00:00:00+08:00" content="2014-07-22">
-              2014-07-22
+            <time itemprop="dateCreated" datetime="2014-08-20T00:00:00+08:00" content="2014-08-20">
+              2014-08-20
             </time>
           </span>
 
@@ -262,8 +262,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/前端/" itemprop="url" rel="index">
-                    <span itemprop="name">前端</span>
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
                   </a>
                 </span>
 
@@ -278,8 +278,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/gojs-links/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/gojs-links/" itemprop="commentsCount"></span>
+              <a href="/articles/access-control-and-protected/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/access-control-and-protected/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -309,924 +309,150 @@
 </script>
 
 
-<p><code>Link</code>对象顾名思义就是连线，它可以通过连线的方式表达<code>Node</code>之间的关系。</p>
-<h2 id="u65E0_u65B9_u5411_u8FDE_u7EBF"><a href="#u65E0_u65B9_u5411_u8FDE_u7EBF" class="headerlink" title="无方向连线"></a>无方向连线</h2><p>最简单的<code>Link</code>就是没有箭头的，无方向的连线。当Diagram中的<code>Node</code>之间的关系没有方向性或者它们之间存在隐性关系的时候，我们使用这种连线。  </p>
-<p>我们在构建<code>Link</code>时，先设置创建模板（<code>linkTemplate</code>），该模板指定了连线的样式。然后创建一个指定连线关系的数组<code>linkDataArray</code>，我们通过该数组指定<code>Node</code>之间的连线关系，最后通过<code>GraphLinksModel</code>方法构建连线。 </p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,       // the whole link panel
-  $(go.Shape));  // the link shape, default black stroke
-
-var nodeDataArray = [
-{ key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
-{ key: &quot;Beta&quot;, loc: &quot;100 50&quot; }
-];
-var linkDataArray = [
-{ from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link1.jpg" alt="Link"></p>
-<h2 id="u5E26_u65B9_u5411_u8FDE_u7EBF"><a href="#u5E26_u65B9_u5411_u8FDE_u7EBF" class="headerlink" title="带方向连线"></a>带方向连线</h2><p>一般情况下我们都需要使用带方向的连线，即带箭头的连线。我们只需要修改一下<code>linkTemplate</code>即可，我们在连线模板中加入一个箭头，通过在<code>Link</code>中再添加一个<code>Shape</code>，然后设置<code>Shape.toArrow</code>属性为<code>OpenTrigangle</code>。  </p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  $(go.Shape),  // the link shape
-  $(go.Shape,   // the arrowhead
-    { toArrow: &quot;OpenTriangle&quot;, fill: null })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link2.jpg" alt="Link"></p>
-<h2 id="u8FDE_u7EBF_u8DEF_u5F84"><a href="#u8FDE_u7EBF_u8DEF_u5F84" class="headerlink" title="连线路径"></a>连线路径</h2><p>如果你想改变连线的路径，那么需要设置<code>Link.routing</code>属性，下面的例子中展示了<code>Link.Normal</code>和<code>Link.Orthogonal</code>两种连线路径。  </p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  new go.Binding(&quot;routing&quot;, &quot;routing&quot;),
-  $(go.Shape),
-  $(go.Shape, { toArrow: &quot;Standard&quot; })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;50 50&quot; },
-    { key: &quot;Gamma&quot;, loc: &quot;100 25&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot;, routing: go.Link.Normal },
-    { from: &quot;Alpha&quot;, to: &quot;Gamma&quot;, routing: go.Link.Orthogonal }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link3.jpg" alt="Link"></p>
-<p>要注意的是，这里设置连线路径的是<code>Shape</code>里的属性，在<code>GraphObject</code>中也有设置路径的属性，<code>GraphObject.fromSpot</code>和<code>GraphObject.toSpot</code>，前者是作用于<code>Shape</code>上的，后者是作用于容器上的。</p>
-<p>你还可以设置<code>Link.routing</code>属性为<code>Link.AvoidsNodes</code>，可以让连线自动避开<code>Node</code>，也就是说可以避免<code>Link</code>与<code>Node</code>相交。但是如果有一个<code>Node</code>离起始<code>Node</code>或者终点<code>Node</code>非常近的时候，连线就没有办法避让了，因为它没有足够的空间去计算避让路线。  </p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  { routing: go.Link.AvoidsNodes },  // link route should avoid nodes
-  $(go.Shape),
-  $(go.Shape, { toArrow: &quot;Standard&quot; })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;250 40&quot; },
-    { key: &quot;Gamma&quot;, loc: &quot;100 0&quot; },
-    { key: &quot;Delta&quot;, loc: &quot;75 50&quot; },
-    { key: &quot;Epsilon&quot;, loc: &quot;150 30&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link4.jpg" alt="Link"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u8FDE_u7EBF_u7684_u5F2F_u66F2_u5EA6_u548C_u89D2_u5EA6"><a href="#u8FDE_u7EBF_u7684_u5F2F_u66F2_u5EA6_u548C_u89D2_u5EA6" class="headerlink" title="连线的弯曲度和角度"></a>连线的弯曲度和角度</h2><p>在我们创建好连线关系以及路径后，就可以使用其他属性来控制连线的其他特性，比如说弯曲度。我们可以通过设置<code>Link.curve</code>属性设置连线的弯曲度，默认情况下该属性的值为<code>Link.Node</code>。</p>
-<p>下面的例子中，我们将<code>Link.curve</code>属性设置为<code>Link.bezier</code>，让连线产生弧度。</p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  { curve: go.Link.Bezier },  // Bezier curve
-  $(go.Shape),
-  $(go.Shape, { toArrow: &quot;Standard&quot; })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link5.jpg" alt="Link"></p>
-<p>我们还可以通过<code>Link.curviness</code>属性设置连线的弯曲力度。</p>
-<p>下面的例子中，两个<code>Node</code>之间有多条连线，并且我们没有设置连线的弯曲度，但是我们可以看到，每条连线都自动的产生了轻微的弯曲度的变化。</p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  { curve: go.Link.Bezier },
-  $(go.Shape),
-  $(go.Shape, { toArrow: &quot;Standard&quot; })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },  // multiple links between the same nodes
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link6.jpg" alt="Link"></p>
-<p>上面第四个例子中，连线避让<code>Node</code>时折角都是直角，我们还可以通过<code>Link.corner</code>属性，设置连线折角的弧度。</p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  { routing: go.Link.AvoidsNodes,
-    corner: 10 },                  // rounded corners
-  $(go.Shape),
-  $(go.Shape, { toArrow: &quot;Standard&quot; })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 0&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;250 40&quot; },
-    { key: &quot;Gamma&quot;, loc: &quot;100 0&quot; },
-    { key: &quot;Delta&quot;, loc: &quot;75 50&quot; },
-    { key: &quot;Epsilon&quot;, loc: &quot;150 30&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link7.jpg" alt="Link"></p>
-<p>当两条连线相交时，我们希望在视觉上能有所表示。那么我们可以设置<code>Link.curve</code>属性为<code>Link.JumpOver</code>属性，展现出的效果就是一条线越过了交叉的另一条线。 </p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  { locationSpot: go.Spot.Center },
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  { routing: go.Link.Orthogonal,  // may be either Orthogonal or AvoidsNodes
-    curve: go.Link.JumpOver },
-  $(go.Shape),
-  $(go.Shape, { toArrow: &quot;Standard&quot; })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 50&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; },
-    { key: &quot;Alpha2&quot;, loc: &quot;50 0&quot; },
-    { key: &quot;Beta2&quot;, loc: &quot;50 100&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },  // these two links will cross
-    { from: &quot;Alpha2&quot;, to: &quot;Beta2&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link8.jpg" alt="Link"></p>
-<p>或者我们也可以将<code>Link.curve</code>属性设置为<code>Link.JumpGap</code>，表现为当两条连线相交时，其中一条在相交处会断开。</p>
-<pre><code>diagram.nodeTemplate =
-$(go.Node, &quot;Auto&quot;,
-  { locationSpot: go.Spot.Center },
-  new go.Binding(&quot;location&quot;, &quot;loc&quot;, go.Point.parse),
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightgray&quot; }),
-  $(go.TextBlock, { margin: 5 },
-    new go.Binding(&quot;text&quot;, &quot;key&quot;))
-);
-
-diagram.linkTemplate =
-$(go.Link,
-  { routing: go.Link.Orthogonal,  // may be either Orthogonal or AvoidsNodes
-    curve: go.Link.JumpGap },
-  $(go.Shape),
-  $(go.Shape, { toArrow: &quot;Standard&quot; })
-);
-
-var nodeDataArray = [
-    { key: &quot;Alpha&quot;, loc: &quot;0 50&quot; },
-    { key: &quot;Beta&quot;, loc: &quot;100 50&quot; },
-    { key: &quot;Alpha2&quot;, loc: &quot;50 0&quot; },
-    { key: &quot;Beta2&quot;, loc: &quot;50 100&quot; }
-];
-var linkDataArray = [
-    { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },  // these two links will cross
-    { from: &quot;Alpha2&quot;, to: &quot;Beta2&quot; }
-];
-diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/link9.jpg" alt="Link"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/gojs-shape/" itemprop="url">
-                  GOJS教程 -- 如何使用Shape
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2014-07-21T00:00:00+08:00" content="2014-07-21">
-              2014-07-21
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/前端/" itemprop="url" rel="index">
-                    <span itemprop="name">前端</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/gojs-shape/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/gojs-shape/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>通过<code>Shape</code>你可以构建一个几何图形，并且可以控制它的形状和轮廓颜色以及填充色等。  </p>
-<h2 id="u56FE_u5F62"><a href="#u56FE_u5F62" class="headerlink" title="图形"></a>图形</h2><p>你可以通过<code>Shape.figure</code>属性设置它的形状。让你使用<code>GraphObject.make</code>方法构建时，你可以将形状参数以字符串形式作为第二个参数。你可能还需要通过<code>GraphObject.desiredSize</code>、<code>GraphObject.width</code>、<code>GraphObject.height</code>属性设置<code>Shape</code>的尺寸大小。  </p>
-<p>下面的例子中列出了一些常用的<code>Shape</code>形状，并且你可以看到它们的名字：</p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Horizontal&quot;,
-  $(go.Shape, &quot;Rectangle&quot;,
-              { width: 40, height: 60, margin: 4, fill: null }),
-  $(go.Shape, &quot;RoundedRectangle&quot;,
-              { width: 40, height: 60, margin: 4, fill: null }),
-  $(go.Shape, &quot;Ellipse&quot;,
-              { width: 40, height: 60, margin: 4, fill: null }),
-  $(go.Shape, &quot;Triangle&quot;,
-              { width: 40, height: 60, margin: 4, fill: null }),
-  $(go.Shape, &quot;Diamond&quot;,
-              { width: 40, height: 60, margin: 4, fill: null })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/shape1.jpg" alt="shape"></p>
-<h2 id="u586B_u5145_u8272_u4E0E_u8F6E_u5ED3"><a href="#u586B_u5145_u8272_u4E0E_u8F6E_u5ED3" class="headerlink" title="填充色与轮廓"></a>填充色与轮廓</h2><p>可以通过<code>Shape.stroke</code>属性设置<code>Shape</code>的轮廓线条颜色。通过<code>Shape.strokeWidth</code>设置轮廓线条的粗细度。通过<code>Shape.fill</code>属性设置填充颜色。  </p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Horizontal&quot;,
-  $(go.Shape, { figure: &quot;Club&quot;, width: 40, height: 40, margin: 4
-                }),  // default fill and stroke are &quot;black&quot;
-  $(go.Shape, { figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
-                fill: &quot;green&quot; }),
-  $(go.Shape, { figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
-                fill: &quot;green&quot;, stroke: null }),
-  $(go.Shape, { figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
-                fill: null, stroke: &quot;green&quot; }),
-  $(go.Shape, { figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
-                fill: null, stroke: &quot;green&quot;, strokeWidth: 3 }),
-  $(go.Shape, { figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
-                fill: null, stroke: &quot;green&quot;, strokeWidth: 6 }),
-  $(go.Shape, { figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
-                fill: &quot;green&quot;, background: &quot;orange&quot; })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/shape2.jpg" alt="shape"></p>
-<p><code>Shape.stroke</code>和<code>Shape.fill</code>属性的值一般使用CSS设置，它们的默认颜色都是黑色。但是我们最常用的还是将它们设置为<code>null</code>或<code>transparent</code>，前者意思是空，后者是透明，在表象上，这两者是没有差距的，但是在点击行为上有区别。如果设置为<code>null</code>，那么只能点击图形的轮廓才能选中，点击图形里面是无法选中的。而如设置为<code>transparent</code>，点击图形的任何地方都可以选中该图形。  </p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Table&quot;,
-  $(go.Shape, { row: 0, column: 0, figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
-                fill: &quot;green&quot; }),
-  $(go.TextBlock, &quot;green&quot;, { row: 1, column: 0 }),
-  $(go.Shape, { row: 0, column: 1, figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
-                fill: &quot;white&quot; }),
-  $(go.TextBlock, &quot;white&quot;, { row: 1, column: 1 }),
-  $(go.Shape, { row: 0, column: 2, figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
-                fill: &quot;transparent&quot; }),
-  $(go.TextBlock, &quot;transparent&quot;, { row: 1, column: 2 }),
-  $(go.Shape, { row: 0, column: 3, figure: &quot;Club&quot;, width: 40, height: 40, margin: 4,
-                fill: null }),
-  $(go.TextBlock, &quot;null&quot;, { row: 1, column: 3 })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/shape3.jpg" alt="shape"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u51E0_u4F55_u5F62_u72B6"><a href="#u51E0_u4F55_u5F62_u72B6" class="headerlink" title="几何形状"></a>几何形状</h2><p>形状其实就是若干个不同坐标的点，然后被线连起来形成的。上述的例子中，我们使用的都是gojs定义好的一些形成，然而gojs也支持用户自定义形状，可以使用<code>Shape.geometry</code>属性。可以通过<code>Geometry.parse</code>来创建一个几何图形，不过<code>Geometry</code>的表达式交为复杂，我们将在后期对其进行详细的介绍。  </p>
-<p>下面的例子中，我们展示了通过<code>Geometry.parse</code>方法创建自定义“W”几何图形的过程：</p>
-<pre><code>var W_geometry = go.Geometry.parse(&quot;M 0,0 L 10,50 20,10 30,50 40,0&quot;, false);
-diagram.add(
-$(go.Part, &quot;Horizontal&quot;,
-  $(go.Shape, { geometry: W_geometry, strokeWidth: 2 }),
-  $(go.Shape, { geometry: W_geometry, stroke: &quot;blue&quot;, strokeWidth: 10,
-                strokeJoin: &quot;miter&quot;, strokeCap: &quot;butt&quot; }),
-  $(go.Shape, { geometry: W_geometry, stroke: &quot;blue&quot;, strokeWidth: 10,
-                strokeJoin: &quot;miter&quot;, strokeCap: &quot;round&quot; }),
-  $(go.Shape, { geometry: W_geometry, stroke: &quot;blue&quot;, strokeWidth: 10,
-                strokeJoin: &quot;miter&quot;, strokeCap: &quot;square&quot; }),
-  $(go.Shape, { geometry: W_geometry, stroke: &quot;green&quot;, strokeWidth: 10,
-                strokeJoin: &quot;bevel&quot;, strokeCap: &quot;butt&quot; }),
-  $(go.Shape, { geometry: W_geometry, stroke: &quot;green&quot;, strokeWidth: 10,
-                strokeJoin: &quot;bevel&quot;, strokeCap: &quot;round&quot; }),
-  $(go.Shape, { geometry: W_geometry, stroke: &quot;green&quot;, strokeWidth: 10,
-                strokeJoin: &quot;bevel&quot;, strokeCap: &quot;square&quot; }),
-  $(go.Shape, { geometry: W_geometry, stroke: &quot;red&quot;, strokeWidth: 10,
-                strokeJoin: &quot;round&quot;, strokeCap: &quot;butt&quot; }),
-  $(go.Shape, { geometry: W_geometry, stroke: &quot;red&quot;, strokeWidth: 10,
-                strokeJoin: &quot;round&quot;, strokeCap: &quot;round&quot; }),
-  $(go.Shape, { geometry: W_geometry, stroke: &quot;red&quot;, strokeWidth: 10,
-                strokeJoin: &quot;round&quot;, strokeCap: &quot;square&quot; }),
-  $(go.Shape, { geometry: W_geometry, stroke: &quot;purple&quot;, strokeWidth: 2,
-                strokeDashArray: [4, 2] }),
-  $(go.Shape, { geometry: W_geometry, stroke: &quot;purple&quot;, strokeWidth: 2,
-                strokeDashArray: [6, 6, 2, 2] })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/shape4.jpg" alt="shape"></p>
-<h2 id="u89D2_u5EA6_u548C_u6BD4_u4F8B"><a href="#u89D2_u5EA6_u548C_u6BD4_u4F8B" class="headerlink" title="角度和比例"></a>角度和比例</h2><p>除了通过<code>GraphObject.desiredSize</code>，<code>GraphObject.width</code>，<code>GraphObject.height</code>这几个属性设置<code>Shape</code>的尺寸大小外，还可以使用<code>GraphObject.angle</code>和<code>GraphObject.scale</code>属性设置<code>Shape</code>的角度和比例。  </p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Table&quot;,
-  $(go.Shape, { row: 0, column: 1,
-                figure: &quot;Club&quot;, fill: &quot;green&quot;, width: 40, height: 40,
-                }),  // default angle is zero; default scale is one
-  $(go.Shape, { row: 0, column: 2,
-                figure: &quot;Club&quot;, fill: &quot;green&quot;, width: 40, height: 40,
-                angle: 30 }),
-  $(go.Shape, { row: 0, column: 3,
-                figure: &quot;Club&quot;, fill: &quot;green&quot;, width: 40, height: 40,
-                scale: 1.5 }),
-  $(go.Shape, { row: 0, column: 4,
-                figure: &quot;Club&quot;, fill: &quot;green&quot;, width: 40, height: 40,
-                angle: 30, scale: 1.5 })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/shape5.jpg" alt="shape"></p>
-<p>下面的例子中，将<code>Shape.fill</code>的属性设置为<code>Brush</code>画笔对象，并使用了线性渐变画笔给<code>Shape</code>填充颜色。  </p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Table&quot;,
-  $(go.Shape, { row: 0, column: 0,
-                figure: &quot;Club&quot;, width: 40, height: 40, angle: 0, scale: 1.5,
-                fill: $(go.Brush, go.Brush.Linear, { 0.0: &quot;blue&quot;, 1.0: &quot;red&quot; }),
-                background: $(go.Brush, go.Brush.Linear, { 0.0: &quot;yellow&quot;, 1.0: &quot;green&quot; }),
-                areaBackground: $(go.Brush, go.Brush.Linear, { 0.0: &quot;gray&quot;, 1.0: &quot;lightgray&quot; }) }),
-  $(go.Shape, { row: 0, column: 1, width: 10, fill: null, stroke: null }),
-  $(go.Shape, { row: 0, column: 2,
-                figure: &quot;Club&quot;, width: 40, height: 40, angle: 45, scale: 1.5,
-                fill: $(go.Brush, go.Brush.Linear, { 0.0: &quot;blue&quot;, 1.0: &quot;red&quot; }),
-                background: $(go.Brush, go.Brush.Linear, { 0.0: &quot;yellow&quot;, 1.0: &quot;green&quot; }),
-                areaBackground: $(go.Brush, go.Brush.Linear, { 0.0: &quot;black&quot;, 1.0: &quot;lightgray&quot; }) })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/shape6.jpg" alt="shape"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/gojs-textblock/" itemprop="url">
-                  GOJS教程 -- 如何使用TextBlocks
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2014-07-20T00:00:00+08:00" content="2014-07-20">
-              2014-07-20
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/前端/" itemprop="url" rel="index">
-                    <span itemprop="name">前端</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/gojs-textblock/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/gojs-textblock/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p><code>TextBlock</code>是用于显示文本信息的对象。 </p>
-<p>通过设置<code>TexkBlock.text</code>属性来显示文本信息，这也是唯一的一个方法。因为<code>TexkBlock</code>继承自<code>GraphObject</code>，所以一些<code>GraphObject</code>的属性也有可能对文本有影响。  </p>
-<h2 id="u5B57_u4F53_u548C_u989C_u8272"><a href="#u5B57_u4F53_u548C_u989C_u8272" class="headerlink" title="字体和颜色"></a>字体和颜色</h2><p>可以通过<code>TexkBlock.font</code>属性设置文本的字体，该属性的值可以使用CSS来设置。  </p>
-<p>可以通过<code>TextBlock.stroke</code>属性设置文本字体的颜色，同样可以使用CSS来设置。</p>
-<p>因为<code>TexkBlock</code>继承自<code>GraphObject</code>，所以<code>GraphObject.background</code>属性也可以作用于<code>TextBlock</code>，可以通过该属性设置文本背景色。</p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Vertical&quot;,
-  $(go.TextBlock, { text: &quot;a Text Block&quot; }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, stroke: &quot;red&quot; }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightblue&quot; }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, font: &quot;bold 14pt serif&quot; })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/texkBlock1.jpg" alt="textblock"></p>
-<h2 id="u5C3A_u5BF8_u548C_u88C1_u526A"><a href="#u5C3A_u5BF8_u548C_u88C1_u526A" class="headerlink" title="尺寸和裁剪"></a>尺寸和裁剪</h2><p><code>TexkBlock</code>的自然尺寸是会自适应设置文本的字体以及文本长度的。但是实际上它的尺寸是可大可小的。  </p>
-<p>下面的例子中首先展示了自然尺寸的<code>TextBlock</code>，然后对其进行明确的尺寸设置，并给与绿色背景：</p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Vertical&quot;,
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2 }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                    width: 100, height: 33 }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                    width: 60, height: 33 }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                    width: 50, height: 22 }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                    width: 40, height: 9 })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/texkBlock2.jpg" alt="textblock"></p>
-<h2 id="u6587_u672C_u81EA_u9002_u5E94"><a href="#u6587_u672C_u81EA_u9002_u5E94" class="headerlink" title="文本自适应"></a>文本自适应</h2><p><code>TextBlock</code>也可以使文本信息在规定的尺寸内自动换行，以达到自适应尺寸。可以通过<code>TextBlock.wrap</code>属性来设置，该属性不能为空，必须对其进行属性设置。  </p>
-<p>下面的例子中，第一个使用自然尺寸，第二个规定了宽度，第三第四个在规定相同宽度的基础上设置了<code>TextBlock.wrap</code>属性： </p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Vertical&quot;,
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2 }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                    width: 50, wrap: go.TextBlock.None }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                    width: 50, wrap: go.TextBlock.WrapDesiredSize }),
-  $(go.TextBlock, { text: &quot;a Text Block&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                    width: 50, wrap: go.TextBlock.WrapFit })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/texkBlock3.jpg" alt="textblock"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u6587_u672C_u5BF9_u9F50"><a href="#u6587_u672C_u5BF9_u9F50" class="headerlink" title="文本对齐"></a>文本对齐</h2><p>使用<code>TextBlock.textAlign</code>属性可以设置文本的对齐方式。</p>
-<p>这里注意<code>TextBlock.textAlign</code>与<code>GraphObject.alignment</code>是不同的，前者是针对文本的对齐方式，后者是针对所在容器的对齐方式：</p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Horizontal&quot;,
-  $(go.Panel, &quot;Vertical&quot;,
-    { width: 150, defaultStretch: go.GraphObject.Horizontal },
-    $(go.TextBlock, { text: &quot;textAlign: &apos;left&apos;&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                      textAlign: &quot;left&quot; }),
-    $(go.TextBlock, { text: &quot;textAlign: &apos;center&apos;&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                      textAlign: &quot;center&quot; }),
-    $(go.TextBlock, { text: &quot;textAlign: &apos;right&apos;&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                      textAlign: &quot;right&quot; })
-  ),
-  $(go.Panel, &quot;Vertical&quot;,
-    { width: 150, defaultStretch: go.GraphObject.None },
-    $(go.TextBlock, { text: &quot;alignment: Left&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                      alignment: go.Spot.Left }),
-    $(go.TextBlock, { text: &quot;alignment: Center&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                      alignment: go.Spot.Center }),
-    $(go.TextBlock, { text: &quot;alignment: Right&quot;, background: &quot;lightgreen&quot;, margin: 2,
-                      alignment: go.Spot.Right })
-  )
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/texkBlock4.jpg" alt="textblock"></p>
-<h2 id="u5BF9_u9F50_u65B9_u5F0F_u3001_u6362_u884C_u3001_u81EA_u9002_u5E94"><a href="#u5BF9_u9F50_u65B9_u5F0F_u3001_u6362_u884C_u3001_u81EA_u9002_u5E94" class="headerlink" title="对齐方式、换行、自适应"></a>对齐方式、换行、自适应</h2><p><code>TextBlock.textAlign</code>不管在自然尺寸中处理多行还是在规定尺寸中处理多行都很好用。</p>
-<p><code>TextBlock.isMultiline</code>属性用于设置是否开启内嵌文本中的换行符作用。</p>
-<p><code>TextBlock.wrap</code>属性在处理换行时就更加游刃有余，它会根据<code>TexkBlock</code>的尺寸自动对文本进行换行。  </p>
-<pre><code>diagram.add(
-$(go.Part, &quot;Vertical&quot;,
-  $(go.TextBlock, { text: &quot;a Text Block\nwith three logical lines\nof text&quot;,
-                    background: &quot;lightgreen&quot;, margin: 2,
-                    isMultiline: false }),
-  $(go.TextBlock, { text: &quot;a Text Block\nwith three logical lines\nof text&quot;,
-                    background: &quot;lightgreen&quot;, margin: 2,
-                    isMultiline: true }),
-  $(go.TextBlock, { text: &quot;a Text Block\nwith three logical lines\nof centered text&quot;,
-                    background: &quot;lightgreen&quot;, margin: 2,
-                    isMultiline: true, textAlign: &quot;center&quot; }),
-  $(go.TextBlock, { text: &quot;a single line of centered text that should wrap because we will limit the width&quot;,
-                    background: &quot;lightgreen&quot;, margin: 2, width: 80,
-                    wrap: go.TextBlock.WrapFit, textAlign: &quot;center&quot; })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/texkBlock5.jpg" alt="textblock"></p>
-<h2 id="u7F16_u8F91_u6587_u672C"><a href="#u7F16_u8F91_u6587_u672C" class="headerlink" title="编辑文本"></a>编辑文本</h2><p>GOJS也提供了对<code>TextBlock</code>文本的编辑功能，只需要设置<code>TextBlock.editable</code>为<code>true</code>即可。<br>如果你想对<code>TextBlock</code>中的文本进行某种规则的验证，那么可以设置<code>TextBlock.textValidation</code>属性，该属性的值为<code>function</code>，你可以自行编写验证规则。你甚至可以更换文本编辑器，设置<code>TextBlock.textEditor</code>属性即可。 </p>
-<pre><code>diagram.add(
-$(go.Part,
-  $(go.TextBlock,
-    { text: &quot;select and then click to edit&quot;,
-      background: &quot;lightblue&quot;,
-      editable: true, isMultiline: false })
-));
-diagram.add(
-$(go.Part,
-  $(go.TextBlock,
-    { text: &quot;this one allows embedded newlines&quot;,
-      background: &quot;lightblue&quot;,
-      editable: true })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/texkBlock6.jpg" alt="textblock"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/gojs-build-diagram/" itemprop="url">
-                  GOJS教程 -- 如何构建Parts
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2014-07-19T00:00:00+08:00" content="2014-07-19">
-              2014-07-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/前端/" itemprop="url" rel="index">
-                    <span itemprop="name">前端</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/gojs-build-diagram/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/gojs-build-diagram/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p><code>Parts</code>是一个图表对象，它继承自<code>Panel</code>。它是所有用户操作级别对象的基类。因为它继承自<code>Panel</code>，所以它实际上也是其他<code>GraphObject</code>可视对象的容器。也同样因为继承自<code>Panel</code>，所以它的超类是<code>GraphObject</code>，因此<code>Parts</code>也拥有<code>GraphObject</code>的属性，比如<code>GraphObject.actualBounds</code>、<code>GraphObject.contextMenu</code>、<code>GraphObject.visible</code>。  </p>
-<p>如果你只想创建一个用户可以选中并拖拽移动的可视对象，那么创建<code>Parts</code>就可以满足你。但通常情况下<code>Parts</code>并不能满足我们，所以我们一般创建的是<code>Node</code>和<code>Link</code>，它们都继承自<code>Parts</code>。<br>gojs框架提供两种构建对象的语法，即普通的JavaScript语法和gojs的进阶语法，下面我们来一一了解一下。  </p>
-<h2 id="u4F20_u7EDF_u6784_u5EFA_u8BED_u6CD5"><a href="#u4F20_u7EDF_u6784_u5EFA_u8BED_u6CD5" class="headerlink" title="传统构建语法"></a>传统构建语法</h2><p><code>Node</code>是gojs中最低级的<code>GraphObject</code>对象容器，它只能包含继承自<code>GraphObject</code>对象的<code>TextBlock</code>和<code>Shape</code>对象。<code>Node</code>的父类<code>Part</code>可包含<code>Node</code>和<code>Link</code>对象，<code>Node</code>的超类<code>Panel</code>就能包含更多的<code>GraphObject</code>对象了。 <code>Diagram</code>是gojs中最大的<code>GraphObject</code>对象容器，<code>Palette</code>次之。<br>一个最简单的<code>Node</code>是由<code>TextBlock</code>和<code>Shape</code>组成的：  </p>
-<pre><code>var node = new go.Node(go.Panel.Auto);
-var shape = new go.Shape();
-shape.figure = &quot;RoundedRectangle&quot;;
-shape.fill = &quot;lightblue&quot;;
-node.add(shape);
-var textblock = new go.TextBlock();
-textblock.text = &quot;Hello!&quot;;
-textblock.margin = 5;
-node.add(textblock);
-diagram.add(node);
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagram.jpg" alt="diagram">  </p>
-<p>上面的图片就是通过上述代码创建的Diagram，虽然这里只是图片展示，但实际上他是有交互行为的，你可以选中<code>Node</code>，并拖拽移动。  </p>
-<p>虽然通过这种语法构建Diagram没有问题，但是如果工程量比较大的时候，这种方式会使代码的可读性变的很差，维护起来也很困难。幸好，gojs为我们提供了另一种构建Diagram的语法。</p>
-<h2 id="gojs_u6784_u5EFA_u8BED_u6CD5"><a href="#gojs_u6784_u5EFA_u8BED_u6CD5" class="headerlink" title="gojs构建语法"></a>gojs构建语法</h2><p>gojs定义了一个用于创建<code>GraphObject</code>对象的静态函数<code>GraphObject.make</code>。如果使用该方法创建对象，我们就不用再关心要创建什么样的对象变量名，什么地方该使用什么变量等。该方法还支持内嵌模式，这样的好处就是代码不会是一行一行罗列下来，而是能够表达出层级关系和所属关系的结构体。  </p>
-<p><code>GraphObject.make</code>函数的参数量是可变的，但是第一个参数必须是一个<code>GraphObject</code>对象的子类。其他的参数一般有这么几种：</p>
+<p>当Swift提供了访问控制特性后大家对该特性的响应非常积极和强烈。同时也有很多开发者朋友会问，“为什么Swift中没有提供<code>protected</code>访问级别呢？” 然而在很多其他语言中有这种访问控制级别，就是只能由子类可以访问某些方法或属性的访问级别。</p>
+<p>当定义Swift的访问级别时，我们主要考虑了以下两个使用情况：</p>
 <ul>
-<li>普通JavaScript的键值对象，用于设置构建类型的相关属性比如<code>{ figure:&quot;RoundedRectangle&quot; }</code>。</li>
-<li>构建对象的子元素，比如说给<code>Node</code>里添加一个<code>Shape</code>。</li>
-<li>一个枚举类型的参数，一般该参数用于设定构建对象在Diagram中的排列方式，比如平铺排列、垂直排列等，以及嵌套元素的自适应方法。</li>
-<li>一个字符串，这个参数一般作为第二个参数，用于设置某个<code>GraphObject</code>子类型的第一属性，比如设置<code>TextBlock</code>的<code>text</code>、<code>Shape</code>的<code>figure</code>、<code>Picture</code>的<code>source</code>、<code>Panel</code>的<code>type</code>等。</li>
-<li>如果构建的是一个<code>Table Panel</code>，那么有一个<code>RowCoumnDefinition</code>属性，用于描述<code>row</code>和<code>column</code>的信息。不过有一点要注意的是，如果构建的是一个<code>Diagram</code>，那么这个字符串必须是<code>DIV</code>的<code>id</code>。</li>
-<li>一个JavaScript数组，它的作用有点像元组，如果过一个函数的返回类型由多个的时候，用它来储存。</li>
+<li>在App中隐藏<code>class</code>的私人信息。</li>
+<li>在App客户端中隐藏框架中的实现细节。</li>
 </ul>
-<p>下面我们用<code>go.GraphObject.make</code>语法来构建一个与上述例子相同的Diagram：</p>
-<pre><code>// 注意，这里的$可以更换，随你喜好    
-var $ = go.GraphObject.make;
-diagram.add(
-$(go.Node, go.Panel.Auto,
-  $(go.Shape,
-    { figure: &quot;RoundedRectangle&quot;,
-      fill: &quot;lightblue&quot; }),
-  $(go.TextBlock,
-    { text: &quot;Hello!&quot;,
-      margin: 5 })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagram.jpg" alt="diagram"> </p>
-<p>上面的代码还可以进行简化，将枚举类型参数替换为字符串，可参阅上文中提到的参数类型： </p>
-<pre><code>var $ = go.GraphObject.make;
-diagram.add(
-$(go.Node, &quot;Auto&quot;,
-  $(go.Shape, &quot;RoundedRectangle&quot;, { fill: &quot;lightblue&quot; }),
-  $(go.TextBlock, &quot;Hello!&quot;, { margin: 5 })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagram.jpg" alt="diagram"> </p>
-<p>使用<code>go.GraphObject.make</code>不仅可以构建可视对象，还可以方便的实例化gojs中的装饰对象，可以动态的创建某些作为参数或属性的对象。比如上述例子中的<code>Node</code>是蓝色，我们可以使用样式刷对象（<code>Brush</code>）对其颜色进行修饰：  </p>
-<pre><code>diagram.add(
-$(go.Node, &quot;Auto&quot;,
-  $(go.Shape, &quot;RoundedRectangle&quot;,
-    { fill: $(go.Brush, go.Brush.Linear,
-              { 0.0: &quot;Violet&quot;, 1.0: &quot;Lavender&quot; }) }),
-  $(go.TextBlock, &quot;Hello!&quot;,
-    { margin: 5 })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagramWithBrush.jpg" alt="diagram"><br>下面我们再来看一个构建<code>Diagram</code>的例子：  </p>
-<pre><code>var myDiagram =
-$(go.Diagram, &quot;myDiagramDiv&quot;,  // must name or refer to the DIV HTML element
-  {
-    // any initial diagram is centered in the viewport
-    initialContentAlignment: go.Spot.Center,
+<p>这两种情况就分别对应了<code>private</code>和<code>internal</code>访问级别。</p>
+<p>相比之下，<code>protected</code>级别保护了继承者的访问权限，这个新的访问控制级别给我们带来全新的思考方式和设计模式。但实际上，该级别并没有提供真正意义上的保护，因为子类总是能通过<code>public</code>级别的方法和属性去暴露<code>protected</code>级别的API。它也没有提供额外的优化解决机制，因为一个父类的方法或属性可以被很多个子类重写，很难控制。所以也没有必要在这方面进行限制，也就是说在现有机制下，子类可以访问父类的一些成员，但是在子类中使用的，或帮助子类实现某些功能的类并不一定能访问到该子类父类的成员。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
 
-    // don&apos;t initialize some properties until after a new model has been loaded
-    &quot;InitialLayoutCompleted&quot;: loadDiagramProperties,  // this DiagramEvent listener is defined below
 
-    // have mouse wheel events zoom in and out instead of scroll up and down
-    &quot;toolManager.mouseWheelBehavior&quot;: go.ToolManager.WheelZoom,
+<p>正如一些开发者指出的，Apple的框架里有些API被分离出来，专门供子类使用。那么为什么不使用<code>protected</code>级别控制一下呢？我们查看了相关代码后，发现这些API大体符合这么两点情况。第一，一些方法在子类外没有用，所以没有必要将其保护为只能由子类使用。第二，一些方法可以被重写，但不能被调用。比如<code>drawRect(_:)</code>方法，在<code>UIKit</code>框架代码库中肯定可以使用，但是在<code>UIKit</code>框架之外就没法使用了。</p>
+<p>在扩展类的时候，如何与<code>protected</code>级别的成员交互也思考的不是很明确。比如一个类的扩展是否可以访问该类的<code>protected</code>成员呢？或者一个子类的扩展是否能访问其父类的<code>protected</code>成员呢？在相同模块中申明类的扩展会有什么影响呢？</p>
+<p>还有一个影响我们设计的原因是：现在已有的应用大多数都使用了Apple提供的或第三方提供的框架。Objective-C的方法和属性通常都是在<code>.h</code>公共头文件中申明的，但同样可以加在类扩展的<code>.m</code>实现文件中。当公共类的某些部分在框架的其他地方使用，但没有超出框架外时，开发者就要创建第二个头文件用于内部使用。这些种情况就对应着Swift中的<code>public</code>、<code>private</code>、<code>internal</code>三种访问级别。</p>
+<p>Swift提供的访问控制特性本着单一、易于理解、与继承无关的原则。我们认为现在这种模式很简单也很容易理解，并且大多数的应用场景是想隐藏类或框架中一些功能实现细节。这种访问控制机制可能和你以前使用的其他语言不太一样，但是我们鼓励你们大胆的去尝试。</p>
+<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=11" target="_blank" rel="external">Access Control and protected</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
 
-    // specify a data object to copy for each new Node that is created by clicking
-    &quot;clickCreatingTool.archetypeNodeData&quot;: { text: &quot;new node&quot; }
-  });
 
-function loadDiagramProperties(e) { . . . }
-</code></pre><p>从上面的例子中可以看出，第二个参数为<code>DIV</code>的<code>id</code>，第三个参数就是键值对象了，其实就是json字符串，用于配置<code>Diagram</code>的相关属性。<br>我们也可以单独创建能够复用的对象，比如样式刷（<code>Brush</code>）：</p>
-<pre><code>var violetbrush = $(go.Brush, go.Brush.Linear, { 0.0: &quot;Violet&quot;, 1.0: &quot;Lavender&quot; });
+            
+          </span>
+        
+      
+    </div>
 
-diagram.add(
-$(go.Node, &quot;Auto&quot;,
-  $(go.Shape, &quot;RoundedRectangle&quot;,
-    { fill: violetbrush }),
-  $(go.TextBlock, &quot;Hello!&quot;,
-    { margin: 5 })
-));
+    <footer class="post-footer">
+      
 
-diagram.add(
-$(go.Node, &quot;Auto&quot;,
-  $(go.Shape, &quot;Ellipse&quot;,
-    { fill: violetbrush }),
-  $(go.TextBlock, &quot;Goodbye!&quot;,
-    { margin: 5 })
-));
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/buildSimpleDiagramWithBrush2.jpg" alt="diagram"></p>
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/implicitly-converting-functions-return-optionals/" itemprop="url">
+                  Swift中将函数的返回值隐式转换为Optional类型的特性
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2014-08-19T00:00:00+08:00" content="2014-08-19">
+              2014-08-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/implicitly-converting-functions-return-optionals/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/implicitly-converting-functions-return-optionals/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>一个函数A的参数是返回值为<code>Optional</code>类型的函数，如果你传入了一个返回值不是<code>Optional</code>的函数，那么函数A会自动将传入函数的返回值转换为<code>Optional</code>类型，来看代码示例：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 函数B的返回值为Int类型</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">()</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数A的参数是返回值为Optional(Int)类型</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 把函数B作为参数传入函数A，输出结果为Optional(1)</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
+<p>更棒的是你还可以使用经过转换后的函数，比如：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 让函数A返回作为参数的函数</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?)-&gt;()-&gt;<span class="type">Int</span>? &#123;</span><br><span class="line">    <span class="keyword">return</span> fun;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line"><span class="keyword">let</span> j = &#123; ++i &#125;</span><br><span class="line"> </span><br><span class="line">j() <span class="comment">// returns 1</span></span><br><span class="line">j() <span class="comment">// returns 2</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> h = <span class="type">A</span>(j)</span><br><span class="line"> </span><br><span class="line">h() <span class="comment">// returns &#123;Some 3&#125;</span></span><br><span class="line">h() <span class="comment">// returns &#123;Some 4&#125;</span></span><br><span class="line">j() <span class="comment">// returns 5</span></span><br></pre></td></tr></table></figure>
+<p>这种特性只能作用于函数的返回值，如果是下面这种情况，就不好使了：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">(i: Int)</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">(Int?)</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 编译失败，不能将B函数参数的Int类型隐式转换为Int?类型</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
+<p>这是因为函数B希望它的参数永远不能为nil，当接收到值为nil的参数后它就不知道该怎么办了。但如果函数B的参数为<code>Optional</code>类型，而函数A希望传入的函数参数为非<code>Optional</code>呢？我们来看看：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">(i: Int?)</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i ?? <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">(Int?)</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 编译成功，并做了隐式转换，</span></span><br><span class="line"><span class="type">A</span>(<span class="type">B</span>);</span><br></pre></td></tr></table></figure>
+<p>上面的特新其实可以理解为，编译器使用了一个闭包，调用了你传入的函数并进行了封包操作：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">B</span><span class="params">()</span></span>-&gt;<span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">A</span><span class="params">(fun: <span class="params">()</span></span></span>-&gt;<span class="type">Int</span>?) &#123;</span><br><span class="line">    <span class="built_in">println</span>(fun());</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="type">A</span>( &#123; <span class="type">Optional</span>(<span class="type">B</span>()) &#125; );</span><br></pre></td></tr></table></figure>
+<p>这是Swift很有意思也很有用的一个特性。</p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -1272,8 +498,8 @@ $(go.Node, &quot;Auto&quot;,
             
             
               
-                <a class="post-title-link" href="/articles/gojs-simple-diagram/" itemprop="url">
-                  JavaScript图表图形框架 -- GOJS简介
+                <a class="post-title-link" href="/articles/swift-value-and-reference-types/" itemprop="url">
+                  Swift中的值类型和参照类型
                 </a>
               
             
@@ -1283,8 +509,8 @@ $(go.Node, &quot;Auto&quot;,
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-07-18T00:00:00+08:00" content="2014-07-18">
-              2014-07-18
+            <time itemprop="dateCreated" datetime="2014-08-17T00:00:00+08:00" content="2014-08-17">
+              2014-08-17
             </time>
           </span>
 
@@ -1293,8 +519,8 @@ $(go.Node, &quot;Auto&quot;,
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/前端/" itemprop="url" rel="index">
-                    <span itemprop="name">前端</span>
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
                   </a>
                 </span>
 
@@ -1309,8 +535,8 @@ $(go.Node, &quot;Auto&quot;,
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/gojs-simple-diagram/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/gojs-simple-diagram/" itemprop="commentsCount"></span>
+              <a href="/articles/swift-value-and-reference-types/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-value-and-reference-types/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -1340,54 +566,28 @@ $(go.Node, &quot;Auto&quot;,
 </script>
 
 
-<p>gojs是一个能够让我们很容易的实现基于html5浏览器绘制具有交互性的图形图表的JavaScript框架。<br>gojs采用了面向对象的编程模式。以图形对象表示绘图模板。以用普通js对象存储数据作为数据模型，然后赋值给图形对象的属性作为数据绑定的模式。gojs同样提供了大量工具类来代表我们的交互行为。我们需要做的就是创建图形对象、构建数据模型、设置属性、绑定数据模型、使用工具类添加行为即可创建出具有丰富交互性能的各种图表。 </p>
-<h2 id="u4E00_u4E2A_u7B80_u5355_u7684gojs_u56FE_u8868"><a href="#u4E00_u4E2A_u7B80_u5355_u7684gojs_u56FE_u8868" class="headerlink" title="一个简单的gojs图表"></a>一个简单的gojs图表</h2><p>下面的代码定义了一个<code>node</code>模板和数据模型，并它们构建了一个简单的图表：  </p>
-<pre><code>// For conciseness. See the &quot;Building Parts&quot; intro page for more
-var $ = go.GraphObject.make;
-
-// the node template describes how each Node should be constructed
-diagram.nodeTemplate =
-  $(go.Node, &quot;Auto&quot;,  // the Shape automatically fits around the TextBlock
-    $(go.Shape, &quot;RoundedRectangle&quot;,
-      // bind Shape.fill to Node.data.color
-      new go.Binding(&quot;fill&quot;, &quot;color&quot;)),
-    $(go.TextBlock,
-      { margin: 3 },  // some room around the text
-      // bind TextBlock.text to Node.data.key
-      new go.Binding(&quot;text&quot;, &quot;key&quot;))
-  );
-
-// the Model holds only the essential information describing the diagram
-diagram.model = new go.GraphLinksModel(
-[ // a JavaScript Array of JavaScript objects, one per node
-  { key: &quot;Alpha&quot;, color: &quot;lightblue&quot; },
-  { key: &quot;Beta&quot;, color: &quot;orange&quot; },
-  { key: &quot;Gamma&quot;, color: &quot;lightgreen&quot; },
-  { key: &quot;Delta&quot;, color: &quot;pink&quot; }
-],
-[ // a JavaScript Array of JavaScript objects, one per link
-  { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },
-  { from: &quot;Alpha&quot;, to: &quot;Gamma&quot; },
-  { from: &quot;Beta&quot;, to: &quot;Beta&quot; },
-  { from: &quot;Gamma&quot;, to: &quot;Delta&quot; },
-  { from: &quot;Delta&quot;, to: &quot;Alpha&quot; }
-]);
-
-diagram.initialContentAlignment = go.Spot.Center;
-// enable Ctrl-Z to undo and Ctrl-Y to redo
-diagram.undoManager.isEnabled = true;
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/simpleDiagram.jpg" alt="Diagram">  </p>
-<p>虽然上面展示的是图片，但是实际上我们可以在这个图表上用鼠标中键滚动、选中、删除、重做、撤销等等交互。</p>
-<h2 id="gojs_u7684_u57FA_u672C_u6982_u5FF5"><a href="#gojs_u7684_u57FA_u672C_u6982_u5FF5" class="headerlink" title="gojs的基本概念"></a>gojs的基本概念</h2><p>上面的示例是让我们先在感官上认知一下gojs的产出物，下面我们来阐述一下gojs的基本概念。  </p>
-<p>gojs绘制的图表（<code>Diagram</code>）具有两个最基本的元素，就是点和线（<code>Node</code>和<code>Link</code>），并且他们可以自由组合组成一个组（<code>Group</code>）。所有的元素都处在图层（<code>Layer</code>）上，并且可以对它们进行布局（<code>Layout</code>）。  </p>
-<p>每个<code>Diagram</code>都是通过数据模型（<code>Model</code>）来填充和确定<code>Node</code>的信息和<code>Link</code>的所属关系的。并且我们只需要创建好<code>Node</code>和<code>Link</code>的模板以及数据模型，其他的是事情都交给gojs去处理。它会通过<code>Model.nodeDataArray</code>方法和<code>GraphLinksModel.linkDataArray</code>方法自动加载模型并构建元素。  </p>
-<p>每一个<code>Node</code>和<code>Link</code>都是通过模板来描述他们的文本、形状、颜色等信息以及交互行为。每个模板其实就是一个面板（<code>Panel</code>）（你可以将各种元素自由组合在它里面，也可以在它里面添加各种交互行为），比如说将<code>TextBlock</code>、<code>Shape</code>、<code>Picture</code>等元素添加到这个<code>Panel</code>中，鼠标进入离开的交互行为也可以添加到<code>Panel</code>中，那么这个<code>Panel</code>就是一个模板。</p>
-<p>每个<code>Node</code>的位置可以使用<code>Diagram.layout</code>或<code>Group.layout</code>进行初始化设置，也可以基于交互行为进行拖拽。  </p>
-<p>gojs里的工具类可以为<code>Diagram</code>添加鼠标、键盘事件。一般情况下<code>Diagram</code>都默认设置了几种交互行为，比如说拖拽、连线。我们也可以通过<code>ToolManager</code>对象来管理工具类，或者说来管理交互行为，比如说可以停止某些交互，或开启某些交互等。  </p>
-<p>每个<code>Diagram</code>同时也包含<code>CommandHandler</code>对象，它的作用是添加一些键盘命令，比如点<code>Delete</code>键删除元素，<code>Ctrl+C</code>复制、<code>Ctrl+V</code>粘贴、<code>Ctrl+Z</code>撤销等。但是<code>CommandHandler</code>也是被<code>ToolManager</code>管理的。  </p>
-<p><code>Diagram</code>也提供通过鼠标中键滚动视图、放大缩小视图。</p>
-<p>gojs还提供了图表的预览视图（<code>Overview</code>），用于了解大规模图表的概况，同时还提供了组件管理面板（<code>Palette</code>），用于管理创建的组件，并且支持将组件拖拽到<code>Diagram</code>中。</p>
-<p>在<code>Diagram</code>中，你可以选中<code>Node</code>或者<code>Link</code>，你会发现他们有少许的变化，比如在<code>Node</code>周围会增加选中框，选中<code>Link</code>会变色等。这些都是由<code>Adornment</code>对象控制的，你还可以用它来增加提示框、右键菜单等。</p>
+<p>在Swift中，类型分为两类：第一种是<strong>值类型</strong>，该类型的每个实例持有数据的副本，并且该副本对于每个实例来说是独一无二的一份，比如结构体（struct）、枚举（enum）、元组（tuple）都是值类型。第二种是<strong>参照类型</strong>，该类型的实例共享数据唯一的一份副本（在native层面说的话，就是该类型的每个实例都指向内存中的同一个地址），比如类（class）就是参照类型。在这篇文章中，我们将深入探讨值类型和参照类型的使用价值，以及如何在某种场景下选择正确的类型。</p>
+<h2 id="u5B83_u4EEC_u6709_u4EC0_u4E48_u4E0D_u540C_uFF1F"><a href="#u5B83_u4EEC_u6709_u4EC0_u4E48_u4E0D_u540C_uFF1F" class="headerlink" title="它们有什么不同？"></a>它们有什么不同？</h2><p>值类型最基本的特点就是复制，这影响到它的赋值、初始化、传参等操作。来看看下面的代码示例：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 值类型示例</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">S</span> </span>&#123; <span class="keyword">var</span> data: <span class="type">Int</span> = -<span class="number">1</span> &#125;</span><br><span class="line"><span class="keyword">var</span> a = <span class="type">S</span>()</span><br><span class="line"><span class="keyword">var</span> b = a                       <span class="comment">// a复制一份，并将副本赋值给了b</span></span><br><span class="line">a.data = <span class="number">42</span>                     <span class="comment">// a的数据改变了，但是b的并没有改变</span></span><br><span class="line"><span class="built_in">println</span>(<span class="string">"<span class="subst">\(a.data)</span>, <span class="subst">\(b.data)</span>"</span>) <span class="comment">// prints "42, -1"</span></span><br></pre></td></tr></table></figure>
+<p>参照类型的复制行为其实是隐式的创建了一个共享的实例，作为原始类型的参照。下面的例子中，两个变量都会参照唯一的那个共享实例的数据，所当改变这两个变量中任何一个的数据，都会同样作用于原始类型的数据：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 参照类型示例</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123; <span class="keyword">var</span> data: <span class="type">Int</span> = -<span class="number">1</span> &#125;</span><br><span class="line"><span class="keyword">var</span> x = <span class="type">C</span>()</span><br><span class="line"><span class="keyword">var</span> y = x       <span class="comment">// 将x赋值给y</span></span><br><span class="line">x.data = <span class="number">42</span>     <span class="comment">// 修改了x的数据，其实是修改了参照数据，那么y的数据也会改变 </span></span><br><span class="line"><span class="built_in">println</span>(<span class="string">"<span class="subst">\(x.data)</span>, <span class="subst">\(y.data)</span>"</span>) <span class="comment">// prints "42, 42"</span></span><br></pre></td></tr></table></figure>
+<h2 id="Mutation_u5728_u5B89_u5168_u6027_u4E2D_u7684_u89D2_u8272"><a href="#Mutation_u5728_u5B89_u5168_u6027_u4E2D_u7684_u89D2_u8272" class="headerlink" title="Mutation在安全性中的角色"></a>Mutation在安全性中的角色</h2><p>选择值类型的一个很重要的原因是可以让你比较容易的理解和掌控你的代码。如果你使用值类型，那么都是唯一的数据值、类型的副本在和你打交道，你对数据的修改只作用于数据所属的类型实例，所以你可以不用担心因为你在某个地方对数据的修改而影响到其他地方的数据。这在多线程环境中非常有用，因为在多线程下，不同的线程有可能会在你不知情的情况下改变数据。发生这种Bug后，调试起来就非常困难。</p>
+<p>因为值类型和参照类型的表象区别就在于当你修改类型实例的数据时，它们对原始类型数据的处理方式不同。但是有一种情况，值类型和参照类型的处理方式却又相似，那就是当类型实例的数据为只读的时候。在不存在修改的情况下，值类型和参照类型就没什么区别了。</p>
+<p>你可能会觉得这一点很有用，假如说一个<code>class</code>是完全不能被重定义的，那么就比较符合使用Cocoa的<code>NSObject</code>对象的一些习惯，并能很好的保持原本的语义。今天，在Swift你可以通过定义不可改变的存储属性来创建一个不可重定义的类，这样可以避免暴露出的API被修改。事实上，许多普通的Cocoa框架里的类，比如<code>NSURL</code>，都被定义成了不可重定义的类。尽管如此，Swift目前还不提供任何机制像结构体（struct）和枚举（enum）一样去强制使一个<code>class</code>成为不可重定义的类（比如像子类）。</p>
+<h2 id="u5982_u4F55_u9009_u62E9_u6B63_u786E_u7684_u7C7B_u578B_uFF1F"><a href="#u5982_u4F55_u9009_u62E9_u6B63_u786E_u7684_u7C7B_u578B_uFF1F" class="headerlink" title="如何选择正确的类型？"></a>如何选择正确的类型？</h2><p>如果你想创建一个新类型，那么你应该选择值类型还是参照类型呢？当你使用Cocoa框架时，很多API都是<code>NSObject</code>的子类，那么你就必须要使用参照类型，也就是<code>class</code>。在其他情况下，这里有一些指导建议你可以参考：</p>
+<p>使用值类型的情形：</p>
+<ul>
+<li>使用<code>==</code>运算符比较实例数据的时候。</li>
+<li>你想单独复制一份实例数据的时候。</li>
+<li>当在多线程环境下操作数据的时候。</li>
+</ul>
+<p>使用参照类型（比如<code>class</code>）的情形：</p>
+<ul>
+<li>当使用<code>===</code>运算符判断两个对象是否引用同一个对象实例的时候。</li>
+<li>当上下文需要创建一个共享的、可变的对象时。</li>
+</ul>
+<p>在Swift中，<code>Array</code>、<code>String</code>、<code>Dictionary</code>都是值类型。它们的使用方式类似C语言中得<code>int</code>，每一个实例都有一份数据。你不需要进行显示的复制操作去防止数据在你不知情的情况下被修改。更重要的是，你可以跨线程进行传参而不需要考虑同步的问题，因为传递值类型很安全。秉着高安全性的精神，这种类型划分模式能帮助你在Swift中写出更加有可预测性的代码。</p>
+<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=10" target="_blank" rel="external">Value and Reference Types</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -1396,40 +596,361 @@ diagram.undoManager.isEnabled = true;
 </script>
 
 
-<h2 id="Diagram_u9ED8_u8BA4_u7684_u4EA4_u4E92_u884C_u4E3A"><a href="#Diagram_u9ED8_u8BA4_u7684_u4EA4_u4E92_u884C_u4E3A" class="headerlink" title="Diagram默认的交互行为"></a>Diagram默认的交互行为</h2><ul>
-<li>选中<code>Node</code>或者<code>Link</code>，会出现蓝色选中框，<code>Link</code>也会变为蓝色。</li>
-<li>使用<code>Ctrl+鼠标左键</code>可以选中多个元素。</li>
-<li>在<code>Panel</code>中点击鼠标左键移动鼠标可以移动所有元素。</li>
-<li>使用<code>Ctrl+A</code>可以选中所有元素。</li>
-<li>选中元素，用鼠标可以拖动元素。</li>
-<li>使用<code>Ctrl+C</code>/<code>Ctrl+V</code>可以复制粘贴元素。</li>
-<li>使用<code>Delete</code>键可以删除元素。</li>
-<li>选中多个元素，然后使用<code>Ctrl+G</code>可以将这些选中的元素组合成一个组。</li>
-<li>使用<code>Ctrl+Shift+G</code>可以拆散组。</li>
-<li>当元素超出<code>Diagram</code>时，可自动出现滚动条。</li>
-<li>用鼠标拖拽<code>Node</code>边缘可以与其他<code>Node</code>进行连线。</li>
-<li>选中<code>Link</code>，可以重新选择目标<code>Node</code>，即可以重新连线。</li>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/ios8-day-by-day-day1-swift-guide/" itemprop="url">
+                  iOS8 Day-by-Day -- Day1 -- Swift引子
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2014-08-15T00:00:00+08:00" content="2014-08-15">
+              2014-08-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/ios8-day-by-day-day1-swift-guide/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/ios8-day-by-day-day1-swift-guide/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u5F00_u573A_u767D"><a href="#u5F00_u573A_u767D" class="headerlink" title="开场白"></a>开场白</h2><p>在今年的WWDC大会上绝对不容忽视的一点就是苹果除了宣布iOS8的发布，还介绍了一门新的编程语言Swift。是与Objective-C大不相同的一门语言，它不但是强类型的语言，而且吸收了当前多种优秀编程语言的特点。  </p>
+<p>为了能够涵盖到Swift语言所有的新特性，该博客系列将只使用Swift语言来进行讲解。我认为，学习如何使用Swift语言、如何与Cocoa框架交互最有价值的资料应该官方提供的两个文档。我相信如果你一开始就跟着这两个文档学习，你能避免不少弯路。</p>
+<ul>
+<li><a href="https://itunes.apple.com/us/book/the-swift-programming-language/id881256329?mt=11&amp;ls=1" target="_blank" rel="external">The Swift Programming Language</a></li>
+<li><a href="https://itunes.apple.com/us/book/using-swift-cocoa-objective/id888894773?mt=11&amp;ls=1" target="_blank" rel="external">Using Swift with Cocoa and Objective-C</a></li>
 </ul>
-<h2 id="u521B_u5EFA_u4E00_u4E2ADiagram"><a href="#u521B_u5EFA_u4E00_u4E2ADiagram" class="headerlink" title="创建一个Diagram"></a>创建一个Diagram</h2><p>每个<code>Diagram</code>都需要依托与一个HTML的<code>DIV</code>元素，虽然由gojs接管了这个<code>DIV</code>，但是<code>DIV</code>本身的属性依然可以由我们通过CSS设置，比如位置、高宽等。gojs实际上是在<code>DIV</code>中创建了一个<code>Canvas</code>元素，<code>Canvas</code>的高宽自动适配<code>DIV</code>的高宽。</p>
-<pre><code>&lt;!-- The DIV for a Diagram needs an explicit size or else we won&apos;t see anything.
- In this case we also add a border to help see the edges. --&gt;
-&lt;div id=&quot;myDiagramDiv&quot; style=&quot;border: solid 1px blue; width:400px; height:150px&quot;&gt;&lt;/div&gt;
-</code></pre><p>当然，当你准备开始创建<code>Diagram</code>前，首先要导入gojs的文件。gojs的文件分为Develop（<code>gojs-debug.js</code>）和Product（<code>gojs.js</code>）两种，前者是供开发人员使用的，因为它包含了一些用于调试的代码，后者用于正式发布，速度较快。gojs不依赖与任何JavaScript框架，所以它可以与任何JavaScript框架一起使用，而不会产生冲突。</p>
-<pre><code>&lt;!-- Include the GoJS library. --&gt;
-&lt;script src=&quot;gojs.js&quot;&gt;&lt;/script&gt;
-</code></pre><p>下面就可以使用gojs将上述的<code>DIV</code>构建为一个<code>Diagram</code>了，这里需要注意的是，使用gojs的api时，都要使用前缀<code>go.</code>。</p>
-<pre><code>&lt;!-- Create the Diagram in the DIV element using JavaScript. --&gt;
-&lt;!-- The &quot;go&quot; object is the &quot;namespace&quot; that holds all of the GoJS types. --&gt;
-&lt;script&gt;
-var diagram = new go.Diagram(&quot;myDiagramDiv&quot;);
-diagram.model = new go.GraphLinksModel(
-    [{ key: &quot;Hello&quot; },   // two node data, in an Array
-    { key: &quot;World!&quot; }],
-    [{ from: &quot;Hello&quot;, to: &quot;World!&quot;}]  // one link, in an Array
-);
-&lt;/script&gt;
-</code></pre><p>这样就构建了一个简单的<code>Diagram</code>。<br><img src="http://www.devtalking.com/postImages/anotherSimpleDiagram.jpg" alt="Diagram"></p>
+<p>你还应该经常去看<a href="https://developer.apple.com/swift/blog/" target="_blank" rel="external">Swift官方博客</a>以及Apple提供的关于该语言的其他<a href="https://developer.apple.com/swift/resources/" target="_blank" rel="external">资源</a>。</p>
+<p>既然已经有很多资料和文档能帮助你学习如何使用Swift语言，所以这个博客系列不会将已有的知识点重复讲解。相反，我会根据初学者在使用Swift语言中可能会遇到的一些陷阱、难以理解的知识点进行讲解，尤其当和系统框架一起使用的时候。</p>
+<p>今天这篇文章主要使用Xcode 6提供的<code>Playground</code>演示每个章节的代码示例。你可以在ShinobiControls的Github主页上下载这些示例代码。地址：<a href="https://github.com/ShinobiControls/iOS8-day-by-day" target="_blank" rel="external">github.com/ShinobiControls/iOS8-day-by-day</a>。</p>
+<p>如果你对这篇文章里的知识点有什么问题或者其他建议，你可以联系我。我会在最新一期的博客中进行说明。你可以在底部进行评论或者给我发Twitter-<a href="https://twitter.com/iwantmyrealname" target="_blank" rel="external">@iwantmyrealname</a>。</p>
+<h2 id="u6784_u9020_u51FD_u6570"><a href="#u6784_u9020_u51FD_u6570" class="headerlink" title="构造函数"></a>构造函数</h2><p>Swift围绕着对象构造过程形成了一个概念，包括命名、方便的构造器以及在对象的构造阶段指定了严格的调用顺序等。在未来几周内，该博客系列将会有一篇文章深入详细地介绍Swift中对象的构造过程，以及对你写的Objective-C有何影响。</p>
+<p>Swift与Objective-C另外一个最大的不同之处就是构造函数的返回值和构造失败的处理。在Objective-C中的构造器大多数都是这样： </p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">- (instancetype)<span class="keyword">init</span> &#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> <span class="keyword">init</span>];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="comment">// Do some stuff</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然而在Swift中是这样：  </p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">init</span> &#123;</span><br><span class="line">    variableA = <span class="number">10</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里要注意的是，Objective-C中的构造器负责<strong>创建</strong>并返回<code>self</code>，但是Swift中的构造函数却没有返回值。这意味着在Swift的构造函数中不可能也没有机会返回一个<code>nil</code>的返回值，而这在Objective-C中恰恰是表明构造失败的通用模式。</p>
+<p>这显然是Swift语言新的Beta版中需要修改的问题。那么现在我们唯一的解决办法是通过类方法返回一个Optional类型用于表明是否构造成功：  </p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">myFactoryMethod</span>() -&gt; <span class="title">MyClass</span>? </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有趣的是Objective-C中的工厂方法被转换成了Swift中的构造方法，这一点显然是不可取的。但是，到目前为止，我们只能选择Swift提供的有潜在隐患的构造方法。</p>
+<h2 id="u53EF_u53D8_u6027"><a href="#u53EF_u53D8_u6027" class="headerlink" title="可变性"></a>可变性</h2><p>在Cocoa开发者中，可变性这个概念已然不是什么新鲜的东西了，比如在合适的情景下，我们会使用<code>NSArray</code>的可变类型<code>NSMutableArray</code>。Swift将这个概念进行了升华，并且它将不可变性升级为一个基本概念。</p>
+<p>Swift中用<code>let</code>关键字定义一个不可变的变量，也就是常量。比如说：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> a = <span class="type">MyClass</span>()</span><br><span class="line">a = <span class="type">MySecondClass</span>() <span class="comment">// 不允许</span></span><br></pre></td></tr></table></figure>
+<p>这意味着，我们不能改变被<code>let</code>关键字定义的常量的值，以及该常量引用对象的类型。这里需要注意的是，如果引用的类型是一个值类型（比如结构体）那么不论是引用类型还是引用类型自身都是不可变的。如果引用的是一个类，那么它的引用类型也是是不可变的，但是引用类型自身是可以改变的。  </p>
+<p>我们来看看下面这个结构体：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">MyStruct</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> t = <span class="number">12</span></span><br><span class="line">  <span class="keyword">var</span> u: <span class="type">String</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你用<code>var</code>关键字定义一个变量名叫<code>struct1</code>，那么你可以对其做以下操作：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> struct1 = <span class="type">MyStruct</span>(t: <span class="number">15</span>, u: <span class="string">"Hello"</span>)</span><br><span class="line">struct1.t = <span class="number">13</span> <span class="comment">// 编译错误，因为t是一个常量，也就是不可变属性</span></span><br><span class="line">struct1.u = <span class="string">"GoodBye"</span></span><br><span class="line">struct1 = <span class="type">MyStruct</span>(t: <span class="number">10</span>, u: <span class="string">"You"</span>)</span><br></pre></td></tr></table></figure>
+<p>你可以对<code>u</code>属性重新赋值，也可以对<code>struct1</code>重新赋值，因为他们都是用<code>var</code>定义的变量。但是你不能对<code>t</code>属性重新赋值，因为它是用<code>let</code>定义的常量属性。下面我们再来看看如果用<code>let</code>关键字定义一个<code>MyStruct</code>的实例常量，会发生什么：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> struct2 = <span class="type">MyStruct</span>(t: <span class="number">12</span>, u: <span class="string">"World"</span>)</span><br><span class="line">struct2.u = <span class="string">"Planet"</span> <span class="comment">// 编译错误，struct2是一个常量，也就是不可变的</span></span><br><span class="line">struct2 = <span class="type">MyStruct</span>(t: <span class="number">10</span>, u: <span class="string">"Defeat"</span>) <span class="comment">// 编译错误，struct2的类型是不可变的</span></span><br></pre></td></tr></table></figure>
+<p>在上述代码片段的情况下，你不能改变<code>struct2</code>的类型，同样也不能改变这个类型自身（比如该类型的属性<code>u</code>），这是因为结构体是一个<strong>值类型</strong>。</p>
+<p>但如果引用的是一个类，那么上述代码示例的结果就会有所不同了，我们先看看下面这个类的定义：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> t = <span class="number">12</span></span><br><span class="line">  <span class="keyword">var</span> u: <span class="type">String</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">init</span>(t: <span class="type">Int</span>, u: <span class="type">String</span>) &#123;</span><br><span class="line">    <span class="keyword">self</span>.t = t</span><br><span class="line">    <span class="keyword">self</span>.u = u</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们使用<code>var</code>定义一个变量<code>class1</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> class1 = <span class="type">MyClass</span>(t: <span class="number">15</span>, u: <span class="string">"Hello"</span>)</span><br><span class="line">class1.t = <span class="number">13</span> <span class="comment">// 编译错误，因为t是一个常量，也就是不可变属性</span></span><br><span class="line">class1.u = <span class="string">"GoodBye"</span></span><br><span class="line">class1 = <span class="type">MyClass</span>(t: <span class="number">10</span>, u: <span class="string">"You"</span>)</span><br></pre></td></tr></table></figure>
+<p>从上述代码示例可以看出，你可以改变类型以及该类型中使用<code>var</code>定义的属性，但是不能改变使用<code>let</code>定义的属性。当我们用<code>let</code>定义一个常量<code>class2</code>，看看会发生什么：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> class2 = <span class="type">MyClass</span>(t: <span class="number">12</span>, u: <span class="string">"World"</span>)</span><br><span class="line">class2.u = <span class="string">"Planet"</span> <span class="comment">// 编译通过</span></span><br><span class="line">class2 = <span class="type">MyClass</span>(t: <span class="number">11</span>, u: <span class="string">"Geoid"</span>) <span class="comment">// 编译错误，class2的类型是不可变的</span></span><br></pre></td></tr></table></figure>
+<p>从上述代码示例中可以看出，你可以改变类型自身，也就是可以改变类型中使用<code>var</code>定义的属性。这是因为类是一个<strong>引用类型</strong>。</p>
+<p>这种行为很好理解，在文档中也有较全面的解释。但是当我们查看Swift中的集合类型时，就会产生一些疑惑。</p>
+<p><code>NSArray</code>是一个引用类型。也就是说，当你实例化一个<code>NSArray</code>时，你创建的变量实际是指向了该数组在内存中的位置，所以在Objective-C中，用<code>*</code>号定义该变量。如果你回顾一下我们刚才说的使用<code>let</code>和<code>var</code>关键字定义引用类型和值类型的知识点，那么你应该基本清楚<code>let</code>与<code>var</code>关键字的用法和区别。但实际上，在Objective-C中，要想使用一个可变的<code>NSArray</code>，你需要使用另外一个类<code>NSMutableArray</code>。</p>
+<p>Swift中的数组与Objective-C中的就有很大区别了，数组不再是引用类型，而是值类型。这意味着在使用中，它们像上述代码示例中的结构体一样使用，而不像类那样使用。因此，<code>let</code>和<code>var</code>关键字不仅仅是指定变量是否可以被重新定义，同时也会指定创建的数组是否是一个可变数组。</p>
+<p>使用<code>var</code>定义的数组不仅可以对其重新赋值，也可以改变数组：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> array1 = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>]</span><br><span class="line">array1.append(<span class="number">5</span>)  <span class="comment">// [1,2,3,4,5]</span></span><br><span class="line">array1[<span class="number">0</span>] = <span class="number">27</span>    <span class="comment">// [27,2,3,4,5]</span></span><br><span class="line">array1 = [<span class="number">3</span>,<span class="number">2</span>]    <span class="comment">// [3,2]</span></span><br></pre></td></tr></table></figure>
+<p>但是用<code>let</code>定义的数组都不能进行上述的改变：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> array2 = [<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>]</span><br><span class="line">array2.append(<span class="number">0</span>) <span class="comment">// 编译错误，array2是不可变数组</span></span><br><span class="line">array2[<span class="number">2</span>] = <span class="number">36</span>   <span class="comment">// 编译错误，array2是不可变数组</span></span><br><span class="line">array2 = [<span class="number">5</span>,<span class="number">6</span>]   <span class="comment">// 编译错误，不能对array2重新赋值</span></span><br></pre></td></tr></table></figure>
+<p>在这一点，Swift与Objective-C有巨大的差异，所以会给我们在实际开发中造成一些概念上混淆。也许在Swift之后的版本中对此会有所改变，所以要时刻关注Swift的文档。</p>
+<p>通过上面的示例代码我们可以得出一个结论，因为在Swift中数组是一个值类型，所以当你创建一个数组时，实际上是将数组的副本赋值给了变量或常量。但在Objective-C中，创建一个数组时，是将一个指针赋值给变量，也就是引用了该数组在内存中的地址。所以在Objective-C中将它作为方法的参数传递时，始终传递的是数组在内存中的那块相同的地址。而在Swift中，传递的是数组的副本。同时根据数组中存储的对象的类型你可以对数组进行完全复制或者部分复制。在开发过程中要时刻注意这点。</p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u5F3A_u7C7B_u578B_u548CAnyObject"><a href="#u5F3A_u7C7B_u578B_u548CAnyObject" class="headerlink" title="强类型和AnyObject"></a>强类型和AnyObject</h2><p>强类型是Swift语言最大的一个特点。它可以提高我们代码的安全性，因此，以前在Objective-C中会在运行时才能发现的异常，现在在编译时就可以发现了。</p>
+<p>这一点非常棒。但是当你在Swift中使用Objective-C框架进行开发时，你要特别注意<code>AnyObject</code>这个类型。它相当于Objective-C中的<code>id</code>。在有些时候，<code>AnyObject</code>给我们的感觉好像又不太符合Swift的特性。因为你可以将<code>AnyObject</code>作为任何的类型去使用，但是这会导致程序在运行时发生异常。实际上，<code>AnyObject</code>的使用方式大多时候都和Objective-C中的<code>id</code>一样。不同的一点是，当你用<code>AnyObject</code>代表一个类型，但是你使用了该类型中并不存在的方法或属性时，它会返回<code>nil</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> myString: <span class="type">AnyObject</span> = <span class="string">"hello"</span></span><br><span class="line">myString.cornerRadius <span class="comment">// 返回 nil</span></span><br></pre></td></tr></table></figure>
+<p>为了更符合Swift语言的特性，在使用Cocoa API时，你也许该使用如下的模式：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">someFunc</span><span class="params">(parameter: AnyObject!)</span></span> -&gt; <span class="type">AnyObject</span>! &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> castedParameter = parameter <span class="keyword">as</span>? <span class="type">NSString</span> &#123;</span><br><span class="line">    <span class="comment">// Now I know I have a string :)</span></span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你确定你传入的参数就是<code>String</code>类型的，你就没必要在强制转换时用<code>?</code>来保护了：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> castedParameter = parameter <span class="keyword">as</span> <span class="type">NSString</span></span><br></pre></td></tr></table></figure>
+<p>根据上述内容我们得知，转换数组其实也是一件很容易的事情。你从Cocoa框架接收的所有数组的类型都是<code>[AnyObject]</code>，因为<code>NSArray</code>不支持泛型。然而在大多数情况下，不是所有的元素都是同一类型，但是他们都有已知类型。所以你可以使用有条件判断的转换，也可以不用条件判断进行转换，像下面代码中的语法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">someArrayFunc</span><span class="params">(parameter: [AnyObject]!)</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> newArray = parameter <span class="keyword">as</span> [<span class="type">String</span>]</span><br><span class="line">  <span class="comment">// Do something with your strings :)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="u534F_u8BAE_u4E00_u81F4_u6027"><a href="#u534F_u8BAE_u4E00_u81F4_u6027" class="headerlink" title="协议一致性"></a>协议一致性</h2><p>协议在Swift很好理解，定义方式如下：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">MyProtocol</span> </span>&#123;</span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">myProtocolMethod</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有件事一定是你经常想做的，那就是判断一个对象是否遵循了指定的协议，我们可以这样写：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> class1AsMyProtocol = class1 <span class="keyword">as</span>? <span class="type">MyProtocol</span> &#123;</span><br><span class="line">  <span class="comment">// We're in</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是这里存在一个错误，因为判断指定的这个协议必须是一个Objective-C协议，所以在定义协议时要加上<code>@objc</code>标签;</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@objc</span> <span class="class"><span class="keyword">protocol</span> <span class="title">MyNewProtocol</span> </span>&#123;</span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">myProtocolMethod</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> class1AsMyNewProtocol = class1 <span class="keyword">as</span>? <span class="type">MyNewProtocol</span> &#123;</span><br><span class="line">  <span class="comment">// We're in</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然看起来只是加了<code>@objc</code>标签，但实际上不仅如此，因为在协议前加上了<code>@objc</code>标签，所以协议里的所有属性和方法返回值类型都被解析成Objective-C中的类型了。</p>
+<h2 id="u679A_u4E3E"><a href="#u679A_u4E3E" class="headerlink" title="枚举"></a>枚举</h2><p>枚举在Swift中变得更加实用。现在不仅可以在枚举中关联值（它们可以是不同类型的），也可以包含函数。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">MyEnum</span> </span>&#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="type">FirstType</span></span><br><span class="line">  <span class="keyword">case</span> <span class="type">IntType</span> (<span class="type">Int</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="type">StringType</span> (<span class="type">String</span>)</span><br><span class="line">  <span class="keyword">case</span> <span class="type">TupleType</span> (<span class="type">Int</span>, <span class="type">String</span>)</span><br><span class="line"></span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">prettyFormat</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> .<span class="type">FirstType</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"No params"</span></span><br><span class="line">    <span class="keyword">case</span> .<span class="type">IntType</span>(<span class="keyword">let</span> value):      </span><br><span class="line">      <span class="keyword">return</span> <span class="string">"One param: <span class="subst">\(value)</span>"</span>    </span><br><span class="line">    <span class="keyword">case</span> .<span class="type">StringType</span>(<span class="keyword">let</span> value):</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"One param: <span class="subst">\(value)</span>"</span></span><br><span class="line">    <span class="keyword">case</span> .<span class="type">TupleType</span>(<span class="keyword">let</span> v1, <span class="keyword">let</span> v2):</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"Some params: <span class="subst">\(v1)</span>, <span class="subst">\(v2)</span>"</span></span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"Nothing to see here"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这非常有用：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> enum1 = <span class="type">MyEnum</span>.<span class="type">FirstType</span></span><br><span class="line">enum1.prettyFormat() <span class="comment">// "No params"</span></span><br><span class="line">enum1 = .<span class="type">TupleType</span>(<span class="number">12</span>, <span class="string">"Hello"</span>)</span><br><span class="line">enum1.prettyFormat() <span class="comment">// "Some params: 12, Hello"</span></span><br></pre></td></tr></table></figure>
+<p>只需要做一些小练习，你就能体会出它的强大之处。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>Swift的确很强大，它还需要我们通过实践去摸索新的开发模式，而不必局限在Objective-C的模式中。这篇文章列举了一些从Objective-C转到Swift中可能遇到的潜在的问题和疑惑，但希望不要让你对Swift却步。所有与本博客系列相关的项目和代码示例都是用Swift写的，并且都很通俗易懂。</p>
+<p>本文中的代码示例都是在<code>Playground</code>中完成的，你可以在<a href="https://github.com/ShinobiControl/iOS8-day-by-day" target="_blank" rel="external">github.com/ShinobiControl/iOS8-day-by-day</a>下载这些示例。</p>
+<p>原文地址：<a href="http://www.shinobicontrols.com/blog/posts/2014/07/17/ios8-day-by-day-day-1-blaggers-guide-to-swift" target="_blank" rel="external">iOS8 Day-by-Day :: Day 1 :: Blagger’s Guide to Swift</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/swift-nil-coalescing/" itemprop="url">
+                  Swift中Nil Coalescing运算符的使用技巧
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2014-08-13T00:00:00+08:00" content="2014-08-13">
+              2014-08-13
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/swift-nil-coalescing/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-nil-coalescing/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>在Swift官方《The Swift Programming Language》文档的<code>Basic Operators</code>一节中添加了<code>Nil Coalescing Operator</code>小结，介绍了一个新的运算符<strong>Nil Coalescing</strong>，符号是<code>??</code>，它的表现形成如下：</p>
+<pre><code>let c = a ?? b
+</code></pre><p>这个运算符有两个条件：</p>
+<ul>
+<li><code>a</code>必须是<code>Optional</code>类型的。</li>
+<li><code>b</code>的类型必须要和<code>a</code>解包后的值类型一致。</li>
+</ul>
+<p>符合这两个条件后，我们来解释一下上述这行代码，意思就是<code>c</code>的值是<code>a</code>或<code>b</code>中一个的值，但有前提条件，就是当<code>a</code>解包后值不为<code>nil</code>时，那么就将<code>a</code>解包后的值赋值给<code>c</code>，如果<code>a</code>解包后值为<code>nil</code>，那么就将<code>b</code>的值赋值给<code>c</code>。</p>
+<p>我们还可以用三目运算来更形象的解释这个运算符：</p>
+<pre><code>let c = a != nil ? a! : b
+</code></pre><p>从上面的代码我们很容易理解，当<code>a</code>的值不等于<code>nil</code>时，将<code>a</code>解包后的值赋值给<code>c</code>，否则将<code>b</code>的值赋值给<code>c</code>。</p>
+<p>我们来看看官方给的代码示例：</p>
+<pre><code>let defaultColorName = &quot;red&quot;
+var userDefinedColorName: String?   // 默认值为nil
+
+var colorNameToUse = userDefinedColorName ?? defaultColorName
+// 因为userDefinedColorName的值是nil，所以colorNameToUse的值为&quot;red&quot;
+
+
+userDefinedColorName = &quot;green&quot;
+colorNameToUse = userDefinedColorName ?? defaultColorName
+// 因为userDefinedColorName的值不为nil，所以colorNameToUse的值为&quot;green&quot;
+</code></pre><p>大家看到这应该对<strong>Nil Coalescing</strong>这个运算符有比较清晰的理解了，但在实际运用中，我们还需要注意以下几点。</p>
+<h2 id="u7F16_u8BD1_u5668_u4E2D_u7684_u7C7B_u578B_u5339_u914D_u539F_u5219"><a href="#u7F16_u8BD1_u5668_u4E2D_u7684_u7C7B_u578B_u5339_u914D_u539F_u5219" class="headerlink" title="编译器中的类型匹配原则"></a>编译器中的类型匹配原则</h2><blockquote>
+<p>原谅我在末尾加的<code>;</code>，编码习惯而已 = =|| </p>
+</blockquote>
+<p>我们先来看一段代码：</p>
+<pre><code>let a: Int? = nil;
+let b: Int? = 7;
+
+let c = a != nil ? a! : b; // 因为a的默认值为nil，所以c的值为{Some 7}
+let d = a ?? b; // 这里d的值为nil，这是怎么回事？
+</code></pre><p>首先我们需要注意的是，在官方文档中有这么一句话：<code>“The expression b must match the type that is stored inside a”</code>。但是上面的代码示例中，我们的<code>b</code>是<code>Int?</code>类型，那么此时我们的编译器会怎么处理呢？我们通过自己实现一个Nil Coalescing运算符来说明，代码片段如下：</p>
+<pre><code>infix operator ??? {
+    associativity right;
+    precedence 110;
+}
+
+func ???&lt;T&gt;(a: T?, b: @autoclosure () -&gt; T) -&gt; T {
+    return a != nil ? a! : b();
+}
+
+let d = a ??? b; // 这里d的值仍然是nil
+</code></pre><p>从上面的代码片段中我们可以看出，<code>a</code>的类型是根据传入的<code>b</code>的类型决定的，所以当我们传入的<code>b</code>是<code>Int?</code>类型时，编译器其实将<code>a</code>的类型自动转换为<code>Int??</code>类型了，也就是<code>Optional(a)</code>，那么我们就能解释<code>let d = a ?? b;</code>这行代码。因为<code>a == nil</code>但是<code>Optional(a) != nil</code>，所以<code>d = Optional(a)!</code>，<code>d</code>的值为<code>nil</code>。</p>
+<h2 id="Nil_Coalescing_u8FD0_u7B97_u7B26_u8FD4_u56DE_u503C_u7684_u7C7B_u578B"><a href="#Nil_Coalescing_u8FD0_u7B97_u7B26_u8FD4_u56DE_u503C_u7684_u7C7B_u578B" class="headerlink" title="Nil Coalescing运算符返回值的类型"></a>Nil Coalescing运算符返回值的类型</h2><p>我们先看示例代码片段：</p>
+<pre><code>let a: Int? = nil;
+let b: Int? = 5;
+let c: Int? = 6;
+
+// 因为a的默认值为nil，所以将b的值赋值给x，x的值为{Some 5}，类型为Int?
+let x = a != nil ? a! : b;
+// 因为c的值不为nil，所以将c解包后的值赋值给y，但是y的值却是{Some 6}，而不是6，这是怎么回事？
+let y = c != nil ? c! : b;
+</code></pre><p>根据上面我们提到的编译器中类型判断的原则就可以理解了，因为<code>b</code>的类型是<code>Int?</code>，所以在编译时<code>c</code>的类型已经成了<code>Int??</code>,所以为<code>Int??</code>解包的类型就是<code>Int?</code>了。</p>
+<p>如果我们声明变量<code>y</code>的类型，编译器就要提出抗议了：</p>
+<pre><code>// 如何a为Int?类型，那么编译器就不会通过，因为会导致赋值运算符两边类型不等
+let x: Int = a != nil ? a! : b;
+
+// 这种写法和上面一样，都不会编译通过
+let y: Int = a ?? b;
+</code></pre><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
 <script>
@@ -1461,7 +982,7 @@ diagram.model = new go.GraphLinksModel(
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/18/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/20/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/18/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/20/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1499,7 +1020,7 @@ diagram.model = new go.GraphLinksModel(
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">100</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

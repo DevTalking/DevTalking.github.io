@@ -241,8 +241,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/machine-learning-7/" itemprop="url">
-                  机器学习笔记七之主成分分析法（PCA）、人脸识别应用
+                <a class="post-title-link" href="/articles/kafka-practice-4/" itemprop="url">
+                  Kafka从上手到实践-庖丁解牛：Producer
                 </a>
               
             
@@ -252,8 +252,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-02-27T00:00:00+08:00" content="2018-02-27">
-              2018-02-27
+            <time itemprop="dateCreated" datetime="2018-10-01T00:00:00+08:00" content="2018-10-01">
+              2018-10-01
             </time>
           </span>
 
@@ -262,8 +262,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
                   </a>
                 </span>
 
@@ -278,8 +278,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-7/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-7/" itemprop="commentsCount"></span>
+              <a href="/articles/kafka-practice-4/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-4/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -310,24 +310,17 @@
 </script>
 
 
-<p>在机器学习的实际使用中，我们都希望有足够多的样本数据，并且有足够的特征来训练我们的模型，所以高维特征数据是经常会用到的，但是高维特征数据同样会带来一些问题：</p>
+<p>通过上一章节，我们知道了Kafka的Message是如何持久化的，知道了保证高可用性、稳定性的策略。这一节来看看Kafka中如何生产Message以及相关的策略。</p>
+<h2 id="Producer"><a href="#Producer" class="headerlink" title="Producer"></a>Producer</h2><p>简而言之，Producer就负责往Topic里发送数据，或者说写入数据。换言之，就是往组成这个Topic的一至多个Partition里写入数据。这里有三点需要注意：</p>
 <ul>
-<li>机器学习算法收敛速度下降。</li>
-<li>特征难于分辨，很难第一时间认识某个特征代表的意义。</li>
-<li>会产生冗余特征，增加模型训练难度，比如说某一品牌型号汽车的特征数据，有从中国采集的，也有从国外采集的，那么就会产生公里/小时和英里/小时这种特征，但其实这两个特征代表的意义是一样的。</li>
-<li>无法通过可视化对训练数据进行综合分析。</li>
+<li>我们只需要通过Producer产生数据，往Topic里塞既可。Producer会自动去选择正确的、合适的Broker和Partition持久化数据。</li>
+<li>Producer默认采用轮询的机制选择Broker往Partition里持久化数据的。</li>
+<li>如果其中有一个Broker挂了，当它再恢复时，Producer会自动接纳它。</li>
 </ul>
-<p>以上问题都是高维特征数据带来的普遍问题，所以将高维特征数据降为低维特征数据就很重要了。这篇笔记主要讲解机器学习中经常用到的降维算法PCA。</p>
-<p>PCA是英文Principle Component Analysis的缩写，既主成分分析法。该算法能从冗余特征中提取主要成分，在不太损失模型质量的情况下，提升了模型训练速度。</p>
-<h2 id="u7406_u89E3PCA_u7B97_u6CD5_u964D_u7EF4_u7684_u539F_u7406"><a href="#u7406_u89E3PCA_u7B97_u6CD5_u964D_u7EF4_u7684_u539F_u7406" class="headerlink" title="理解PCA算法降维的原理"></a>理解PCA算法降维的原理</h2><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/96db7d87e7af97e05b630366cc02bcf1.jpg" alt=""></p>
-<p>我们从二维降一维的场景来理解PCA降维的原理。上面的图示显示了一个二维的特征坐标，横坐标是特征1，纵座标是特征2。图中的五个点就表示了五条特征数据。我们先来想一下最简单粗暴的降维方式就是丢弃掉其中一个特征。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/b51d7ec017736d4f47fb7e836c33f074.jpg" alt=""></p>
-<p>如上图中显示，将特征2抛弃，这里大家先注意一下这五个点落在特征1轴上的间距。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/aa709dfbb796ada2b6b6dae9d0d43d64.jpg" alt=""></p>
-<p>或者如上图所示抛弃特征1，大家再注意一下这五个点落在特征2轴上的间距。能很明显的发现，抛弃特征2，落在特征1轴上的五个点之间间距比较大，并且分布均匀。而抛弃特征1，落在特征2轴上的五个点之间间距大多都比较小，并且分布不均匀。</p>
-<p>就这两种简单粗暴的降维方式而言，哪种更好一些呢？这里我们先来看看方差的概念，方差描述的是随机数据的离散程度，也就是离期望值（不严谨的说，期望值等同于均值）的距离。所以方差越大，数据的离散程度越高，约分散，离均值的距离越大。方差越小，数据的离散程度越小，约聚合，离均值的距离约小。那么大家可以想想作为机器学习算法训练的样本数据，每组特征应该尽可能的全，在该特征的合理范围内尽可能的广，这样才能更高的代表真实性，也就是每组特征数据的方差应该尽可能的大才好。所以就上面两种情况来看，抛弃特征2的降维方式更好一些。</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/18/1545090560721.png" alt=""></p>
+<h3 id="Message_keys"><a href="#Message_keys" class="headerlink" title="Message keys"></a>Message keys</h3><p>Producer默认采用轮询的机制选择Broker往Partition里持久化数据。但当我们需要根据数据中的某个字段按Partition进行分组或者排序时，就需要在每条Message里添加Key，这个Key可以是数字，也可以是字符串等等。然后相同Key的Message永远会持久化到同一个Partition。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-7/#more" rel="contents">
+            <a class="btn" href="/articles/kafka-practice-4/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -365,8 +358,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/machine-learning-6/" itemprop="url">
-                  机器学习笔记六之梯度下降、优化梯度公式、随机梯度下降
+                <a class="post-title-link" href="/articles/kafka-practice-3/" itemprop="url">
+                  Kafka从上手到实践-庖丁解牛：Partition
                 </a>
               
             
@@ -376,8 +369,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-02-15T00:00:00+08:00" content="2018-02-15">
-              2018-02-15
+            <time itemprop="dateCreated" datetime="2018-09-15T00:00:00+08:00" content="2018-09-15">
+              2018-09-15
             </time>
           </span>
 
@@ -386,8 +379,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
                   </a>
                 </span>
 
@@ -402,8 +395,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-6/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-6/" itemprop="commentsCount"></span>
+              <a href="/articles/kafka-practice-3/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-3/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -434,20 +427,26 @@
 </script>
 
 
-<p>这篇笔记主要介绍梯度下降法，梯度下降不是机器学习专属的算法，它是一种基于搜索的最优化方法，也就是通过不断的搜索然后找到损失函数的最小值。像上篇笔记中使用正规方程解实现多元线性回归，基于$X_b\theta$这个模型我们可以推导出$\theta$的数学解，但是很多模型是推导不出数学解的，所以就需要梯度下降法来搜索出最优解。</p>
-<h2 id="u68AF_u5EA6_u4E0B_u964D_u6CD5_u6982_u5FF5"><a href="#u68AF_u5EA6_u4E0B_u964D_u6CD5_u6982_u5FF5" class="headerlink" title="梯度下降法概念"></a>梯度下降法概念</h2><p>我们来看看在二维坐标里的一个曲线方程：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/8b3433626c22d7f31a236492458a58e0.jpg" alt=""></p>
-<p>纵坐标表示损失函数L的值，横坐标表示系数$\theta$。每一个$\theta$的值都会对应一个损失函数L的值，我们希望损失函数收敛，既找到一个$\theta$的值，使损失函数L的值最小。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/7d33b5dbd153029338804e42063e7dae.jpg" alt=""></p>
-<p>在曲线上定义一点A，对应一个$\theta$值，一个损失函数L的值，要判断点A是否是损失函数L的最小值，既求该点的导数，在第一篇笔记中我解释过，点A的导数就是直线M的斜率，直线M是点A的切线，所以导数描述了一个函数在某一点附近的变化率，并且导数大于零时，函数在区间内单调递增，导数小于零时函数在区间内单调递减。所以$\frac {d L}{d \theta}$表示损失函数L增大的变化率，$-\frac {d L}{d \theta}$表示损失函数L减小的变化率。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/79181d4455f5a40c4a652a41a743bc7b.jpg" alt=""></p>
-<p>再在曲线上定义一点B，在点A的下方，B点的$\theta$值就是A点的$\theta$值加上让损失函数L递减的变化率$-\eta \frac {d L}{d \theta}$，$\eta$称为步长，既B点在$-\frac {d L}{d \theta}$变化率的基础下移动了多少距离，在机器学习中$\eta$这个值也称为学习率。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/12d864def3bdafa3f3ecda683f2950e4.jpg" alt=""></p>
-<p>同理还可以再求得点C，然后看是否是损失函数的L的最小值。所以梯度下降法就是基于损失函数在某一点的变化率$-\frac {d L}{d \theta}$，以及寻找下一个点的步长$\eta$，不停的找到下一个点，然后判断该点处的损失函数值是否为最小值的过程。$-\eta \frac {d L}{d \theta}$就称为梯度。</p>
-<p>在第一篇笔记中将极值的时候提到过，当曲线或者曲面很复杂时，会有多个驻点，既局部极值，所以如果运行一次梯度下降法寻找损失函数极值的话很有可能找到的只是局部极小值点。所以在实际运用中我们需要多次运行算法，随机化初始点，然后进行比较找到真正的全局极小值点，所以初始点的位置是梯度下降法的一个超参数。</p>
-<p>不过在线性回归的场景中，我们的损失函数$\sum_{i=1}^m(y^{(i)}-\hat y^{(i)})^2$是有唯一极小值的，所以暂时不需要多次执行算法搜寻全局极值。</p>
+<p>了解了Kafka的窗户和内核之后，我们深入Broker中，看看Topic和Broker之间的关系，它们之间到底是用什么联系起来的。Broker对Message的持久化是如何处理的。</p>
+<h2 id="Partition"><a href="#Partition" class="headerlink" title="Partition"></a>Partition</h2><p>Kafka的Partition是分区的概念，在Kafka中，一个Topic可以有多个Partition，换句话说，就是一个Topic中的内容是被多个Partition分割的。对于Partition，我们需要注意以下几个要点：</p>
+<ul>
+<li>一个Topic下的所有Partition是有顺序的，或者说在创建Topic和Partition时，Partition的顺序就已经是确定了的。</li>
+<li>每条进入Partition中的Message都会获得一个自增的ID，这个ID称为Offset（消息的偏移量）。</li>
+<li>通常在说Message的Offset时，只是针对该条Message所在的Partition而言。举个例子，Partition-0中Offset为3的Message和Partition-1中Offset为3的Message没有任何关系。</li>
+<li>当说到Message的顺序时，通常有两种解读：<ul>
+<li>业务语义上的Message顺序，如下图所示，1至4条Message之间是有语义顺序的，可以理解为是消息生产者生产消息时的顺序。</li>
+<li>Partition中的Message顺序，如下图所示，Partition-1中的Message如果按照Offset的顺序，那么第一条和第二条Message其实是语义上的第一条和第三条Message。</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/kafka-message-order.png" alt=""></p>
+<ul>
+<li>当Message进入Partition后，它的Offset和内容就无法再修改了。</li>
+<li>Message默认是随机存储在一个Topic下的不同的Partition中的，如上图。除非显示的指定Partition。</li>
+<li>存储在Partition中的Message是有时效性的，默认是保存一周，可以通过配置更改（后续章节会介绍）。</li>
+</ul>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-6/#more" rel="contents">
+            <a class="btn" href="/articles/kafka-practice-3/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -485,8 +484,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/machine-learning-5/" itemprop="url">
-                  机器学习笔记五之线性回归、评测标准、多元线性回归
+                <a class="post-title-link" href="/articles/kafka-practice-2/" itemprop="url">
+                  Kafka从上手到实践-庖丁解牛：Topic&Broker
                 </a>
               
             
@@ -496,8 +495,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-02-05T00:00:00+08:00" content="2018-02-05">
-              2018-02-05
+            <time itemprop="dateCreated" datetime="2018-09-01T00:00:00+08:00" content="2018-09-01">
+              2018-09-01
             </time>
           </span>
 
@@ -506,8 +505,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
                   </a>
                 </span>
 
@@ -522,8 +521,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-5/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-5/" itemprop="commentsCount"></span>
+              <a href="/articles/kafka-practice-2/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-2/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -554,23 +553,15 @@
 </script>
 
 
-<p>这篇笔记主要介绍线性回归算法，对在第一篇笔记中介绍过的线性回归算法进行实现。kNN算法主要解决的是分类问题，并且它的结果不具备良好的解释性。线性回归算法主要解决回归问题，它的结果具有良好的可解释性，和kNN算法的介绍过程一样，线性回归算法也蕴含了机器学习中很多重要的思想，并且它是许多强大的非线性模型的基础。</p>
-<h2 id="u7B80_u5355_u7EBF_u6027_u56DE_u5F52"><a href="#u7B80_u5355_u7EBF_u6027_u56DE_u5F52" class="headerlink" title="简单线性回归"></a>简单线性回归</h2><p>在第一篇笔记中，我们举过房屋面积大小和价格例子，将其绘制在二维坐标图上，横轴表示房屋面积，纵轴表示房屋价格，这里样本特征数据只有一个，那就是房屋面积，而在kNN算法的分类问题中，二维坐标图上横纵轴表示的都是样本特征数据，这是一个比较明显的区别。如果线性回归问题要在图中表示两种样本特征数据的话就需要三维空间坐标来表示。我们一般将只有一种样本特征数据的线性回归问题称为简单线性回归问题。</p>
-<h3 id="u56DE_u987E_u7EBF_u6027_u56DE_u5F52"><a href="#u56DE_u987E_u7EBF_u6027_u56DE_u5F52" class="headerlink" title="回顾线性回归"></a>回顾线性回归</h3><p>线性回归其实就是寻找一条直线，最大程度的拟合样本特征和样本输出标记之间的关系。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/a9e2a5cbcffbf0037e8bf53f49cc414e.jpg" alt=""></p>
-<p>我们来看上面这张图，大家知道直线的方程是$y=ax+b$，那么点A肯定是在一条直线上，该条直线方程为$y^{(i)}=ax^{(i)}+b$，那么点A的横轴值为$x^{(i)}$，既是A的样本特征值，纵轴值为$y^{(i)}$，既是A的样本输出值。我们假设图中的红线就是拟合直线，方程为$\hat y^{(i)}=ax^{(i)}+b$，也就是将$x^{(i)}$代入这条红线，会得到一个预测的纵轴值$\hat y^{(i)}$。我们希望真值$y^{(i)}$和预测值$\hat y^{(i)}$的差值越小，说明我们的拟合直线拟合的越好。</p>
-<p>因为差值有正有负，为了保证都是正数，所以将差值进行平方，之所以不用绝对值，是为了方便求导数。</p>
-<blockquote>
-<p>方程求导的知识可参阅<a href="http://www.devtalking.com/articles/machine-learning-1/"> 《机器学习笔记一之机器学习定义、导数、最小二乘》 </a>。</p>
-</blockquote>
-<p>$$ (y^{(i)} - \hat y^{(i)})^2 $$</p>
-<p>将所有样本特征都考虑到，既将所有真值和预测值的差值求和：</p>
-<p>$$ \sum_{i=1}^m(y^{(i)} - \hat y^{(i)})^2 $$</p>
-<p>将$ax^{(i)}+b$代入上面的公式就得到：</p>
-<p>$$\sum_{i=1}^m(y^{(i)} - ax^{(i)}-b)^2$$</p>
-<p>上面的公式我们称为损失函数（Loss Function），损失函数值越小，我们的拟合直线越好。在Loss函数中，$a$和$b$是变量，所以我们要做的就是找到使Loss函数值最小的$a$和$b$。这个套路是近乎所有参数学习算法常用的套路，既通过分析问题，确定问题的损失函数，通过最优化损失函数获得机器学习的模型。像线性回归、多项式回归、逻辑回归、SVM、神经网络等都是这个套路。</p>
+<p>Apache Kafka正是上节描述的MQ系统，但不仅是MQ系统，它往往也被描述为<strong>分布式提交日志系统</strong>或者<strong>分布式流式处理系统</strong>。从这节开始，我们将逐步了解Kafka的核心概念。</p>
+<h2 id="Topic"><a href="#Topic" class="headerlink" title="Topic"></a>Topic</h2><p>在Kafka中，Topic可以理解为表示一组特殊的数据流。可以将它想象为关系性数据库中的表。</p>
+<ul>
+<li>数据库中的表存储着同一类的数据。那么Topic同样表示同一类的数据流。</li>
+<li>数据库中的表可以根据需求创建多张。那么Topic同样可以根据需求创建多个，但有一点区别是，Topic没有像数据库表中约束（Constraints）的概念。</li>
+<li>数据库中表的名称是不能重复的，表名能唯一确定一张表。那么Topic同样是以名称确定唯一的，Topic名称不能重复。</li>
+</ul>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-5/#more" rel="contents">
+            <a class="btn" href="/articles/kafka-practice-2/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -608,8 +599,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/machine-learning-4/" itemprop="url">
-                  机器学习笔记四之kNN算法、超参数、数据归一化
+                <a class="post-title-link" href="/articles/kafka-practice-1/" itemprop="url">
+                  Kafka从上手到实践-初步认知：MQ系统
                 </a>
               
             
@@ -619,8 +610,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-01-27T00:00:00+08:00" content="2018-01-27">
-              2018-01-27
+            <time itemprop="dateCreated" datetime="2018-08-15T00:00:00+08:00" content="2018-08-15">
+              2018-08-15
             </time>
           </span>
 
@@ -629,8 +620,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
                   </a>
                 </span>
 
@@ -645,8 +636,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-4/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-4/" itemprop="commentsCount"></span>
+              <a href="/articles/kafka-practice-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-1/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -677,16 +668,10 @@
 </script>
 
 
-<p>上一篇笔记主要介绍了NumPy，Matplotlib和Scikit Learn中Datasets三个库的用法，以及基于欧拉定理的kNN算法的基本实现。这一篇笔记的主要内容是通过PyCharm封装kNN算法并且在Jupyter Notebook中调用，以及计算器算法的封装规范，kNN的<code>k</code>值如何计算，如何使用Scikit Learn中的kNN算法，还有机器学习算法中的一些主要概念，比如训练数据集、测试数据集，分类准确度，超参数，数据归一化。另外会具体用代码实现第一篇笔记中介绍过的线性回归算法。</p>
-<h2 id="u5C01_u88C5kNN_u7B97_u6CD5"><a href="#u5C01_u88C5kNN_u7B97_u6CD5" class="headerlink" title="封装kNN算法"></a>封装kNN算法</h2><p>上一篇笔记中我们对kNN算法在Jupyter Notebook中进行了实现，但是想要复用这个算法就很不方便，所以我们来看看如何在PyCharm中封装算法，并且在Jupyter Notebook中进行调用。</p>
-<p>PyCharm的配置这里我就不再累赘，如图所示，我们创建了一个Python文件<code>kNN.py</code>，然后定义了<code>kNNClassify</code>方法，该方法有4个参数，分别是kNN算法的<code>k</code>值，训练样本特征数据集<code>XTrain</code>，训练样本类别数据集<code>yTrain</code>，预测特征数据集<code>x</code>。该方法中的实现和在Jupyter Notebook中实现的一模一样，只不过加了三个断言，让方法的健壮性更好一点。我们给出<strong>N维欧拉定理</strong>：</p>
-<p>$$ \sqrt {\sum_{i=1}^n(x_i^{(a)}-x_i^{(b)})^2} $$</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/574075757e0d0a820e2a8a7ef37f79ec.jpg" alt=""></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># kNN.py</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> sqrt</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">kNNClassify</span><span class="params">(k, XTrain, yTrain, x)</span>:</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">assert</span> <span class="number">1</span> &lt;= k &lt;= XTrain.shape[<span class="number">0</span>], <span class="string">"k 的取值范围不正确"</span></span><br><span class="line">	<span class="keyword">assert</span> XTrain.shape[<span class="number">0</span>] == yTrain.shape[<span class="number">0</span>], <span class="string">"训练样本数据行数应该与训练结果集行数相同"</span></span><br><span class="line">	<span class="keyword">assert</span> XTrain.shape[<span class="number">1</span>] == x.shape[<span class="number">0</span>], <span class="string">"训练样本数据特性个数应该与被预测数据特性个数相同"</span></span><br><span class="line"></span><br><span class="line">	distances = [sqrt(np.sum((xTrain - x) ** <span class="number">2</span>)) <span class="keyword">for</span> xTrain <span class="keyword">in</span> XTrain]</span><br><span class="line">	nearest = np.argsort(distances)</span><br><span class="line"></span><br><span class="line">	topKy = [yTrain[i] <span class="keyword">for</span> i <span class="keyword">in</span> nearest[:k]]</span><br><span class="line">	votes = Counter(topKy)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> votes.most_common(<span class="number">1</span>)[<span class="number">0</span>][<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
-<p>这样我们就在PyCharm中封装好了kNN算法的方法，我们再来看看如何在Jupyter Notebook中调用封装好的方法呢，这就需要使用<code>%run</code>这个命令：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">raw_data_X = [[<span class="number">3.393533211</span>, <span class="number">2.331273381</span>],</span><br><span class="line">			  [<span class="number">3.110073483</span>, <span class="number">1.781539638</span>],</span><br><span class="line">			  [<span class="number">1.343808831</span>, <span class="number">3.368360954</span>],</span><br><span class="line">			  [<span class="number">3.582294042</span>, <span class="number">4.679179110</span>],</span><br><span class="line">			  [<span class="number">2.280362439</span>, <span class="number">2.866990263</span>],</span><br><span class="line">			  [<span class="number">7.423436942</span>, <span class="number">4.696522875</span>],</span><br><span class="line">			  [<span class="number">5.745051997</span>, <span class="number">3.533989803</span>],</span><br><span class="line">			  [<span class="number">9.172168622</span>, <span class="number">2.511101045</span>],</span><br><span class="line">			  [<span class="number">7.792783481</span>, <span class="number">3.424088941</span>],</span><br><span class="line">			  [<span class="number">7.939820817</span>, <span class="number">0.791637231</span>]</span><br><span class="line">			 ]</span><br><span class="line">raw_data_y = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">XTrain = np.array(raw_data_X)</span><br><span class="line">yTrain = np.array(raw_data_y)</span><br><span class="line"></span><br><span class="line">x = np.array([<span class="number">8.093607318</span>, <span class="number">3.365731514</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用%run命令可以引入Python文件，并可使用该Python文件中定义的属性和方法</span></span><br><span class="line">%run ../pycharm/kNN.py</span><br><span class="line">predicty = kNNClassify(<span class="number">6</span>, XTrain, yTrain, x)</span><br><span class="line">predicty</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>首先我们来认知什么是MQ系统既消息队列（Message Queue）系统。举个不恰当的例子，消息（Message）就相当于自来水，队列（Queue）就相当于自来水管道，错综复杂的管道将自来水送给千家万户。在计算机领域，消息其实就是数据，各种格式的数据，队列就是运输数据的管道，通过各种运输策略将数据送达使用它们的地方。</p>
+<h2 id="u6D88_u606F_u751F_u4EA7_u8005_uFF08Producer_uFF09"><a href="#u6D88_u606F_u751F_u4EA7_u8005_uFF08Producer_uFF09" class="headerlink" title="消息生产者（Producer）"></a>消息生产者（Producer）</h2><p>任何MQ系统都离不开消息生产者（后文中统一使用Producer），否则MQ系统也就没有了存在的意义。好比没有了水源，自来水管道也就没有意义了一样。MQ系统中的Producer既消息（数据）生产者，主要的作用就是生成数据，然后发送给MQ系统中的队列，通常情况下，消息生产者将生产出的消息丢给MQ系统的队列后通常就不再关心消息的去向了，所以它的职责主要就是生成数据，以及数据是否成功被队列接收。然后丢进队列。每个MQ系统都有自己的消息格式，以字节数组的形式在队列中传输。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-4/#more" rel="contents">
+            <a class="btn" href="/articles/kafka-practice-1/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -724,8 +709,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/machine-learning-3/" itemprop="url">
-                  机器学习笔记三之NumPy、Matplotlib、kNN算法
+                <a class="post-title-link" href="/articles/machine-learning-17/" itemprop="url">
+                  机器学习笔记十七之集成学习、随机森林
                 </a>
               
             
@@ -735,8 +720,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-01-20T00:00:00+08:00" content="2018-01-20">
-              2018-01-20
+            <time itemprop="dateCreated" datetime="2018-08-01T00:00:00+08:00" content="2018-08-01">
+              2018-08-01
             </time>
           </span>
 
@@ -761,8 +746,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-3/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-3/" itemprop="commentsCount"></span>
+              <a href="/articles/machine-learning-17/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-17/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -793,20 +778,10 @@
 </script>
 
 
-<h2 id="NumPy"><a href="#NumPy" class="headerlink" title="NumPy"></a>NumPy</h2><p>NumPy是Python中的一个类库，它支持高阶维度数组（矩阵）的创建及各种操作、运算，是我们在机器学习中经常会使用的一个类库。这一节再看一些NumPy的矩阵用法。</p>
-<h3 id="numpy-random"><a href="#numpy-random" class="headerlink" title="numpy.random"></a>numpy.random</h3><p>NumPy也提供了生成随机数和随机元素数组的方法，我们来看一下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 生成从0到10之间的随机数</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成元素从0到10，一共4个随机元素的数组</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=<span class="number">4</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([<span class="number">4</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成元素随机从0到10，3行5列的矩阵</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=(<span class="number">3</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">6</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">9</span>],</span><br><span class="line">	   [<span class="number">7</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">8</span>],</span><br><span class="line">	   [<span class="number">4</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">2</span>]])</span><br></pre></td></tr></table></figure>
-<p>如果我们希望每次使用随机方法生成的结果都是一样的，一般调试时候有这个需求，此时NumPy的<code>random()</code>方法也提供了方便简单的方式，既随机种子的概念：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 生成随机矩阵前给定一个种子</span></span><br><span class="line">np.random.seed(<span class="number">123</span>)</span><br><span class="line"><span class="comment"># 然后生成随机矩阵</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=(<span class="number">4</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">2</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>]])</span><br><span class="line">	   </span><br><span class="line"><span class="comment"># 再次生成随机矩阵时，只要传入相同的种子，就可以得到相同结果的矩阵</span></span><br><span class="line">np.random.seed(<span class="number">123</span>)</span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=(<span class="number">4</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">2</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>]])</span><br><span class="line">	   </span><br><span class="line"><span class="comment"># 默认范围是从0.0到1.0，返回值为float型</span></span><br><span class="line">np.random.random()</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.18249173045349998</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 传入的参数是数组的大小</span></span><br><span class="line">np.random.random(<span class="number">10</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([ <span class="number">0.17545176</span>,  <span class="number">0.53155137</span>,  <span class="number">0.53182759</span>,  <span class="number">0.63440096</span>,  <span class="number">0.84943179</span>,</span><br><span class="line">		<span class="number">0.72445532</span>,  <span class="number">0.61102351</span>,  <span class="number">0.72244338</span>,  <span class="number">0.32295891</span>,  <span class="number">0.36178866</span>])</span><br><span class="line">		</span><br><span class="line"><span class="comment"># 创建4行5列，元素值的范围从0.0到1.0的矩阵</span></span><br><span class="line">np.random.random((<span class="number">4</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[ <span class="number">0.22826323</span>,  <span class="number">0.29371405</span>,  <span class="number">0.63097612</span>,  <span class="number">0.09210494</span>,  <span class="number">0.43370117</span>],</span><br><span class="line">	   [ <span class="number">0.43086276</span>,  <span class="number">0.4936851</span> ,  <span class="number">0.42583029</span>,  <span class="number">0.31226122</span>,  <span class="number">0.42635131</span>],</span><br><span class="line">	   [ <span class="number">0.89338916</span>,  <span class="number">0.94416002</span>,  <span class="number">0.50183668</span>,  <span class="number">0.62395295</span>,  <span class="number">0.1156184</span> ],</span><br><span class="line">	   [ <span class="number">0.31728548</span>,  <span class="number">0.41482621</span>,  <span class="number">0.86630916</span>,  <span class="number">0.25045537</span>,  <span class="number">0.48303426</span>]])</span><br></pre></td></tr></table></figure>
-<h3 id="u6307_u5B9A_u5747_u503C_u548C_u6807_u51C6_u5DEE_u751F_u6210_u968F_u673A_u6570_u6570_u7EC4_u6216_u77E9_u9635"><a href="#u6307_u5B9A_u5747_u503C_u548C_u6807_u51C6_u5DEE_u751F_u6210_u968F_u673A_u6570_u6570_u7EC4_u6216_u77E9_u9635" class="headerlink" title="指定均值和标准差生成随机数数组或矩阵"></a>指定均值和标准差生成随机数数组或矩阵</h3><p>我们先来看看均值、方差、标准差的概念。均值很好理解，就是所有样本数据的平均值，描述了样本集合的中间点：</p>
-<p>$$ \overline X=\frac{\sum_{i=1}^nX_i}n $$</p>
-<p>方差是衡量样本点和样本期望值相差的度量值：</p>
-<p>$$ S^2 = \frac{\sum_{i=1}^n(X_i-\overline X)^2} n $$</p>
-<p>标准差描述的是样本集合的各个样本点到均值的距离之平均：</p>
-<p>$$ S = \sqrt {\frac{\sum_{i=1}^n(X_i-\overline X)^2} n } $$</p>
-<p>标准差也就是对方差开根号。举个例子，<code>[0, 8, 12, 20]</code>和<code>[8, 9, 11, 12]</code>，两个集合的均值都是10，但显然两个集合的差别是很大的，计算两者的标准差，前者是8.3后者是1.8，显然后者较为集中，标准差描述的就是这种散布度或者叫做波动大小。综上，方差的意义在于描述随机变量稳定与波动、集中与分散的状况。标准差则体现随机变量取值与其期望值的偏差。</p>
+<p>到目前为止，我们已经学习了大概有八种机器学习的算法，其中有解决分类问题的，有解决回归问题的。这些算法其实没有谁是最好的，谁不好之说，反而应该将这些算法集合起来，发挥他们的最大价值。比如我们买东西或看电影之前，多少都会咨询身边的朋友，或去网上看看买家的评价，然后我们才会根据口碑好坏，或评价好坏决定买还是不买，看还是不看。在机器学习中，同样有这样的思路，这就是重要的集成学习。</p>
+<h2 id="u96C6_u6210_u5B66_u4E60"><a href="#u96C6_u6210_u5B66_u4E60" class="headerlink" title="集成学习"></a>集成学习</h2><p>机器学习中的集成学习就是将选择若干算法，针对同一样本数据训练模型，然后看看结果，使用投票机制，少数服从多数，用多数算法给出的结果当作最终的决策依据，这就是集成学习的核心思路。下面我们先手动模拟一个使用集成学习解决回归问题的的示例：</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-3/#more" rel="contents">
+            <a class="btn" href="/articles/machine-learning-17/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -832,7 +807,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -870,7 +845,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">100</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

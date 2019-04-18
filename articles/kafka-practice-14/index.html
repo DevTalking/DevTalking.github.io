@@ -1,0 +1,885 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Kafka," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这一节我们来真正搭建一个Zookeeper集群。
+搭建Zookeeper集群首先要做的就是再租赁两个服务器，参照搭建单机Kafka章节中的步骤，租赁阿里云服务器、安装JDK、下载配置Kafka、配置安全组规则。
+Zookeeper配">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka从上手到实践-实践真知：搭建Zookeeper集群">
+<meta property="og:url" content="http://www.devtalking.com/articles/kafka-practice-14/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这一节我们来真正搭建一个Zookeeper集群。
+搭建Zookeeper集群首先要做的就是再租赁两个服务器，参照搭建单机Kafka章节中的步骤，租赁阿里云服务器、安装JDK、下载配置Kafka、配置安全组规则。
+Zookeeper配">
+<meta property="og:updated_time" content="2019-04-18T08:26:41.846Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kafka从上手到实践-实践真知：搭建Zookeeper集群">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这一节我们来真正搭建一个Zookeeper集群。
+搭建Zookeeper集群首先要做的就是再租赁两个服务器，参照搭建单机Kafka章节中的步骤，租赁阿里云服务器、安装JDK、下载配置Kafka、配置安全组规则。
+Zookeeper配">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> Kafka从上手到实践-实践真知：搭建Zookeeper集群 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Kafka从上手到实践-实践真知：搭建Zookeeper集群
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2019-02-10T00:00:00+08:00" content="2019-02-10">
+              2019-02-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/kafka-practice-14/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-14/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这一节我们来真正搭建一个Zookeeper集群。</p>
+<h2 id="u642D_u5EFAZookeeper_u96C6_u7FA4"><a href="#u642D_u5EFAZookeeper_u96C6_u7FA4" class="headerlink" title="搭建Zookeeper集群"></a>搭建Zookeeper集群</h2><p>首先要做的就是再租赁两个服务器，参照<strong>搭建单机Kafka</strong>章节中的步骤，租赁阿里云服务器、安装JDK、下载配置Kafka、配置安全组规则。</p>
+<h3 id="Zookeeper_u914D_u7F6E_u4FE1_u606F"><a href="#Zookeeper_u914D_u7F6E_u4FE1_u606F" class="headerlink" title="Zookeeper配置信息"></a>Zookeeper配置信息</h3><p>在<strong>搭建单机Kafka</strong>章节中，启动的是单机Zookeeper，所以<code>/root/kafka_2.12-2.0.0/config</code>目录下的<code>zookeeper.properties</code>配置文件中只配置了<code>dataDir</code>，也就是存储各种数据、日志、快照的路径。</p>
+<p>在搭建Zookeeper时，就需要额外再配置一些参数了。同样打开<code>/root/kafka_2.12-2.0.0/config</code>目录下的<code>zookeeper.properties</code>配置文件，额外添加如下内容：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">maxClientCnxns=0&#10;tickTime=2000&#10;initLimit=10&#10;syncLimit=5&#10;quorumListenOnAllIPs=true&#10;server.1=zookeeper.server.1:2888:3888&#10;server.2=zookeeper.server.2:2888:3888&#10;server.3=zookeeper.server.3:2888:3888</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>逐一解释一下这些配置信息：</p>
+<ul>
+<li><code>maxClientCnxns</code>：该参数表示允许客户端最大连接数。如果设置为0则表示不做限制。</li>
+<li><code>tickTime</code>：该参数表示Zookeeper服务之间进行心跳监测的间隔时间，单位是毫秒。设置为2000，表示每隔2秒，Zookeeper服务器之间会进行一次心跳监测。</li>
+<li><code>initLimit</code>：该参数表示Zookeeper集群中的Follower在启动时需要在多少个心跳时间内从Leader同步数据。设置为10，表示要在10个心跳时间内，也就是在20秒内，要完成Leader数据的同步。</li>
+<li><code>syncLimit</code>：该参数表示超过多少个心跳时间收不到Follower的响应，Leader就认为此Follower已经下线。设置为5，表示在5个心跳时间内，也就是判断Follower是否存活的响应时间是10秒。</li>
+</ul>
+<h3 id="Zookeeper_u96C6_u7FA4_u8282_u70B9_u5217_u8868"><a href="#Zookeeper_u96C6_u7FA4_u8282_u70B9_u5217_u8868" class="headerlink" title="Zookeeper集群节点列表"></a>Zookeeper集群节点列表</h3><p>首先节点列表的配置规则为<code>server.N=IP:Port1:Port2</code>：</p>
+<ul>
+<li><code>N</code>表示Zookeeper节点编号。</li>
+<li><code>IP</code>表示Zookeeper节点的服务器IP，既阿里云ECS的外网IP。</li>
+<li><code>Port1</code>表示该Zookeeper集群中的Follower节点与Leader节点通讯时使用的端口。作为Leader时监听该端口。</li>
+<li><code>Port2</code>表示选举新的Leader时，Zookeeper节点之间互相通信的端口，比如当Leader挂掉时，其余服务器会互相通信，选出新的Leader。Leader和Follower都会监听该端口。</li>
+</ul>
+<p>这里的节点编号是数字类型，需要我们在<code>/root/kafka_2.12-2.0.0/data/zookeeper</code>目录下创建名为<code>myid</code>的文件，然后将编号配置在里面。<code>server.N</code>这里的<code>N</code>要和<code>myid</code>文件中配置的编号保持一致。</p>
+<p>另外还需要注意的是，如果要在一台服务器上搭建伪集群，那么每个<code>Port1</code>和每个<code>Port2</code>要不一样才可以，因为<code>IP</code>都是一样的。这里我们是分别用三台不同的阿里云ECS，所以<code>IP</code>肯定是不一样的，而每个<code>Port1</code>是一致的，每个<code>Port2</code>也是一致的。</p>
+<p>为了方便起见，我们可以在服务器的<code>/etc/hosts</code>文件中设置一下域名映射，比如：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[&#38463;&#37324;&#20113;ECS-1 IP] zookeeper.server.1&#10;[&#38463;&#37324;&#20113;ECS-2 IP] zookeeper.server.2&#10;[&#38463;&#37324;&#20113;ECS-3 IP] zookeeper.server.3</span><br></pre></td></tr></table></figure></p>
+<p>这样在配置Zookeeper集群节点列表时就可以写成如下形式了：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server.1=zookeeper.server.1:2888:3888&#10;server.2=zookeeper.server.2:2888:3888&#10;server.3=zookeeper.server.3:2888:3888</span><br></pre></td></tr></table></figure></p>
+<h3 id="u963F_u91CC_u4E91ECS_u670D_u52A1_u76D1_u542C_u6240_u6709_u7F51_u5361"><a href="#u963F_u91CC_u4E91ECS_u670D_u52A1_u76D1_u542C_u6240_u6709_u7F51_u5361" class="headerlink" title="阿里云ECS服务监听所有网卡"></a>阿里云ECS服务监听所有网卡</h3><p>如果现在通过<code>/root/kafka_2.12-2.0.0/bin/zookeeper-server-start.sh config/zookeeper.properties</code>启动Zookeeper，肯定会报一大堆错误，比如：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[myid:0] - WARN  [WorkerSender[myid=0]:QuorumCnxManager@588] - Cannot open channel to 1 at election address /zookeeper.server.1:3888&#10;java.net.ConnectException: Connection refused&#10;&#160; &#160; &#160; &#160; at java.net.PlainSocketImpl.socketConnect(Native Method)&#10;&#160; &#160; &#160; &#160; at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)&#10;.......</span><br></pre></td></tr></table></figure></p>
+<p>这是因为阿里云ECS都是采用虚拟化技术创建的服务器实例，而虚拟机中并没有物理网卡，所以Zookeeper服务启动后，进程并没有监听到<code>3888</code>端口，而是会随机生成一个端口进行监听。所以会报上面的错。解决的办法就是让Zookeeper服务进程监听<code>0.0.0.0</code>的IP地址，也就是监听所有网卡。那么就需要在<code>zookeeper.properties</code>配置文件加入<code>quorumListenOnAllIPs=true</code>配置信息，来保证Zookeeper服务进程能监听到我们设定的<code>3888</code>端口。</p>
+<h3 id="Zookeeper_u96C6_u7FA4_u914D_u7F6E_u603B_u7ED3"><a href="#Zookeeper_u96C6_u7FA4_u914D_u7F6E_u603B_u7ED3" class="headerlink" title="Zookeeper集群配置总结"></a>Zookeeper集群配置总结</h3><p>在启动Zookeeper集群前，先来总结一下配置工作：</p>
+<ul>
+<li>租赁三台阿里云ECS，下载JDK、Kafka、配置安全组规则。</li>
+<li>在<code>/root/kafka_2.12-2.0.0/data/zookeeper</code>目录下创建名为<code>myid</code>的文件，配置Zookeeper节点编号。</li>
+<li>在服务器的<code>/etc/hosts</code>文件中设置一下域名映射：  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[&#38463;&#37324;&#20113;ECS-1 IP] zookeeper.server.1&#10;[&#38463;&#37324;&#20113;ECS-2 IP] zookeeper.server.2&#10;[&#38463;&#37324;&#20113;ECS-3 IP] zookeeper.server.3</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li>在<code>/root/kafka_2.12-2.0.0/config/zookeeper.properties</code>配置文件中添加如下配置（<code>server.N</code>中的<code>N</code>要和<code>myid</code>中配置的节点编号保持一致）：  <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">maxClientCnxns=0&#10;tickTime=2000&#10;initLimit=10&#10;syncLimit=5&#10;quorumListenOnAllIPs=true&#10;server.1=zookeeper.server.1:2888:3888&#10;server.2=zookeeper.server.2:2888:3888&#10;server.3=zookeeper.server.3:2888:3888</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在三台阿里云ECS中都完成上述工作后，就可以逐一启动Zookeeper了，命令如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/root/kafka_2.12-2.0.0/bin/zookeeper-server-start.sh config/zookeeper.properties &#38;</span><br></pre></td></tr></table></figure></p>
+<h2 id="u68C0_u9A8CZookeeper_u96C6_u7FA4"><a href="#u68C0_u9A8CZookeeper_u96C6_u7FA4" class="headerlink" title="检验Zookeeper集群"></a>检验Zookeeper集群</h2><p>三个Zookeeper节点都启动后，我们可以通过下面两个方法对Zookeeper集群进行基础的验证。</p>
+<h3 id="u67E5_u770B_u7AEF_u53E3_u76D1_u542C_u72B6_u6001"><a href="#u67E5_u770B_u7AEF_u53E3_u76D1_u542C_u72B6_u6001" class="headerlink" title="查看端口监听状态"></a>查看端口监听状态</h3><p>我们可以使用<code>nc</code>命令看看端口都有没有被成功监听，选择任意一台服务器，通过下面的命令查看：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nc -vz zookeeper.server.1 2181&#10;Connection to zookeeper.server.1 2181 port [tcp/*] succeeded!&#10;&#10;nc -vz zookeeper.server.1 3888&#10;Connection to zookeeper.server.1 3888 port [tcp/*] succeeded!&#10;&#10;nc -vz zookeeper.server.1 2888&#10;nc: connect to zookeeper.server.1 port 2888 (tcp) failed: Connection refused&#10;&#10;nc -vz zookeeper.server.2 2181&#10;Connection to zookeeper.server.2 2181 port [tcp/*] succeeded!&#10;&#10;nc -vz zookeeper.server.2 3888&#10;Connection to zookeeper.server.2 3888 port [tcp/*] succeeded!&#10;&#10;nc -vz zookeeper.server.2 2888&#10;nc: connect to zookeeper.server.2 port 2888 (tcp) failed: Connection refused&#10;&#10;nc -vz zookeeper.server.3 2181&#10;Connection to zookeeper.server.3 2181 port [tcp/*] succeeded!&#10;&#10;nc -vz zookeeper.server.3 3888&#10;Connection to zookeeper.server.3 3888 port [tcp/*] succeeded!&#10;&#10;nc -vz zookeeper.server.3 2888&#10;Connection to zookeeper.server.3 2888 port [tcp/*] succeeded!</span><br></pre></td></tr></table></figure></p>
+<p>从上面的信息中可以看出，三个Zookeeper都成功启动了，并且可以知道<code>zookeeper.server.1</code>和<code>zookeeper.server.2</code>是Follower，<code>zookeeper.server.3</code>是Leader，因为前两个节点并没有监听<code>2888</code>端口。</p>
+<h3 id="u901A_u8FC7Zookeeper_CLI_u9A8C_u8BC1"><a href="#u901A_u8FC7Zookeeper_CLI_u9A8C_u8BC1" class="headerlink" title="通过Zookeeper CLI验证"></a>通过Zookeeper CLI验证</h3><p>我们还可以通过Zookeeper Client连接到集群来检验。我们选择任意一台服务器，首先连接<code>zookeeper.server.1</code>节点：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/root/kafka_2.12-2.0.0/bin/zookeeper-shell.sh zookeeper.server.1:2181</span><br></pre></td></tr></table></figure></p>
+<p>连接成功后，我们创建一个zNode：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">create /my_zNode &#34;some data&#34;&#10;Created /my_zNode</span><br></pre></td></tr></table></figure></p>
+<p>查看<code>zookeeper.server.1</code>节点中所有的zNode：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ls /&#10;[cluster, brokers, my_zNode, zookeeper, admin, isr_change_notification, log_dir_event_notification, controller_epoch, kafka-manager, consumers, latest_producer_id_block, config]</span><br></pre></td></tr></table></figure></p>
+<p>我们看到了刚才创建的<code>my_zNode</code>。然后退出连接，再连接<code>zookeeper.server.2</code>节点：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/root/kafka_2.12-2.0.0/bin/zookeeper-shell.sh zookeeper.server.2:2181</span><br></pre></td></tr></table></figure></p>
+<p>然后查看<code>zookeeper.server.2</code>节点中的所有zNode：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ls /&#10;[cluster, controller_epoch, brokers, my_zNode, zookeeper, kafka-manager, admin, isr_change_notification, consumers, log_dir_event_notification, latest_producer_id_block, config]</span><br></pre></td></tr></table></figure></p>
+<p>我们同样发现了<code>my_zNode</code>。查看<code>my_zNode</code>中的数据：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">get /my_zNode&#10;some data&#10;cZxid = 0x500000009&#10;ctime = Wed Jan 09 15:38:39 CST 2019&#10;mZxid = 0x500000009&#10;mtime = Wed Jan 09 15:38:39 CST 2019&#10;pZxid = 0x500000009&#10;cversion = 0&#10;dataVersion = 0&#10;aclVersion = 0&#10;ephemeralOwner = 0x0&#10;dataLength = 9&#10;numChildren = 0</span><br></pre></td></tr></table></figure></p>
+<p>看到是在<code>zookeeper.server.1</code>节点中创建时添加的<code>some data</code>数据。</p>
+<p>同样我们再连接<code>zookeeper.server.3</code>节点查看zNode情况：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/root/kafka_2.12-2.0.0/bin/zookeeper-shell.sh zookeeper.server.3:2181&#10;&#10;ls /&#10;[cluster, controller_epoch, brokers, my_zNode, zookeeper, kafka-manager, admin, isr_change_notification, consumers, log_dir_event_notification, latest_producer_id_block, config]&#10;&#10;get /my_zNode&#10;some data&#10;cZxid = 0x500000009&#10;ctime = Wed Jan 09 15:38:39 CST 2019&#10;mZxid = 0x500000009&#10;mtime = Wed Jan 09 15:38:39 CST 2019&#10;pZxid = 0x500000009&#10;cversion = 0&#10;dataVersion = 0&#10;aclVersion = 0&#10;ephemeralOwner = 0x0&#10;dataLength = 9&#10;numChildren = 0</span><br></pre></td></tr></table></figure></p>
+<p>我们在<code>zookeeper.server.3</code>节点中修改<code>my_zNode</code>中的数据：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">set /my_zNode &#34;new data&#34;&#10;&#10;get /my_zNode&#10;new data&#10;cZxid = 0x500000009&#10;ctime = Wed Jan 09 15:38:39 CST 2019&#10;mZxid = 0x50000000e&#10;mtime = Wed Jan 09 15:46:29 CST 2019&#10;pZxid = 0x500000009&#10;cversion = 0&#10;dataVersion = 1&#10;aclVersion = 0&#10;ephemeralOwner = 0x0&#10;dataLength = 8&#10;numChildren = 0</span><br></pre></td></tr></table></figure></p>
+<p>然后再连接<code>zookeeper.server.1</code>节点查看<code>my_zNode</code>的数据：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/root/kafka_2.12-2.0.0/bin/zookeeper-shell.sh zookeeper.server.1:2181&#10;&#10;get /my_zNode&#10;new data&#10;cZxid = 0x500000009&#10;ctime = Wed Jan 09 15:38:39 CST 2019&#10;mZxid = 0x50000000e&#10;mtime = Wed Jan 09 15:46:29 CST 2019&#10;pZxid = 0x500000009&#10;cversion = 0&#10;dataVersion = 1&#10;aclVersion = 0&#10;ephemeralOwner = 0x0&#10;dataLength = 8&#10;numChildren = 0</span><br></pre></td></tr></table></figure></p>
+<p>看到<code>zookeeper.server.1</code>节点中<code>my_zNode</code>的数据也变成了<code>new data</code>。</p>
+<p>上面的过程虽然比较繁琐，但是充分说明了我们的Zookeeper集群是搭建成功的。无论从哪个Zookeeper节点创建的zNode，都可以同步到集群中的其他节点。无论从哪个Zookeeper节点修改的zNode中的数据，也可以同步到起群中的其他节点。</p>
+<h2 id="Zookeeper_The_Four_Letter_Words_Commands"><a href="#Zookeeper_The_Four_Letter_Words_Commands" class="headerlink" title="Zookeeper The Four Letter Words Commands"></a>Zookeeper The Four Letter Words Commands</h2><p>Zookeeper提供了一些能够查看节点Server状态、Client连接Server的状态、节点健康状态的命令。因为命令大多都是四个字母的简写，所以称为<a href="https://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_zkCommands" target="_blank" rel="external">The Four Letter Words Commands</a>，我称为四字真言。</p>
+<p>首先来看看整体的命令格式：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo &#34;xxxx&#34; | nc IP Port</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><code>xxxx</code>就是四字真言命令。</li>
+<li><code>IP</code>是Zookeeper节点的IP。</li>
+<li><code>Port</code>自然是Zookeeper监听的2181端口。</li>
+</ul>
+<p>下面来具体看看这些命令。</p>
+<h3 id="u67E5_u770BZookeeper_u8282_u70B9_u914D_u7F6E"><a href="#u67E5_u770BZookeeper_u8282_u70B9_u914D_u7F6E" class="headerlink" title="查看Zookeeper节点配置"></a>查看Zookeeper节点配置</h3><p>该命令可以查看指定节点的配置信息：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo &#34;conf&#34; | nc zookeeper.server.1 2181&#10;&#10;clientPort=2181&#10;dataDir=/root/kafka_2.12-2.0.0/data/zookeeper/version-2&#10;dataLogDir=/root/kafka_2.12-2.0.0/data/zookeeper/version-2&#10;tickTime=2000&#10;maxClientCnxns=0&#10;minSessionTimeout=4000&#10;maxSessionTimeout=40000&#10;serverId=1&#10;initLimit=10&#10;syncLimit=5&#10;electionAlg=3&#10;electionPort=3888&#10;quorumPort=2888&#10;peerType=0</span><br></pre></td></tr></table></figure></p>
+<p>这个命令可以很方便的查看Zookeeper节点<code>zookeeper.properties</code>中的配置信息，以及默认的配置信息。</p>
+<h3 id="u67E5_u770B_u8FDE_u63A5_u5230Zookeeper_u8282_u70B9_u7684Client_u4FE1_u606F"><a href="#u67E5_u770B_u8FDE_u63A5_u5230Zookeeper_u8282_u70B9_u7684Client_u4FE1_u606F" class="headerlink" title="查看连接到Zookeeper节点的Client信息"></a>查看连接到Zookeeper节点的Client信息</h3><p>该命令可以查看连接到指定Zookeeper节点的Client信息：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo &#34;cons&#34; | nc zookeeper.server.1 2181&#10;&#10;/[Client IP]:35764[1](queued=0,recved=1,sent=1,sid=0x10000b81b7d0003,lop=SESS,est=1547024407028,to=30000,lcxid=0x0,lzxid=0x500000012,lresp=22061060,llat=11,minlat=0,avglat=11,maxlat=11)&#10; /[Zookeeper Server IP]:42946[0](queued=0,recved=1,sent=0)</span><br></pre></td></tr></table></figure></p>
+<h3 id="u67E5_u770BSession_u53CA_u4E34_u65F6_u8282_u70B9_u4FE1_u606F"><a href="#u67E5_u770BSession_u53CA_u4E34_u65F6_u8282_u70B9_u4FE1_u606F" class="headerlink" title="查看Session及临时节点信息"></a>查看Session及临时节点信息</h3><p>该命令可以查看指定Zookeeper节点建立Session的信息以及临时节点的信息：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo &#34;dump&#34; | nc zookeeper.server.3 2181&#10;&#10;SessionTracker dump:&#10;Session Sets (3):&#10;0 expire at Fri Jan 02 07:13:54 CST 1970:&#10;0 expire at Fri Jan 02 07:14:04 CST 1970:&#10;1 expire at Fri Jan 02 07:14:14 CST 1970:&#10;&#9;0x10000b81b7d0003&#10;ephemeral nodes dump:&#10;Sessions with Ephemerals (0):</span><br></pre></td></tr></table></figure></p>
+<p>该命令只有指定了Leader节点才有效。</p>
+<h3 id="u67E5_u770BZookeeper_u8282_u70B9_u7684_u73AF_u5883_u53D8_u91CF"><a href="#u67E5_u770BZookeeper_u8282_u70B9_u7684_u73AF_u5883_u53D8_u91CF" class="headerlink" title="查看Zookeeper节点的环境变量"></a>查看Zookeeper节点的环境变量</h3><p>该命令可以查看指定Zookeeper节点的环境变量信息：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo &#34;envi&#34; | nc zookeeper.server.3 2181</span><br></pre></td></tr></table></figure></p>
+<h3 id="u76D1_u6D4BZookeeper_u8282_u70B9_u53EF_u7528_u72B6_u6001"><a href="#u76D1_u6D4BZookeeper_u8282_u70B9_u53EF_u7528_u72B6_u6001" class="headerlink" title="监测Zookeeper节点可用状态"></a>监测Zookeeper节点可用状态</h3><p>该命令可以查看指定Zookeeper节点是否正常：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo &#34;ruok&#34; | nc zookeeper.server.3 2181&#10;&#10;imok</span><br></pre></td></tr></table></figure></p>
+<p>如果节点正常则返回<code>imok</code>，如果不正常则没有任何响应。</p>
+<h3 id="u67E5_u770BZookeeper_u8282_u70B9_u7684_u4FE1_u606F"><a href="#u67E5_u770BZookeeper_u8282_u70B9_u7684_u4FE1_u606F" class="headerlink" title="查看Zookeeper节点的信息"></a>查看Zookeeper节点的信息</h3><p>该命令可以查看指定Zookeeper节点的信息：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo &#34;srvr&#34; | nc zookeeper.server.3 2181&#10;&#10;Zookeeper version: 3.4.13-2d71af4dbe22557fda74f9a9b4309b15a7487f03, built on 06/29/2018 00:39 GMT&#10;Latency min/avg/max: 0/1/8&#10;Received: 34&#10;Sent: 33&#10;Connections: 1&#10;Outstanding: 0&#10;Zxid: 0x500000012&#10;Mode: leader&#10;Node count: 164&#10;Proposal sizes last/min/max: 36/32/90</span><br></pre></td></tr></table></figure></p>
+<h3 id="u67E5_u770BZookeeper_u8282_u70B9_u7684_u4FE1_u606F_u4EE5_u53CA_u8FDE_u63A5Client_u4FE1_u606F"><a href="#u67E5_u770BZookeeper_u8282_u70B9_u7684_u4FE1_u606F_u4EE5_u53CA_u8FDE_u63A5Client_u4FE1_u606F" class="headerlink" title="查看Zookeeper节点的信息以及连接Client信息"></a>查看Zookeeper节点的信息以及连接Client信息</h3><p>该命令可以查看指定Zookeeper节点的信息，以及连接该节点的Client信息：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo &#34;stat&#34; | nc zookeeper.server.1 2181&#10;&#10;Zookeeper version: 3.4.13-2d71af4dbe22557fda74f9a9b4309b15a7487f03, built on 06/29/2018 00:39 GMT&#10;Clients:&#10; /[Client IP]:35764[1](queued=0,recved=54,sent=54)&#10; /[Zookeeper Server IP]:42956[0](queued=0,recved=1,sent=0)&#10;&#10;Latency min/avg/max: 0/0/17&#10;Received: 223&#10;Sent: 222&#10;Connections: 2&#10;Outstanding: 0&#10;Zxid: 0x500000012&#10;Mode: follower&#10;Node count: 164</span><br></pre></td></tr></table></figure></p>
+<h3 id="u67E5_u770BZookeeper_u8282_u70B9_u7684_u76D1_u63A7_u72B6_u6001_u4FE1_u606F"><a href="#u67E5_u770BZookeeper_u8282_u70B9_u7684_u76D1_u63A7_u72B6_u6001_u4FE1_u606F" class="headerlink" title="查看Zookeeper节点的监控状态信息"></a>查看Zookeeper节点的监控状态信息</h3><p>该命令可以查看指定Zookeeper节点的监控状态信息：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo &#34;mntr&#34; | nc zookeeper.server.1 2181&#10;&#10;zk_version&#9;3.4.13-2d71af4dbe22557fda74f9a9b4309b15a7487f03, built on 06/29/2018 00:39 GMT&#10;zk_avg_latency&#9;0&#10;zk_max_latency&#9;17&#10;zk_min_latency&#9;0&#10;zk_packets_received&#9;236&#10;zk_packets_sent&#9;235&#10;zk_num_alive_connections&#9;2&#10;zk_outstanding_requests&#9;0&#10;zk_server_state&#9;follower&#10;zk_znode_count&#9;164&#10;zk_watch_count&#9;0&#10;zk_ephemerals_count&#9;0&#10;zk_approximate_data_size&#9;13322&#10;zk_open_file_descriptor_count&#9;116&#10;zk_max_file_descriptor_count&#9;65535&#10;zk_fsync_threshold_exceed_count&#9;0</span><br></pre></td></tr></table></figure></p>
+<p>我们可以使用以上这些命令方便的查看Zookeeper节点以及Client的各种信息，提高效率。</p>
+<h2 id="u5C0F_u7ED3"><a href="#u5C0F_u7ED3" class="headerlink" title="小结"></a>小结</h2><p>这一章节带大家实践搭建了真正的Zookeeper集群，为之后搭建Kafka集群打基础，同时还复习了Zookeeper CLI的使用方式以及很重要的Zookeeper四字真言。希望能给小伙伴们带来帮助。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Kafka/" rel="tag">#Kafka</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/kafka-practice-13/" rel="next" title="Kafka从上手到实践-Zookeeper CLI：CRUD zNode">
+                <i class="fa fa-chevron-left"></i> Kafka从上手到实践-Zookeeper CLI：CRUD zNode
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/kafka-practice-15/" rel="prev" title="Kafka从上手到实践-Kafka集群：配置Broker">
+                Kafka从上手到实践-Kafka集群：配置Broker <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">115</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">93</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u642D_u5EFAZookeeper_u96C6_u7FA4"><span class="nav-number">1.</span> <span class="nav-text">搭建Zookeeper集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Zookeeper_u914D_u7F6E_u4FE1_u606F"><span class="nav-number">1.1.</span> <span class="nav-text">Zookeeper配置信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zookeeper_u96C6_u7FA4_u8282_u70B9_u5217_u8868"><span class="nav-number">1.2.</span> <span class="nav-text">Zookeeper集群节点列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u963F_u91CC_u4E91ECS_u670D_u52A1_u76D1_u542C_u6240_u6709_u7F51_u5361"><span class="nav-number">1.3.</span> <span class="nav-text">阿里云ECS服务监听所有网卡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zookeeper_u96C6_u7FA4_u914D_u7F6E_u603B_u7ED3"><span class="nav-number">1.4.</span> <span class="nav-text">Zookeeper集群配置总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u68C0_u9A8CZookeeper_u96C6_u7FA4"><span class="nav-number">2.</span> <span class="nav-text">检验Zookeeper集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u67E5_u770B_u7AEF_u53E3_u76D1_u542C_u72B6_u6001"><span class="nav-number">2.1.</span> <span class="nav-text">查看端口监听状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u901A_u8FC7Zookeeper_CLI_u9A8C_u8BC1"><span class="nav-number">2.2.</span> <span class="nav-text">通过Zookeeper CLI验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper_The_Four_Letter_Words_Commands"><span class="nav-number">3.</span> <span class="nav-text">Zookeeper The Four Letter Words Commands</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u67E5_u770BZookeeper_u8282_u70B9_u914D_u7F6E"><span class="nav-number">3.1.</span> <span class="nav-text">查看Zookeeper节点配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u67E5_u770B_u8FDE_u63A5_u5230Zookeeper_u8282_u70B9_u7684Client_u4FE1_u606F"><span class="nav-number">3.2.</span> <span class="nav-text">查看连接到Zookeeper节点的Client信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u67E5_u770BSession_u53CA_u4E34_u65F6_u8282_u70B9_u4FE1_u606F"><span class="nav-number">3.3.</span> <span class="nav-text">查看Session及临时节点信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u67E5_u770BZookeeper_u8282_u70B9_u7684_u73AF_u5883_u53D8_u91CF"><span class="nav-number">3.4.</span> <span class="nav-text">查看Zookeeper节点的环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u76D1_u6D4BZookeeper_u8282_u70B9_u53EF_u7528_u72B6_u6001"><span class="nav-number">3.5.</span> <span class="nav-text">监测Zookeeper节点可用状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u67E5_u770BZookeeper_u8282_u70B9_u7684_u4FE1_u606F"><span class="nav-number">3.6.</span> <span class="nav-text">查看Zookeeper节点的信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u67E5_u770BZookeeper_u8282_u70B9_u7684_u4FE1_u606F_u4EE5_u53CA_u8FDE_u63A5Client_u4FE1_u606F"><span class="nav-number">3.7.</span> <span class="nav-text">查看Zookeeper节点的信息以及连接Client信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u67E5_u770BZookeeper_u8282_u70B9_u7684_u76D1_u63A7_u72B6_u6001_u4FE1_u606F"><span class="nav-number">3.8.</span> <span class="nav-text">查看Zookeeper节点的监控状态信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5C0F_u7ED3"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/kafka-practice-14/';
+      var disqus_title = 'Kafka从上手到实践-实践真知：搭建Zookeeper集群';
+      var disqus_url = 'http://www.devtalking.com//articles/kafka-practice-14/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

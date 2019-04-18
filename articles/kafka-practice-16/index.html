@@ -1,0 +1,850 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Kafka," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这一章节主要对和Listener相关的四个配置项做以详细解释。listeners、advertised.listeners、listener.security.protocol.map、inter.broker.listener.n">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka从上手到实践-Kafka集群：Kafka Listeners">
+<meta property="og:url" content="http://www.devtalking.com/articles/kafka-practice-16/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这一章节主要对和Listener相关的四个配置项做以详细解释。listeners、advertised.listeners、listener.security.protocol.map、inter.broker.listener.n">
+<meta property="og:image" content="http://devtalking.oss-cn-beijing.aliyuncs.com/2019/4/18/1555576212167.png">
+<meta property="og:image" content="http://devtalking.oss-cn-beijing.aliyuncs.com/2019/4/18/1555576272952.png">
+<meta property="og:updated_time" content="2019-04-18T08:31:16.417Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kafka从上手到实践-Kafka集群：Kafka Listeners">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这一章节主要对和Listener相关的四个配置项做以详细解释。listeners、advertised.listeners、listener.security.protocol.map、inter.broker.listener.n">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> Kafka从上手到实践-Kafka集群：Kafka Listeners | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Kafka从上手到实践-Kafka集群：Kafka Listeners
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2019-03-01T00:00:00+08:00" content="2019-03-01">
+              2019-03-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/kafka-practice-16/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-16/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这一章节主要对和Listener相关的四个配置项做以详细解释。<code>listeners</code>、<code>advertised.listeners</code>、<code>listener.security.protocol.map</code>、<code>inter.broker.listener.name</code>这四个配置项可能是大家最容易混淆和最不容易理解的。</p>
+<p>在解释这些配置项之前，我们先来明确几个概念。</p>
+<ul>
+<li>部署Broker的阿里云ECS称为Host Machine。</li>
+<li>在阿里云ECS里启动的Producer或者Consumer，比如使用Kafka CLI启动的称为Internal Client。</li>
+<li>在大家的IDEA中使用Java编写的，或者第三方的Producer/Consumer，称为External Client。</li>
+<li>Host Machine具有外网IP和内网IP。</li>
+<li>Internal Client可以同时和Host Machine的外网IP及内网IP通信。</li>
+<li>External Client只能和Host Machine的外网IP通信。</li>
+<li>多个阿里云ECS之间可以同时通过外网IP及内网IP通信。<ul>
+<li>既在这个特定的场景下，Host Machine之间可以同时通过外网IP及内网IP通信。</li>
+<li>再换句话说就是不同Host Machine上的Broker之间可以同时通过外网IP及内网IP通信。</li>
+</ul>
+</li>
+</ul>
+<a id="more"></a>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2019/4/18/1555576212167.png" alt=""></p>
+<p>如上图所示，是一个很常见的Kafka集群场景，涵盖了上述的概念。图中那些通信虚线箭头就是靠Kafka的Listener建立的，并且是通过Kafka中不同的Listener建立的，这些Listener分为Internal Listener和External Listener。如下图所示：</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2019/4/18/1555576272952.png" alt=""></p>
+<p>那么这些Listener的创建以及内外部如何通信都是由上面那四个配置项决定的。</p>
+<h3 id="listener-security-protocol-map"><a href="#listener-security-protocol-map" class="headerlink" title="listener.security.protocol.map"></a>listener.security.protocol.map</h3><p>先来看<code>listener.security.protocol.map</code>配置项，在上一章节中介绍过，它是配置监听者的安全协议的，比如<code>PLAINTEXT</code>、<code>SSL</code>、<code>SASL_PLAINTEXT</code>、<code>SASL_SSL</code>。因为它是以Key/Value的形式配置的，所以往往我们也使用该参数给Listener命名：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">listener.security.protocol.map=EXTERNAL_LISTENER_CLIENTS:SSL,INTERNAL_LISTENER_CLIENTS:PLAINTEXT,INTERNAL_LISTENER_BROKER:PLAINTEXT</span><br></pre></td></tr></table></figure></p>
+<p>使用Key作为Listener的名称。就如上图所示，Internal Producer、External Producer、Internal Consumer、External Consumer和Broker通信以及Broker之间互相通信时都很有可能使用不同的Listener。这些不同的Listener有监听内网IP的，有监听外网IP的，还有不同安全协议的，所以使用Key来表示更加直观。当然这只是一种非官方的用法，Key本质上还是代表了安全协议，如果只有一个安全协议，多个Listener的话，那么这些Listener所谓的名称肯定都是相同的。</p>
+<h3 id="listeners"><a href="#listeners" class="headerlink" title="listeners"></a>listeners</h3><p><code>listeners</code>就是主要用来定义Kafka Broker的Listener的配置项。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">listeners=EXTERNAL_LISTENER_CLIENTS://&#38463;&#37324;&#20113;ECS&#22806;&#32593;IP:9092,INTERNAL_LISTENER_CLIENTS://&#38463;&#37324;&#20113;ECS&#20869;&#32593;IP:9093,INTERNAL_LISTENER_BROKER://&#38463;&#37324;&#20113;ECS&#20869;&#32593;IP:9094</span><br></pre></td></tr></table></figure></p>
+<p>上面的配置表示，这个Broker定义了三个Listener，一个External Listener，用于External Producer和External Consumer连接使用。也许因为业务场景的关系，Internal Producer和Broker之间使用不同的安全协议进行连接，所以定义了两个不同协议的Internal Listener，分别用于Internal Producer和Broker之间连接使用。</p>
+<p>通过之前的章节，我们知道Kafka是由Zookeeper进行管理的，由Zookeeper负责Leader选举，Broker Rebalance等工作。所以External Producer和External Consumer其实是通过Zookeeper中提供的信息和Broker通信交互的。所以<code>listeners</code>中配置的信息都会发布到Zookeeper中，但是这样就会把Broker的所有Listener信息都暴露给了外部Clients，在安全上是存在隐患的，我们希望只把给外部Clients使用的Listener暴露出去，此时就需要用到下面这个配置项了。</p>
+<h3 id="advertised-listeners"><a href="#advertised-listeners" class="headerlink" title="advertised.listeners"></a>advertised.listeners</h3><p><code>advertised.listeners</code>参数的作用就是将Broker的Listener信息发布到Zookeeper中，供Clients（Producer/Consumer）使用。如果配置了<code>advertised.listeners</code>，那么就不会将<code>listeners</code>配置的信息发布到Zookeeper中去了：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">advertised.listeners=EXTERNAL_LISTENER_CLIENTS://&#38463;&#37324;&#20113;ECS&#22806;&#32593;IP:9092</span><br></pre></td></tr></table></figure></p>
+<p>这里在Zookeeper中发布了供External Clients（Producer/Consumer）使用的Listener<code>EXTERNAL_LISTENER_CLIENTS</code>。所以<code>advertised.listeners</code>配置项实现了只把给外部Clients使用的Listener暴露出去的需求。</p>
+<h3 id="inter-broker-listener-name"><a href="#inter-broker-listener-name" class="headerlink" title="inter.broker.listener.name"></a>inter.broker.listener.name</h3><p>这个配置项从名称就可以看出它的作用了，就是指定一个<code>listener.security.protocol.map</code>配置项中配置的Key，或者说指定一个或一类Listener的名称，将它作为Internal Listener。这个Listener<strong>专门用于Kafka集群中Broker之间的通信</strong>：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">inter.broker.listener.name=INTERNAL_LISTENER_BROKER</span><br></pre></td></tr></table></figure></p>
+<h3 id="listener__u548C_advertised-listeners__u7684_u5173_u7CFB"><a href="#listener__u548C_advertised-listeners__u7684_u5173_u7CFB" class="headerlink" title="listener 和 advertised.listeners 的关系"></a>listener 和 advertised.listeners 的关系</h3><p>先来看看<code>KafkaConfig.scala</code>和<code>SocketServer.scala</code>源码中的这几行代码片段：<br><figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="comment">// KafkaConfig.scala</span></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> <span class="type">ListenersProp</span> = <span class="string">"listeners"</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dataPlaneListeners</span>:</span> <span class="type">Seq</span>[<span class="type">EndPoint</span>] = &#123;</span><br><span class="line">    <span class="type">Option</span>(getString(<span class="type">KafkaConfig</span>.<span class="type">ControlPlaneListenerNameProp</span>)) <span class="keyword">match</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="type">Some</span>(controlPlaneListenerName) =&gt; listeners.filterNot(_.listenerName.value() == controlPlaneListenerName)</span><br><span class="line">      <span class="keyword">case</span> <span class="type">None</span> =&gt; listeners</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">listeners</span>:</span> <span class="type">Seq</span>[<span class="type">EndPoint</span>] = &#123;</span><br><span class="line">    <span class="type">Option</span>(getString(<span class="type">KafkaConfig</span>.<span class="type">ListenersProp</span>)).map &#123; listenerProp =&gt;</span><br><span class="line">      <span class="type">CoreUtils</span>.listenerListToEndPoints(listenerProp, listenerSecurityProtocolMap)</span><br><span class="line">    &#125;.getOrElse(<span class="type">CoreUtils</span>.listenerListToEndPoints(<span class="string">"PLAINTEXT://"</span> + hostName + <span class="string">":"</span> + port, listenerSecurityProtocolMap))</span><br><span class="line">  &#125;  </span><br><span class="line"></span><br><span class="line"><span class="comment">// SocketServer.scala</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">startup</span>(</span>startupProcessors: <span class="type">Boolean</span> = <span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.synchronized &#123;</span><br><span class="line">      connectionQuotas = <span class="keyword">new</span> <span class="type">ConnectionQuotas</span>(config.maxConnectionsPerIp, config.maxConnectionsPerIpOverrides)</span><br><span class="line">      createControlPlaneAcceptorAndProcessor(config.controlPlaneListener)</span><br><span class="line">      createDataPlaneAcceptorsAndProcessors(config.numNetworkThreads, config.dataPlaneListeners)</span><br><span class="line">      <span class="keyword">if</span> (startupProcessors) &#123;</span><br><span class="line">        startControlPlaneProcessor()</span><br><span class="line">        startDataPlaneProcessors()</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">createDataPlaneAcceptorsAndProcessors</span>(</span>dataProcessorsPerListener: <span class="type">Int</span>,</span><br><span class="line">                                                    endpoints: <span class="type">Seq</span>[<span class="type">EndPoint</span>]): <span class="type">Unit</span> = synchronized &#123;</span><br><span class="line">    endpoints.foreach &#123; endpoint =&gt;</span><br><span class="line">      <span class="keyword">val</span> dataPlaneAcceptor = createAcceptor(endpoint)</span><br><span class="line">      addDataPlaneProcessors(dataPlaneAcceptor, endpoint, dataProcessorsPerListener)</span><br><span class="line">      <span class="type">KafkaThread</span>.nonDaemon(s<span class="string">"data-plane-kafka-socket-acceptor-$&#123;endpoint.listenerName&#125;-$&#123;endpoint.securityProtocol&#125;-$&#123;endpoint.port&#125;"</span>, dataPlaneAcceptor).start()</span><br><span class="line">      dataPlaneAcceptor.awaitStartup()</span><br><span class="line">      dataPlaneAcceptors.put(endpoint, dataPlaneAcceptor)</span><br><span class="line">      info(s<span class="string">"Created data-plane acceptor and processors for endpoint : $endpoint"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>startup()</code>方法是Kafka Broker创建启动Socket连接的入口，既用来创建Acceptor线程的入口，该线程负责处理Socket连接。 <code>createDataPlaneAcceptorsAndProcessors()</code>方法的第二个参数<code>config.dataPlaneListeners</code>可以看到取的就是<code>listeners</code>配置项的内容。 </p>
+<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line">* Create a server socket to listen for connections on.</span><br><span class="line">*/</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">openServerSocket</span>(</span>host: <span class="type">String</span>, port: <span class="type">Int</span>): <span class="type">ServerSocketChannel</span> = &#123;</span><br><span class="line">  <span class="keyword">val</span> socketAddress =</span><br><span class="line">    <span class="keyword">if</span> (host == <span class="literal">null</span> || host.trim.isEmpty)</span><br><span class="line">      <span class="keyword">new</span> <span class="type">InetSocketAddress</span>(port)</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      <span class="keyword">new</span> <span class="type">InetSocketAddress</span>(host, port)</span><br><span class="line">  <span class="keyword">val</span> serverChannel = <span class="type">ServerSocketChannel</span>.open()</span><br><span class="line">  serverChannel.configureBlocking(<span class="literal">false</span>)</span><br><span class="line">  <span class="keyword">if</span> (recvBufferSize != <span class="type">Selectable</span>.<span class="type">USE_DEFAULT_BUFFER_SIZE</span>)</span><br><span class="line">    serverChannel.socket().setReceiveBufferSize(recvBufferSize)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    serverChannel.socket.bind(socketAddress)</span><br><span class="line">    info(<span class="string">"Awaiting socket connections on %s:%d."</span>.format(socketAddress.getHostString, serverChannel.socket.getLocalPort))</span><br><span class="line">  &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> e: <span class="type">SocketException</span> =&gt;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">KafkaException</span>(<span class="string">"Socket server failed to bind to %s:%d: %s."</span>.format(socketAddress.getHostString, port, e.getMessage), e)</span><br><span class="line">  &#125;</span><br><span class="line">  serverChannel</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>跟到里面，可以看到如果没有配置<code>listeners</code>，那么会使用网卡地址创建Socket连接，对于阿里云ECS，就是内网IP。</p>
+<p>再来看看<code>KafkaServer.scala</code>源码中的这几行代码片段：<br><figure class="highlight scala"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> brokerInfo = createBrokerInfo</span><br><span class="line"><span class="keyword">val</span> brokerEpoch = zkClient.registerBroker(brokerInfo)</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>[server] <span class="function"><span class="keyword">def</span> <span class="title">createBrokerInfo</span>:</span> <span class="type">BrokerInfo</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> endPoints = config.advertisedListeners.map(e =&gt; s<span class="string">"$&#123;e.host&#125;:$&#123;e.port&#125;"</span>)</span><br><span class="line">    zkClient.getAllBrokersInCluster.filter(_.id != config.brokerId).foreach &#123; broker =&gt;</span><br><span class="line">      <span class="keyword">val</span> commonEndPoints = broker.endPoints.map(e =&gt; s<span class="string">"$&#123;e.host&#125;:$&#123;e.port&#125;"</span>).intersect(endPoints)</span><br><span class="line">      require(commonEndPoints.isEmpty, s<span class="string">"Configured end points $&#123;commonEndPoints.mkString("</span>,<span class="string">")&#125; in"</span> +</span><br><span class="line">        s<span class="string">" advertised listeners are already registered by broker $&#123;broker.id&#125;"</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> listeners = config.advertisedListeners.map &#123; endpoint =&gt;</span><br><span class="line">      <span class="keyword">if</span> (endpoint.port == <span class="number">0</span>)</span><br><span class="line">        endpoint.copy(port = socketServer.boundPort(endpoint.listenerName))</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">        endpoint</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> updatedEndpoints = listeners.map(endpoint =&gt;</span><br><span class="line">      <span class="keyword">if</span> (endpoint.host == <span class="literal">null</span> || endpoint.host.trim.isEmpty)</span><br><span class="line">        endpoint.copy(host = <span class="type">InetAddress</span>.getLocalHost.getCanonicalHostName)</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">        endpoint</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> jmxPort = <span class="type">System</span>.getProperty(<span class="string">"com.sun.management.jmxremote.port"</span>, <span class="string">"-1"</span>).toInt</span><br><span class="line">    <span class="type">BrokerInfo</span>(<span class="type">Broker</span>(config.brokerId, updatedEndpoints, config.rack), config.interBrokerProtocolVersion, jmxPort)</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>从上面的代码可以看到，<code>advertised.listeners</code>主要用于向Zookeeper注册Broker的连接信息，但是不参与创建Socket连接。</p>
+<p>所以从这几处源码内容可以得出结论，Kafka Broker真正建立通信连接使用的是<code>listeners</code>配置项里的内容，而<code>advertised.listeners</code>只用于向Zookeeper注册Broker的连接信息，既向Client暴露Broker对外的连接信息（Endpoint）。</p>
+<p>另外在<code>KafkaConfig.scala</code>源码中还有有这么几行代码：<br><figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> advertisedListenerNames = advertisedListeners.map(_.listenerName).toSet</span><br><span class="line"><span class="keyword">val</span> listenerNames = listeners.map(_.listenerName).toSet</span><br><span class="line"></span><br><span class="line">require(advertisedListenerNames.contains(interBrokerListenerName),</span><br><span class="line">      s<span class="string">"$&#123;KafkaConfig.InterBrokerListenerNameProp&#125; must be a listener name defined in $&#123;KafkaConfig.AdvertisedListenersProp&#125;. "</span> +</span><br><span class="line">      s<span class="string">"The valid options based on currently configured listeners are $&#123;advertisedListenerNames.map(_.value).mkString("</span>,<span class="string">")&#125;"</span>)</span><br><span class="line">require(advertisedListenerNames.subsetOf(listenerNames),</span><br><span class="line">      s<span class="string">"$&#123;KafkaConfig.AdvertisedListenersProp&#125; listener names must be equal to or a subset of the ones defined in $&#123;KafkaConfig.ListenersProp&#125;. "</span> +</span><br><span class="line">      s<span class="string">"Found $&#123;advertisedListenerNames.map(_.value).mkString("</span>,<span class="string">")&#125;. The valid options based on the current configuration "</span> +</span><br><span class="line">      s<span class="string">"are $&#123;listenerNames.map(_.value).mkString("</span>,<span class="string">")&#125;"</span></span><br></pre></td></tr></table></figure></p>
+<p>从上面的代码片段可以得出两个结论：</p>
+<ul>
+<li><code>advertised.listeners</code>配置项中配置的Listener名称或者说安全协议必须在<code>listeners</code>中存在。因为真正创建连接的是<code>listeners</code>中的信息。</li>
+<li><code>inter.broker.listener.name</code>配置项中配置的Listener名称或者说安全协议必须在<code>advertised.listeners</code>中存在。因为Broker之间也是要通过<code>advertised.listeners</code>配置项获取Internal Listener信息的。</li>
+</ul>
+<h2 id="u5C0F_u7ED3"><a href="#u5C0F_u7ED3" class="headerlink" title="小结"></a>小结</h2><p>这一章节主要大家详细解释了Broker几个比较容易混淆和不好理解的配置项，解释了什么是内外部Listener，如何暴露Listener等。这些配置在我们搭建Kafka集群时至关重要。希望能给小伙伴们带来帮助。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Kafka/" rel="tag">#Kafka</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/kafka-practice-15/" rel="next" title="Kafka从上手到实践-Kafka集群：配置Broker">
+                <i class="fa fa-chevron-left"></i> Kafka从上手到实践-Kafka集群：配置Broker
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/kafka-practice-17/" rel="prev" title="Kafka从上手到实践-Kafka集群：启动Kafka集群">
+                Kafka从上手到实践-Kafka集群：启动Kafka集群 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">115</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">93</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#listener-security-protocol-map"><span class="nav-number">1.</span> <span class="nav-text">listener.security.protocol.map</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#listeners"><span class="nav-number">2.</span> <span class="nav-text">listeners</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#advertised-listeners"><span class="nav-number">3.</span> <span class="nav-text">advertised.listeners</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inter-broker-listener-name"><span class="nav-number">4.</span> <span class="nav-text">inter.broker.listener.name</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#listener__u548C_advertised-listeners__u7684_u5173_u7CFB"><span class="nav-number">5.</span> <span class="nav-text">listener 和 advertised.listeners 的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5C0F_u7ED3"><span class="nav-number"></span> <span class="nav-text">小结</span></a></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/kafka-practice-16/';
+      var disqus_title = 'Kafka从上手到实践-Kafka集群：Kafka Listeners';
+      var disqus_url = 'http://www.devtalking.com//articles/kafka-practice-16/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

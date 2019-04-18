@@ -1,0 +1,896 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Kafka," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+了解完Producer，接下来介绍Kafka中的Consumer的概念，以及在消费Message时有什么样的策略。
+ConsumerConsumer负责从Topic中读取数据，我们已经知道了Topic是通过名称确定唯一的，所以指定C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka从上手到实践-庖丁解牛：Consumer">
+<meta property="og:url" content="http://www.devtalking.com/articles/kafka-practice-5/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+了解完Producer，接下来介绍Kafka中的Consumer的概念，以及在消费Message时有什么样的策略。
+ConsumerConsumer负责从Topic中读取数据，我们已经知道了Topic是通过名称确定唯一的，所以指定C">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/kafka-consumer.png">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/kafka-consumer.png">
+<meta property="og:image" content="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/27/1545902569574.png">
+<meta property="og:image" content="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/27/1545903354244.png">
+<meta property="og:image" content="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/27/1545925702680.png">
+<meta property="og:image" content="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/19/1545190605332.png">
+<meta property="og:updated_time" content="2019-04-18T08:03:41.362Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kafka从上手到实践-庖丁解牛：Consumer">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+了解完Producer，接下来介绍Kafka中的Consumer的概念，以及在消费Message时有什么样的策略。
+ConsumerConsumer负责从Topic中读取数据，我们已经知道了Topic是通过名称确定唯一的，所以指定C">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> Kafka从上手到实践-庖丁解牛：Consumer | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Kafka从上手到实践-庖丁解牛：Consumer
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2018-10-15T00:00:00+08:00" content="2018-10-15">
+              2018-10-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/kafka-practice-5/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-5/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>了解完Producer，接下来介绍Kafka中的Consumer的概念，以及在消费Message时有什么样的策略。</p>
+<h2 id="Consumer"><a href="#Consumer" class="headerlink" title="Consumer"></a>Consumer</h2><p>Consumer负责从Topic中读取数据，我们已经知道了Topic是通过名称确定唯一的，所以指定Consumer从哪个Topic中读数据，同样使用Topic名称指定。Kafka中的Consumer有以下几点需要我们注意：</p>
+<ul>
+<li>我们只需要指定需要从哪个Topic中读取数据即可。不需要关心Consumer是从哪个Broker中的哪个Partition中读数据，这些工作由Kafka帮我们处理好了。</li>
+<li>当持有Topic的Broker挂掉，重新恢复后，Consumer可以自动重新从该Broker中读数据。</li>
+<li>在一个Partition中，Consumer是按Offset的顺序读取数据的。</li>
+<li>一个Consumer可以同时读取多个Broker中的不同Partition，但是Partition之间无法保证读取数据的顺序，因为是并行执行的。</li>
+</ul>
+<a id="more"></a>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/kafka-consumer.png" alt=""></p>
+<h3 id="Consumer_Group"><a href="#Consumer_Group" class="headerlink" title="Consumer Group"></a>Consumer Group</h3><p>Consumer有组的概念，对于Consumer Group有以下几点需要我们注意：</p>
+<ul>
+<li>不同的Consumer Group之间可以读取相同的Partition中的数据。</li>
+<li>Consumer Group里的Consumer之间不能读取相同的Partition中的数据，他们读取数据的Partition是专享的。</li>
+<li>所以基于上面的知识点，如果Consumer数量多于Partition数量，那么就会有Consumer处于空闲的状态。</li>
+</ul>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/kafka-consumer.png" alt=""></p>
+<p>上图的示例中，如果Consumer Group 2中再增加一个Consumer 4，那么Consumer 4就会处于空闲状态，因为没有多余的Partition分给它了。</p>
+<h3 id="Consumer_Offset"><a href="#Consumer_Offset" class="headerlink" title="Consumer Offset"></a>Consumer Offset</h3><p>一个优秀的MQ系统，必定会有一个能力，那就是断点续传的能力。既当Consumer挂掉再恢复后，需要从挂掉的前一时刻读数据的点开始接着往后读。那么如何做到这一点呢，那就是通过Consumer Offset来实现的。</p>
+<p>每当一个活跃的Consumer正在从Partition中读取数据时，Kafka都会根据给定的策略记住该Consumer读取数据的Offset。这个策略就是Consumer提交Offset的策略。目前有三个策略：</p>
+<h4 id="At_most_once"><a href="#At_most_once" class="headerlink" title="At most once"></a>At most once</h4><p>这种策略下，只要Consumer读到了Message，就立即提交Offset，不考虑Message有没有被正确处理。如果Message刚读过来，还没有处理的时候，Consumer挂掉了，重新恢复后对上一次读取的Message不会重新读取，所以这种模式比较容易丢失数据。整个过程如下图所示：</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/27/1545902569574.png" alt=""></p>
+<h4 id="At_least_once"><a href="#At_least_once" class="headerlink" title="At least once"></a>At least once</h4><p>这种策略下，Consumer需要读到Message，并且正确处理了Message后，才会提交Offset。如果Consumer挂掉，再恢复后，可以重新读取上一次的Message继续处理。这里就需要我们处理Message的逻辑必须是幂等的，否则会造成Message重复执行导致错误的业务结果。整个过程如下图所示：</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/27/1545903354244.png" alt=""></p>
+<h4 id="Exactly_once"><a href="#Exactly_once" class="headerlink" title="Exactly once"></a>Exactly once</h4><p>这个策略想做到的是不丢数据，又可以不用幂等的处理逻辑。这里通常需要Kafka和外部系统配合使用。后面再做具体介绍。</p>
+<h3 id="Consumer_Poll_Options"><a href="#Consumer_Poll_Options" class="headerlink" title="Consumer Poll Options"></a>Consumer Poll Options</h3><p>在Consumer订阅Topic拉取Message的行为中，会涉及到四个参数：</p>
+<ul>
+<li><code>fetch.min.bytes</code>：该参数表示每次拉取Message的最小量，默认是1Bytes。</li>
+<li><code>fetch.max.bytes</code>：该参数表示每次拉取Message的最大量，默认是50MB。</li>
+<li><code>max.poll.records</code>：该参数表示每次拉取Message的条数，默认是500条。</li>
+<li><code>max.partitions.fetch.bytes</code>：该参数表示每个Partition在一次拉取中，可以被拉取到Message的最大量，默认是1MB。</li>
+</ul>
+<p>这些参数可以让Consumer控制拉取Message的速率，以及可以监控Consumer每次拉取Message的具体信息。</p>
+<h3 id="Consumer_Offset_Reset_Behavior"><a href="#Consumer_Offset_Reset_Behavior" class="headerlink" title="Consumer Offset Reset Behavior"></a>Consumer Offset Reset Behavior</h3><p>在实际应用中，Consumer是很有可能在运行过程中挂掉的，那么当Consumer重新恢复后，拉取什么范围的Message，是有策略可以设置的，可以通过设置<code>auto.offset.reset</code>属性，常用的值有两个：</p>
+<ul>
+<li><code>earliest</code>：从Message文件的最开始进行拉取，既将Topic中的所有数据重新拉取过来。</li>
+<li><code>latest</code>：从Message文件的最后开始拉取，既不考虑Topic之前的所有数据，只拉取最新的数据。</li>
+</ul>
+<p>在后面讲到CLI的时候，这部分再做详细阐述。</p>
+<h3 id="Consumer_internal_thread"><a href="#Consumer_internal_thread" class="headerlink" title="Consumer internal thread"></a>Consumer internal thread</h3><p>为保证Consumer的稳定性和高可用性。Kafka有心跳机制，所以Consumer不光和Broker交互，也要和心跳监控节点交互：</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/27/1545925702680.png" alt=""></p>
+<p>这里引出了两个参数：</p>
+<ul>
+<li><code>seesion.timeout.ms</code>：该参数的作用是Broker认为Consumer挂掉的持续时间。默认为10秒。也就是说Broker在10秒内没有收到Consumer的心跳信号，那么认为该Consumer已经挂掉了。</li>
+<li><code>heartbeat.interval.ms</code>：该参数决定了Consumer发送心跳信号的间隔时间。默认为3秒。</li>
+</ul>
+<p>总结一下前文介绍的Kafka核心概念。先上一张图总体概括：</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/19/1545190605332.png" alt=""></p>
+<h2 id="Producer"><a href="#Producer" class="headerlink" title="Producer"></a>Producer</h2><p>在Producer层面，我们了解了以下知识点：</p>
+<ul>
+<li>Producer发送Message到Broker默认采用轮询方式，除非显示的将Message带着Key。</li>
+<li>如果希望Message根据某个字段发送至相同的Partition中，可以将Message带着Key发送。</li>
+<li>Producer有acks机制，关系到Message的完整性，以及整体MQ系统的整体性能（Message吞吐量）。</li>
+<li>Producer发送Message有重试机制。</li>
+<li>在实际使用时，我们通常需要考虑幂等Producer，以确保不会有业务上的错误。</li>
+<li>Message压缩和批量发送有助于提高Message传输性能。</li>
+</ul>
+<h2 id="Broker"><a href="#Broker" class="headerlink" title="Broker"></a>Broker</h2><p>在Broker层面，我们了解了以下知识点：</p>
+<ul>
+<li>Partition是以文件夹的形式存储在Broker中的。</li>
+<li>Partition有Replication的概念，可以确保Message的完整性。</li>
+<li>Partition有Leader和ISR的概念。</li>
+<li>Partition中Message存储的方式。</li>
+<li>Partition中清理Message的策略。</li>
+</ul>
+<h2 id="Consumer-1"><a href="#Consumer-1" class="headerlink" title="Consumer"></a>Consumer</h2><p>在Consumer层面，我们了解了以下知识点：</p>
+<ul>
+<li>Consumer有组的概念，Consumer Group和Consumer获取Topic中数据的方式。</li>
+<li>Consumer提交Offset的策略，关系到Consumer断点续传的方式。</li>
+<li>Consumer如何控制获取Topic中Message的速率。</li>
+<li>Consumer如何重制Offset。</li>
+</ul>
+<p>最后我们再明确一下有哪些是Kafka提供的保障，或者说是我们不能，也不应该违背的原则：</p>
+<ul>
+<li>Message写入Topic-Partition的顺序严格按照Producer发送Message的顺序。</li>
+<li>Consumer从Topic-Partition读Message的顺序严格按照Partition中Message的Offset顺序。</li>
+<li>如果Partition的Replication Factor是N，那么可以允许有N-1个Broker挂掉，而且Kafka可以正常运转。</li>
+<li>只要Topic的Partition的数量恒定，那么带有指定Key的Message会始终写入该Key对应的Partition。</li>
+<li>如果你想给Kafka集群中的某个Topic发送数据，你只需要连接Kafka集群中的一个Broker以及给定Topic名称既可。不用考虑Partition、Replication等等的问题。</li>
+</ul>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>前面五个章节阐述了什么是MQ系统，然后基于这个大的框架介绍了Kafka系统中的核心模块，以及这些核心模块中的核心知识点。之后的章节主要就是实践部分，包括如何使用Kafka CLI、搭建Zookeeper、单机Kakfa、集群Kafka等。希望能给小伙伴们带来帮助。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Kafka/" rel="tag">#Kafka</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/kafka-practice-4/" rel="next" title="Kafka从上手到实践-庖丁解牛：Producer">
+                <i class="fa fa-chevron-left"></i> Kafka从上手到实践-庖丁解牛：Producer
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/kafka-practice-6/" rel="prev" title="Kafka从上手到实践-实践真知：搭建单机Kafka">
+                Kafka从上手到实践-实践真知：搭建单机Kafka <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">115</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">93</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Consumer"><span class="nav-number">1.</span> <span class="nav-text">Consumer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Consumer_Group"><span class="nav-number">1.1.</span> <span class="nav-text">Consumer Group</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Consumer_Offset"><span class="nav-number">1.2.</span> <span class="nav-text">Consumer Offset</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#At_most_once"><span class="nav-number">1.2.1.</span> <span class="nav-text">At most once</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#At_least_once"><span class="nav-number">1.2.2.</span> <span class="nav-text">At least once</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Exactly_once"><span class="nav-number">1.2.3.</span> <span class="nav-text">Exactly once</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Consumer_Poll_Options"><span class="nav-number">1.3.</span> <span class="nav-text">Consumer Poll Options</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Consumer_Offset_Reset_Behavior"><span class="nav-number">1.4.</span> <span class="nav-text">Consumer Offset Reset Behavior</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Consumer_internal_thread"><span class="nav-number">1.5.</span> <span class="nav-text">Consumer internal thread</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Producer"><span class="nav-number">2.</span> <span class="nav-text">Producer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Broker"><span class="nav-number">3.</span> <span class="nav-text">Broker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Consumer-1"><span class="nav-number">4.</span> <span class="nav-text">Consumer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u603B_u7ED3"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/kafka-practice-5/';
+      var disqus_title = 'Kafka从上手到实践-庖丁解牛：Consumer';
+      var disqus_url = 'http://www.devtalking.com//articles/kafka-practice-5/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

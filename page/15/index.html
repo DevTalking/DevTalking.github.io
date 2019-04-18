@@ -241,8 +241,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/closure-expressions-in-swift/" itemprop="url">
-                  Swift中的闭包（Closure）
+                <a class="post-title-link" href="/articles/failable-initializers/" itemprop="url">
+                  可失败构造器（Failable Initializers）
                 </a>
               
             
@@ -252,8 +252,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-09-01T00:00:00+08:00" content="2014-09-01">
-              2014-09-01
+            <time itemprop="dateCreated" datetime="2014-10-21T00:00:00+08:00" content="2014-10-21">
+              2014-10-21
             </time>
           </span>
 
@@ -278,8 +278,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/closure-expressions-in-swift/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/closure-expressions-in-swift/" itemprop="commentsCount"></span>
+              <a href="/articles/failable-initializers/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/failable-initializers/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -308,28 +308,565 @@
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
-<p>闭包在Swift中非常有用。通俗的解释就是一个<code>Int</code>类型里存储着一个整数，一个<code>String</code>类型包含着一串字符，同样，闭包是一个包含着函数的类型。有了闭包，你就可以处理很多在一些古老的语言中不能处理的事情。这是因为闭包使用的多样性，比如你可以将闭包赋值给一个变量，你也可以将闭包作为一个函数的参数，你甚至可以将闭包作为一个函数的返回值。它的强大之处可见一斑。</p>
-<p>在Swift的很多文档教材中都说函数是“一等公民”，起初我还不是很理解“一等公民”是什么意思，但当我理解了闭包以及它的强大功能后，我恍然大悟、茅塞顿开、醍醐灌顶。原来闭包的这些特性就是“一等公民”的特性啊！参见维基百科<a href="http://en.wikipedia.org/wiki/First-class_citizen" target="_blank" rel="external">First-class citizen</a>。</p>
-<p>Swift中的闭包类似Objective-C中的Block。其实，如果你想在Swift中实现Objective-C里的Block功能，你可以直接使用闭包来代替。Block和闭包的区别只是语法的不同而已，而且闭包的可读性比较强。</p>
-<h2 id="u51FD_u6570_u662F_u95ED_u5305_u5417_uFF1F"><a href="#u51FD_u6570_u662F_u95ED_u5305_u5417_uFF1F" class="headerlink" title="函数是闭包吗？"></a>函数是闭包吗？</h2><p>虽然你还没有意识到，但我们确实已经在Swift中这么用了。Swift中的函数就是闭包，在Apple的官方文档中有这样的描述：</p>
+
+<p><a href="https://developer.apple.com/xcode/downloads/" target="_blank" rel="external">Xcode6.1</a>中Swift的最新版本是1.1，在该版本中引入了一个新的特性：可失败构造器。通过构造器初始化实际上是给<code>class</code>或<code>struct</code>的每一个存储属性（参数）提供初始值，进行对象实例化的过程。在一些情况下，初始化的过程是有可能失败的。比如，实例化一个对象，在实例化的过程中需要访问资源文件，就像从文件中加载图片一样：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSImage</span>(contentsOfFile: <span class="string">"swift.png"</span>)</span><br></pre></td></tr></table></figure>
+<p>如果该文件不存在或者因为某种原因不允许访问，那么<code>NSImage</code>的初始化过程就会失败。在Swift 1.1版本中，像这种情况可以通过可失败构造器进行捕获。如果在构造一个对象时使用可失败构造器，那么当对象构造成功时返回该对象，当对象构造失败时则返回<code>nil</code>。因此可以直接用条件判断语句使用可失败构造器来实例化对象：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> image = <span class="type">NSImage</span>(contentsOfFile: <span class="string">"swift.png"</span>) &#123;</span><br><span class="line">    <span class="comment">// loaded the image successfully</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// could not load the image</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>init</code>初始化方法可以通过在<code>init</code>关键字后面加上<code>?</code>或<code>!</code>将其变为可失败初始化方法，这样就表示某对象的初始化方法会产生两种结果。比如，将<code>Int</code>类型的<code>init</code>初始化方法变为可失败初始化方法，然后执行<code>String</code>类型转换：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Int</span> </span>&#123;</span><br><span class="line">    <span class="keyword">init</span>?(fromString: <span class="type">String</span>) &#123; </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> i = fromString.toInt() &#123;</span><br><span class="line">            <span class="comment">// Initialize</span></span><br><span class="line">            <span class="keyword">self</span> = i</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">            <span class="comment">// return nil, discarding self is implied</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在可失败构造器或可失败初始化方法中，一旦返回<code>nil</code>就代表构造失败或初始化失败，不会再返回其他的值。在上述的示例中，当<code>String</code>不能解析为<code>Integer</code>时会导致初始化失败，返回<code>nil</code>，否则返回解析成功后的值。</p>
+<p>可失败构造器/初始化方法解决了以前在Swift中只能通过工厂方法捕获构造或初始化失败情况的问题。比如，一个枚举，通过<code>fromRaw</code>工厂方法通过一个原始值来寻找它所对应的枚举成员，返回类型为可选枚举类型。即如果该原始值对应的枚举成员存在，那么返回该枚举成员，如果不存在则返回<code>nil</code>。现在，Swift编译器结合可失败构造器，通过可失败的初始化方法用<code>switch</code>语句判断原始值对应的枚举成员，如果没有对应的则返回<code>nil</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Color</span> : <span class="title">Int</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Red</span> = <span class="number">0</span>, <span class="type">Green</span> = <span class="number">1</span>, <span class="type">Blue</span> = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// implicitly synthesized</span></span><br><span class="line">    <span class="keyword">var</span> rawValue: <span class="type">Int</span> &#123; <span class="comment">/* returns raw value for current case */</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// implicitly synthesized</span></span><br><span class="line">    <span class="keyword">init</span>?(rawValue: <span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">switch</span> rawValue &#123; </span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>: <span class="keyword">self</span> = .<span class="type">Red</span></span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>: <span class="keyword">self</span> = .<span class="type">Green</span></span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>: <span class="keyword">self</span> = .<span class="type">Blue</span></span><br><span class="line">            <span class="keyword">default</span>: <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用可失败构造器可极大程度的统一Swift中的构造对象语法，消除了构造器与工厂方法之间混乱、重复的冗余语法，使Swift更加简洁。随着可失败构造器这一特性的加入，Swift将对大多数Cocoa中带<code>NSError</code>参数的工厂初始化方法进行调整，从而加强Swift中构造对象语法的统一性，给开发者带来更好的开发体验。</p>
+<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=17" target="_blank" rel="external">Failable Initializers</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/adaptive-layout-for-iphone6-2/" itemprop="url">
+                  为iPhone6设计自适应布局（二）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2014-10-17T00:00:00+08:00" content="2014-10-17">
+              2014-10-17
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/adaptive-layout-for-iphone6-2/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/adaptive-layout-for-iphone6-2/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2 id="Size_Classes"><a href="#Size_Classes" class="headerlink" title="Size Classes"></a>Size Classes</h2><p>自适应布局的布局约束自然是好东西，但也不是万能的，有时候我们也需要使用最基本的布局，所以使用size classes将它们两者结合起来才能碰撞出更有激情的火花。</p>
 <blockquote>
-<p>闭包有三种形式：  </p>
+<p>引用我上篇译文中的一段话：<br>Size Classes并不代表真正的尺寸，而是我们从感官上感觉尺寸的种类，通过这种种类的组合，表示出不同屏幕尺寸设备的横屏及竖屏。</p>
+</blockquote>
+<p>我们在给storyboard中的对象添加约束时可以选择给某一个size class添加约束，所以在你选择特定的size class时，只能看到你添加的只适用于该size class的约束。</p>
+<p>这些特性能使我们有效的在不同的设备和屏幕方向中定义、设计不同的用户界面。</p>
+<h3 id="Size_Classes_u4E2D_u7684_u9AD8_u548C_u5BBD"><a href="#Size_Classes_u4E2D_u7684_u9AD8_u548C_u5BBD" class="headerlink" title="Size Classes中的高和宽"></a>Size Classes中的高和宽</h3><p>Size Classes为高和宽分别提供了三种类型：紧凑型（compact）、普通型（regular）、任意型（any）。用这三种高和宽的类型就可以组合出9种size class，来表示不同的设备屏幕。</p>
+<p>在实际运用中，我们发现并不是所有的尺寸都能在Size Classes中找到明确的组合（比如没有组合可以明确表示iPhone6 Plus的竖屏，iPad的横竖屏也不好区分），但是我们可以使用表示这个尺寸范围的组合。比如我们可以用Compact Width | Regular Height来表示iPhone6 Plus的竖屏。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-23.png" alt="图片"></p>
+<p>接下来还是用一个活生生的示例来向大家介绍Size Classes。</p>
+<h3 id="u6211_u4EEC_u7684_u76EE_u6807"><a href="#u6211_u4EEC_u7684_u76EE_u6807" class="headerlink" title="我们的目标"></a>我们的目标</h3><p>这个示例是实现Instagram的一个详细信息页面，并让它自适应更大的屏幕尺寸，在竖屏和横屏中都展现出最合适的布局。</p>
+<p>我们的目标是让布局自适应iPhone6的屏幕（这里需要注意一下，我所说的自适应是指图片、文字信息的布局排版，对于个人信息的头像不会根据布局的变化而变化），在竖屏中各个信息按照堆栈方式从上到下布局，在横屏时各元素按照大小进行有序排列，而不再是堆栈的方式：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-24.png" alt="图片"></p>
+<h3 id="u7ED9_u901A_u7528_u7684size_class_u6DFB_u52A0_u7EA6_u675F"><a href="#u7ED9_u901A_u7528_u7684size_class_u6DFB_u52A0_u7EA6_u675F" class="headerlink" title="给通用的size class添加约束"></a>给通用的size class添加约束</h3><p>在这个示例中，我们不会像上个示例那样使用模拟器的实际尺寸来设计布局，我们使用Size Classes提供的抽象的屏幕尺寸，这里我们先使用通用的尺寸来设计布局，也就是<strong>w Any | h Any</strong>尺寸。我们要注意的是，在这个尺寸下添加的view或者约束必须是一些公用的，也就是说在任何尺寸，任何屏幕方向的情况下都适用的。</p>
+<p>这些约束包括：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-25.png" alt="图片"></p>
+<p>除了之前介绍过的页边间距约束、水平间距约束、等高等宽约束、方向比例约束外还有顶部、底部间距约束。</p>
+<p>添加完上述的view和约束后，storyboard里应该是这番景象：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-26.png" alt="图片"></p>
+<p>这里要注意一下，目前这个界面的布局还有很多关键点需要考虑横屏和竖屏的布局，但是这些工作不会在<strong>w Any | h Any</strong>尺寸下进行。大伙接着往下看。</p>
+<h3 id="u4E3AiPhone_u7684_u7AD6_u5C4F_u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F"><a href="#u4E3AiPhone_u7684_u7AD6_u5C4F_u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="为iPhone的竖屏添加布局约束"></a>为iPhone的竖屏添加布局约束</h3><p>现在在Size Classes选择器中选择<strong>w Compact | h Regular</strong>尺寸，这个size class适用于所有iPhone设备的竖屏界面，不论尺寸是多少。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-27.gif" alt="图片"></p>
+<p>当你在Size Classes选择器中选择某一个size class后，storyboard<br>中的view controller会实时的反映出你改变后的尺寸大小。</p>
+<p>现在你就可以为iPhone的竖屏状态重新设计view的位置和添加新的布局约束了。下图中说明了我在竖屏状态下添加的约束：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-28.png" alt="图片"></p>
+<p>我的storyboard中看起来是这样的：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-29.png" alt="图片"></p>
+<p>在这个阶段，你可以在3.5、4、4.7、5.5这几个尺寸的模拟器中编译运行应用，在竖屏状态下看看它们的运行情况，尽管在横屏状态表现的还很糟糕。</p>
+<p>这里要注意的是我们并没有定义图片的宽度，我们只是给图片添加了相对父容器的左右边间距，并将其值设为了0。所以当屏幕尺寸增大的时候图片的宽度在布局约束的作用下也会增加，这时又因为我们给图片添加了高宽比例约束，所以图片的高度也会随之增加。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-30.png" alt="图片"></p>
+<h3 id="u4E3AiPhone_u7684_u6A2A_u5C4F_u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F"><a href="#u4E3AiPhone_u7684_u6A2A_u5C4F_u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="为iPhone的横屏添加布局约束"></a>为iPhone的横屏添加布局约束</h3><p>打开Size Classes选择器，选择<strong>w Any | h Compact</strong>，这个size class适用于任何一个尺寸的横屏状态。我们将在这个size class下设计我们希望在iPhone横屏时显示的用户界面。</p>
+<p>此时图片的顶部、左侧、底部都添加了相对于父容器的边界约束。在显示评论的label上添加了右侧边界约束。</p>
+<p>当设备横屏时，图片在布局约束的作用下移到了左侧，个人信息label和评论label在约束的作用下被挤到了右侧，并且评论label的高度增加，宽度减少。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-31.png" alt="图片"></p>
+<p>现在来看看我的storyboard中显示的内容。大家注意左侧的对象结构树中有很多个约束，但是有些是灰色的。那是因为这些灰色的约束在当前的size class下是禁用的，或者说不适用、不起作用。那些是竖屏时用到的约束。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-32.png" alt="图片"></p>
+<p>现在在storyboard中切换size class时布局也会随之变化，更新非常及时和平滑。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-33.gif" alt="图片"></p>
+<p>我们在模拟器中编译运行应用，切换横竖屏，可以看到布局切换的效果，过度非常自然平滑。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-1.gif" alt="图片"></p>
+<blockquote>
+<p>为了能让大家看清楚布局变化过度的细节，我放慢了这个git动画。大家注意，在布局变化时屏幕上的组件有一个层级关系，从该示例中我们可以看到图片view的层级高于个人信息label和评论label。所以我们在设计布局的时候就要考虑如何给view分层，包括在普通布局中不会被覆盖的view。这是一个细节问题。</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h3 id="u5C4F_u5E55_u9884_u89C8_u52A9_u624B_u7F16_u8F91_u5668"><a href="#u5C4F_u5E55_u9884_u89C8_u52A9_u624B_u7F16_u8F91_u5668" class="headerlink" title="屏幕预览助手编辑器"></a>屏幕预览助手编辑器</h3><p>Xcode6中另一个值得关注的功能是屏幕预览助手。它可以避免你一遍遍的在不同屏幕尺寸的模拟器中编译运行应用来检查布局的正确与否。你可以在屏幕预览编辑器中添加一个或多个你想查看的屏幕尺寸，并可以让他们呈现横屏或竖屏的状态。</p>
+<p>当然它也不是非常完美（因为在预览时导航栏的颜色会丢失），但是切换<em>Double Length Pseudolanguage</em>选项很方便，便于你检查问题。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-34.gif" alt="图片"></p>
+<p>从上图中大家可以看到我在屏幕预览编辑器中显示了3.5寸屏幕的横屏和4寸屏幕的竖屏，整体布局没有问题，但是当选择<em>Double Length Pseudolanguage</em>使label中的文字都增加一倍时，问题就出现了，个人信息和评论的label长度没有自适应。</p>
+<h3 id="u4E3AiPad_u5E03_u5C40_u6DFB_u52A0_u7EA6_u675F"><a href="#u4E3AiPad_u5E03_u5C40_u6DFB_u52A0_u7EA6_u675F" class="headerlink" title="为iPad布局添加约束"></a>为iPad布局添加约束</h3><p>现在我们将Sizae Classes调整为<strong>w Regular | h Regular</strong>，这个size class表示了iPad的横屏和竖屏大小。</p>
+<p>和往常一样，我们先调整图片和各个label的位置及大小，调整满意后，再添加相关的约束。在iPad布局中我打算将图片的尺寸设置为固定尺寸（不像iPhone中那样随着横屏和竖屏改变图片的尺寸），并将个人信息和评论label紧跟在图片下面。</p>
+<p>我的storyboard现在看起来是这样的：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-35.png" alt="图片"></p>
+<p>以往，我们都是在特定的size class中添加相关的约束，但在iPad布局中，我们不仅仅只添加一些约束。</p>
+<p>因为在iPad布局中有很大的空余空间，所以我们不只是重新排列一下组件的位置和大小，我们还要添加一些其他的组件。在这个示例中，我们再添加两个图片view（分别表示当前显示图片的上一张图片和下一张图片）。</p>
+<p>再来看看我的storyboard：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-36.png" alt="图片"></p>
+<p>我们不需要对这两个图片手动的设置高宽，而是给它们设置对于主显示图片的相对高宽即可。</p>
+<p>这样做的好处是当主显示图片的尺寸更改时，我们不需要自己手动计算和更改这两个图片的尺寸，相对高宽会自动针对主显示图片的尺寸调整这两个图片的尺寸。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-37.gif" alt="图片"></p>
+<p>我没有制作在iPad上运行的gif动画，但这里有iPad横屏竖屏的运行图片，大家可以看看：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-38.png" alt="图片"></p>
+<h2 id="u4F7F_u7528_u5E03_u5C40_u89C6_u56FE_u548C_u95F4_u8DDD_u89C6_u56FE"><a href="#u4F7F_u7528_u5E03_u5C40_u89C6_u56FE_u548C_u95F4_u8DDD_u89C6_u56FE" class="headerlink" title="使用布局视图和间距视图"></a>使用布局视图和间距视图</h2><p>目前Xcode提供的布局约束可以满足大部分的布局需求，但是有些场景下需要变通的使用约束才能达到我们想要的效果。</p>
+<h3 id="u5E03_u5C40_u89C6_u56FE_u793A_u4F8B"><a href="#u5E03_u5C40_u89C6_u56FE_u793A_u4F8B" class="headerlink" title="布局视图示例"></a>布局视图示例</h3><p>通过Xcode提供的约束，我们可以很容易设置组件与view controller view的边缘的间距，也可以很容易的让组件在view controller view中水平居中显示和垂直居中显示。但是却不太容易设置组件与view controller view的水平中线或垂直中线的间距。像这样：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-39.png" alt="图片"></p>
+<p>下面向大家介绍两种实现该需求的方法。首先我们先添加一个view，背景色设置为透明，让它在屏幕中垂直居中显示，它作为该需求中组件的父容器，因为父容器在屏幕中是垂直居中的，所以可以给组件添加相对于父容器的Center X约束，就可以达到我们的需求了：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-40.png" alt="图片"></p>
+<p>但是通过上述的方式未免会使我们的布局的层级关系太过复杂，我更希望布局比较扁平一些，不需要太多的层级关系。因为上述方法中的容器view主要是用于布局使用，所以这种view我称之为布局视图。</p>
+<p>我们来改进一下方法，首先也是在view controller view中添加一个布局视图，我习惯将高度设置为20（这个值随个人喜好或实际情况而定），然后将它和屏幕的顶部、左侧、右侧的间距设为0，这样的话这个布局视图就和状态栏重合了，我们将这个布局视图设置一个深一点的颜色，然后将它的<code>hidden</code>属性设置为<code>true</code>，这样布局视图的颜色就会变浅，也不太会影响我们的布局，而且在应用运行时是不会显示该视图的。现在我们的组件就可以设置相对于布局视图的Center X约束来实现我们的需求了。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-41.png" alt="图片"></p>
+<h3 id="u95F4_u9694_u89C6_u56FE_u793A_u4F8B"><a href="#u95F4_u9694_u89C6_u56FE_u793A_u4F8B" class="headerlink" title="间隔视图示例"></a>间隔视图示例</h3><p>之前我们学习了如何使用约束设置视图和视图边缘的间距，并且当屏幕尺寸增加时视图也会相应的改变大小，但它们的间距不会改变。</p>
+<p>但是如果我们希望当屏幕增加尺寸时，视图的大小保持不变，只是增加间距呢？</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-42.png" alt="图片"></p>
+<p>从理论上讲，实现该需求可能可以使用类似等宽这样的约束，但是现实往往的是骨干感的。</p>
+<p>这时我们就需要间距视图出场了，和布局视图一样，间距视图可以设置一个深一点的颜色，<code>hidden</code>属性要设置为<code>true</code>。</p>
+<p>我们在每个视图与视图间距之间添加一个间距视图，设置每个视图与相邻间距视图的边缘间距约束，然后给所有的间距视图添加相对于view controller view的等宽约束，设置合适的比例即可。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-43.png" alt="图片"></p>
+<p>原文地址：<a href="http://mathewsanders.com/designing-adaptive-layouts-for-iphone-6-plus" target="_blank" rel="external">ADAPTIVE LAYOUTS FOR iPHONE 6</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/adaptive-layout-for-iphone6-1/" itemprop="url">
+                  为iPhone6设计自适应布局（一）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2014-10-16T00:00:00+08:00" content="2014-10-16">
+              2014-10-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/adaptive-layout-for-iphone6-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/adaptive-layout-for-iphone6-1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<blockquote>
+<p>译者的话：<br>本文是自适应布局的巩固篇，所以对布局约束的添加操作步骤等没有详细的说明。如果看着吃力的话请先移步<a href="http://www.devtalking.com/articles/adaptive-layout-1/">Swift自适应布局（Adaptive Layout）教程</a>。</p>
+</blockquote>
+<p>Apple从iOS6加入了Auto Layout后开始就比较委婉的开始鼓励、建议开发者使用自适应布局，但是到目前为止，我感觉大多数开发者一直在回避这个问题，不管是不是由于历史原因造成的，至少他们在心底还坚守着固定布局的老传统思想。</p>
+<p>随着iPhone6、iPhone6 Plus的到来，使用自适应布局更是迫在眉睫的事，固定布局的老传统思想脆弱的不堪一击。现在的iPhone有4种尺寸，如果算上iPad，现在Apple的iOS设备有5种尺寸。我们在准备使用自适应布局设计应用界面之前，可以把这5种尺寸划分为3种分辨率和屏幕方向，这样在设计时分类会更加清晰一些。</p>
+<p>我们先来看一张自适应布局的效果图：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-1.gif" alt="图片"></p>
+<p>当你们学习完这篇文章后，你们应该会比较自如的使用 <em>storyboard</em>、<em>constaints</em>、<em>size classes</em> 这三个Apple在Xcode里提供的工具，去探索和构建巧妙的自适应布局。</p>
+<h2 id="Storyboards"><a href="#Storyboards" class="headerlink" title="Storyboards"></a>Storyboards</h2><p>在Xcode中，storyboard是一个可以让我们对应用界面进行可视化布局的工具，你首先可以在storyboard文件中看到一个或若干个iOS设备屏幕大小的布局区，然后你可以从组件库（Object Library）中拖拽组件到屏幕布局区中进行布局（比如按钮、图片、文本框、labels等），你还可以定义屏幕布局区之间的连接关系。</p>
+<p>用Xcode的术语来说，人们可以看到、触碰到或以其他方式（按钮、图片、文本框、labels等）进行交互的用户界面被称为<em>views</em>。屏幕中包含和管理这些views的容器称为<em>view controller</em>。</p>
+<p>当我们在storyboard中添加一个view controller后，我们所看到的并不是一个我们熟知的屏幕尺寸，而是一个600X600的正方形：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-2.png" alt="图片"></p>
+<p>从上图我们可以很明显的看出，storyboard中显示的屏幕尺寸不是实际设备的尺寸。Apple这样做的目的是将屏幕尺寸进行了抽象化，也就是说你可以将这个正方形的屏幕看成iphone4的屏幕，也可以将它看成iphone6的屏幕。</p>
+<h3 id="u6A21_u62DF_u5668_u7684_u5C3A_u5BF8"><a href="#u6A21_u62DF_u5668_u7684_u5C3A_u5BF8" class="headerlink" title="模拟器的尺寸"></a>模拟器的尺寸</h3><p>当你习惯了600X600的屏幕后，你可能会用着很爽，但是有些时候，我们也需要将它改成实际的屏幕尺寸来设计一些东西。</p>
+<p>我们可以很方便的在Xcode中改变view controller的模拟屏幕尺寸和屏幕方向：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-3.gif" alt="图片"></p>
+<h2 id="u5E03_u5C40_u7EA6_u675F"><a href="#u5E03_u5C40_u7EA6_u675F" class="headerlink" title="布局约束"></a>布局约束</h2><p>介绍布局约束的最好、最直观的方法就是向你们展示一个示例。</p>
+<p>首先我们将storyboard中的屏幕布局区域的尺寸调整为iphone5s的尺寸，也就是4寸屏幕，然后添加两个正方形的view，并排放置在屏幕顶部，一个设置为蓝色，一个设置为粉色。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-4.png" alt="图片"></p>
+<p>我们选择iPhone5s模拟器设备并编译运行应用，可以看到一蓝一粉这两个方块按照我们设定的那样杵在竖屏方向的屏幕上，没有问题。当我们把设备调整为横屏时，这两个方块像拥护党一样拥护着他们的坐标位置，所以在横屏的时候看着就不是那么完美：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-5.gif" alt="图片"></p>
+<p>我们再将模拟器改为iPhone6，然后编译运行，此时在竖屏的时候就已经感觉无法再爱了。这两个方块并没有按照我们设置或设想的那样在屏幕顶部中间，而是偏向了左边，在右边有一块留白区域。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-6.png" alt="图片"></p>
+<p>这是就是没有布局约束而导致的，蓝色粉色方块的大小、坐标位置都是固定的，都是在4寸屏幕的参照下设置的，不论在哪种尺寸的屏幕下，它们都在固定的那个坐标位置和固定的大小，所以就会出现上面的情况。</p>
+<p>那么接下来让我们给这两个方块添加一些布局约束，再看看会有什么神奇的事情发生。</p>
+<h3 id="u9875_u8FB9_u95F4_u8DDD_u7EA6_u675F_uFF08Leading_and_Trailing_space_uFF09"><a href="#u9875_u8FB9_u95F4_u8DDD_u7EA6_u675F_uFF08Leading_and_Trailing_space_uFF09" class="headerlink" title="页边间距约束（Leading and Trailing space）"></a>页边间距约束（Leading and Trailing space）</h3><p>页边间距约束分前部间距约束（Leading space constaint）和尾部间距约束（Trailing space constaint）。从屏幕上说就是左边距和右边距。我们给蓝色方块添加左边距约束，其值设置为10，给粉色方块设置右边距约束，其值也设置为10。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-7.png" alt="图片"></p>
+<p>我们再次在iPhone5s模拟器中运行应用，当横屏时蓝色方块被左边距约束拉到了屏幕左边，粉色方块被右边距约束拉到了屏幕右边。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-8.gif" alt="图片"></p>
+<h3 id="u6C34_u5E73_u95F4_u8DDD_u7EA6_u675F_uFF08Horizontal_space_constaint_uFF09"><a href="#u6C34_u5E73_u95F4_u8DDD_u7EA6_u675F_uFF08Horizontal_space_constaint_uFF09" class="headerlink" title="水平间距约束（Horizontal space constaint）"></a>水平间距约束（Horizontal space constaint）</h3><p>给蓝色方块和粉色方块添加水平间距约束，其值设置为10。这个约束会使这两个方块之间的距离永远约束为10。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-9.png" alt="图片"></p>
+<p>我们再来运行应用，现在横屏时两个方块之间的间距、它们与屏幕边缘的间距都和竖屏时显示的一样了。但是其中粉色方块为了满足水平间距约束自行增加了方块的宽度，变成了长方形。简直是一只老鼠坏了一锅汤有木有。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-10.gif" alt="图片"></p>
+<p>从上面这个效果我们可以得知，除非我们特别限制了view的尺寸，否则的话iOS会为满足布局约束而改变view的尺寸，也就是保持一个自然的尺寸。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h3 id="u7B49_u5BBD_u7EA6_u675F_uFF08Equal_widths_constaint_uFF09"><a href="#u7B49_u5BBD_u7EA6_u675F_uFF08Equal_widths_constaint_uFF09" class="headerlink" title="等宽约束（Equal widths constaint）"></a>等宽约束（Equal widths constaint）</h3><p>我们给这两个方块添加一个等宽约束来改善上面的情况。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-11.png" alt="图片"></p>
+<p>再次运行应用，现在在横屏时由于等宽约束的作用，两个方块的宽度保持了一致。我们已经非常接近完美了。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-12.gif" alt="图片"></p>
+<h3 id="u65B9_u5411_u6BD4_u4F8B_u7EA6_u675F_uFF08Aspect_ratio_constaint_uFF09"><a href="#u65B9_u5411_u6BD4_u4F8B_u7EA6_u675F_uFF08Aspect_ratio_constaint_uFF09" class="headerlink" title="方向比例约束（Aspect ratio constaint）"></a>方向比例约束（Aspect ratio constaint）</h3><p>从上面的运行情况来看各个约束都工作正常，但唯一不足的是本来在竖屏是两个正方形方块，在横屏时缺变成了长方形方块，由范爷变成了凤姐这是人类无法接受的。</p>
+<p>我们给这两个方块添加方向比例约束来解决这个问题。这个约束使方块在满足其他约束的前提下始终保持高和宽的比例相同。所以在横屏时就会以方块的宽度为比例标准，将高度的比例改为宽度的比例。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-13.png" alt="图片"></p>
+<p>用iPhone5s模拟器编译运行应用，现在在横屏状态下两个正方形方块完美的呈现在我们眼前。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-14.gif" alt="图片"></p>
+<p>我们在iPhone6模拟器上再编译运行应用，从下面的图中我们可以很清晰的看到添加约束之前和之后的变化。布局约束根据多出的空间大小将方块放大到合适的尺寸以满足约束。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-15.png" alt="图片"></p>
+<h3 id="u5B9E_u8DF5_u5E03_u5C40_u7EA6_u675F"><a href="#u5B9E_u8DF5_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="实践布局约束"></a>实践布局约束</h3><p>到目前为止，你们已经看到布局约束神奇的作用和效果。是时候让你们在你们自己的storyboard文件中添加布局约束了。</p>
+<p>熟练布局约束最好的方法就是多练习，从添加少量的布局约束开始，一步步达到自己想要的效果。</p>
+<p>另外有一点，我始终不认为添加过多的布局约束会对应用的性能产生影响。但是我们也不能滥用约束布局，好钢要用在刀刃上，我们尽可能用最节俭的约束布局达到我们想要的效果。</p>
+<h3 id="u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F_u7684_u65B9_u5F0F"><a href="#u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F_u7684_u65B9_u5F0F" class="headerlink" title="添加布局约束的方式"></a>添加布局约束的方式</h3><p>这里向大家介绍三种在storyboard中添加约束的方式：</p>
+<h4 id="1-_u5E95_u90E8_u5E03_u5C40_u7EA6_u675F_u6309_u94AE"><a href="#1-_u5E95_u90E8_u5E03_u5C40_u7EA6_u675F_u6309_u94AE" class="headerlink" title="1.底部布局约束按钮"></a>1.底部布局约束按钮</h4><p>这种方式可能是最简单直观的一种方式，在屏幕上选择一个或多个对象，然后点击底部的布局约束按钮添加一个或多个需要的约束。它的好处是可以直观的看到当前选择的对象已经添加了该类中的那些约束。</p>
+<p>如果你指选择了一个对象想要添加某个约束，但发现该约束是不可选的，那么就意味着这个约束是适用于两个以上对象的约束。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-16.gif" alt="图片"></p>
+<h4 id="2-_u6309_u4F4FControl_u952E_u62D6_u62FD_u9F20_u6807"><a href="#2-_u6309_u4F4FControl_u952E_u62D6_u62FD_u9F20_u6807" class="headerlink" title="2.按住Control键拖拽鼠标"></a>2.按住Control键拖拽鼠标</h4><p>你也可以选择一个对象，然后按住Control键和鼠标左键，拖拽鼠标到另一个对象（容器对象，也就是父对象或者选中对象自己），松开鼠标后会弹出适用的约束菜单，你可以选择约束进行添加。</p>
+<p>这是我偏爱的一种方式，因为它比上面那种方式来的快多了。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-17.gif" alt="图片"></p>
+<h4 id="3-_u83DC_u5355/_u7ED1_u5B9A_u5FEB_u6377_u952E"><a href="#3-_u83DC_u5355/_u7ED1_u5B9A_u5FEB_u6377_u952E" class="headerlink" title="3.菜单/绑定快捷键"></a>3.菜单/绑定快捷键</h4><p>你也可以通过菜单选项<code>editor —&gt; pin</code>给一个或多个对象添加布局约束。这是效率最低的一种方式。如果你发现有些约束你会一遍遍的反复添加，那么你就可以给该约束绑定一个快捷键来提高效率。</p>
+<h3 id="u68C0_u67E5_u548C_u7F16_u8F91_u5DF2_u6DFB_u52A0_u7684_u5E03_u5C40_u7EA6_u675F"><a href="#u68C0_u67E5_u548C_u7F16_u8F91_u5DF2_u6DFB_u52A0_u7684_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="检查和编辑已添加的布局约束"></a>检查和编辑已添加的布局约束</h3><p>检查约束最简单的方式就是选中一个对象，然后打开右侧工具栏，选择Size Inspector面板。或者在storyboard界面左侧的结构树中查看约束。</p>
+<p>通过这两种方式，你都可以选择某个约束，然后编辑它。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-18.gif" alt="图片"></p>
+<h3 id="u79FB_u9664_u5E03_u5C40_u7EA6_u675F"><a href="#u79FB_u9664_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="移除布局约束"></a>移除布局约束</h3><p>布局约束可以添加自然也就可以删除。选中某个约束使其高亮显示，然后按下Delete键移除该约束。</p>
+<p>如果想移除某个对象上所有的约束，有一个快捷的方式。选择该对象，然后在底部点击Resolve Auto Layout Issues按钮，选择Clear Constaints。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-19.gif" alt="图片"></p>
+<h3 id="u5E03_u5C40_u51FA_u73B0_u7684_u95EE_u9898_u548C_u51B2_u7A81"><a href="#u5E03_u5C40_u51FA_u73B0_u7684_u95EE_u9898_u548C_u51B2_u7A81" class="headerlink" title="布局出现的问题和冲突"></a>布局出现的问题和冲突</h3><p>我们在添加约束时，经常伴随有警告或者错误出现。虽然有些警告是因为我们还没有添加完约束出现的，当我们添加完我们设想的约束后警告就会自然消失。但大多数的警告还是指明我们的约束确实存在问题，需要我们修复。</p>
+<p>查看警告或错误最方便的方式就是在storyboard左侧的结构树中，在view controller的右边会出现一个红色或黄色的小图标，向我们指明这里存在问题：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-20.gif" alt="图片"></p>
+<h3 id="u9519_u8BEF_u6446_u653Eview_u7684_u8B66_u544A"><a href="#u9519_u8BEF_u6446_u653Eview_u7684_u8B66_u544A" class="headerlink" title="错误摆放view的警告"></a>错误摆放view的警告</h3><p>view位置的错误摆放是一个很常见的警告。当一个view没有摆放在约束规定的位置的时候，会出现该警告。</p>
+<p>这些问题会在你切换不同设备的模拟器或鼠标不小心移动了某个对象时出现。</p>
+<p>选中一个错误摆放的对象，在屏幕上会出现布局约束给你提示的正确的摆放位置。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-21.gif" alt="图片"></p>
+<p>点击左侧出现的黄色警告图片，会弹出一个菜单，你可以选择让Xcode改变约束，以适应当前该对象的位置，但通常情况下我们都选择让Xcode将该对象移动到约束规定的位置。</p>
+<h3 id="u7F3A_u5C11_u5E03_u5C40_u7EA6_u675F_u7684_u9519_u8BEF"><a href="#u7F3A_u5C11_u5E03_u5C40_u7EA6_u675F_u7684_u9519_u8BEF" class="headerlink" title="缺少布局约束的错误"></a>缺少布局约束的错误</h3><p>我们回到早些时候的示例中。这时候我们没有给方块添加Y坐标位置的约束。在运行时没有问题，因为iOS会假设方块的位置就是我们在storyboard中摆放的那个位置。但是Xcode会提示我们一个缺失约束的错误，为了避免意外发生（更换设备尺寸），我还是要根据Xcode的提示添加缺失的约束。</p>
+<p>我们给这两个方块添加一个<em>top space to to layout guide</em>约束使方块的位置更加清晰，并消除Xcode的错误提示。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-22.gif" alt="图片"></p>
+<p>未完待续……</p>
+<p>原文地址：<a href="http://mathewsanders.com/designing-adaptive-layouts-for-iphone-6-plus" target="_blank" rel="external">ADAPTIVE LAYOUTS FOR iPHONE 6</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/adaptive-layout-2/" itemprop="url">
+                  Swift自适应布局（Adaptive Layout）教程（二）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2014-10-13T00:00:00+08:00" content="2014-10-13">
+              2014-10-13
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/adaptive-layout-2/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/adaptive-layout-2/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2 id="u7ED9TextContainer_u4E2D_u6DFB_u52A0_u5185_u5BB9"><a href="#u7ED9TextContainer_u4E2D_u6DFB_u52A0_u5185_u5BB9" class="headerlink" title="给TextContainer中添加内容"></a>给TextContainer中添加内容</h2><p>打开 <strong>Main.storyboard</strong> ，从组件库（Object Library）中拖拽两个 <strong>Label</strong> 组件到TextContainer中，位置可以随意摆放：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-35.png" alt="图片"></p>
+<p>先选择靠上的Label，然后点击底部的 <strong>Align</strong> 按钮，添加一个 <strong>Horizontal Center in Container</strong> 约束，再点击 <strong>Pin</strong> 按钮，添加一个 <strong>Top Spacing to nearest neighbor</strong> 约束，设置其值为10：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-36.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/adaptive-layout-37.png" alt="图片"></p>
+<p>然后选择右侧工具栏中的 <strong>Attribute Inspector</strong> 页签，将该Label的 <strong>Text</strong> 属性设置为 <strong>Cupertino</strong> ，<strong>Color</strong> 属性设置为 <strong>White</strong> ，<strong>Font</strong> 属性设置为 <strong>Helvetica Neue, Thin</strong> ， <strong>Size</strong> 属性设置为 <strong>150</strong>。</p>
+<p>这时同学们可能会发现基本看不到刚才设置的文字的全貌，这是因为Label大小的原因。别着急，我们很快就会解决这个问题。</p>
+<p>现在选择另一个Label，按照上述的方法给它也添加一个 <strong>Horizontal Center in Container</strong> 约束以及一个 **Bottom Spacing<br>to nearest neighbor** 约束，将其值设置为10。打开右侧工具栏中的 <strong>Size Inspector</strong> 看看：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-38.png" alt="图片"></p>
+<p>然后选择 <strong>Attribute Inspector</strong> 将该Label的 <strong>Text</strong> 属性设置为 <strong>28C</strong> ， <strong>Color</strong> 属性设置为 <strong>White</strong>， 将 <strong>Font</strong> 属性设置为 <strong>Helvetica Neue, Thin</strong>， 将 <strong>Size</strong> 属性设置为 <strong>250</strong>。</p>
+<p>现在是时候解决Label大小的问题了。选中view controller的view，点击底部的 <strong>Resolve Auto Layout Issues</strong> 按钮，在弹出菜单中选择 <strong>All Views\Update Frames</strong> ，现在看看<code>storyboard</code>中发生了什么：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-39.png" alt="图片"></p>
+<p>我们看到了刚才设置的城市和温度，但是他们有一点点重叠，这可不是我们想要的结果。在我们修改这个问题之前，先看看预览编辑区的显示情况。我们发现在iPad下显示貌似还挺完美：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-40.png" alt="图片"></p>
+<p>但是在iPhone下不出所料的无法直视，字体太大了：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-41.png" alt="图片"></p>
+<p>接下来让我们解决这个重叠和字体大小的问题。</p>
+<h2 id="Size_Classes"><a href="#Size_Classes" class="headerlink" title="Size Classes"></a>Size Classes</h2><p>通用的<code>storyboard</code>文件固然很好，但是你想真正把它玩转还是得花功夫去研究它，这是一件很有挑战性的工作，当然我们也要懂得运用一些现有的工具来帮助我们。Xcode6就为我们提供了一些工具和技巧，帮助我们更好的实现自适应布局。</p>
+<p>自适应布局有一个很重要的概念就是 <strong>Size Classes</strong>。它并不代表真正的尺寸，而是我们从感官上感觉尺寸的种类，通过这种种类的组合，表示出不同屏幕尺寸设备的横屏及竖屏。</p>
+<p>Xcode6为我们提供了两个种类：普通（<strong>Regular</strong>）和紧凑（<strong>Compact</strong>）。虽然它们涉及到视图的物理尺寸，但一般它们只代表视图的语义尺寸，即不是真正的尺寸，而是我们从感官上分出的尺寸种类。</p>
+<p>下面这个表格向同学们展示了size classes和各个尺寸设备竖屏、横屏之间的关系：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-42.png" alt="图片"></p>
+<p>上表中的这些size classes组合都是我们在开发应用中经常碰到的。然而你也可以在视图的任何一个层级中覆盖这些size classes。当以后我们开发Apple Watch应用时显得尤其有用。</p>
+<h2 id="Size_Classes_u4E0E_u5F00_u53D1_u8005"><a href="#Size_Classes_u4E0E_u5F00_u53D1_u8005" class="headerlink" title="Size Classes与开发者"></a>Size Classes与开发者</h2><p>何为设计应用的UI？虽然现在你们的应用已经知道要使用Size Classes，并且你们在<code>storyboard</code>文件中设计应用界面时已经抛开了具体尺寸大小的束缚。但是你们难道没有发现在所有尺寸的设备中，不管是竖屏还是横屏，应用的界面布局都是一致的吗？只是自适应了尺寸大小而已。这还远远不是设计。</p>
+<p>当你们决心要设计自适应的界面并已经开始设计的时候，有一点很关键。那就是要知道界面在不同的Size Classes要有继承的关系。你们应该首先设计一个基础的界面，然后根据不同尺寸的横竖屏在基础的界面上进行自定义。千万不要把不同的Size Classes当做独立的屏幕尺寸去设计UI。应该在你们的脑海中建立起界面的一个继承关系的思想，也就是大多数的设备使用基础界面，然后特别的尺寸及横竖屏再根据情况基于基础界面修改。</p>
+<p>在本文中，一直没有像大家介绍过如何设置特殊设备的布局，那是应为自适应布局的核心概念Size Classes本身就是由各种特殊设备的特点抽象而来的。也就是说一个Size Classes就意味着一种特殊设备的布局特点，其实普通情况也是特殊情况中的一种。所以说我们可以组合不同的Size Classes来满足各种特殊的布局情况，比如一个支持自适应的视图，它可以在应用的父视图控制器中自适应，也可以在某一个功能的视图控制器容器中自适应。但是两者自适应后的布局却不相同。</p>
+<p>这种改进对Apple本身也是有益的，因为他们不断的改变移动设备的尺寸，但从来没有强迫开发者和设计者重新开发和设计他们的应用以适应新尺寸的设备。这就不会让开发者和设计者对Apple不断改变设备尺寸这件事有抗拒心理。</p>
+<p>接下来，我们将自定义Size Classes以适应iPhone横屏的时候，因为现在的布局在横屏时用户体验很糟糕。</p>
+<h2 id="u4F7F_u7528Size_Classes"><a href="#u4F7F_u7528Size_Classes" class="headerlink" title="使用Size Classes"></a>使用Size Classes</h2><p>回到 <strong>Main.storyboard</strong>，点击底部的 <strong>w Any h Any</strong>，你就可以看到Size Classes的选择器了：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-43.png" alt="图片"></p>
+<p>在这个由9个方格组成的网格中，你就可以选择你想在<code>storyboard</code>中显示的Size Class。一共有9种组合方式：3种垂直的也就是竖屏的（任意尺寸（Any），普通（regular），紧凑（compact））选择和3种水平的也就是横屏（任意尺寸（Any），普通（regular），紧凑（compact））的选择。</p>
+<blockquote>
+<p>注意：这里有一点需要大家注意。在Size Classes中，有两个重要的概念叫做<em>水平（Horizontal）</em>和<em>垂直（Vertical）</em>。但是在IB中叫做 <em>宽（Width）</em>和<em>高（Height）</em>。但他们是等价的，所以大家记住这个概念有两种叫法就可以了。</p>
+</blockquote>
+<p>目前我们的布局在紧凑高度（Compact Height）时显示的很糟糕，也就是iPhone横屏时。我们来解决这个问题，在Size Classes选择器中选择 <strong>Any Width | Compact Height</strong> 的组合：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-44.png" alt="图片"></p>
+<p>这时你会发现在<code>storyboard</code>中会立即出现2个变化：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-45.png" alt="图片"></p>
 <ol>
-<li>全局函数是一个有名字但不会捕获任何值的闭包。  </li>
-<li>嵌套函数是一个有名字并可以捕获到其封闭函数域内的值的闭包。  </li>
-<li>闭包表达式是一个利用轻量级语法所写的，可以捕获其上下文中变量或常量值的匿名闭包。</li>
+<li><code>storyboard</code>中的view controller变成了我们刚才设置的size class。</li>
+<li><code>storyboard</code>底部会出现蓝色的长条区域，并显示出当前我们正在使用的size class。</li>
 </ol>
+<p>为了在该size class下改变布局，我们要临时改变一些之前设置好的约束。在自动布局中这种操作有个术语叫做 <strong>装配（installing）</strong> 和 <strong>卸载（uninstalling）</strong> 约束。当一个约束在当前的size class中是适用的，我们就将该约束装配在当前的size class中，如果不适用，我们就卸载它。</p>
+<p>选择image view，在右侧工具栏中选择 <strong>Size Inspector</strong>。你可以看到在image view上添加的所有约束：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-46.png" alt="图片"></p>
+<p>单击鼠标左键选择 <strong>Align Center X to: Superview</strong> 约束，然后按下键盘上的 <strong>Delete</strong> 键来卸载该约束。这时我们可以看到在<code>storyboard</code>中这个约束就立即消失了，并且在<code>storyboard</code>的结构目中和 Size Inspector中该约束都变成了灰色：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-47.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/adaptive-layout-48.png" alt="图片"></p>
+<blockquote>
+<p>注意：你可以在Size Inspector中点击 <strong>All</strong> 来查看当前size class卸载掉的约束。</p>
 </blockquote>
-<p>今天，我们要讨论的是第三种形式，尤其讨论它是如何将繁复的、可读性比较差的业务逻辑代码压缩成高可读性、简明明了的形式。</p>
-<p>大家还记得数组的<code>map</code>方法么？它的参数就是一个闭包，它会将数组里的每一个元素放在闭包中进行处理，然后返回一个新的数组，甚至是与原数组不同元素类型的新数组。</p>
-<p><code>map</code>函数的原型如下：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">map</span><span class="generics">&lt;U&gt;</span><span class="params">(transform: <span class="params">(T)</span></span></span> -&gt; <span class="type">U</span>) -&gt; [<span class="type">U</span>]</span><br></pre></td></tr></table></figure>
-<p>我们可以看到该函数使用了泛型。<code>(T) -&gt; U</code>是一个泛型闭包，它的意思就是类型<code>T</code>将会在闭包中进行逻辑处理，然后返回<code>U</code>类型。最后<code>map</code>函数会返回一个<code>U</code>类型的数组。</p>
-<p>用一个例子来说明。今天我办生日聚会，要迎接很多人，并且为每个人都准备了一句欢迎词。我们要怎么做呢？首先我们将迎接的人放进一个数组名叫<code>guestList</code>，然后用一个名叫<code>greetPeople</code>的函数为每个人生成欢迎词：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">greetPeople</span><span class="params">(person: String)</span></span> -&gt; <span class="type">String</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> guestList = [<span class="string">"Chris"</span>, <span class="string">"Jill"</span>, <span class="string">"Tim"</span>]</span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(greetPeople)</span><br></pre></td></tr></table></figure>
-<p>然后将<code>greetPeople</code>函数作为<code>guestList</code>数组的<code>map</code>函数的参数传入，并返回一个新的数组<code>fullGreetings</code>，这个数组就包含了每个人的欢迎词。</p>
-<p>如果我们想展示一下每个人的欢迎词，我们甚至可以这样写：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">fullGreetings.<span class="built_in">map</span>(<span class="built_in">println</span>)</span><br></pre></td></tr></table></figure>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -337,24 +874,61 @@
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
-<p>这时也许有人要质疑了，<code>println</code>函数不是没有返回值么？那么<code>map</code>函数会返回什么呢？其实每一个没有返回值的函数，都会返回一个空的元组（<code>tuple</code>），所以说上述代码的返回值其实是<code>Array&lt;()&gt;</code>。</p>
-<p>上面的例子中我们就是将一个全局函数<code>greetPeople</code>作为一个闭包来使用的。</p>
-<h2 id="u7B80_u660E_u627C_u8981_u7684_u95ED_u5305_u8868_u8FBE_u5F0F"><a href="#u7B80_u660E_u627C_u8981_u7684_u95ED_u5305_u8868_u8FBE_u5F0F" class="headerlink" title="简明扼要的闭包表达式"></a>简明扼要的闭包表达式</h2><p>其实Swift已经为我们提供了很多简化的语法，可以让我们保证代码的高可读性和维护性。还用上面的例子来说明，对于<code>greetPeople</code>这个全局函数来说，其实只需要使用一次，所以我们没必要单独定义这个函数。我们可以直接使用闭包表达式来处理：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123;(person: <span class="type">String</span>) -&gt; <span class="type">String</span> <span class="keyword">in</span> <span class="keyword">return</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span>&#125;)</span><br></pre></td></tr></table></figure>
-<p>闭包表达式其实是函数的字面值，官方一般称之为匿名函数。一般当我们需要使用函数快速的实现一个简短的处理逻辑并且只使用一次的时候，我们可以省去函数名，使用简化的语法。上面的代码中可以看到关键字<code>in</code>之前是闭包表达式的参数和返回值，<code>in</code>之后是闭包表达式实际处理逻辑的代码区域。</p>
-<p>下面我们将使用Swift更多的特性来进一步简化闭包表达式。</p>
-<p>我们知道Swift中有类型推断的特性，所以我们可以取掉参数类型：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123;(person) -&gt; <span class="type">String</span> <span class="keyword">in</span> <span class="keyword">return</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span> &#125;)</span><br></pre></td></tr></table></figure>
-<p>像我们示例中的这种单一闭包表达式，编译器可以根据<code>in</code>之前的返回值类型和<code>return</code>之后的返回数据类型自动判断，所以我们可以省略返回值和<code>return</code>关键字：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123;person <span class="keyword">in</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span> &#125;)</span><br></pre></td></tr></table></figure>
-<p>其实在Swift中还提供了参数的简写方式：<code>$0</code>代表第一个参数、<code>$1</code>代表第二个参数以此类推。所以我们又可以将参数名称省略：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123; <span class="string">"Hello, <span class="subst">\($<span class="number">0</span>)</span>!"</span> &#125;)</span><br></pre></td></tr></table></figure>
-<p>当函数的最后一个参数是闭包时，可以将闭包写在<code>()</code>之外，这也是Swift的一个特性，所以我们还可以继续简化：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>()&#123; <span class="string">"Hello, <span class="subst">\($<span class="number">0</span>)</span>!"</span> &#125;</span><br></pre></td></tr></table></figure>
-<p>当函数有且仅有一个参数，并该参数是闭包时，不但可以将闭包写在<code>()</code>外，还可以省略<code>()</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>&#123; <span class="string">"Hello, <span class="subst">\($<span class="number">0</span>)</span>!"</span> &#125;</span><br></pre></td></tr></table></figure>
-<p>到目前为止，示例中的闭包表达式已经被我们根据Swift的特性，简化为简明扼要、高可读性的闭包表达式了，是不是很酷呢！</p>
-<p>参考原文：<a href="http://www.codingexplorer.com/closure-expressions-swift/?utm_source=feedly&amp;utm_reader=feedly&amp;utm_medium=rss&amp;utm_campaign=closure-expressions-swift" target="_blank" rel="external">Closure Expressions in Swift</a></p>
+<p>鼠标双击刚才卸载的那条约束，我们可以看到在约束编辑界面的底部出现了额外的2个选项：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-49.png" alt="图片"></p>
+<p>这两个选项的意思就是这条约束在基础布局中是可用的，但在当前的 <strong>Any Width | Compact Height</strong> 布局中是不可用的。  </p>
+<p>按照上面的步骤卸载掉image view上的另外3个约束：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-50.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/adaptive-layout-51.png" alt="图片"></p>
+<p>现在你就可以添加适合当前size class的约束了。我们添加一个 <strong>Align/Vertical Center in Container</strong> 约束，再添加一个 <strong>Pin/Left Spacing to nearest neighbor</strong> 约束，其值设置为10：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-52.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/adaptive-layout-53.png" alt="图片"></p>
+<p>选择image view，按住 <strong>Ctrl</strong> 键从image view上拖拽至view controller的view上，在弹出的菜单中选择 <strong>Equal Widths</strong> 约束。</p>
+<p>打开右侧工具栏中的 <strong>Size Inspector</strong> 页签，双击 <strong>Equal Width to: Superview</strong> 打开该约束的属性编辑界面。如果 <strong>First Item</strong> 属性的值不是 <strong>cloud.Width</strong> ，那么点击输入框，在下拉菜单中选择 <strong>Reverse First and Second Item</strong>。然后将 <strong>Multiplier</strong> 属性的值设置为 <strong>0.45</strong>。</p>
+<p>现在image view在所有的size class中显示应该都没有什么问题了。但是text container view还有点问题。你需要给它添加一个约束，让它显示在该size class屏幕的右侧。</p>
+<p><code>TextContainer</code> view现在有两种约束在身。一种是内部约束，它约束了两个Label的位置，这些约束在各size class中表现的还不错。另一种是外部的约束，它们限制了text container view的左、右、底部与它容器的左、右、底部的间距。这些约束在当前的size class中表现的就不尽如人意了。如果想使text container view在当前size class中位于容器的右下角位置，你得卸载掉左侧的约束。</p>
+<p>选中 <strong>Left Spacing to nearest neighbor</strong> 约束：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-54.png" alt="图片"></p>
+<p>按 <strong>Cmd-Delete</strong> 卸载该约束，和之前一样，被卸载的约束显示为灰色。</p>
+<p>现在你需要再添加两个约束将TextContainer限制在正确的位置上。一个是让text container view的宽度为它容器（view controller的view）宽度的一半。另一个是将text container view固定在顶部。</p>
+<p>按理来说，你现在需要选中text container view然后按住Ctrl键和鼠标左键拖动鼠标到view controller view上，然后选择约束。但是目前的情况由于image view和text container view占满了整个view controller，所以你很难选中view controller的view。同学们可以通过<code>storyboard</code>的结构树上进行该操作，会容易很多。</p>
+<p>在结构树中选中TextContainer，按住 <strong>Ctrl</strong> 键和鼠标左键，拖动鼠标到结构树的View上：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-55.png" alt="图片"></p>
+<p>弹出菜单中显示了可用的约束，按住 <strong>Shift</strong> 键点击 <strong>Top Space to Top Layout Guide</strong> 和 <strong>Equal Widths</strong> 约束：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-56.png" alt="图片"></p>
+<p>然后选中TextContainer，在 <strong>Size Inspector</strong> 中设置刚刚添加的两个约束：</p>
+<ul>
+<li>将 **Top Space to: Top Layout Guide ** 约束的值设置为0。</li>
+<li>将 <strong>Equal Width</strong> 约束的 <strong>Multiplier</strong> 的值设置为0.5。这里要注意 <strong>First Item</strong> 和 <strong>Second Item</strong> 这两个属性的值。前者应为TextContainer view，后者为view controller view。如果不一致，那么点击任意一个输入框，选择 <strong>Reverse First and Second Item</strong>。</li>
+</ul>
+<p>现在点击<code>storyboard</code>界面底部的 <strong>Resolve Auto Layout Issues</strong> 按钮，然后选择 <strong>All Views\Update frames</strong> 。看看发生了什么变化呢：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-57.png" alt="图片"></p>
+<p>到目前为止，我们的布局已经越来越接近完美了，唯一一点不足的就是字体大小的自适应，我们会在下一节解决它！</p>
+<h2 id="u6587_u5B57_u5C5E_u6027_u7684_u81EA_u9002_u5E94"><a href="#u6587_u5B57_u5C5E_u6027_u7684_u81EA_u9002_u5E94" class="headerlink" title="文字属性的自适应"></a>文字属性的自适应</h2><p>目前TextContainer中的文字尺寸在iPad设备上，也就是使用普通（Regular）size class显示还比较正常。但是当使用紧凑（Compact）size class时文字尺寸就显得太大了，以至于都超出了视图。不过同学们不要怕，我们照样可以在不同的Size Classes中设置不同的文字尺寸来做到自适应。</p>
+<blockquote>
+<p>注意：与重写布局不同，在不同的size class中改变文字的属性始终会影响基础布局中的文字。它不能像布局一样，在不同的size class中设置不同的属性值。我们通过下面的方法来解决这一问题。</p>
+</blockquote>
+<p>回到<code>storyboard</code>文件中，将目前的size class改为最基础的 <strong>Any Width | Any Height</strong> 。</p>
+<p>选择显示Cupertino的Label，打开 <strong>Attribute Inspector</strong> 。点击 <strong>Font</strong> 属性前面的 <strong>+</strong> 号：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-58.png" alt="图片"></p>
+<p>弹出的菜单内容是让我们选择一种size class的组合来重写该组合下的文字属性。我们选择 <strong>Compact Width > Any Height</strong>：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-59.png" alt="图片"></p>
+<p>这时就会出现另外一个文字属性下拉框，针对于我们刚才选择的 <strong>Compact Width | Any Height</strong> size class，我们将字体大小改为90：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-60.png" alt="图片"></p>
+<p>再选择显示温度的Label，重复刚才的操作，选择size class组合时选择 <strong>Compact Width > Any Height</strong>。设置字体大小为150。</p>
+<p>在预览区域会自动更新我们刚才的设置：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-61.png" alt="图片"></p>
+<p>现在看起来稍微好一些了，但是显示 <strong>Cupertino</strong> 的Label被截掉了两头。同学们可能会继续调整字体大小使Cupertino显示完全，虽然目前看起来完美了，但是当换一个城市名称后或许又会出现刚才的问题。比如Washington, D.C这么长的名称，又比如Kleinfeltersville, PA这个更长的名称。那么我们应该如何设计呢？</p>
+<p>我们的救世主 <strong>自动布局（Auto Layout）</strong> 再次出马。你只需要给显示城市名称和温度的这两个Label设置一个相对于TextContainer view的宽度约束即可。选中显示Cupertino的Label，按住 <strong>Ctrl</strong> 键和鼠标左键，拖动鼠标到TextContainer view，在弹出菜单中选择 <strong>Equal Widths</strong> 约束。对显示温度的Label做相同的操作。之后在预览界面看看发生了什么：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-62.png" alt="图片"></p>
+<p>呃……貌似还是有问题，城市名显示不完全。Label中的文字长度超出了允许显示的空间。不过我们可以通过一个选项，让Label自动判断当前的空间可以显示多大的字体。</p>
+<p>选择显示Cupertino的Label，然后打开 <strong>Attribute Inspector</strong>。将 <strong>AutoShrink</strong> 属性设置为 <strong>Minimum font scale</strong>，将其值设置为0.5。将 <strong>Alignment</strong> 属性设置为 <strong>Centered</strong>：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-63.png" alt="图片"></p>
+<p>对显示温度的Label做相同的操作。</p>
+<p>再来看看预览区域，是不是在不同尺寸的iPhone横屏、竖屏下显示都比较完美了：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-64.png" alt="图片"></p>
+<p>是时候在不同的设备上编译运行我们的程序了。用设备来检验才是最保险的。iPhone下的横屏、竖屏是多么的完美：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-65.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/adaptive-layout-66.png" alt="图片"></p>
+<p>同学们，至此你们已经学习到了自适应布局最基本的技能。恭喜你们！</p>
+<p>原文地址：<a href="http://www.raywenderlich.com/83276/beginning-adaptive-layout-tutorial" target="_blank" rel="external">Beginning Adaptive Layout Tutorial</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -399,8 +973,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/optionals-case-study/" itemprop="url">
-                  Swift中Optional类型的使用案例分析：valuesForKeys
+                <a class="post-title-link" href="/articles/adaptive-layout-1/" itemprop="url">
+                  Swift自适应布局（Adaptive Layout）教程（一）
                 </a>
               
             
@@ -410,8 +984,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-08-29T00:00:00+08:00" content="2014-08-29">
-              2014-08-29
+            <time itemprop="dateCreated" datetime="2014-10-11T00:00:00+08:00" content="2014-10-11">
+              2014-10-11
             </time>
           </span>
 
@@ -436,8 +1010,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/optionals-case-study/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/optionals-case-study/" itemprop="commentsCount"></span>
+              <a href="/articles/adaptive-layout-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/adaptive-layout-1/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -466,32 +1040,75 @@
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
-
-<p>这篇文章将带我们探索在Swift中如何使用<code>Optional</code>类型保证强类型的安全性。我们将创建一个Swift版本的Objective-C的API。虽然在Swift中这个API存在的意义不是很大，但是这将会是一个很有趣的例子。</p>
-<p>在Objective-C中，<code>NSDictionary</code>类有一个方法，名为<code>-objectsForKeys:notFoundMarker:</code>，它的作用是根据第一个<code>NSArray</code>类型参数中的值作为该字典的key，查找这些key对应的字典中的值，并放到一个新的<code>NSArray</code>中返回，如果找不到对应的值，那么就返回第二个参数指定的对象。在官方文档中对该方法有这么一句描述“返回的数组中的第N个对象，对应着第一个数组参数中的第N个值”。假如说以第一个数组参数中的第三个值作为key在字典中查不到值怎么办呢？这时候就需要<code>notFoundMarker</code>参数登场了。这种情况下就会返回<code>notFoundMarker</code>参数指定的对象了。在<code>Foundation</code>框架中还有专门针对该情况适用的一个类，那就是<code>NSNull</code>，就是当你也没有备选返回对象的时候，就可以返回<code>NSNull</code>对象。</p>
-<p>在Swift中，<code>Dictionary</code>类型并没有类似<code>objectsForKeys</code>的方法。所以接下来的练习中，我们将使用类型的扩展机制为<code>Dictionary</code>类型添加一个类似<code>objectsForKeys</code>的方法，为保持Swift的风格我们起名为<code>valuesForKeys:notFoundMarker:</code>。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [K], notFoundMarker: V)</span></span> -&gt; [<span class="type">V</span>] &#123;</span><br><span class="line">        <span class="comment">// To be implemented</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在Swift中实现该方法与Objective-C有点不同，因为Swift中强类型的特性使返回的数组中只能包含某一种类型的元素，也就是说我们不能在一个字符串数组中添加一个<code>NSNull</code>类型的元素，这就使<code>notFoundMarker</code>的参数类型显得非常尴尬。这怎么解决呢？别着急，在Swift中我们有更好的选择：我们可以返回一个<code>Optional</code>类型的数组。从<code>Dictionary</code>中查出的值全部被包在<code>Optional</code>类型中，这样当使用的key没有对应值的时候，我们就可以使用<code>nil</code>来替代<code>NSNull</code>类型了。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key])</span></span> -&gt; [<span class="type">Value</span>?] &#123;</span><br><span class="line">        <span class="keyword">var</span> result = [<span class="type">Value</span>?]()</span><br><span class="line">        result.reserveCapacity(keys.<span class="built_in">count</span>)</span><br><span class="line">        <span class="keyword">for</span> key <span class="keyword">in</span> keys &#123;</span><br><span class="line">            result.append(<span class="keyword">self</span>[key])</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>注意：此时可能已经有人认为<code>Dictionary</code>类型中的这个方法可能没必要写的这么繁琐，你们可能已经想到了这种情形：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key])</span></span> -&gt; [<span class="type">Value</span>?] &#123;</span><br><span class="line">        <span class="keyword">return</span> keys.<span class="built_in">map</span> &#123; <span class="keyword">self</span>[$<span class="number">0</span>] &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这段代码和上面那段代码的作用和结果是完全一样的，当<code>keys</code>调用<code>map</code>方法时，其实已经将查出的所有值都包在了<code>Optional</code>类型中了。这就足以说明了为什么Swift中类型的API都那么短小精干，因为实现复杂逻辑就像上述代码中直接调用<code>map</code>方法一样简单。</p>
-<p>现在我们可以试着用我们扩展的方法做一些例子：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> dict = [<span class="string">"A"</span>: <span class="string">"Amir"</span>, <span class="string">"B"</span>: <span class="string">"Bertha"</span>, <span class="string">"C"</span>: <span class="string">"Ching"</span>]</span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"A"</span>, <span class="string">"C"</span>])</span><br><span class="line"><span class="comment">// [Optional("Amir"), Optional("Ching")]</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>])</span><br><span class="line"><span class="comment">// [Optional("Bertha"), nil]</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([])</span><br><span class="line"><span class="comment">// []</span></span><br></pre></td></tr></table></figure>
-<h2 id="u5185_u5D4COptional_u7C7B_u578B"><a href="#u5185_u5D4COptional_u7C7B_u578B" class="headerlink" title="内嵌Optional类型"></a>内嵌Optional类型</h2><p>现在我们来看看使用<code>last</code>属性返回数组的最后一个元素会发生什么？</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"A"</span>, <span class="string">"C"</span>]).last</span><br><span class="line"><span class="comment">// Optional(Optional("Ching"))</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>]).last</span><br><span class="line"><span class="comment">// Optional(nil)</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([]).last</span><br><span class="line"><span class="comment">// nil</span></span><br></pre></td></tr></table></figure>
-<p>看着结果我们是不是觉得很奇怪呢？我们在上述代码的第一种情况下得到了嵌套的<code>Optional</code>类型，而在第二种情况下缺得到了包含<code>nil</code>的<code>Optional</code>类型，为什么得到的不是<code>Optional(&quot;Ching&quot;)</code>和<code>nil</code>呢？</p>
-<p>冷静下来，我们回忆一下<code>last</code>属性的是如何申明的：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> last: <span class="type">T</span>? &#123; <span class="keyword">get</span> &#125;</span><br></pre></td></tr></table></figure>
-<p>恍然大悟，原来<code>last</code>属性的类型是<code>Optional</code>类型，这也就是说如果<code>T</code>是<code>Optional</code>类型的话，那么<code>T?</code>自然就是<code>Optional(Optional)</code>了，也就是<code>T??</code>。所以上面的情况就很容易解释了，因为<code>T</code>的类型是<code>Optional(String)</code>，所以我们得到的结果就是<code>Optional(Optional(String))</code>。</p>
-<p>那么<code>Optional(nil)</code>这种情况如何解释呢？为什么不是<code>Optional(Optional(nil))</code>呢？</p>
-<p>我们现在Objective-C中执行一下上面那三种情况看一看：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">[dict valuesForKeys:@[@<span class="string">"A"</span>, @<span class="string">"C"</span>] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// @"Ching"</span></span><br><span class="line"></span><br><span class="line">[dict valuesForKeys:@[@<span class="string">"B"</span>, @<span class="string">"D"</span>] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// NSNull</span></span><br><span class="line"></span><br><span class="line">[dict valuesForKeys:@[] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// nil</span></span><br></pre></td></tr></table></figure>
-<p>我们看到，不论在Swift中还是在Objective-C中，当第一个参数的数组是空数组的时候，取最后一个元素的返回结果都是<code>nil</code>，意思就是“数组是空数组，那么最后一个元素肯定不存在啦”。那么在Swift中返回<code>Optional(nil)</code>和在Objective-C中返回<code>NSNull</code>的情况表明这个所谓的最后一个元素在数组中其实是存在的，只不过它就代表没有。当这种情况发生时，Objective-C只能用一个占位符对象来表示，而在Swift中就可以用一个系统类型来表示。</p>
-<h2 id="u63D0_u4F9B_u9ED8_u8BA4_u503C"><a href="#u63D0_u4F9B_u9ED8_u8BA4_u503C" class="headerlink" title="提供默认值"></a>提供默认值</h2><p>如果我们想当在<code>Dictionary</code>中查不到对应值的时候返回一个我们指定的默认值要怎么做呢？其实这也很简单：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key], notFoundMarker: Value)</span></span> -&gt; [<span class="type">Value</span>] &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.valuesForKeys(keys).<span class="built_in">map</span> &#123; $<span class="number">0</span> ?? notFoundMarker &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>], notFoundMarker: <span class="string">"Anonymous"</span>)</span><br><span class="line"><span class="comment">// ["Bertha", "Anonymous"]</span></span><br></pre></td></tr></table></figure>
-<p>当Objective-C只能用占位符对象来做到这一点的时候，Swift却可以使用系统类型来呈现，并且提供了丰富的语法支持多样化的返回结果。</p>
-<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=12" target="_blank" rel="external">Optionals Case Study: valuesForKeys</a></p>
+<h2 id="u901A_u7528_u7684Storyboard"><a href="#u901A_u7528_u7684Storyboard" class="headerlink" title="通用的Storyboard"></a>通用的Storyboard</h2><p>通用的<code>stroyboard</code>文件是通向自适应布局光明大道的第一步。在一个<code>storyboard</code>文件中适配iPad和iPhone的布局在iOS8中已不再是梦想。我们不必再为不同尺寸的Apple移动设备创建不同的<code>storyboard</code>文件，不用再苦逼的同步若干个<code>storyboard</code>文件中的内容。这真是一件美好的事情。</p>
+<p>我们打开Xcode，新建一个项目： </p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-1.png" alt="图片"></p>
+<p>选择<code>iOS\Application\Single View Application</code>创建一个单视图应用：  </p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-2.png" alt="图片"></p>
+<p>设置项目名称<strong>AdaptiveWeather</strong>，语言选择<strong>Swift</strong>，设备选择<strong>Universal</strong>：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-3.png" alt="图片"></p>
+<p>创建好项目后，我们在项目目录结构中可以看到只存在一个<code>storyboard</code>文件：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-4.png" alt="图片"></p>
+<p><strong>Main.storyboard</strong>文件就是一个通用的<code>storyboard</code>文件，它可以适配目前所有屏幕尺寸的Apple移动设备。打开该文件，同学们会看到一个View Controller，以及一个我们不太熟悉的界面尺寸：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-5.png" alt="图片"></p>
+<p>同学们不要吃惊，没错，你们看到的就是一个简单的、有点大的正方形！大伙都知道，在上一个版本的Xcode中，<code>storyboard</code>里的屏幕尺寸都对应着我们所选的目标设备的尺寸，但是这样无法让我们达到“用一个<code>storyboard</code>搞定所有设备”的宏伟目标。所以在iOS8中，Apple将<code>storyboard</code>中屏幕的尺寸进行了抽象处理，也就是说我们看到的这个正方形是一个抽象的屏幕尺寸。</p>
+<p>我们接着往下走，选中<code>Main.storyboard</code>文件，然后在右侧工具栏中选择<strong>File Inspector</strong>页签，然后勾选<strong>Use Size Classes</strong>选项：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-6.png" alt="图片"></p>
+<p>在新的iOS8项目中，该选项默认是勾选的。但当你使用老版本的项目创建新的<code>storyboard</code>文件时就需要你手动进行勾选了。</p>
+<h3 id="u8BBE_u7F6E_u4F60_u7684Storyboard_u6587_u4EF6"><a href="#u8BBE_u7F6E_u4F60_u7684Storyboard_u6587_u4EF6" class="headerlink" title="设置你的Storyboard文件"></a>设置你的Storyboard文件</h3><p>首先，我们打开<code>Main.storyboard</code>文件，从组件库（Object Library）中选择<strong>Image View</strong>拖拽到View Controller中。选中刚刚拖入的Image View，在右侧工具栏选择<strong>Size Inspector</strong>页签，设置<strong>X</strong>坐标为150，<strong>Y</strong>坐标为20，<strong>宽</strong>为300，<strong>高</strong>为265。</p>
+<p>然后再拖入一个<strong>View</strong>组件，设置<strong>X</strong>坐标为150，<strong>Y</strong>坐标为315，<strong>宽</strong>为300，<strong>高</strong>为265。</p>
+<p>选择你刚才拖入的View，在右侧工具栏中选择<strong>Identity Inspector</strong>页签，在<strong>Document</strong>面板中的<strong>Label</strong>属性输入框中输入<strong>TextContainer</strong>。这个属性的作用就是给View起一个名字，方便我们辨认。这里要注意一下，<strong>Document</strong>面板有可能是隐藏的，我们需要点击它后面的 <strong>Show</strong>按钮来显示它。我们拖入的这个View最后是显示城市和温度Label的容器。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-7.png" alt="图片"></p>
+<p>完成上面的设置后，同学们可能会发现刚才拖入的View貌似看不到，这是因为它的背景色和View Controller的背景色是相同的，都是白色，所以我们不太容易辨别。我们来解决这个问题，选中View Controller的View，然后在右侧工具栏中选择<strong>Attribute Inspector</strong>页签，设置背景色为 <strong>红：74，绿：171，蓝：247</strong>。然后再选择TextContainer，就是我们拖入的View，设置背景色为 <strong>红：55，绿：128，蓝：186</strong>。此时<code>Main.storyboard</code>文件中应该是这番景象：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-8.png" alt="图片"></p>
+<p>到目前为止，我们在View Controller中添加了两个组件Image View和View，这也是仅有的两个组件，接下来我们就要给它们添加一些布局约束了。</p>
+<h3 id="u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F"><a href="#u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="添加布局约束"></a>添加布局约束</h3><p>选择image view，点击底部自动布局工具栏中的<strong>Align</strong>按钮，勾选<strong>Horizontal Center in Container</strong>选项，将后面的值设置为0，点击 <strong>Add 1 Constraint</strong>按钮添加第一个约束。</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-9.png" alt="图片"></p>
+<p>这个约束的意思是让image view在它的容器（View Controller的View）中保持居中。</p>
+<p>然后再点击底部自动布局工具栏中的<strong>Pin</strong>按钮，添加一个image view顶部与容器顶部间距的约束，我们设置为0：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-10.png" alt="图片"></p>
+<p>上面这两个约束使image view处于容器居中的位置，并且它的顶部与容器顶部有一个固定的间距。现在我们需要添加image view和text container view之间的约束。同学们先选中image view，然后按住<strong>Ctrl</strong>键和鼠标左键，从image view往text container view移动鼠标：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-11.png" alt="图片"></p>
+<p>松开鼠标左键后会弹出一个约束菜单，我们选择<strong>Vertical Spacing</strong>：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-12.png" alt="图片"></p>
+<p>这个约束决定了image view底部和text container view顶部之间的距离。</p>
+<p>现在选中image view然后点击右侧工具栏中的<strong>Size Inspector</strong>页签，同学们会发现这里在Xcode6中和之前的Xcode版本有所不同：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-13.png" alt="图片"></p>
+<p>你会看到之前添加的三个布局约束，你可以在<strong>Size Inspector</strong>中很方便的修改这些布局约束。比如点击<strong>Bottom Space To: TextContainer</strong>约束后的 <strong>Edit</strong>按钮，会弹出约束属性编辑框，我们让<strong>Constant</strong>的值等于20：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-14.png" alt="图片"></p>
+<p>然后点击该弹出框之外的任意地方关闭该弹出框。</p>
+<p>你先已经将TextContainer view顶部与image view底部的间距调整到了20，我们还需要添加TextContainer view另外三个边的间距约束。</p>
+<p>继续选择TextContainer view，点击底部的<strong>Pin</strong>按钮弹出 <strong>Add New Constraints</strong>窗口，在 <strong>Spacing to nearest neighbor</strong>面板中设置左、右、底部的约束，将值设置为0，然后点击<strong>Add 3 Constraints</strong>按钮添加约束。这里要注意的是，在设置约束时要将 <strong>Constrain to margins</strong>选项的勾去掉，这样可以避免TextContainer view产生内边距：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-15.png" alt="图片"></p>
+<p>这三个约束会让TextContainer view的左、右、底部三个边与容器的左、右、底部的间距始终为0。</p>
+<p>现在<strong>Main.storyboard</strong>中应该是这番景象：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-16.png" alt="图片"></p>
+<p>此时同学们应该会注意到在view上有几个橘黄色的约束线，这意味着还有一些约束上的问题需要我们注意。不过在运行时<code>storyboard</code>会自动更新view的大小来满足它与容器的约束条件。我们也可以点击底部 <strong>Resolve Auto Layout Issues</strong> 按钮，在弹出框中选择 <strong>All Views in View Controller/Update Frames</strong> 来修复提示的约束问题，但是如果我们这样做，那么image view的尺寸就会压缩成零，也就是会看不到image view。</p>
+<p>这是因为我们的image view还有没有任何内容，但是它有一个缺省的高和宽，并且值为0。进行自动布局的时候，如果被约束的view没有实际的高和宽，那么会依照缺省的高和宽来满足约束条件。</p>
+<p>我们接着学习，在项目结构中打开 <strong>Images.xcassets</strong> ，然后点击左下角的 <strong>+</strong>号，在弹出菜单中选择 <strong>New Image Set</strong>：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-17.png" alt="图片"></p>
+<p>双击左上角的 <strong>Image</strong> 标题将其改为 <strong>cloud</strong> ：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-18.png" alt="图片"></p>
+<p>我们刚才新建的这个image set其实就是若干图片文件的一个集合，其中的每一个图片都会对应一个特定的应用场景，也就是针对与不同分辨率的Apple移动设备。比如说，一个图片集合可能会包含针对非视网膜、视网膜、视网膜高清三种分辨率的图片。自从Xcode中的资源库与UIKit完美结合后，在代码中引入图片时我们只需要写图片的名称，程序在运行时会根据当前运行的设备自动选择对应分辨率的图片。</p>
+<blockquote>
+<p>注意：如果你以前使用过通过资源库管理图片，那么你可能会发现在Xcode6中会有所不同。那就是3x图片是怎么回事？</p>
+<p>这个新的分片率是专为iPhone 6 Plus提供的。这意味着每一个点是由3个像素点组成，也就是说3x的图片比1x图片的像素多9倍。</p>
+</blockquote>
+<p>目前你的图片集合中还是空的，同学们可以在这里下载需要的图片<a href="http://cdn2.raywenderlich.com/wp-content/uploads/2014/09/cloud_images.zip" target="_blank" rel="external">cloud_images.zip </a>，然后将图片拖入刚才创建的名为cloud的图片集合中，将 <strong>cloud_small.png</strong>图片拖到 <strong>1x</strong>图片区域：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-19.png" alt="图片"></p>
+<p>由于我们的图片背景颜色是透明的，所以在图片集合中看到的都是白色的图片。你可以选中某一个图片，然后按下空格键来预览图片。比如选中 <strong>1x</strong> 图片，按下空格：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-20.png" alt="图片"></p>
+<p>现在将 <strong>cloud_small@2x.png</strong> 图片拖至 <strong>2x</strong> 图片区域，将 <strong>cloud_small@3x.png</strong> 图片拖至 <strong>3x</strong> 图片区域。和之前情况一样，我们看到的只是白色的图片，但我们可以通过空格键来预览图片集合中的图片。</p>
+<p>现在你就可以在image view中设置图片了。我们回到 <strong>Main.storyboard</strong> 中，选中image view，在右侧工具栏中选择 <strong>Attribute Inspector</strong> 页签，将 <strong>Image View</strong> 面板中的 <strong>Image</strong> 属性设置为 <strong>cloud</strong>，然后将 <strong>View</strong> 面板中的 <strong>Mode</strong> 属性设置为 <strong>Aspect Fit</strong> ：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-21.png" alt="图片"></p>
+<p>现在你的<strong>Main.storyboard</strong>中应该是这番景象：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-22.png" alt="图片"></p>
+<p>我们看到<code>storyboard</code>中一直有橘黄色的约束提示，是时候让我们来修复它们了。首先选中view controller的view：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-23.png" alt="图片"></p>
+<p>然后点击底部的 <strong>Resolve Auto Layout Issues</strong> 按钮，在弹出菜单的 <strong>All Views in View Controller</strong> 面板中选择 <strong>Update Frames</strong> ：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-24.png" alt="图片"></p>
+<p>这时，<code>storyboard</code>会自动根据约束条件重新计算view的大小以满足约束：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-25.png" alt="图片"></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -499,628 +1116,32 @@
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/handling-common-scenarios/" itemprop="url">
-                  常见问题的处理方案 -- iOS8/OS X v10.10应用扩展编程指南
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2014-08-27T00:00:00+08:00" content="2014-08-27">
-              2014-08-27
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/iOS-macOS-tvOS-watchOS/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS & macOS & tvOS & watchOS</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/handling-common-scenarios/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/handling-common-scenarios/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>当你在开发一个应用扩展，让其执行某个任务时，你可能会遇到一些常见的，或者说在多种扩展中都会出现的通用的问题，并且必须要处理这些问题。在这一章节中，我们将帮助你如何应对和处理这些常见的问题。</p>
-<h2 id="u4F7F_u7528_u5185_u5D4C_u6846_u67B6_u5171_u4EAB_u4EE3_u7801"><a href="#u4F7F_u7528_u5185_u5D4C_u6846_u67B6_u5171_u4EAB_u4EE3_u7801" class="headerlink" title="使用内嵌框架共享代码"></a>使用内嵌框架共享代码</h2><p>你可以创建一个内嵌框架，用于在应用扩展和它的载体应用之间共享代码。比如，你开发了一个图片滤镜的照片编辑扩展，同时该扩展的载体应用也有这个功能，那么你就可以将实现该功能的代码封装成一个框架，让扩展<code>target</code>和载体应用<code>target</code>都使用这个框架。</p>
-<p>你要确保你创建的内嵌框架不包含应用扩展不能使用的API。这类API一般使用<code>unavailability</code>宏来标记，比如像<code>NS_EXTENSION_UNAVAILABLE</code>。</p>
-<p>如果你创建的内嵌框架中包含应用扩展不能使用的API，那么你将其Link到载体应用没关系，载体应用可以正常使用框架中的API，但是不能与应用扩展共享代码，也就是应用扩展不能使用该框架提供的所有API，继而无法做到代码共享。如果你上传App Store的应用扩展中有这种框架，或者应用扩展中使用了不允许使用的API，那么审核时会被拒绝。</p>
-<p>如果我们要想应用扩展使用内嵌框架，那么首先要配置一下。将<code>target</code>的<code>Require Only App-Extension-Safe API</code>选项设置为<code>Yes</code>。如果你不这样设置，那么Xcode会向你提示警告：<code>linking against dylib not safe for use in application extensions</code>。</p>
-<blockquote>
-<p>重要提示：如果载体应用要使用内嵌框架，那么必须要支持<code>arm64</code>架构，否则在上传App Store时会被拒绝。（如“创建应用扩展”章节中介绍的，所有应用扩展都要支持<code>arm64</code>架构。）</p>
-</blockquote>
-<p>在配置你的Xcode项目时，在<code>Build Phases</code>选项卡的<code>Copy Files</code>项中一定要将<code>Destination</code>设置为<code>Frameworks</code>。</p>
-<blockquote>
-<p>重要提示：我们要始终将<code>Destination</code>设置为<code>Frameworks</code>，如果你将其设置为<code>SharedFramework</code>，那么上传App Store时会被拒绝的。</p>
-</blockquote>
-<p>你可以让载体应用支持iOS7或更早的版本，但当在iOS8或更新的版本中运行时，要特别注意内嵌框架的安全性。详细内容可以参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW3" target="_blank" rel="external">Deploying a Containing App to Older Versions of iOS</a>。</p>
-<p>有关创建和使用内嵌框架的更多内容，请观看<a href="https://developer.apple.com/videos/wwdc/2014" target="_blank" rel="external">WWDC 2014的视频</a>“Building Modern Frameworks”。</p>
-<h2 id="u4E0E_u8F7D_u4F53_u5E94_u7528_u5171_u4EAB_u6570_u636E"><a href="#u4E0E_u8F7D_u4F53_u5E94_u7528_u5171_u4EAB_u6570_u636E" class="headerlink" title="与载体应用共享数据"></a>与载体应用共享数据</h2><p>虽然应用扩展的包内嵌在载体应用中，但是应用扩展和载体应用的安全域还是不一样的。默认情况下，应用扩展和载体应用是不能直接访问对方内容的。</p>
-<p>不过你可以通过数据共享来实现这个愿望。比如，你希望应用扩展和它的载体应用共享一个单一的大数据集。比如<code>prerendered assets</code>。</p>
-<p>要实现数据共享，我们要使用Xcode或者开发者门户网站允许应用扩展和它的载体应用成为一个应用组，然后在开发者门户网站中注册应用组，并指明在载体应用中使用该应用组。关于应用组的知识请查阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/AboutEntitlements.html#//apple_ref/doc/uid/TP40011195" target="_blank" rel="external">Entitlement Key Reference</a>文档的<a href="https://developer.apple.com/library/prerelease/ios/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/EnablingAppSandbox.html#//apple_ref/doc/uid/TP40011195-CH4-SW19" target="_blank" rel="external">Adding an App to an App Group</a>章节。</p>
-<p>当你设置好应用组后，应用扩展和它的载体应用就可以通过<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSUserDefaults_Class/index.html#//apple_ref/occ/cl/NSUserDefaults" target="_blank" rel="external">NSUserDefaults</a>API共享访问用户的信息。我们可以使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSUserDefaults_Class/index.html#//apple_ref/occ/instm/NSUserDefaults/initWithSuiteName:" target="_blank" rel="external">initWithSuiteName:</a>方法实例化一个<code>NSUserDefaults</code>对象，然后传入共享组的标示符。比如一个共享扩展，它或许会更新用户最近经常使用的共享账号，那么我们可以这样来写：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Create and share access to an NSUserDefaults object.</span></span><br><span class="line"><span class="type">NSUserDefaults</span> *mySharedDefaults = [[<span class="type">NSUserDefaults</span> alloc] initWithSuiteName:@<span class="string">"com.example.domain.MyShareExtension"</span>];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">// Use the shared user defaults object to update the user's account.</span></span><br><span class="line">[mySharedDefaults setObject:theAccountName forKey:@<span class="string">"lastAccountName"</span>];</span><br></pre></td></tr></table></figure>
-<p>下图向我们展示了应用扩展和它的载体应用是如何通过共享容器实现数据共享的：  </p>
-<p><img src="http://www.devtalking.com/postImages/handling-common-scenarios1.png" alt="结构"></p>
-<blockquote>
-<p>重要提示：如果你的应用扩展使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSession_class/index.html#//apple_ref/occ/cl/NSURLSession" target="_blank" rel="external">NSURLSession</a>类执行后台的上传下载任务时，你必须要设置一个共享容器。这样扩展和载体应用就可以访问到转换传输的数据。后台上传下载的更多知识请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW2" target="_blank" rel="external"> Performing Uploads and Downloads</a>。</p>
-</blockquote>
-<p>如果你设置了共享容器，那么载体应用和它包含的扩展就可以对共享容器里的内容进行读写操作了。同时你还必须要对数据的操作进行同步，以避免数据损坏或出错。使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIDocument_Class/index.html#//apple_ref/occ/cl/UIDocument" target="_blank" rel="external">UIDocument</a>类、Core Data或者SQLite可以帮助定位、协调操作共享容器中的内容。</p>
-<h2 id="u8BBF_u95EE_u7F51_u9875"><a href="#u8BBF_u95EE_u7F51_u9875" class="headerlink" title="访问网页"></a>访问网页</h2><p>在分享扩展（iOS与OS X平台）和Action扩展（iOS平台）中，一般都允许用户使用Safari浏览器执访问网页并通过执行JavaScript脚本将结果返回到扩展中。你也可以在你的扩展运行之前或执行完任务之后通过JavaScript文件修改网页内容。比如分享扩展，它可以帮助用户将网页上的内容分享到用户的社交网站上，或者iOS上的Action扩展可能会显示当前网页的指定翻译内容。</p>
-<p>如果要通过应用扩展访问网页并操作网页内容，那么需要遵循下面几个步骤：</p>
-<ul>
-<li>创建一个JavaScript文件，并申明一个全局对象，名为<code>ExtensionPreprocessingJS</code>并将其实例化。</li>
-<li>在应用扩展的属性列表文件中添加关键字<code>NSExtensionJavaScriptPreprocessingFile</code>，给Safari浏览器指明使用哪个JavaScript文件。</li>
-<li>在<code>NSExtensionActivationRule</code>字典中，将<code>NSExtensionActivationSupportsWebURLWithMaxCount</code>赋值一个非零的值。（更多关于<code>NSExtensionActivationRule</code>字典的知识请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW8" target="_blank" rel="external">Declaring Supported Data Types for a Share or Action Extension</a>。）</li>
-<li>当你的应用扩展开始运行时，使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSItemProvider_Class/index.html#//apple_ref/occ/cl/NSItemProvider" target="_blank" rel="external">NSItemProvider</a>类从JavaScript文件的返回值中获取结果。</li>
-<li>在iOS系统的应用扩展中，如果你希望当应用扩展执行完任务后实时更新网页内容，那么你要向JavaScript文件中传入内容。（在这一步中也使用<code>NSItemProvider</code>类。）</li>
-</ul>
-<p>为了告知Safari你的应用扩展中包含一个JavaScript文件，你需要在应用扩展的<code>Info.plist</code>文件中，向<code>NSExtensionAttributes</code>字典添加<code>NSExtensionJavaScriptPreprocessingFile</code>关键字来指明你的JavaScript文件。这个关键字的值就是你希望当你的应用扩展运行前，Safari要加载的JavaScript文件的名称。比如：</p>
-<pre><code>&lt;key&gt;NSExtensionAttributes&lt;/key&gt;
-    &lt;dict&gt;
-        &lt;key&gt;NSExtensionJavaScriptPreprocessingFile&lt;/key&gt;
-        &lt;string&gt;MyJavaScriptFile&lt;/string&gt;
-    &lt;/dict&gt;
-</code></pre><p>在iOS和OS X平台中，在你自定义的JavaScript类中可以定义一个<code>run()</code>函数，该函数就是Safari加载JavaScript文件的入口。在<code>run()</code>函数中，Safari提供了一个名为<code>completionFunction</code>的参数，你可以使用键值对象的形式将结果传给应用扩展。</p>
-<p>在iOS平台中，你还可以定义一个<code>finalize()</code>函数，当应用扩展在任务结束阶段调用<code>completeRequestReturningItems:expirationHandler:completion:</code>方法时Safari会调用<code>finalize()</code>函数。在该函数中，可以通过向<code>completeRequestReturningItems:expirationHandler:completion:</code>方法传值，来改变网页内容。</p>
-<p>比如，你的iOS应用扩展需要基于一个网页URI启动，并且当它结束运行时改变网页的背景色，那么你需要这样写JavaScript代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">MyExtensionJavaScriptClass</span> = function() &#123;&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="type">MyExtensionJavaScriptClass</span>.prototype = &#123;</span><br><span class="line">    run: function(arguments) &#123;</span><br><span class="line">    <span class="comment">// Pass the baseURI of the webpage to the extension.</span></span><br><span class="line">        arguments.completionFunction(&#123;<span class="string">"baseURI"</span>: document.baseURI&#125;);</span><br><span class="line">    &#125;,</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// Note that the finalize function is only available in iOS.</span></span><br><span class="line">    finalize: function(arguments) &#123;</span><br><span class="line">    <span class="comment">// arguments contains the value the extension provides in [NSExtensionContext completeRequestReturningItems:expirationHandler:completion:].</span></span><br><span class="line">    <span class="comment">// In this example, the extension provides a color as a returning item.</span></span><br><span class="line">    document.body.style.backgroundColor = arguments[<span class="string">"bgColor"</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// The JavaScript file must contain a global object named "ExtensionPreprocessingJS".</span></span><br><span class="line"><span class="keyword">var</span> <span class="type">ExtensionPreprocessingJS</span> = new <span class="type">MyExtensionJavaScriptClass</span>;</span><br></pre></td></tr></table></figure>
-<p>在iOS和OS X平台中，你需要编写代码来处理<code>fun()</code>函数返回的值，为获取到字典中的值，我们需要指定<code>kUTTypePropertyList</code>类型作为标示符传入<code>NSItemProvider</code>类的<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSItemProvider_Class/index.html#//apple_ref/occ/instm/NSItemProvider/loadItemForTypeIdentifier:options:completionHandler:" target="_blank" rel="external"> loadItemForTypeIdentifier:options:completionHandler:</a>方法。在该字典中使用<code>NSExtensionJavaScriptPreprocessingResultsKey</code>作为<code>key</code>来取值。比如下面例子中我们想要获取将URI传入<code>run()</code>的返回值：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">[imageProvider loadItemForTypeIdentifier:kUTTypePropertyList options:<span class="literal">nil</span> completionHandler:^(<span class="type">NSDictionary</span> *item, <span class="type">NSError</span> *error) &#123;</span><br><span class="line">    <span class="type">NSDictionary</span> *results = (<span class="type">NSDictionary</span> *)item;</span><br><span class="line">        <span class="type">NSString</span> *baseURI = [[results objectForKey:<span class="type">NSExtensionJavaScriptPreprocessingResultsKey</span>] objectForKey:@<span class="string">"baseURI"</span>];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-<p><code>finalize()</code>函数是在当应用扩展执行完任务后传参并调用的，创建一个含有我们需要处理的值的字典，然后用<code>NSItemProvider</code>的<code>initWithItem:typeIdentifier:</code>方法来封装该字典。比如当扩展执行完任务后我们想让网页变为红色，我们可以这样写：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSExtensionItem</span> *extensionItem = [[<span class="type">NSExtensionItem</span> alloc] <span class="keyword">init</span>];</span><br><span class="line">extensionItem.attachments = @[[[<span class="type">NSItemProvider</span> alloc] initWithItem: @&#123;<span class="type">NSExtensionJavaScriptFinalizeArgumentKey</span>: @&#123;@<span class="string">"bgColor"</span>:@<span class="string">"red"</span>&#125;&#125; typeIdentifier:(<span class="type">NSString</span> *)kUTTypePropertyList]];</span><br><span class="line">[[<span class="keyword">self</span> extensionContext] completeRequestReturningItems:@[extensionItem] expirationHandler:<span class="literal">nil</span> completion:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u6267_u884C_u4E0A_u4F20_u4E0B_u8F7D_u4EFB_u52A1"><a href="#u6267_u884C_u4E0A_u4F20_u4E0B_u8F7D_u4EFB_u52A1" class="headerlink" title="执行上传下载任务"></a>执行上传下载任务</h2><p>用户一般的操作习惯都倾向于当使用你的应用扩展完成某个任务后，可以将结果立即反馈在使用扩展的应用中。如果一个扩展要处理的任务包含较长时间的上传下载操作时，你要确保当你的应用扩展关闭后能继续完成该任务。为实现这个功能，我们需要使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSession_class/index.html#//apple_ref/occ/cl/NSURLSession" target="_blank" rel="external">NSURLSession</a>类创建一个URL会话并创建后台的上传下载任务。</p>
-<blockquote>
-<p>提示：你可以回想一下其他类型的后台任务，比如后台支持VoIP、后台播放音乐，这些是不能用应用扩展去实现的。更多信息请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionCreation.html#//apple_ref/doc/uid/TP40014214-CH5-SW3" target="_blank" rel="external">Respond to the Host App’s Request</a>。</p>
-</blockquote>
-<p>当你的应用扩展准备好上传下载任务后，扩展会完成调用它的应用发出的请求，并在不影响上传下载任务的前提下终止扩展。更多关于扩展处理主叫应用请求的知识请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionCreation.html#//apple_ref/doc/uid/TP40014214-CH5-SW3" target="_blank" rel="external">Respond to the Host App’s Request</a>。在iOS系统中，如果你的应用扩展在执行完后台任务时并没有在运行，那么系统会自动在后台运行扩展的载体应用，并调用<a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIApplicationDelegate_Protocol/index.html#//apple_ref/occ/intfm/UIApplicationDelegate/application:handleEventsForBackgroundURLSession:completionHandler:" target="_blank" rel="external">application:handleEventsForBackgroundURLSession:completionHandler:</a>代理方法。</p>
-<blockquote>
-<p>重要提示：如果你的应用扩展在后台创建了<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSession_class/index.html#//apple_ref/occ/cl/NSURLSession" target="_blank" rel="external">NSURLSession</a>任务，那么你必须要设置一个共享容器，以确保扩展和载体应用实现数据共享。我们可以在<code>NSURLSessionConfiguration</code>类中使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSessionConfiguration_class/index.html#//apple_ref/occ/instp/NSURLSessionConfiguration/sharedContainerIdentifier" target="_blank" rel="external">sharedContainerIdentifier</a>属性来指定一个共享容器的标示符，然后我们就可以通过该标示符获取到共享容器。<br>请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW6" target="_blank" rel="external">Sharing Data with Your Containing App</a>文档来设置共享容器。</p>
-</blockquote>
-<p>下面的例子展示了如何配置一个URL会话，并创建一个下载任务：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSURLSession</span> *mySession = [<span class="keyword">self</span> configureMySession];</span><br><span class="line"><span class="type">NSURL</span> *url = [<span class="type">NSURL</span> <span class="type">URLWithString</span>:@<span class="string">"http://www.example.com/LargeFile.zip"</span>];</span><br><span class="line"><span class="type">NSURLSessionTask</span> *myTask = [mySession downloadTaskWithURL:url];</span><br><span class="line">[myTask resume];</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">- (<span class="type">NSURLSession</span> *) configureMySession &#123;</span><br><span class="line">    <span class="keyword">if</span> (!mySession) &#123;</span><br><span class="line">        <span class="type">NSURLSessionConfiguration</span>* config = [<span class="type">NSURLSessionConfiguration</span> backgroundSessionConfigurationWithIdentifier:@“com.mycompany.myapp.backgroundsession”];</span><br><span class="line">        <span class="comment">// To access the shared container you set up, use the sharedContainerIdentifier property on your configuration object.</span></span><br><span class="line">        config.sharedContainerIdentifier = @“com.mycompany.myappgroupidentifier”;</span><br><span class="line">        mySession = [<span class="type">NSURLSession</span> sessionWithConfiguration:config delegate:<span class="keyword">self</span> delegateQueue:<span class="literal">nil</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> mySession;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>因为在单位时间内只能由一个进程使用后台会话，所以你需要为载体应用中的所有扩展创建不同的后台会话（每个后台会话都要有一个唯一的标示符）。在这里我们建议当载体应用在后台处理扩展的任务时，只使用一个该扩展创建的后台会话。如果你要执行其他的网络相关的任务，那么就要创建相应的URL会话。</p>
-<p>如果你需要在后台创建URL会话之前完成主叫应用的请求，那么要确保创建和使用会话的代码是有效可执行的。当你的扩展调用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionContext_Class/index.html#//apple_ref/occ/instm/NSExtensionContext/completeRequestReturningItems:completionHandler:" target="_blank" rel="external">completeRequestReturningItems:completionHandler:</a>方法告知主叫应用已经完成相关请求后，系统就可以随时终止你的应用扩展。</p>
-<h2 id="u4E3A_u5206_u4EAB_u548CAction_u6269_u5C55_u7533_u660E_u652F_u6301_u7684_u6570_u636E_u7C7B_u578B"><a href="#u4E3A_u5206_u4EAB_u548CAction_u6269_u5C55_u7533_u660E_u652F_u6301_u7684_u6570_u636E_u7C7B_u578B" class="headerlink" title="为分享和Action扩展申明支持的数据类型"></a>为分享和Action扩展申明支持的数据类型</h2><p>在你的分享或Action扩展中，在它们的工作中可能会使用到一些数据，并且这些数据的类型各不相同。为了确保只有当用户在主叫应用中选择了你的扩展支持的数据类型时，才会展示你的扩展功能。你需要在扩展的属性列表文件中添加<code>NSExtensionActivationRule</code>关键字。你也可以使用该关键字指定扩展处理每种类型的最大数目。当你的应用扩展运行时，系统会用改关键字的值与扩展数据项的<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionItem_Class/index.html#//apple_ref/occ/instp/NSExtensionItem/attachments" target="_blank" rel="external">attachments</a>属性值作比较。关于<code>NSExtensionActivationRule</code>关键字的详细信息可以参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/SystemExtensionKeys.html#//apple_ref/doc/uid/TP40014212-SW2" target="_blank" rel="external">Action Extension Keys</a>文档中的<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009247" target="_blank" rel="external">Information Property List Key Reference</a>章节。</p>
-<p>比如，你可以申明你的分享扩展支持最大处理10张图片，一部影片和一个网站URL。你可以参考下面的写法：</p>
-<pre><code>&lt;key&gt;NSExtensionAttributes&lt;/key&gt;
-    &lt;dict&gt;
-        &lt;key&gt;NSExtensionActivationRule&lt;/key&gt;
-        &lt;dict&gt;
-            &lt;key&gt;NSExtensionActivationSupportsImageWithMaxCount&lt;/key&gt;
-            &lt;integer&gt;10&lt;/integer&gt;
-            &lt;key&gt;NSExtensionActivationSupportsMovieWithMaxCount&lt;/key&gt;
-            &lt;integer&gt;1&lt;/integer&gt;
-            &lt;key&gt;NSExtensionActivationSupportsWebURLWithMaxCount&lt;/key&gt;
-            &lt;integer&gt;1&lt;/integer&gt;
-        &lt;/dict&gt;
-    &lt;/dict&gt;
-</code></pre><p>如果你想指定不支持的数据类型，那么你可以将该类型的值设置为0，或者在<code>NSExtensionActivationRule</code>中不添加该类型即可。</p>
-<blockquote>
-<p>提示：如果你的分享扩展或iOS中的Action扩展需要访问网页，那你必须要确保<code>NSExtensionActivationSupportsWebURLWithMaxCount</code>关键字的值不为0（更多关于在应用扩展中通过JavaScript访问网页的内容请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ShareSheet.html#//apple_ref/doc/uid/TP40014214-CH12-SW8" target="_blank" rel="external">Accessing a Webpage</a>）。</p>
-</blockquote>
-<p>你也可以使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionItem_Class/index.html#//apple_ref/doc/uid/TP40014375-CH1" target="_blank" rel="external">NSExtensionItem</a>定义的<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/DevPedia-CocoaCore/UniformTypeIdentifier.html#//apple_ref/doc/uid/TP40008195-CH60" target="_blank" rel="external">UTI</a>子类型以便数据检测器检测文本信息，比如电话号码或通讯地址。</p>
-<p><code>NSExtensionActivationRule</code>字典中的关键字足以满足大多数应用的过滤需求。如果你需要做更复杂的过滤，比如像<code>public.url</code>和<code>public.image</code>之间的区别，那么你就得在文本中创建断言语句。如果你要创建一个断言，那么就将<code>NSExtensionActivationRule</code>关键字的值设置为你指定的断言字符串。（在运行时，系统会自动将该字符串编译为<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSPredicate_Class/index.html#//apple_ref/occ/cl/NSPredicate" target="_blank" rel="external">NSPredicate</a>对象）</p>
-<p>比如，一个应用扩展的附件属性可以指定为PDF文件，可以这样写：</p>
-<pre><code>{extensionItems = ({
-    attachments =     (
-                {
-            registeredTypeIdentifiers =             (
-             &quot;com.adobe.pdf&quot;,
-            &quot;public.file-url&quot;
-            );
-        }
-    );
-})}
-</code></pre><p>为了指定你的应用扩展可以处理PDF文件，你可以像这样创建断言字符串：</p>
-<pre><code>SUBQUERY(extensionItems, $extensionItem, SUBQUERY($extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;com.adobe.pdf&quot;).@count == 1).@count == 1
-</code></pre><p>开发过程中，在你创建断言语句之前你可以使用<code>TRUEPREDICATE</code>常量（结果为<code>true</code>）测试你的代码路径。更多断言语句的语法知识请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Conceptual/Predicates/Articles/pSyntax.html#//apple_ref/doc/uid/TP40001795" target="_blank" rel="external">Predicate Format String Syntax</a>。</p>
-<blockquote>
-<p>重要提示：在将你的载体应用上传App Store之前，要确保所有的<code>TRUEPREDICATE</code>常量已经替换为指定的断言语句或<code>NSExtensionActivationRule</code>关键字，不然载体应用会被App Store拒绝。</p>
-</blockquote>
-<h2 id="u914D_u7F6E_u8F7D_u4F53_u5E94_u7528_u4EE5_u9002_u7528_u4E8E_u8001_u7248_u672C_u7684iOS_u7CFB_u7EDF"><a href="#u914D_u7F6E_u8F7D_u4F53_u5E94_u7528_u4EE5_u9002_u7528_u4E8E_u8001_u7248_u672C_u7684iOS_u7CFB_u7EDF" class="headerlink" title="配置载体应用以适用于老版本的iOS系统"></a>配置载体应用以适用于老版本的iOS系统</h2><p>如果你在载体应用中使用了内嵌框架，那么它就可以在iOS8.0之后的版本中使用，即便内嵌框架不支持老版本的系统也没关系。</p>
-<p>使载体应用能做到上述这一点的是<a href="x-man-page://dlopen" target="_blank" rel="external">dlopen</a>命令，它可以使你使用条件链接和加载框架包的机制。你可以使用这个命令来代替编译时链接，你可以在Xcode的General 选项或Build Phases选项中对该命令进行编辑。其原理就是只有当载体应用在iOS8.0或更高的版本中运行时，才会链接使用内嵌框架。</p>
-<blockquote>
-<p>重要提示：如果你的载体应用使用了内嵌框架，那么就必须要支持<code>arm64</code>架构，否则会被App Store拒绝。</p>
-</blockquote>
-<h3 id="u8BBE_u7F6EXcode_u9879_u76EE_u4E2D_u5E94_u7528_u6269_u5C55_u7684_u6761_u4EF6_u94FE_u63A5"><a href="#u8BBE_u7F6EXcode_u9879_u76EE_u4E2D_u5E94_u7528_u6269_u5C55_u7684_u6761_u4EF6_u94FE_u63A5" class="headerlink" title="设置Xcode项目中应用扩展的条件链接"></a>设置Xcode项目中应用扩展的条件链接</h3><ol>
-<li>将每一个应用扩展的运行系统版本设置为iOS8.0或更高，通常选中Xcode中的<code>target</code>，在<code>General</code>选项中设置<code>Deployment info</code>。</li>
-<li>将你载体应用的运行系统版本设置为你想支持的最低iOS版本。</li>
-<li>在你的载体应用中，通过<a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIDevice_Class/index.html#//apple_ref/occ/instp/UIDevice/systemVersion" target="_blank" rel="external">systemVersion</a>方法，在运行时检查判断iOS的版本，并判断是否执行<code>dlopen</code>命令。只有你的载体应用在iOS8.0或更高的版本中运行时才会指定<code>dlopen</code>命令。</li>
-</ol>
-<p>特定的iOS API通过<code>dlopen</code>命令使用内嵌框架。你必须选择性的使用这些API，就像使用<code>dlopen</code>命令时那样。这些API都是<a href="https://developer.apple.com/library/prerelease/ios/documentation/CoreFoundation/Reference/CFBundleRef/index.html#//apple_ref/c/tdef/CFBundleRef" target="_blank" rel="external">CFBundleRef</a>的封装类型：</p>
-<ul>
-<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/CoreFoundation/Reference/CFBundleRef/index.html#//apple_ref/c/func/CFBundleGetFunctionPointerForName" target="_blank" rel="external">CFBundleGetFunctionPointerForName</a></li>
-<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/CoreFoundation/Reference/CFBundleRef/index.html#//apple_ref/c/func/CFBundleGetFunctionPointersForNames" target="_blank" rel="external">CFBundleGetFunctionPointersforNames</a></li>
-</ul>
-<p>还有来自<a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSBundle_Class/index.html#//apple_ref/occ/cl/NSBundle" target="_blank" rel="external">NSBundle</a>类的方法：</p>
-<ul>
-<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSBundle_Class/index.html#//apple_ref/occ/instm/NSBundle/load" target="_blank" rel="external">load</a></li>
-<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSBundle_Class/index.html#//apple_ref/occ/instm/NSBundle/loadAndReturnError:" target="_blank" rel="external">loadAndReturnError:</a></li>
-<li><a href="https://developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSBundle_Class/index.html#//apple_ref/occ/instm/NSBundle/classNamed:" target="_blank" rel="external">classNamed:</a></li>
-</ul>
-<p>因为你一般会将载体应用的运行系统版本配置为较低的版本，所以这些API通常都是在运行时检查，只有确保载体应用在iOS8.0或更高版本中运行时才会使用这些API。</p>
-<p>原文地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW1" target="_blank" rel="external">Handling Common Scenarios</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/swift-uikit-dynamics-2/" itemprop="url">
-                  Swift中的UIKit动力学（二）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2014-08-25T00:00:00+08:00" content="2014-08-25">
-              2014-08-25
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/swift-uikit-dynamics-2/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-uikit-dynamics-2/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u78B0_u649E_u80CC_u540E_u7684_u6545_u4E8B"><a href="#u78B0_u649E_u80CC_u540E_u7684_u6545_u4E8B" class="headerlink" title="碰撞背后的故事"></a>碰撞背后的故事</h2><p>在UIKit的动态引擎中，每个行为都有一个<code>action</code>属性，它的类型是一个函数（() -> Void），我们可以使用一个闭包来打印一下每一步行为的信息。我们在<code>viewDidLoad</code>方法加入下面这行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision.action = &#123;</span><br><span class="line">    <span class="built_in">println</span>(<span class="string">"<span class="subst">\(NSStringFromCGAffineTransform(square.transform)</span>) <span class="subst">\(NSStringFromCGPoint(square.center)</span>)"</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>上面的代码记录了蓝绿色方块坠落、碰撞时的<code>center</code>和<code>transform</code>属性。当编译运行时，在方块下坠的前一秒我们可以在控制台看到如下信息：</p>
-<pre><code>[1, 0, 0, 1, 0, 0] {150, 150}
-[1, 0, 0, 1, 0, 0] {150, 150}
-[1, 0, 0, 1, 0, 0] {150, 151}
-[1, 0, 0, 1, 0, 0] {150, 151}
-[1, 0, 0, 1, 0, 0] {150, 152}
-[1, 0, 0, 1, 0, 0] {150, 154}
-</code></pre><p>我们可以看到，随着方块的坠落，它的<code>center</code>属性在不断变化，也就是中点的x坐标没变，y坐标在一直变化，这时方块还没有与<code>barrier</code>发生碰撞。当方块与红色障碍物<code>barrier</code>碰撞时，我们可以看到方块的<code>transform</code>属性也有了变化：</p>
-<pre><code>[0.999995500003375, 0.0029999955000020251, -0.0029999955000020251, 0.999995500003375, 0, 0] {150, 250}
-[0.99970233476860393, 0.02439757894140453, -0.02439757894140453, 0.99970233476860393, 0, 0] {151, 249}
-[0.99894218654750844, 0.045983779049604996, -0.045983779049604996, 0.99894218654750844, 0, 0] {152, 249}
-</code></pre><p>通过这些信息我们得知，动态引擎通过不断改变<code>ransform</code>和<code>center</code>两个数据模型的数据来驱动View的行为。</p>
-<p>虽然这些数据的精确度可能不是很高，但关键在于这些数据让我们知道了动力引擎是如何进行驱动的，通过这些数据也让我们知道了在行为动作背后也是有据可循的。因此，我们能不能通过程序改变这些数据呢，也就是从另一个层面来控制物体的行为动作。如果是这样的话，那么就需要我们自己计算出一套运行轨迹和行为的数据，而不是通过动作引擎去控制了。</p>
-<p>这里有一个协议，它描述了动作行为的数据模型，那就是<code>UIDynamicItem</code>，它遵循<code>NSObjectProtocol</code>协议。<code>UIDynamicItem</code>协议提供了两个可读写的属性<code>center</code>和<code>transform</code>，物体的运动轨迹靠这两个属性来计算。同时还提供了一个只读的属性<code>bounds</code>，该属性运动物体的边界，它用于描述碰撞物体的边界周长，这样就可以计算碰撞时该物体的受力大小，并做出相应的动作。</p>
-<p>因为<code>UIDynamicItem</code>是一个协议，所以这就说明了它与<code>UIView</code>是松耦合的关系。在<code>UIKit</code>中还有一个类遵循这个协议，就是<code>UICollectionViewLayoutAttributes</code>，这意味着动作引擎不但可以作用于一个View，还可以作用于一个集合中的View。</p>
-<h2 id="u78B0_u649E_u901A_u77E5"><a href="#u78B0_u649E_u901A_u77E5" class="headerlink" title="碰撞通知"></a>碰撞通知</h2><p>到目前为止，我们的程序中已经添加了两个View和两个行为，并让他们产生碰撞行为，那么下面我们将看看当他们互相发生碰撞时我们如何捕获这个行为呢。</p>
-<p>我们回到<code>ViewController.swift</code>文件，让<code>ViewController</code>类遵循<code>UICollisionBehaviorDelegate</code>协议：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ViewController</span>: <span class="title">UIViewController</span>, <span class="title">UICollisionBehaviorDelegate</span> </span>&#123;</span><br></pre></td></tr></table></figure>
-<p>在<code>viewDidLoad</code>方法中，设置碰撞行为<code>collision</code>的碰撞代理：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision.collisionDelegate = <span class="keyword">self</span>;</span><br></pre></td></tr></table></figure>
-<p>然后我们实现<code>UICollisionBehaviorDelegate</code>协议的一个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">collisionBehavior</span><span class="params">(behavior: UICollisionBehavior!, beganContactForItem item: UIDynamicItem!, withBoundaryIdentifier identifier: NSCopying!, atPoint p: CGPoint)</span></span> &#123;</span><br><span class="line">  <span class="built_in">println</span>(<span class="string">"Boundary contact occurred - <span class="subst">\(identifier)</span>"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个方法在View每次发生碰撞时调用。我们让它在控制台打印一些信息。为了能更好的查看该方法中打印的信息，我们将之前设置的<code>collision.action</code>打印信息先去掉。</p>
-<p>我们编译运行一下，可以看到当View之间发生交互，也就是碰撞时，我们在控制台看到了打印信息：</p>
-<pre><code>Boundary contact occurred - barrier
-Boundary contact occurred - barrier
-Boundary contact occurred - nil
-Boundary contact occurred - nil
-Boundary contact occurred - nil
-Boundary contact occurred - nil
-</code></pre><p>从上面的打印信息中可以看出，坠落的方块与标示符为<code>barrier</code>的View发生了两次碰撞，这就是我们之前添加的那个隐性的红色障碍物。标示符为<code>nil</code>的几次碰撞就是方块与引用的屏幕边界发生的碰撞。</p>
-<p>我们接着在该方法中添加代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> collidingView = item <span class="keyword">as</span> <span class="type">UIView</span>;</span><br><span class="line">collidingView.backgroundColor = <span class="type">UIColor</span>.yellowColor();</span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.3</span>) &#123;</span><br><span class="line">  collidingView.backgroundColor = <span class="type">UIColor</span>.grayColor();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>通过上面的代码可以看出，我们定义了一个<code>collidingView</code>常量，用<code>item</code>参数将其赋值，实际上这就是发生碰撞的View，就是那个小方块。然后我们将它的背景色改为黄色，然后经过0.3秒将其背景色从黄色改为了灰色。我们编译运行一下看看：</p>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics21.gif" alt="luping"></p>
-<p>我们可以看到当方块每次发生碰撞行为时，它都会闪着黄色。</p>
-<p>到目前为止，我们所看到的一切都是由动作引擎帮我们实现的，比如说碰撞质量、弹力等，那么接下来，你会看到如何通过<code>UIDynamicItemBehavior</code>类由我们自己控制这些行为属性。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u914D_u7F6E_u884C_u4E3A_u5C5E_u6027"><a href="#u914D_u7F6E_u884C_u4E3A_u5C5E_u6027" class="headerlink" title="配置行为属性"></a>配置行为属性</h2><p>在<code>viewDidLoad</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> itemBehaviour = <span class="type">UIDynamicItemBehavior</span>(items: [square]);</span><br><span class="line">itemBehaviour.elasticity = <span class="number">0.6</span>;</span><br><span class="line">animator.addBehavior(itemBehaviour);</span><br></pre></td></tr></table></figure>
-<p>上面的代码中，我们创建了一个行为项，它与方块View相关联，修改它的弹力为0.6，然后将其添加到行为中。<code>elasticity</code>的最大值为1，这意味着当方块与障碍物发生碰撞时，所以不会损失碰撞能量和速度，所以方块会一直弹。</p>
-<p>我们编译运行一下，看看现在当方块发生碰撞时会有什么反应：</p>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics22.gif" alt="luping"></p>
-<p>我们也可以通过<code>collision.action</code>来记录方块的运行轨迹：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> updateCount = <span class="number">0</span>;</span><br><span class="line">collision.action = &#123;</span><br><span class="line">  <span class="keyword">if</span> (updateCount % <span class="number">3</span> == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> outline = <span class="type">UIView</span>(frame: square.bounds);</span><br><span class="line">    outline.transform = square.transform;</span><br><span class="line">    outline.center = square.center;</span><br><span class="line"> </span><br><span class="line">    outline.alpha = <span class="number">0.5</span>;</span><br><span class="line">    outline.backgroundColor = <span class="type">UIColor</span>.clearColor();</span><br><span class="line">    outline.layer.borderColor = square.layer.presentationLayer().backgroundColor;</span><br><span class="line">    outline.layer.borderWidth = <span class="number">1.0</span>;</span><br><span class="line">    <span class="keyword">self</span>.view.addSubview(outline);</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">    ++updateCount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面代码的意思是，每当<code>collision.action</code>执行三次时，我们添加一个View，大小与<code>square</code>相同，<code>transform</code>和<code>center</code>也相同，透明度设为5，背景色设为空，边框色设为当前<code>square</code>的颜色。这样就可以记录下<code>square</code>运行轨迹了。</p>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics23.gif" alt="luping"></p>
-<p>在上面的代码中，我们只修改了弹力属性<code>elasticity</code>，其实还有其他的属性，我们来看一下：</p>
-<ul>
-<li>弹力（<code>elasticity</code>）：设置物体发生碰撞时的弹力，比如当物体碰撞时弹开的高度、角度的大小，物体的韧性等。</li>
-<li>摩擦力（<code>friction</code>）：设置物体滑动时的摩擦力。</li>
-<li>密度（<code>density</code>）：设置物体密度，密度越大加速度越大。</li>
-<li>阻力（<code>resistance</code>）：设置物体滑动时的阻力，与<code>friction</code>不同的是，它只作用于线性滑动时。</li>
-<li>角度阻力（<code>angularResistance</code>）：物体进行旋转运动时的阻力设置。</li>
-<li>允许旋转（<code>allowsRotation</code>）：该属性并不是模拟现实中的一些行为属性，它是物体是否可以旋转的开关属性。</li>
-</ul>
-<h2 id="u52A8_u6001_u6DFB_u52A0_u884C_u4E3A"><a href="#u52A8_u6001_u6DFB_u52A0_u884C_u4E3A" class="headerlink" title="动态添加行为"></a>动态添加行为</h2><p>在目前的程序中，我们都是预先设置好了View的各种行为和行为属性，那么这一节我们会展现如何动态的添加或移除行为。</p>
-<p>我们打开<code>ViewController.swift</code>文件，在<code>viewDidLoad</code>方法中添加一个属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> firstContact = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
-<p>然后在碰撞代理的方法<code>collisionBehavior(behavior:beganContactForItem:withBoundaryIdentifier:atPoint:)</code>中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!firstContact) &#123;</span><br><span class="line">  firstContact = <span class="literal">true</span>;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> square = <span class="type">UIView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">30</span>, y: <span class="number">0</span>, width: <span class="number">100</span>, height: <span class="number">100</span>));</span><br><span class="line">  square.backgroundColor = <span class="type">UIColor</span>.grayColor();</span><br><span class="line">  view.addSubview(square);</span><br><span class="line"> </span><br><span class="line">  collision.addItem(square);</span><br><span class="line">  gravity.addItem(square);</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> attach = <span class="type">UIAttachmentBehavior</span>(item: collidingView, attachedToItem:square);</span><br><span class="line">  animator.addBehavior(attach);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们又创建了一个正方形View，背景色设置为灰色，将它添加至碰撞和重力行为中，然后我们创建了一个关联行为，将这个正方形和我们之前创建的正方形关联起来。</p>
-<p>编译运行一下，我们可以看到当之前创建的方块与障碍物发生碰撞后，会出现另一个方块：</p>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics24.gif" alt="luping"></p>
-<p>虽然你看到了两个方块似乎被连接起来了，但是之间没有连线，因为我们只是动态的添加了一个行为，然后由该行为达到了这种效果。</p>
-<h2 id="u7528_u6237_u4EA4_u4E92"><a href="#u7528_u6237_u4EA4_u4E92" class="headerlink" title="用户交互"></a>用户交互</h2><p>现在你看到了，我们可以在系统运行时动态的添加或删除行为。在最后呢，我们再介绍一个行为，那就是<code>UISnapBehavior</code>。当你点击屏幕时，<code>UISnapBehavior</code>行为会让对象像弹簧一样跳到你点击的那个位置。</p>
-<p>为了能更好的看清楚效果，我们将刚才添加的那段用于显示方块运行轨迹的代码注释掉，也就是下面这段代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!firstContact) &#123;</span><br><span class="line">  firstContact = <span class="literal">true</span>;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> square = <span class="type">UIView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">30</span>, y: <span class="number">0</span>, width: <span class="number">100</span>, height: <span class="number">100</span>));</span><br><span class="line">  square.backgroundColor = <span class="type">UIColor</span>.grayColor();</span><br><span class="line">  view.addSubview(square);</span><br><span class="line"> </span><br><span class="line">  collision.addItem(square);</span><br><span class="line">  gravity.addItem(square);</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> attach = <span class="type">UIAttachmentBehavior</span>(item: collidingView, attachedToItem:square);</span><br><span class="line">  animator.addBehavior(attach);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后我们在<code>ViewController.swift</code>文件中添加两个属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> square: <span class="type">UIView</span>!;</span><br><span class="line"><span class="keyword">var</span> snap: <span class="type">UISnapBehavior</span>!;</span><br></pre></td></tr></table></figure>
-<p>在<code>viewDidLoad</code>方法中，我们去掉申明<code>square</code>的<code>let</code>关键字：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">square = <span class="type">UIView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">100</span>, y: <span class="number">100</span>, width: <span class="number">100</span>, height: <span class="number">100</span>));</span><br></pre></td></tr></table></figure>
-<p>将<code>square</code>申明为类的属性，而不是方法的常量，是因为我们需要追踪<code>square</code>的轨迹，这样我们就可以在<code>ViewController</code>类的任何方法和地方访问到<code>square</code>。</p>
-<p>然后我们重写<code>touchesEnded</code>方法，在该方法中创建Snap行为，也就是当用户点击屏幕时，会触发Snap行为：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">touchesEnded</span><span class="params">(touches: NSSet!, withEvent event: UIEvent!)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (snap != <span class="literal">nil</span>) &#123;</span><br><span class="line">    animator.removeBehavior(snap);</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> touch = touches.anyObject() <span class="keyword">as</span> <span class="type">UITouch</span>;</span><br><span class="line">  snap = <span class="type">UISnapBehavior</span>(item: square, snapToPoint: touch.locationInView(view));</span><br><span class="line">  animator.addBehavior(snap);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上述代码的作用非常清晰，首先判断Snap行为是否存在，如果存在就从引擎中移除。然后实例化Snap行为，作用项是<code>square</code>，弹跳的位置是我们点击屏幕的位置。编译运行看看，会发生什么呢？</p>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics25.gif" alt="luping"></p>
-<p>参考原文：<a href="http://www.raywenderlich.com/76147/uikit-dynamics-tutorial-swift" target="_blank" rel="external">UIKit Dynamics Tutorial in Swift</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/swift-uikit-dynamics-1/" itemprop="url">
-                  Swift中的UIKit动力学（一）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2014-08-23T00:00:00+08:00" content="2014-08-23">
-              2014-08-23
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/swift-uikit-dynamics-1/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-uikit-dynamics-1/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p><strong>动力学</strong>这个名词不论在哪个行业领域听起来似乎都很高大上。那么在Swift中的重力学是什么呢？那就是将我们移动端屏幕上毫无生命力的东西也置于万有引力中，使它们能够展现出好像真的由于引力而向下坠落以及碰到物体后自然的弹开的效果。  </p>
-<p>要想做到这一点，我们得需要两个利器：<code>UIKit Dynamics</code>和<code>Motion Effects</code>。</p>
-<ul>
-<li><code>UIKit Dynamics</code>是<code>UIKit</code>中一套完整的物理引擎。它可以让我们在程序中对界面元素添加一些行为从而达到诸如重力、弹簧等现实中的动作行为。你只需在引擎中注册界面元素，并指定好物理行为，其他的事就交给物理引擎去完成了。</li>
-<li><code>Motion Effects</code>可以创建很酷的视差效果，就像你iPhone上横竖屏切换时那样。它基于Apple提供的重力加速器提供的数据计算分析，使我们的界面元素根据移动设备的倾斜方向做出相应的反应。  </li>
-</ul>
-<p>当这两者一起使用的时候，我们就可以让程序活起来，富有生命力。</p>
-<h2 id="u8BA9_u6211_u4EEC_u5F00_u59CB_u5C4C_u4E1D_u7684_u9006_u88AD"><a href="#u8BA9_u6211_u4EEC_u5F00_u59CB_u5C4C_u4E1D_u7684_u9006_u88AD" class="headerlink" title="让我们开始屌丝的逆袭"></a>让我们开始屌丝的逆袭</h2><p>我们挑一些小例子来学习<code>UIKit Dynamics</code>。</p>
-<blockquote>
-<p>注：由于个人编码习惯，在Swift代码中我还是加了<code>;</code>，其实可加可不加，根据大家喜好。</p>
-</blockquote>
-<p>打开Xcode6新建项目，选择<code>iOS Application/Single View Application</code>，名称随便取，我这里命名为<code>UIKitDynamicsDemo</code>，我们可以看到<code>Single View Application</code>的目录结构：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics1.png" alt="目录结构"> </p>
-<p>打开<code>ViewController.swift</code>文件，在<code>viewDidLoad</code>方法中添加如下代码：  </p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 创建一个正方形View，颜色设置为蓝绿色，加入当前的View中</span></span><br><span class="line"><span class="keyword">let</span> square = <span class="type">UIView</span>(frame: <span class="type">CGRect</span>(x: <span class="number">100</span>, y: <span class="number">100</span>, width: <span class="number">100</span>, height: <span class="number">100</span>));</span><br><span class="line">square.backgroundColor = <span class="type">UIColor</span>.cyanColor();</span><br><span class="line"><span class="keyword">self</span>.view.addSubview(square);</span><br></pre></td></tr></table></figure>
-<p>上面的代码在我们的屏幕上添加了一个蓝绿色的正方形<code>UIView</code>。运行一下，我们能看到一个木讷的蓝绿色正方形静静的待在屏幕中：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics2.png" alt="屏幕"></p>
-<p>如果你用真机运行，你可以摇晃一下手机、倾斜手机、拿着手机手舞足蹈一下，看看那个木讷的方块有什么反应和变化么？答案是要有反应你就见鬼了。因为我们写的这几行代码只能让它杵在那一动不动，那怎么能让它动起来呢？接下来让我们见证奇迹的时刻！</p>
-<h2 id="u6DFB_u52A0_u91CD_u529B_u884C_u4E3A"><a href="#u6DFB_u52A0_u91CD_u529B_u884C_u4E3A" class="headerlink" title="添加重力行为"></a>添加重力行为</h2><p>在<code>ViewController.swift</code>文件中添加两个属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// UIKit物理引擎</span></span><br><span class="line"><span class="keyword">var</span> animator: <span class="type">UIDynamicAnimator</span>!;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 重力行为</span></span><br><span class="line"><span class="keyword">var</span> gravity: <span class="type">UIGravityBehavior</span>!;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注：代码中感叹号的作用这里不做过多介绍，请自行查阅官方文档。</p>
-</blockquote>
-<p>然后在<code>viewDidLoad</code>方法中再加入以下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化UIKit物理引擎类，作用于ViewController的View</span></span><br><span class="line">animator = <span class="type">UIDynamicAnimator</span>(referenceView: <span class="keyword">self</span>.view);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 实例化重力行为类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">gravity = <span class="type">UIGravityBehavior</span>(items: [square]);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 将重力行为添加到UIKit物理引擎类中</span></span><br><span class="line">animator.addBehavior(gravity);</span><br></pre></td></tr></table></figure>
-<p>现在再编译运行一下，这时我们可以看到这个蓝绿色正方形开始做自由落体运动了，一直跌落出屏幕下边缘然后消失。  </p>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics61.gif" alt="屏幕">  </p>
-<p>我们来看看刚才我们添加的两个属性的类型：</p>
-<ul>
-<li><code>UIDynamicAnimator</code>属于<code>UIKit</code>物理引擎中的类。它的作用是跟踪你添加到物理引擎中的各种行为动作，比如这里的重力行为，并且提供整个上下文。实例化<code>UIDynamicAnimator</code>时，它的构造函数需要传入一个<code>referenceView</code>参数，用于告知它要跟踪并制定坐标的<code>View</code>。</li>
-<li><code>UIGravityBehavior</code>是一个模拟重力的模型，可作用于一个或多个元素。它的构造函数需要传入一个数组，该数组的内容就是我们希望有重力表现的一个元素或多个元素。  </li>
-</ul>
-<p>大多数的行为都有一些配置属性，比如重力行为就有可以改变角度和速率的属性：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化UIKit物理引擎类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">animator = <span class="type">UIDynamicAnimator</span>(referenceView: <span class="keyword">self</span>.view); </span><br><span class="line"></span><br><span class="line"><span class="comment">// 实例化重力行为类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">gravity = <span class="type">UIGravityBehavior</span>(items: [square]);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 角度</span></span><br><span class="line">gravigy.angle = <span class="number">1.6</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 速率</span></span><br><span class="line">gravigy.magnitude = <span class="number">0.1</span>;</span><br><span class="line">    </span><br><span class="line"><span class="comment">// 将重力行为添加到UIKit物理引擎类中</span></span><br><span class="line">animator.addBehavior(gravity);</span><br></pre></td></tr></table></figure>
-<p>上述代码中的<code>angle</code>是重力行为的角度属性，<code>angle</code>的值为0时，方块会水平向右移动，随着值的增大，方块会顺时针改变角度。不过我们要模拟现实中的重力，所以该属性一般不设置，不设置时默认是垂直向下移动。<code>magnitude</code>是重力行为的速率属性，值越大下降的速度越快，当<code>magnitude</code>属性的值为0时，方块就不会下降了，所以最小的速率是0.1。</p>
-<blockquote>
-<p>注意：在现实世界中，重力加速度大约是<code>g = 9.80665m/s^2</code>，就是9.8米每平方秒。根据牛顿第二定律，我们可以使用<code>0.5 * g * Time^2</code>公式来计算下坠距离。<br>在UIKit的重力世界中，计算重力加速度的公式是一样的，但是单位有所不同。不是米而是像素，即<code>g = 1000pixels/s^2</code>，我们同样可以使用牛顿第二定律来计算我们的方块在单位时间内下降的距离。我们只需要知道重力加速度<code>g</code>越大，坠落速度越快，所以上述代码中的<code>magnitude</code>属性就差不多是这意思。</p>
-</blockquote>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u4E0D_u80FD_u8BA9_u6211_u4EEC_u7684_u65B9_u5757_u4E00_u5760_u5343_u91CC"><a href="#u4E0D_u80FD_u8BA9_u6211_u4EEC_u7684_u65B9_u5757_u4E00_u5760_u5343_u91CC" class="headerlink" title="不能让我们的方块一坠千里"></a>不能让我们的方块一坠千里</h2><p>从目前代码的运行状况知道，我们的方块下降到屏幕底部时丝毫没有停止的意思，直接坠崖而下，看都看不见。我们希望我们的屏幕类似一个盒子一样，方块在盒子中，当下降到底部时就停止，那么我们就需要设置一个边界。  </p>
-<p>在<code>ViewController.swift</code>文件中再添加一个属性：  </p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"> </span><br><span class="line"><span class="comment">// 碰撞行为</span></span><br><span class="line"><span class="keyword">var</span> collision: <span class="type">UICollisionBehavior</span>!;</span><br></pre></td></tr></table></figure>
-<p>然后在<code>viewDidLoad</code>方法中加入以下几行代码：  </p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化碰撞行为类，目前只作用于刚才创建的正方形View</span></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square]);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 将参考视图的边界作为碰撞边界</span></span><br><span class="line">collision.translatesReferenceBoundsIntoBoundary = <span class="literal">true</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 将碰撞行为添加到UIKit物理引擎类中</span></span><br><span class="line">animator.addBehavior(collision);</span><br></pre></td></tr></table></figure>
-<p>上面的代码创建了边界行为，它会将一个或多个边界与指定的View联系起来，并使两者有具有交互行为。</p>
-<p>从上面代码我可以注意到<code>collision.translatesReferenceBoundsIntoBoundary = true;</code>这行代码，它的意思是将<code>UIDynamicAnimator</code>引用的View的边界作为碰撞行为的触发边界，这样就不用我们再去设置边界的坐标了，非常好用。</p>
-<p>接着我们编译运行看看，此时小方块坠落到屏幕底部时会产生碰撞效果，并且还会反弹几下，是不是很逼真呢。</p>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics71.gif" alt="屏幕">  </p>
-<h2 id="u78B0_u649E_u884C_u4E3A_u8FDB_u9636_u5E94_u7528"><a href="#u78B0_u649E_u884C_u4E3A_u8FDB_u9636_u5E94_u7528" class="headerlink" title="碰撞行为进阶应用"></a>碰撞行为进阶应用</h2><p>接下来我们在屏幕中再添加一个View，长方形并横在屏幕中间，在<code>viewDidLoad</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 创建一个长方形View，颜色设置为红色，加入当前的View中</span></span><br><span class="line"><span class="keyword">let</span> barrier = <span class="type">UIView</span>(frame:<span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">300</span>, width: <span class="number">140</span>, height: <span class="number">20</span>));</span><br><span class="line">barrier.backgroundColor = <span class="type">UIColor</span>.redColor();</span><br><span class="line"><span class="keyword">self</span>.view.addSubview(barrier);</span><br></pre></td></tr></table></figure>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics3.png" alt="屏幕"></p>
-<p>但是我们发现这个红色的障碍物和方块并没有任何交互行为，这里有一点很重要：只有被行为关联起来的Views才会具有交互行为。我们来看看下面这张关系图：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics4.png" alt="屏幕"></p>
-<p><code>UIDynamicAnimator</code>引擎引用了当前屏幕的view，该view给引擎提供了整个坐标系统。每个行为可以关联多个元素，每个元素都可以被多个行为关联，上面的关系图可以很清晰的表现出当前app中各个行为与元素的关联关系。由于所有行为都没有与长方形view关联，所以<code>barrier</code>基本可以被忽略。</p>
-<h2 id="u5524_u9192Barrier"><a href="#u5524_u9192Barrier" class="headerlink" title="唤醒Barrier"></a>唤醒Barrier</h2><p>如果我们想让<code>barrier</code>活起来，我们得让碰撞行为将它关联起来：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 实例化碰撞行为类，目前作用于刚才创建的正方形View和长方形View</span></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square,barrier]);</span><br></pre></td></tr></table></figure>
-<p>将<code>barrier</code>添加到碰撞行为关联元素的数组中。这样的话，<code>square</code>和<code>barrier</code>这两个view都会有碰撞行为，所以当他们相撞时就会产生碰撞效果。</p>
-<p>编译并运行，让我们来看看睡醒的<code>barrier</code>会产生什么效果：</p>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics81.gif" alt="屏幕">  </p>
-<p>我们再来看看现在app中行为与元素的关系图：<br><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics5.png" alt="屏幕"></p>
-<p>来看看我给这个红色长方形view起的名字：<code>barrier</code>，没错，障碍物。但是它现在是一个称职的障碍物吗？显然不是，当它与蓝绿色正方形碰撞时，它会于正方形一起旋转坠落。</p>
-<p>等等，为什么<code>barrier</code>坠落到屏幕底部后不像<code>square</code>会有蹦跶一下然后停止，反而在缓慢旋转，感觉向失重一样。嗯哼，这是因为我们并没有将重力行为与<code>barrier</code>关联起来，所以它会向失重一样开始旋转。</p>
-<p>这显然不是我想要的结果，我希望<code>square</code>坠落碰到<code>barrier</code>后，<code>barrier</code>纹丝不动，然后<code>square</code>被撞的七荤八素。我们要拦住那个<code>square</code>！</p>
-<h2 id="u9690_u5F62_u7684_u8FB9_u754C_u4E0E_u78B0_u649E_u6548_u679C"><a href="#u9690_u5F62_u7684_u8FB9_u754C_u4E0E_u78B0_u649E_u6548_u679C" class="headerlink" title="隐形的边界与碰撞效果"></a>隐形的边界与碰撞效果</h2><p>我们先去掉<code>barrier</code>的碰撞效果，将：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square,barrier]);</span><br></pre></td></tr></table></figure>
-<p>改为：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square]);</span><br></pre></td></tr></table></figure>
-<p>然后在这行下面添加另外一行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">collision = <span class="type">UICollisionBehavior</span>(items: [square]);</span><br><span class="line">collision.addBoundaryWithIdentifier(<span class="string">"barrier"</span>, forPath: <span class="type">UIBezierPath</span>(rect: barrier.frame));</span><br></pre></td></tr></table></figure>
-<p>这行代码的意思是在碰撞效果中添加一个隐形的边界，它的位置和形状和<code>barrier</code>的一样。这样就会让人产生一种错觉，认为红色的<code>barrier</code>成为了边界，其实真正的边界隐藏在它之后。编译运行一下，我们来看看会发生什么：</p>
-<p><img src="http://www.devtalking.com/postImages/swift-uikit-dynamics91.gif" alt="屏幕"> </p>
-<p>我们看到了当蓝绿色方块下降碰到红色障碍物时产生了碰撞行为，蓝绿色方块弹开并翻转落下。</p>
-<p>从上面内容我们了解到，Swift的UIKit动力引擎非常强大，通过简短的几行代码就可以帮助我们实现惊艳的实现行为。下篇文章会向大家详细的介绍碰撞行为背后的故事。</p>
-<p>参考原文：<a href="http://www.raywenderlich.com/76147/uikit-dynamics-tutorial-swift" target="_blank" rel="external">UIKit Dynamics Tutorial in Swift</a></p>
+<h3 id="u9884_u89C8_u52A9_u624B_u7F16_u8F91_u5668_uFF08Preview_Assistant_Editor_uFF09"><a href="#u9884_u89C8_u52A9_u624B_u7F16_u8F91_u5668_uFF08Preview_Assistant_Editor_uFF09" class="headerlink" title="预览助手编辑器（Preview Assistant Editor）"></a>预览助手编辑器（Preview Assistant Editor）</h3><p>一般情况下，在这个时候我们应该会在iPad、iPhone4s、iPhone5s、iPhone6、iPhone6 Plus这几个不同尺寸的设备上编译运行程序，以便测试通用的<code>storyboard</code>是否能在不同尺寸的设备上正确的自适应。但这确实是个体力活，一遍一遍的更改设备、编译、运行，多么苦逼。但上天总是会眷顾我们这些苦逼的程序员，Xcode6提供了Preview Assistant Editor，能在一个界面上显示出不同尺寸设备的程序运行情况，是否有问题一目了然。</p>
+<p>我们打开 <strong>Main.storyboard</strong> ，然后选择 <strong>View\Assistant Editor\Show Assistant Editor</strong> ，这时编辑区会分隔为两部分。再点击顶部导航栏中的 <strong>Automatic</strong> ，在弹出菜单中选择 <strong>Preview</strong> ，最后选择 <strong>Main.storyboard (Preview)</strong> ：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-26.png" alt="图片"></p>
+<p>现在在 <strong>Assistant Editor</strong> 区域会显示一个4寸的界面：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-27.png" alt="图片"></p>
+<p>我们还可以点击预览界面底部，名字（比如图中的iPhone 4-inch）旁边的地方让屏幕翻转为横屏：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-28.png" alt="图片"></p>
+<p>这无疑是针对检查不同尺寸设备的自适应情况的一项重大改进，但还远远不止于此！点击预览界面左下角的 <strong>+</strong> 按钮，会弹出当前<code>storyboard</code>文件支持的各种尺寸的设备，可供我们预览：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-29.png" alt="图片"></p>
+<p>分别选择iPhone 5.5-inch和iPad，此时我们在预览界面就可以同时显示三种尺寸的屏幕：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-30.png" alt="图片"></p>
+<p>此时同学们是否注意到4寸的横屏显示有点别扭呢？没错，它的那朵元太大了，我们可以通过对image view添加其他的约束条件来改善这个问题。</p>
+<p>回到 <strong>Main.storyboard</strong> ，选择image view，然后按住 <strong>Ctrl</strong>建和鼠标左键，拖动鼠标到View Controller的View上，松开鼠标后会弹出一个菜单，我们选择 <strong>Equal Heights</strong> ：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-31.png" alt="图片"></p>
+<p>这时会出现一些红色的约束提示，这是因为我们刚才加的这个约束条件与之前加过的约束条件有冲突。因为之前我们添加过image view和TextContainer view之间的垂直间距（Vertical Margins）约束，所以image view的高度不可能等于它容器（View Controller的View）的高度。</p>
+<p>让我们来修复该问题，首先在<code>storyboard</code>的结构目录中选择我们刚才添加的 <strong>Equal Heights</strong> 约束，然后选择右侧工具栏中的 <strong>Attribute Inspect</strong> 页签，如果 <strong>First Item</strong> 属性不是 <strong>cloud.Height</strong> ，那么在下拉菜单中选择 <strong>Reverse First and Second Item</strong> 这一项让 <strong>First Item</strong> 的值成为 <strong>cloud.Height</strong> ：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-32.png" alt="图片"></p>
+<p>接下来将 <strong>Relation</strong> 属性的值设置为 <strong>Less Than or Equal</strong> ，将 <strong>Multiplier</strong> 的值设置为 <strong>0.4</strong> ：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-33.png" alt="图片"></p>
+<p>这一系列设置的作用是让cloud这张图片的高度要么等于它自身的高度，要么等于屏幕高度的40%，最后呈现的效果选择这两者中较小的一个高度。</p>
+<p>现在你应该注意到了在预览面板中，4寸的横屏显示即时的对你刚才的约束改动做出了响应：</p>
+<p><img src="http://www.devtalking.com/postImages/adaptive-layout-34.png" alt="图片"></p>
+<p>你看看其他尺寸的预览自动更新了么？答案那是必须的，所以说 <strong>Preview Assistant Editor</strong> 确实是一项重大改进，是程序员和设计人员的福音！</p>
+<p>由于本文的示例是一个天气应用，所以光有天气图标不行，我们还得加上城市和温度才行。</p>
+<p>未完待续……</p>
+<p>原文地址：<a href="http://www.raywenderlich.com/83276/beginning-adaptive-layout-tutorial" target="_blank" rel="external">Beginning Adaptive Layout Tutorial</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -1153,7 +1174,7 @@ Boundary contact occurred - nil
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1191,7 +1212,7 @@ Boundary contact occurred - nil
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">100</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

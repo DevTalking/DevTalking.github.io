@@ -241,8 +241,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/machine-learning-16/" itemprop="url">
-                  机器学习笔记十六之基尼系数、CART
+                <a class="post-title-link" href="/articles/kafka-practice-14/" itemprop="url">
+                  Kafka从上手到实践-实践真知：搭建Zookeeper集群
                 </a>
               
             
@@ -252,8 +252,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-07-15T00:00:00+08:00" content="2018-07-15">
-              2018-07-15
+            <time itemprop="dateCreated" datetime="2019-02-10T00:00:00+08:00" content="2019-02-10">
+              2019-02-10
             </time>
           </span>
 
@@ -262,8 +262,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
                   </a>
                 </span>
 
@@ -278,8 +278,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-16/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-16/" itemprop="commentsCount"></span>
+              <a href="/articles/kafka-practice-14/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-14/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -310,21 +310,12 @@
 </script>
 
 
-<p>这篇笔记我们来看看决策树的另一种划分方式基尼系数和决策树中的超参数，以及决策树的缺陷。</p>
-<h2 id="u57FA_u5C3C_u7CFB_u6570"><a href="#u57FA_u5C3C_u7CFB_u6570" class="headerlink" title="基尼系数"></a>基尼系数</h2><p>在一开始我们使用Scikit Learn中提供的决策树分类器时，<code>DecisionTreeClassifier</code>有一个参数<code>criterion</code>，我们之前传入了<code>entropy</code>，也就是表示此时决策树使用信息熵方式。由此可知，决策树应该不止信息熵一种方式，所以这一节来看看决策树的另一种方式，基尼系数。</p>
-<p>其实基尼系数和信息熵的思路基本是一致的，只是判定数据随机性度量的公式不一样，那么基尼系数的公式为：</p>
-<p>$$G = 1 - \sum_{i=1}^k p_i^2$$</p>
-<p>同样用之前的例子代入公式看一下：</p>
-<p>$$\{\frac 1 3,\frac 1 3,\frac 1 3\}$$</p>
-<p>将上面的数据类别占比信息代入公式后可得：</p>
-<p>$$G = 1-(\frac 1 3)^2-(\frac 1 3)^2-(\frac 1 3)^2=0.6666$$</p>
-<p>再换一组数据类别占比信息：</p>
-<p>$$\{\frac 1 {10},\frac 2 {10},\frac 7 {10}\}$$</p>
-<p>代入公式后可得：</p>
-<p>$$G = 1-(\frac 1 {10})^2-(\frac 2 {10})^2-(\frac 7 {10})^2=0.46$$</p>
-<p>可见基尼系数同样反应了数据不确定性的度量。这里就不再使用代码对基尼系数的方式进行模拟了，其实只需要将信息熵的公式换成基尼系数的既可。</p>
+<p>这一节我们来真正搭建一个Zookeeper集群。</p>
+<h2 id="u642D_u5EFAZookeeper_u96C6_u7FA4"><a href="#u642D_u5EFAZookeeper_u96C6_u7FA4" class="headerlink" title="搭建Zookeeper集群"></a>搭建Zookeeper集群</h2><p>首先要做的就是再租赁两个服务器，参照<strong>搭建单机Kafka</strong>章节中的步骤，租赁阿里云服务器、安装JDK、下载配置Kafka、配置安全组规则。</p>
+<h3 id="Zookeeper_u914D_u7F6E_u4FE1_u606F"><a href="#Zookeeper_u914D_u7F6E_u4FE1_u606F" class="headerlink" title="Zookeeper配置信息"></a>Zookeeper配置信息</h3><p>在<strong>搭建单机Kafka</strong>章节中，启动的是单机Zookeeper，所以<code>/root/kafka_2.12-2.0.0/config</code>目录下的<code>zookeeper.properties</code>配置文件中只配置了<code>dataDir</code>，也就是存储各种数据、日志、快照的路径。</p>
+<p>在搭建Zookeeper时，就需要额外再配置一些参数了。同样打开<code>/root/kafka_2.12-2.0.0/config</code>目录下的<code>zookeeper.properties</code>配置文件，额外添加如下内容：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">maxClientCnxns=0&#10;tickTime=2000&#10;initLimit=10&#10;syncLimit=5&#10;quorumListenOnAllIPs=true&#10;server.1=zookeeper.server.1:2888:3888&#10;server.2=zookeeper.server.2:2888:3888&#10;server.3=zookeeper.server.3:2888:3888</span><br></pre></td></tr></table></figure></p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-16/#more" rel="contents">
+            <a class="btn" href="/articles/kafka-practice-14/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -362,8 +353,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/machine-learning-15/" itemprop="url">
-                  机器学习笔记十五之决策树、信息熵
+                <a class="post-title-link" href="/articles/kafka-practice-13/" itemprop="url">
+                  Kafka从上手到实践-Zookeeper CLI：CRUD zNode
                 </a>
               
             
@@ -373,8 +364,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-06-30T00:00:00+08:00" content="2018-06-30">
-              2018-06-30
+            <time itemprop="dateCreated" datetime="2019-01-28T00:00:00+08:00" content="2019-01-28">
+              2019-01-28
             </time>
           </span>
 
@@ -383,8 +374,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
                   </a>
                 </span>
 
@@ -399,8 +390,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-15/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-15/" itemprop="commentsCount"></span>
+              <a href="/articles/kafka-practice-13/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-13/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -431,12 +422,14 @@
 </script>
 
 
-<p>这篇笔记我们来看看机器学习中一个重要的非参数学习算法，决策树。</p>
-<h2 id="u4EC0_u4E48_u662F_u51B3_u7B56_u6811"><a href="#u4EC0_u4E48_u662F_u51B3_u7B56_u6811" class="headerlink" title="什么是决策树"></a>什么是决策树</h2><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/84205d722c59ef40b62804d2672f9435.jpg" alt=""></p>
-<p>上图是一个向银行申请信用卡的示例，图中的树状图展示了申请人需要在银行过几道关卡后才能成功申请到一张信用卡的流程图。在图中树状图的根节点是申请人输入的信息，叶子节点是银行作出的决策，也就相当于是对申请者输入信息作出的分类决策。从第一个根节点到最后一个叶子节点经过的根节点数量称为树状图的深度（depth）。上图示例中的树状图从第一个根节点<strong>申请人是否办理过信用卡</strong>，到最后一个<strong>发放信用卡</strong>叶子节点共经过了三个根节点，所以深度为3。那么像这样使用树状图对输入信息一步步分类的方式就称为决策树方式。</p>
-<p>我们再来看一个问题，上图中每一个根节点的输入信息都可以用<strong>是</strong>或<strong>否</strong>来做判断分类，但是机器学习的样本数据都是数字，那么此时如果做判断呢？我们先来使用Scikit Learn中提供的决策树直观的看一下通过决策树对样本数据的分类过程和分类结果。</p>
+<p>这一节来看看Zookeeper的命令行工具。</p>
+<h2 id="Zookeeper_CLI"><a href="#Zookeeper_CLI" class="headerlink" title="Zookeeper CLI"></a>Zookeeper CLI</h2><p>在第七章节搭建单机Kafka中，我们已经发现了，Kafka是自带Zookeeper的，而且在启动Kafka之前，要先启动Zookeeper，相当于启动了单机Zookeeper，所以我们先说Zookeeper CLI，后面说Zookeeper集群时再具体说配置参数。</p>
+<h3 id="u5C55_u793AzNode"><a href="#u5C55_u793AzNode" class="headerlink" title="展示zNode"></a>展示zNode</h3><p>首先打开终端，连接至我们的服务器，进入<code>/root/kafka_2.12-2.0.0/bin</code>目录，执行如下命令：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sh zookeeper-shell.sh 127.0.0.1:2181</span><br></pre></td></tr></table></figure></p>
+<p>这是Zookeeper CLI Client连接Zookeeper的命令，当看到如下信息时，说明连接成功：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Connecting to 127.0.0.1:2181&#10;Welcome to ZooKeeper!&#10;JLine support is disabled</span><br></pre></td></tr></table></figure></p>
+<p>先来来看看目前Zookeeper里都有哪些zNode：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ls /&#10;&#10;[cluster, controller_epoch, controller, brokers, zookeeper, kafka-manager, admin, isr_change_notification, consumers, log_dir_event_notification, latest_producer_id_block, config]</span><br></pre></td></tr></table></figure></p>
+<p><code>ls</code>命令和Linux中的作用一样，在Zookeeper中是展示某个zNode下的所有zNode。这里的<code>/</code>表示根zNode。可以看到已经有很多zNode注册在了Zookeeper。再来看看<code>brokers</code>下还有哪些zNode：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ls /brokers&#10;&#10;[ids, topics, seqid]</span><br></pre></td></tr></table></figure></p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-15/#more" rel="contents">
+            <a class="btn" href="/articles/kafka-practice-13/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -474,8 +467,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/machine-learning-14/" itemprop="url">
-                  机器学习笔记十四之核函数（Kernel Function）
+                <a class="post-title-link" href="/articles/kafka-practice-12/" itemprop="url">
+                  Kafka从上手到实践-初步认知：Zookeeper
                 </a>
               
             
@@ -485,8 +478,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-06-15T00:00:00+08:00" content="2018-06-15">
-              2018-06-15
+            <time itemprop="dateCreated" datetime="2019-01-07T00:00:00+08:00" content="2019-01-07">
+              2019-01-07
             </time>
           </span>
 
@@ -495,8 +488,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
                   </a>
                 </span>
 
@@ -511,8 +504,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-14/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-14/" itemprop="commentsCount"></span>
+              <a href="/articles/kafka-practice-12/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-12/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -543,24 +536,20 @@
 </script>
 
 
-<h2 id="SVM_u5904_u7406_u975E_u7EBF_u6027_u95EE_u9898"><a href="#SVM_u5904_u7406_u975E_u7EBF_u6027_u95EE_u9898" class="headerlink" title="SVM处理非线性问题"></a>SVM处理非线性问题</h2><p>我们在<a href="http://www.devtalking.com/articles/machine-learning-8/"> 机器学习笔记八之多项式回归、拟合程度、模型泛化 </a>中讲过线性回归通过多项式回归方法处理非线性问题，同样SVM也可以使用多项式方法处理非线性问题。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用datasets提供的方法构建非线性数据</span></span><br><span class="line">X, y = datasets.make_moons()</span><br></pre></td></tr></table></figure>
-<p>我们可以使用<code>datasets</code>提供的<code>make_moons()</code>函数生成非线性数据，默认为100行2列的矩阵，既100个样本数据，每个样本数据2个特征。可以使用<code>n_samples</code>参数指定样本数据数量。我们将其绘制出来看看：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/df044e91c5054a81223e83ab5e339d9d.jpg" alt=""></p>
-<p>可以看到<code>make_moons()</code>默认生成的数据绘制出的图像是两个规整的半月牙曲线。但是作为样本数据有点太规整了，所以我们可以使用<code>noise</code>参数给生成的数据增加一点噪音：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X, y = datasets.make_moons(noise=<span class="number">0.15</span>)</span><br><span class="line"></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/e1409e9a5bd253d605c321d1edf4aa9c.jpg" alt=""></p>
-<p>可以看到，增加了噪音后虽然数据点较之前的分布分散随机了许多，但整体仍然是两个半月牙形状。下面我们就在SVM的基础上使用多项式来看看对这个样本数据决策边界的计算：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures, StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> LinearSVC</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br></pre></td></tr></table></figure>
-<p>首先我们需要引入我们用到的几个类：</p>
+<p>这一节我们来认识一下在Kafka中有着超然地位的Zookeeper。</p>
+<h2 id="Zookeeper_u521D_u8BC6"><a href="#Zookeeper_u521D_u8BC6" class="headerlink" title="Zookeeper初识"></a>Zookeeper初识</h2><p>ZooKeeper 分布式服务框架是Apache Hadoop 的一个子项目，它主要是用来解决分布式应用中经常遇到的一些数据管理问题，如：统一命名服务、状态同步服务、集群管理、分布式应用配置项的管理等。简化分布式应用协调及其管理的难度，提供高性能的分布式服务。ZooKeeper的目标就是封装好复杂、易出错的关键服务，将简单易用的接口和性能高效、功能稳定的系统提供给用户。</p>
+<p>Zookeeper有以下一些特点：</p>
 <ul>
-<li>多项式自然要用到之前讲过的<code>PolynomialFeatures</code>类。</li>
-<li>数据归一化需要用到<code>StandardScaler</code>类。</li>
-<li>同样需要用到Pipeline将多个过程封装在一个函数里，所以要用到<code>Pipeline</code>类。</li>
+<li>Zookeeper的内部数据结构是树状结构的。</li>
+<li>每个节点称为zNode。</li>
+<li>每个zNode都有一个唯一路径（path）。</li>
+<li>zNode分长久存在的和临时存在的。</li>
+<li>每个zNode都可以存储数据。</li>
+<li>zNode不能重命名。</li>
+<li>每个zNode的任何变化都可以被监控。</li>
 </ul>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-14/#more" rel="contents">
+            <a class="btn" href="/articles/kafka-practice-12/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -598,8 +587,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/machine-learning-13/" itemprop="url">
-                  机器学习笔记十三之支撑向量机（SVM）
+                <a class="post-title-link" href="/articles/kafka-practice-11/" itemprop="url">
+                  Kafka从上手到实践-实践真知：Kafka Java Consumer
                 </a>
               
             
@@ -609,8 +598,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-05-30T00:00:00+08:00" content="2018-05-30">
-              2018-05-30
+            <time itemprop="dateCreated" datetime="2019-01-01T00:00:00+08:00" content="2019-01-01">
+              2019-01-01
             </time>
           </span>
 
@@ -619,8 +608,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
                   </a>
                 </span>
 
@@ -635,8 +624,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-13/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-13/" itemprop="commentsCount"></span>
+              <a href="/articles/kafka-practice-11/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-11/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -667,21 +656,18 @@
 </script>
 
 
-<p>这一篇笔记主要讲机器学习算法中一个重要的分类算法，支撑向量机（Support Vector Machine）。它背后有严格的数学理论和统计学理论支撑的，这里我们只对它的原理和应用做以介绍，更深层次的数学理论有兴趣可以查阅其他资料。</p>
-<h2 id="u4EC0_u4E48_u662FSVM"><a href="#u4EC0_u4E48_u662FSVM" class="headerlink" title="什么是SVM"></a>什么是SVM</h2><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/5142c26ba0e86429631a63609c314a97.jpg" alt=""></p>
-<p>上面的图展示的是一个二分类问题，在逻辑回归的笔记中，我们知道了决策边界，图中橘黄色的直线就是决策边界，它看似很好的将样本数据的不同分类区分开了。我们在多项式回归的笔记中，讲过模型泛化的问题，一个模型的好坏程度很大程度上是体现了模型泛化能力的好坏，也就是对未知样本的预测能力。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/b26d6614606ac304144b99549eeb390e.jpg" alt=""></p>
-<p>如果新来一个样本数据A，按照决策边界划分它是被分为了蓝色分类，可事实真的是如此吗，因为点A和红色分类的点非常近，很有可能点A是属于红色分类的。所以上图中的决策边界可能并不是最优的，那最优的决策边界应该是什么样的呢？</p>
-<p>上面的决策边界之所以有缺陷，是因为它和红色类别的点太近了，当然肯定也不能和蓝色的点太近了，所以我们希望这条决策边界离红色分类和蓝色分类都尽可能的远，才能很好的避免上面出现的问题。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/990fbea083569d4503be599d202b049d.jpg" alt=""></p>
-<p>想要决策边界离红蓝两个分类都尽可能的远，也就是红蓝分类两边离决策边界最近的点的距离要远，并且两边的点到决策边界的距离要相等，这才说明决策边界是不偏不倚的，如上图所示。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/d4642c6673e5e75023088be725dcd4f8.jpg" alt=""></p>
-<p>过红蓝两边离决策边界最近的点画两条直线，并且平行于决策边界，那么就确定了一个区域，在这个区域内不应该再有任何数据点出现。那么SVM就是尝试寻找这个区域中间那条最优的决策边界。这个区域边界上的点称为支撑向量，换句话说，是支撑向量定义出了这个区域，那么最优的决策边界也是由支撑向量决定的，这也是支撑向量机这个名称的由来。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/f5af760ed417acf74d79d065b437807d.jpg" alt=""></p>
-<p>如上图所示，由支撑向量确定的区域之间的距离称为Margin。那么SVM要做的事情就是最大化Margin，既将问题转化为了求最优解的问题。</p>
-<p>以上对SVM的解释是基于线性可分问题的基础上，也就是能确确实实找到一条直线作为决策边界，这种问题称为Hard Margin SVM，但是很多真实的情况是线性不可分的，这类问题称为Soft Margin SVM，这两类问题都是支撑向量机可以处理的，但基础还是Hard Margin SVM。</p>
+<p>这一节来看看如何使用Java编写Kafka Consumer。</p>
+<h2 id="Java_Consumer"><a href="#Java_Consumer" class="headerlink" title="Java Consumer"></a>Java Consumer</h2><p>首先创建Consumer需要的配置信息，最基本的有五个信息：</p>
+<ul>
+<li>Kafka集群的地址。</li>
+<li>发送的Message中Key的序列化方式。</li>
+<li>发送的Message中Value的序列化方式。</li>
+<li>指定Consumer Group。</li>
+<li>指定拉取Message范围的策略。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">"IP:Port"</span>);</span><br><span class="line">properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, <span class="string">"consumer_group_1"</span>);</span><br><span class="line">properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, <span class="string">"latest"</span>); <span class="comment">// earliest, none</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-13/#more" rel="contents">
+            <a class="btn" href="/articles/kafka-practice-11/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -719,8 +705,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/machine-learning-12/" itemprop="url">
-                  机器学习笔记十二之算法精准率、召回率、混淆矩阵
+                <a class="post-title-link" href="/articles/kafka-practice-10/" itemprop="url">
+                  Kafka从上手到实践-实践真知：Kafka Java Producer
                 </a>
               
             
@@ -730,8 +716,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-05-15T00:00:00+08:00" content="2018-05-15">
-              2018-05-15
+            <time itemprop="dateCreated" datetime="2018-12-15T00:00:00+08:00" content="2018-12-15">
+              2018-12-15
             </time>
           </span>
 
@@ -740,8 +726,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
                   </a>
                 </span>
 
@@ -756,8 +742,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-12/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-12/" itemprop="commentsCount"></span>
+              <a href="/articles/kafka-practice-10/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-10/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -788,30 +774,11 @@
 </script>
 
 
-<p>机器学习算法中有一个重要环节就是评判算法的好坏，我们在之间的笔记中讲过多种评价回归算法的评测标准，比如均方误差（MSE）、均方根误差（RMSE）、平均绝对误差（MAE）、$R^2$（R Squared）。但是在分类问题中我们一直使用分类准确度这一个指标，也就是预测对分类的样本数量除以总预测样本数量。但是这个方法存在很大的一个缺陷，所以这篇笔记主要介绍评价分类问题的方式方法。</p>
-<h2 id="u6781_u5EA6_u504F_u659C_u6570_u636E_uFF08Skewed_Data_uFF09"><a href="#u6781_u5EA6_u504F_u659C_u6570_u636E_uFF08Skewed_Data_uFF09" class="headerlink" title="极度偏斜数据（Skewed Data）"></a>极度偏斜数据（Skewed Data）</h2><p>为什么说分类准确度这个指标存在很大的一个缺陷呢。举个例子，假设有一个癌症预测系统，输入体检信息，判断是否患有癌症。我们知道世界上相对于其他病症，患癌症的比例还是很小，如果癌症产生的概率只有0.1%，那么有99.9%的人都不会患有癌症。这就意味着，就算癌症预测系统什么都不做，但凡有体检信息输入，就给出没有患癌症的结果，那准确率也是达到了99.9%。那此时这个分类准确度是真实的吗？所以当样本数据或领域的实际情况存在数据极度偏斜的时候，只使用分类准确度这个指标是远远不够的。</p>
-<h2 id="u6DF7_u6DC6_u77E9_u9635_uFF08Confusion_Matrix_uFF09"><a href="#u6DF7_u6DC6_u77E9_u9635_uFF08Confusion_Matrix_uFF09" class="headerlink" title="混淆矩阵（Confusion Matrix）"></a>混淆矩阵（Confusion Matrix）</h2><p>这一节介绍一个能进一步分析分类结果的工具，混淆矩阵。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/c997c342900bf1764c1982113ad3e571.jpg" alt=""></p>
-<p>上面这个表针对二分类问题，所有将类别就分为两类0和1，0表示Negative，类似医院上的阴性，1表示Positive，类似医学上的阳性。行代表真实值，列代表预测值。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/11d0bcf47d48fee84429d1f387b21847.jpg" alt=""></p>
-<p>如上图所示：</p>
-<ul>
-<li>(0, 0)格子真实值和预测值都为0，称为预测Negative正确，记作True Negative，简写为TN。</li>
-<li>(0, 1)格子真实值为0，但预测值为1，称为预测Positive错误，记作False Positive，简写为FP。</li>
-<li>(1, 0)格子真实值为1， 但预测值为0，称为预测Negative错误，记作False Negative，简写为FN。</li>
-<li>(1, 1)格子真实值和预测值都为1，称为预测Positive正确，记作True Positive，简写为TP。</li>
-</ul>
-<p>以上这个表格就叫做混淆矩阵。举个例子，如果对10000个人预测他们是否患癌症，通过混淆矩阵表示出的真实情况就是：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/c3d5ddc7046eae2076c334850889e4e8.jpg" alt=""></p>
-<p>解读一下：</p>
-<ul>
-<li>没有患癌症，系统也预测出没有患癌症的人为9978人（TN）。</li>
-<li>没有患癌症，但系统预测出患癌症的人为12人（FP）。</li>
-<li>患有癌症，但系统预测出没有患癌症的人为2人（FN）。</li>
-<li>患有癌症，系统也预测出患有癌症的人为8人（TP）。</li>
-</ul>
+<p>这一节来看看如何使用Java编写Kafka Producer。</p>
+<h2 id="Create_Kafka_Project"><a href="#Create_Kafka_Project" class="headerlink" title="Create Kafka Project"></a>Create Kafka Project</h2><p>创建Maven工程，在POM文件中加入如下两个依赖：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.kafka<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>kafka-clients<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.0.0<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>slf4j-simple<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.7.25<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>第一个是Kafka的依赖包，用于创建Producer、ProducerRecord、Consumer等。第二个是Log4J的依赖包，用于输出日志。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-12/#more" rel="contents">
+            <a class="btn" href="/articles/kafka-practice-10/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -837,7 +804,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -875,7 +842,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">100</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -241,8 +241,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/tuple-in-swift/" itemprop="url">
-                  Swift中的元组（Tuples）
+                <a class="post-title-link" href="/articles/uiview-first-animation/" itemprop="url">
+                  iOS UIView Animation - First Animation
                 </a>
               
             
@@ -252,8 +252,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-10-08T00:00:00+08:00" content="2014-10-08">
-              2014-10-08
+            <time itemprop="dateCreated" datetime="2015-06-28T00:00:00+08:00" content="2015-06-28">
+              2015-06-28
             </time>
           </span>
 
@@ -278,8 +278,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/tuple-in-swift/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/tuple-in-swift/" itemprop="commentsCount"></span>
+              <a href="/articles/uiview-first-animation/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/uiview-first-animation/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -308,47 +308,261 @@
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
-
-<h2 id="u521B_u5EFA_u5143_u7EC4"><a href="#u521B_u5EFA_u5143_u7EC4" class="headerlink" title="创建元组"></a>创建元组</h2><p>在Swift中创建元组的方式很简单，它的语法有点类似数组，但是需要把方括号替换为圆括号：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> firstHighScore = (<span class="string">"Mary"</span>, <span class="number">9001</span>)</span><br></pre></td></tr></table></figure>
-<p>与数组不同的是，元组中的元素可以是任意类型。上面代码中<code>firstHighScore</code>元组就包含一个<code>String</code>类型的元素和一个<code>Int</code>类型的元素。</p>
-<p>另外，在创建元组时你还可以给元组中的元素命名：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> secondHighScore = (name: <span class="string">"James"</span>, score: <span class="number">4096</span>)</span><br></pre></td></tr></table></figure>
-<p>这样可以让我们在使用元组的时候明确的指定某个元素，非常有用。在后面的文章中大家可以看到给元素命名的好处。</p>
-<p>以上就是创建元组的两种方式，非常简单和简洁。你不需要像创建<code>struct</code>一样写出它的结构和内部属性，也不需要像创建<code>class</code>一样要写初始化方法。你只需要把你想用的、任何类型的值放在圆括号内，用逗号隔开即可。如果你愿意你还可以给每个元素命名，提高元组使用效率。</p>
-<h2 id="u4ECE_u5143_u7EC4_u4E2D_u8BFB_u5143_u7D20"><a href="#u4ECE_u5143_u7EC4_u4E2D_u8BFB_u5143_u7D20" class="headerlink" title="从元组中读元素"></a>从元组中读元素</h2><p>从元组中读取元素有几种方式，但一般我们会选择最适合当前应用场景的方式，并且确保选择的方式是在当前情况下最简单的一种。</p>
-<h3 id="u5143_u7EC4_u5143_u7D20_u6CA1_u6709_u547D_u540D"><a href="#u5143_u7EC4_u5143_u7D20_u6CA1_u6709_u547D_u540D" class="headerlink" title="元组元素没有命名"></a>元组元素没有命名</h3><p>如果我们没有给元组的元素命名，我们可以用点语法，通过定义好的元组变量或常量获取它的第1个到第n个元素：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> firstHighScore = (<span class="string">"Mary"</span>, <span class="number">9001</span>)</span><br><span class="line">firstHighScore.<span class="number">0</span>            <span class="comment">// Mary</span></span><br><span class="line">firstHighScore.<span class="number">1</span>        <span class="comment">// 9001</span></span><br></pre></td></tr></table></figure>
-<p>如果你觉得上述这种方法会造成语义的不明确，那么我们还可以将元组赋值给一个带有元素名称的元组（元素名称个数要对应）：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> (firstName, firstScore) = firstHighScore</span><br><span class="line">firstName       <span class="comment">// Mary</span></span><br><span class="line">firstScore      <span class="comment">// 9001</span></span><br></pre></td></tr></table></figure>
-<p>如果你只想读取<code>firstHighScore</code>元组中的分数，那么你可以这样写：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> (<span class="number">_</span>, firstScore) = firstHighScore</span><br><span class="line">firstScore      <span class="comment">// 9001</span></span><br></pre></td></tr></table></figure>
-<h3 id="u5143_u7EC4_u5143_u7D20_u6709_u547D_u540D"><a href="#u5143_u7EC4_u5143_u7D20_u6709_u547D_u540D" class="headerlink" title="元组元素有命名"></a>元组元素有命名</h3><p>如果我们已经给元组中的元素命名了名称，那么我们可以这样写：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> secondName = secondHighScore.name</span><br><span class="line"><span class="keyword">let</span> secondScore = secondHighScore.score</span><br><span class="line">secondName      <span class="comment">// James</span></span><br><span class="line">secondScore     <span class="comment">// 4096</span></span><br></pre></td></tr></table></figure>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u5C06_u5143_u7EC4_u4F5C_u4E3A_u51FD_u6570_u8FD4_u56DE_u503C"><a href="#u5C06_u5143_u7EC4_u4F5C_u4E3A_u51FD_u6570_u8FD4_u56DE_u503C" class="headerlink" title="将元组作为函数返回值"></a>将元组作为函数返回值</h2><p>我们可以将元组作为函数的返回值，下面这个函数的返回值就是我们之前定义过的<code>secondHighScore</code>元组：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAHighScore</span><span class="params">()</span></span> -&gt; (name: <span class="type">String</span>, score: <span class="type">Int</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">let</span> theName = <span class="string">"Patricia"</span></span><br><span class="line">    <span class="keyword">let</span> theScore = <span class="number">3894</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> (theName, theScore)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>为什么说上述函数的返回值是<code>secondHighScore</code>元组呢？因为<code>getAHighScore</code>函数返回的元组元素个数、元素名称、元素类型均和<code>secondHighScore</code>相同。</p>
-<p>其实将元组作为函数的返回值时也可以不必对元素进行命名，只要你明白每个元素代表的含义即可：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAHighScore</span><span class="params">()</span></span> -&gt; (<span class="type">String</span>, <span class="type">Int</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">let</span> theName = <span class="string">"Patricia"</span></span><br><span class="line">    <span class="keyword">let</span> theScore = <span class="number">3894</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> (theName, theScore)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果你不确定返回的元组一定不为<code>nil</code>，那么你可以返回一个可选的元组类型：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">maybeGetHighScore</span><span class="params">()</span></span> -&gt; (<span class="type">String</span>, <span class="type">Int</span>)?</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>因为是可选的元组类型，所以当返回的元组不为<code>nil</code>时，你需要对元组进行解包：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> possibleScore = maybeGetHighScore()</span><br><span class="line">&#123;</span><br><span class="line">    possibleScore.<span class="number">0</span></span><br><span class="line">    possibleScore.<span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">println</span>(<span class="string">"Nothing Here"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>注意：当你定义了一个没有返回值的函数时，其实该函数是返回一个空的元组<code>()</code>。</p>
+<p>本文首发<a href="http://www.csdn.net/article/2015-07-02/2825115-ios-uiview-animation-1" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
 </blockquote>
-<h2 id="u5143_u7EC4_u7684_u8BBF_u95EE_u7EA7_u522B"><a href="#u5143_u7EC4_u7684_u8BBF_u95EE_u7EA7_u522B" class="headerlink" title="元组的访问级别"></a>元组的访问级别</h2><p>元组的访问级别取决于它包含的元素。比如元组里的元素都是<code>private</code>级别的，那么该元组也是<code>private</code>级别的。但这里有一个遵循最小的原则，也就是说如果一个元组中有两个元素，一个为<code>private</code>级别，另一个为<code>public</code>级别，那么该元组遵循最小原则，它的访问级别为<code>private</code>。</p>
-<h2 id="u5143_u7EC4_u662F_u503C_u7C7B_u578B"><a href="#u5143_u7EC4_u662F_u503C_u7C7B_u578B" class="headerlink" title="元组是值类型"></a>元组是值类型</h2><p>关于值类型和引用类型的知识这里不再累赘，我们通过一个代码示例来看看元组是哪种类型：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> someScore = (<span class="string">"John"</span>, <span class="number">55</span>)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> anotherScore = someScore</span><br><span class="line">anotherScore.<span class="number">0</span> = <span class="string">"Robert"</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(anotherScore.<span class="number">0</span>)  <span class="comment">//Outputs:  "Robert"</span></span><br><span class="line"><span class="built_in">println</span>(someScore.<span class="number">0</span>)     <span class="comment">//Outputs:  "John"</span></span><br></pre></td></tr></table></figure>
-<p>通过上述的代码示例可以看出，我把<code>someScore</code>元组赋值给了<code>anotherScore</code>，然后修改了<code>anotherScore</code>的第1个元素的值，最后分别打印了<code>someScore</code>和<code>anotherScore</code>第1个元素的值。<code>someScore</code>元组第一个元素的值为<code>Robert</code>，而<code>anotherScore</code>元组第一个元素的值仍然为<code>John</code>。由此可见元组是值类型。</p>
+<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>在一个看脸的社会中，不论什么事物，长的好看总是能多吸引一些目光。App同样不例外，一款面相不错的App就算功能已经被轮子千百遍，依然会有人买账，理由就是看的顺眼，于是平面设计人员越来越被重视。白驹过隙，斗转星移，人们已然不满足于静态的美感，于是动态的用户体验应运而生，平面设计人员捉襟见肘，是我们程序员出马的时候了。</p>
+<p>这篇文章是UIView Animation的第一篇，从极简的概念开始，为大家揭开Animation的神秘面纱。我们以一个登录界面为例。美丽的太阳，婀娜的云，还有几个小山包，中间静躺着用户名、密码输入框和登录按钮。搁以前，这个界面许是会亮瞎眼现如今尼玛狗都嫌。所以我们的目标是赋予这个界面生命力。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/FirstAnimation-LoginScreen.png" alt="登录页"></p>
+<blockquote>
+<p>注意：本文章基于Swift 2.0和Xcode 7 Beta2编写。登录界面中的所有元素都已经连接到了代码中（outlet），在这个示例中我们先不使用Auto Layout和SizeClasses。</p>
+</blockquote>
+<h2 id="u4F1A_u52A8_u7684_u8F93_u5165_u6846"><a href="#u4F1A_u52A8_u7684_u8F93_u5165_u6846" class="headerlink" title="会动的输入框"></a>会动的输入框</h2><p>我们的第一个场景应该是这样。用户打开App，启动画面过后显示登录界面，此时屏幕上还没有用户名和密码的输入框，下一秒他们从屏幕左侧飘然而至。</p>
+<h3 id="u9996_u5148"><a href="#u9996_u5148" class="headerlink" title="首先"></a>首先</h3><p>我们需要在登录界面还没有展现给用户的时候把用户名和密码的输入框移至屏幕外面。打开<code>ViewController.swift</code>，在<code>viewWillAppear()</code>方法中添加以下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">self</span>.username.center.x -= <span class="keyword">self</span>.view.bounds.width</span><br><span class="line"><span class="keyword">self</span>.password.center.x -= <span class="keyword">self</span>.view.bounds.width</span><br></pre></td></tr></table></figure>
+<p>这两行代码使用户名、密码输入框移出屏幕外，这里可以使用简单暴力的方式，直接让<code>center</code>的<code>x</code>减去屏幕宽度。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/FirstAnimation-LoginScreen-1.png" alt="输入框移出屏幕"></p>
+<h3 id="u7136_u540E"><a href="#u7136_u540E" class="headerlink" title="然后"></a>然后</h3><p>我们在<code>viewDidAppear()</code>方法中添加以下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.username.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line">    <span class="keyword">self</span>.password.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><code>animationWithDuration(_:animations:)</code>是<code>UIView</code>的类方法，从方法名就可以看出，该方法可使<code>UIView</code>动起来。它有两个参数：</p>
+<ul>
+<li><code>duration</code>：动画的持续时间。</li>
+<li><code>animation</code>：动画闭包，在这个闭包中你可以改变<code>UIView</code>的各种动画属性。</li>
+</ul>
+<p>因为该方法是一个类方法，所以在闭包中你可以同时改变多个<code>views</code>的动画属性。所以在上述代码中，同时改变了用户名和密码输入框的位置。编译运行，我们可以看到如下效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/FirstAnimation-1.gif" alt="FirstAnimation-1"></p>
+<p>但是由于两个输入框是同时从屏幕外滑入，略显呆板，所以我们用另一个方法再来润色一下。</p>
+<h3 id="u6700_u540E"><a href="#u6700_u540E" class="headerlink" title="最后"></a>最后</h3><p>我们更新<code>viewDidAppear()</code>中的代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.username.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line"><span class="comment">//  self.password.center.x += self.view.bounds.width</span></span><br><span class="line">&#125;)</span><br><span class="line">        </span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, delay: <span class="number">0.3</span>, options: .<span class="type">AllowUserInteraction</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.password.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p><code>animationWithDuration(_:delay:options:animations:completion:)</code>方法同样是<code>UIView</code>的类方法，但是多了3个参数：</p>
+<ul>
+<li><code>delay</code>：顾名思义，动画迟延执行的时间。</li>
+<li><code>options</code>：自定义动画的一些效果，比如重复动画、前后运动等。这个参数在后面的文章中会说明。</li>
+<li><code>completion</code>：也是一个闭包，当动画执行完之后会执行该闭包中的逻辑，可以用来连接动画，或者是在动画结束后你需要做一些清理工作等。</li>
+</ul>
+<p>现在编译运行，可以看到如下效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/FirstAnimation-2.gif" alt="FirstAnimation-2"></p>
+<p>用户名输入框先滑入屏幕，在0.3秒的延迟后，密码输入框紧随其后。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2 id="u52A8_u753B_u5C5E_u6027"><a href="#u52A8_u753B_u5C5E_u6027" class="headerlink" title="动画属性"></a>动画属性</h2><p>在上一节，我们体验了视图的简单动画效果，不难发现，其实真正导致视图动起来的是<code>animations</code>闭包中的代码，也就是对视图属性的改变，然后<code>UIView</code>的类方法生成了视图某属性的起始值和终止值之间的补间动画。这引出了另一个概念，那就是视图的动画属性，诚然不是所有的视图属性都是动画属性，下面给大家介绍一下视图的动画属性。</p>
+<h3 id="u4F4D_u7F6E_u548C_u5927_u5C0F"><a href="#u4F4D_u7F6E_u548C_u5927_u5C0F" class="headerlink" title="位置和大小"></a>位置和大小</h3><ul>
+<li><code>bounds</code>：改变视图内容的位置和尺寸大小的属性。</li>
+<li><code>frame</code>：改变视图的位置和尺寸大小的属性。</li>
+<li><code>center</code>：改变视图位置的属性。</li>
+</ul>
+<h3 id="u5916_u89C2"><a href="#u5916_u89C2" class="headerlink" title="外观"></a>外观</h3><ul>
+<li><code>backgroundColor</code>：改变背景色时，<code>UIKit</code>会线性的从原始颜色转变为目标颜色。</li>
+<li><code>alpha</code>：改变透明度，<code>UIKit</code>会创建淡入淡出的效果。</li>
+</ul>
+<h3 id="u8F6C_u6362"><a href="#u8F6C_u6362" class="headerlink" title="转换"></a>转换</h3><p><code>transform</code>属性的类型为<code>CGAffineTransform</code>，它是一个结构体，<code>CoreGraphics</code>中有若干方法可生成不同的<code>CGAffineTransform</code>结构，使视图旋转、按比例缩放、翻转等，我们来看看它如何使用。在<code>viewDidAppear()</code>方法中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> rotation = <span class="type">CGAffineTransformMakeRotation</span>(<span class="type">CGFloat</span>(<span class="type">M_PI</span>))</span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.sun.transform = rotation</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>首先创建了一个旋转的结构，参数是一个<code>CGFloat</code>类型的角度，这里我们使用预定义好的常量比如<code>M_PI</code>代表3.14…，也就是旋转一周、<code>M_PI_2</code>代表1.57…，也就是旋转半周等。</p>
+<p>然后在<code>animations</code>闭包中将创建的旋转结构赋值给屏幕上太阳视图的<code>transform</code>属性。编译运行可以看到如下效果：</p>
+<iframe src="https://player.vimeo.com/video/132005476?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
+
+<p>我们再来看看缩放，在<code>viewDidAppear()</code>方法中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> scale = <span class="type">CGAffineTransformMakeScale</span>(<span class="number">0.5</span>, <span class="number">0.5</span>)       </span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.cloudBig.transform = scale</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>首先创建了一个缩放的结构，第一个参数是x轴的缩放比例，第二个参数是y轴的缩放比例。同样在<code>animations</code>闭包中将创建的缩放结构赋值给屏幕上云朵视图的<code>transform</code>属性。编译运行可以看到如下效果：</p>
+<iframe src="https://player.vimeo.com/video/132005775?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
+
+<h2 id="u52A8_u753B_u9009_u9879"><a href="#u52A8_u753B_u9009_u9879" class="headerlink" title="动画选项"></a>动画选项</h2><p>大家应该还记得我们之前使用过<code>animationWithDuration(_:delay:options:animations:completion:)</code>方法，其中的<code>options</code>当时没有详细的讲述，这节会向大家说明该属性。<code>options</code>选项可以使你自定义让<code>UIKit</code>如何创建你的动画。该属性需要一个或多个<code>UIAnimationOptions</code>枚举类型，让我们来看看都有哪些动画选项吧。</p>
+<h3 id="u91CD_u590D_u7C7B"><a href="#u91CD_u590D_u7C7B" class="headerlink" title="重复类"></a>重复类</h3><ul>
+<li><code>.Repeat</code>：该属性可以使你的动画永远重复的运行。</li>
+<li><code>.Autoreverse</code>：该属性可以使你的动画当运行结束后按照相反的行为继续运行回去。该属性只能和<code>.Repeat</code>属性组合使用。</li>
+</ul>
+<p>我们来看看怎么使用这两个属性，我们修改一个密码输入框的动画：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, delay: <span class="number">0.3</span>, options: .<span class="type">Repeat</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.password.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>编译运行看看效果：</p>
+<iframe src="https://player.vimeo.com/video/132008765?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
+
+<p>可以看到密码输入框不停的从左向右滑入。大家可以自己试试<code>.Autoreverse</code>的效果或者<code>[.Repeat, .Autoreverse]</code>组合效果。</p>
+<h3 id="u52A8_u753B_u7F13_u51B2"><a href="#u52A8_u753B_u7F13_u51B2" class="headerlink" title="动画缓冲"></a>动画缓冲</h3><p>在现实生活中，几乎没有什么东西可以突然开始运动，然后突然停止一动不动。可以运动的物体基本都是以较慢的速度启动，逐渐加速，达到一个稳定的速度，然后当要停止时，会逐渐减速，最后停止。所以要使动画更加逼真，也可以采用这种方式，那就是<strong>ease-in</strong>和<strong>ease-out</strong>。</p>
+<ul>
+<li><code>.CurveLinear</code> ：该属性既不会使动画加速也不会使动画减速，只是做以线性运动。</li>
+<li><code>.CurveEaseIn</code>：该属性使动画在开始时加速运行。</li>
+<li><code>.CurveEaseOut</code>：该属性使动画在结束时减速运行。</li>
+<li><code>.CurveEaseInOut</code>：该属性结合了上述两种情况，使动画在开始时加速，在结束时减速。</li>
+</ul>
+<p>下面依然以密码输入框作为示例，修改密码输入框的动画代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, delay: <span class="number">0.3</span>, options: [.<span class="type">Repeat</span>, .<span class="type">Autoreverse</span>, .<span class="type">CurveEaseOut</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.password.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>上面的代码中组合了三种动画选项，首先让动画重复执行，然后让动画在一次执行完毕后接着反方向再次执行，最后让动画在结束时减速。编译运行，这次我们减慢动画的运行速度来看看：</p>
+<iframe src="https://player.vimeo.com/video/132012000?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
+
+<p>从上面的效果中可以看到当密码输入框滑入屏幕的后半段时速度有明显的减慢。大家也可以在自己的项目中试试其他动画选项的组合。</p>
+<h2 id="u7ED3_u675F_u8BED"><a href="#u7ED3_u675F_u8BED" class="headerlink" title="结束语"></a>结束语</h2><p>看完这篇文章后，相信大家对iOS的动画有了大致的了解，也学会了如何实现简单的视图动画，当然这些只是iOS Animation的冰山一角，我会陆续向大家介绍iOS Animation的其他知识，今天就先到这吧。</p>
+<p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/what-is-new-in-swift/" itemprop="url">
+                  Swift 2.0初探
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-06-20T00:00:00+08:00" content="2015-06-20">
+              2015-06-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/what-is-new-in-swift/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/what-is-new-in-swift/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>转眼间，Swift已经一岁多了，这门新鲜、语法时尚、类型安全、执行速度更快的语言已经渐渐的深入广大开发者的心。我同样也是非常喜爱这门新的编程语言。</p>
+<p>今年6月，一年一度的WWDC大会如期而至，在大会上Apple发布了Swift 2.0，引入了很多新的特性，以帮助开发者能更快，更简单的构建应用。我在这里也说道说道Swift 2.0中值得大家注意的新特性。</p>
+<h2 id="guard_u8BED_u53E5"><a href="#guard_u8BED_u53E5" class="headerlink" title="guard语句"></a><code>guard</code>语句</h2><p><code>guard</code>语句和<code>if</code>语句有点类似，都是根据其关键字之后的表达式的布尔值决定下一步执行什么。但与<code>if</code>语句不同的是，<code>guard</code>语句只会有一个代码块，不像<code>if</code>语句可以<code>if else</code>多个代码块。</p>
+<p>那么<code>guard</code>语句的作用到底是什么呢？顾名思义，就是守护。<code>guard</code>语句判断其后的表达式布尔值为<code>false</code>时，才会执行之后代码块里的代码，如果为<code>true</code>，则跳过整个<code>guard</code>语句，我们举例来看看。</p>
+<p>我们以今年高考为例，在进入考场时一般都会检查身份证和准考证，我们写这样一个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">checkup</span><span class="params">(person: [String: String!])</span></span> &#123;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 检查身份证，如果身份证没带，则不能进入考场</span></span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> id = person[<span class="string">"id"</span>] <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"没有身份证，不能进入考场!"</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 检查准考证，如果准考证没带，则不能进入考场</span></span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> examNumber = person[<span class="string">"examNumber"</span>] <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"没有准考证，不能进入考场!"</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 身份证和准考证齐全，方可进入考场</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"您的身份证号为:<span class="subst">\(id)</span>，准考证号为:<span class="subst">\(examNumber)</span>。请进入考场!"</span>)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">checkup([<span class="string">"id"</span>: <span class="string">"123456"</span>]) <span class="comment">// 没有准考证，不能进入考场!</span></span><br><span class="line">checkup([<span class="string">"examNumber"</span>: <span class="string">"654321"</span>]) <span class="comment">// 没有身份证，不能进入考场!</span></span><br><span class="line">checkup([<span class="string">"id"</span>: <span class="string">"123456"</span>, <span class="string">"examNumber"</span>: <span class="string">"654321"</span>]) <span class="comment">// 您的身份证号为:123456，准考证号为:654321。请进入考场!</span></span><br></pre></td></tr></table></figure>
+<p>上述代码中的第一个<code>guard</code>语句用于检查身份证，如果检查到身份证没带，也就是表达式为<code>false</code>时，执行大括号里的代码，并返回。第二个<code>guard</code>语句则检查准考证。</p>
+<p>如果两证齐全，则执行最后一个打印语句，上面的两个<code>guard</code>语句大括号内的代码都不会执行，因为他们表达式的布尔值都是<code>true</code>。</p>
+<p>这里值得注意的是，<code>id</code>和<code>examNumber</code>可以在<code>guard</code>语句之外使用，也就是说当<code>guard</code>对其表达式进行验证后，<code>id</code>和<code>examNumber</code>可在整个方法的作用域中使用，并且是解包后的。</p>
+<p>我们再用<code>if else</code>语句写一个类似的方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">checkupUseIf</span><span class="params">(person: [String: String!])</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> id = person[<span class="string">"id"</span>], <span class="keyword">let</span> examNumber = person[<span class="string">"examNumber"</span>] &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"您的身份证号为:<span class="subst">\(id)</span>，准考证号为:<span class="subst">\(examNumber)</span>。请进入考场！"</span>)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"证件不齐全，不能进入考场!"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"您的身份证号为:<span class="subst">\(id)</span>，准考证号为:<span class="subst">\(examNumber)</span>"</span>)  <span class="comment">// 报异常</span></span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">checkupUseIf([<span class="string">"id"</span>: <span class="string">"123456"</span>]) <span class="comment">// 证件不齐全，不能进入考场!</span></span><br><span class="line">checkupUseIf([<span class="string">"examNumber"</span>: <span class="string">"654321"</span>]) <span class="comment">// 证件不齐全，不能进入考场!</span></span><br><span class="line">checkupUseIf([<span class="string">"id"</span>: <span class="string">"123456"</span>, <span class="string">"examNumber"</span>: <span class="string">"654321"</span>]) <span class="comment">// 您的身份证号为:123456，准考证号为:654321。请进入考场!</span></span><br></pre></td></tr></table></figure>
+<p>我们可以看到用<code>if else</code>实现的方法显然不如<code>guard</code>实现的那么精准。而且<code>id</code>和<code>examNumber</code>的作用域只限在<code>if</code>的第一个大括号内，超出这个作用域编译就会报错。</p>
+<p>通过上述两个小例子不难看出，<code>guard</code>语句正如一个称职的守卫，层层把关，严防一切不允许发生的事，并且让代码具有更高的可读性，非常棒。</p>
+<h2 id="u5F02_u5E38_u5904_u7406"><a href="#u5F02_u5E38_u5904_u7406" class="headerlink" title="异常处理"></a>异常处理</h2><p>在Swift 1.0时代是没有异常处理和抛出机制的，如果要处理异常，要么使用<code>if else</code>语句或<code>switch</code>语句判断处理，要么使用闭包形式的回调函数处理，再要么就使用<code>NSError</code>处理。以上这些方法都不能像Java中的<code>try catch</code>异常控制语句那样行如流水、从容不迫的处理异常，而且也会降低代码的可读性。当Swift 2.0到来后，一切都不一样了。</p>
+<p>在Swift 2.0中Apple提供了使用<code>throws</code>、<code>throw</code>、<code>try</code>、<code>do</code>、<code>catch</code>这五个关键字组成的异常控制处理机制。下面我们来举例看看如何使用，我用使用手机刷朋友圈为例。</p>
+<p>首先我们需要定义异常枚举，在Swift 2.0中Apple提供了<code>ErrorType</code>协议需要我们自定义的异常枚举遵循：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">WechatError</span>: <span class="title">ErrorType</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">NoBattery</span> <span class="comment">// 手机没电</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">NoNetwork</span> <span class="comment">// 手机没网</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">NoDataStream</span> <span class="comment">// 手机没有流量</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们定义了导致不能刷微信的错误枚举<code>’wechatError</code>。然后定义一个检查是否可以刷微信的方法<code>checkIsWechatOk()</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">checkIsWechatOk</span><span class="params">(isPhoneHasBattery: Bool, isPhoneHasNetwork: Bool, dataStream: Int)</span></span> <span class="keyword">throws</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">guard</span> isPhoneHasBattery <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="type">WechatError</span>.<span class="type">NoBattery</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">guard</span> isPhoneHasNetwork <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="type">WechatError</span>.<span class="type">NoNetwork</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">guard</span> dataStream &gt; <span class="number">50</span> <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="type">WechatError</span>.<span class="type">NoDataStream</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里注意，在方法名后有<code>throws</code>关键字，意思为该方法产生的异常向上层抛出。在方法体内使用<code>guard</code>语句对各种状态进行判断，然后使用<code>throw</code>关键字抛出对应的异常。然后我们定义刷微信的方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">playWechat</span><span class="params">(isPhoneHasBattery: Bool, isPhoneHasNetwork: Bool, dataStream: Int)</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> checkIsWechatOk(isPhoneHasBattery, isPhoneHasNetwork: isPhoneHasNetwork, dataStream: dataStream)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"放心刷，刷到天昏地暗！"</span>)</span><br><span class="line">    &#125; <span class="keyword">catch</span> <span class="type">WechatError</span>.<span class="type">NoBattery</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"手机都没电，刷个鬼啊！"</span>)</span><br><span class="line">    &#125; <span class="keyword">catch</span> <span class="type">WechatError</span>.<span class="type">NoNetwork</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"没有网络哎，洗洗玩单机吧！"</span>)</span><br><span class="line">    &#125; <span class="keyword">catch</span> <span class="type">WechatError</span>.<span class="type">NoDataStream</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"没有流量了，去蹭Wifi吧！"</span>)</span><br><span class="line">    &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"见鬼了！"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">playWechat(<span class="literal">true</span>, isPhoneHasNetwork: <span class="literal">true</span>, dataStream: <span class="number">60</span>) <span class="comment">// 放心刷，刷到天昏地暗！</span></span><br><span class="line">playWechat(<span class="literal">true</span>, isPhoneHasNetwork: <span class="literal">false</span>, dataStream: <span class="number">60</span>) <span class="comment">// 没有网络哎，洗洗玩单机吧！</span></span><br><span class="line">playWechat(<span class="literal">false</span>, isPhoneHasNetwork: <span class="literal">true</span>, dataStream: <span class="number">60</span>) <span class="comment">// 手机都没电，刷个鬼啊！</span></span><br><span class="line">playWechat(<span class="literal">true</span>, isPhoneHasNetwork: <span class="literal">true</span>, dataStream: <span class="number">30</span>) <span class="comment">// 没有流量了，去蹭Wifi吧！</span></span><br></pre></td></tr></table></figure>
+<p>上述的代码示例中，首先检查是否可以刷微信的方法前使用<code>try</code>关键字，表示允许该方法抛出异常，然后使用了<code>do catch</code>控制语句捕获抛出的异常，进而做相关的逻辑处理。</p>
+<p>这套异常处理机制使Swift更加的全面和安全，并且提高了代码的可读性，非常棒。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u534F_u8BAE_u6269_u5C55"><a href="#u534F_u8BAE_u6269_u5C55" class="headerlink" title="协议扩展"></a>协议扩展</h2><p>在Swift 1.0 时代，协议（<code>Protocol</code>）基本上类似一个接口，定义若干属性和方法，供类、结构体、枚举遵循和实现。在Swift 2.0中，可以对协议进行属性或者方法的扩展，和扩展类与结构体类似。这让我们开启了面向协议编程的篇章。</p>
+<p>Swift中，大多数基础对象都遵循了<code>CustomStringConvertible</code>协议，比如<code>Array</code>、<code>Dictionary</code>（Swift 1.0中的<code>Printable</code>协议），该协议定义了<code>description</code>方法，用于<code>print</code>方法打印对象。现在我们对该协议扩展一个方法，让其打印出大写的内容:</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> arr = [<span class="string">"hello"</span>, <span class="string">"world"</span>]</span><br><span class="line"><span class="built_in">print</span>(arr.description) <span class="comment">// "[hello, world]"</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">CustomStringConvertible</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> upperDescription: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"<span class="subst">\(<span class="keyword">self</span>.description.uppercaseString)</span>"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(arr.upperDescription) <span class="comment">// "[HELLO, WORLD]"</span></span><br></pre></td></tr></table></figure>
+<p>如果在Swfit 1.0时代，要想达到上述示例的效果，那么我们需要分别对<code>Array</code>、<code>Dictionary</code>进行扩展，所以协议的扩展极大的提高了我们的编程效率，也同样使代码更简洁和易读。</p>
+<h2 id="u6253_u5370_u8BED_u53E5_u7684_u6539_u53D8"><a href="#u6253_u5370_u8BED_u53E5_u7684_u6539_u53D8" class="headerlink" title="打印语句的改变"></a>打印语句的改变</h2><p>在Swift1中，有’println()’和’print()’两个在控制台打印语句的方法，前者是换行打印，后者是连行打印。在Swift2中，’println()’已成为过去，取而代之的是他俩的结合体。如果你想做换行打印，现在需要这样写：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"我要换行！"</span>, appendNewline: <span class="literal">true</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="available_u68C0_u67E5"><a href="#available_u68C0_u67E5" class="headerlink" title="available检查"></a><code>available</code>检查</h2><p>作为iOS开发者，谁都希望使用最新版本iOS的Api进行开发，省事省力。但常常事与愿违，因为我们经常需要适配老版本的iOS，这就会面临一个问题，一些新特性特性或一些类无法在老版本的iOS中使用，所以在编码过程中经常会对iOS的版本做以判断，就像这样：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="type">NSClassFromString</span>(<span class="string">"NSURLQueryItem"</span>) != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// iOS 8或更高版本</span></span><br><span class="line">&#125; <span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="comment">// iOS8之前的版本</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上这只是一种方式，在Swift 2.0之前也没有一个标准的模式或机制帮助开发者判断iOS版本，而且容易出现疏漏。在Swift 2.0到来后，我们有了标准的方式来做这个工作：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> #available(iOS <span class="number">8</span>, *) &#123;</span><br><span class="line">    <span class="comment">// iOS 8或更高版本</span></span><br><span class="line">    <span class="keyword">let</span> queryItem = <span class="type">NSURLQueryItem</span>()</span><br><span class="line">    </span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// iOS8之前的版本</span></span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个特性让我们太幸福。</p>
+<h2 id="do-while_u8BED_u53E5_u91CD_u547D_u540D"><a href="#do-while_u8BED_u53E5_u91CD_u547D_u540D" class="headerlink" title="do-while语句重命名"></a><code>do-while</code>语句重命名</h2><p>经典的<code>do-while</code>语句改名了，改为了<code>repeat-while</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line"><span class="keyword">repeat</span> &#123;</span><br><span class="line">    i++</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br><span class="line">&#125; <span class="keyword">while</span> i &lt; <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<p>个人感觉更加直观了。</p>
+<h2 id="defer_u5173_u952E_u5B57"><a href="#defer_u5173_u952E_u5B57" class="headerlink" title="defer关键字"></a><code>defer</code>关键字</h2><p>在一些语言中，有<code>try/finally</code>这样的控制语句，比如Java。这种语句可以让我们在<code>finally</code>代码块中执行必须要执行的代码，不管之前怎样的兴风作浪。在Swift 2.0中，Apple提供了<code>defer</code>关键字，让我们可以实现同样的效果。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">checkSomething</span><span class="params">()</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"CheckPoint 1"</span>)</span><br><span class="line">    doSomething()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"CheckPoint 4"</span>)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">doSomething</span><span class="params">()</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"CheckPoint 2"</span>)</span><br><span class="line">    <span class="keyword">defer</span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"Clean up here"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"CheckPoint 3"</span>)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">checkSomething() <span class="comment">// CheckPoint 1, CheckPoint 2, CheckPoint 3, Clean up here, CheckPoint 4</span></span><br></pre></td></tr></table></figure>
+<p>上述示例可以看到，在打印出“CheckPoint 2”之后并没有打印出“Clean up here”，而是“CheckPoint 3”，这就是<code>defer</code>的作用，它对进行了<code>print(&quot;Clean up here&quot;)</code>延迟。我们再来看一个I/O的示例：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 伪代码</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">writeSomething</span><span class="params">()</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> file = <span class="type">OpenFile</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> ioStatus = fetchIOStatus()</span><br><span class="line">    <span class="keyword">guard</span> ioStatus != <span class="string">"error"</span> <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    file.write()</span><br><span class="line">    </span><br><span class="line">    closeFile(file)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述示例是一个I/O操作的伪代码，如果获取到的<code>ioStatus</code>正常，那么该方法没有问题，如果<code>ioStatus</code>取到的是<code>error</code>，那么会被<code>guard</code>语句抓到执行<code>return</code>操作，这样的话<code>closeFile(file)</code>就永远都不会执行了，一个严重的Bug就这样产生了。下面我们看看如何用<code>defer</code>来解决这个问题：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 伪代码</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">writeSomething</span><span class="params">()</span></span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> file = <span class="type">OpenFile</span>()</span><br><span class="line">    <span class="keyword">defer</span> &#123;</span><br><span class="line">        closeFile(file)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> ioStatus = fetchIOStatus()</span><br><span class="line">    <span class="keyword">guard</span> ioStatus != <span class="string">"error"</span> <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    file.write()</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们将<code>closeFile(file)</code>放在<code>defer</code>代码块里，这样即使<code>ioStatus</code>为<code>error</code>，在执行<code>return</code>前会先执行<code>defer</code>里的代码，这样就保证了不管发生什么，最后都会将文件关闭。</p>
+<p><code>defer</code>又一个保证我们代码健壮性的特性，我非常喜欢。</p>
+<p>Swift 2.0中的新特性当然不止以上这些，但窥一斑可见全豹，Swift 2.0努力将更快、更安全做到极致，这是开发人员的福音，让我们尽情享受这门美妙的语言吧。</p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -394,8 +608,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/how-to-create-action-extension/" itemprop="url">
-                  如何在Swift中创建Action扩展
+                <a class="post-title-link" href="/articles/ios-design-pattern-in-swift-2/" itemprop="url">
+                  Swift中的iOS设计模式（二）
                 </a>
               
             
@@ -405,8 +619,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-09-22T00:00:00+08:00" content="2014-09-22">
-              2014-09-22
+            <time itemprop="dateCreated" datetime="2015-01-14T00:00:00+08:00" content="2015-01-14">
+              2015-01-14
             </time>
           </span>
 
@@ -431,8 +645,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/how-to-create-action-extension/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/how-to-create-action-extension/" itemprop="commentsCount"></span>
+              <a href="/articles/ios-design-pattern-in-swift-2/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/ios-design-pattern-in-swift-2/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -462,33 +676,51 @@
 </script>
 
 
-<p>我们先想象一下，我们已经有一个很牛逼的应用了，我们姑且叫做重要信息记事本。它的功能就是将我们认为是重要的信息记录下，便于我们随时查看。那么何为重要信息呢？重要信息可以是很多类型的信息，比如武功秘籍、食谱、生日、一段牛逼的代码等等。当我们已经有了这样一个应用后，接下来应该考虑的事情就是如何记录重要信息了。通常思维下，你们可能认为应该是先打开这个应用，然后将重要信息敲进去。是这样么？你当用户是傻子么，什么年代了还手敲，简直弱爆了。下面我向你们介绍一个很酷的方法，那就是通过Action扩展，将信息记录到我们的应用中。下面例子的主要功能是将Safari浏览的网页中的信息保存在我们应用中。</p>
-<h2 id="u89C1_u8BC1_u5947_u8FF9_u7684_u65F6_u523B"><a href="#u89C1_u8BC1_u5947_u8FF9_u7684_u65F6_u523B" class="headerlink" title="见证奇迹的时刻"></a>见证奇迹的时刻</h2><p>先通过<em>File > New > Project</em>菜单创建一个新的工程，选择<strong>Single View Application</strong>：</p>
-<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension1.png" alt="图片"></p>
-<p>然后通过<em>File > New > Target</em>菜单给给工程添加一个<strong>Target</strong>，选择<strong>Action Extension</strong>：</p>
-<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension2.png" alt="图片"></p>
-<p>在创建Action扩展时需要指定一个Aciton类型，Apple提供了两种Action扩展的类型模板。一种是有用户界面的类型，包含一个<code>UIViewController</code>和一个<code>Storeboard</code>文件，可以自定义显示界面和行为。另一种是不带用户界面的类型，这种类型只允许我们处理来自Host应用的请求。</p>
-<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension3.png" alt="图片"></p>
-<p>现在我们在工程中就可以看到刚才创建的Action扩展<strong>NoteAppExtension</strong>，它包含两个主要的文件，一个是<code>Action.js</code>，另一个是<code>ActionRequestHandler.swift</code>：</p>
-<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension4.png" alt="图片"></p>
-<p>我们来看看这两个文件的作用。<code>Action.js</code>文件用来实现和处理浏览器中请求的逻辑，在本文的例子中，它主要实现用户在浏览器中选中文本并发送到我们的应用中。<code>ActionRequestHandler.swift</code>用来处理Host应用发送的请求和参数。</p>
-<p>在实现逻辑之前我们需要设置一下扩展的属性，打开<code>Info.plist</code>文件将<code>NSExtensionActivationSupportsWebURLWithMaxCount</code>属性设置为1，该设置让扩展知道我们需要请求一个URL。</p>
-<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension5.png" alt="图片"></p>
-<p>我们<code>Action.js</code>文件中有如下内容：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">Action</span> = function() &#123;&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="type">Action</span>.prototype = &#123;</span><br><span class="line">    </span><br><span class="line">    run: function(arguments) &#123;</span><br><span class="line">        <span class="comment">// 在这个方法里，你可以通过document操作HTML中的元素，或者可以将HTML中的内容传给ActionRequestHandler文件的代码。</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 在本文的例子中，我们不做任何更新，只是将HTML中选中的内容穿给ActionRequestHandler文件的代码。</span></span><br><span class="line">        <span class="keyword">var</span> selected = <span class="string">"No Text Selected"</span>;</span><br><span class="line">        <span class="keyword">if</span> (window.getSelection) &#123;</span><br><span class="line">            selected = window.getSelection().getRangeAt(<span class="number">0</span>).<span class="built_in">toString</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            selected = document.getSelection().getRangeAt(<span class="number">0</span>).<span class="built_in">toString</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        arguments.completionFunction(&#123;<span class="string">"args"</span> : selected&#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    finalize: function(arguments) &#123;</span><br><span class="line">        <span class="comment">// 当ActionRequestHandler文件中的itemLoadCompletedWithPreprocessingResults方法执行完之后会调用该方法。</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果ActionRequestHandler文件向HTML返回了信息，我们可以通过arguments["message"]来查看，并且可以根据该信息操作HTML中的元素。</span></span><br><span class="line">        alert(arguments[<span class="string">"message"</span>])</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">var</span> <span class="type">ExtensionPreprocessingJS</span> = new <span class="type">Action</span></span><br></pre></td></tr></table></figure>
-<p>Safari与Action扩展的交互就是通过<code>Action.js</code>文件中的<code>run</code>和<code>finalize</code>这两个方法实现的。当我们在Safari中使用Action扩展时就会调用<code>run</code>方法，它能让我们在该方法中操作当前Safari显示页面的DOM元素。当Action扩展处理完逻辑向Safari返回信息时会调用<code>finalize</code>方法，在我们的例子中，我们通过<code>self.extensionContext!.completeRequestReturningItems(nil, completionHandler: nil)</code>这段代码向Safari返回信息。该方法的第一个参数就是要返回的信息，它会将信息传给<code>Action.js</code>文件，然后通过js代码操作HTML。如果第一个参数传入<code>nil</code>，那就意味着不会调用<code>Action.js</code>文件中的<code>finalize</code>方法。<code>run</code>和<code>finalize</code>这两个方法的参数<code>arguments</code>都包含着一些信息，只不过一个是来自与HTML，一个来自<code>ActionRequestHandler</code>文件。</p>
-<p><strong>一定要记住：</strong>我们必须要实例化<code>ExtensionPreprocessingJS</code>这个全局变量，因为它是Safari和Action扩展之间的桥梁。</p>
-<p>我们的<code>ActionRequestHandler</code>文件内容如下：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ActionRequestHandler</span>: <span class="title">NSObject</span>, <span class="title">NSExtensionRequestHandling</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">var</span> extensionContext: <span class="type">NSExtensionContext</span>?</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">beginRequestWithExtensionContext</span><span class="params">(context: NSExtensionContext!)</span></span> &#123;</span><br><span class="line">        <span class="keyword">self</span>.extensionContext = context</span><br><span class="line">        <span class="keyword">let</span> identifierType = <span class="type">NSString</span>(format: kUTTypePropertyList, <span class="type">NSUTF8StringEncoding</span>)</span><br><span class="line">        <span class="keyword">for</span> (item: <span class="type">NSExtensionItem</span>) <span class="keyword">in</span> context.inputItems <span class="keyword">as</span> [<span class="type">NSExtensionItem</span>] &#123;</span><br><span class="line">            <span class="keyword">for</span> (itemProvider: <span class="type">NSItemProvider</span>) <span class="keyword">in</span> item.attachments <span class="keyword">as</span> [<span class="type">NSItemProvider</span>] &#123;</span><br><span class="line">                <span class="keyword">if</span> itemProvider.hasItemConformingToTypeIdentifier(identifierType) &#123;</span><br><span class="line">                    itemProvider.loadItemForTypeIdentifier(identifierType, options: <span class="literal">nil</span>, completionHandler: &#123;(item, error) <span class="keyword">in</span></span><br><span class="line">                        <span class="keyword">let</span> dictionary = item <span class="keyword">as</span> <span class="type">NSDictionary</span></span><br><span class="line">                        dispatch_async(dispatch_get_main_queue(), &#123;</span><br><span class="line">                            <span class="keyword">self</span>.itemLoadCompletedWithPreprocessingResults(dictionary[<span class="type">NSExtensionJavaScriptPreprocessingResultsKey</span>] <span class="keyword">as</span> <span class="type">NSDictionary</span>)</span><br><span class="line">                        &#125;)</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">itemLoadCompletedWithPreprocessingResults</span><span class="params">(javaScriptPreprocessingResults: NSDictionary)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> text = javaScriptPreprocessingResults[<span class="string">"args"</span>] <span class="keyword">as</span>? <span class="type">String</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> userDefaults = <span class="type">NSUserDefaults</span>(suiteName: <span class="string">"group.name"</span>)</span><br><span class="line">            userDefaults.setValue(text, forKey: <span class="string">"note"</span>)</span><br><span class="line">            userDefaults.synchronize()</span><br><span class="line">            <span class="keyword">self</span>.doneWithResults([<span class="string">"message"</span>: <span class="string">"Successfully added to the note app"</span>])</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">doneWithResults</span><span class="params">(resultsForJavaScriptFinalizeArg: NSDictionary?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> resultsForJavaScriptFinalize = resultsForJavaScriptFinalizeArg &#123;</span><br><span class="line">            <span class="keyword">let</span> identifierType = <span class="type">NSString</span>(format: kUTTypePropertyList, <span class="type">NSUTF8StringEncoding</span>)</span><br><span class="line">            <span class="comment">// 创建合适返回类型的标示符。            </span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 这里创建的resultsItem将作为Action.js文件中finalize方法的参数。</span></span><br><span class="line">            <span class="keyword">var</span> resultsDictionary = [<span class="type">NSExtensionJavaScriptFinalizeArgumentKey</span>: resultsForJavaScriptFinalize]</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">var</span> resultsProvider = <span class="type">NSItemProvider</span>(item: resultsDictionary, typeIdentifier: identifierType)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">var</span> resultsItem = <span class="type">NSExtensionItem</span>()</span><br><span class="line">            resultsItem.attachments = [resultsProvider]</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 这段代码意味着Action扩展已经处理完了逻辑，现在将信息返回给Action.js文件。</span></span><br><span class="line">            <span class="keyword">self</span>.extensionContext!.completeRequestReturningItems([resultsItem], completionHandler: <span class="literal">nil</span>)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 就算我们没有任何要返回的信息，也要执行这段代码，用于告知我们的Action扩展已经完成了逻辑处理。</span></span><br><span class="line">            <span class="keyword">self</span>.extensionContext!.completeRequestReturningItems(<span class="literal">nil</span>, completionHandler: <span class="literal">nil</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">self</span>.extensionContext = <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>现在我们可以运行一下我们的应用，然后打开Safari，在Action选项中开启我们的Action扩展：</p>
-<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension6.png" alt="图片"></p>
-<p>然后我们就可以在Action栏中看到我们的扩展了：</p>
-<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension7.png" alt="图片"></p>
-<p>我们使用Safari随便打开一个含有文字的页面，选中一段文字，然后打开Action栏，点击<strong>NoteApp</strong>扩展，此时我们的扩展就会将选中的这段文字发送给我们的应用，形成一条新的重要信息。</p>
-<p><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension8.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension9.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/2014-09-22-how-to-create-action-extension10.png" alt="图片"></p>
-<p>以上只是一个简单的Aciton扩展的例子，但我们可以由此延伸出更多有用、有创意的功能，让我们的生活更加美好。</p>
-<p>本文例子的代码可以在这里下载：<a href="https://github.com/jorjuela33/NoteApp" target="_blank" rel="external">NoteApp</a></p>
-<p>原文地址：<a href="http://nsnerd.co/action-extension-in-swift/" target="_blank" rel="external">Action Extension in Swift</a></p>
+<h2 id="Facade_u8BBE_u8BA1_u6A21_u5F0F"><a href="#Facade_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="Facade设计模式"></a>Facade设计模式</h2><p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-7.png" alt="pic"></p>
+<p>Facade设计模式为多个子模块或子系统提供统一的、单独的API接口。也就是说，不用给用户暴露一堆乱七八糟的接口，只需要暴露一个简单的、标准的接口即可。</p>
+<p>下面这张图能更好的描述这个概念：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-8.png" alt="pic"></p>
+<p>用户在使用我们暴露的标准的API时，根本不知道在这个API底下其实疏导着大量复杂的接口。该设计模式是暴露大量接口的最佳模式，尤其当接口使用很复杂、很难理解时，尤为体现该模式的价值。</p>
+<p>Facade模式可以有效保证调用各个模块功能的接口和你隐藏起来的实现模块功能的逻辑代码是一个松耦合的关系。同时也可以减少你的子系统或子模块对外部代码的依赖。例如一个遵循Facade模式的类，如果逻辑有变化，需要修改内部实现代码，但是并不需要修改该逻辑的接口。使用接口的用户甚至根本都不知道你已经修改了该接口背后的某些逻辑功能。</p>
+<h2 id="u5982_u4F55_u4F7F_u7528Facade_u8BBE_u8BA1_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528Facade_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="如何使用Facade设计模式"></a>如何使用Facade设计模式</h2><p>目前，你们已经有<code>PersistencyManager</code>类用于在本地保存专辑的数据，以及<code>HTTPClient</code>类用于和远程服务器进行交互。项目中的其他类压根不会知道这两个类中具体的处理逻辑，因为他们将要遵循Facade模式，隐藏与<code>LibraryAPI</code>身后。</p>
+<p>要遵循Facade模式，我们要有一个暴露给用户接口的类，那就是<code>LibraryAPI</code>，它持有<code>PersistencyManager</code>和<code>HTTPClient</code>的实例，并暴露一些简单的接口来访问这两个类中的方法：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-9.png" alt="pic"></p>
+<p><code>LibraryAPI</code>就是作为暴露给其他类的标准接口，它能有效的向接口使用者规避掉<code>HTTPClient</code>和<code>PersistencyManager</code>复杂的逻辑代码。</p>
+<p>打开<code>LibraryAPI.swift</code>文件添加如下常量属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> persistencyManager: <span class="type">PersistencyManager</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> httpClient: <span class="type">HTTPClient</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> isOnline: <span class="type">Bool</span></span><br></pre></td></tr></table></figure>
+<p><code>isOnline</code>属性决定了是否向远程服务器上更新专辑数据的变化，比如添加或删除专辑。</p>
+<p>然后需要添加<code>init</code>初始化方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">  persistencyManager = <span class="type">PersistencyManager</span>()</span><br><span class="line">  httpClient = <span class="type">HTTPClient</span>()</span><br><span class="line">  isOnline = <span class="literal">false</span></span><br><span class="line"> </span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为本篇教程中的示例应用只是为了向大家介绍如何运用各种设计模式，所以没有远程服务器的需求，<code>HTTPClient</code>自然不会用到。所以这里<code>isOnline</code>属性总是设置为<code>false</code>。</p>
+<p>下一步，向<code>LibraryAPI.swift</code>文件中添加如下三个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAlbums</span><span class="params">()</span></span> -&gt; [<span class="type">Album</span>] &#123;</span><br><span class="line">  <span class="keyword">return</span> persistencyManager.getAlbums()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">addAlbum</span><span class="params">(album: Album, index: Int)</span></span> &#123;</span><br><span class="line">  persistencyManager.addAlbum(album, index: index)</span><br><span class="line">  <span class="keyword">if</span> isOnline &#123;</span><br><span class="line">    httpClient.postRequest(<span class="string">"/api/addAlbum"</span>, body: album.description())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">deleteAlbum</span><span class="params">(index: Int)</span></span> &#123;</span><br><span class="line">  persistencyManager.deleteAlbumAtIndex(index)</span><br><span class="line">  <span class="keyword">if</span> isOnline &#123;</span><br><span class="line">    httpClient.postRequest(<span class="string">"/api/deleteAlbum"</span>, body: <span class="string">"<span class="subst">\(index)</span>"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>大家看一下<code>addAlbum(_:index:)</code>方法，该方法顾名思义是添加专辑的方法，在实现时会先更新本地的数据，如果网络连通且需要使用远程服务的时候，再调用远程服务接口更新数据状态。当该模块以外的类调用了<code>LibraryAPI</code>接口的<code>addAlbum</code>方法时，它并不知道添加专辑的具体实现逻辑，并且也不需要知道，这就是Facade设计模式的魅力所在。</p>
+<p>现在编译运行你们的应用。你们会看到两个空的视图，和一个Toolbar。顶部的视图用于显示专辑的封面，下面的视图会以列表的形式显示该专辑的相关信息。</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-10.png" alt="pic"></p>
+<p>接下来的工作就是将专辑的数据或图片等显示在屏幕上，这就给我们带来了学习另一个设计模式的机会 – <strong>Decorator设计模式</strong>。</p>
+<h2 id="Decorator_u8BBE_u8BA1_u6A21_u5F0F"><a href="#Decorator_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="Decorator设计模式"></a>Decorator设计模式</h2><p>Decorator模式可以自动的为对象添加某些行为或响应能力，并且不需要对该对象做任何修改。</p>
+<p>该模式可以通过将希望添加的行为或响应能力打包到另一个对象中，然后通过该对象获得添加的行为或响应能力。</p>
+<p>在Swift中，有两种最为常用的实现该模式的方案： <strong>Extensions</strong> 和 <strong>Delegation</strong>。</p>
+<h3 id="Extensions"><a href="#Extensions" class="headerlink" title="Extensions"></a>Extensions</h3><p>你们可以对class、struct或者enum添加Extension，用于添加新的行为或响应能力，最关键的是不需要让它们继承乱七八糟的父类。更厉害的是通过Extension你们甚至不需要去访问目标class、struct或enum，就可以给它们添加新的能力。这意味着，你们可以让Cocoa框架中的对象元素更加符合你们自己的口味，比如给UIView或UIImage添加你们想要的能力。这就是Extension机制的强大之处。</p>
+<p>这里要注意，通过Extension新添加的方法在编译阶段被加载，然后你们可以像使用某类的原生方法一样使用扩展的方法。但是与传统的Decorator模式有些许不同的是，扩展体不会持有被扩展对象的实例，说白了就是你不能实例化一个扩展体，只能通过实例化被扩展的对象，才能使用其扩展的方法。</p>
+<h3 id="u5982_u4F55_u4F7F_u7528Extensions"><a href="#u5982_u4F55_u4F7F_u7528Extensions" class="headerlink" title="如何使用Extensions"></a>如何使用Extensions</h3><p>下图中展示了一种情况，你现在有了<code>Albun</code>对象，然后你想把该对象中的数据展示在一个UITableView中：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-11.png" alt="pic"></p>
+<p>在该情况下，专辑的这些数据从哪来呢？很明显是从<code>Album</code>对象中获取，因为它是一个Model对象，而且它根本不关心它持有的数据要如何展现，展现在哪里。那么这时，你就要使用额外的代码让<code>Album</code>具备将数据按需归位的能力，并且不能直接修改该类。</p>
+<p>这就需要使用Extension机制了，你们将通过Extension机制扩展<code>Album</code>类，目的是给<code>Album</code>添加一个方法，并返回一个<code>UITableView</code>便于使用的数据结构。</p>
+<p>该数据结构图如下：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-12.png" alt="pic"></p>
+<p>接下来我们新建一个Swift文件，名为 <strong>AlbumExtensions</strong> ，然后打开 <strong>AlbumExtensions.swift</strong> 文件，添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Album</span> </span>&#123;</span><br><span class="line">  <span class="func"><span class="keyword">func</span> <span class="title">ae_tableRepresentation</span><span class="params">()</span></span> -&gt; (titles:[<span class="type">String</span>], values:[<span class="type">String</span>]) &#123;</span><br><span class="line">    <span class="keyword">return</span> ([<span class="string">"Artist"</span>, <span class="string">"Album"</span>, <span class="string">"Genre"</span>, <span class="string">"Year"</span>], [artist, title, genre, year])</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里注意该方法名的开头<code>ae_</code>，它是<code>AlbumExtensions</code>的缩写。这是一个约定俗成的扩展方法名的写法，目的在于防止扩展方法与原生方法名产生冲突。</p>
+<blockquote>
+<p><strong>注意：</strong>通常类可以重写父类的方法或属性，但是在Extension中不可以。Extension中的方法名、属性名也不能和原生方法名、原生属性名相同。</p>
+</blockquote>
+<p>我们再来总结一下Extension机制：</p>
+<ul>
+<li>当<code>Album</code>被扩展后，直接使用<code>Album</code>访问扩展方法。</li>
+<li>你们通过扩展的方式已经给<code>Album</code>添加了新的能力，如果你们还想通过子类的方式，那么依然可以这么做。</li>
+<li>上面这个简单的扩展可以看出，你们不用对<code>Album</code>做任何改动，它就具备了可以返回适用于<code>UITableView</code>数据格式的能力。</li>
+</ul>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -497,225 +729,46 @@
 </script>
 
 
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/ios8-day-by-day-day2-sharing-extension/" itemprop="url">
-                  iOS8 Day-by-Day-- Day2 -- 分享应用扩展
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2014-09-17T00:00:00+08:00" content="2014-09-17">
-              2014-09-17
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/ios8-day-by-day-day2-sharing-extension/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/ios8-day-by-day-day2-sharing-extension/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u5F00_u573A_u767D"><a href="#u5F00_u573A_u767D" class="headerlink" title="开场白"></a>开场白</h2><p>在iOS8中，有一个重量级的特性，那就是应用扩展。不论是第三方的应用还是Apple自家的应用，开发者们都可以根据这些应用自身的特点通过应用扩展提升应用与系统之间的交互性、应用的用户体验等等。目前在iOS中提供6种应用场景的扩展：</p>
-<ul>
-<li>通知界面widget</li>
-<li>分享扩展</li>
-<li>Action</li>
-<li>照片编辑扩展</li>
-<li>资源存储扩展</li>
-<li>自定义键盘</li>
-</ul>
-<p>我们在今后的文章中都会介绍以上这些场景的应用扩展，但今天我们的主角是分享扩展。</p>
-<p>关于分享其实我们都不陌生，比如我们打开一个应用，在某个内容页会有系统提供的分享按钮，点击该按钮后会出现一个应用图标列表（比如Twitter，Flickr，新浪微博等），意在让我们选择一个希望分享内容的应用。分享扩展就是能让我们可以增加这个列表，让我们自己的应用图标能出现在分享列表里。</p>
-<p>这里需要注意的是，这篇文章的内容有一定的难度，Apple提供的应用扩展特性还是比较复杂的。本文会列举最常用的使用场景作为示例来讲解分享扩展，当然你也可以在我们提供的示例基础上设计属于你自己的应用界面风格。Apple在应用扩展方面提供了非常详尽的文档，如果你在学习这篇文章的过程中有不懂的地方，你可以参阅Apple官方文档。</p>
-<p>本文的示例应用名为“ShareAlike”，我们会通过该示例应用向大家展示如何实现图片、文本信息的分享。该示例的代码可以在<a href="https://github.com/ShinobiControls/iOS8-day-by-day" target="_blank" rel="external">Github</a>中下载。</p>
-<h2 id="u521B_u5EFA_u4E00_u4E2A_u5206_u4EAB_u6269_u5C55"><a href="#u521B_u5EFA_u4E00_u4E2A_u5206_u4EAB_u6269_u5C55" class="headerlink" title="创建一个分享扩展"></a>创建一个分享扩展</h2><p>首先我们要清楚，应用扩展不能单独存在，它必须要依附一个应用程序，我们称之为应用扩展的载体应用。应用扩展以二进制文件形式存在于载体应用中。Xcode为每一种应用扩展都提供了一个模板，但是我们必须通过给一个应用程序添加Target的方式创建应用扩展的模板，创建好模板后，会在工程中增加一个应用扩展模块以及必要的属性文件。</p>
-<p>我们执行一个分享操作主要是通过一系列界面来完成，所以分享扩展的主要部分就是UI展现。因此我们可以看到分享扩展模板为我们提供了一个继承了<code>SLComposeServiceViewController</code>的类以及一个<code>storyboard</code>文件。<code>SLComposeServiceViewController</code>为我们提供了一些常规的行为（包括字数、图片展示、文本输入、发送和取消按钮），并且这些行为对应的界面都符合iOS UI的标准。在本文的示例中我们基本都会用到这些默认的行为。</p>
-<p>除了<code>UIViewController</code>的标准方法外，<code>SLComposeServiceViewController</code>还提供了一些与分享功能生命周期相关的属性和方法：</p>
-<ul>
-<li><code>presentationAnimationDidFinish()</code>方法可以让我们执行大数据量的分享任务，我们在分享图片时会用到它。</li>
-<li><code>contentText</code>是一个<code>String</code>类型的属性，它存储分享者编辑的一些文字描述。</li>
-<li><code>didSelectPost()</code>函数在点击<strong>Post</strong>按钮时调用。它是上传分享数据的入口。</li>
-<li><code>didSelectCancel()</code>函数在点击<strong>Cancel</strong>按钮时调用。</li>
-<li><code>isContentValid()</code>函数在分享者编辑的文字有变化时调用。</li>
-<li><code>charactersRemaining</code>是一个<code>Int</code>类型的属性，当描述内容有字数限制时，它表示当前还能编写的字数，如果超出字数，该属性展示的字数会变红，并用负数表示已经超出了多少字数。</li>
-</ul>
-<p>只要你的应用工程里添加了分享扩展，那么用户就能很轻松的将选中的内容分享到你的应用中。我们会一步一步展示如何实现这些有用的功能，但首先我们要学习如何编译、运行和调试。</p>
-<h2 id="u7F16_u8BD1_uFF0C_u8FD0_u884C_u548C_u8C03_u8BD5"><a href="#u7F16_u8BD1_uFF0C_u8FD0_u884C_u548C_u8C03_u8BD5" class="headerlink" title="编译，运行和调试"></a>编译，运行和调试</h2><p>在添加一个扩展Target时，Xcode会让你激活扩展的Scheme。在运行工程之前，如果我们选择app的Scheme，那么会直接运行app，如果选择扩展的Scheme，那么会出现让你选择在哪个应用程序中运行该扩展，也就是选择一个扩展的Host应用，然后就可以针对扩展进行调试了。通常情况下运行分享扩展最好的Host应用是照片应用（Photos），所以我们一般都选择照片应用，然后调试分享扩展。</p>
-<p>下面有几个步骤能帮助我们熟悉这个过程：</p>
-<ul>
-<li>不管是选择一个扩展的Host应用还是使用扩展的载体应用充当Host应用，它们都应该有比较容易能分享的内容。在示例项目中，<strong>ShareAlike</strong>扩展使用它的载体应用充当Host应用，载体应用包含一张图片和一个分享按钮，点击分享按钮时会弹出标准的分享内容界面：</li>
-</ul>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">handleShareSampleTapped</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">  shareContent(sharingText: <span class="string">"Highland Cow"</span>,</span><br><span class="line">                       sharingImage: sharingContentImageView.image)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Utility methods</span></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">shareContent</span><span class="params">(#sharingText: String?, sharingImage: UIImage?)</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> itemsToShare = [<span class="type">AnyObject</span>]()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> text = sharingText &#123;</span><br><span class="line">    itemsToShare.append(text)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> image = sharingImage &#123;</span><br><span class="line">    itemsToShare.append(image)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> activityViewController = <span class="type">UIActivityViewController</span>(activityItems: itemsToShare, applicationActivities: <span class="literal">nil</span>)</span><br><span class="line">  presentViewController(activityViewController, animated: <span class="literal">true</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension1.png" alt="图片">  </p>
-<ul>
-<li>在扩展中编写相关代码。</li>
-<li>调试或测试时，选择载体应用的Scheme编译并运行，当点击Share Sample时，调试器会自动关联到扩展的进程上，简言之也就是可以捕获到你在分享扩展代码中设置的断点。</li>
-<li>你也可以选择模拟器中的其他应用作为Host应用来使用分享扩展。但是调试器不会捕获到你设置的断点，也就是无法进行调试。你可以使用这种方式来测试扩展的运行情况，通常分享扩展最佳的Host应用是Photos。</li>
-</ul>
-<h2 id="u5206_u4EAB_u6269_u5C55_u7684_u5206_u4EAB_u5185_u5BB9_u5C5E_u6027_u8BBE_u7F6E"><a href="#u5206_u4EAB_u6269_u5C55_u7684_u5206_u4EAB_u5185_u5BB9_u5C5E_u6027_u8BBE_u7F6E" class="headerlink" title="分享扩展的分享内容属性设置"></a>分享扩展的分享内容属性设置</h2><p>与在<strong>Info.plist</strong>文件中设置应用一样，在扩展中也有这个文件。在该文件中有一个属性代表在分享应用列表中，我们扩展的显示名称（分享应用列表中图标下的文字）。</p>
-<p>这个属性是<strong>Bundle display name</strong>（<code>CFBundleDisplayName</code>）：</p>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension2.png" alt="图片"></p>
-<p>你还可以在<strong>Info.plist</strong>文件中定义你的分享扩展可以处理什么样的分享任务，比如说是否可以处理分享视频？</p>
-<p>在该文件中有一个名为<code>NSExtension</code>字典类型属性，展开该属性后，可以看到<code>NSExtensionAttributes</code>属性，同样是字典类型，再展开该属性我们可以看到<code>NSExtenionActivationRule</code>属性，依然是字典类型的属性。可以看到<code>NSExtension</code>中有<code>Boolean</code>类型的、<code>String</code>类型的、<code>Number</code>类型的或者字典类型的各种属性。在<code>NSExtenionActivationRule</code>属性中就有设置分享图片数量，分享视频、文件、URL数量的属性：</p>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension3.png" alt="图片"></p>
-<p>每一个属性表示的意思从字面上就可以理解，比如<code>NSExtensionActivationSupportsImageWithMaxCount</code>，类型为<code>Number</code>，值为1。意思就是我们的分享扩展支持的最大分享图片数为1，我们可以测试一下看看：</p>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension4.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension5.png" alt="图片"></p>
-<p>从上图中可以看到，当我们选择了一张照片时，在分享应用列表中有我们的ShareAlike，如果选择了两张照片，分享应用列表中就没有我们的扩展了。</p>
-<h2 id="u9A8C_u8BC1_u7528_u6237_u8F93_u5165_u7684_u5185_u5BB9"><a href="#u9A8C_u8BC1_u7528_u6237_u8F93_u5165_u7684_u5185_u5BB9" class="headerlink" title="验证用户输入的内容"></a>验证用户输入的内容</h2><p>到目前为止，你大概已经知道如何创建一个扩展并设置它的相关属性了，现在让我们看看如何实现一些自定义的扩展行为。首先，我们要知道如何验证用户的输入内容。比如我们通常情况下都需要的一个验证，就是限制用户输入的文字数量，我们可以通过<code>SLComposeServiceViewController</code>来实现它。</p>
-<p>在之前我们提到过<code>SLComposeServiceViewController</code>类的一些属性方法，其中有一个方法叫<code>isContentValid() -&gt; Bool</code>。该方法的作用时随时监听着分享界面文本域的变化，也就是说一旦用户输入或删除文字，都会触发该方法。该方法如果返回<code>true</code>，那说明用户输入的内容合法，并可以使用<strong>Post</strong>按钮完成分享，如果返回<code>false</code>，那说明输入内容不合法，并且不能使用<strong>Post</strong>按钮。下面的代码片段展示了如何实现文字数量限制功能：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> sc_maxCharactersAllowed = <span class="number">25</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">isContentValid</span><span class="params">()</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> currentMessage = contentText &#123;</span><br><span class="line">    <span class="keyword">let</span> currentMessageLength = <span class="built_in">countElements</span>(currentMessage)</span><br><span class="line">    charactersRemaining = sc_maxCharactersAllowed - currentMessageLength</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="type">Int</span>(charactersRemaining) &lt; <span class="number">0</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面代码中的<code>contentText</code>是<code>SLComposeServiceViewController</code>中的属性，类型为<code>String!</code>，它存储着分享界面中<code>TextView</code>中的文本信息。<code>charactersRemaining</code>也是<code>SLComposeServiceViewController</code>中的属性，类型为<code>NSNumber</code>，他表示还有多少合法的字数以及超出的字数，并显示在分享界面的左下角。你可以用<code>countElements()</code>方法获取输入文本的字数，用于计算<code>charactersRemaining</code>的值并判断是否超出了限定的最大字数。至于<strong>Post</strong>按钮的可用和禁用由<code>charactersRemaining</code>决定，不需要我们额外设置。</p>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension6.png" alt="图片"><br><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension7.png" alt="图片"></p>
-<h2 id="u4E0A_u4F20_u5206_u4EAB_u5185_u5BB9"><a href="#u4E0A_u4F20_u5206_u4EAB_u5185_u5BB9" class="headerlink" title="上传分享内容"></a>上传分享内容</h2><p>到目前为止，我们已经知道了如何创建一个应用扩展、如何对应用扩展进行配置、如何控制用户的操作行为等。但是作为分享扩展，它的遵旨应该是将文本、图片、视频等资源上传至某个网络客户端（比如FaceBook、Twitter、新浪微博等）。下面就让我们看看应该如何做吧。</p>
-<p>应用扩展相比载体应用或者Host应用来说，它是一个轻量级的、处理单一功能任务的组件，所以用户一般不会因为使用扩展而停止当前使用的应用或关闭正在看的内容。你可以试想一下，如果一个Host应用使用某个应用扩展让它处理一个简单的任务时，该扩展因为同时占用了Host应用的运行内存从而使Host应用不可用、退出以至于崩溃，这是多么令人发指的事情。因此，所有的上传操作都应该在后台执行（iOS7中<code>NSURLSession</code>类对实现该功能很有帮助）。你可能会认为跟着去年<a href="https://leanpub.com/ios7daybyday" target="_blank" rel="external">iOS7 Day-by-Day</a>系列文章就能很容易的实现该功能，但事实并非如此。</p>
-<p>事情往往不是你想象的那么简单。首先提取分享的内容就不是一件容易的事（比如图片），而且你还要将它们分享出去，其次应用扩展没有任何写硬盘的权限。关于第二点，有人可能会有疑问：为什么应用扩展需要写硬盘的权限呢？因为所有后台上传的网络程序，在上传时都会先将上传内容缓存在硬盘中，然后从硬盘获取缓存的内容开始上传。为了能模拟硬盘缓存，我们需要在Host应用中创建一个存放分享内容的容器，并且要允许应用扩展使用该容器缓存分享内容。我们会在下面的内容中讲解如何实现该功能，但首先，我们先来看看如何提出分享内容中的图片。</p>
-<h2 id="u63D0_u53D6_u8981_u5206_u4EAB_u7684_u56FE_u7247"><a href="#u63D0_u53D6_u8981_u5206_u4EAB_u7684_u56FE_u7247" class="headerlink" title="提取要分享的图片"></a>提取要分享的图片</h2><p>在<code>SLComposeServiceViewController</code>类中有一个属性叫<code>extensionContext</code>，它存储着与当前应用扩展有关联的所有数据，其中包含一个<code>NSInputItem</code>类型的数组，名叫<code>inputItems</code>。每个<code>NSInputItem</code>都含有一个<code>attachments</code>集合，它们的类型都为<code>NSItemProvider</code>。这些<code>attachments</code>存储的就是分享内容中的媒体资源，比如图片、视频、文件或链接。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">imageFromExtensionItem</span><span class="params">(extensionItem: NSExtensionItem, callback: <span class="params">(image: UIImage?)</span></span></span>-&gt;<span class="type">Void</span>) &#123;</span><br><span class="line">  <span class="keyword">for</span> attachment <span class="keyword">in</span> extensionItem.attachments <span class="keyword">as</span> [<span class="type">NSItemProvider</span>] &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面这个方法的作用是从分享内容中提取图片（<code>UIImage</code>），注意这个方法没有返回值，而是用一个闭包回调函数来替代。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>为了确定<code>attachments</code>中是否包含了图片类型的资源，我们需要用到<code>hasItemConformingToTypeIdentifier()</code>方法。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span>(attachment.hasItemConformingToTypeIdentifier(kUTTypeImage <span class="keyword">as</span> <span class="type">NSString</span>)) &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>该方法的参数类型是<code>NSString</code>，并且类型标示符<code>kUTTypeImage</code>属于<strong>MobileCoreServices</strong>框架中的属性，所以我们要引入<strong>MobileCoreServices</strong>框架：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> MobileCoreServices</span><br></pre></td></tr></table></figure>
-<p>该框架中还包含几种类型标示符：</p>
-<ul>
-<li><code>kUTTypeImage</code></li>
-<li><code>kUTTypeMovie</code></li>
-<li><code>kUTTypeAudio</code></li>
-<li><code>kUTTypeSpreadsheet</code></li>
-</ul>
-<p>现在你可以确定<code>attachments</code>中至少包含了一个图片资源，并且需要将该图片资源提取出来。因为执行该任务会消耗很高的内存资源，所以为了确保在执行时UI界面不会出现无响应的情况，它应该在后台队列中执行。我们可以使用<code>loadItemForTypeIdentifier()</code>方法，与刚才的方法类似，该方法也有类型标示符参数，并且用闭包实现对图片的操作：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Marshal on to a background thread</span></span><br><span class="line">dispatch_async(dispatch_get_global_queue(<span class="type">DISPATCH_QUEUE_PRIORITY_DEFAULT</span>, <span class="type">UInt</span>(<span class="number">0</span>))) &#123;</span><br><span class="line">  attachment.loadItemForTypeIdentifier(kUTTypeImage <span class="keyword">as</span> <span class="type">NSString</span>, options: <span class="literal">nil</span>) &#123;</span><br><span class="line">      (imageProvider, error) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">      ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果你使用Objective-C，那么你可以用block将返回结果强制转换为你期望的类型（比如<code>UIImage</code>），然后实现回调。但是在Swift中就行不通了，所以上面代码中的<code>imageProvider</code>变量的类型应该是<code>NSSecureCoding</code>，然后你可以将它强转为<code>UIImage</code>类型：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> image: <span class="type">UIImage</span>? = <span class="literal">nil</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> e = error &#123;</span><br><span class="line">  <span class="built_in">println</span>(<span class="string">"Item loading error: <span class="subst">\(e.localizedDescription)</span>"</span>)</span><br><span class="line">&#125;</span><br><span class="line">image = imageProvider <span class="keyword">as</span>? <span class="type">UIImage</span></span><br><span class="line">dispatch_async(dispatch_get_main_queue()) &#123;</span><br><span class="line">  callback(image: image)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>大家注意，在<code>dispatch_async</code>中我使用了<code>callback()</code>函数，也就是<code>imageFromExtensionItem</code>方法的第二个参数，并将刚才强转为<code>UIImage</code>类型的<code>image</code>对象作为其参数。</p>
-<p>这段代码可以让用户在输入分享文本信息的同时将<code>attachments</code>中的图片提取出来。看起来非常完美：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> attachedImage: <span class="type">UIImage</span>?</span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">presentationAnimationDidFinish</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// Only interested in the first item</span></span><br><span class="line">  <span class="keyword">let</span> extensionItem = extensionContext.inputItems[<span class="number">0</span>] <span class="keyword">as</span> <span class="type">NSExtensionItem</span></span><br><span class="line">  <span class="comment">// Extract an image (if one exists)</span></span><br><span class="line">  imageFromExtensionItem(extensionItem) &#123;</span><br><span class="line">    image <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">if</span> image &#123;</span><br><span class="line">      dispatch_async(dispatch_get_main_queue()) &#123;</span><br><span class="line">        <span class="keyword">self</span>.attachedImage = image</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>该方法的作用就是提取出图片，并将提取出的图片赋值给我们定义的<code>attachedImage</code>变量。</p>
-<h2 id="u6267_u884C_u540E_u53F0_u4E0A_u4F20_u7684_u4EFB_u52A1"><a href="#u6267_u884C_u540E_u53F0_u4E0A_u4F20_u7684_u4EFB_u52A1" class="headerlink" title="执行后台上传的任务"></a>执行后台上传的任务</h2><p>一旦用户输入完要分享的文本信息，按下<strong>Post</strong>按钮后，分享扩展就应该将所有内容通过Web服务上传到某个地方。本文的示例为了达到这个目的，我们在视图控制器中定义了一个常量属性<code>sc_uploadURL</code>，值为一个URL，也就是一个服务地址：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> sc_uploadURL = <span class="string">"http://requestb.in/oha28noh"</span></span><br></pre></td></tr></table></figure>
-<p>这个URL是Request Bin的服务，Request Bin可以给你提供一个临时的URL，用于测试一些网络操作。上面代码中的这个URL对你们来说没有什么用，因为这是我申请的，你们可以去<a href="http://requestb.in/" target="_blank" rel="external">requestb.in</a>申请一个自己的URL用于测试。</p>
-<p>在前面我们提到过，应用扩展不应该和Host应用抢占内存资源，它应该在后台执行相关任务。因此，当<strong>Post</strong>按钮被按下时，在当前的Host应用中我们不会看到任何有关应用扩展的执行痕迹，像同步、网络操作等。此时，我们就需要使用<code>NSURLSession</code>给我们提供的API来实现后台的网络操作。</p>
-<p>当用户点击<strong>Post</strong>按钮后会调用<code>didSelectPost()</code>方法，它的代码片段应该是这样的：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">didSelectPost</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// Perform upload</span></span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Inform the host that we're done, so it un-blocks its UI.</span></span><br><span class="line">  extensionContext.completeRequestReturningItems(<span class="literal">nil</span>, completionHandler: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>设置<code>NSURLSession</code>很简单，有规范的设置流程：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> configName = <span class="string">"com.shinobicontrols.ShareAlike.BackgroundSessionConfig"</span></span><br><span class="line"><span class="keyword">let</span> sessionConfig = <span class="type">NSURLSessionConfiguration</span>.backgroundSessionConfigurationWithIdentifier(configName)</span><br><span class="line"><span class="comment">// Extensions aren't allowed their own cache disk space. Need to share with application</span></span><br><span class="line">sessionConfig.sharedContainerIdentifier = <span class="string">"group.ShareAlike"</span></span><br><span class="line"><span class="keyword">let</span> session = <span class="type">NSURLSession</span>(configuration: sessionConfig)</span><br></pre></td></tr></table></figure>
-<p>我们要特别注意上面代码片段中<code>sharedContainerIdentifier</code>的设置，它给<code>NSURLSession</code>使用的共享容器（用于缓存分享内容）指定了一个名称，这个容器也是扩展载体应用的一部分（在这个例子中，载体应用就是ShareAlike），所以我们要通过Xcode对载体应用进行设置：</p>
+<h3 id="Delegation"><a href="#Delegation" class="headerlink" title="Delegation"></a>Delegation</h3><p>另一个Decorator设计模式是Delegation，它是一种代表其他对象或协调其他对象的机制。</p>
+<p>比如当你使用<code>UITableView</code>时，你必须要实现<code>tableView(_:numberOfRowsInSection:)</code>方法，你不要期望<code>UITableView</code>会知道你希望每个Section里有多少行。因此，计算每个Section有多少行的任务就交给了<code>UITableView</code>的代理。这样就可以使<code>UITableView</code>显示与数据松耦合，独立开来。</p>
+<p>下图是<code>UITableView</code>和它的代理之间的运行关系示意图：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-13.png" alt="pic"></p>
+<p><code>UITableView</code>的工作是将一些信息展示在一个列表视图中。但是它只关注于展示，并不会持有需要展示的数据。那么这时就需要向它的代理询问获取相关的信息了。在Objective-C的代理模式中，代理或协议可以申明两种类型的方法，一种是必须类型，另一种是可选类型。前者是遵循该协议的类必须要实现的方法，后者是可以实现，也可以不实现的方法。你们在该教程中会实践到这些内容。</p>
+<p>这时大伙可能会有疑问了，为何我们要使用协议而不直接继承一个对象，然后重写需要的方法呢？这样不是更省事么？但是你们考虑一下，如果这样做，你们只能基于一个单独的父类去实现其子类，也就是说，该父类只能作为某一个对象的代理。如果想让一个对象成为多个对象的代理，那么用继承父类这种形式就行不通了。</p>
+<blockquote>
+<p><strong>注意：</strong>代理机制是一个很重要的模式。Apple在UIKit框架中大量应用了该模式，比如<code>UITableView</code>、<code>UITextView</code>、<code>UITextField</code>、<code>UIWebView</code>、<code>UIAlert</code>、<code>UIActionSheet</code>、<code>UICollectionView</code>、<code>UIPickerView</code>、<code>UIGestrueRecognizer</code>、<code>UIScrollView</code>等等。</p>
+</blockquote>
+<h2 id="u5982_u4F55_u4F7F_u7528Delegate_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528Delegate_u6A21_u5F0F" class="headerlink" title="如何使用Delegate模式"></a>如何使用Delegate模式</h2><p>打开<code>ViewController.swift</code>文件，然后添加以下私有属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> allAlbums = [<span class="type">Album</span>]()</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> currentAlbumData : (titles:[<span class="type">String</span>], values:[<span class="type">String</span>])?</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> currentAlbumIndex = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>然后重写<code>viewDidLoad</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">  <span class="comment">//1</span></span><br><span class="line">  <span class="keyword">self</span>.navigationController?.navigationBar.translucent = <span class="literal">false</span></span><br><span class="line">  currentAlbumIndex = <span class="number">0</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment">//2</span></span><br><span class="line">  allAlbums = <span class="type">LibraryAPI</span>.sharedInstance.getAlbums()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3</span></span><br><span class="line">  <span class="comment">// the uitableview that presents the album data</span></span><br><span class="line">  dataTable.delegate = <span class="keyword">self</span></span><br><span class="line">  dataTable.dataSource = <span class="keyword">self</span></span><br><span class="line">  dataTable.backgroundView = <span class="literal">nil</span></span><br><span class="line">  view.addSubview(dataTable!)       </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们对上述的代码来进行一一讲解：</p>
 <ol>
-<li>在工程设置面板中选择<strong>Capabilities</strong>页签，然后在左侧<strong>Targets</strong>栏中选中载体应用。</li>
-<li>开启载体应用的<strong>App Groups</strong>。</li>
-<li>创建一个App Group，起一个合适的名称，但是必须要以<code>group.</code>开头。在我们的示例中，我们刚才设置的名称为<code>group.ShareAlike</code>。</li>
-<li>Xcode会进行一系列检查，然后创建App Group。</li>
+<li>关闭导航栏的透明效果。</li>
+<li>通过API获取所有专辑的列表。这里要记住，要使用符合Facade模式的<code>LibraryAPI</code>而不是直接使用<code>PersisencyManager</code>。</li>
+<li>对<code>UITableView</code>进行相关设置，将它的delegate和datasource设置为当前的ViewController。这样一来<code>UITableView</code>所有对数据的请求都会由当前的ViewController响应并提供了。这里需要注意的是如果你们在Storeboard中创建<code>UIViewController</code>和<code>UITableView</code>，那么也可以在Storeboard中通过拖拽来设置delegate和datasource。</li>
 </ol>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension8.png" alt="图片"></p>
-<p>然后选中应用扩展，开启<strong>App Groups</strong>，然后选择刚才创建好的App Group。</p>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension9.png" alt="图片"></p>
-<p>这些App Group都是登记在你的开发者账号下的，这样才能确保只有你的应用可以使用这些共享容器。</p>
-<p>Xcode会为每个工程创建一个<code>.entitlements</code>授权文件，里面就包含有共享容器的访问名称。</p>
-<p>现在<code>NSURLSession</code>就已经设置成功了，你还需要创建一个URL request对象来发送请求：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Prepare the URL Request</span></span><br><span class="line"><span class="keyword">let</span> request = urlRequestWithImage(attachedImage, text: contentText)</span><br></pre></td></tr></table></figure>
-<p><code>urlRequestWithImage</code>函数的作用是构造一个URL请求结构，通过HTTP Post方式发送一些JSON格式的数据。这其中就包含了文本内容和图片的元数据信息：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">urlRequestWithImage</span><span class="params">(image: UIImage?, text: String)</span></span> -&gt; <span class="type">NSURLRequest</span>? &#123;</span><br><span class="line">  <span class="keyword">let</span> url = <span class="type">NSURL</span>.<span class="type">URLWithString</span>(sc_uploadURL)</span><br><span class="line">  <span class="keyword">let</span> request = <span class="type">NSMutableURLRequest</span>(<span class="type">URL</span>: url)</span><br><span class="line">  request.addValue(<span class="string">"application/json"</span>, forHTTPHeaderField: <span class="string">"Content-Type"</span>)</span><br><span class="line">  request.addValue(<span class="string">"application/json"</span>, forHTTPHeaderField: <span class="string">"Accept"</span>)</span><br><span class="line">  request.<span class="type">HTTPMethod</span> = <span class="string">"POST"</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> jsonObject = <span class="type">NSMutableDictionary</span>()</span><br><span class="line">  jsonObject[<span class="string">"text"</span>] = text</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> image = image &#123;</span><br><span class="line">    jsonObject[<span class="string">"image_details"</span>] = extractDetailsFromImage(image)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Create the JSON payload</span></span><br><span class="line">  <span class="keyword">var</span> jsonError: <span class="type">NSError</span>?</span><br><span class="line">  <span class="keyword">let</span> jsonData = <span class="type">NSJSONSerialization</span>.dataWithJSONObject(jsonObject, options: <span class="literal">nil</span>, error: &amp;jsonError)</span><br><span class="line">  <span class="keyword">if</span> jsonData &#123;</span><br><span class="line">    request.<span class="type">HTTPBody</span> = jsonData</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> error = jsonError &#123;</span><br><span class="line">      <span class="built_in">println</span>(<span class="string">"JSON Error: <span class="subst">\(error.localizedDescription)</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> request</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个方法实际上并不是创建一个上传图片的请求，虽然也可以这样做，但这里我们将图片的详细信息（元数据）提取出来进行上传，下面代码是提取图片详细信息的方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">extractDetailsFromImage</span><span class="params">(image: UIImage)</span></span> -&gt; <span class="type">NSDictionary</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> resultDict = <span class="type">NSMutableDictionary</span>()</span><br><span class="line">  resultDict[<span class="string">"height"</span>] = image.size.height</span><br><span class="line">  resultDict[<span class="string">"width"</span>] = image.size.width</span><br><span class="line">  resultDict[<span class="string">"orientation"</span>] = image.imageOrientation.toRaw()</span><br><span class="line">  resultDict[<span class="string">"scale"</span>] = image.scale</span><br><span class="line">  resultDict[<span class="string">"description"</span>] = image.description</span><br><span class="line">  <span class="keyword">return</span> resultDict.copy() <span class="keyword">as</span> <span class="type">NSDictionary</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>最后你就可以通过<code>resume()</code>在后台发起上传请求了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Create the task, and kick it off</span></span><br><span class="line"><span class="keyword">let</span> task = session.dataTaskWithRequest(request)</span><br><span class="line">task.resume()</span><br></pre></td></tr></table></figure>
-<p>如果你按下<strong>Post</strong>按钮完成分享后，在requestb.in中，你应该可以看到如下的结果：</p>
-<p><img src="http://www.devtalking.com/postImages/iOS8%20Day-by-Day-Day2-sharing-extension10.png" alt="图片"></p>
-<p>原文地址：<a href="http://www.shinobicontrols.com/blog/posts/2014/07/21/ios8-day-by-day-day-2-sharing-extension" target="_blank" rel="external">iOS8 Day-by-Day :: Day 2 :: Sharing Extension</a></p>
+<p>接下来，在<code>ViewController.swift</code>中添加如下方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">showDataForAlbum</span><span class="params">(albumIndex: Int)</span></span> &#123;</span><br><span class="line">  <span class="comment">// 保证代码健壮性，确保专辑数至少大于0，避免数组下标越界的错误</span></span><br><span class="line">  <span class="keyword">if</span> (albumIndex &lt; allAlbums.<span class="built_in">count</span> &amp;&amp; albumIndex &gt; -<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="comment">//获取专辑对象</span></span><br><span class="line">    <span class="keyword">let</span> album = allAlbums[albumIndex]</span><br><span class="line">    <span class="comment">// 保存专辑的数据，用于一会在tableview中展现</span></span><br><span class="line">    currentAlbumData = album.ae_tableRepresentation()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    currentAlbumData = <span class="literal">nil</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 我们已经获取到了需要的数据，可以刷新tableview来显示数据了</span></span><br><span class="line">  dataTable!.reloadData()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>showDataForAlbum()</code>方法的作用是从专辑数组中获取到专辑的对象，然后请求并保存专辑的数据。当你想显示新的数据或有改变的数据时，你只需要调用<code>reloadData</code>方法即可。这样<code>UItableView</code>会重新请求它的代理获取相关数据，比如一共要显示多少个Section、每个Section里显示多少行、每行看起来是什么样的等等。</p>
+<p>我们在<code>viewDidLoad</code>方法中再加入一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">self</span>.showDataForAlbum(currentAlbumIndex)</span><br></pre></td></tr></table></figure>
+<p>该行代码让应用启动时就开始加载专辑数据。因为之前已经将<code>currentAlbumIndex</code>的值设为了0，所以从专辑数组中的第一个专辑开始显示。</p>
+<p>现在，是时候实现DataSource协议的方法了，你们可以将DataSource的方法直接写在ViewController里。也可以通过使用扩展的方式使代码保持整洁。</p>
+<p>如果使用扩展的方式，那么一定要确保它们是写在文件的最下面，并且要在ViewController类定义的大括号之外！</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">ViewController</span>: <span class="title">UITableViewDataSource</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">ViewController</span>: <span class="title">UITableViewDelegate</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这两行代码的含义就是ViewController通过扩展的方式遵循了Delegate和DataSource协议 – 你可以把协议想象成是与委托之间的约定，只要你实现了约定的方法，就算是实现了委托。在我们的代码中，ViewController需要遵守<code>UITableViewDataSource</code>和<code>UITableViewDelegate</code>这两个协议。这样 UITableView 才能明确的知道，需要用到的代理中的方法是由这个ViewController实现的。</p>
+<p>在遵循<code>UITableViewDataSource</code>协议的扩展中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, numberOfRowsInSection section: Int)</span></span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> albumData = currentAlbumData &#123;</span><br><span class="line">    <span class="keyword">return</span> albumData.titles.<span class="built_in">count</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> cell:<span class="type">UITableViewCell</span> = tableView.dequeueReusableCellWithIdentifier(<span class="string">"Cell"</span>, forIndexPath: indexPath) <span class="keyword">as</span> <span class="type">UITableViewCell</span></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> albumData = currentAlbumData &#123;</span><br><span class="line">    cell.textLabel?.text = albumData.titles[indexPath.row]</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">let</span> detailTextLabel = cell.detailTextLabel &#123;</span><br><span class="line">        detailTextLabel.text = albumData.values[indexPath.row]</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> cell</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>tableView(_:numberOfRowsInSection:)</code>方法返回每个Section中显示多少行内容，这里对应着专辑数据结构中的标题。</p>
+<p><code>tableView(_:cellForRowAtIndexPath:)</code>方法会逐个创建每行的内容，包括专辑标题和它的值。</p>
+<blockquote>
+<p><strong>注意：</strong>你们可以把这些协议的方法直接加在类声明里面，也可以放在扩展里，编译器不会去管DataSource的方法是放在扩展里还是类申明里，只要实现了必须的方法即可。而我们之所以这样写，是为了保证代码的整洁性和可读性。</p>
+</blockquote>
+<p>编译并运行你们的项目，你们的应用应该已经可以显示出专辑的基本信息了：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-14.png" alt="pic"></p>
+<p>未完待续……</p>
+<p>原文地址：<a href="http://www.raywenderlich.com/86477/introducing-ios-design-patterns-in-swift-part-1" target="_blank" rel="external">Introducing iOS Design Patterns in Swift</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -760,8 +813,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/create-documentation-in-playground/" itemprop="url">
-                  在Playground中添加说明文档
+                <a class="post-title-link" href="/articles/ios-design-pattern-in-swift-1/" itemprop="url">
+                  Swift中的iOS设计模式（一）
                 </a>
               
             
@@ -771,8 +824,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-09-15T00:00:00+08:00" content="2014-09-15">
-              2014-09-15
+            <time itemprop="dateCreated" datetime="2015-01-05T00:00:00+08:00" content="2015-01-05">
+              2015-01-05
             </time>
           </span>
 
@@ -797,8 +850,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/create-documentation-in-playground/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/create-documentation-in-playground/" itemprop="commentsCount"></span>
+              <a href="/articles/ios-design-pattern-in-swift-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/ios-design-pattern-in-swift-1/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -828,31 +881,121 @@
 </script>
 
 
-<p>大家应该还记得Swift官方博客中的《Patterns Playground》和《Balloons》这两篇文章，虽然博文很短，但是它们都包含了一个Playground文件，通过这个文件向我们阐述当前文章的主题。当我们打开这两个Playground文件时，发现里面别有洞天，里面有代码，有说明文档，有引用，而且格式规整。它们看起来非常像《The Swift Programming Language》、《Using Swift with Cocoa and Objective-C》这两本iBook，但是却比这两本书有更高的交互性。让我们来看看这两个Playground文件的片段：</p>
-<p><img src="http://www.devtalking.com/postImages/2014-09-15-create-documentation-in-playground1.png" alt="片段"><br><img src="http://www.devtalking.com/postImages/2014-09-15-create-documentation-in-playground2.png" alt="片段"> </p>
-<p>大家可以看到，在Playground中还有小练习，加上它所见所得的特性，运用在教学中再好不过。可以想象，以后Objective-C，Swift的教学视频、材料都少不了Playground的身影。</p>
-<p>说了这么多，大家一定很捉急想知道如何在Playground中添加说明文档吧。别着急，让我们一步一步进行：</p>
+<p><strong>iOS设计模式</strong> - 大伙应该都听说过，但是有多少人真正的了解他们呢？虽然大多数开发者都认同设计模式的重要性，但是在实际开发中却并不怎么注意使用设计模式，而且关于设计模式的文章也是凤毛麟角，这更使得开发者无从下手去学习设计模式。</p>
+<p>设计模式是一个处理软件设计中常见问题的解决方法，并可以重复使用。它向开发者提供了设计模板，使开发者更容易写出逻辑清晰、具有可复用性的代码。它还可以使代码具有松耦合性，能让开发者轻松的更新或替换项目中使用的组件。</p>
+<p>在本教程中，大伙要开发一个音乐仓库应用，能显示你们收藏的专辑以及相关信息。</p>
+<p>在开发过程中，大伙会逐渐掌握大多数通用的Cocoa设计模式：</p>
 <ul>
-<li>创建一个Playground文件，并保存。</li>
-<li>找到刚刚保存的Playground文件，在其上点击鼠标右键，选择<strong>显示包内容</strong>。</li>
-<li>在该Playground文件包内新建一个文件夹，命名为“Documentation”。</li>
-<li>使用Mou或MacDown编辑你的说明文档：</li>
+<li><strong>构建设计模式：</strong>Singleton。</li>
+<li><strong>架构设计模式：</strong>MVC，Decorator，Adapter，Facade。</li>
+<li><strong>行为设计模式：</strong>Observer，Memento。</li>
 </ul>
-<p><img src="http://www.devtalking.com/postImages/2014-09-15-create-documentation-in-playground3.png" alt="图片"> </p>
+<p>千万不要认为该文章只是对设计模式理论上的讲解，大伙需要在你们的音乐仓库应用中运用到这些设计模式。你们的应用最终看起来大概是这个模样：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-1.png" alt="pic"></p>
+<h2 id="u51C6_u5907_u5F00_u59CB"><a href="#u51C6_u5907_u5F00_u59CB" class="headerlink" title="准备开始"></a>准备开始</h2><p>从这里下载<a href="http://cdn1.raywenderlich.com/wp-content/uploads/2014/11/BlueLibrarySwift-Starter.zip" target="_blank" rel="external">初始项目</a>，解压Zip文件，然后在Xcode中打开<strong>BlueLibrarySwift.xcodeproj</strong>工程。</p>
+<p>在开始之前，有三件事需要大伙注意：</p>
 <ul>
-<li>这里以MacDown为例（其实Mou也一样），点击File -> Export -> HTML，将编辑好的.md说明文档导出HTML文件，然后将该HTML文件拷贝到刚才创建的“Documentation”文件夹中。</li>
+<li>在<code>ViewController</code>中有两个<code>IBOutlet</code>连接着Storyboard中的TableView和Toolbar。</li>
+<li>在Storyboard中的<code>ViewController</code>里含有三个组件，并且设置了AutoLayout布局约束。最上面的组件用来显示音乐专辑的封面。中间是一个TableView，用来显示与该专辑相关的信息。最下面是两个Toolbar按钮，一个是撤销操作按钮，另一个是删除选中专辑的按钮。你们的Storyboard看起来应该是下面这个样子：</li>
+</ul>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-2.png" alt="pic"></p>
+<ul>
+<li>在工程里还有一个HTTP Client类（<code>HTTPClient</code>），这个类目前是空的，但是你们在之后会充实它。</li>
 </ul>
 <blockquote>
-<p>你也可以自己添加CSS文件，修饰你的HTML内容。</p>
+<p><strong>注意：</strong>你们知道吗，当你们创建了一个新的Xcode项目后，你们所编写的代码其实就已经在遵循一定的设计模式了，Model-View-Controller, Delegate, Protocol, Singleton这些设计模式统统可以免费使用哦。</p>
 </blockquote>
+<p>在带你们深入了解第一个设计模式之前，你们需要创建两个类，用于存储和展示音乐专辑的数据。</p>
+<p>点击菜单 <strong>File\New\File…</strong> （或者按下 <strong>Command+N</strong> 快捷键）。选择 <strong>iOS > Cocoa Touch Class</strong> ，点击 <strong>Next</strong>。设置该类的名称为 <strong>Album</strong> ，并让它继承 <strong>NSObject</strong>。最后选择语言为 <strong>Swift</strong> 然后点击 <strong>Next</strong>，最后点击 <strong>Create</strong>。</p>
+<p>打开<strong>Album.swift</strong>文件，在<strong>Album</strong>类中定义如下属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> title : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> artist : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> genre : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> coverUrl : <span class="type">String</span>!</span><br><span class="line"><span class="keyword">var</span> year : <span class="type">String</span>!</span><br></pre></td></tr></table></figure>
+<p>然后添加一个初始化方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">init</span>(title: <span class="type">String</span>, artist: <span class="type">String</span>, genre: <span class="type">String</span>, coverUrl: <span class="type">String</span>, year: <span class="type">String</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">self</span>.title = title</span><br><span class="line">  <span class="keyword">self</span>.artist = artist</span><br><span class="line">  <span class="keyword">self</span>.genre = genre</span><br><span class="line">  <span class="keyword">self</span>.coverUrl = coverUrl</span><br><span class="line">  <span class="keyword">self</span>.year = year</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码为<strong>Album</strong>类创建了一个初始化方法，当你要创建一个新的专辑时你要通过这个初始化方法，传入专辑名称、演唱者、风格、专辑封面图片的URL以及年份这些属性。</p>
+<p>接下来需要再添加一个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">description</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"title: <span class="subst">\(title)</span>"</span> +</span><br><span class="line">   <span class="string">"artist: <span class="subst">\(artist)</span>"</span> +</span><br><span class="line">   <span class="string">"genre: <span class="subst">\(genre)</span>"</span> +</span><br><span class="line">   <span class="string">"coverUrl: <span class="subst">\(coverUrl)</span>"</span> +</span><br><span class="line">   <span class="string">"year: <span class="subst">\(year)</span>"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>description()</code>方法将专辑的这些属性拼成一个字符串，并返回。</p>
+<p>我们再次通过刚才创建类的步骤创建一个名为<strong>AlibumView</strong>的类，注意该类要继承<strong>UIView</strong>。</p>
+<p>打开<strong>AlbumView.swift</strong>文件，在该类中添加两个属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> coverImage: <span class="type">UIImageView</span>! </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> indicator: <span class="type">UIActivityIndicatorView</span>!</span><br></pre></td></tr></table></figure>
+<p><code>coverImage</code>属性用来展示专辑封面，<code>indicator</code>是当正在下载封面图片时转动的菊花。</p>
+<p>大伙注意，这里的两个属性分配了<code>private</code>访问级别，也就是说这两个属性只能在<strong>AlbumView.swift</strong>文件中使用，因为其他的类压根没有必要知道这两个属性的存在。（译者：其实这里用不用private都无所谓，因为咱们写的又不是library或者framework。）</p>
+<p>接下来为<code>AlbumView</code>类添加初始化方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">required</span> <span class="keyword">init</span>(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>(coder: aDecoder)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">init</span>(frame: <span class="type">CGRect</span>, albumCover: <span class="type">String</span>) &#123;</span><br><span class="line">  <span class="keyword">super</span>.<span class="keyword">init</span>(frame: frame)</span><br><span class="line">  backgroundColor = <span class="type">UIColor</span>.blackColor()</span><br><span class="line">  coverImage = <span class="type">UIImageView</span>(frame: <span class="type">CGRectMake</span>(<span class="number">5</span>, <span class="number">5</span>, frame.size.width - <span class="number">10</span>, frame.size.height - <span class="number">10</span>))</span><br><span class="line">  addSubview(coverImage)</span><br><span class="line">  indicator = <span class="type">UIActivityIndicatorView</span>()</span><br><span class="line">  indicator.center = center</span><br><span class="line">  indicator.activityIndicatorViewStyle = .<span class="type">WhiteLarge</span></span><br><span class="line">  indicator.startAnimating()</span><br><span class="line">  addSubview(indicator)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于<code>UIView</code>遵循了<code>NSCoding</code>，而<code>AlbumView</code>又继承了<code>UIView</code>，所以这里需要写一个<code>NSCoder</code>的初始化方法，但我们不会在这个方法中处理什么逻辑，所以调用<code>super.init</code>即可。</p>
+<p><code>AlbumView</code>真正的初始化方法是另外一个<code>init</code>方法，在这个方法中设置了一些默认的属性，比如将背景色设置为黑色、实例化了<code>coverImage</code>属性，并让它与父容器有5px的四周间距、实例化<code>indicator</code>并设置位置及风格。</p>
+<p>最后再添加一个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">highlightAlbum</span><span class="params">(#didHighlightView: Bool)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> didHighlightView == <span class="literal">true</span> &#123;</span><br><span class="line">    backgroundColor = <span class="type">UIColor</span>.whiteColor()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    backgroundColor = <span class="type">UIColor</span>.blackColor()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法是专辑封面高亮开关，高亮时专辑封面背景色为白色，否则为黑色。</p>
+<p>现在编译你们的工程，确保一切都没有问题，然后准备开始第一个设计模式的学习。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u8BBE_u8BA1_u6A21_u5F0F_u7684_u738B_u8005_-_MVC_u6A21_u5F0F"><a href="#u8BBE_u8BA1_u6A21_u5F0F_u7684_u738B_u8005_-_MVC_u6A21_u5F0F" class="headerlink" title="设计模式的王者 - MVC模式"></a>设计模式的王者 - MVC模式</h2><p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-3.png" alt="pic"></p>
+<p>Model-View-Controller (MVC)设计模式是Cocoa框架的基石，毋庸置疑它是开发者们最常用的设计模式没有之一。它把应用中的对象按它们的角色进行分类，并鼓励开发者按这种角色分类创建项目目录，将代码放置在合适的位置，保证项目结构清晰明确。</p>
+<p>顾名思义，MVC中有三种角色：</p>
 <ul>
-<li>打开Playground文件包内的contents.xcplayground文件，在<code>&lt;sections&gt;</code>标签中加入下面这行：</li>
+<li><strong>Model：</strong>这种对象保存应用程序的数据，并定义如何操作处理这些数据。比如之前你们创建的<code>Album</code>类就是一个Model对象。</li>
+<li><strong>View：</strong>这种对象主要负责Model对象的呈现，以及用户交互。基本上，由<code>UIView</code>衍生出的类都是View对象。在你们的音乐仓库应用中<code>AlbumView</code>就是一个View对象。</li>
+<li><strong>Controller：</strong>这种对象充当着应用程序的协调者，由它来协调所有的事情。它会访问Model对象的数据，然后展示在相应的View对象中；它也会监听用户在View对象上的交互，从而通知Model对象进行相应的数据操作等等。你们应用中的<code>ViewController</code>就是一个Controller对象。</li>
 </ul>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">&lt;documentation relative-path='playgroundDocumentation.html'&gt;&lt;/documentation&gt;</span><br></pre></td></tr></table></figure>
-<p>也就是将我们刚才拷贝到“Documentation”文件夹中的HTML文件添加到Playground文件的xml文件中，使用<code>&lt;documentation&gt;</code>标签，将<code>relative-path</code>的值设置为HTML文件的名称：</p>
-<p><img src="http://www.devtalking.com/postImages/2014-09-15-create-documentation-in-playground4.png" alt="图片"> </p>
-<p>现在再打开刚才创建的Playground文件看看，是不是很酷呢！</p>
-<p><img src="http://www.devtalking.com/postImages/2014-09-15-create-documentation-in-playground5.png" alt="图片"> </p>
+<p>下图可以很好的说明Model对象和View对象是如何通过Controller对象进行通信的：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-4.png" alt="pic"></p>
+<p>当Model对象的数据发生改变时，它会通知Controller对象，然后Controller对象更新对应的View对象上展示的数据。当用户在View对象进行了交互操作时，View对象会通知Controller对象，然后Controller对象会更新对应的Model对象中的数据。</p>
+<p>你们可能会有这样的疑惑，为什么不把这些操作处理都写在Controller对象中呢，这样就不用通知来通知去的，不是更简单吗？</p>
+<p>我告诉你们两个概念，你们就明白这样做的目的了，那就是低耦合性和高复用性。我举个例子，在一个应用中每个界面中的数据大多数是来自于多个Model对象，如果把View对象和Model对象绑定死了，那么就没法处理这种情况了。</p>
+<p>拿咱们这个音乐仓库的应用来说，如果你们以后想做一个电影仓库或者图书仓库，你仍然可以使用<code>AlbumView</code>这个View对象来展示你的电影或者图书Model对象。假如你的电影仓库应用需要展示电影主题曲的一些信息，那么或许你就可以直接复用<code>Album</code>对象，因为<code>Album</code>对象不依赖于任何View对象。这就是MVC设计模式的强大之处。</p>
+<h2 id="u5982_u4F55_u4F7F_u7528MVC_u8BBE_u8BA1_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528MVC_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="如何使用MVC设计模式"></a>如何使用MVC设计模式</h2><p>首先，你要确保项目中每个类的功能，要么是Controller，要么是View，要么是Model。千万不要将两种角色混合于一个类，每个类只有单一的职责。不过，到目前为止，你们已经创建了标准的Model类<code>Album</code>和View类<code>AlbumView</code>。</p>
+<p>其次，为了使项目目录结构清晰明了，以及能够更感官的实行MVC模式，你们需要在工程中创建三个文件组，来区分开这三种角色的文件。</p>
+<p>通过<strong>File\New\Group</strong>（或同时按下<strong>Command+Option+N</strong>）在工程中创建一个名为 <strong>Model</strong> 的文件组，然后以同样的方式创建 <strong>View</strong> 文件组和 <strong>Model</strong> 文件组。</p>
+<p>最后将 <strong>Album.swift</strong> 文件拖进Model文件组，将 <strong>AlbumView.swift</strong>文件拖进View文件组，将 <strong>ViewController.swift</strong> 文件拖进Model文件组。</p>
+<p>此时，你们的项目目录结构应该是这样的：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-5.png" alt="pic"></p>
+<p>现在的项目结构看起来已然井然有序，当然你们还可以创建其他的文件组和类文件，但是要记住的是，Model、View、Controller这三个文件组是整个程序的核心所在。</p>
+<p>现在项目结构已经理清楚了，接下来的工作就需要从某个地方获取到专辑的相关数据。你们可以创建一个名为API的类，用于负责整个应用的数据管理工作。并且将拉开你们要了解的下一个设计模式 – Singleton。</p>
+<h2 id="Singleton_u8BBE_u8BA1_u6A21_u5F0F"><a href="#Singleton_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="Singleton设计模式"></a>Singleton设计模式</h2><p>单例模式使一个类在整个应用生命周期内只存在一个实例，并且有一个全局的方法来访问这个实例。在单例模式下，当第一次访问某个类的实例时，该类通常使用延迟加载的方式创建该类的单例。</p>
+<blockquote>
+<p><strong>注意：</strong> Apple在iOS和OSX中大量使用了单例模式，比如： <strong>NSUserDefaults.standardUserDefaults()</strong>， <strong>UIApplication.sharedApplication()</strong>， <strong>UIScreen.mainScreen()</strong>， <strong>NSFileManager.defaultManager()</strong>。</p>
+</blockquote>
+<p>你们可能会有疑问，为什么我们要这么在意一个类有一个或多个实例？代码和内存现在是如此的廉价，不是么？</p>
+<p>其实不然，有些情况下，确实只需要类实例化一次，且仅有一次。比如有这么一种情况，在一个应用的生命周期里，应用（Application）设备的主屏幕是只存在一份的，那么你当然希望应用和设备屏幕的实例有且只有一个。或者你需要一个全局的处理配置的类，这样能线程安全的访问配置文件，避免多个配置类同时访问一个配置文件。这些就是单例模式的好处所在。</p>
+<h2 id="u5982_u4F55_u4F7F_u7528Singleton_u8BBE_u8BA1_u6A21_u5F0F"><a href="#u5982_u4F55_u4F7F_u7528Singleton_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="如何使用Singleton设计模式"></a>如何使用Singleton设计模式</h2><p>先看看下面这张图：</p>
+<p><img src="http://www.devtalking.com/postImages/ios-design-pattern-in-swift-1-6.png" alt="pic"></p>
+<p>上图是Logger的类图，从图中可以看出，Logger有一个<code>instance</code>属性以及<code>sharedInstance</code>和<code>init</code>两个方法。</p>
+<p>当第一次调用<code>sharedInstance</code>方法时，<code>instance</code>属性还没有初始化，所以你会创建一个新的Logger类实例，并返回一个该实例的引用。</p>
+<p>当再次调用<code>sharedInstance</code>方法时，<code>instance</code>属性会立即返回，并且不需要再进行任何实例化操作。这个逻辑就保证了Logger类的实例有且仅有一份。</p>
+<p>你们将要通过Singleton设计模式，创建一个单例的类用于管理所有专辑的数据。</p>
+<p>你们应该注意到了，在项目的目录结构中，有一个文件组叫做API，这个文件组里存放的类基本都是为应用提供服务的类。我们在这个文件组中创建一个名为 <strong>LibraryAPI</strong> 的类。</p>
+<p>打开 <strong>LibraryAPI.swift</strong> 文件，添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//1</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">var</span> <span class="title">sharedInstance</span>: <span class="title">LibraryAPI</span> </span>&#123;</span><br><span class="line">  <span class="comment">//2</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="comment">//3</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">let</span> instance = <span class="type">LibraryAPI</span>()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//4</span></span><br><span class="line">  <span class="keyword">return</span> <span class="type">Singleton</span>.instance</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>创建一个类变量的计算属性。类变量类似Objective-C中的类方法，也就是说在任何时候你访问<code>sharedInstance</code>属性时，都不需要对<code>LibraryAPI</code>进行实例化，关于属性类型更多的知识请参阅Swift文档 – <a href="https://developer.apple.com/library/ios/documentation/swift/conceptual/swift_programming_language/Properties.html" target="_blank" rel="external">properties</a>。</li>
+<li>在类变量中内嵌一个结构体，名为<code>Singleton</code>。</li>
+<li><code>Singleton</code>中包含一个名为<code>instance</code>的静态常量属性。用<code>static</code>申明属性意味着该属性只能存在一份。这里要注意的是Swift中的静态属性都会延迟加载，也就是说只有<code>instance</code>被使用时，才会初始化它。还要注意的一点是，一旦<code>instance</code>被初始化了，那么它就是一个常量属性，不会有第二次初始化的机会了。这就是Singleton模式的精髓所在。</li>
+<li>返回该计算属性的值。</li>
+</ol>
+<blockquote>
+<p><strong>注意：</strong>如果想了解Swift中创建单例的其他方法请参阅这里：<a href="https://github.com/hpique/SwiftSingleton" target="_blank" rel="external">Github page</a>。</p>
+</blockquote>
+<p>你们现在已经有一个单例模式的对象，作为管理专辑数据的入口。接下来要更进一步，创建一个类，用于处理你们数据的持久性。</p>
+<p>继续在 <strong>API</strong> 这个文件组中创建一个类，名为<code>PersistencyManager</code>，并让它继承<code>NSObject</code>类。</p>
+<p>打开 <strong>PersistencyManager.swift</strong> 文件，申明一个属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">var</span> albums = [<span class="type">Album</span>]()</span><br></pre></td></tr></table></figure>
+<p>这里申明了一个private访问权限的变量属性，用于储存专辑数据。这个数组是可变数组，所以你们可以很轻松的增删专辑。</p>
+<p>接下来我们在该类中添加如下初始化方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">  <span class="comment">//Dummy list of albums</span></span><br><span class="line">  <span class="keyword">let</span> album1 = <span class="type">Album</span>(title: <span class="string">"Best of Bowie"</span>,</span><br><span class="line">         artist: <span class="string">"David Bowie"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_david%20bowie_best%20of%20bowie.png"</span>,</span><br><span class="line">         year: <span class="string">"1992"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album2 = <span class="type">Album</span>(title: <span class="string">"It's My Life"</span>,</span><br><span class="line">         artist: <span class="string">"No Doubt"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_no%20doubt_its%20my%20life%20%20bathwater.png"</span>,</span><br><span class="line">         year: <span class="string">"2003"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album3 = <span class="type">Album</span>(title: <span class="string">"Nothing Like The Sun"</span>,</span><br><span class="line">         artist: <span class="string">"Sting"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_sting_nothing%20like%20the%20sun.png"</span>,</span><br><span class="line">         year: <span class="string">"1999"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album4 = <span class="type">Album</span>(title: <span class="string">"Staring at the Sun"</span>,</span><br><span class="line">         artist: <span class="string">"U2"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_u2_staring%20at%20the%20sun.png"</span>,</span><br><span class="line">         year: <span class="string">"2000"</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> album5 = <span class="type">Album</span>(title: <span class="string">"American Pie"</span>,</span><br><span class="line">         artist: <span class="string">"Madonna"</span>,</span><br><span class="line">         genre: <span class="string">"Pop"</span>,</span><br><span class="line">         coverUrl: <span class="string">"http://www.coversproject.com/static/thumbs/album/album_madonna_american%20pie.png"</span>,</span><br><span class="line">         year: <span class="string">"2000"</span>)</span><br><span class="line"> </span><br><span class="line">  albums = [album1, album2, album3, album4, album5]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在初始化方法中，你们可以构建一些专辑添加到<code>albums</code>数组中，这里我构建了5个专辑。</p>
+<p>然后再添加几个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">getAlbums</span><span class="params">()</span></span> -&gt; [<span class="type">Album</span>] &#123;</span><br><span class="line">  <span class="keyword">return</span> albums</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">addAlbum</span><span class="params">(album: Album, index: Int)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (albums.<span class="built_in">count</span> &gt;= index) &#123; </span><br><span class="line">    albums.insert(album, atIndex: index)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    albums.append(album)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">deleteAlbumAtIndex</span><span class="params">(index: Int)</span></span> &#123;</span><br><span class="line">  albums.removeAtIndex(index)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这些方法可以让你们方便的存、取、删除<code>album</code>数组中的专辑。</p>
+<p>然后编译你们的项目，确保编译通过。此时大伙也许又有了疑问，我们应该如何使用<code>PersistencyManager</code>类呢？别着急，在下一节里，会向大家介绍 <strong>Facade</strong> 设计模式，届时你们就会明白<code>LibraryAPI</code>与<code>PersistencyManager</code>之间的关系，以及如何使用<code>PersistencyManager</code>了。</p>
+<p>未完待续……</p>
+<p>原文地址：<a href="http://www.raywenderlich.com/86477/introducing-ios-design-patterns-in-swift-part-1" target="_blank" rel="external">Introducing iOS Design Patterns in Swift</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -897,8 +1040,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/swift-required/" itemprop="url">
-                  Swift中的required修饰符（Xcode 6 GM）
+                <a class="post-title-link" href="/articles/text-kit-tutorial-in-swift-2/" itemprop="url">
+                  如何在Swift中运用Text Kit框架（二）
                 </a>
               
             
@@ -908,8 +1051,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-09-12T00:00:00+08:00" content="2014-09-12">
-              2014-09-12
+            <time itemprop="dateCreated" datetime="2014-12-11T00:00:00+08:00" content="2014-12-11">
+              2014-12-11
             </time>
           </span>
 
@@ -934,8 +1077,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/swift-required/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-required/" itemprop="commentsCount"></span>
+              <a href="/articles/text-kit-tutorial-in-swift-2/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/text-kit-tutorial-in-swift-2/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -965,32 +1108,165 @@
 </script>
 
 
-<h2 id="u666E_u901A_u5B50_u7C7B"><a href="#u666E_u901A_u5B50_u7C7B" class="headerlink" title="普通子类"></a>普通子类</h2><p>通常情况下，一说到<code>required</code>修饰符，我们最先想到的应该就是普通类（class）的<code>init()</code>方法了。比如下面这个类：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当我们定义一个<code>MyClass</code>的子类（subclass）并实例化这个子类时，我们一般会如何做呢？没错，通常情况下都会是这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">MySubClass</span>(str:<span class="string">"Hello Swift"</span>)</span><br></pre></td></tr></table></figure>
-<p>大伙应该已经注意到了，在实例化<code>MySubClass</code>时，其实是继承了它父类<code>MyClass</code>的<code>init()</code>方法。那我们再来看看子类的初始化方法。</p>
-<h2 id="u5B50_u7C7B_u7684_u521D_u59CB_u5316_u65B9_u6CD5"><a href="#u5B50_u7C7B_u7684_u521D_u59CB_u5316_u65B9_u6CD5" class="headerlink" title="子类的初始化方法"></a>子类的初始化方法</h2><p>如果我们在子类中添加一个<code>init()</code>方法，像这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str:str)</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="type">MySubClass</span>(str:<span class="string">"Hello Swift"</span>)</span><br></pre></td></tr></table></figure>
-<p>那么我们首先要在<code>init()</code>方法前加上<code>override</code>修饰符，表示<code>MySubClass</code>重写了其父类的<code>init()</code>方法，然后还要调用父类的<code>init()</code>方法，并将参数一并传给父类的方法。</p>
-<p>在实际运用中，也有另外一种情况，当子类的初始化方法参数类型与父类的初始化方法参数类型不同时，我们就不必在子类的初始化方法前加<code>override</code>修饰符了，但是要把子类初始化方法的参数类型转换为符合父类初始化方法的参数类型，然后传给父类的初始化方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">init</span>(i:<span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str:<span class="type">String</span>(i))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">MySubClass</span>(i: <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="required_u4FEE_u9970_u7B26"><a href="#required_u4FEE_u9970_u7B26" class="headerlink" title="required修饰符"></a>required修饰符</h2><p>我们给父类的<code>init()</code>方法加上<code>required</code>修饰符后会发生什么呢，我们来看看：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">init</span>(i:<span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str:<span class="type">String</span>(i))</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="comment">// 编译错误</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">MySubClass</span>(i: <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
-<p>我们可以看到上面的代码在编译会发生错误，因为我们没有实现父类中要去必须要实现的方法。我们应该这样写：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str: str)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span>(i:<span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(str:<span class="type">String</span>(i))</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">MySubClass</span>(i: <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
-<p>从上面的代码示例中不难看出，如果子类需要添加异于父类的初始化方法时，必须先要实现父类中使用<code>required</code>修饰符修饰过的初始化方法，并且也要使用<code>required</code>修饰符而不是<code>override</code>。</p>
-<p>如果子类中不需要添加任何初始化方法，我们则可以忽略父类的<code>required</code>初始化方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> str:<span class="type">String</span></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>(str:<span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.str = str</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySubClass</span>:<span class="title">MyClass</span></span><br><span class="line"></span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">MySubClass</span>(str: <span class="string">"hello swift"</span>)</span><br></pre></td></tr></table></figure>
-<p>在这种情况下，编译器不会报错，因为如果子类没有任何初始化方法时，Swift会默认使用父类的初始化方法。在<a href="https://developer.apple.com/library/prerelease/mac/documentation/Swift/Conceptual/Swift_Programming_Language/Initialization.html#//apple_ref/doc/uid/TP40014097-CH18-XID_339" target="_blank" rel="external">Apple的文档</a>中也有相关描述：</p>
+<h2 id="u52A8_u6001_u7684_u6587_u672C_u683C_u5F0F_u548C_u5B58_u50A8"><a href="#u52A8_u6001_u7684_u6587_u672C_u683C_u5F0F_u548C_u5B58_u50A8" class="headerlink" title="动态的文本格式和存储"></a>动态的文本格式和存储</h2><p>在上篇文章中，同学们已经看到了Text Kit可以根据用户在设置选项里对文本属性设置而动态的改变App中的文本属性。但你们不知道它还有更酷的功能，那就是可以根据文本本身的某种字符而更改文本属性。</p>
+<p>比如说，你们也许希望我们这个应用中还有以下这些自动的功能：</p>
+<ul>
+<li>被波浪号（~）括起来的文本会显示艺术字体。</li>
+<li>被下划线（_）括起来的文本会显示斜体。</li>
+<li>被破折号（-）括起来的文本会在其上划一道横线。</li>
+<li>所有大写字体会显示红色。</li>
+</ul>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-12.png" alt="pic"></p>
+<p>如何用TextKit实现上述这些功能就是这篇文章将要向同学们介绍的内容。</p>
+<p>在学习这些之前，大家需要先理解在TextKit中，文本的存储系统是如何工作的。下面的图展示了TextKit中对文本进行存储、渲染、显现的基本流程：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-13.png" alt="pic"></p>
+<p>在开发过程中，如果你创建了<code>UITextView</code>、<code>UILabel</code>或<code>UITextField</code>，那么同时Apple会在幕后自动创建上图中的这些类。你可以使用这些类默认实现的行为，也可以自己实现这些类，从而达到你想要的一些对文本控制的行为。让我们来看看这些类的作用：</p>
+<ul>
+<li><code>NSTextStorage</code>的功能是存储文本，并通过字符串属性渲染文本。当文本内容发生任何变化的时候，它会告知布局管理器（Layout Manager）。你们也许脑海中已经有了一点想法，那就是实现一个<code>NSTextStorage</code>的子类，以便实现当文本更新时动态改变文本属性的功能，Bingo！想法基本正确（在后文中你将会看到它的运用）。</li>
+<li><code>NSLayoutManager</code>的功能是从<code>NSTextStorage</code>中获取文本并在屏幕上渲染文本。它将作为你应用中的布局引擎。</li>
+<li><code>NSTextContainer</code>的功能是在屏幕上描绘一个几何图形区域，要显示的文本就是在这个区域内进行渲染的。每个Text Container一般都和一和<code>UITextView</code>相关联。你可以实现一个<code>NSTextContainer</code>的子类，描绘一个复杂的几何图形，让文本在其中进行渲染。</li>
+</ul>
+<p>如果想要在我们的应用中实现动态文本格式的功能，那么就需要实现一个<code>NSTextStorage</code>的子类，然后根据用户键入的字符动态的设置文本格式属性。</p>
+<p>一旦你实现了<code>NSTextStorage</code>的子类，那么你就要替换<code>UITextView</code>默认的存储类示例，同学们接着往下看。</p>
+<h2 id="UITextStorage_u7684_u5B50_u7C7B"><a href="#UITextStorage_u7684_u5B50_u7C7B" class="headerlink" title="UITextStorage的子类"></a>UITextStorage的子类</h2><p>我们选中左侧项目结构目录中的<strong>SwiftTextKitNotepad</strong>，然后选择菜单栏中的<strong>New File…</strong> ，接着选择<strong>iOS/Source/Cocoa Touch Class</strong> ，点击<strong>Next</strong>。</p>
+<p>我们给该类起名为<strong>SyntaxHighlightTextStorage</strong>，让它继承<code>NSTextStorage</code>，确认<strong>Language</strong>选项为 <strong>Swift</strong>，然后点击 <strong>Next</strong> ，最后点击<strong>Create</strong>。 </p>
+<p>打开<strong>SyntaxHighlightTextStorage.swift</strong>文件，申明一个新的属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> backingStore = <span class="type">NSMutableAttributedString</span>()</span><br></pre></td></tr></table></figure>
+<p>文本存储的子类必须要保证自己的持久性，因此使用<code>NSMutableAttributedString</code>作为<code>backingStore</code>的类型。后面我们会经常用到。</p>
+<p>然后在该类中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">var</span> string: <span class="type">String</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> backingStore.string</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">attributesAtIndex</span><span class="params">(index: Int, effectiveRange range: NSRangePointer)</span></span> -&gt; [<span class="type">NSObject</span> : <span class="type">AnyObject</span>] &#123;</span><br><span class="line">  <span class="keyword">return</span> backingStore.attributesAtIndex(index, effectiveRange: range)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先我们重写了计算属性<code>string</code>的<code>get</code>方法，让它返回咱们定义的<code>backingStore</code>中字符串的值，同样重写了<code>attributesAtIndex</code>方法，并返回<code>backingStore</code>的<code>attributesAtIndex</code>方法的返回值。</p>
+<p>最后重写这些必须要重写的方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">replaceCharactersInRange</span><span class="params">(range: NSRange, withString str: String)</span></span> &#123;</span><br><span class="line">  <span class="built_in">println</span>(<span class="string">"replaceCharactersInRange:<span class="subst">\(range)</span> withString:<span class="subst">\(str)</span>"</span>)</span><br><span class="line"> </span><br><span class="line">  beginEditing()</span><br><span class="line">  backingStore.replaceCharactersInRange(range, withString:str)</span><br><span class="line">  edited(.<span class="type">EditedCharacters</span> | .<span class="type">EditedAttributes</span>, range: range, changeInLength: (str <span class="keyword">as</span> <span class="type">NSString</span>).length - range.length)</span><br><span class="line">  endEditing()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">setAttributes</span><span class="params">(attrs: [NSObject : AnyObject]!, range: NSRange)</span></span> &#123;</span><br><span class="line">  <span class="built_in">println</span>(<span class="string">"setAttributes:<span class="subst">\(attrs)</span> range:<span class="subst">\(range)</span>"</span>)</span><br><span class="line"> </span><br><span class="line">  beginEditing()</span><br><span class="line">  backingStore.setAttributes(attrs, range: range)</span><br><span class="line">  edited(.<span class="type">EditedAttributes</span>, range: range, changeInLength: <span class="number">0</span>)</span><br><span class="line">  endEditing()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>和上面一样，这些方法的实现都使用我们自己定义的<code>backingStore</code>属性的相同方法代替。然而，从上面的示例代码中可以看到使用<code>backingStore</code>的相关方法时，它是被包围在<code>beginEditing</code>、<code>edited</code>和<code>endEditing</code>三个方法中的。这三个方法是必须要写的，它们的作用是当文本准备被编辑时通知与之相关联的布局管理器（Layout Manager）。</p>
+<p>通过上面的示例代码你们可能已经注意到了要实现一个<code>NSTextStorage</code>的子类要重写这么多的方法（写这么多的代码）。因为<code>NSTextStorage</code>是一个<strong>类集群</strong>的公共接口，所以在实现它的子类时只重写一两个方法是没法真正扩展其功能的，上面这几个主要的方法是我们必须要重写的。</p>
 <blockquote>
-<p>You do not have to provide an explicit implementation of a required initializer if you can satisfy the requirement with an inherited initialiser.</p>
+<p>注意：<strong>类集群</strong>是Apple框架中经常使用的一种设计模式。类集群是Objective-C对抽象工厂设计模式的一种简单的实现，它的作用就是将相似的类聚集到一起，通过一个工厂类暴露给开发者，该工厂类提供若干工厂方法，每个或每几个工厂方法对应其包含的某个类。我们比较熟悉的像<code>NSArray</code>、<code>NSNumber</code>都是类集群。</p>
 </blockquote>
-<h2 id="required_u4FEE_u9970_u7B26_u7684_u4F7F_u7528_u89C4_u5219"><a href="#required_u4FEE_u9970_u7B26_u7684_u4F7F_u7528_u89C4_u5219" class="headerlink" title="required修饰符的使用规则"></a>required修饰符的使用规则</h2><ol>
-<li><code>required</code>修饰符只能用于修饰类初始化方法。</li>
-<li>当子类含有异于父类的初始化方法时（初始化方法参数类型和数量异于父类），子类必须要实现父类的<code>required</code>初始化方法，并且也要使用<code>required</code>修饰符而不是<code>override</code>。</li>
-<li>当子类没有初始化方法时，可以不用实现父类的<code>required</code>初始化方法。</li>
+<p>Apple使用类集群将私有的具体的子类压缩到一个公共的抽象超类中，该超类会申明一些方法，用于创建其包含子类的实例。开发者不必关心公共抽象类内部的事情，也无法得知，因为开发者永远只是和这个抽象类打交道。</p>
+<p>使用类集群确实可以简化接口，使类的使用和学习更加简单，但是有一点很重要，那就是在使用类集群时要权衡可扩展性和易用性。比如说如果使用类集群，那么你就很难创建一个个性化的子类。</p>
+<p>现在，我们已经有了一个自定义的<code>NSTextStorage</code>，接下来就需要用<code>UITextView</code>来使用它了。</p>
+<h2 id="u8BA9UITextView_u4F7F_u7528_u6211_u4EEC_u81EA_u5B9A_u4E49_u7684Text_Kit_Stack"><a href="#u8BA9UITextView_u4F7F_u7528_u6211_u4EEC_u81EA_u5B9A_u4E49_u7684Text_Kit_Stack" class="headerlink" title="让UITextView使用我们自定义的Text Kit Stack"></a>让UITextView使用我们自定义的Text Kit Stack</h2><p>如果我们在Storyboard中创建一个<code>UITextView</code>，那么就同时会自动创建<code>NSTextStorage</code>、<code>NSLayoutManager</code>和<code>NSTextContainer</code>这三个类的实例（也就是<strong>Text Kit Stack</strong>），并且这三个实例是只读状态的。也就意味着在Storyboard中，我们没法让<code>UITextView</code>使用我们自己定义的Text Kit Stack。真的没招了吗？非也，我们可以在代码中创建<code>UITextView</code>，然后让它使用自定义的Text Kit Stack。</p>
+<p>打开<code>Main.storyboard</code>，找到<code>NoteEditorViewController</code>，展开它，在<strong>Detail Scene/Detail/View</strong>中找到 <strong>Text View</strong>，然后删掉<code>UITextView</code>实例。</p>
+<p>然后打开<code>NoteEditorViewController.swift</code>文件，移除<code>UITextView</code>的<code>outlet</code>。添加如下代码重新申明<code>UITextView</code>和<code>SyntaxHighlightTextStorage</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> textView: <span class="type">UITextView</span>!</span><br><span class="line"><span class="keyword">var</span> textStorage: <span class="type">SyntaxHighlightTextStorage</span>!</span><br></pre></td></tr></table></figure>
+<p>接下来移除<code>viewDidLoad</code>方法中的这两行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">textView.text = note.contents</span><br><span class="line">textView.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br></pre></td></tr></table></figure>
+<p>因为我们已经移除了<code>UITextView</code>的<code>outlet</code>，并且手动申明了新的<code>UITextView</code>，所以这两行就不需要了，因为我们先要对新的<code>UITextView</code>进行初始化和相关设置。</p>
+<p>继续在<code>NoteEditorViewController.swift</code>中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">createTextView</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// 1. 初始化用于备份编辑器中文本的存储器</span></span><br><span class="line">  <span class="keyword">let</span> attrs = [<span class="type">NSFontAttributeName</span> : <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)]</span><br><span class="line">  <span class="keyword">let</span> attrString = <span class="type">NSAttributedString</span>(string: note.contents, attributes: attrs)</span><br><span class="line">  textStorage = <span class="type">SyntaxHighlightTextStorage</span>()</span><br><span class="line">  textStorage.appendAttributedString(attrString)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> newTextViewRect = view.bounds</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 2. 创建layoutManager</span></span><br><span class="line">  <span class="keyword">let</span> layoutManager = <span class="type">NSLayoutManager</span>()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3. 创建text container</span></span><br><span class="line">  <span class="keyword">let</span> containerSize = <span class="type">CGSize</span>(width: newTextViewRect.width, height: <span class="type">CGFloat</span>.<span class="built_in">max</span>)</span><br><span class="line">  <span class="keyword">let</span> container = <span class="type">NSTextContainer</span>(size: containerSize)</span><br><span class="line">  container.widthTracksTextView = <span class="literal">true</span></span><br><span class="line">  layoutManager.addTextContainer(container)</span><br><span class="line">  textStorage.addLayoutManager(layoutManager)</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 4. 初始化并设置UITextView</span></span><br><span class="line">  textView = <span class="type">UITextView</span>(frame: newTextViewRect, textContainer: container)</span><br><span class="line">  textView.delegate = <span class="keyword">self</span></span><br><span class="line">  view.addSubview(textView)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这次加的代码有点多，不过没关系，我们一一来分析：</p>
+<ol>
+<li>初始化我们之前自定义的文本存储类，并定义了文本的属性。</li>
+<li>创建了一个布局管理器。</li>
+<li>创建了一个文本容器，并添加到上步创建的布局管理器中，然后又将布局管理器添加到我们自定义的文本存储器中。</li>
+<li>初始化文本视图，其<code>frame</code>为父视图的大小，<code>textContainer</code>为上步创建的容器。然后设置了文本视图的代理，并将其添加到父视图中。</li>
 </ol>
+<p>到目前为止，之前向大家展示过的这张图中的四个关键点（存储，布局器，容器，文本视图）之间的关系应该会更容易了理解了：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-14.png" alt="pic"></p>
+<p>这里要注意的是，在上面添加的代码中文本容器的宽度为屏幕的宽度，但是高度是无限大的，这样设置的目的是为了当<code>UITextView</code>中的文本很长的时候可以上下滚动。</p>
+<p>现在我们就可以在<code>viewDidLoad</code>方法中调用<code>createTextView()</code>方法了，不过要记得加在<code>super.viewDidLoad()</code>方法的后面：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">createTextView()</span><br></pre></td></tr></table></figure>
+<p>最后还有一点需要注意的是：在代码中创建的自定义的视图不能沿用storyboard中添加的布局约束，这就意味着当改变设备的横竖屏方向时，代码中创建的视图是不能根据布局约束改变大小和位置的。你需要在代码中添加布局约束。</p>
+<p>此时我们还需要在<code>viewDidLayoutSubviews</code>方法中加一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">textView.frame = view.bounds</span><br></pre></td></tr></table></figure>
+<p>编译并运行应用，在应用中打开一条笔记，然后去编辑它，此时注意观察Xcode的控制台，你可以看到在控制台中像瀑布一般的刷出好多日志信息：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-15.png" alt="pic"></p>
+<p>产生这些日志信息的来源是<code>SyntaxHighlightTextStorage</code>类，该类中输出的日志信息可以让你们知道你们自定义的类是否在正常的工作。</p>
+<p>现在文本解析器的基本框架看似已经可以稳定的运行了，接下来实现动态文本格式吧！</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u52A8_u6001_u6587_u672C_u683C_u5F0F"><a href="#u52A8_u6001_u6587_u672C_u683C_u5F0F" class="headerlink" title="动态文本格式"></a>动态文本格式</h2><p>在接下来的步骤中，你们要对自定义的文本存储类进行修改，让它实现被星号包围起来的文本加粗的功能。</p>
+<p>打开<code>SyntaxHighlightTextStorage.swift</code>文件，添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">applyStylesToRange</span><span class="params">(searchRange: NSRange)</span></span> &#123;</span><br><span class="line">  <span class="comment">// 1. 创建一些字体</span></span><br><span class="line">  <span class="keyword">let</span> fontDescriptor = <span class="type">UIFontDescriptor</span>.preferredFontDescriptorWithTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">  <span class="keyword">let</span> boldFontDescriptor = fontDescriptor.fontDescriptorWithSymbolicTraits(.<span class="type">TraitBold</span>)</span><br><span class="line">  <span class="keyword">let</span> boldFont = <span class="type">UIFont</span>(descriptor: boldFontDescriptor, size: <span class="number">0</span>)</span><br><span class="line">  <span class="keyword">let</span> normalFont = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 2. 匹配由星号包围的文本</span></span><br><span class="line">  <span class="keyword">let</span> regexStr = <span class="string">"(\\*\\w+(\\s\\w+)*\\*)"</span></span><br><span class="line">  <span class="keyword">let</span> regex = <span class="type">NSRegularExpression</span>(pattern: regexStr, options: <span class="literal">nil</span>, error: <span class="literal">nil</span>)</span><br><span class="line">  <span class="keyword">let</span> boldAttributes = [<span class="type">NSFontAttributeName</span> : boldFont]</span><br><span class="line">  <span class="keyword">let</span> normalAttributes = [<span class="type">NSFontAttributeName</span> : normalFont]</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 3. 遍历所有匹配上的文本，设置加粗字体属性</span></span><br><span class="line">  regex.enumerateMatchesInString(backingStore.string, options: <span class="literal">nil</span>, range: searchRange) &#123;</span><br><span class="line">    match, flags, stop <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">let</span> matchRange = match.rangeAtIndex(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">self</span>.addAttributes(boldAttributes, range: matchRange)</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 4. 还原字体格式</span></span><br><span class="line">    <span class="keyword">let</span> maxRange = matchRange.location + matchRange.length</span><br><span class="line">    <span class="keyword">if</span> maxRange + <span class="number">1</span> &lt; <span class="keyword">self</span>.length &#123;</span><br><span class="line">      <span class="keyword">self</span>.addAttributes(normalAttributes, range: <span class="type">NSMakeRange</span>(maxRange, <span class="number">1</span>))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码主要功能是：</p>
+<ol>
+<li>通过<code>UIFontDescriptor</code>创建一个加粗的字体格式和一个正常的字体格式。<code>UIFontDescriptor</code>可帮助你们避免使用硬编码来设置字体的类型和格式。</li>
+<li>创建一个正则表达式，用于查找被星号包围的文本。比如说，这有一个字符串”iOS8是*非常完美*的一个系统”,那么正则表达式就可以将”*非常完美*“过滤出来。如果你不熟悉正则表达式也没关系，在后面会详细给大家介绍的。</li>
+<li>遍历通过正则表达式过滤出的文本，将我们定义的加粗字体属性设置给它们。</li>
+<li>重置跟在最后一个星号后的文本的属性为正常，确保只在闭合星号内的文本才显示为粗体。</li>
+</ol>
+<p>在上面的方法后面添加如下方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">performReplacementsForRange</span><span class="params">(changedRange: NSRange)</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> extendedRange = <span class="type">NSUnionRange</span>(changedRange, <span class="type">NSString</span>(string: backingStore.string).lineRangeForRange(<span class="type">NSMakeRange</span>(changedRange.location, <span class="number">0</span>)))</span><br><span class="line">  extendedRange = <span class="type">NSUnionRange</span>(changedRange, <span class="type">NSString</span>(string: backingStore.string).lineRangeForRange(<span class="type">NSMakeRange</span>(<span class="type">NSMaxRange</span>(changedRange), <span class="number">0</span>)))</span><br><span class="line">  applyStylesToRange(extendedRange)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这个方法的作用是设置检查被星号包围文本的范围。这个方法是很重要的，因为<code>changedRange</code>通常代表一个字符，而<code>lineRangeForRange</code>将其扩展到一行的范围。</p>
+<p>最后在<code>performReplacementsForRange()</code>方法后再添加一个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">processEditing</span><span class="params">()</span></span> &#123;</span><br><span class="line">  performReplacementsForRange(<span class="keyword">self</span>.editedRange)</span><br><span class="line">  <span class="keyword">super</span>.processEditing()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当文本发生改变时，<code>processEditing</code>方法会向布局管理器发送通知，告知布局管理器文本发生了变化。</p>
+<p>编译运行应用，打开一条笔记，输入一些文本信息，然后用星号包围几段文本，你会看到被星号包围的文本变成了粗体：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-16.png" alt="pic"></p>
+<p>是不是很方便呢，你还可以依法炮制，举一反三，比如两个下划线包围的文本显示为斜体等等。</p>
+<h2 id="u6DF1_u5165_u5B8C_u5584"><a href="#u6DF1_u5165_u5B8C_u5584" class="headerlink" title="深入完善"></a>深入完善</h2><p>实现该功能的基本方法其实很简单：在<code>applyStylesToRange</code>方法中通过正则表达式过滤出你想要的文本信息，然后给过滤出的文本设置新的文本属性。</p>
+<p>打开<code>SyntaxHighlightTextStorage.swift</code>文件，添加如下方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">createAttributesForFontStyle</span><span class="params">(style: String, withTrait trait: UIFontDescriptorSymbolicTraits)</span></span> -&gt; [<span class="type">NSObject</span> : <span class="type">AnyObject</span>] &#123;</span><br><span class="line">  <span class="keyword">let</span> fontDescriptor = <span class="type">UIFontDescriptor</span>.preferredFontDescriptorWithTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">  <span class="keyword">let</span> descriptorWithTrait = fontDescriptor.fontDescriptorWithSymbolicTraits(trait)</span><br><span class="line">  <span class="keyword">let</span> font = <span class="type">UIFont</span>(descriptor: descriptorWithTrait, size: <span class="number">0</span>)</span><br><span class="line">  <span class="keyword">return</span> [<span class="type">NSFontAttributeName</span> : font]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方法可以创建正文文本字体的样式。在该方法中，构建<code>UIFont</code>时，其构造函数中的<code>size</code>属性设置为0，这是为了让字体的大小使用用户当前设置的字体大小。</p>
+<p>接下来，在该类中添加一个属性和一个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> replacements: [<span class="type">String</span> : [<span class="type">NSObject</span> : <span class="type">AnyObject</span>]]!</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">createHighlightPatterns</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> scriptFontDescriptor = <span class="type">UIFontDescriptor</span>(fontAttributes: [<span class="type">UIFontDescriptorFamilyAttribute</span> : <span class="string">"Zapfino"</span>])</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 1. 让我们的手写字体的大小基于首选设置中正文字体的大小</span></span><br><span class="line">  <span class="keyword">let</span> bodyFontDescriptor = <span class="type">UIFontDescriptor</span>.preferredFontDescriptorWithTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">  <span class="keyword">let</span> bodyFontSize = bodyFontDescriptor.fontAttributes()[<span class="type">UIFontDescriptorSizeAttribute</span>] <span class="keyword">as</span> <span class="type">NSNumber</span></span><br><span class="line">  <span class="keyword">let</span> scriptFont = <span class="type">UIFont</span>(descriptor: scriptFontDescriptor, size: <span class="type">CGFloat</span>(bodyFontSize.floatValue))</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 2. 创建一些字体属性</span></span><br><span class="line">  <span class="keyword">let</span> boldAttributes = createAttributesForFontStyle(<span class="type">UIFontTextStyleBody</span>, withTrait:.<span class="type">TraitBold</span>)</span><br><span class="line">  <span class="keyword">let</span> italicAttributes = createAttributesForFontStyle(<span class="type">UIFontTextStyleBody</span>, withTrait:.<span class="type">TraitItalic</span>)</span><br><span class="line">  <span class="keyword">let</span> strikeThroughAttributes = [<span class="type">NSStrikethroughStyleAttributeName</span> : <span class="number">1</span>]</span><br><span class="line">  <span class="keyword">let</span> scriptAttributes = [<span class="type">NSFontAttributeName</span> : scriptFont]</span><br><span class="line">  <span class="keyword">let</span> redTextAttributes = [<span class="type">NSForegroundColorAttributeName</span> : <span class="type">UIColor</span>.redColor()]</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 创建一个正则表达式的字典</span></span><br><span class="line">  replacements = [</span><br><span class="line">    <span class="string">"(\\*\\w+(\\s\\w+)*\\*)"</span> : boldAttributes,</span><br><span class="line">    <span class="string">"(_\\w+(\\s\\w+)*_)"</span> : italicAttributes,</span><br><span class="line">    <span class="string">"([0-9]+\\.)\\s"</span> : boldAttributes,</span><br><span class="line">    <span class="string">"(-\\w+(\\s\\w+)*-)"</span> : strikeThroughAttributes,</span><br><span class="line">    <span class="string">"(~\\w+(\\s\\w+)*~)"</span> : scriptAttributes,</span><br><span class="line">    <span class="string">"\\s([A-Z]&#123;2,&#125;)\\s"</span> : redTextAttributes</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法主要有以下几个功能：</p>
+<ul>
+<li>首先，使用Zapfino字体创建一个手写风格的字体。然后让它的字体大小基于正文文本设置的字体大小。</li>
+<li>其次，创建若干用于匹配的字体属性。</li>
+<li>最后，创建了一个字典，key为各种正则表达式，值为刚才创建的字体属性。</li>
+</ul>
+<p>如果你们不熟悉正则表达式，可能这个字典看起来会比较奇怪。但是如果你们一点一点去解析它，就会发现其实很简单。</p>
+<p>我们拿出字典中的第一个正则表达式，也就是过滤被星号围绕的文本的表达式来看看：</p>
+<pre><code>(\\*\\w+(\\s\\w+)*\\*)
+</code></pre><p>在正则表达式中一个反斜杠“\”代表将下一个字符标记为特殊字符或一个原义字符，双反斜杠的作用是不会使程序解析时忽略“\”，如果你把额外的一个反斜杠去掉，那么该正则表达式应该是这样：</p>
+<pre><code>(\*\w+(\s\w+)*\*)
+</code></pre><p>现在我们来一步一步解析这个正则表达式：</p>
+<ol>
+<li><strong>(*</strong> - 匹配一个星号。</li>
+<li><strong>\w+</strong> - 匹配包括下划线在内任何单词字符以及该字符之前的字符。</li>
+<li><strong>(\s\w+)</strong>* - 这是一个字表达式，\s的含义是匹配任何空白字符，包括空格、制表符、换页符等，*的含义是匹配前面的子表达式0次或多次。</li>
+<li><strong>*)</strong> - 匹配后面的星号。</li>
+</ol>
+<blockquote>
+<p><strong>注意</strong>：如果你想了解更多关于正则表达式的知识，请查阅这篇文章<a href="http://www.raywenderlich.com/?p=30288" target="_blank" rel="external">NSRegularExpression tutorial and cheat sheet</a></p>
+</blockquote>
+<p>接下来我们在<code>SyntaxHighlightTextStorage</code>类的初始化方法中调用<code>createHighlightPatterns()</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">    <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">    createHighlightPatterns()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">required</span> <span class="keyword">init</span>(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">    <span class="keyword">super</span>.<span class="keyword">init</span>(coder: aDecoder)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后，我们来修改<code>applyStylesToRange()</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">applyStylesToRange</span><span class="params">(searchRange: NSRange)</span></span> &#123;</span><br><span class="line">  <span class="keyword">let</span> normalAttrs = [<span class="type">NSFontAttributeName</span> : <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)]</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 遍历每个需要替换字体属性的文本</span></span><br><span class="line">  <span class="keyword">for</span> (pattern, attributes) <span class="keyword">in</span> replacements &#123;</span><br><span class="line">    <span class="keyword">let</span> regex = <span class="type">NSRegularExpression</span>(pattern: pattern, options: <span class="literal">nil</span>, error: <span class="literal">nil</span>)</span><br><span class="line">    regex.enumerateMatchesInString(backingStore.string, options: <span class="literal">nil</span>, range: searchRange) &#123;</span><br><span class="line">      match, flags, stop <span class="keyword">in</span></span><br><span class="line">      <span class="comment">// 设置字体属性</span></span><br><span class="line">      <span class="keyword">let</span> matchRange = match.rangeAtIndex(<span class="number">1</span>)</span><br><span class="line">      <span class="keyword">self</span>.addAttributes(attributes, range: matchRange)</span><br><span class="line"> </span><br><span class="line">      <span class="comment">// 还原字体样式</span></span><br><span class="line">      <span class="keyword">let</span> maxRange = matchRange.location + matchRange.length</span><br><span class="line">      <span class="keyword">if</span> maxRange + <span class="number">1</span> &lt; <span class="keyword">self</span>.length &#123;</span><br><span class="line">        <span class="keyword">self</span>.addAttributes(normalAttrs, range: <span class="type">NSMakeRange</span>(maxRange, <span class="number">1</span>))</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在之前，该方法只使用一个正则表达式过滤出被星号围绕的文本，并将其设置为粗体，现在，虽然该方法所做的事情没有变，但是却不只使用一个正则表达式，而是遍历正则表达式字典中的所有表达式，过滤出文本中所有被符号围绕的文本，然后设置相应的字体样式。</p>
+<p>现在再次编译运行应用，你看到了什么？</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-17.png" alt="pic"></p>
+<p>到目前为止，似乎这个记事本应用已经大功告成了，但是还有几个小问题需要解决。</p>
+<p>第一个问题是如果在使用该应用时，改变手机的方向，也就是从竖屏变为横屏，你会注意到屏幕上的内容并没有变化，这是因为自定义的子类不支持这种转变，之前我们也提到过。</p>
+<p>第二个问题是当一条笔记中有很多文本信息的时候，文本的底部会被键盘遮住，这时你打字写东西就很困难。</p>
+<p>也是时候解决这两个问题了。</p>
+<h2 id="u56DE_u987E_u52A8_u6001_u7C7B_u578B"><a href="#u56DE_u987E_u52A8_u6001_u7C7B_u578B" class="headerlink" title="回顾动态类型"></a>回顾动态类型</h2><p>要想通过动态类型正确的解决该问题，你们得修改代码，当文本显示区域大小发生改变的通知发生时，要通过字体属性来改变字体。</p>
+<p>在<code>SyntaxHighlightTextStorage</code>类中添加如下方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">update</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// update the highlight patterns</span></span><br><span class="line">  createHighlightPatterns()</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// change the 'global' font</span></span><br><span class="line">  <span class="keyword">let</span> bodyFont = [<span class="type">NSFontAttributeName</span> : <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)]</span><br><span class="line">  addAttributes(bodyFont, range: <span class="type">NSMakeRange</span>(<span class="number">0</span>, length))</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// re-apply the regex matches</span></span><br><span class="line">  applyStylesToRange(<span class="type">NSMakeRange</span>(<span class="number">0</span>, length))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的方法更新了所有与各种正则表达式相关联的字体，让所有字符串都基于正文文本的属性，然后重新过滤文本。</p>
+<p>最后，打开<code>NoteEditorViewController.swift</code>文件，更新<code>preferredContentSizeChanged()</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">preferredContentSizeChanged</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  textStorage.update()</span><br><span class="line">  updateTimeIndicatorFrame()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译运行应用，在设置中修改文本大小，看看会发生什么：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-18.png" alt="pic"></p>
+<h2 id="u6539_u53D8_u6587_u672C_u89C6_u56FE_u7684_u5927_u5C0F"><a href="#u6539_u53D8_u6587_u672C_u89C6_u56FE_u7684_u5927_u5C0F" class="headerlink" title="改变文本视图的大小"></a>改变文本视图的大小</h2><p>剩下的另一个问题就是编辑长文本时，键盘会遮住一半文本的问题。</p>
+<p>解决这个问题的核心就是当键盘弹出时减小文本视图的高度。</p>
+<p>打开<code>NoteEditorViewController.swift</code>文件，在<code>viewDidLoad()</code>方法中的<code>createTextView()</code>后面加一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">textView.scrollEnabled = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>这行代码允许文本视图开启滚动条。</p>
+<p>然后在<code>viewDidLoad()</code>的最后面添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSNotificationCenter</span>.defaultCenter().addObserver(<span class="keyword">self</span>, selector: <span class="string">"keyboardDidShow:"</span>, name: <span class="type">UIKeyboardDidShowNotification</span>, object: <span class="literal">nil</span>)</span><br><span class="line"><span class="type">NSNotificationCenter</span>.defaultCenter().addObserver(<span class="keyword">self</span>, selector: <span class="string">"keyboardDidHide:"</span>, name: <span class="type">UIKeyboardDidHideNotification</span>, object: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>这两个通知可以让你捕捉到键盘弹出和收起的事件，好让你修改文本视图的相应大小。</p>
+<p>再在该类中添加如下方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">updateTextViewSizeForKeyboardHeight</span><span class="params">(keyboardHeight: CGFloat)</span></span> &#123;</span><br><span class="line">  textView.frame = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: view.frame.width, height: view.frame.height - keyboardHeight)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方法让文本视图的高度减去键盘的高度，保证合适的文本视图高度。</p>
+<p>最后就是实现<code>keyboardDidShow</code>和<code>keyboardDidHide</code>方法了：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">keyboardDidShow</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> rectValue = notification.userInfo?[<span class="type">UIKeyboardFrameBeginUserInfoKey</span>] <span class="keyword">as</span>? <span class="type">NSValue</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> keyboardSize = rectValue.<span class="type">CGRectValue</span>().size</span><br><span class="line">    updateTextViewSizeForKeyboardHeight(keyboardSize.height)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">keyboardDidHide</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  updateTextViewSizeForKeyboardHeight(<span class="number">0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当键盘弹出时，你需要从通知中获取到键盘的高度，然后让文本视图减去这个高度，当键盘收回时，要复原文本视图的高度。</p>
+<blockquote>
+<p><strong>注意：</strong>在iOS8之前的版本中，当设备的方向发生变化时，也就是从竖屏变为横屏时，我们要计算新的文本视图的大小（因为<code>UIView的高和宽会交换，但是键盘的高和宽不会交换</code>），但是在iOS8中已经没这个必要了。</p>
+</blockquote>
+<p>现在编译运行应用，选择一条长文本的日记，编辑文本，此时弹出的键盘就不会再遮挡文本信息了：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-19.png" alt="pic"></p>
+<p>原文链接：<a href="http://www.raywenderlich.com/77092/text-kit-tutorial-swift" target="_blank" rel="external">Text Kit Tutorial in Swift</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -1023,7 +1299,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1061,7 +1337,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">100</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

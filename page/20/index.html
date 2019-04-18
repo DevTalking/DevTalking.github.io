@@ -241,8 +241,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/method-category-protocol/" itemprop="url">
-                  Objective-C中的实例方法、类方法、Category、Protocol
+                <a class="post-title-link" href="/articles/creating-an-app-extension/" itemprop="url">
+                  开发应用扩展 -- iOS8/OS X v10.10应用扩展编程指南
                 </a>
               
             
@@ -252,8 +252,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-07-16T00:00:00+08:00" content="2014-07-16">
-              2014-07-16
+            <time itemprop="dateCreated" datetime="2014-08-11T00:00:00+08:00" content="2014-08-11">
+              2014-08-11
             </time>
           </span>
 
@@ -262,8 +262,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Objective-C/" itemprop="url" rel="index">
-                    <span itemprop="name">Objective-C</span>
+                  <a href="/categories/iOS-macOS-tvOS-watchOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS & macOS & tvOS & watchOS</span>
                   </a>
                 </span>
 
@@ -278,8 +278,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/method-category-protocol/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/method-category-protocol/" itemprop="commentsCount"></span>
+              <a href="/articles/creating-an-app-extension/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/creating-an-app-extension/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -309,93 +309,36 @@
 </script>
 
 
-
-<h1 id="u65B9_u6CD5"><a href="#u65B9_u6CD5" class="headerlink" title="方法"></a>方法</h1><p>Objective-C中的方法有两种：</p>
-<h2 id="u5B9E_u4F8B_u65B9_u6CD5"><a href="#u5B9E_u4F8B_u65B9_u6CD5" class="headerlink" title="实例方法"></a>实例方法</h2><p>以<code>-</code>开头的方法是实例方法。它属于类的某一个或某几个实例对象，即类对象必须实例化后才可以使用的方法，将消息发送给实例对象：  </p>
-<pre><code>// Deck.h
-
-#import &lt;Foundation/Foundation.h&gt;
-#import &quot;Card.h&quot;
-
-@interface Deck : NSObject
-
-@property(nonatomic) int cardNum;
-
-// 实例方法
-- (Card *)randomDrawCard;
-
-+ (NSString *)CardKinds;
-
-@end
-</code></pre><p>实例方法中可以使用该类的所有实例变量：  </p>
-<pre><code>// Deck.m
-
-#import &quot;Card.h&quot;
-
-@implementation Deck
-
-- (Card *)drawCardFromTop
-{
-    // 实例变量
-    _cardNum--;
-
-    //TODO.....
-}
-
-+ (NSString *)CardKinds
-{
-    NSLog(&quot;Cards are divided into four kinds: spades, diamonds, clubs and hearts&quot;);
-}
-
-@end 
-</code></pre><h2 id="u7C7B_u65B9_u6CD5"><a href="#u7C7B_u65B9_u6CD5" class="headerlink" title="类方法"></a>类方法</h2><p>以<code>+</code>开头的方法是类方法。Objc中的类方法类似Java中的<code>static</code>静态方法，它是属于类本身的方法，不属于类的某一个实例对象，所以不需要实例化类，用类名即可使用，是将消息发送给类：  </p>
-<pre><code>// Deck.h
-
-#import &lt;Foundation/Foundation.h&gt;
-#import &quot;Card.h&quot;
-
-@interface Deck : NSObject
-
-- (Card *)randomDrawCard;
-
-// 类方法
-+ (NSString *)CardKinds;
-
-@end    
-</code></pre><p>类方法不能使用任何实例变量：  </p>
-<pre><code>// Deck.m
-
-#import &quot;Card.h&quot;
-
-@implementation Deck
-
-- (Card *)drawCardFromTop
-{
-    // 实例变量
-    _cardNum--;
-
-    //TODO.....
-}
-
-// 不能使用该类的实例变量_carNum
-+ (NSString *)CardKinds
-{
-    NSLog(&quot;Cards are divided into four kinds: spades, diamonds, clubs and hearts&quot;);
-}
-
-@end 
-</code></pre><p>所以我们使用类方法一般有两种情况：</p>
+<p>当你准备好开发一个应用扩展时，要选择一个合适的扩展点来呈现你的应用扩展的功能。然后使用Xcode提供的各个扩展点的模板来创建<code>Target</code>，以便使默认文件与你自定义的代码和界面更好的结合。最后，在你调试并优化你的应用扩展之后，就可以打包进你的应用程序给用户使用了。</p>
+<h2 id="u5F00_u53D1_u4E4B_u524D_u8981_u9009_u62E9_u6B63_u786E_u7684_u6269_u5C55_u70B9"><a href="#u5F00_u53D1_u4E4B_u524D_u8981_u9009_u62E9_u6B63_u786E_u7684_u6269_u5C55_u70B9" class="headerlink" title="开发之前要选择正确的扩展点"></a>开发之前要选择正确的扩展点</h2><p>因为每一个扩展点，它的功能定义都非常明确，对用户的使用习惯针对性很强，所以你首先应该考虑清楚的是，我要开发的这个应用扩展给用户提供什么样的功能，并且用户最习惯在哪个扩展点使用它。这是非常关键的，因为每个扩展点都有不同的API，为你提供不同的功能开发，所以如果你选错了扩展点，那么很有可能你就无法实现你想要的功能。<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/index.html#//apple_ref/doc/uid/TP40014214-CH20-SW3" target="_blank" rel="external">表1-1</a>列出了iOS和OS X中支持的所有扩展点。</p>
+<p>当你选定了一个扩展点并创建后，在你准备包含扩展的应用程序工程中就会有一个新的<code>Target</code>出现。创建一个应用扩展<code>Target</code>最简单的方式就是使用Xcode提供的模板，因为它已经帮你将基本的配置信息都配置好了，你只需要进行功能的开发即可。</p>
+<p>你可以通过菜单<code>choose File &gt; New &gt; Target</code>在你的Xcode工程中创建一个新<code>Target</code>。在打开的窗口中，选择iOS或OS X的<code>Application Extension</code>选项，然后选择你想要创建的应用扩展模板，如下图所示：<br><img src="http://www.devtalking.com/postImages/addNewTarget.png" alt="图片">  </p>
+<p>当你选择好模板，并在工程中创建<code>Target</code>后，你就可以试着编译并运行一下默认代码。如果你是基于Xcode提供的模板创建的扩展<code>Target</code>，那么当编译成功后，就会生成一个扩展名为<code>.appex</code>的应用扩展包。</p>
+<blockquote>
+<p>注意64位的架构：<br>一个应用程序扩展在设置其编译架构时必须要包含<code>arm64</code>的架构，否则在上传App Store时会被拒绝。你创建完一个应用扩展后，可以在Xcode的<code>Standard architectures</code>选项中设置<code>arm64</code>架构。<br>如果你的包含扩展的应用程序使用了一些框架，那么你的应用程序也必须要包含<code>arm64</code>架构，否则上传App Store时也会被拒绝。<br>关于64位架构开发环境的更多信息，请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/CocoaTouch64BitGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40013501" target="_blank" rel="external">64-Bit Transition Guide for Cocoa Touch</a>  </p>
+</blockquote>
+<p>在大多数情况下，你可以在OS X的<code>System Preferences</code>或iOS的<code>Settings</code>中开启应用扩展，或授予权限，这样就可以在其他应用中测试只含有初始默认代码的扩展了。比如说，你可以在OS X系统中通过<code>Safari</code>中打开一个页面来测试分享扩展，点击分享按钮，然后选择你要测试的扩展即可。</p>
+<h2 id="u68C0_u67E5_u9ED8_u8BA4_u7684_u6269_u5C55_u6A21_u677F"><a href="#u68C0_u67E5_u9ED8_u8BA4_u7684_u6269_u5C55_u6A21_u677F" class="headerlink" title="检查默认的扩展模板"></a>检查默认的扩展模板</h2><p>一般情况下，每个扩展模板都包含一个属性列表文件（就是<code>Info.plist</code>文件），一个View Controller类和一个默认的界面文件，这些都是基于扩展点定义的。默认的View Controller类（或主体类）都含有扩展点对应功能的方法，需要我们去实现。</p>
+<p>应用扩展<code>Target</code>的<code>Info.plist</code>文件中除了标示扩展点的信息外还挪列了应用扩展的详细信息。但至少，该文件中包含一个Key <code>NSExtension</code>，它的值是一个用于说明扩展点的<code>Dictionary</code>。比如Key <code>NSExtensionPointIdentifier</code>的值就代表一个扩展点的名称的引用值，比如<code>com.apple.widget-extension</code>。在应用扩展的<code>NSExtension</code>字典中还有其他的Key代表了不同的信息。</p>
 <ul>
-<li>创建一些事物，比如特殊格式的字符串等。</li>
-<li>作为工具方法，比如返回常数等。</li>
+<li><code>NSExtensionAttributes</code>：这是一个描述扩展点具体属性的字典，就像照片编辑扩展中的<code>PHSupportedMediaTypes</code>一样。</li>
+<li><code>NSExtensionPrincipalClass</code>：这是扩展模板创建的主体视图控制器类，就像<code>SharingViewController</code>。当主应用程序调用扩展时，扩展点会实例化这个类。</li>
+<li><code>NSExtensionMainStoryboard</code>（只适用于iOS）：扩展的默认<code>Storyboard</code>文件，一般名为<code>MainInterface</code>。</li>
 </ul>
-<h2 id="u7C7B_u65B9_u6CD5_u548C_u5B9E_u4F8B_u65B9_u6CD5_u8BA4_u77E5_u7684_u8BEF_u533A"><a href="#u7C7B_u65B9_u6CD5_u548C_u5B9E_u4F8B_u65B9_u6CD5_u8BA4_u77E5_u7684_u8BEF_u533A" class="headerlink" title="类方法和实例方法认知的误区"></a>类方法和实例方法认知的误区</h2><ul>
-<li><p>类方法常驻内存，所以比实例方法效率高。<br>  事实上，在加载时机和占用内存上，类方法和实例方法是一样的，在类第一次被使用时加载方法，所以在效率上没有什么区别。</p>
-</li>
-<li><p>类方法分配在堆上，实例方法分配在栈上。<br>  事实上，所有的方法都不可能分配在堆栈区，方法作为二进制代码是存储在内存的程序代码区，这个内存区域是不可写的。请查看我这篇笔记中的相关概念<a href="http://www.devtalking.com/articles/you-should-know-block/">Objective-C中的Block</a>。</p>
-</li>
-</ul>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>实例方法和类方法有大多数的共性，比如都可以有一个或多个参数、都可以继承基类的方法、相同的声明规范等。唯一不同的就是类方法不能使用实例变量，所以导致它只适用于一些特殊的情况。</p>
+<p>除了在属性列表中设置以外，扩展模板还可以设置一些默认的功能。每个扩展点都可以给它们提供任务类型的场景定义功能，比如说一个iOS的<code>Document Provider</code>扩展就包含<code>com.apple.security.application-groups</code>的功能。</p>
+<p>所有的OS X扩展模板，都默认包含应用程序沙箱和<code>com.apple.security.files.user-selected.read-only</code>功能。如果你开发的扩展需要适用网络，或者访问用户的相册，再或者需要访问用户的通讯录，那么你就需要额外定义这些功能。</p>
+<blockquote>
+<p>注意：<br>通常情况下，如果用户允许主应用程序访问他们的私有数据，那么主程序里的扩展也同样拥有该权限。</p>
+</blockquote>
+<h2 id="u54CD_u5E94_u4E3B_u7A0B_u5E8F_u7684_u8BF7_u6C42"><a href="#u54CD_u5E94_u4E3B_u7A0B_u5E8F_u7684_u8BF7_u6C42" class="headerlink" title="响应主程序的请求"></a>响应主程序的请求</h2><p>正如你在<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionOverview.html#//apple_ref/doc/uid/TP40014214-CH2-SW2" target="_blank" rel="external">Understand How an Extension Works</a>这篇文档中了解的，当用户在主程序选择一个扩展，并使主程序向扩展发出请求时，扩展才会被打开。说的再详细一点，用户做出了一个动作或者说是任务请求，然后你的扩展收到了一个请求，这个请求是帮助用户完成他希望完成的任务，最后扩展完成并关闭这个请求。比如说，一个分享扩展收到了它主程序的请求，然后该扩展响应请求并打开它相应的界面。然后用户在该界面中编辑要分享的内容，用户可以选择发送或者不发送，最后扩展根据用户的行为响应完成还是关闭请求。</p>
+<p>当主程序向扩展发出请求时，一般都会指明扩展运行的上下文。对于很多扩展来说，最重要的一部分就是要设置一个工作项，这个工作项就是用户在使用这个扩展时要处理的工作项。比如说，一个分享扩展的上下文可能就包含用户选择的想要分享的一段文字。</p>
+<p>当主程序发出一个请求（通常就是调用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionRequestHandling_Protocol/index.html#//apple_ref/occ/intfm/NSExtensionRequestHandling/beginRequestWithExtensionContext:" target="_blank" rel="external">beginRequestWithExtensionContext:</a>方法），你的扩展就可以用主试图控制器中的<code>extensionContext</code>属性来接受上下文，然后使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionContext_Class/index.html#//apple_ref/occ/cl/NSExtensionContext" target="_blank" rel="external">NSExtensionContext</a>类解析上下文并获得工作项。通常，在视图控制器的<a href="https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIViewController_Class/index.html#//apple_ref/occ/instm/UIViewController/loadView" target="_blank" rel="external">loadView</a>方法中解析上下文并获得工作项，这样在加载完视图后就可以将信息显示在视图界面中了。获取扩展上下文可以使用如下代码：  </p>
+<pre><code>NSExtensionContext *myExtensionContext = [self extensionContext];
+</code></pre><p>有意思的<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionContext_Class/index.html#//apple_ref/occ/instp/NSExtensionContext/inputItems" target="_blank" rel="external">inputItems</a>属性，它包含了用户在使用扩展时要处理的工作项。<code>inputItems</code>属性包含一个<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionItem_Class/index.html#//apple_ref/occ/cl/NSExtensionItem" target="_blank" rel="external">NSExtensionItem</a>类型的数组，数组的每一个成员都包含一个可执行的工作项。从上下文中获取工作项可以使用如下代码：  </p>
+<pre><code>NSArray *inputItems = [myExtensionContext inputItems];
+</code></pre><p>每个<code>NSExtensionItem</code>对象都包含若干个描述工作项的属性，比如标题、文本内容、附件信息、用户信息。</p>
+<p>注意<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionItem_Class/index.html#//apple_ref/occ/instp/NSExtensionItem/attachments" target="_blank" rel="external">attachments</a>属性，它包含一个与工作项相关联的媒体数据数组。比如说一个分享请求的工作项，那么<code>attachments</code>属性可能就包含用户想要分享网页中的信息。</p>
+<p>当用户希望的工作项处理完后，应用扩展通常会给用户两个选择，完成任务或取消任务。根据用户的选择，扩展会调用<code>completeRequestReturningItems:expirationHandler:completion:</code>方法，选择返回给主体程序的工作项，或者会调用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSExtensionContext_Class/index.html#//apple_ref/occ/instm/NSExtensionContext/cancelRequestWithError:" target="_blank" rel="external">cancelRequestWithError:</a>方法，返回一个错误编码。</p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -404,493 +347,52 @@
 </script>
 
 
-
-<h1 id="Category"><a href="#Category" class="headerlink" title="Category"></a>Category</h1><p>如果我们想给一个已存在的、很复杂的类添加一个新的方法，应该怎么做？<br>想翻源码添加？骚年，你太天真，你如果看不到源码呢。即便我们可以看到源码，如果我们新增的逻辑也很复杂，这样就会扩大原始设计的规模，有可能会打乱整个设计的结构。<br>Category就是Objective-C提供的为我们解决这一问题的方法。它可以让我们动态的在已经存在的类中添加新的行为，即方法。对类进行扩展时不需要访问其源码，也不需要创建子类。</p>
-<h2 id="u4F7F_u7528_u65B9_u6CD5"><a href="#u4F7F_u7528_u65B9_u6CD5" class="headerlink" title="使用方法"></a>使用方法</h2><p>Category的实现很简单，我们举例说明。</p>
-<pre><code>// Deck.h
-
-#import &lt;Foundation/Foundation.h&gt;
-#import &quot;Card.h&quot;
-
-@interface Deck : NSObject
-
-- (Card *)randomDrawCard;
-
-@end
-</code></pre><p>这是类Deck的声明文件，其中包含一个实例方法<code>randomDrawCard</code>，如果我们想在不修改原始类、不增加子类的情况下，为该类增加一个<code>drawCardFromTop</code>方法，只需要定义两个文件<code>Deck+DrawCardFromTop.h</code>和<code>Deck+DrawCardFromTop.m</code>，在声明文件和实现文件中用<code>()</code>把Category的名称括起来即可，声明文件如下：</p>
-<pre><code>// Deck+DrawCardFromTop.h
-
-#import &quot;Deck.h&quot;
-#import &quot;Card.h&quot;
-
-@interface Deck(DrawCardFromTop)
-
-- (Card *)drawCardFromTop;
-
-@end
-</code></pre><p>实现文件如下：</p>
-<pre><code>// Deck+DrawCardFromTop.m
-
-#import &quot;Deck+DrawCardFromTop.h&quot;
-#import &quot;Card.h&quot;
-
-@implementation Deck(DrawCardFromTop)
-
-- (Card *)drawCardFromTop
-{
-    //TODO.....
-}
-
-@end
-</code></pre><p><code>DrawCardFromTop</code>是Category的名称。这里一般使用约定俗成的习惯，将声明文件和实现文件统一采用”原类名+Category名”的方式命名。<br>使用也非常简单，引入Category的声明文件，然后正常调用即可：</p>
-<pre><code>// main.m
-
-#import &quot;Deck+DrawCardFromTop.h&quot;
-#import &quot;Card.h&quot;
-
-int main(int argc, char * argv[])
-{
-
-    Deck *deck = [[Deck alloc] init];
-    Card *card = [deck drawCardFromTop];
-
-    return 0;
-
-}
-</code></pre><h2 id="u4F7F_u7528_u573A_u666F"><a href="#u4F7F_u7528_u573A_u666F" class="headerlink" title="使用场景"></a>使用场景</h2><ul>
-<li>需求变更在整个开发周期是司空见惯的事情，那么我们可能就需要对某个或某几个类中添加新的方法以满足需求。</li>
-<li>我们在团队协作开发时候，经常需要多个人来实现一个类中的不同方法，在这种情况下采用Category是一个较好的选择。</li>
-<li>当一些基础类库满足不了我们的需求时，我们希望能扩展基础类库，这时就需要Category。</li>
-</ul>
-<h2 id="u9700_u8981_u6CE8_u610F_u7684_u95EE_u9898"><a href="#u9700_u8981_u6CE8_u610F_u7684_u95EE_u9898" class="headerlink" title="需要注意的问题"></a>需要注意的问题</h2><ul>
-<li>Category可以访问原始类的实例变量，但不能添加变量，如果想添加变量，可以考虑通过继承创建子类。</li>
-<li>Category可以重载原始类的方法，但不推荐这么做，这么做的后果是你再也不能访问原来的方法。如果确实要重载，正确的选择是创建子类。</li>
-<li>和普通接口有所区别的是，在分类的实现文件中可以不必实现所有声明的方法，只要你不去调用它。</li>
-</ul>
-<h2 id="u603B_u7ED3-1"><a href="#u603B_u7ED3-1" class="headerlink" title="总结"></a>总结</h2><p>掌握并用好Category可以充分利用Objective-C的动态特性，编写出灵活简洁的代码。</p>
-<h1 id="Protocol"><a href="#Protocol" class="headerlink" title="Protocol"></a>Protocol</h1><p>简单来说，Protocol不属于任何一个类，它只是一个方法列表，任何类都可以对其中声明的方法进行实现。这种设计模式一般称为代理模式（delegation）。你可以通过Protocol定义各种行为，在不同的场景采用不同的实现方式。在iOS和OS X开发中，Apple采用了大量的代理模式来实现MVC中View和Controller的解耦。</p>
-<h2 id="u4F7F_u7528_u65B9_u6CD5-1"><a href="#u4F7F_u7528_u65B9_u6CD5-1" class="headerlink" title="使用方法"></a>使用方法</h2><p>Protocol有两种声明的方式：</p>
-<ul>
-<li>在单独的声明文件（.h文件）中声明。</li>
-<li>在某个类的声明的文件中声明。</li>
-</ul>
-<p>以上两种方式视具体情况而定，但是在代码规范上都是一致的：</p>
-<pre><code>// HandleDeckDelegate.h
-
-@protocol HandleDeckDelegate &lt;NSObject&gt;
-
-@required
-- (void)ShuffleDeck;
-
-@optional
-- (void)CuttingDeck;
-
-@end
-</code></pre><p>上述代码中有两个关键字，<code>@required</code>和<code>@optional</code>，表示如果要实现这个协议，那么<code>ShuffleDeck</code>方法是必须要实现的，<code>CuttingDeck</code>则是可选的，如果不注明，那么方法默认是<code>@required</code>的，必须实现。 </p>
-<p>那么如何实现这个Protocol呢，很简单，创建一个普通的Objective-C类，如果Protocol使用单独的.h文件声明，那么在该类的.h声明文件中引入包含Protocol的.h文件，如果Protocol是声明在一个相关类中，那么就需要引入该类的.h文件。之后声明采用这个Protocol即可：</p>
-<pre><code>// Deck.h
-
-#import &lt;Foundation/Foundation.h&gt;
-#import &quot;Card.h&quot;
-#import &quot;HandleDeckDelegate.h&quot;
-
-@interface Deck : NSObject&lt;HandleDeckDelegate&gt;
-
-- (Card *)randomDrawCard;
-
-@end
-</code></pre><p>用尖括号（\&lt;…>）括起来的<code>HandleDeckDelegate</code>就是我们创建的Protocol。如果要采用多个Protocol，可以在尖括号内引入多个Protocol名称，并用逗号隔开即可。例如<code>&lt;HandleDeckDelegate,xxxDelegate&gt;</code>。</p>
-<pre><code>// Deck.m
-
-#import &quot;Card.h&quot;
-
-@implementation Deck
-
-- (Card *)drawCardFromTop
-{
-    //TODO.....
-}
-
-- (void)ShuffleDeck
-{
-    //TODO.....
-}
-
-@end
-</code></pre><p>由于<code>CuttingDeck</code>方法是可选的，所以我们只实现了<code>ShuffleDeck</code>。</p>
-<h2 id="u4F7F_u7528_u573A_u666F-1"><a href="#u4F7F_u7528_u573A_u666F-1" class="headerlink" title="使用场景"></a>使用场景</h2><ul>
-<li>Objective-C里的Protocol和Java语言中的接口很类似，如果一些类之间没有继承关系，但是又具备某些相同的行为，则可以使用Protocol来描述它们的关系。</li>
-<li>不同的类，可以遵守同一个Protocol，在不同的场景下注入不同的实例，实现不同的功能。</li>
-</ul>
-<h2 id="u9700_u8981_u6CE8_u610F_u7684_u95EE_u9898-1"><a href="#u9700_u8981_u6CE8_u610F_u7684_u95EE_u9898-1" class="headerlink" title="需要注意的问题"></a>需要注意的问题</h2><ul>
-<li>根据约定，框架中后缀为Delegate的都是Protocol，例如<code>UIApplicationDelegate</code>，<code>UIWebViewDelegate</code>等。</li>
-<li>Protocol本身是可以继承的，比如：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@protocol A&#10;    -(void)methodA;&#10;@end&#10;&#10;@protocol B &#60;A&#62;&#10;    -(void)methodB;&#10;@end</span><br></pre></td></tr></table></figure>
-<p>如果你要实现B，那么methodA和methodB都需要实现。</p>
-<ul>
-<li>Protocol是与任何类都无关的，任何类都可以实现定义好的Protocol，如果我们想知道某个类是否实现了某个Protocol，那么我们可以用<code>conformsToProtocol</code>方法进行判断：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[obj conformsToProtocol:@protocol(ProcessDataDelegate)]</span><br></pre></td></tr></table></figure>
-<h2 id="u603B_u7ED3-2"><a href="#u603B_u7ED3-2" class="headerlink" title="总结"></a>总结</h2><p>Protocol最常用的就是委托代理模式，Cocoa框架中大量采用了这种模式实现数据和UI的分离。例如UIView产生的所有事件，都是通过委托的方式交给Controller完成。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/you-should-to-know-property/" itemprop="url">
-                  Objective-C中的@property
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2014-07-12T00:00:00+08:00" content="2014-07-12">
-              2014-07-12
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Objective-C/" itemprop="url" rel="index">
-                    <span itemprop="name">Objective-C</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/you-should-to-know-property/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/you-should-to-know-property/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<h1 id="@property_u662F_u4EC0_u4E48"><a href="#@property_u662F_u4EC0_u4E48" class="headerlink" title="@property是什么"></a>@property是什么</h1><p><code>@Property</code>是声明属性的语法，它可以快速方便的为实例变量创建存取器，并允许我们通过点语法使用存取器。</p>
+<p>在iOS中，你的应用程序扩展可能需要更多的时间去处理潜在的需要长时间处理的任务，比如说往网上上传数据。这种情况下，你就要使用<a href="https://developer.apple.com/library/prerelease/ios/documentation/Foundation/Reference/NSURLSession_class/index.html#//apple_ref/occ/cl/NSURLSession" target="_blank" rel="external">NSURLSession</a>类将该任务转为后台处理的任务。因为转换到后台处理任务需要用一个单独的线程，所以在扩展完成主应用请求并关闭后仍然可以处理。想了解更多关于扩展中<code>NSURLSession</code>类的使用，请参阅：<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html#//apple_ref/doc/uid/TP40014214-CH21-SW2" target="_blank" rel="external">Performing Uploads and Downloads</a>。</p>
 <blockquote>
-<p>存取器（accessor）：指用于获取和设置实例变量的方法。用于获取实例变量值的存取器是<code>getter</code>，用于设置实例变量值的存取器是<code>setter</code>。</p>
+<p>注意：<br>虽然你可以设置一个在后台通过URL上传下载的任务，但是有一些类型的后台任务，比如提供<code>VoIp</code>或者在后台播放音乐的任务，是不能通过扩展来实现的。<br>如果你应用扩展的<code>Info.plist</code>文件中含有<code>UIBackgroundModes</code>关键字，那么在上传App Store时会被拒绝。（想了解更多关于<code>UIBackgroundModes</code>关键字的内容，请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009247" target="_blank" rel="external">Information Property List Key Reference</a>中的<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW22" target="_blank" rel="external">UIBackgroundModes</a>）</p>
 </blockquote>
-<h1 id="u521B_u5EFA_u5B58_u53D6_u5668"><a href="#u521B_u5EFA_u5B58_u53D6_u5668" class="headerlink" title="创建存取器"></a>创建存取器</h1><h2 id="u624B_u5DE5_u521B_u5EFA_u5B58_u53D6_u5668"><a href="#u624B_u5DE5_u521B_u5EFA_u5B58_u53D6_u5668" class="headerlink" title="手工创建存取器"></a>手工创建存取器</h2><p>我们先看两段代码：</p>
-<pre><code>// Car.h
-
-#import &lt;Foundation/Foundation.h&gt;
-
-@interface Car : NSObject
-{
-    // 实例变量
-    NSString *carName;
-    NSString *carType;
-}
-
-// setter                                   
-- (void)setCarName:(NSString *)newCarName; 
-
-// getter
-- (NSString *)carName;
-
-// setter
-- (void)setCarType:(NSString *)newCarType;
-
-// getter
-- (NSString *)carType;
-
-@end  
-</code></pre><p>上面的代码中<code>carName</code>和<code>carType</code>就是<code>Car</code>的实例变量，并且可以看到分别对这两个实例变量声明了get/set方法，即存取器。  </p>
-<pre><code>#import &quot;Car.h&quot;
-
-@implementation Car
-
-// setter
-- (void)setCarName:(NSString *)newCarName
-{
-    carName = newCarName;
-}
-
-// getter
-- (NSString *)carName
-{
-    return carName;
-}
-
-// setter
-- (void)setCarType:(NSString *)newCarType
-{
-    carType = newCarType;
-}
-
-// getter
-- (NSString *)carType
-{
-    return carType;
-}
-
-@end
-</code></pre><p>上面代码是对实例变量存取器的实现。我们可以看到，存取器就是对实例变量进行赋值和取值。按照约定赋值方法以set开头，取值方法以实例变量名命名。<br>我们看看如何使用：</p>
-<pre><code>// main.m
-
-#import &quot;Car.h&quot;
-
-int main(int argc, char * argv[])
-{
-    @autoreleasepool {
-        Car *car = [[Car alloc] init];
-        [car setCarName:@&quot;Jeep Cherokee&quot;];
-        [car setCarType:@&quot;SUV&quot;];
-        NSLog(@&quot;The car name is %@ and the type is %@&quot;,[car carName],[car carType]);      
-    }
-    return 0;
-}
-</code></pre><p>上面的代码中我们注意到，对象<code>Car</code>使用了消息语法，也就是使用方括号的语法给存取器发送消息。<br>返回结果为：</p>
-<pre><code>The car name is Jeep Cherokee and the type is SUV
-</code></pre><h2 id="u4F7F_u7528@Property_u521B_u5EFA_u5B58_u53D6_u5668"><a href="#u4F7F_u7528@Property_u521B_u5EFA_u5B58_u53D6_u5668" class="headerlink" title="使用@Property创建存取器"></a>使用@Property创建存取器</h2><pre><code>// Car.h
-
-#import &lt;Foundation/Foundation.h&gt;
-
-@interface Car : NSObject
-{
-    // 实例变量
-    NSString *carName;
-    NSString *carType;
-}
-
-@property(nonatomic,strong) NSString *carName;
-@property(nonatomic,strong) NSString *carType;
-
-@end
-</code></pre><p>上面代码中，我们使用<code>@property</code>声明两个属性，名称与实例变量名称相同（让我们先忽略<code>nonatomic</code>和<code>strong</code>）。</p>
-<pre><code>// Car.m
-
-#import &quot;Car.h&quot;
-
-@implementation Car
-
-@synthesize carName;
-@synthesize carType;
-
-@end
-</code></pre><p>在.m文件中我们使用<code>@synthesize</code>自动生成这两个实例变量的存取器，并且隐藏了存取器，虽然我们看不到存取器，但它们确实是存在的。</p>
-<pre><code>// main.m
-
-int main(int argc, char * argv[])
-{
-    @autoreleasepool {
-        Car *car = [[Car alloc] init];
-        car.carName = @&quot;Jeep Compass&quot;;
-        car.carType = @&quot;SUV&quot;;
-        NSLog(@&quot;The car name is %@ and the type is %@&quot;,car.carName,car.carType); 
-    }
-    return 0;
-}
-</code></pre><p>在上面的代码中我们可以注意到，<code>Car</code>对象使用点语法给存取器发送消息，并且get与set的语法是相同的，所以这里的点语法可以根据语境判断我们是要赋值还是取值。  </p>
-<p>当然我们也依然可以使用消息语法来使用：</p>
-<pre><code>// main.m
-
-int main(int argc, char * argv[])
-{
-    @autoreleasepool {
-        Car *car = [[Car alloc] init];
-
-        // 点语法
-//        car.carName = @&quot;Jeep Compass&quot;;
-//        car.carType = @&quot;SUV&quot;;
-//        NSLog(@&quot;The car name is %@ and the type is %@&quot;,car.carName,car.carType);
-
-        // 消息语法
-        [car setCarName:@&quot;Jeep Compass&quot;];
-        [car setCarType:@&quot;SUV&quot;];
-        NSLog(@&quot;The car name is %@ and the type is %@&quot;,[car carName],[car carType]);       
-    }
-    return 0;
-}
-</code></pre><p>上面两段代码的执行结果都是：  </p>
-<pre><code>The car name is Jeep Compass and the type is SUV
-</code></pre><blockquote>
-<p>总结：<code>@property</code>等同于在.h文件中声明实例变量的get/set方法，<code>@synthesize</code>等同于在.m文件中实现实例变量的get/set方法。使用<code>@property</code>和<code>synthesize</code>创建存取器要比手动声明两个存取方法（<code>getter</code>和<code>setter</code>）更简单。而且我们在使用属性时可以使用点语法赋值或取值，语法更简单，更符合面向对象编程。</p>
-</blockquote>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<h1 id="u4E0D_u5FC5_u5355_u72EC_u58F0_u660E_u793A_u4F8B_u53D8_u91CF"><a href="#u4E0D_u5FC5_u5355_u72EC_u58F0_u660E_u793A_u4F8B_u53D8_u91CF" class="headerlink" title="不必单独声明示例变量"></a>不必单独声明示例变量</h1><p>如果使用<code>@Property</code>，就不必单独声明实例变量了。因为在没有显示提供示例变量声明的前提下，系统会自动帮你生成实例变量。我们通过以下代码来说明：</p>
-<pre><code>// Car.h
-
-#import &lt;Foundation/Foundation.h&gt;
-
-@interface Car : NSObject
-
-@property(nonatomic,strong) NSString *carName;
-@property(nonatomic,strong) NSString *carType;
-
-- (NSString *)carInfo;
-
-@end
-</code></pre><p>在.h文件中我们并没有声明实例变量，只是声明了<code>carName</code>和<code>carType</code>两个属性，以及一个<code>carInfo</code>方法，返回值为<code>NSString *</code>。</p>
-<pre><code>// Car.m
-
-#import &quot;Car.h&quot;
-
-@implementation Car
-
-- (NSString *)carInfo
-{
-    return [NSString stringWithFormat:@&quot;The car name is %@ and the type is %@&quot;,_carName,_carType];
-}
-
-@end
-</code></pre><p>在.m文件中我们可以注意到，在<code>carInfo</code>方法中我们使用了<code>_carName</code>和<code>_carType</code>实例变量，这就是当我们没有显示声明实例变量时，系统为我们自动生成的。命名规则是以<code>_</code>为前缀，加上属性名，即<code>_propertyName</code>。 </p>
-<p>其实在.m文件中实际是存在<code>@synthesize</code>声明语句的，只是系统将其隐藏了：</p>
-<pre><code>@synthesize carName = _carName;
-@synthesize carType = _carType;
-</code></pre><p>那么如果我们不喜欢默认的实例变量命名方法，或者我们希望使用更有语义的名称，应该怎么做呢。其实很简单：</p>
-<pre><code>// Car.m
-
-#import &quot;Car.h&quot;
-
-@implementation Car
-
-@synthesize carName = i_am_car_name;
-@synthesize carType = i_am_car_type;
-
-- (NSString *)carInfo
-{
-    return [NSString stringWithFormat:@&quot;The car name is %@ and the type is %@&quot;,i_am_car_name,i_am_car_type];
-}
-
-@end
-</code></pre><p>通过上述代码可以看到，我们只需要通过<code>@synthesize</code>来声明我们希望的实例变量名。</p>
-<blockquote>
-<p>总结：如果我们希望使用默认的实例变量命名方式，那么我们在.m文件中就不需要使用<code>@synthesize</code>声明，系统会帮我们自动完成。如果我们希望自己命名实例变量命，那么我们就使用<code>@synthesize</code>显示声明我们希望的实例变量名。</p>
-</blockquote>
-<h1 id="@property_u7684_u7279_u6027"><a href="#@property_u7684_u7279_u6027" class="headerlink" title="@property的特性"></a>@property的特性</h1><p><code>@property</code>还有一些关键字，它们都是有特殊作用的，比如上述代码中的<code>nonatomic</code>，<code>strong</code>：</p>
-<pre><code>@property(nonatomic,strong) NSString *carName;
-@property(nonatomic,strong) NSString *carType;
-</code></pre><p>我把它们分为三类，分别是：原子性，存取器控制，内存管理。</p>
-<h2 id="u539F_u5B50_u6027"><a href="#u539F_u5B50_u6027" class="headerlink" title="原子性"></a>原子性</h2><ul>
-<li><code>atomic</code>（默认）：<code>atomic</code>意为操作是原子的，意味着只有一个线程访问实例变量。atomic是线程安全的，至少在当前的存取器上是安全的。它是一个默认的特性，但是很少使用，因为比较影响效率，这跟ARM平台和内部锁机制有关。</li>
-<li><code>nonatomic</code>：<code>nonatomic</code>跟<code>atomic</code>刚好相反。表示非原子的，可以被多个线程访问。它的效率比atomic快。但不能保证在多线程环境下的安全性，在单线程和明确只有一个线程访问的情况下广泛使用。</li>
-</ul>
-<h2 id="u5B58_u53D6_u5668_u63A7_u5236"><a href="#u5B58_u53D6_u5668_u63A7_u5236" class="headerlink" title="存取器控制"></a>存取器控制</h2><ul>
-<li><code>readwrite</code>（默认）：<code>readwrite</code>是默认值，表示该属性同时拥有<code>setter</code>和<code>getter</code>。</li>
-<li><code>readonly</code>： <code>readonly</code>表示只有<code>getter</code>没有<code>setter</code>。</li>
-</ul>
-<p>有时候为了语意更明确可能需要自定义访问器的名字：</p>
-<pre><code>@property (nonatomic, setter = mySetter:,getter = myGetter ) NSString *name;
-</code></pre><p>最常见的是BOOL类型，比如标识View是否隐藏的属性hidden。可以这样声明：</p>
-<pre><code>@property (nonatomic,getter = isHidden ) BOOL hidden;
-</code></pre><h2 id="u5185_u5B58_u7BA1_u7406"><a href="#u5185_u5B58_u7BA1_u7406" class="headerlink" title="内存管理"></a>内存管理</h2><p><code>@property</code>有显示的内存管理策略。这使得我们只需要看一眼<code>@property</code>声明就明白它会怎样对待传入的值。</p>
+<h2 id="u4F18_u5316_u6548_u7387_u548C_u6027_u80FD"><a href="#u4F18_u5316_u6548_u7387_u548C_u6027_u80FD" class="headerlink" title="优化效率和性能"></a>优化效率和性能</h2><p>应用扩展在内存使用优先级上要明显低于当前运行的应用程序。不管是iOS还是OS X，系统都会频繁的终止扩展，因为用户想返回到主应用程序。但是也有一些应用扩展的内存使用优先级要高于其他扩展，比如说<code>widgets</code>就要求要高一些，因为它要实时的显示一些信息，并且一般用户都会同时开启多个<code>widgets</code>。</p>
+<p>你的应用扩展并不拥有主循环线程，你要遵循这一规则，以便让扩展在主循环线程中发挥最好的性能。比如说，如果你的应用扩展阻止了主循环线程，那么在用户使用主应用程序的过程中会造成非常糟糕的用户体验效果。</p>
+<p>我们需要明确的一点是，GPU在系统中是一个共享的资源，所以应用扩展不会得到很高的优先级照顾。比如说，如果你正在玩一个对GPU消耗很高的游戏，那么由于内存压力比较大，它就有可能会选择关闭<code>Today widget</code>。</p>
+<h2 id="u8BBE_u8BA1_u4E00_u4E2A_u7CBE_u7B80_u7684_u7528_u6237_u754C_u9762"><a href="#u8BBE_u8BA1_u4E00_u4E2A_u7CBE_u7B80_u7684_u7528_u6237_u754C_u9762" class="headerlink" title="设计一个精简的用户界面"></a>设计一个精简的用户界面</h2><p>大多数的扩展点都允许你向用户提供一个自定义的界面，它在用户打开你的应用扩展时呈现给用户。通常情况下，应用扩展的界面要尽可能的简约、功能的针对性要强。为了提高性能和用户体验效果，你要避免与该扩展功能无关的界面出现。</p>
+<p>大多数Xcode提供的扩展点模板都包含一个初始界面文件，你可以在这个文件中设计界面。</p>
+<p>在用户的惯性思维中，一般他们都是通过应用扩展的图标来辨识扩展功能的。不过通常情况下，应用扩展的图标和它的主体应用的图标是一致的。使用主体应用的图标作为应用扩展的图标有利于用户去判断这个扩展的来源，也就是说让用户确信这个扩展是来源于他们安装的主体应用。当然也有一些例外。</p>
 <ul>
-<li><code>assign</code>（默认）：<code>assign</code>用于值类型，如<code>int</code>、<code>float</code>、<code>double</code>和<code>NSInteger</code>，<code>CGFloat</code>等表示单纯的复制。还包括不存在所有权关系的对象，比如常见的delegate。</li>
+<li>在iOS中，自定义的<code>Action</code>扩展的图标使用它主体应用的图标。</li>
+<li>在OS X中，如果一个扩展的主体程序只是用来安装扩展的安装包，那么该扩展要提供一个单独的图标，否则都会使用主体应用的图标。</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@property(nonatomic) int running;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@property(nonatomic,assign) int running;</span><br></pre></td></tr></table></figure>
-<p>以上两段代码是相同的。</p>
-<p>在<code>setter</code>方法中，采用直接赋值来实现设值操作：</p>
-<pre><code>-(void)setRunning:(int)newRunning{  
-    _running = newRunning;  
-} 
-</code></pre><ul>
-<li><code>retain</code>：在<code>setter</code>方法中，需要对传入的对象进行引用计数加1的操作。<br>  简单来说，就是对传入的对象拥有所有权，只要对该对象拥有所有权，该对象就不会被释放。如下代码所示：</li>
-</ul>
-<pre><code>-(void)setName:(NSString*)_name{  
-     //首先判断是否与旧对象一致，如果不一致进行赋值。  
-     //因为如果是一个对象的话，进行if内的代码会造成一个极端的情况：当此name的retain为1时，使此次的set操作让实例name提前释放，而达不到赋值目的。  
-     if ( name != _name){  
-          [name release];  
-          name = [_name retain];  
-     }  
-}
-</code></pre><ul>
-<li><code>strong</code>：<code>strong</code>是在IOS引入ARC的时候引入的关键字，是retain的一个可选的替代。表示实例变量对传入的对象要有所有权关系，即强引用。strong跟retain的意思相同并产生相同的代码，但是语意上更好更能体现对象的关系。</li>
-<li><p><code>weak</code>：在<code>setter</code>方法中，需要对传入的对象不进行引用计数加1的操作。<br>  简单来说，就是对传入的对象没有所有权，当该对象引用计数为0时，即该对象被释放后，用<code>weak</code>声明的实例变量指向<code>nil</code>，即实例变量的值为0。  </p>
-<blockquote>
-<p>注：<code>weak</code>关键字是IOS5引入的，IOS5之前是不能使用该关键字的。delegate 和 Outlet 一般用<code>weak</code>来声明。</p>
+<p>应用扩展要使用一个简短，语义明确的名字，这能让用户更乐意使用主体应用和应用扩展，并且能让他们在系统中更好的管理应用扩展。通过应用扩展<code>Target</code>的<code>CFBundleDisplayName</code>属性来设置它的名称，你可以在<code>Info.plist</code>文件中修改它。如果你没有给<code>CFBundleDisplayName</code>设置值，也就是没有给扩展设置名称，那么应用扩展会使用它的主体应用的名称，也就是<code>CFBundleName</code>属性中的值。</p>
+<p>同时一些应用扩展也需要一个简短的说明。比如说，OS X中的<code>Widget</code>扩展就会显示一个简单的描述，这能帮助用户更好的选择他们想要显示在今日通知中的<code>Widget</code>扩展。扩展的描述可以在<code>InfoPlist.strings</code>文件的<code>widget.description</code>属性中设置。</p>
+<h2 id="u8C03_u8BD5_uFF0C_u914D_u7F6E_u548C_u6D4B_u8BD5_u4F60_u7684_u5E94_u7528_u6269_u5C55"><a href="#u8C03_u8BD5_uFF0C_u914D_u7F6E_u548C_u6D4B_u8BD5_u4F60_u7684_u5E94_u7528_u6269_u5C55" class="headerlink" title="调试，配置和测试你的应用扩展"></a>调试，配置和测试你的应用扩展</h2><blockquote>
+<p>注意：要确保主体应用中的所有扩展都要使用相同签名方式的代码。</p>
 </blockquote>
-</li>
-<li><p><code>copy</code>：与<code>strong</code>类似，但区别在于实例变量是对传入对象的副本拥有所有权，而非对象本身。</p>
-</li>
-</ul>
+<p>在Xcode调试应用扩展和调试其他程序基本是一样的，但唯一一点不同的是：你要选择一个能看到扩展的载体应用。当你编译运行应用扩展后，Xcode会运行载体应用，等待你去使用扩展并触发调试点来调试扩展。你要在<a href="https://developer.apple.com/library/prerelease/ios/featuredarticles/XcodeConcepts/Concept-Schemes.html#//apple_ref/doc/uid/TP40009328-CH8" target="_blank" rel="external">scheme</a>中要为扩展指定一个载体应用（一个<code>scheme</code>封装了<code>Target</code>编译的说明）。</p>
+<p>当你在主体应用工程中创建一个应用扩展的<code>Target</code>时，Xcode就会为应用扩展默认创建一个<code>scheme</code>。应用扩展的<code>scheme</code>可以让你指定在调试时，由哪个应用程序来调用你的扩展，也就是指定一个调试时的载体应用。默认情况下，当你编译运行扩展时，会询问你使用哪个载体应用来调用该扩展。</p>
+<p>在你编译运行应用扩展之前，你要确保你的扩展已经选择了一个<code>scheme</code>。你可以通过<code>Product &gt; Scheme &gt; MyExtensionName</code>或者使用Xcode菜单栏呼出<code>scheme</code>菜单并选择<code>MyExtensionName</code>来设置应用扩展的<code>scheme</code>。</p>
+<blockquote>
+<p>注意：如果你使用运行主体应用的<code>scheme</code>代替应用扩展的<code>scheme</code>，那么你在编译工程时Xcode会告诉你它正在等待调试应用扩展。</p>
+</blockquote>
+<p>当你编译运行应用扩展时，Xcode会为你列出允许调用该扩展的载体应用程序。当你选择一个载体应用程序并且运行后，调试器就准备开始工作了，并准备好在你打的断点处进行拦截。当你在载体应用程序中使用扩展时，就可以对应用扩展进行<code>Debug</code>调试了。调试应用扩展的方式和方法与调试其他应用程序是一样的。</p>
+<blockquote>
+<p>注意：如果你选择的载体应用程序不是扩展的<code>scheme</code>中指定的载体应用程序，那么当你在这个载体应用程序中访问扩展时，<code>Debug</code>调试器是不会起作用的。</p>
+</blockquote>
+<p>在OS X中，你在载体应用程序中访问扩展之前，要确保该扩展是允许被使用的。一般情况下，在<code>System Preferences</code>的扩展面板中开启或关闭扩展（你也可以在共享或<code>Action</code>菜单中打开应用扩展面板）。这里要注意一点，在OS X中使用<code>Widget</code>模拟器调试<code>Widget</code>扩展时，是不需要对其进行开启操作的。当你要调试键盘扩展时，必须要开启该扩展（你可以通过<code>Settings &gt; General &gt; Keyboard &gt; Keyboards</code>开启键盘扩展）。</p>
+<p>在调试时，Xcode会在OS X中创建一个持续的编译应用扩展的会话。这意味着，如果你要使用OS X系统下的扩展，就要将该扩展编译打包好的程序拷贝到<code>Finder</code>中的<code>Applications</code>文件里。</p>
+<blockquote>
+<p>注意：在Xcode的调试控制台日志中，应用扩展的二进制值可能是和<code>CFBundleIdentifier</code>属性关联，而不是<code>CFBundleDisplayName</code>属性。</p>
+</blockquote>
+<p>因为应用扩展必须要做出一个有效的响应，所以当你运行应用扩展时，在调试导航中查看各种调试监控器就非常的清晰明了。这些调试监控器会告诉你当前运行的应用扩展占用了多少CPU、内存和其他系统资源。当你发现类似占用CPU资源出现异常的性能问题后，你就可以使用<code>Instruments</code>来分析你的应用扩展，并确定需要改进的地方。想学习了解调试监控器，请查阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/ToolsLanguages/Conceptual/Xcode_Overview/DebugYourApp/DebugYourApp.html#//apple_ref/doc/uid/TP40010215-CH18" target="_blank" rel="external">Debug Your App</a>，想学习了解<code>Instruments</code>，请查阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40004652" target="_blank" rel="external">Instruments User Guide</a>。</p>
+<blockquote>
+<p>注意：通过<code>Product &gt; Profile</code>可以直接在<code>Instruments</code>中编译并运行应用扩展。</p>
+</blockquote>
+<p>如果要使用Xcode提供的测试框架（比如XCTest APIs），你需要在主体应用程序中写一些测试用例代码。想了解更多XCTest的知识，请参阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/DeveloperTools/Conceptual/testing_with_xcode/Introduction/Introduction.html#//apple_ref/doc/uid/TP40014132" target="_blank" rel="external">Testing with Xcode</a>。</p>
+<h2 id="u5206_u53D1_u6269_u5C55_u4E3B_u4F53_u5E94_u7528_u7A0B_u5E8F"><a href="#u5206_u53D1_u6269_u5C55_u4E3B_u4F53_u5E94_u7528_u7A0B_u5E8F" class="headerlink" title="分发扩展主体应用程序"></a>分发扩展主体应用程序</h2><p>你不能直接将应用扩展上传至App Store，你只能上传应用扩展的主体应用程序，并且你不能将应用扩展从一个应用程序中转到另一个应用程序。</p>
+<p>如果想让用户使用你的应用扩展，你就比如将该扩展的主体应用程序上传至App Store中，并且主体应用程序如要有其他的功能，不能只包含应用扩展。</p>
+<p>虽然我们推荐将应用扩展主体应用程序上传至App Store作为用户使用应用扩展的途径，但这也不是唯一的途径。比如在OS X中，主体应用程序就可以只包含应用扩展，而不需要提供其他的功能。</p>
+<blockquote>
+<p>注意：如果你不使用通过上传主体应用程序到App Store这种方式交付应用扩展，那么在主体应用程序被用户认可或批准前，<code>Gatekeeper</code>是不会允许应用扩展生效的。同时，如果你不将主体应用程序上传至App Store，那么该主体应用程序也不能签署你的开发者ID名称，所以用户需要在设置用手动将你的主体应用设置为可信任的应用程序，才可以使用你的应用扩展。</p>
+</blockquote>
+<p>原文地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionCreation.html#//apple_ref/doc/uid/TP40014214-CH5-SW1" target="_blank" rel="external">Creating an App Extension</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -935,8 +437,8 @@ int main(int argc, char * argv[])
             
             
               
-                <a class="post-title-link" href="/articles/you-should-know-block/" itemprop="url">
-                  Objective-C中的Block
+                <a class="post-title-link" href="/articles/swift-balloon/" itemprop="url">
+                  WWDC2014大会中的Playground大炮气球示例
                 </a>
               
             
@@ -946,8 +448,8 @@ int main(int argc, char * argv[])
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-06-25T00:00:00+08:00" content="2014-06-25">
-              2014-06-25
+            <time itemprop="dateCreated" datetime="2014-08-09T00:00:00+08:00" content="2014-08-09">
+              2014-08-09
             </time>
           </span>
 
@@ -956,8 +458,8 @@ int main(int argc, char * argv[])
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Objective-C/" itemprop="url" rel="index">
-                    <span itemprop="name">Objective-C</span>
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
                   </a>
                 </span>
 
@@ -972,8 +474,8 @@ int main(int argc, char * argv[])
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/you-should-know-block/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/you-should-know-block/" itemprop="commentsCount"></span>
+              <a href="/articles/swift-balloon/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-balloon/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -1002,148 +504,159 @@ int main(int argc, char * argv[])
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
-<h1 id="u76F8_u5173_u6982_u5FF5"><a href="#u76F8_u5173_u6982_u5FF5" class="headerlink" title="相关概念"></a>相关概念</h1><p>在这篇笔记开始之前，我们需要对以下概念有所了解。</p>
-<h2 id="u64CD_u4F5C_u7CFB_u7EDF_u4E2D_u7684_u6808_u548C_u5806"><a href="#u64CD_u4F5C_u7CFB_u7EDF_u4E2D_u7684_u6808_u548C_u5806" class="headerlink" title="操作系统中的栈和堆"></a>操作系统中的栈和堆</h2><blockquote>
-<p>注：这里所说的堆和栈与数据结构中的堆和栈不是一回事。</p>
-</blockquote>
-<p>我们先来看看一个由C/C++/OBJC编译的程序占用内存分布的结构：<br><img src="http://www.devtalking.com/postImages/memory_structure.jpg" alt="内存分布结构"> </p>
-<ul>
-<li><p>栈区（stack）：由系统自动分配，一般存放函数参数值、局部变量的值等。由编译器自动创建与释放。其操作方式类似于数据结构中的栈，即后进先出、先进后出的原则。</p>
+
+<p>在WWDC14上我们通过<code>Playground</code>展示了Swift这门语言，很多人会问关于在<code>Playground</code>中展示出的那个气球的示例是如何实现的。从气球这个示例我们可以看到我们写的代码具有很强的交互性，而且非常有趣，并且也从该示例中展示了<code>Playground</code>的许多特性。现在，你可以通过这篇文章，学习如何实现气球示例中的各种有趣的效果，在我们提供的<code>Balloons.playground</code>文件中有详细的文档说明和代码示例。  </p>
+<p>由于<code>Balloons.playground</code>文件中运用了<code>SpriteKit</code>的新特性，所以要求在最新的Xcode 6 Beta版本环境和OS X Yosemite系统下运行。</p>
+<h2 id="Balloons-playground"><a href="#Balloons-playground" class="headerlink" title="Balloons.playground"></a>Balloons.playground</h2><pre><code>// Requires Xcode 6 (beta 4) running on Yosemite (developer preview 4) or later.
+import SpriteKit
+import XCPlayground
+</code></pre><p>该<code>Playground</code>文件中包含了探索<code>SpriteKit</code>新特性的示例代码。该示例来自WWDC2014大会上演示Swift语言时使用的示例,该示例描述的是两个大炮，间隔任意一段时间就会向天上的气球开火，当两个气球相撞时，会“砰”的一下消失。在该示例中，你会了解到创建如此炫酷的场景、自定义动作和效果是多么简单。  </p>
+<p>当你更改示例中的代码时，你会在<code>Playground</code>的右侧<code>Timeline</code>区域即时的看到更改后的效果，所以你可以尝试按照你自己的想法创造出更多有趣的效果。</p>
 <blockquote>
-<p>例如：在函数中申明一个局部变量<code>int b</code>;系统自动在栈中为b开辟空间。</p>
+<p>注意：如果你看不到气球大炮的场景，那么你可以通过<code>View &gt; Assistant Editor &gt; Show Assistant Editor</code>打开<code>Timeline</code>区域，或者也可以使用<code>Option-Command-Return</code>快捷键打开。</p>
 </blockquote>
-</li>
-<li><p>堆区（heap）：一般由程序员申请并指明大小，最终也由程序员释放。如果程序员不释放，程序结束时可能会由OS回收。对于堆区的管理是采用<strong>链表</strong>式管理的，操作系统有一个记录空闲内存地址的链表，当接收到程序分配内存的申请时，操作系统就会遍历该链表，遍历到一个记录的内存地址大于申请内存的链表节点，并将该节点从该链表中删除，然后将该节点记录的内存地址分配给程序。  </p>
-<blockquote>
-<p>例如：在C中malloc函数<br>char <em>p1;<br>p1 = (char </em>)malloc(10);<br>但是p1本身是在栈中的。   </p>
+<p>来让我们开始吧！</p>
+<h3 id="u5728Timeline_u533A_u57DF_u5448_u73B0_u6211_u4EEC_u60F3_u8981_u7684_u6548_u679C"><a href="#u5728Timeline_u533A_u57DF_u5448_u73B0_u6211_u4EEC_u60F3_u8981_u7684_u6548_u679C" class="headerlink" title="在Timeline区域呈现我们想要的效果"></a>在Timeline区域呈现我们想要的效果</h3><p><code>SpriteKit</code>的内容用<code>SKView</code>对象来表示，它负责将要显示的内容提供给模拟器。所有的效果都通过<code>SKScene</code>对象来呈现，它相当于<code>SKNode</code>对象树的根节点。在这个场景中，你将添加一些节点并且创建游戏的内容。</p>
+<p>我们在Xcode中通过<code>iOS &gt; Application &gt; SpriteKit Game</code>创建一个<code>SpriteKit Game</code>模板，模板中会提供<code>MyScene</code>文件，这就是我们游戏场景，该文件就是场景文件。所有的资源，包括场景文件、图片资源都全部绑定在<code>Playground</code>包中供我们使用，你也可以在<code>Playground</code>包种添加你自己的图片资源。你可以在<code>Balloons.playground</code>文件上点击鼠标右键，然后选择<strong>显示包内容</strong>，将资源文件添加进去即可。</p>
+<pre><code>let sceneView = SKView(frame: NSRect(x: 0, y: 0, width: 850, height: 638))
+let scene = SKScene(fileNamed: &quot;GameScene&quot;)
+scene.scaleMode = .AspectFill
+sceneView.presentScene(scene)
+
+XCPShowView(&quot;Balloons&quot;, sceneView)
+</code></pre><blockquote>
+<p>尝试实验：因为重力是在场景中由程序虚拟构建的物理世界（<code>physicsWorld</code>属性）定义的，所以在<code>SpriteKit</code>的物理世界中，我们可以不按照现实世界的定律，并且可以改变定律。<br>我们可以通过改变<code>scene.physicsWorld.gravity</code>矢量值让重力颠倒。</p>
 </blockquote>
-</li>
-</ul>
-<blockquote>
-<p>链表：是一种常见的基础数据结构，一般分为单向链表、双向链表、循环链表。以下为单向链表的结构图：<br><img src="http://www.devtalking.com/postImages/linked_list.jpg" alt="单向链表"><br>单向链表是链表中最简单的一种，它包含两个区域，一个信息域和一个指针域。信息域保存或显示关于节点的信息，指针域储存下一个节点的地址。<br>上述的空闲内存地址链表的信息域保存的就是空闲内存的地址。</p>
-</blockquote>
-<ul>
-<li>全局区/静态区：顾名思义，全局变量和静态变量存储在这个区域。只不过初始化的全局变量和静态变量存储在一块，未初始化的全局变量和静态变量存储在一块。程序结束后由系统释放。</li>
-<li>文字常量区：这个区域主要存储字符串常量。程序结束后由系统释放。</li>
-<li>程序代码区：这个区域主要存放函数体的二进制代码。</li>
-</ul>
-<p>下面举一个前辈写的例子：</p>
-<pre><code>//main.cpp
-int a = 0; // 全局初始化区
-char *p1; // 全局未初始化区
-main {
-    int b; // 栈
-    char s[] = &quot;abc&quot;; // 栈
-    char *p2; // 栈
-    char *p3 = &quot;123456&quot;; // 123456\0在常量区，p3在栈上
-    static int c =0； // 全局静态初始化区
-    p1 = (char *)malloc(10);
-    p2 = (char *)malloc(20); // 分配得来的10和20字节的区域就在堆区
-    strcpy(p1, &quot;123456&quot;); // 123456\0在常量区，这个函数的作用是将&quot;123456&quot; 这串字符串复制一份放在p1申请的10个字节的堆区域中。
-    // p3指向的&quot;123456&quot;与这里的&quot;123456&quot;可能会被编译器优化成一个地址。
+<p>我们要想在<code>Playground</code>的场景中真正看到希望的效果，那么我们就要调用<code>XCPlayground</code>类的<code>XCPShowView</code>函数。该函数的功能是将场景真实的显示在<code>Timeline</code>区域中，通过该函数，你对代码做的每一个改动都会实时的显示在<code>Timeline</code>区域中。</p>
+<h3 id="u8BA9_u5927_u70AE_u5F00_u706B"><a href="#u8BA9_u5927_u70AE_u5F00_u706B" class="headerlink" title="让大炮开火"></a>让大炮开火</h3><p>当大炮要开火时，让我们在场景中添加一些气球，并让它们在场景中来回穿梭。每一个气球其实就是一个<code>Sprite</code>节点或者叫<code>Sprite</code>元素，为了让气球看起来更真实、更有质感，我们会从气球图片集合中随机的取出气球图片用于显示在场景中。</p>
+<p>这里我们先创建一个Swift数组对象，内容是气球图片的名称，然后用数组的<code>map</code>函数创建一个<code>SKTexture</code>对象的数组。这样我们就可以很方便的通过该数组随机的创建<code>Sprite</code>元素。</p>
+<pre><code>let images = [
+    &quot;blue&quot;, &quot;heart-blue&quot;, &quot;star-blue&quot;,
+    &quot;green&quot;, &quot;star-green&quot;, &quot;heart-pink&quot;,
+    &quot;heart-red&quot;, &quot;orange&quot;, &quot;red&quot;,
+    &quot;star-gold&quot;, &quot;star-pink&quot;, &quot;star-red&quot;,
+    &quot;yellow&quot;
+]
+let textures: [SKTexture] = images.map { SKTexture(imageNamed: &quot;balloon-\($0)&quot;) }
+
+var configureBalloonPhysics: ((balloon: SKSpriteNode) -&gt; Void)?
+func createRandomBalloon() -&gt; SKSpriteNode {
+    let choice = Int(arc4random_uniform(UInt32(textures.count)))
+    var balloon = SKSpriteNode(texture: textures[choice])
+    configureBalloonPhysics?(balloon: balloon)
+
+    return balloon
 }
 </code></pre><blockquote>
-<p>strcpy函数<br>原型声明：<code>extern char *strcpy(char* dest, const char *src);</code><br>功能：把从src地址开始且含有NULL结束符的字符串复制到以dest开始的地址空间。</p>
+<p>尝试实验：你可以点击代码编辑区右侧的小圆圈将代码片段的结果显示在<code>Timeline</code>区域，这样可以便于我们检查。<br>如果将<code>SKTexture</code>添加到<code>Timeline</code>后内容显示不全，你可以拖动<code>Timeline</code>滚动条来显示全部内容。</p>
 </blockquote>
-<h2 id="u7ED3_u6784_u4F53_uFF08Struct_uFF09"><a href="#u7ED3_u6784_u4F53_uFF08Struct_uFF09" class="headerlink" title="结构体（Struct）"></a>结构体（Struct）</h2><p>在C语言中，结构体(struct)指的是一种数据结构。结构体可以被声明为变量、指针或数组等，用以实现较复杂的数据结构。结构体同时也是一些元素的集合，这些元素称为结构体的成员(member)，且这些成员可以为不同的类型，成员一般用名字访问。<br>我们来看看结构体的定义： </p>
-<pre><code>struct tag { member-list } variable-list;
-</code></pre><ul>
-<li><code>struct</code>：结构体关键字。</li>
-<li><code>tag</code>：结构体标签。</li>
-<li><code>member-list</code>：结构体成员列表。</li>
-<li><code>variable-list</code>：为结构体声明的变量列表。</li>
-</ul>
-<p>在一般情况下，<code>tag</code>，<code>member-list</code>，<code>variable-list</code>这三部分至少要出现两个。以下为示例：</p>
-<pre><code>// 该结构体拥有3个成员，整型的a，字符型的b，双精度型的c
-// 并且为该结构体声明了一个变量s1
-// 该结构体没有标明其标签
-struct{
-    int a;
-    char b;
-    double c;
-} s1;
+<p>现在我们就已经创建好了气球，是时候让它们动起来了。我们首先要赋予它们真实的物理身体，因为当模拟物理形态和行为时，只会对有物理身体的元素起作用。</p>
+<p>在<code>SpriteKit</code>中，每个场景最多可包含32个类别。在众多的元素中，你可以用物理身体的类别来区分它们。这里要注意的是，我们将气球类别赋值为位移掩码，原因是为了当两个气球碰撞时能触发通知。</p>
+<pre><code>let BalloonCategory: UInt32 = 1 &lt;&lt; 1
+configureBalloonPhysics = { balloon in
+    balloon.physicsBody = SKPhysicsBody(texture: balloon.texture, size: balloon.size)
+    balloon.physicsBody.linearDamping = 0.5
+    balloon.physicsBody.mass = 0.1
+    balloon.physicsBody.categoryBitMask = BalloonCategory
+    balloon.physicsBody.contactTestBitMask = BalloonCategory
+}
+</code></pre><blockquote>
+<p>尝试实验：将把<code>BalloonCategory</code>赋值给<code>contactTestBitMask</code>这行移除掉，看看会发生什么？</p>
+</blockquote>
+<p>更新物理身体的属性是很有意思的实验，因为你的修改会即时的现实在<code>Timeline</code>区域，会给即时给你呈现反馈。并且你还可以在<code>Timeline</code>区域检查并调试当前代码段的结果是否正确。</p>
+<blockquote>
+<p>尝试实验：尝试增加或减少物理身体的<code>mass</code>和<code>linearDamping</code>属性的值。气球会有什么变化？再尝试修改其他属性，看看气球会有什么变化？</p>
+</blockquote>
+<p>我们还需要设定气球在场景中的位置。并且我们希望气球被击中时正对着大炮的炮口。</p>
+<pre><code>let displayBalloon: (SKSpriteNode, SKNode) -&gt; Void = { balloon, cannon in
+    balloon.position = cannon.childNodeWithName(&quot;mouth&quot;).convertPoint(CGPointZero, toNode: scene)
+    scene.addChild(balloon)
+}
+</code></pre><p>这里要注意一下，我们通过调用名为<code>mouth</code>子元素的<code>convertPoint:toNode</code>方法给气球设置位置。这样做是没问题的，因为我们在每个大炮中都增加了名为<code>mouth</code>的子元素，用来标示或预定位气球可能出现的位置。这样做的好处是能避免我们去计算气球的位置，并且如果我们想改变气球第一次出现的位置时，根本不用修改代码，因为气球的位置是随机取<code>mouth</code>子元素的位置的。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
 
-// 该结构体拥有同样的三个成员
-// 并且该结构体标明了标签EXAMPLE
-// 该结构体没有声明变量
-struct EXAMPLE{
-    int a;
-    char b;
-    double c;
-};
 
-//用EXAMPLE标签的结构体，另外声明了变量t1、t2、t3
-struct EXAMPLE t1, t2[20], *t3;
-</code></pre><p>以上就是简单结构体的代码示例。结构体的成员可以包含其他结构体，也可以包含指向自己结构体类型的指针。结构体的变量也可以是指针。</p>
-<p>下面我们来看看结构体成员的访问。结构体成员依据结构体变量类型的不同，一般有2种访问方式，一种为直接访问，一种为间接访问。直接访问应用于普通的结构体变量，间接访问应用于指向结构体变量的指针。直接访问使用结构体变量名.成员名，间接访问使用(*结构体指针名).成员名或者使用结构体指针名->成员名。相同的成员名称依靠不同的变量前缀区分。</p>
-<pre><code>struct EXAMPLE{
-    int a;
-    char b;
-};
+<p>在气球被击中时，我们应该让气球表现出有一股冲击力作用于它，其实就是瞬间改变了气球的速度。我们可以用<code>SpriteKit</code>提供的推力的行为，可以作用于指定的方向来做出冲击力的效果。当然我们也要根据大炮发出炮弹的旋转方向设置气球被冲击后的方向。</p>
+<p>最后，我们将创建、显示已经向气球射击的代码封装成一个单独的函数，用于后续调用。</p>
+<pre><code>let fireBalloon: (SKSpriteNode, SKNode) -&gt; Void = { balloon, cannon in
+    let impulseMagnitude: CGFloat = 70.0
 
-//声明结构体变量s1和指向结构体变量的指针s2
-struct EXAMPLE s1, *s2;
+    let xComponent = cos(cannon.zRotation) * impulseMagnitude
+    let yComponent = sin(cannon.zRotation) * impulseMagnitude
+    let impulseVector = CGVector(dx: xComponent, dy: yComponent)
 
-//给变量s1和s2的成员赋值,注意s1.a和s2-&gt;a并不是同一成员
-s1.a = 5;
-s1.b = 6;
-s2-&gt;a = 3;
-s2-&gt;b = 4;
-</code></pre><p>最后我们来看看结构体成员存储。在内存中，编译器按照成员列表顺序分别为每个结构体成员分配内存。如果想确认结构体占多少存储空间，则使用关键字<code>sizeof</code>，如果想得知结构体的某个特定成员在结构体的位置，则使用<code>offsetof</code>宏(定义于stddef.h)。</p>
-<pre><code>struct EXAMPLE{
-    int a;
-    char b;
-};
-
-//获得EXAMPLE类型结构体所占内存大小
-int size_example = sizeof( struct EXAMPLE );
-
-//获得成员b相对于EXAMPLE储存地址的偏移量
-int offset_b = offsetof( struct EXAMPLE, b );
-</code></pre><h2 id="u95ED_u5305_uFF08Closure_uFF09"><a href="#u95ED_u5305_uFF08Closure_uFF09" class="headerlink" title="闭包（Closure）"></a>闭包（Closure）</h2><p>闭包就是一个函数，或者一个指向函数的指针，加上这个函数执行的非局部变量。<br>说的通俗一点，就是闭包允许一个函数访问声明该函数运行上下文中的变量，甚至可以访问不同运行上文中的变量。<br>我们用脚本语言来看一下：</p>
-<pre><code>function funA(callback){
-    alert(callback());
+    balloon.physicsBody.applyImpulse(impulseVector)
 }
 
-function funB(){
-    var str = &quot;Hello World&quot;; // 函数funB的局部变量，函数funA的非局部变量
-    funA（
-        function（）{
-            return str;
+func fireCannon(cannon: SKNode) {
+    let balloon = createRandomBalloon()
+
+    displayBalloon(balloon, cannon)
+    fireBalloon(balloon, cannon)
+}
+</code></pre><p>为了能够方便的访问大炮元素，我们在Xcode对他们进行明确的命名。这样我们就可以不需要知道元素树的结构或者说是大炮节点的位置，我们甚至可以不需要修改代码就可以更改大炮的位置。</p>
+<pre><code>let leftBalloonCannon = scene.childNodeWithName(&quot;//left_cannon&quot;)
+let rightBalloonCannon = scene.childNodeWithName(&quot;//right_cannon&quot;)
+</code></pre><p><code>SpriteKit</code>通过<code>SKAction</code>对象改变节点的位置、旋转、缩放或因我们设置的其他情况而等待（也就是在特定的时间内什么也不做）。你可以在一系列或一组行为中单独指定执行某个行为，并且可以让该行为自动的重复执行任意次数（或者一直执行）。而这并不需要修改节点的属性，它完全可以由一个简单的<code>Block</code>来执行。</p>
+<pre><code>let wait = SKAction.waitForDuration(1.0, withRange: 0.05)
+let pause = SKAction.waitForDuration(0.55, withRange: 0.05)
+
+let left = SKAction.runBlock { fireCannon(leftBalloonCannon) }
+let right = SKAction.runBlock { fireCannon(rightBalloonCannon) }
+
+let leftFire = SKAction.sequence([wait, left, pause, left, pause, left, wait])
+let rightFire = SKAction.sequence([pause, right, pause, right, pause, right, wait])
+</code></pre><p>当大炮开火时，我们需要为它创建一系列的行为，让它在开火和停止开火之间交替执行。我们将开火/停止这一系列的行为添加到另外一个行为中，并且让他们一直重复执行。</p>
+<blockquote>
+<p>尝试实验：增加大炮开火的间隔，改变大炮的火力，并让大炮不停的开火。</p>
+</blockquote>
+<p>要想让某个元素执行相应的动作，我们只需要调用<code>runAction</code>函数，并将我们想执行的动作作为参数传入即可。每个节点可以同时执行多个行为动作，这就使得我们可以在<code>SpriteKit</code>中让节点执行自定义的，复杂的行为动作。</p>
+<pre><code>leftBalloonCannon.runAction(SKAction.repeatActionForever(leftFire))
+rightBalloonCannon.runAction(SKAction.repeatActionForever(rightFire))
+</code></pre><blockquote>
+<p>尝试实验：<code>SKAction</code>类有一个<code>rotateByAngle</code>函数，该函数可以让节点根据某个角度旋转。<br>创建一个让大炮在开火时按角度旋转的行为动作，并执行。</p>
+</blockquote>
+<h3 id="u6C14_u7403_u7684_u649E_u51FB"><a href="#u6C14_u7403_u7684_u649E_u51FB" class="headerlink" title="气球的撞击"></a>气球的撞击</h3><p>当两个气球碰撞时，我们希望让其中一个气球爆炸。爆炸的效果就是我们创建的一个行为，所以就可以使用该行为创建出一个动画效果，作用在气球相互碰撞时，并将爆炸的气球元素移除场景。当有两个行为合并为一个系列行为时，它们会按顺序一个一个执行。</p>
+<pre><code>let balloonPop = (1...4).map {
+    SKTexture(imageNamed: &quot;explode_0\($0)&quot;)
+}
+
+let removeBalloonAction: SKAction = SKAction.sequence([
+    SKAction.animateWithTextures(balloonPop, timePerFrame: 1 / 30.0),
+    SKAction.removeFromParent()
+])
+</code></pre><p>虽然两个元素在场景中碰撞的行为由<code>SpriteKit</code>自动处理，但是我们也必须要为其提供一个符合我们游戏场景的逻辑。这包括定义碰撞时触发的通知。在之前，我们将所有气球元素的物理身体类别都设定为气球类别，但是场景中的地面也是一个元素，并且它的类别是默认类别，这里我们需要知道，默认类别为所有类别。</p>
+<pre><code>let GroundCategory: UInt32 = 1 &lt;&lt; 2
+let ground = scene.childNodeWithName(&quot;//ground&quot;)
+ground.physicsBody.categoryBitMask = GroundCategory
+</code></pre><blockquote>
+<p>尝试实验：如果不给地面设置类别（也就是将上述三行代码注释掉），那么当气球碰撞或者说落到地面时会发生什么？</p>
+</blockquote>
+<p>接触通知由<code>SpriteKit</code>的物理世界中的接触代理处理，这是一个遵循<code>SKPhysicsContactDelegate</code>协议的类。每当碰撞发生时，物理世界会通知接触代理（即遵循<code>SKPhysicsContactDelegate</code>协议的类），所以我们才能做出碰撞后正确的反应。</p>
+<pre><code>class PhysicsContactDelegate: NSObject, SKPhysicsContactDelegate {
+    func didBeginContact(contact: SKPhysicsContact) {
+        let categoryA = contact.bodyA.categoryBitMask
+        let categoryB = contact.bodyB.categoryBitMask
+
+        if (categoryA &amp; BalloonCategory != 0) &amp;&amp; (categoryB &amp; BalloonCategory != 0) {
+            contact.bodyA.node.runAction(removeBalloonAction)
         }
-    ）；
+    }
 }
-</code></pre><p>通过上面的代码我们可以看出，按常规思维来说，变量<code>str</code>是函数<code>funB</code>的局部变量，作用域只在函数<code>funB</code>中，函数<code>funA</code>是无法访问到<code>str</code>的。但是上述代码示例中函数<code>funA</code>中的<code>callbac</code>k可以访问到<code>str</code>，这是为什么呢，因为闭包性。</p>
-<h1 id="block_u57FA_u7840_u77E5_u8BC6"><a href="#block_u57FA_u7840_u77E5_u8BC6" class="headerlink" title="block基础知识"></a>block基础知识</h1><p>block实际上就是Objective-C语言对闭包的实现。</p>
-<h2 id="block_u7684_u539F_u578B_u53CA_u5B9A_u4E49"><a href="#block_u7684_u539F_u578B_u53CA_u5B9A_u4E49" class="headerlink" title="block的原型及定义"></a>block的原型及定义</h2><p>我们来看看block的原型：</p>
-<pre><code>NSString * ( ^ myBlock )( int );
-</code></pre><p>上面的代码声明了一个block(^)原型，名字叫做<code>myBlock</code>，包含一个<code>int</code>型的参数，返回值为<code>NSString</code>类型的指针。</p>
-<p>下面来看看block的定义：</p>
-<pre><code>myBlock = ^( int paramA )
-{
-    return [ NSString stringWithFormat: @&quot;Passed number: %i&quot;, paramA ];
-};
-</code></pre><p>上面的代码中，将一个函数体赋值给了<code>myBlock</code>变量，其接收一个名为<code>paramA</code>的参数，返回一个<code>NSString</code>对象。</p>
+
+let contactDelegate = PhysicsContactDelegate()
+scene.physicsWorld.contactDelegate = contactDelegate
+</code></pre><p>在接触代理的<code>didBeginContact</code>函数中，我们通过物理身体的类别位掩码来确保这次接触或者说碰撞是两个气球发生的（也就是说确保元素的类别是<code>BalloonCategory</code>）。用按位运算来确定两个元素是否是<code>BalloonCategory</code>类别，并执行该类别正确的行为。</p>
 <blockquote>
-<p>注意：一定不要忘记block后面的分号。</p>
+<p>尝试实验：允许气球和大炮碰撞。<br>提示：大炮元素没有赋予物理身体。</p>
 </blockquote>
-<p>定义好block后，就可以像使用标准函数一样使用它了：</p>
-<pre><code>myBlock(7);
-</code></pre><p>由于block数据类型的语法会降低整个代码的阅读性，所以常使用<code>typedef</code>来定义block类型。例如，下面的代码创建了<code>GetPersonEducationInfo</code>和<code>GetPersonFamilyInfo</code>两个新类型，这样我们就可以在下面的方法中使用更加有语义的数据类型。</p>
-<pre><code>// Person.h
-#import &lt;Foundation/Foundation.h&gt;
-
-// Define a new type for the block
-typedef NSString * (^GetPersonEducationInfo)(NSString *);
-typedef NSString * (^GetPersonFamilyInfo)(NSString *);
-
-@interface Person : NSObject
-
-- (NSString *)getPersonInfoWithEducation:(GetPersonEducationInfo)educationInfo
-    andFamily:(GetPersonFamilyInfo)familyInfo;
-
-@end
-</code></pre><p>我们用一张大师文章里的图来总结一下block的结构：<br><img src="http://www.devtalking.com/postImages/block.png" alt="block"> </p>
+<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><p><code>Playground</code>为你提供了一种与代码互动的有趣的方式。使用<code>Playground</code>对你也有很大的帮助，因为你的学习过程和调试错误过程都在一个可控的环境中。更重要的一点是，<code>Playground</code>能挑起你的好奇心，鼓励你不断的来测试你的代码。  </p>
+<p>希望你们在不断的修改代码、实验中找到乐趣，并且永远不要害怕重头开始！</p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -1151,161 +664,124 @@ typedef NSString * (^GetPersonFamilyInfo)(NSString *);
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
-<h2 id="u5C06block_u4F5C_u4E3A_u53C2_u6570_u4F20_u9012"><a href="#u5C06block_u4F5C_u4E3A_u53C2_u6570_u4F20_u9012" class="headerlink" title="将block作为参数传递"></a>将block作为参数传递</h2><pre><code>// .h
--(void) testBlock:( NSString * ( ^ )( int ) )myBlock;
 
-// .m
--(void) testBlock:( NSString * ( ^ )( int ) )myBlock
-{
-    NSLog(@&quot;Block returned: %@&quot;, myBlock(7) );
-}
-</code></pre><p>由于Objective-C是强制类型语言，所以作为函数参数的block也必须要指定返回值的类型，以及相关参数类型。</p>
-<h2 id="u95ED_u5305_u6027"><a href="#u95ED_u5305_u6027" class="headerlink" title="闭包性"></a>闭包性</h2><p>上文说过，block实际是Objc对闭包的实现。<br>我们来看看下面代码：  </p>
-<pre><code>#import &lt;Cocoa/Cocoa.h&gt;
 
-void logBlock( int ( ^ theBlock )( void ) )
-{
-    NSLog( @&quot;Closure var X: %i&quot;, theBlock() );
-}
+            
+          </span>
+        
+      
+    </div>
 
-int main( void )
-{
-    NSAutoreleasePool * pool;
-    int ( ^ myBlock )( void );
-    int x;
+    <footer class="post-footer">
+      
 
-    pool = [ [ NSAutoreleasePool alloc ] init ];
-    x = 42;
+      
 
-    myBlock = ^( void )
-    {
-        return x;
-    };
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
 
-    logBlock( myBlock );
 
-    [ pool release ];
+    
+      
 
-    return EXIT_SUCCESS;
-}
-</code></pre><p>上面的代码在<code>main</code>函数中声明了一个整型，并赋值42，另外还声明了一个block，该block会将42返回。然后将block传递给<code>logBlock</code>函数，该函数会显示出返回的值42。即使是在函数<code>logBlock</code>中执行block，而block又声明在<code>main</code>函数中，但是block仍然可以访问到<code>x</code>变量，并将这个值返回。</p>
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/understand-how-an-extension-works/" itemprop="url">
+                  应用扩展如何工作 -- iOS8/OS X v10.10应用扩展编程指南
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2014-08-08T00:00:00+08:00" content="2014-08-08">
+              2014-08-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS-macOS-tvOS-watchOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS & macOS & tvOS & watchOS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/understand-how-an-extension-works/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/understand-how-an-extension-works/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>一个应用程序扩展不是一个应用，它在主体应用程序中单独打包并生成单独的二进制文件。应用程序扩展不同于一个应用程序，它的功能相对于应用来说更加明确、单一，并且要严格遵循扩展点的协议。</p>
+<h2 id="u5E94_u7528_u7A0B_u5E8F_u6269_u5C55_u7684_u751F_u547D_u5468_u671F"><a href="#u5E94_u7528_u7A0B_u5E8F_u6269_u5C55_u7684_u751F_u547D_u5468_u671F" class="headerlink" title="应用程序扩展的生命周期"></a>应用程序扩展的生命周期</h2><p>因为一个应用程序扩展不是一个应用，所以它的生命周期和运行环境也不同于应用。一般情况来说，应用程序扩展的生命周期开始于用户从某个应用中使用它。这个应用能够让用户选择某一种扩展来实现某个特定功能或任务，这种应用我们称为<strong>扩展载体应用</strong>。当扩展载体应用给扩展发送一个请求，让扩展代替响应用户的操作时，应用扩展就会被激活并意味着生命周期也随之开始。当应用扩展完成载体应用发送的请求任务后，该扩展的生命周期也随之结束。  </p>
+<p>比如说，有这样一个场景，用户在扩展载体应用中选中一段文字，并点击分享按钮，从分享列表中选择某一个分享扩展，将选中的内容分享至社区网站。此时，扩展载体应用就会启动该扩展，让它去响应用户的请求，即分享所选文本的内容。应用扩展基本的生命周期归纳在下图2-1中。<br><img src="http://www.devtalking.com/postImages/app_extensions_lifecycle.png" alt="生命周期">  </p>
+<p>在图2-1中的第2步中，系统实例化扩展载体应用中定义好的扩展，并建立载体应用于扩展之间的通信通道。然后扩展会根据上下文场景显示相关的界面，并使用载体应用接收到的信息执行用户的操作（在上述的例子中，分享扩展就使用用户选中的文本信息来执行相关操作）。 </p>
+<p>在图2-1的第3步中，用户在扩展中执行或取消某个任务，或者直接可以忽略该扩展。在对用户的操作做出响应的过程中，扩展会根据载体应用的请求立即开始执行任务，但如果有特殊需要时，扩展也会在系统后台去执行任务，这种情况下，扩展不会显示其相关界面，并且载体应用会显示用户操作扩展前的界面。当应用扩展执行完任务后，不管是返回还是延迟返回，但最后其执行结果都要返回给载体应用。  </p>
+<p>当扩展开始执行任务之后（或者开始在系统后台执行任务），系统就会终止扩展，比如图2-1中的第4步。  </p>
+<h2 id="u5E94_u7528_u6269_u5C55_u662F_u5982_u4F55_u8FDB_u884C_u901A_u4FE1_u7684"><a href="#u5E94_u7528_u6269_u5C55_u662F_u5982_u4F55_u8FDB_u884C_u901A_u4FE1_u7684" class="headerlink" title="应用扩展是如何进行通信的"></a>应用扩展是如何进行通信的</h2><p>当应用扩展在运行的时候，它会直接和载体应用进行通信。但是应用扩展不会和调用它的应用进行直接通信，因为有可能应用扩展在运行，但是调用它的应用程序并没有运行。另外还有一点，扩展载体应用和调用扩展应用之间是绝对不会进行通信的。图2-2中描述了应用扩展、载体应用、调用扩展应用之间的关系。<br><img src="http://www.devtalking.com/postImages/simple_communication.png" alt="关系"></p>
+<p>当一个扩展需要和调用它的应用进行通信时，只能间接的通过扩展载体应用提供的上下文进行。比如说，一个应用扩展有可能会运行调用它的应用程序。在这个例子中，应用扩展不能通过API直接和调用它的应用传递消息。但是，应用扩展和调用它的应用可以共同访问一个定义为私有的共享容器。在图2-3中描述了扩展和调用扩展应用之间通信的模式。<br><img src="http://www.devtalking.com/postImages/detailed_communication.png" alt="通信"></p>
 <blockquote>
-<p>注意：block同样可以访问全局变量，即使是<code>static</code>。</p>
+<p>注意：在底层，系统使用进程间通信来确保应用扩展和扩展载体应用做到无缝结合。在你的代码中，你从来不会考虑这个通用的通信机制。那是因为我们使用的扩展API是扩展点和系统已经高度封装后的。  </p>
 </blockquote>
-<h2 id="block_u4E2D_u53D8_u91CF_u7684_u590D_u5236_u4E0E_u4FEE_u6539"><a href="#block_u4E2D_u53D8_u91CF_u7684_u590D_u5236_u4E0E_u4FEE_u6539" class="headerlink" title="block中变量的复制与修改"></a>block中变量的复制与修改</h2><p>对于block外的变量引用，block默认是将其复制到其数据结构中来实现访问的，如下图：<br><img src="http://www.devtalking.com/postImages/block-capture-1.jpg" alt="copy variables"><br>通过block进行闭包的变量是<code>const</code>的。也就是说不能在block中直接修改这些变量。来看看当block试着增加<code>x</code>的值时，会发生什么：</p>
-<pre><code>myBlock = ^( void )
-{
-    x++;
-
-    return x;
-};
-</code></pre><p>编译器会报错，表明在block中变量<code>x</code>是只读的。<br>有时候确实需要在block中处理变量，怎么办？别着急，我们可以用<code>__block</code>关键字来声明变量，这样就可以在block中修改变量了。<br>基于之前的代码，给x变量添加<code>__block</code>关键字，如下：</p>
-<pre><code>__block int x;
-</code></pre><p>对于用<code>__block</code>修饰的外部变量引用，block是复制其引用地址来实现访问的，如下图：<br><img src="http://www.devtalking.com/postImages/block-capture-2.jpg" alt="ref variables"></p>
-<h1 id="3-_u7F16_u8BD1_u5668_u4E2D_u7684block"><a href="#3-_u7F16_u8BD1_u5668_u4E2D_u7684block" class="headerlink" title="3.编译器中的block"></a>3.编译器中的block</h1><h2 id="3-1_block_u7684_u6570_u636E_u7ED3_u6784_u5B9A_u4E49"><a href="#3-1_block_u7684_u6570_u636E_u7ED3_u6784_u5B9A_u4E49" class="headerlink" title="3.1 block的数据结构定义"></a>3.1 block的数据结构定义</h2><p>我们通过大师文章中的一张图来说明：<br><img src="http://www.devtalking.com/postImages/block-struct.jpg" alt="block struct"><br>上图这个结构是在栈中的结构，我们来看看对应的结构体定义：  </p>
-<pre><code>struct Block_descriptor {
-    unsigned long int reserved;
-    unsigned long int size;
-    void (*copy)(void *dst, void *src);
-    void (*dispose)(void *);
-};
-
-struct Block_layout {
-    void *isa;
-    int flags;
-    int reserved;
-    void (*invoke)(void *, ...);
-    struct Block_descriptor *descriptor;
-    /* Imported variables. */
-};
-</code></pre><p>从上面代码看出，<code>Block_layout</code>就是对block结构体的定义：</p>
-<ul>
-<li><code>isa</code>指针：指向表明该block类型的类。</li>
-<li><code>flags</code>：按bit位表示一些block的附加信息，比如判断block类型、判断block引用计数、判断block是否需要执行辅助函数等。</li>
-<li><code>reserved</code>：保留变量，我的理解是表示block内部的变量数。</li>
-<li><code>invoke</code>：函数指针，指向具体的block实现的函数调用地址。</li>
-<li><code>descriptor</code>：block的附加描述信息，比如保留变量数、block的大小、进行<code>copy</code>或<code>dispose</code>的辅助函数指针。</li>
-<li><code>variables</code>：因为block有闭包性，所以可以访问block外部的局部变量。这些<code>variables</code>就是复制到结构体中的外部局部变量或变量的地址。</li>
-</ul>
-<h2 id="block_u7684_u7C7B_u578B"><a href="#block_u7684_u7C7B_u578B" class="headerlink" title="block的类型"></a>block的类型</h2><p>block有几种不同的类型，每种类型都有对应的类，上述中<code>isa</code>指针就是指向这个类。这里列出常见的三种类型：</p>
-<ul>
-<li><code>_NSConcreteGlobalBlock</code>：全局的静态block，不会访问任何外部变量，不会涉及到任何拷贝，比如一个空的block。例如：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#include &#60;stdio.h&#62;&#10;&#10;int main()&#10;&#123;&#10;    ^&#123; printf(&#34;Hello, World!\n&#34;); &#125; ();&#10;    return 0;&#10;&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>_NSConcreteStackBlock</code>：保存在栈中的block，当函数返回时被销毁。例如：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#include &#60;stdio.h&#62;&#10;&#10;int main()&#10;&#123;&#10;    char a = &#39;A&#39;;&#10;    ^&#123; printf(&#34;%c\n&#34;,a); &#125; ();&#10;    return 0;&#10;&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>_NSConcreteMallocBlock</code>：保存在堆中的block，当引用计数为0时被销毁。该类型的block都是由<code>_NSConcreteStackBlock</code>类型的block从栈中复制到堆中形成的。例如下面代码中，在<code>exampleB_addBlockToArray</code>方法中的block还是<code>_NSConcreteStackBlock</code>类型的，在<code>exampleB</code>方法中就被复制到了堆中，成为<code>_NSConcreteMallocBlock</code>类型的block：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">void exampleB_addBlockToArray(NSMutableArray *array) &#123;&#10;    char b = &#39;B&#39;;&#10;    [array addObject:^&#123;&#10;            printf(&#34;%c\n&#34;, b);&#10;    &#125;];&#10;&#125;&#10; &#10;void exampleB() &#123;&#10;    NSMutableArray *array = [NSMutableArray array];&#10;    exampleB_addBlockToArray(array);&#10;    void (^block)() = [array objectAtIndex:0];&#10;    block();&#10;&#125;</span><br></pre></td></tr></table></figure>
-<p>总结一下：</p>
-<ul>
-<li><code>_NSConcreteGlobalBlock</code>类型的block要么是空block，要么是不访问任何外部变量的block。它既不在栈中，也不在堆中，我理解为它可能在内存的全局区。</li>
-<li><code>_NSConcreteStackBlock</code>类型的block有闭包行为，也就是有访问外部变量，并且该block只且只有有一次执行，因为栈中的空间是可重复使用的，所以当栈中的block执行一次之后就被清除出栈了，所以无法多次使用。</li>
-<li><code>_NSConcreteMallocBlock</code>类型的block有闭包行为，并且该block需要被多次执行。当需要多次执行时，就会把该block从栈中复制到堆中，供以多次执行。</li>
-</ul>
-<h2 id="u7F16_u8BD1_u5668_u5982_u4F55_u7F16_u8BD1"><a href="#u7F16_u8BD1_u5668_u5982_u4F55_u7F16_u8BD1" class="headerlink" title="编译器如何编译"></a>编译器如何编译</h2><p>我们通过一个简单的示例来说明：  </p>
-<pre><code>#import &lt;dispatch/dispatch.h&gt;
-
-typedef void(^BlockA)(void);
-
-__attribute__((noinline))
-void runBlockA(BlockA block) {
-    block();
-}
-
-void doBlockA() {
-    BlockA block = ^{
-        // Empty block
-    };
-    runBlockA(block);
-}
-</code></pre><p>上面的代码定义了一个名为<code>BlockA</code>的block类型，该block在函数<code>doBlockA</code>中实现，并将其作为函数<code>runBlockA</code>的参数，最后在函数<code>doBlockA</code>中调用函数<code>runBloackA</code>。</p>
-<blockquote>
-<p>注意：如果block的创建和调用都在一个函数里面，那么优化器(optimiser)可能会对代码做优化处理，从而导致我们看不到编译器中的一些操作，所以用<code>__attribute__((noinline))</code>给函数<code>runBlockA</code>添加<code>noinline</code>，这样优化器就不会在<code>doBlockA</code>函数中对<code>runBlockA</code>的调用做内联优化处理。</p>
-</blockquote>
-<p>我们来看看编译器做的工作内容：</p>
-<pre><code>#import &lt;dispatch/dispatch.h&gt;
-
-__attribute__((noinline))
-void runBlockA(struct Block_layout *block) {
-    block-&gt;invoke();
-}
-
-void block_invoke(struct Block_layout *block) {
-    // Empty block function
-}
-
-void doBlockA() {
-    struct Block_descriptor descriptor;
-    descriptor-&gt;reserved = 0;
-    descriptor-&gt;size = 20;
-    descriptor-&gt;copy = NULL;
-    descriptor-&gt;dispose = NULL;
-
-    struct Block_layout block;
-    block-&gt;isa = _NSConcreteGlobalBlock;
-    block-&gt;flags = 1342177280;
-    block-&gt;reserved = 0;
-    block-&gt;invoke = block_invoke;
-    block-&gt;descriptor = descriptor;
-
-    runBlockA(&amp;block);
-}
-</code></pre><p>上面的代码结合block的数据结构定义，我们能很容易得理解编译器内部对block的工作内容。</p>
-<h2 id="copy_28_29_u548Cdispose_28_29"><a href="#copy_28_29_u548Cdispose_28_29" class="headerlink" title="copy()和dispose()"></a>copy()和dispose()</h2><p>上文中提到，如果我们想要在以后继续使用某个block，就必须要对该block进行拷贝操作，即从栈空间复制到堆空间。所以拷贝操作就需要调用<code>Block_copy()</code>函数，block的<code>descriptor</code>中有一个<code>copy()</code>辅助函数，该函数在<code>Block_copy()</code>中执行，用于当block需要拷贝对象的时候，拷贝辅助函数会retain住已经拷贝的对象。</p>
-<p>既然有有copy那么就应该有release，与<code>Block_copy()</code>对应的函数是<code>Block_release()</code>，它的作用不言而喻，就是释放我们不需要再使用的block，block的<code>descriptor</code>中有一个<code>dispose()</code>辅助函数，该函数在<code>Block_release()</code>中执行，负责做和<code>copy()</code>辅助函数相反的操作，例如释放掉所有在block中拷贝的变量等。</p>
-<h1 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h1><p>以上内容是我学习各大师的文章后对自己学习情况的一个记录，其中有部分文字和代码示例是来自大师的文章，还有一些自己的理解，如有错误还请大家勘误。</p>
-<p>参考链接：  </p>
-<ul>
-<li><a href="http://www.galloway.me.uk/2012/10/a-look-inside-blocks-episode-1/" target="_blank" rel="external">A look inside blocks: Episode 1</a>  </li>
-<li><a href="http://www.galloway.me.uk/2012/10/a-look-inside-blocks-episode-2/" target="_blank" rel="external">A look inside blocks: Episode 2</a></li>
-<li><a href="http://www.galloway.me.uk/2013/05/a-look-inside-blocks-episode-3-block-copy/" target="_blank" rel="external">A look inside blocks: Episode 3</a></li>
-<li><a href="http://blog.parse.com/2013/02/05/objective-c-blocks-quiz/" target="_blank" rel="external">Objective-C Blocks Quiz</a></li>
-<li><a href="http://blog.devtang.com/blog/2013/07/28/a-look-inside-blocks/" target="_blank" rel="external">谈Objective-C Block的实现</a></li>
-</ul>
+<p>原文地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/ExtensionOverview.html#//apple_ref/doc/uid/TP40014214-CH2-SW2" target="_blank" rel="external">Understand How an Extension Works</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -1350,8 +826,8 @@ void doBlockA() {
             
             
               
-                <a class="post-title-link" href="/articles/git-gitHub-markdown-jekyll/" itemprop="url">
-                  Git+GitHub+Markdown+Jekyll=Perfect Personal Blog
+                <a class="post-title-link" href="/articles/app-extensions-increase-your-impact/" itemprop="url">
+                  APP扩展提高你的影响力 -- iOS8/OS X v10.10应用扩展编程指南
                 </a>
               
             
@@ -1361,8 +837,8 @@ void doBlockA() {
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-06-17T00:00:00+08:00" content="2014-06-17">
-              2014-06-17
+            <time itemprop="dateCreated" datetime="2014-08-07T00:00:00+08:00" content="2014-08-07">
+              2014-08-07
             </time>
           </span>
 
@@ -1371,8 +847,8 @@ void doBlockA() {
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/能工巧匠/" itemprop="url" rel="index">
-                    <span itemprop="name">能工巧匠</span>
+                  <a href="/categories/iOS-macOS-tvOS-watchOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS & macOS & tvOS & watchOS</span>
                   </a>
                 </span>
 
@@ -1387,8 +863,8 @@ void doBlockA() {
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/git-gitHub-markdown-jekyll/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/git-gitHub-markdown-jekyll/" itemprop="commentsCount"></span>
+              <a href="/articles/app-extensions-increase-your-impact/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/app-extensions-increase-your-impact/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -1418,90 +894,18 @@ void doBlockA() {
 </script>
 
 
-<p>以前建过个人网站，也用过第三方的博客系统，然后又回归到自建的个人博客，但总有不敬人意的地方。比如自建的博客涉及到购买的服务器的稳定性、流量成本、维护成本、数据的安全性、文本编辑器的舒适度等，第三方的博客系统又觉得局限性比较大、缺乏插件、觉得不牛逼等原因。总之人是很贪心的，总想找到一个既不用担心服务器稳定性、又不用担心流量成本、也不用担心数据安全性、而且还能方便的维护资源、并且还有丰富的插件的个人博客解决方案。于是外事问Google，经过一阵寻觅后发现大牛们的博客方案不正是我所需要的么，于是便有了上一篇的补脑笔记，把涉及到的知识大概整理了一下，准备开始搭建自己的个人学习笔记博客。今天这篇笔记将记录我使用Git+GitHub+Markdown+Jekyll搭建博客系统的过程。</p>
 <blockquote>
-<p>注：以下过程均在OS X系统上操作，Win系统的童靴请勿效仿，但可借鉴。</p>
+<p>重要提示：<br>这个文档只是一个使用API或了解技术的初级文档。Apple提供该文档的目的在于能让开发者尽快熟悉新技术和新的API，用于开发者针对其持有的设备进行开发。但是该文档会不断的更新，因为目前较新的技术和语言还在不断的完善，所以使用该文档提供的技术开发的软件不一定是最终的操作系统所能完全支持的，要时刻关注该文档的更新，以便了解新的API和技术特性。</p>
 </blockquote>
-<h2 id="GitHub"><a href="#GitHub" class="headerlink" title="GitHub"></a>GitHub</h2><blockquote>
-<p>让人不再担心本地备份与远程协作，一切提交均有记录，均可追溯。</p>
-</blockquote>
-<h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2><blockquote>
-<p>让人不再担心写废，想到哪里，写到哪里。</p>
-</blockquote>
-<p>由于OS X系统自带Git，所以不需要再安装Git，自带的Git版本为1.8.5.2。</p>
-<h2 id="Markdown"><a href="#Markdown" class="headerlink" title="Markdown"></a>Markdown</h2><blockquote>
-<p>不再忧虑排版，专注于写作。</p>
-</blockquote>
-<p>Markdown是我认为最好的写作利器没有之一。GitHub完美支持，个人写作使用的DayOne也完美支持，Win系统下也有MarkdownPad这种成熟的工具。</p>
-<h2 id="u4EC0_u4E48_u662FGithub_Pages"><a href="#u4EC0_u4E48_u662FGithub_Pages" class="headerlink" title="什么是Github Pages"></a>什么是Github Pages</h2><blockquote>
-<p>Github Pages：Websites for you and your projects.</p>
-</blockquote>
-<p>Github Pages 是面向用户、组织和项目开放的公共静态页面搭建托管服 务，站点可以被免费托管在 Github 上，你可以选择使用 Github Pages 默 认提供的域名 username.github.io 或者自定义域名来发布站点。Github Pages 支持自动利用 Jekyll 生成站点，也同样支持纯 HTML 文档，将你的 Jekyll 站点托管在 Github Pages 上是一个不错的选择。</p>
-<p>通俗一点讲。你可以将你个人网站的html、css、js、image等按一定<strong>目录结构</strong>托管在github上，以index.html为入口（即个人网站首页），使用username.github.io就可以访问你的个人网站了。</p>
-<p>再通俗一点讲。github为你提供了一台无限流量、稳定、的服务器。你将个人网站的资源以一定<strong>目录结构</strong>上传（托管）到github，该服务器的ip就是username.github.io。</p>
-<p>上述两次提到<strong>目录结构</strong>，下面我解释一下这个目录结构。</p>
-<h2 id="u4EC0_u4E48_u662FJekyll"><a href="#u4EC0_u4E48_u662FJekyll" class="headerlink" title="什么是Jekyll"></a>什么是Jekyll</h2><p>Jekyll 的核心其实是一个文本转换引擎。它的概念其实就是： 你用你最喜欢的标记语言来写文章，可以是 Markdown，也可以是 Textile,或者就是简单的 HTML, 然后 Jekyll 就会帮你套入一个或一系列的布局中。在整个过程中你可以设置URL路径, 你的文本在布局中的显示样式等等。这些都可以通过纯文本编辑来实现，最终生成的静态页面就是你的成品了。</p>
-<h2 id="u5982_u4F55_u4F7F_u7528Github_Pages_u4E0EJekyll"><a href="#u5982_u4F55_u4F7F_u7528Github_Pages_u4E0EJekyll" class="headerlink" title="如何使用Github Pages与Jekyll"></a>如何使用Github Pages与Jekyll</h2><h3 id="Jekyll_u76EE_u5F55_u7ED3_u6784"><a href="#Jekyll_u76EE_u5F55_u7ED3_u6784" class="headerlink" title="Jekyll目录结构"></a>Jekyll目录结构</h3><p>上述多次提到的目录结构即Jekyll的目录结构。如下：</p>
-<pre><code>.   
-|--_config.yml&gt;  
-|--_drafts  
-    |--articles1.textile 
-    |--articles2.md
-|--_includes
-    |--footer.html
-    |--header.html
-|--_layouts
-    |--default.html
-    |--post.html
-|--_posts
-    |--2014-06-17-articles1.textile
-    |--2014-06-17-articles1.md
-|--_site
-|--index.html
-|--other files
-</code></pre><ul>
-<li><code>_config.yml</code>：保存配置数据。  </li>
-<li><code>_drafts</code>：存放未发布的文章。  </li>
-<li><code>_includes</code>：存放页面片段，即页头（<code>head.html</code>）、页脚（<code>footer.html</code>）、导航（<code>navigation.html</code>）、评论（<code>disqus_comments.html</code>）等，这些资源通过标签添加到index.html中，从而形成一个完整的页面。  </li>
-<li><code>_layouts</code>：存放模板文件。文章模板、关于页面模板、首页模板等。  </li>
-<li><code>_posts</code>：存放文章的文件。并且文章文件名称要符合<code>YEAR-MONTH-DAY-title.MARKUP</code>格式。</li>
-<li><code>_site</code>：经过jekyll转换的页面。</li>
-<li><code>index.html</code>：网站首页。</li>
-<li><code>other files</code>：其他文件，存放css、js、image等。</li>
-</ul>
-<h3 id="Jekyll_u89E3_u6790_u6D41_u7A0B"><a href="#Jekyll_u89E3_u6790_u6D41_u7A0B" class="headerlink" title="Jekyll解析流程"></a>Jekyll解析流程</h3><ul>
-<li>首先会加载_posts及文件夹下的所有文章，将其参数和文章内容组织保存在内存中，所有的文章的内容、参数都在site.posts对象（其他文件夹下的文章不会放入site.posts中）。</li>
-<li>其次加载_layouts文件夹下的所有模板。</li>
-<li>再次加载_includes文件夹下的所有需要被引入的内容。</li>
-<li>最后根据每一篇需要编译的文章选择的其参数定义的模板来创建一个模板，并将当前文章的内容、参数等进行扩展后放在page对象、content对象中，然后进行模板的编译，生成html文件，并按照一定规则放在_site文件夹下。也就是说在创建一篇文章时，其实所有文章的内容都已经被读取出来了，这也为文章相互之间的关联提供了可能。</li>
-</ul>
-<h3 id="u5728_u672C_u5730_u5B89_u88C5jekyll"><a href="#u5728_u672C_u5730_u5B89_u88C5jekyll" class="headerlink" title="在本地安装jekyll"></a>在本地安装jekyll</h3><blockquote>
-<p>注：这里默认安装环境已具备Ruby、RubyGems环境。</p>
-</blockquote>
-<ul>
-<li>安装jekyll：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo gem update &#8212;system&#10;$ sudo gem install jekyll</span><br></pre></td></tr></table></figure>
-<ul>
-<li>安装模板，默认的模板是Maruku，我们替换为RDiscount。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo gem install rdiscount</span><br></pre></td></tr></table></figure>
+<p>当iOS8.0和OS X v10.10来临后，一个全新的概念出现在我们眼前，那就是应用扩展。顾名思义，应用扩展允许开发者对应用的功能进行扩展，究其根本的作用就是通过应用扩展能够让用户在使用别的应用时可以快速便捷的了解该应用的相关信息。你可以开发一个应用扩展，用来执行某些特定的任务，当用户使用该扩展后就可以在各种情况下去执行该任务。比如说，你开发了一款分享应用扩展，他可以让用户快速的将当前浏览的内容分享到你的社区网站。再比如说，你开发了一款实时显示比赛当前分数的扩展，那么用户就可以在通知中心的当天通知中看到比赛比分。你甚至可以开发一款自定义的键盘，可以让用户用它来替代系统自带的键盘。</p>
+<h2 id="u5E94_u7528_u6269_u5C55_u7684_u7C7B_u578B"><a href="#u5E94_u7528_u6269_u5C55_u7684_u7C7B_u578B" class="headerlink" title="应用扩展的类型"></a>应用扩展的类型</h2><p>iOS和OS X定义了几种应用扩展的类型，每一种类型的扩展都对应系统中一块展示区域，像分享、通知中心、键盘等。我们把这些区域成为扩展点。当你开发某一个扩展点的应用扩展时，都有相对应的API以及要遵循的策略。还要注意的一点是，当你针某个扩展点开发应用扩展时，该应用扩展的功能必须要符合该扩展点的功能特性。  </p>
+<p>表1-1列出了iOS和OS X中的扩展点，并列举了对应扩展点的应用示例。</p>
+<table class="table table-bordered table-striped table-condensed"><br>    <tr><br>        <td>扩展点</td><br>        <td>应用扩展示例</td><br>    </tr><br>    <tr><br>        <td>今日通知（iOS和OS X）</td><br>        <td>在通知中心的今日通知中快速查看或处理任务。（这个扩展点中的应用扩展称为Widget）</td><br>    </tr><br>    <tr><br>        <td>分享（iOS和OS X）</td><br>        <td>将网页内容或其他内容分享给他人。</td><br>    </tr><br>    <tr><br>        <td>Action（iOS和OS X）</td><br>        <td>处理或查看其他应用中的信息。</td><br>    </tr><br>    <tr><br>        <td>照片编辑（iOS）</td><br>        <td>在Photos应用中编辑照片或视频。</td><br>    </tr><br>    <tr><br>        <td>Finder（OS X）</td><br>        <td>在Finder中直接显示文件的同步信息等。</td><br>    </tr><br>    <tr><br>        <td>文本管理（iOS）</td><br>        <td>提供用于查看和管理文件的文本库。</td><br>    </tr><br>    <tr><br>        <td>自定义键盘（iOS）</td><br>        <td>用于替换系统自带的键盘。</td><br>    </tr><br></table>
+
+<p>由于系统定义了扩展特定领域，所以当你在开发应用扩展时，其功能要适用于所有列出的这些扩展点。比如说你要开发一个分享信息的应用扩展，那么你只能选择分享扩展点，而不能使用今日通知或Action扩展点。</p>
 <blockquote>
-<p>Maruku是纯ruby写的Markdown模板解释器。<br>RDiscount是C写的模板解释器。</p>
+<p>重要提示：你开发的应用扩展只可能满足于某一个扩展点，你不能开发一个类似通用的应用扩展去满足所有的扩展点。</p>
 </blockquote>
-<p>为什么要替换为RDiscount呢，有心人对两者做了比较，优劣可见一斑。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Maruku: 08.424132s total time, 00.084241s average  &#10;RDiscount: 00.082019s total time, 00.000820s average</span><br></pre></td></tr></table></figure>
-<ul>
-<li>新建一个jekyll目录：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ jekyll new blog</span><br></pre></td></tr></table></figure>
-<ul>
-<li>进入到该目录下，你就能看到上述的目录结构：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cd blog</span><br></pre></td></tr></table></figure>
-<p>jekyll集成了一个开发用的服务器，可以让你使用浏览器在本地进行预览。启动server，访问地址为<a href="http://localhost:4000/：" target="_blank" rel="external">http://localhost:4000/：</a></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ jekyll serve</span><br></pre></td></tr></table></figure>
-<p>至此，一个简单的基于本机服务器的jekyll框架的个人网站就算搭建完毕，在浏览器中访问<a href="http://localhost:4000/，就可以看到index.html中的内容，一般在制作模板时多采在本地安装的方式，便于调试。更多配置信息请参见[Jekyll文档][1]。" target="_blank" rel="external">http://localhost:4000/，就可以看到index.html中的内容，一般在制作模板时多采在本地安装的方式，便于调试。更多配置信息请参见[Jekyll文档][1]。</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -1510,78 +914,22 @@ void doBlockA() {
 </script>
 
 
-<h3 id="u7ED3_u5408Github_Pages_u4F7F_u7528Jekyll"><a href="#u7ED3_u5408Github_Pages_u4F7F_u7528Jekyll" class="headerlink" title="结合Github Pages使用Jekyll"></a>结合Github Pages使用Jekyll</h3><p>这篇笔记的主题不是如何在本机搭建个人网站，所以这种使用方式是重点。</p>
-<p>由于Github Pages完美支持Jekyll，所以你只需要安照Jekyll的文件目录结构，托管在Github中即可，不需要在本机安装Jekyll，只需要关注于github，可以借鉴大师们设计的Jekyll模板，然后push或pull你的文章即可。</p>
-<ul>
-<li>注册GitHub账号，只需要一个邮箱和密码。<a href="https://github.com" target="_blank" rel="external">GitHub官网</a></li>
-<li>创建一个Repository，命名格式为：username.github.io，这样就生成了你的User site。可参见<a href="https://pages.github.com" target="_blank" rel="external">GitHub Pages</a></li>
-</ul>
+<h2 id="Xcode_u548C_u5E94_u7528_u5546_u5E97_u5E2E_u52A9_u4F60_u521B_u5EFA_u5E76_u63D0_u4EA4_u5E94_u7528_u6269_u5C55"><a href="#Xcode_u548C_u5E94_u7528_u5546_u5E97_u5E2E_u52A9_u4F60_u521B_u5EFA_u5E76_u63D0_u4EA4_u5E94_u7528_u6269_u5C55" class="headerlink" title="Xcode和应用商店帮助你创建并提交应用扩展"></a>Xcode和应用商店帮助你创建并提交应用扩展</h2><p>应用扩展不同于应用，虽然你需要基于应用去开发应用扩展，但是每个应用扩展都是独立于应用运行的二进制文件。  </p>
+<p>当你要创建一个应用扩展时，需要在项目中创建一个新的<code>Target</code>。和其他<code>Target</code>一样，扩展<code>Target</code>将设置信息和相关文件打包在<code>Products</code>文件下生成一个扩展名为<code>.appex</code>的包。你可以在应用项目中创建多个扩展<code>Target</code>（一个应用程序可以包含一个或多个应用扩展，该应用程序称为调用扩展应用程序）。  </p>
+<p>开发一个应用扩展最好的切入点是使用Xcode提供的所有平台上扩展点的应用扩展模板去开发。每个模板包含扩展点的具体实现文件和相关设置，并生成独立的二进制文件添加到你的应用程序中。  </p>
 <blockquote>
-<p>注意：这里的username必须和你的账号名一致。</p>
+<p>注意：在iOS中，包含扩展的应用必须提供一个扩展之外的功能。而在OS X中没有这个硬性要求，一个包含扩展的应用不要求必须提供一个额外功能。  </p>
 </blockquote>
-<ul>
-<li>不管用命令行还是用Finder，总之新建一个目录，我这里起名为GitRepo。</li>
-<li>进入GitRepo目录，键入git init命令，初始化一个git库。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /Users/JaceFu/GitRepo</span><br></pre></td></tr></table></figure>
-<ul>
-<li>将刚才在Github中创建的Repo克隆到你本地的Git库中，即刚在本地创建的GitRepo目录中。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /Users/JaceFu/GitRepo&#10;git clone https://github.com/username/username.github.io</span><br></pre></td></tr></table></figure>
-<p>在GitRepo文件中会看到名为username.github.io的文件，这就是你从Github中克隆的Repo文件。</p>
-<ul>
-<li>Hello World，进入Repo目录中，创建一个HTML文件，名为index，内容为“Hello World”。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /Users/JaceFu/GitRepo/username.github.io&#10;echo &#8220;Hello World&#8221; &#62; index.html</span><br></pre></td></tr></table></figure>
-<ul>
-<li>将创建的index.html文件push到github中</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /Users/JaceFu/GitRepo/username.github.io&#10;git add .&#10;git commit -m &#8220;Hello World update&#8221;&#10;git push</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>在浏览器中访问<code>http://username.github.io</code>，你将会看到index.html文件中的内容，我们这里会显示“Hello World”。至此，基于Github Pages功能的个人站点就算搭建好了。</p>
-</li>
-<li><p>在克隆到本地的Repo文件中，按照上述的Jekyll文件目录结构手动创建所需的文件资源，并上传。由于Github本身完美支持Jekyll，所以只要符合Jekyll的文件目录，Github就自动使用Jekyll解析形成页面。</p>
-</li>
-</ul>
-<p>至此，我们应该有了一定的理解，这里我再简单梳理一下：</p>
-<ul>
-<li>Jekyll可以将我们使用markdown写的文章按照指定模板解析为html文件。</li>
-<li>Github Pages可以充当我们的服务器，通过username.github.io可以访问到我们上传的html页面。</li>
-<li>Github Pages完美支持Jekyll，所以不需要我们自己编写复杂的html页面，只要将Jekyll的目录结构上传至Github中，就可以通过username.github.io访问由Jekyll解析生成的html页面，从而形成了个人网站。</li>
-</ul>
-<h3 id="u914D_u7F6E_config-yml_u6587_u4EF6"><a href="#u914D_u7F6E_config-yml_u6587_u4EF6" class="headerlink" title="配置_config.yml文件"></a>配置_config.yml文件</h3><p>基本配置参见<a href="http://jekyllcn.com/docs/configuration/" target="_blank" rel="external">官方配置文档</a>。<br>不同的模板，在该文件中的配置项也不一样，因为我自己使用了大师设计的模板，配置了如下参数（部分）：</p>
-<ul>
-<li>title：网站名称。</li>
-<li>description：网站说明。</li>
-<li>logo：网站logo。</li>
-<li>disqus_shortname：disqus标示符。</li>
-<li>search：是否运行搜索。</li>
-<li>url：网站中一些资源文件使用的url地址。</li>
-<li>encoding：编码。</li>
-<li>markdown：md解析模板。</li>
-<li>timezone：时区。</li>
-</ul>
-<h3 id="u7F16_u5199_u535A_u6587"><a href="#u7F16_u5199_u535A_u6587" class="headerlink" title="编写博文"></a>编写博文</h3><p>可以看一下_posts下的jekyll给的例子：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#10;---&#10;layout: post&#10;title:  &#34;Welcome to Jekyll!&#34;&#10;date:   2014-01-27 21:57:11&#10;categories: jekyll update&#10;&#10;---&#10;&#10;You&#39;ll find this post in your `_posts` directory - edit this post and re-build (or run with the `-w` switch) to see your changes!&#10;To add new posts, simply add a file in the `_posts` directory that follows the convention: YYYY-MM-DD-name-of-post.ext.&#10;&#10;Jekyll also offers powerful support for code snippets:&#10;&#10;&#123; % highlight ruby % &#125; &#10;def print_hi(name)&#10;  puts &#34;Hi, #&#123;name&#125;&#34;&#10;end&#10;print_hi(&#39;Tom&#39;)&#10;&#10;#=&#62; prints &#39;Hi, Tom&#39; to STDOUT.&#10;&#10;&#123; % endhighlight % &#125;&#10;&#10;Check out the [Jekyll docs][jekyll] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll&#39;s GitHub repo][jekyll-gh].&#10;&#10;[jekyll-gh]: https://github.com/mojombo/jekyll&#10;[jekyll]:    http://jekyllrb.com</span><br></pre></td></tr></table></figure>
-<p>可以看到在博文的最上方有被两个—包裹起来的一段，这里就定义了文章的一些参数，更多参数在FrontMatter和Variables获取，简单的只需要关注几个就好：</p>
-<ul>
-<li>title：文章的标题。</li>
-<li>date：文章的日期。</li>
-<li>categories：定义了文章所属的目录。</li>
-<li>layout：文章所使用的模板名称。</li>
-<li>tags：文章标签。</li>
-</ul>
-<p>这里就写一个最简单的文章，只是用其中的两个参数：layout，title，如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#10;---&#10;layout: mylayout&#10;title: hello-jekyll&#10;&#10;---&#10;&#10;Hello jekyll!</span><br></pre></td></tr></table></figure>
-<p>将这个写完的文章保存为 “年-月-日-标题.markdown”的名字形式，上传至Github中的_posts文件中，Jekyll会自动解析生成该文章的html页面。</p>
+<p>当你将包含扩展的应用提交到应用商店后，用户只要下载并安装了你的应用，那么同时也自动安装了你的应用扩展。</p>
+<p>当安装了应用扩展之后，用户首先必须要开启他们。通常，用户可根据当前处理的任务情形使用某个对应的应用扩展。比如，如果你的扩展启用了“Today”通知，那用户可以在通知中心编辑“Today ”view 来添加你的扩展。在其他情况中，用户可以使用 iOS 中的“Settings”或者 OS X 中的“System Preferences”来启用和管理扩展。</p>
+<h2 id="u7528_u6237_u5728_u4E0D_u540C_u7684_u60C5_u5F62_u4E0B_u4F53_u9A8C_u4E0D_u540C_u7684_u5E94_u7528_u6269_u5C55"><a href="#u7528_u6237_u5728_u4E0D_u540C_u7684_u60C5_u5F62_u4E0B_u4F53_u9A8C_u4E0D_u540C_u7684_u5E94_u7528_u6269_u5C55" class="headerlink" title="用户在不同的情形下体验不同的应用扩展"></a>用户在不同的情形下体验不同的应用扩展</h2><p>虽然每种类型的应用扩展的功能都是不同的，但是他们在用户体验及操作方式上还是有共同点的。如果你准备开发一个应用扩展，那么必须明白在不同的扩展点中，用户最喜欢的体验方式是什么，这一点至关重要。应用扩展的最高境界就是快速、流畅、只关注与单一任务。</p>
+<p>通常用户是通过系统提供的某个界面开启应用扩展。比如说，如果一个用户想使用分享扩展，那么就需要通过应用程序中系统提供的分享按钮来选择开启。一个应用扩展必须要提供一个图标，以便用户选择和识别，通常情况下，应用扩展的图标与应用程序的图标是相同的。  </p>
+<p>虽然大多数的应用程序扩展都提供了一些自定义的用户界面，但一般用户不会看到你自定义的用户界面，除非他们进入到应用程序扩展中。当用户进入扩展，你自定义的界面可以将用户的视线、思维带入新的上下文中。由于用户在应用中是可以辨别出你开发的扩展的，所以当你的扩展功能非常独特或者击中用户内心需求的时候，他们会各位青睐你的扩展。当用户意识到扩展其实是独立运行的实体时，他们就可以选择将体验不好或功能不好的扩展移除或停用。  </p>
+<p>为了让用户平滑过渡到你的应用程序扩展，你要斟酌自定义的界面与扩展点界面的风格，做一个权衡。比如说，最好的方法就是让你的通知扩展看起来像是通知中心中原生的<code>Widget</code>，再比如说照片编辑扩展，你应该完全遵循iOS中的Photos应用界面去设计扩展的界面。  </p>
 <blockquote>
-<p>注：文章的文件名不要使用中文，否则会出现Bug。</p>
+<p>注意：即使你的应用程序扩展没有自定义用户界面（不包括图标），但用户仍然知道该扩展来自与当前应用不同的应用，因为通过激活扩展的方式，或扩展的功能就可以判断出。</p>
 </blockquote>
-<h3 id="u7F16_u5199_u6A21_u677F"><a href="#u7F16_u5199_u6A21_u677F" class="headerlink" title="编写模板"></a>编写模板</h3><p>如果想自己编写模板可以参见<a href="http://blog.segmentfault.com/skyinlayer/1190000000406013" target="_blank" rel="external">如何创建Jekyll模板</a>。<br>或者可以使用大师们设计好的模板。<a href="http://yuanyong.org/blog/collect-jekyll-theme.html" target="_blank" rel="external">Jekyll模板锦集</a>。</p>
-<h3 id="u4E2A_u6027_u57DF_u540D"><a href="#u4E2A_u6027_u57DF_u540D" class="headerlink" title="个性域名"></a>个性域名</h3><p>个人网站要有一个称心的域名，使用username.github.io实在不像话，所以我说一下如何配置个性域名。如何申请域名这里就不再累赘。</p>
-<p>在Github中的User Site Repo根目录（即Github中Jekyll目录的根目录）下创建CNAME目录，内容为你的个性域名，格式为www.yourdomain.com即可。</p>
-<p>然后在域名管理系统中解析域名，添加CNAME记录，服务器为username.github.io。等待一个多小时后，就可以使用自己的域名访问了。</p>
-<h2 id="u7ED3_u675F"><a href="#u7ED3_u675F" class="headerlink" title="结束"></a>结束</h2><p>至此，使用Github Pages和Jekyll搭建个人网站的过程记录完毕。</p>
+<p>原文地址：<a href="https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/ExtensibilityPG/index.html#//apple_ref/doc/uid/TP40014214-CH20-SW1" target="_blank" rel="external">App Extensions Increase Your Impact</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -1626,8 +974,8 @@ void doBlockA() {
             
             
               
-                <a class="post-title-link" href="/articles/supplementary-brain/" itemprop="url">
-                  你要补脑 - Git|GitHub|Ruby|rbenv|brew|gem|jekyll
+                <a class="post-title-link" href="/articles/swift-boolean/" itemprop="url">
+                  在Swift中构建布尔类型
                 </a>
               
             
@@ -1637,8 +985,8 @@ void doBlockA() {
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-06-16T00:00:00+08:00" content="2014-06-16">
-              2014-06-16
+            <time itemprop="dateCreated" datetime="2014-08-06T00:00:00+08:00" content="2014-08-06">
+              2014-08-06
             </time>
           </span>
 
@@ -1647,8 +995,8 @@ void doBlockA() {
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/能工巧匠/" itemprop="url" rel="index">
-                    <span itemprop="name">能工巧匠</span>
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
                   </a>
                 </span>
 
@@ -1663,8 +1011,8 @@ void doBlockA() {
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/supplementary-brain/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/supplementary-brain/" itemprop="commentsCount"></span>
+              <a href="/articles/swift-boolean/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-boolean/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -1694,41 +1042,104 @@ void doBlockA() {
 </script>
 
 
-<h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2><p>Git是一个分布式<strong>版本控制</strong>/<strong>软件配置管理</strong>软件，原是Linux内核开发者林纳斯·托瓦兹（Linus Torvalds）为更好的管理Linux内核开发而设计。</p>
-<blockquote>
-<p>版本控制是维护工程蓝图的标准做法，能追踪工程蓝图从诞生到定案的过程。此外，版本控制也是一种软件工程技巧，借此能在软件开发的过程中，确保由不同人所编辑的同一程式档案都得到同步。</p>
-<p>软件配置管理（Software Configuration Management），又称软件形态管理、或者软件建构管理，简称软件形管（SCM）。界定软件的组成项目，对每个项目的变更进行管控，并维护不同项目之间的版本关联，以使软件在开发过程中任一时间的内容都可以被追溯。</p>
-</blockquote>
-<p>Git是用于Linux内核开发的版本控制工具。与CVS、Subversion一类的集中式版本控制工具不同，它采用了分布式版本控制的做法，不需要服务器端软件，就可以运作版本控制，使得源代码的发布和交流极其方便。</p>
-<p>Git和其他版本控制（如CVS、SVN）有不少的差别，Git本身关心文件的整体性是否有改变，但多数的CVS和SVN系统则在乎文件内容的差异。因此Git更像一个文件系统，直接在本机上取得数据，不必连接到主机端获取数据。</p>
-<h2 id="GitHub"><a href="#GitHub" class="headerlink" title="GitHub"></a>GitHub</h2><p>GitHub是一个<strong>共享虚拟主机服务</strong>，用于存放使用Git版本控制的软件代码和内容项目。它由Github公司的开发者使用<strong>Ruby on Rails</strong>编写而成。</p>
-<blockquote>
-<p>共享虚拟主机是在一台虚拟主机上托管多个服务器的服务方式。</p>
-<p>Ruby on Rails，简称Rails，是一个使用Ruby语言写的开源Web应用框架，它是严格按照MVC结构开发的。</p>
-</blockquote>
-<p>GitHub同时提供付费账户和为开源项目提供的免费账户。除了允许个人和组织创建和访问代码库以外，它也提供了一些方便社会化软件开发的功能，包括允许用户跟踪其他用户、组织、软件库的动态，对软件代码的改动和 bug 提出评论等。GitHub也提供了图表功能，用于显示开发者们怎样在代码库上工作以及软件的开发活跃程度。</p>
-<h2 id="rbenv"><a href="#rbenv" class="headerlink" title="rbenv"></a>rbenv</h2><p><strong>Ruby</strong>常有不同的版本同时存在，目前OS X 10.9.3中的版本是2.0.0p451，目前最新的版本是2.1.1，但是有些开发者仍然使用1.8.x系列的版本，而且很多程序只针对特定的Ruby版本。所以对Ruby做版本管理是极为重要的。</p>
-<blockquote>
-<p>Ruby是一种面向对象、命令式、函数式、动态的通用编程语言。</p>
-</blockquote>
-<p>常用的几个Ruby版本管理工具有：rvm，rbenv，ry，rbfu。rvm 应该是最早出现、使用最多的，因为过于强大以至于违背了某个 Linux 软件开发原则，所以出现了很多轻便的替代者，其中来自 37signals 的 rbenv 就很受欢迎。ry 和 rbfu 看上去更轻便，不过使用不广泛。</p>
-<h2 id="Homebrew"><a href="#Homebrew" class="headerlink" title="Homebrew"></a>Homebrew</h2><blockquote>
-<p>Homebrew is the easiest and most flexible way to install the UNIX tools Apple didn’t include with OS X.</p>
-</blockquote>
-<p>我们能够通过终端方便的使用它安装管理苹果没有自带的Unix相关工具软件。被誉为OS X 不可或缺的套件管理器。</p>
-<h2 id="RubyGems"><a href="#RubyGems" class="headerlink" title="RubyGems"></a>RubyGems</h2><blockquote>
-<p>RubyGems is a sophisticated package manager for Ruby.</p>
-</blockquote>
-<p>RubyGems是一个方便而强大的Ruby程序包管理器，Ruby的第三方插件是用gem方式来管理，非常容易发布和共享，一个简单的命令就可以安装上第三方的扩展库。特点：能远程安装包，包之间依赖关系的管理，简单可靠的卸载，查询机制，能查询本地和远程服务器的包信息，能保持一个包的不同版本，基于Web的查看接口，能查看你安装的gem的信息。</p>
-<h2 id="Jekyll"><a href="#Jekyll" class="headerlink" title="Jekyll"></a>Jekyll</h2><p>Jekyll 是一个简单的博客形态的静态站点生产机器。它有一个模版目录，其中包含原始文本格式的文档，通过 Markdown （或者 Textile） 以及 Liquid 转化成一个完整的可发布的静态网站，你可以发布在任何你喜爱的服务器上。Jekyll 也可以运行在 GitHub Page 上，也就是说，你可以使用 GitHub 的服务来搭建你的项目页面、博客或者网站，而且是完全免费的。</p>
-<h2 id="Liquid"><a href="#Liquid" class="headerlink" title="Liquid"></a>Liquid</h2><p>Liquid是一个模板制作引擎，通过简单的标记语言制作强大的html、css页面模板。</p>
+<p>Swift中的<code>Bool</code>类型是许多原始函数的基础。所以基于它可以展示一个有趣的如何构建基本类型的示例。这篇文章的主旨是在Swift中创建一个类似<code>Bool</code>类型的新类型<code>MyBool</code>。我们希望通过这个简单的示例，能让你更清晰的了解Swift语言的工作原理。  </p>
+<p>让我们从最基本的定义开始。我们用枚举来定义<code>MyBool</code>类型的模型，它有两个不同的<code>case</code>：</p>
+<pre><code>enum MyBool {
+    case myTrue, myFalse
+}
+</code></pre><p>为了使大家不会产生混淆，这篇文章中我们将<code>MyBool</code>的两个<code>case</code>命名为<code>myTrue</code>和<code>myFalse</code>。我们希望<code>MyBool</code>的构造函数<code>MyBool()</code>将其自身赋值为<code>false</code>，所以我们提供了如下<code>init</code>方法：</p>
+<pre><code>extension MyBool {
+    init() { self = .myFalse }
+}
+</code></pre><p>Swift中的枚举会隐式的在它们自身内申明其枚举检索器的范围，允许我们使用<code>MyBool.myFalse</code>这种语法调用其成员，如果根据上下文可以推断出类型的话，我们甚至可以使用<code>.myFalse</code>调用其成员。但是在真正使用中，我们还是希望使用原始的<code>true</code>和<code>false</code>关键字。想要做到这一点，我们的新类型<code>MyBool</code>需要遵循<code>BooleanLiteralConvertible</code>协议，像这样：</p>
+<pre><code>extension MyBool : BooleanLiteralConvertible {
+    static func convertFromBooleanLiteral(value: Bool) -&gt; MyBool {
+        return value ? myTrue : myFalse
+    }
+}
+
+// 我们现在就可以给MyBool类型的变量赋值为true或false.
+var a : MyBool = true
+</code></pre><p>通过以上设置，我们有了自己的基本类型，但是目前我们用它还做不了什么。布尔值需要通过<code>if</code>条件语句进行测试。在Swift中，我们通过<code>BooleanType</code>协议来做到这一点，该协议允许任意类型用于进行逻辑判断：</p>
+<pre><code>extension MyBool : BooleanType {
+    func getBooleanType() -&gt; Bool {
+        switch self {
+        case .myTrue: return true
+        case .myFalse: return false
+        }
+    }   
+}
+
+// 现在我们就可以将MyBool类型的变量a用于&apos;if&apos;和&apos;while&apos;语句中进行测试.
+if a {}
+</code></pre><p>我们更希望所有遵循了<code>BooleanType</code>协议的类型都要强制转换为<code>MyBool</code>类型，所以我们可以这样写：</p>
+<pre><code>extension MyBool {
+    // MyBool类型构造函数的参数设定为BooleanType类型.
+    init(_ v : BooleanType) {
+        if v.getBooleanType() {
+            self = .myTrue
+        } else {
+            self = .myFalse
+        }
+    }
+}
+
+// 现在我们就可以这样进行转换了.
+var basicBool : Bool = true
+a = MyBool(basicBool)
+</code></pre><p>注意构造函数里的<code>_</code>，它可以使我们在使用构造函数时省略参数命名。可以使用<code>MyBool(x)</code>这种语法，而不用使用<code>MyBool(v: x)</code>这种啰嗦的语法。  </p>
+<p>现在我们有了基本的功能，现在让我们来定义它的操作符，先来看看如何定义<code>==</code>操作符。没有关联数据的简单的枚举（像<code>MyBool</code>一样）是由编译器自动认为遵循<code>Equatable</code>协议进行编译的，所以没有必须要实现额外的代码。尽管如此，你也可以让任意类型遵循<code>Equatable</code>协议，并实现<code>==</code>操作符。比如我们的<code>MyBool</code>类型：</p>
+<pre><code>extension MyBool : Equatable {
+}
+
+func ==(lhs: MyBool, rhs: MyBool) -&gt; Bool {
+    switch (lhs, rhs) {
+    case (.myTrue,.myTrue), (.myFalse,.myFalse):
+        return true
+    default:
+        return false
+    }
+}
+
+// 现在我们就可以使用==和!=进行比较了.
+if a == a {}
+if a != a {}
+</code></pre><p>这里我们在<code>swich</code>语句中使用简单的匹配模式来处理。由于<code>MyBool</code>现在遵循了<code>Equatable</code>协议，所以他已经自动实现了<code>!=</code>操作符。再让我们加一些二进制运算符：</p>
+<pre><code>func &amp;(lhs: MyBool, rhs: MyBool) -&gt; MyBool {
+    if lhs {
+        return rhs
+    }
+    return false
+}
+
+func |(lhs: MyBool, rhs: MyBool) -&gt; MyBool {
+    if lhs {
+        return true
+    }
+    return rhs
+}
+
+func ^(lhs: MyBool, rhs: MyBool) -&gt; MyBool {
+    return MyBool(lhs != rhs)
+}
+</code></pre><p>有了基本的运算符后，我们就可以实现各种有用的一元和复合赋值运算符，比如：</p>
+<pre><code>prefix func !(a: MyBool) -&gt; MyBool {
+    return a ^ true
+}
+
+// 复合赋值（按位）
+func &amp;=(inout lhs: MyBool, rhs: MyBool) {
+    lhs = lhs &amp; rhs
+}
+</code></pre><p><code>&amp;=</code>运算符将左边的运算对象作为<code>inout</code>对象，因为要对它进行读写操作，并且其效果对于操作者是可见的。Swift提供的值类型，使我们可以完全掌控丰富多变的各种操作，比如<code>enum</code>和<code>struct</code>。</p>
+<p>至此，简单的<code>MyBool</code>类型已经具备了基本的运算符操作。希望这篇文章能给你一些思路，使你能够在自己的代码中构建更高级更复杂的类型。  </p>
+<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=8" target="_blank" rel="external">Boolean</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-
 
 
             
@@ -1755,7 +1166,7 @@ void doBlockA() {
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/19/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span>
+    <a class="extend prev" rel="prev" href="/page/19/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/21/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1793,7 +1204,7 @@ void doBlockA() {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">100</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

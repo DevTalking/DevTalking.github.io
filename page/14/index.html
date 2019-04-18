@@ -241,8 +241,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/swift-final/" itemprop="url">
-                  Swift中的final修饰符（Xcode 6 GM）
+                <a class="post-title-link" href="/articles/watchkit-pagebase-navigation/" itemprop="url">
+                  使用WatchKit实现Page-Based Navigation
                 </a>
               
             
@@ -252,8 +252,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-09-11T00:00:00+08:00" content="2014-09-11">
-              2014-09-11
+            <time itemprop="dateCreated" datetime="2014-11-25T00:00:00+08:00" content="2014-11-25">
+              2014-11-25
             </time>
           </span>
 
@@ -262,8 +262,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
+                  <a href="/categories/iOS-macOS-tvOS-watchOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS & macOS & tvOS & watchOS</span>
                   </a>
                 </span>
 
@@ -278,8 +278,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/swift-final/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-final/" itemprop="commentsCount"></span>
+              <a href="/articles/watchkit-pagebase-navigation/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/watchkit-pagebase-navigation/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -309,195 +309,26 @@
 </script>
 
 
-<p>Swift中的<code>final</code>修饰符可以防止类（class）被继承，还可以防止子类重写父类的属性、方法以及下标。需要注意的是，<code>final</code>修饰符只能用于类，不能修饰结构体（struct）和枚举（enum），因为结构体和枚举只能遵循协议（protocol）。虽然协议也可以遵循其他协议，但是它并不能重写遵循的协议的任何成员，这就是结构体和枚举不需要<code>final</code>修饰的原因。</p>
-<h2 id="final_u4FEE_u9970_u7B26_u7684_u51E0_u70B9_u4F7F_u7528_u539F_u5219"><a href="#final_u4FEE_u9970_u7B26_u7684_u51E0_u70B9_u4F7F_u7528_u539F_u5219" class="headerlink" title="final修饰符的几点使用原则"></a>final修饰符的几点使用原则</h2><ul>
-<li><code>final</code>修饰符只能修饰类，表明该类不能被其他类继承，也就是它没资格当父类。</li>
-<li><code>final</code>修饰符也可以修饰类中的属性、方法和下标，但前提是该类并没有被<code>final</code>修饰过。</li>
-<li><code>final</code>不能修饰结构体和枚举。</li>
-</ul>
-<h2 id="u4EE3_u7801_u793A_u4F8B"><a href="#u4EE3_u7801_u793A_u4F8B" class="headerlink" title="代码示例"></a>代码示例</h2><figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="comment">//Todo...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaglevTrain</span>: <span class="title">Train</span> </span>&#123;  <span class="comment">// 编译失败</span></span><br><span class="line">    <span class="comment">//Todo...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面代码中，因为<code>Train</code>类被<code>final</code>修饰过，所以当<code>MaglevTrain</code>类继承了<code>Train</code>后，编译器会提示错误。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="func"><span class="keyword">func</span> <span class="title">method</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="comment">//Todo...   </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaglevTrain</span>: <span class="title">Train</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">method</span><span class="params">()</span></span> &#123;  <span class="comment">// 编译失败</span></span><br><span class="line">        <span class="comment">//Todo...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的代码中，因为<code>Train</code>类中的<code>method</code>方法被<code>final</code>修饰过，所以当子类<code>MaglevTrain</code>重写父类的<code>method</code>方法时，编译器会提示错误。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/patterns-playground/" itemprop="url">
-                  通过Playground展示一些编码模式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2014-09-08T00:00:00+08:00" content="2014-09-08">
-              2014-09-08
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/patterns-playground/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/patterns-playground/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>在Swift中，根据已有的、明确的规则或约定，描述和匹配一组值的方式，我们可将其称之为一种编码模式，比如：</p>
+<p>这篇文章向大家展示如何使用WatchKit创建Page-Based Navigation，我们还是在Helloworld项目的基础上进行改善。</p>
+<h2 id="u521B_u5EFAController"><a href="#u521B_u5EFAController" class="headerlink" title="创建Controller"></a>创建Controller</h2><p>打开<code>Interface.storyboard</code>，再添加两个Interface Controller，然后给它们添加不同的背景色。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-pagebase-navigation-1.png" alt="pic"></p>
+<p>现在给每个Controller之间添加Segue，选中第一个Controller，按着control+鼠标左键拖拽至第二个Controller，然后选择next page。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-pagebase-navigation-2.png" alt="pic"></p>
+<p>编译运行，看看它是如何工作的：</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-pagebase-navigation-3.gif" alt="pic"></p>
+<h2 id="Interface_Controller_u751F_u547D_u5468_u671F"><a href="#Interface_Controller_u751F_u547D_u5468_u671F" class="headerlink" title="Interface Controller生命周期"></a>Interface Controller生命周期</h2><p>接下来我们自定义两个<code>WKInterfaceController</code>，分别设置给新添加的两个Interface Controller。然后我们来看看InterfaceController的生命周期。首先在<code>GreenInterfaceController</code>和<code>RedInterfaceController</code>中添加如下三个方法：</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-pagebase-navigation-4.png" alt="pic"></p>
+<p>编译运行，当Watch模拟器显示出内容时，在控制台中我们可以看到<code>GreenInterfaceController</code>和<code>RedInterfaceController</code>执行了<code>init</code>方法：</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-pagebase-navigation-5.png" alt="pic"></p>
+<p>当切换到绿色InterfaceController时，在控制台中可以看到<code>GreenInterfaceController</code>执行了<code>willActivate</code>方法：</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-pagebase-navigation-6.png" alt="pic"><br>当切换到粉红色InterfaceController时，在控制台中可以看到<code>RedInterfaceController</code>执行了<code>willActivate</code>方法，而<code>GreenInterfaceController</code>执行了<code>didDeactivate</code>方法：</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-pagebase-navigation-7.png" alt="pic"></p>
+<p>所以由此可见InterfaceController的生命周期主要由三个方法组成：</p>
 <ul>
-<li>所有的元组在取数据时是从0开始的。</li>
-<li>表示数字的范围我们可以使用<code>1...5</code>这种形式。</li>
-<li>匹配或判断某些类实例的类型。</li>
+<li><strong>initWithContext</strong>：当Watch App第一次启动，把三个InterfaceController压入栈的时候调用该方法。</li>
+<li><strong>willActivate</strong>：当进入InterfaceController时，调用该方法。类似<code>UIViewController</code>中的<code>viewDidAppear</code>方法。</li>
+<li><strong>didDeactivate</strong>：当InterfaceController不在当前屏幕显示时调用该方法。类似<code>UIViewController</code>中的<code>viewDidDisappear</code>方法。</li>
 </ul>
-<p>该Playground文件需要使用OS X Mavericks或OS X Yosemite beta系统中的Xcode6打开。</p>
-<h2 id="Patterns-playground"><a href="#Patterns-playground" class="headerlink" title="Patterns.playground"></a>Patterns.playground</h2><p>这个playground文件介绍了一些匹配模式的概念。在Swift中，你可以使用条件语句（比如<code>switch</code>语句）通过简明、易读的方式匹配多个值，这种方式就是一种模式。</p>
-<blockquote>
-<p>注意：<br>如果你看不到控制台输出界面，你可以通过View > Assistant Editor > Show Assistant Editor选项或使用Option-Command-Return快捷键打开Timeline区域。</p>
-</blockquote>
-<h3 id="u5339_u914D_u5143_u7EC4_u4E2D_u7684_u503C"><a href="#u5339_u914D_u5143_u7EC4_u4E2D_u7684_u503C" class="headerlink" title="匹配元组中的值"></a>匹配元组中的值</h3><p>下面这个例子向你展示了如何使用匹配模式写出简明、优雅的<code>switch</code>语句。在这个例子中使用了FizzBuzz游戏作为场景进行说明。我们先来简单介绍一下这个游戏，在FizzBuzz游戏中，你从1开始数数，如果你数到的数字能被3整除，那么你就不能说出该数字而要说“Fizz”。如果你数到的数字能被5整除，那么你就要说“Buzz”。如果你数到的数字既能被3整除又能被5整除，那么你就要说“FizzBuzz”。所以一般情况下数数的情形像这样：“1，2，Fizz，4，Buzz…”。那么在这个例子中我们用一个名为<code>fizzBuzz</code>的函数代表该游戏，这个函数有一个参数，代表我们要数的数字，因为我们需要说出“Fizz”、“Buzz”以及“FizzBuzz”，所以返回值为<code>String</code>类型。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">fizzBuzz</span><span class="params">(number: Int)</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> (number % <span class="number">3</span>, number % <span class="number">5</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> (<span class="number">0</span>, <span class="number">0</span>):</span><br><span class="line">        <span class="comment">// number既能被3整除又能被5整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"FizzBuzz!"</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">0</span>, <span class="number">_</span>):</span><br><span class="line">        <span class="comment">// number能被3整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Fizz!"</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">_</span>, <span class="number">0</span>):</span><br><span class="line">        <span class="comment">// number能被5整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Buzz!"</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">_</span>, <span class="number">_</span>):</span><br><span class="line">        <span class="comment">// number既不能被3整除也不能被5整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"<span class="subst">\(number)</span>"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们通过<code>for</code>循环语句，让<code>fizzBuzz</code>函数参数从1到100执行100次，模拟我们在游戏中从1数到100。然后看看控制台输出的结果。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span>...<span class="number">100</span> &#123;</span><br><span class="line">    <span class="built_in">println</span>(fizzBuzz(i))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在<code>fizzBuzz</code>函数中的<code>switch</code>语句中，判断表达式是一个元组，它包含两个成员，这两个成员也是表达式。第一个表达式<code>number % 3</code>，意思是<code>number</code>取3的余数，第二个表达式<code>number % 5</code>，意思是<code>number</code>取5的余数。每一个<code>case</code>语句都对该元组中这两个表达式计算出的值进行匹配判断。</p>
-<p>比如，如果<code>number</code>等于15，那么<code>(number % 3, number % 5)</code>的结果就是<code>(0, 0)</code>，这代表15既能被3整除又能5整除。这符合<code>switch</code>语句中的第一个<code>case</code>判断，所以返回“FizzBuzz!”。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">fizzBuzz(<span class="number">15</span>)</span><br></pre></td></tr></table></figure>
-<p>如果<code>number</code>等于6，那么元组的结果为<code>(0, 1)</code>，这将符合<code>switch</code>语句中的第二个<code>case</code>判断<code>(0, _)</code>，因为下划线在Swift中约定是通配符，它代表任何值。所以将返回“Fizz!”。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">fizzBuzz(<span class="number">6</span>)</span><br></pre></td></tr></table></figure>
-<p>如果<code>number</code>等于11，那么元组的结果为<code>(2, 1)</code>，这将符合<code>switch</code>语句中的第四个<code>case</code>判断<code>(_, _)</code>，因为第四个<code>case</code>判断的是既不能被3整除又不能被5整除的情况，所以用两个下划线表示元组中的两个成员。返回结果为“11”。</p>
-<blockquote>
-<p>练习：<br>让<code>fizzBuzz</code>函数根据其他数字返回不同的消息。<br>再加一种数字的特殊情况，让该函数返回“Bang!”。使用返回“Fizz!”和“Buzz!”相同的模式，比如如果<code>number</code>能被7整除，就返回“Bang!”。别忘了还有“FizzBuzzBang!”这种情况，尽可能将<code>case</code>情况列举全。<br>如果最后一个<code>case</code>你用<code>default</code>代替<code>case (_ ,_)</code>会发生什么呢？这两种方式都能正确的返回不满足其他<code>case</code>的值么？</p>
-</blockquote>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h3 id="u679A_u4E3E_u548C_u5173_u8054_u503C"><a href="#u679A_u4E3E_u548C_u5173_u8054_u503C" class="headerlink" title="枚举和关联值"></a>枚举和关联值</h3><p>使用枚举和它的关联值匹配枚举中特定的<code>case</code>场景也是一种匹配模式。下面的例子使用枚举展示了火车的到站时间状态。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Status</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">OnTime</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Delayed</span>(minutes: <span class="type">Int</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果火车正点到站，那么它的状态为<code>Status.OnTime</code>，并且没有关联值。当火车晚点，那么它的状态为<code>Status.Delayed(Int)</code>，并需要传入一个关联值用于表示火车到底晚了多久。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> goodNews = <span class="type">Status</span>.<span class="type">OnTime</span></span><br><span class="line"><span class="keyword">let</span> badNews = <span class="type">Status</span>.<span class="type">Delayed</span>(minutes: <span class="number">90</span>)</span><br></pre></td></tr></table></figure>
-<p>这里有一个名为<code>Train</code>的类，包含一个<code>status</code>属性，默认值为<code>Status.OnTime</code>。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> status = <span class="type">Status</span>.<span class="type">OnTime</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>你可以使用匹配模式，将<code>Status.Delayed(Int)</code>这种情况的关联值提出来进行判断。下面的代码将<code>Train</code>类进行了扩展，使之遵循<code>Printable</code>协议，添加了一个只读属性<code>description</code>。这个扩展可以很容易的检索出包含火车晚点分钟数的<code>String</code>字符串，并返回。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Train</span>: <span class="title">Printable</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> description: <span class="type">String</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">switch</span> status &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> .<span class="type">OnTime</span>:</span><br><span class="line">            <span class="comment">// 满足正点到达的情况，返回“On time”</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">"On time"</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Delayed</span>(<span class="keyword">let</span> minutes) <span class="keyword">where</span> <span class="number">0</span>...<span class="number">5</span> ~= minutes:</span><br><span class="line">            <span class="comment">// 将传入的关联值通过“~=”操作符在一定范围内匹配</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Slight delay of <span class="subst">\(minutes)</span> min"</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Delayed</span>(<span class="number">_</span>):</span><br><span class="line">            <span class="comment">// 用下划线通配符匹配不在晚点分钟数范围内的情况</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Delayed"</span></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>switch</code>语句中的第一个<code>case</code>用于匹配当火车状态为<code>OnTime</code>时的情况，并返回简单的字符串。</p>
-<p>第二个<code>case</code>要稍复杂一些，它创建了一个临时常量<code>minutes</code>来表示传入的关联值，并用<code>where</code>关键字申明一个0到5的范围，判断<code>minutes</code>是否在该范围内，如果在该范围内，那么将这个关联值嵌入字符串返回。</p>
-<p>第三个<code>case</code>用于匹配不在晚点范围内的情况。</p>
-<p>你现在可以创建一些<code>Train</code>类的实例验证一下。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> trainOne = <span class="type">Train</span>()</span><br><span class="line"><span class="keyword">let</span> trainTwo = <span class="type">Train</span>()</span><br><span class="line"><span class="keyword">let</span> trainThree = <span class="type">Train</span>()</span><br><span class="line"></span><br><span class="line">trainTwo.status = .<span class="type">Delayed</span>(minutes: <span class="number">2</span>)</span><br><span class="line">trainThree.status = .<span class="type">Delayed</span>(minutes: <span class="number">8</span>)</span><br></pre></td></tr></table></figure>
-<p>然后使用<code>description</code>属性查看每个<code>Train</code>实例的状态值。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">trainOne.description</span><br><span class="line">trainTwo.description</span><br><span class="line">trainThree.description</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>练习：<br>改变<code>trainTwo</code>和<code>trainThree</code>的<code>status</code>属性，看看它们的<code>description</code>属性有何变化。<br>改变<code>Train</code>扩展中<code>switch</code>的最后一个<code>case</code>语句，让它返回包含关联值的字符串，比如“Delayed by 17 min”。<br>加分项，再增加一种<code>case</code>情况，当关联值大于60时，返回列车晚点几小时几分的字符串。<br>提示：可以使用<code>&gt;=</code>操作符。</p>
-</blockquote>
-<h3 id="u68C0_u67E5_u548C_u8F6C_u6362_u5B50_u7C7B_u578B"><a href="#u68C0_u67E5_u548C_u8F6C_u6362_u5B50_u7C7B_u578B" class="headerlink" title="检查和转换子类型"></a>检查和转换子类型</h3><p>还有一种模式可以让你动态的匹配类的实例。考虑一下下面代码中类的所属关系：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">cleanPassengerCars</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Clean the passenger cars"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaglevTrain</span>: <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">referToSpecialist</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Refer the maglev to a specialist"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> maglev = <span class="type">MaglevTrain</span>()</span><br><span class="line"><span class="keyword">let</span> train = <span class="type">Train</span>()</span><br></pre></td></tr></table></figure>
-<p>有一种简单的类型匹配模式，使用<code>is</code>关键字就可以进行父类与子类之间的匹配和判断。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">trainDescription</span><span class="params">(train: Train)</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> train &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="keyword">is</span> <span class="type">MaglevTrain</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"The fastest train on earth."</span></span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Some other kind of train."</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>你可以将刚才创建的<code>Train</code>类和<code>MaglevTrain</code>类实例传入<code>trainDescription</code>函数，看看会有什么结果。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">trainDescription(maglev)</span><br><span class="line">trainDescription(train)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>练习：<br>在<code>trainDescription</code>函数中的<code>switch语句中</code>再添加一个<code>case</code>，用于匹配判断<code>train</code>是不是<code>Train</code>类型的，然后看看会提示什么错误？为什么呢？<br>再定义一个<code>Train</code>类的子类<code>SteamTrain</code>，然后在<code>trainDescription</code>函数的<code>switch</code>语句中添加一个<code>case</code>，用于匹配判断<code>train</code>的类型是不是<code>SteamTrain</code>，然后返回适当的字符串描述。将<code>SteamTrain</code>实例传入<code>trainDescription</code>函数，看看是否返回正确的描述。</p>
-</blockquote>
-<p>不过使用<code>is</code>关键字匹配类型只适用于检查子类。如果你想检查对象类型是不是某个类的子类，并且想使用父类的属性或方法时，可以使用<code>as</code>关键字（作用类似类型强制转换中的<code>as</code>）将判断的对象类型转换为父类型，这样在<code>switch</code>语句中就可以同时进行类型检查和类型转换了。使用<code>as</code>关键字时，需要先创建一个临时常量，用于表示需要判断或转换的对象。</p>
-<p>下面的代码中有一个名为<code>determineMaintenanceRequirements</code>的函数，在<code>switch</code>语句中判断对象的类型是不是<code>MaglevTrain</code>的子类，如果是<code>MaglevTrain</code>的子类，那么将该对象的类型转换为<code>MaglevTrain</code>。如果转换成功，就可以使用转换后类型的方法。如果失败则返回<code>default</code>的返回值。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">determineMaintenanceRequirements</span><span class="params">(train: Train)</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> train &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="keyword">let</span> maglev <span class="keyword">as</span> <span class="type">MaglevTrain</span>:</span><br><span class="line">        <span class="keyword">return</span> maglev.referToSpecialist()</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">return</span> train.cleanPassengerCars()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">determineMaintenanceRequirements(train)</span><br><span class="line">determineMaintenanceRequirements(maglev)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>练习：<br>在<code>SteamTrain</code>类中添加一个名为<code>cleanFirebox</code>的函数，在<code>determineMaintenanceRequirements</code>函数中的<code>switch</code>语句里添加一个<code>case</code>语句，用于判断对象的类型是不是<code>SteamTrain</code>的子类，如果是，将对象的类型转换为<code>SteamTrain</code>类型，并调用<code>SteamTrain</code>类的<code>cleanFirebox</code>函数。然后将<code>SteamTrain</code>类的实例传入<code>determineMaintenanceRequirements</code>函数看看是否能返回正确的描述信息。</p>
-</blockquote>
-<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=13" target="_blank" rel="external">Patterns Playground</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -543,8 +374,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/pike5/" itemprop="url">
-                  Rob Pike 程序开发五项原则
+                <a class="post-title-link" href="/articles/watchkit-create-table/" itemprop="url">
+                  如何使用WatchKit创建Table
                 </a>
               
             
@@ -554,8 +385,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-09-05T00:00:00+08:00" content="2014-09-05">
-              2014-09-05
+            <time itemprop="dateCreated" datetime="2014-11-23T00:00:00+08:00" content="2014-11-23">
+              2014-11-23
             </time>
           </span>
 
@@ -564,8 +395,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/技术杂文/" itemprop="url" rel="index">
-                    <span itemprop="name">技术杂文</span>
+                  <a href="/categories/iOS-macOS-tvOS-watchOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS & macOS & tvOS & watchOS</span>
                   </a>
                 </span>
 
@@ -580,8 +411,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/pike5/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/pike5/" itemprop="commentsCount"></span>
+              <a href="/articles/watchkit-create-table/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/watchkit-create-table/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -611,21 +442,310 @@
 </script>
 
 
-<p>与程序员们共勉：</p>
+<p>上篇文章向大家演示了如何创建一个Helloworld Apple Watch App。这篇文章向大家演示如何使用WatchKit给你的Watch App创建Table。我们在Helloworld项目的基础上进行完善。</p>
+<h2 id="u521B_u5EFA_u4E00_u4E2ATable"><a href="#u521B_u5EFA_u4E00_u4E2ATable" class="headerlink" title="创建一个Table"></a>创建一个Table</h2><p>打开<strong>Interface.storyboard</strong>文件，删除我们之前添加的Label，然后将一个Table组件拖拽到你的Watch屏幕中。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-1.png" alt="pic"></p>
+<p>这里要注意一下，WatchKit中每一个WKInterfaceTableRow都是一个<strong>Table Row Controller</strong>，如果你展开它，你会发现它里面有一个<strong>Group</strong>，我们分别将一个Label和Image组件拖拽至Group中。调整Label和Image的大小，调整到你觉得合适就可以。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-2.png" alt="pic"></p>
+<h2 id="u521B_u5EFA_u81EA_u5B9A_u4E49_u7684Table_Row_Controller"><a href="#u521B_u5EFA_u81EA_u5B9A_u4E49_u7684Table_Row_Controller" class="headerlink" title="创建自定义的Table Row Controller"></a>创建自定义的Table Row Controller</h2><p>我们选中TableRowController，然后选择右侧工具栏的Identify inspector，我们可以在<strong>Custom Class</strong>一栏中看到，其实TableRowController是一个<strong>NSObject</strong>。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-3.png" alt="pic"></p>
+<p>我们可以创建一个自己的NSObject，然后将TableRowController的class设置为我们创建的NSObject，这样就达到了自定义的目的。我们在<strong>HelloworldWatchKit WatchKit Extension</strong>目录中创建一个Swfit文件，让它继承NSObject，然后导入WatchKit框架。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-4.png" alt="pic"></p>
+<p>将TableRowController的class设置为<code>MyTableRowController</code>，并给它设置一个Identifier。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-5.png" alt="pic"></p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-6.png" alt="pic"></p>
+<p>现在你就可以在<code>MyTableRowController</code>中添加Label和Image的<strong>IBOutlet</strong>了。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-7.png" alt="pic"></p>
+<h2 id="u521B_u5EFA_u6570_u636E_u6E90"><a href="#u521B_u5EFA_u6570_u636E_u6E90" class="headerlink" title="创建数据源"></a>创建数据源</h2><p>我们知道，在UIKit的<code>UITableView</code>或者<code>UITableViewController</code>中都有DataSource，负责Table Row中的数据，但是在WatchKit中的TableRowController并没有DataSource，但是这个概念是有的，也就是说我们要为TableRowController创建一个数据源，不论是数组还是字典。在这里，我们创建一个数组，作为TableRowController的数据源，数组中的元素都是<code>String</code>。因为我们的TableRowController中有一个Image组件、一个Label组件，所以我们将图片的名字作为数组的元素。</p>
+<p>我们在<code>InterfaceController</code>中创建一个数据源<code>weather</code>数组，数组元素是图片名称，然后创建Table的IBOutlet。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-8.png" alt="pic"></p>
+<h2 id="u52A0_u8F7D_u6570_u636E_u6E90"><a href="#u52A0_u8F7D_u6570_u636E_u6E90" class="headerlink" title="加载数据源"></a>加载数据源</h2><p>我们在<code>InterfaceController</code>中添加<code>loadTableData()</code>方法，然后在<code>init()</code>方法中调用。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-9.png" alt="pic"></p>
+<p>现在编译运行一下，你就会看到Watch中显示出了Table，是不是很酷呢！</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-10.png" alt="pic"></p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-11.png" alt="pic"></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/helloworld-watchkit-app/" itemprop="url">
+                  Helloworld Apple Watch App
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2014-11-22T00:00:00+08:00" content="2014-11-22">
+              2014-11-22
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS-macOS-tvOS-watchOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS & macOS & tvOS & watchOS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/helloworld-watchkit-app/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/helloworld-watchkit-app/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u4E0B_u8F7DXcode_6-2_Beta"><a href="#u4E0B_u8F7DXcode_6-2_Beta" class="headerlink" title="下载Xcode 6.2 Beta"></a>下载Xcode 6.2 Beta</h2><p>首先我们需要下载最新的<a href="https://developer.apple.com/xcode/downloads/" target="_blank" rel="external">Xcode 6.2 Beta</a>。</p>
+<h2 id="u521B_u5EFA_u4E00_u4E2A_u65B0_u9879_u76EE"><a href="#u521B_u5EFA_u4E00_u4E2A_u65B0_u9879_u76EE" class="headerlink" title="创建一个新项目"></a>创建一个新项目</h2><p>启动Xcode，选择<strong>Create a new Xcode project</strong>， 然后选择<strong>Single View Application</strong>创建一个单视图应用。</p>
+<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app1.png" alt="PIC">  </p>
+<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app2.png" alt="PIC"></p>
+<h2 id="u521B_u5EFAWatch_App_Target"><a href="#u521B_u5EFAWatch_App_Target" class="headerlink" title="创建Watch App Target"></a>创建Watch App Target</h2><p>选择菜单中的<strong>File -> New -> Target</strong>， 然后选择<strong>Apple Watch -> Watch App</strong>， 点击<strong>Next</strong>。  </p>
+<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app3.png" alt="PIC">  </p>
+<p>在Target的基本属性设置界面中不要勾选<strong>Include Notification Scene</strong> 和<strong>Include Glance Scene</strong>这两个选项，因为我们是在做一个<strong>Hello World</strong>， 最后点击<strong>Finish</strong>完成 <strong>Watch App Target</strong>的创建。  </p>
+<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app4.png" alt="PIC">  </p>
+<h2 id="u6DFB_u52A0Label"><a href="#u6DFB_u52A0Label" class="headerlink" title="添加Label"></a>添加Label</h2><p>打开<strong>HelloworldWatchKit Watch App</strong>目录下的 <strong>Interface.storyboard</strong>。</p>
+<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app5.png" alt="PIC">  </p>
+<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app6.png" alt="PIC">  </p>
+<p>然后将一个Label拖拽到<code>InterfaceController</code>中，在Label中输入文字“Hello，World!”，并将Label的<strong>Position</strong>属性设置为 <strong>Horizontal:Center，Vertical:Center</strong>，让Label居中。这里不再需要AutoLayout。</p>
+<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app7.png" alt="PIC">  </p>
+<h2 id="u8FD0_u884CApp"><a href="#u8FD0_u884CApp" class="headerlink" title="运行App"></a>运行App</h2><p>首先选择Active Scheme为<strong>HelloworldWatchKit Watch App</strong>， 然后选择任意型号的iPhone模拟器。</p>
+<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app8.png" alt="PIC"> </p>
+<p>运行应用，这时你可能还看不到Apple Watch模拟器，别着急，这里还需要一个设置。选择iPhone模拟器，在菜单中选择<strong>Hardware -> External Displays -> Apple Watch - 38mm | Apple Watch - 42mm</strong>。</p>
+<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app9.png" alt="PIC"> </p>
+<p>然后重新运行应用，你就会看到你的第一个Apple Watch App了！</p>
+<p><img src="http://www.devtalking.com/postImages/helloworld-watchkit-app10.png" alt="PIC"> </p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/watchkit-initial-impressions/" itemprop="url">
+                  WatchKit初探
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2014-11-20T00:00:00+08:00" content="2014-11-20">
+              2014-11-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS-macOS-tvOS-watchOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS & macOS & tvOS & watchOS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/watchkit-initial-impressions/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/watchkit-initial-impressions/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u6574_u4F53_u529F_u80FD_u9884_u89C8"><a href="#u6574_u4F53_u529F_u80FD_u9884_u89C8" class="headerlink" title="整体功能预览"></a>整体功能预览</h2><p>总体而言，WatchKit第一版SDK提供的功能远远超出了我的期望。因为我原本以为第一版WatchKit可能侧重于对iOS Today Extension功能的延伸，而不是真正开发Watch App。所以当知道真相后，我即惊讶又感到高兴，第一版WatchKit并不是我所想的那样，它可以为Watch App创建全新的交互界面，而且可以通过iOS App Extension去控制他们。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-initial-impressions-1.jpg" alt="pic"></p>
+<p>所以我们能做的并不只是一个简单的所谓iOS Apple Watch Extension的玩意，而是有很多新的功能需要我们去挖掘。目前提供的比如特定的UI控制方式  、Glance、可自定义的Notification、和Handoff的深度结合、图片缓存等等，作为开发者，这些功能已经让我为之兴奋了。</p>
+<h2 id="Apple_Watch_u7684_u67B6_u6784"><a href="#Apple_Watch_u7684_u67B6_u6784" class="headerlink" title="Apple Watch的架构"></a>Apple Watch的架构</h2><p>WatchKit带给我的惊讶之一是它的架构。目前Watch App的运行是由两部分相互结合进行工作的:</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-initial-impressions-2.jpg" alt="pic"></p>
+<ul>
+<li><strong>你的Apple Watch</strong>主要包含用户界面元素文件（Storyboard文件和静态的图片文件）和处理用户的输入行为。并不会真正在Apple Watch中运行代码。换句话说，Apple Watch仅是一个“视图”容器。</li>
+<li><strong>你的iPhone</strong>包含所有的逻辑代码用于响应用户在Apple Watch上产生的诸如应用启动、点击按钮、滑动滑杆等行为。换言之，iPhone包含了控制器和模型。</li>
+</ul>
+<p>有趣的是Apple Watch和iPhone的这种交互是在幕后自动完成的。你要做的工作只是在Storyboard中设置好UI的Outlet，然后其他的事都由WatchKit SDK在幕后通过蓝牙技术自动进行交互。即使iPhone和Apple Watch是两个独立的设备，你也只需要关注你本地的代码以及Outlet的连接情况，这真是一件很酷的事情。</p>
+<h2 id="WatchKit_u5E03_u5C40"><a href="#WatchKit_u5E03_u5C40" class="headerlink" title="WatchKit布局"></a>WatchKit布局</h2><p>一个令我惊讶的是Watch App的UI布局方式，我们不能再用AutoLayout进行布局了。取而代之的是一种新的布局方式<strong>Group</strong>，你需要将界面元素比如按钮、Label添加到Group中，然后Group会自动为你添加的界面元素在其内部进行布局。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-initial-impressions-3.jpg" alt="pic"></p>
+<p>你可以将一个Group嵌入到另一个Group中，用于实现较为复杂一点的界面布局，并在Group中还可以设置背景色、边距、圆角半径等属性。</p>
+<p>这让我想起了Java中的<a href="https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html" target="_blank" rel="external">BoxLayout</a>或者XAML中的<a href="http://msdn.microsoft.com/en-us/library/ms754152.aspx" target="_blank" rel="external">StackPanel</a>。</p>
+<h2 id="Glances_u548CNotifications"><a href="#Glances_u548CNotifications" class="headerlink" title="Glances和Notifications"></a>Glances和Notifications</h2><p>Watch App中最酷的功能我觉得就是Glances和Notifications了。我个人认为，Apple Watch的应用中最有用的功能之一就是能让用户很方便的（比如一抬手）就能看到自己感兴趣的事物的提醒通知，比如有人在Twitter中提及到了你或者比特币现在的价位等等。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-initial-impressions-4.jpg" alt="pic"></p>
+<p>Glances和Notifications能为你带来什么呢？</p>
+<ul>
+<li><strong>Glances</strong>能让你在应用中快速预览信息，有点像iOS8中的Today Extension。</li>
+<li><strong>Notifications</strong>能让你在Apple Watch中接收到各类通知。Apple Watch中的通知分为两种级别。第一种是提示，只显示应用图标和简单的文本信息。当你抬起手腕或者点击屏幕时就会进入到第二种级别，你就可以看到该通知更多详细的信息，甚至有交互按钮。</li>
+</ul>
+<p>在Glance和Notification这两种情形下，你都可以点击屏幕进入到对应的Watch App中，并且使用Handoff。你甚至可以将特定的View Controller作为Glance或Notification的内容发送给用户。</p>
+<p>我预期在未来几个月我们会在Glance和Notification上面投入较大的时间。</p>
+<h2 id="u52A8_u753B"><a href="#u52A8_u753B" class="headerlink" title="动画"></a>动画</h2><p>Apple Watch中不支持动画，这多少让人觉得有点奇怪。如果你希望某个UI元素具有动画效果，你必须要生成一堆图片，这些图片的内容是连续动画每一帧的内容，然后循环显示这些图片，感觉又回到了GIF动画时代。所以在Apple Watch中不支持iOS中UIView或CALayer这种动画，只支持帧动画。</p>
+<p>举个例子，你们可以看看Apple的<a href="https://developer.apple.com/library/prerelease/ios/samplecode/Lister/Introduction/Intro.html" target="_blank" rel="external">Lister example</a>示例，你会发现Apple通过360张图片来实现一个画圆的动画效果。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-initial-impressions-5.jpg" alt="pic"></p>
+<p>这显然是一个灾难性的工作量，不过如果需要，也可以借助某些工具去生成一个动画需要的所有图片。不过，因为Apple Watch的容量很悠闲，所以你要谨慎加入帧动画，因为需要大量图片占用内存，除非有画龙点睛的动画，否则还是尽量少使用动画。</p>
+<h2 id="u8BBE_u8BA1_u8D44_u6E90"><a href="#u8BBE_u8BA1_u8D44_u6E90" class="headerlink" title="设计资源"></a>设计资源</h2><p>如果你是一名设计者（或者对设计有浓厚的兴趣爱好），一下两点建议对你有很好的帮助：</p>
 <ol>
-<li>你无法断定程序会在什么地方耗费运行时间。瓶颈经常出现在想不到的地方，所以别急于胡乱找个地方改代码，除非你已经证实那儿就是瓶颈所在。</li>
-<li>估量。在你没对代码进行估量，特别是没找到最耗时的那部分之前，别去优化速度。</li>
-<li>花哨的算法在 n 很小时通常很慢，而 n 通常很小。花哨算法的常数复杂度很大。除非你确定 n 总是很大，否则不要用花哨算法（即使 n 很大，也优先考虑原则 2 ）。比如，解决常见问题时，最简单的树——二叉树（binary tree）,总是比那些复杂的树（AVL树，伸展树（splay tree）和红黑树、B-树（B-tree）,多叉树（trie））来的高校。</li>
-<li>花哨的算法比简单算法更容易出 bug 、更难实现。尽量使用简单的算法配合简单的数据结构。只要掌握了数据结构中的四大法宝，就可以包打天下，他们是：array 、linked list 、hash table、binary tree 。这四大法宝可不是各自为战的，灵活结合才能游刃有余。比如，一个用hash table组织的symbol table，其中是一个个由字符型array构成的linked list。</li>
-<li>以数据为中心。如果已经选择了正确的数据结构并且把一切都组织得井井有条，正确的算法也就不言自明。编程的核心是数据结构，而不是算法。</li>
+<li>放下你手中所有的事情，阅读Apple提供的针对Apple Watch的<a href="https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/WatchHumanInterfaceGuidelines/index.html" target="_blank" rel="external">Human Interface Guidelines (HIG)</a>。里面有非常不错的指导和参考能帮助你理解Apple Watch UI设计中你有疑惑的地方，因为设计Apple Watch App是一个全新的世界。</li>
+<li>你一定要下载<a href="https://developer.apple.com/watchkit/#agreement" target="_blank" rel="external">Apple Watch Design Resources</a>。这里有大量关于设计Apple Watch App的PSD素材，比如UI控制模型、颜色、元素间距的指导、笔画粗细的指导等等，有很多有用的东西，给我留下了非常深刻的印象，这里强烈推荐。</li>
 </ol>
+<p>原文地址：<a href="http://www.raywenderlich.com/89473/watchkit-initial-impressions" target="_blank" rel="external">WatchKit: Initial Impressions</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-
 
 
             
@@ -664,8 +784,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/how-to-test-library-with-playground/" itemprop="url">
-                  如何用Playground测试自己开发的库或第三方库
+                <a class="post-title-link" href="/articles/text-kit-tutorial-in-swift-1/" itemprop="url">
+                  如何在Swift中运用Text Kit框架（一）
                 </a>
               
             
@@ -675,8 +795,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2014-09-04T00:00:00+08:00" content="2014-09-04">
-              2014-09-04
+            <time itemprop="dateCreated" datetime="2014-10-31T00:00:00+08:00" content="2014-10-31">
+              2014-10-31
             </time>
           </span>
 
@@ -701,8 +821,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/how-to-test-library-with-playground/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/how-to-test-library-with-playground/" itemprop="commentsCount"></span>
+              <a href="/articles/text-kit-tutorial-in-swift-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/text-kit-tutorial-in-swift-1/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -732,17 +852,61 @@
 </script>
 
 
-<p>距离Swift发布已经过去快2个月了，各路前辈和大神写教程、写出、录教学视频忙的不亦乐乎，我们也从中学习到了很多关于Swift有用的知识。在学习的过程中也见证了Apple一次次对Swift修正的历程，在正式版来临之际，我想说说被很多前辈和大神视为玩物的东西–Playground。</p>
-<p>我觉得Swift提供的Playground非常有趣，至少对初学者来说是一个能抓住眼球的重要因素。并且我认为Playground其实挺有用的，比如学习Swift的各种新特性、写一些有趣的代码片段、验证一些算法、甚至可以用它写一个小游戏等等，包括TopCoder的Swift Challange都要求使用Playground。但是很关键的一点是以上这些Playground的应用场景与真实的项目、产品开发之间没有太多的交际，换句话说就是Playground在实际开发中基本帮不上什么忙，这也正式很多人觉得目前的Playground没什么大用的原因。</p>
-<p>但事实真的是如此吗？是，好像又不是，今天我在这里就介绍一个Playground在实际开发中的用途 – 使用Playground在开发中测试自己的库或第三方的库。在80%的第三方常用库还是Objective-C的情况下，我们可以用Playground来测试在Swift中的使用健康程度，从而能更从容的选择继续使用还是更换方案。</p>
-<ul>
-<li>第一步：创建iOS Framework &amp; library project或打开已有的项目。</li>
-<li>第二步：将其存为workspace。</li>
-<li>第三步：新建Playground文件。</li>
-<li>第四步：在64位的模拟器（iPhone5s）上编译运行你的Framework。</li>
-<li>第五步：在Playground中导入库并编写测试代码。</li>
-</ul>
-<p>这样你就可以在Playground中看到每一行代码的运行情况，是不是很酷呢！</p>
+
+<p>由于Apple近几年在iOS系统的不断改进过程中添加了许多新的特性和功能，这使得iOS系统对文本的渲染能力有了大大的提升。在iOS7中我们就已经能感觉到在文本渲染方面有了很大改进和提升。现在iOS8发布了，在文本渲染方面在延续了之前强大功能的基础上，又提升了其易用性。简单纵观iOS文本渲染的发展史，你也许对目前文本渲染的强大能有更深刻的体会。</p>
+<p>在iOS6之前，使用web视图渲染文本是当时最为容易的一种方式，因为它能较为有效的处理混合编排的文本，比如有粗体字、斜体字、有颜色的字等。</p>
+<p>2012年，iOS6在UIKit框架中添加一些支持字符串编辑或渲染的控件。这使得在渲染文本时，使用web视图不再是唯一的选择了。并且在文本排版方面不用再依赖通过HTML布局这种方式了。</p>
+<p>在iOS6中，UIKit中支持字符串编辑和渲染的控件是同时基于WebKit和Core Graphic的<code>String drawing</code>函数开发出的，整个如下图所示：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-1.png" alt="pic"></p>
+<blockquote>
+<p>注意：在这张图上有没有让你疑惑的地方呢？没错，<code>UITextView</code>是基于WebKit框架的。实际上，UIKit中与文本相关的这些控件在底层还是使用HTML渲染的。没有深入研究过相关框架的开发者是不太容易察觉这一点的。</p>
+</blockquote>
+<p>尽管iOS6中提供的这些文本控件在实际开发中的确带来了不少便利，但是当遇到复杂的布局、多行混合渲染等这种高级应用场景时，这些控件就显得捉襟见肘了，此时虽然Core Text是相对底层而且用法繁复的框架，但使用它来解决问题仍是唯一可以选择的方法。</p>
+<p>直到iOS7的问世，这种窘境得以改善。随着扁平化的设计思路，iOS的UI拚弃了沿用多年的拟物化风格，将重点和关注点集中在排版工艺上。比如<code>UIButton</code>在iOS7中去掉了整个外边框和阴影，只留下了按钮文字。所以Apple在iOS7中加入了用于文本编排和渲染的<strong>Text Kit</strong>框架就不足为奇了。</p>
+<p>在iOS7中关于文本渲染的控件及框架结构就比较清晰和合理了。因为所有UIKit中的文本控件都基于Text Kit框架，而不像iOS6中还有基于Web Kit框架的：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-2.png" alt="pic"></p>
+<p>Text Kit在继承了Core Text所有强大功能的基础上，将功能封装为面向对象的API，让开发者们都乐开了花。</p>
+<p>在这篇教程中，你要去探索Text Kit的各种功能特性，并且你要创建一个简单的但又功能丰富的iPhone笔记应用。</p>
+<p>本教程包含一个初始的项目，里面含有事先创建好的UI部分，以便使同学们只关注于Text Kit的部分。在这里可以下载该<a href="http://cdn2.raywenderlich.com/wp-content/uploads/2014/09/SwiftTextKitNotepad-starter6.zip" target="_blank" rel="external">项目</a>。下载完成后解压并在Xcode中打开项目，编译运行后你会看到如下的界面：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-3.png" alt="pic"></p>
+<p>该示例应用创建了一个初始的数组用于存放笔记实例，然后在TableViewController中将其渲染出来，当你点击选择某条笔记时，Storyboard和segue会捕获到你的行为，然后处理视图转换的先关工作，使你看到该条笔记的详细信息。</p>
+<h2 id="Dynamic_Type"><a href="#Dynamic_Type" class="headerlink" title="Dynamic Type"></a>Dynamic Type</h2><p><strong>Dynamic Type</strong>是iOS7中给我们的开发带来变化最多的特性之一，它的作用是让应用中的字体大小遵循你设置的字体大小和粗细。</p>
+<p>在iOS7中，打开设置，可以在 <strong>通用/辅助功能（General/Accessibility）</strong> 和 <strong>通用/字体大小（General/Text Size）</strong> 中查看和设置系统中应用显示字体的属性： </p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-4.png" alt="pic"></p>
+<p>在iOS8中，打开设置，可以在 <strong>通用/辅助功能/更大字体（General/Accessibility/Larger Text）</strong> 查看Dynamic Type的文本尺寸。</p>
+<p>不管是增加文字粗细还是改变文字大小，在支持Dynamic Type的应用中这都能给用户带来极大的便利，增加了文字的可读性。</p>
+<p>为了让应用支持Dynamic Type，你需要设置文本遵循某一<strong>风格</strong>，而不是明确的指定文本的字体名称和大小。在iOS7中已经为<code>UIFont</code>增加了一个新的方法<code>preferredFontForTextStyle</code>，它的作用是给创建出一个由用户在设置中根据自身需要设定的风格的字体。</p>
+<p>下表中展示了六种不同字体样式的不同大小和粗细程度：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-5.png" alt="pic"></p>
+<p>表中最左边的字体是用户可选择的最小的字体，中间是可选择的最大的字体，最右边是选择了辅助功能中给字体加粗后的样式。</p>
+<h2 id="u6700_u57FA_u672C_u7684_u529F_u80FD_u652F_u6301"><a href="#u6700_u57FA_u672C_u7684_u529F_u80FD_u652F_u6301" class="headerlink" title="最基本的功能支持"></a>最基本的功能支持</h2><p>实现动态文本的基本功能还是相对较简单的。应用中的字体不再是一个明确的字体，而是需要请求一个特殊的字体样式。在运行时，应用会根据用户在设置应用中对字体的设置以及请求到的字体样式中选择一个合适的字体样式。</p>
+<p>到了iOS8，Apple让实现Dynamic Type变得比iOS7更加容易了。尤其是TableView中的默认Label自动支持Dynamic Type，这个很赞！但是如果还想适配iOS7的话那就要在TableView中使用自定义的Label了。所以首先同学们要学会如何在iOS7中处理Dynamic Type，然后你就会发现到了iOS8后，生活是多么美好，晴空万里，没有雾霾！</p>
+<h2 id="u4E3A_u4EC0_u4E48iOS7_u662F_u4F18_u79C0_u7684_u7CFB_u7EDF_uFF0C_u800CiOS8_u662F_u8D8B_u8FD1_u5B8C_u7F8E_u7684_u7CFB_u7EDF"><a href="#u4E3A_u4EC0_u4E48iOS7_u662F_u4F18_u79C0_u7684_u7CFB_u7EDF_uFF0C_u800CiOS8_u662F_u8D8B_u8FD1_u5B8C_u7F8E_u7684_u7CFB_u7EDF" class="headerlink" title="为什么iOS7是优秀的系统，而iOS8是趋近完美的系统"></a>为什么iOS7是优秀的系统，而iOS8是趋近完美的系统</h2><p>该教程中初始项目的设置和配置是基于iOS8的。在我们开始学习之前，先编译运行应用，然后尝试改变默认的文本字体大小，多试几次不同的字体大小。你会发现不光是字体大小变了，TableView列表的Cell高度也相应发生了改变。但是你对这个项目还没动过一根手指。同时你也应该发现了点击选择一条笔记后，该笔的详细信息的文本字体却没有发生变化。</p>
+<p>但在iOS7中我们的确还要做一些额外的事，没有十全十美的事应该指的就是这个吧。如果你的编译环境是iOS7或iOS8（确保你使用的Xcode版本是6），那么本教程的绝大部分内容都是没问题的。现在我们需要将Xcode的编译环境设置为iOS7已经选择合适的iOS模拟器（iPhone5s）。如果你不打算支持iOS8之前的系统，那么你可以直接使用iOS8的编译环境。</p>
+<p>现在咱们在iOS7下编译运行应用，然后重复之前修改字体的操作，你会发现什么？没错，发现了悲剧。应用中的字体会忽略你对字体的设置，根本不起作用。所以，同学们必须要做点什么让Dynamic Type在iOS7跑起来。</p>
+<p>打开<strong>NoteEditorViewController.swift</strong>，在<code>viewDidLoad</code>方法中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">textView.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br></pre></td></tr></table></figure>
+<p>这里需要注意的是你并没有给<code>textView.font</code>设置具体的字体，比如Helvetica Neue之类。相反，你只是请求了一个适合主体文本的字体样式<code>UIFontTextStyleBody</code>。</p>
+<p>然后打开<strong>NotesListViewController.swift</strong>，在<code>tableView(_:cellForRowAtIndexPath:)</code>方法的<code>return</code>语句后添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">cell.textLabel?.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleHeadline</span>)</span><br></pre></td></tr></table></figure>
+<p>你依然没有给字体具体的类型，而是请求了一个合适的字体样式。</p>
+<p>使用语义接近的字体样式名称，比如<code>UIFontTextStyleSubHeadline</code>，可以避免在代码中对字体样式使用硬编码，并确保你的应用中的文本信息能正确的响应用户的设置。</p>
+<p>现在再编译和运行应用，你会发现TableView和笔记详细信息页面中的文本字体都发生了变化。下面的截图是设置不同字体大小后的笔记详细信息页面：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-6.png" alt="pic"></p>
+<p>目前看起来一起都很完美，但是细心的读者可能会发现这种解决方法只能解决一半的问题。让我们回到设置应用然后再次更改字体大小，然后我们通过后台程序回到我们的笔记应用中，我们发现了什么？没错，文本字体没有响应我们刚才的设置从而发生变化。</p>
+<p>我相信我们的用户是不会允许这种事情发生的。又一个挑战出现了，让我们来看看如何解决这个问题。</p>
+<h2 id="u5373_u65F6_u54CD_u5E94_u5B57_u4F53_u8BBE_u7F6E"><a href="#u5373_u65F6_u54CD_u5E94_u5B57_u4F53_u8BBE_u7F6E" class="headerlink" title="即时响应字体设置"></a>即时响应字体设置</h2><p>打开<code>NoteEditorViewController.swift</code>，在<code>viewDidLoad</code>方法中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSNotificationCenter</span>.defaultCenter().addObserver(<span class="keyword">self</span>, </span><br><span class="line">    selector: <span class="string">"preferredContentSizeChanged:"</span>, </span><br><span class="line">    name: <span class="type">UIContentSizeCategoryDidChangeNotification</span>,</span><br><span class="line">    object: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>上面这段代码的作用是将我们的<code>NodeEditorViewController</code>注册到通知中心里，当字体发生改变时会通知<code>NodeEditorViewController</code>中的<code>preferredContentSizeChanged</code>方法。</p>
+<p>我们再来看看<code>preferredContentSizeChanged</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">preferredContentSizeChanged</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  textView.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个方法中我们就可以改变文本的字体样式了。</p>
+<blockquote>
+<p>注意：这里你可能会有疑惑，已经更改过字体样式了，为什么这里再次请求样式的时候还是<code>UIFontTextStyleBody</code>呢？当用户更改完字体样式后，你需要通过<code>preferredFontForTextStyle</code>方法重新请求一次字体样式，该方法的参数只代表文本的类型和所在位置，比如是Body里的还是Head中的等，所以<code>UIFont.preferredFontForTextStyle(UIFontTextStyleBody)</code>的意思就是请求类型和位置在Body中显示文本的字体样式，每次请求都是获取最新一次设置的字体样式。</p>
+</blockquote>
+<p>打开<code>NotesListViewController.swift</code>，重写<code>viewDidLoad</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">  <span class="type">NSNotificationCenter</span>.defaultCenter().addObserver(<span class="keyword">self</span>,</span><br><span class="line">      selector: <span class="string">"preferredContentSizeChanged:"</span>, </span><br><span class="line">      name: <span class="type">UIContentSizeCategoryDidChangeNotification</span>, </span><br><span class="line">      object: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同学们应该注意到了，我们刚才添加的方法和<code>NoteEditorViewController.swift</code>中添加的方法一样。没错，给<code>NSNotificationCenter</code>注册的方法是相同的，但是<code>preferredContentSizeChanged</code>方法会有点区别。</p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -751,144 +915,55 @@
 </script>
 
 
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/custom-subscripts-in-swift/" itemprop="url">
-                  在Swift中自定义下标（Subscripts）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2014-09-03T00:00:00+08:00" content="2014-09-03">
-              2014-09-03
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/custom-subscripts-in-swift/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/custom-subscripts-in-swift/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>通常情况下，我们在使用数组（Array）或字典（Dictionary）时会使用到下标。其实在Swift中，我们还可以给类（class）自定义下标，下面就让我们来看看Swift中是如何自定义下标的。</p>
-<h2 id="u901A_u8FC7Subscript_u8D4B_u503C_u548C_u83B7_u53D6_u503C"><a href="#u901A_u8FC7Subscript_u8D4B_u503C_u548C_u83B7_u53D6_u503C" class="headerlink" title="通过Subscript赋值和获取值"></a>通过Subscript赋值和获取值</h2><p>我们先看看下面这个类：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DailyMeal</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">MealTime</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Breakfast</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Lunch</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Dinner</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> meals: [<span class="type">MealTime</span> : <span class="type">String</span>] = [:]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们使用该类时可以直接用<code>meals</code>字典，以枚举作为key来查询，像这样：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday.meals[.<span class="type">Breakfast</span>] = <span class="string">"Toast"</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> someMeal = monday.meals[.<span class="type">Breakfast</span>]</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">println</span>(someMeal)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>到目前呢，我们创建了<code>DailyMeal</code>类的实例变量<code>monday</code>，并可以使用<code>DailyMeal</code>类中的<code>meals</code>字典进行查询。但是大家有没有感觉<code>monday.meals[]</code>这种写法很累赘呢？至少我看<code>meals</code>就很不顺眼，有没有更简单快捷的方法让我们直接使用<code>monday</code>变量就能赋值或获取<code>Breakfast</code>的值呢？别着急，今天的主角要登场了，让我们先在<code>DailyMeal</code>类中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span>?</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">get</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> meals[requestedMeal]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">set</span>(newMealName)</span><br><span class="line">    &#123;</span><br><span class="line">        meals[requestedMeal] = newMealName</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的代码就是一个自定义下标，看起来是不是有点像计算类属性的<code>getter</code>、<code>setter</code>方法的写法呢？但是它们还是有区别的，首先下标使用<code>subscript</code>关键字，然后跟一个圆括号，里面是该下标的参数和参数类型（在实际使用中该参数就相当于数组的index和字典的key一样），最后有该下标的返回值类型。</p>
-<p>从上面代码可以看到，在下标的<code>getter</code>和<code>setter</code>方法中，其实还是在对<code>meals</code>数组进行操作，但是我们通过下标就可以将对<code>meals</code>数组的操作屏蔽掉。现在来看看我们应该怎样使用：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday[.<span class="type">Breakfast</span>] = <span class="string">"Toast"</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> someMeal = monday[.<span class="type">Breakfast</span>]</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">println</span>(someMeal) <span class="comment">// Toast</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>现在是不是已经没有碍眼的<code>meals</code>了呢，使用起来更加简洁，语义也更加明确了呢，这就是下标最简单的一个用法。</p>
-<p>如果上面的代码中我们不给<code>monday[.Breakfast]</code>赋值，直接输出值会得到什么结果呢？细心的同学可能会注意到，在定义下标时它的返回值是Optional类型的，所以不赋值直接输出的结果是<code>nil</code>，这样就显得太没礼貌了，所以我们再来改造一下下标的代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">get</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> thisMeal = meals[requestedMeal]</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> thisMeal</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Ramen"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">set</span>(newMealName)</span><br><span class="line">    &#123;</span><br><span class="line">        meals[requestedMeal] = newMealName</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们看到下标的返回值从<code>String?</code>改为了<code>String</code>，那么相应的我们要在<code>getter</code>方法中对<code>meals[requestedMeal]</code>的值进行判断，如果没有赋值的话，我们将返回一个默认值<code>Ramen</code>（兰州拉面让人欲罢不能）。现在我们就可以这样用啦：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> monday = <span class="type">DailyMeal</span>()</span><br><span class="line"> </span><br><span class="line">monday[.<span class="type">Lunch</span>] = <span class="string">"Pizza"</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(monday[.<span class="type">Lunch</span>])         <span class="comment">//Output:  "Pizza"</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(monday[.<span class="type">Dinner</span>])        <span class="comment">//Output:  "Ramen"</span></span><br></pre></td></tr></table></figure>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>现在使用<code>DailyMeal</code>类是不是感觉到很简介，语义很明确也很健壮呢，答案是肯定的。我们通过下标避免向用户暴露不必要的API，同时也达到了高维护性的目的。</p>
-<p><code>DailyMeal</code>类的完整代码如下：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DailyMeal</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">MealTime</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Breakfast</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Lunch</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">Dinner</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">var</span> meals: [<span class="type">MealTime</span> : <span class="type">String</span>] = [:]    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">subscript</span>(requestedMeal : <span class="type">MealTime</span>) -&gt; <span class="type">String</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> thisMeal = meals[requestedMeal]</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> thisMeal</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">"Ramen"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">set</span>(newMealName)</span><br><span class="line">        &#123;</span><br><span class="line">            meals[requestedMeal] = newMealName</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="u53EA_u8BFB_u4E0B_u6807"><a href="#u53EA_u8BFB_u4E0B_u6807" class="headerlink" title="只读下标"></a>只读下标</h2><p>何为只读下标，顾名思义就是不能通过下标赋值，只能通过下标查询。这种下标的应用场景一般是实现一些数据公式、数据函数，它们一般都是只需要你指定一个数字，然后返回该公式对该数字的计算结果。下面我们用一个阶乘的例子来说明只读下标：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">FactorialGenerator</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">subscript</span>(n: <span class="type">Int</span>) -&gt; <span class="type">Int</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> result = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> n &gt; <span class="number">0</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span> value <span class="keyword">in</span> <span class="number">1</span>...n</span><br><span class="line">            &#123;</span><br><span class="line">                result *= value</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>同学们可能已经注意到了，上面的下标并没有<code>getter</code>和<code>setter</code>方法。这是因为，如果你想定义一个只读的下标，那么可以不实现<code>setter</code>方法，并且可以省略<code>getter</code>方法的<code>get</code>关键字。Swfit的编译器会判断出这是一个只读的下标，如果你强行通过下标赋值，那么编译器会报错。</p>
-<p>让我们来使用以下这个阶乘结构体：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> factorial = <span class="type">FactorialGenerator</span>()</span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(<span class="string">"Five factorial is equal to <span class="subst">\(factorial[<span class="number">5</span>])</span>."</span>)</span><br><span class="line"><span class="comment">//Output:  "Five factorial is equal to 120."</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">println</span>(<span class="string">"Ten Factorial is equal to <span class="subst">\(factorial[<span class="number">10</span>])</span>."</span>)</span><br><span class="line"><span class="comment">//Output:  "Ten Factorial is equal to 3628800."</span></span><br></pre></td></tr></table></figure>
-<p>当然上面这个示例只是展示了只读下标的语法和应用场景，阶乘的实现逻辑在这就不累赘了。总的来说，我们可以通过下标简化暴露给用户的API，你可以在用户毫不知情的情况下更改某个API的功能。不仅使代码更易读，同时也大大提高了代码的可维护性，是不是很酷呢！</p>
-<p>参考原文：<a href="http://www.codingexplorer.com/custom-subscripts-swift/?utm_source=feedly&amp;utm_reader=feedly&amp;utm_medium=rss&amp;utm_campaign=custom-subscripts-swift" target="_blank" rel="external">Custom Subscripts in Swift</a></p>
+<p>然后在<code>NotesListViewController.swift</code>中再添加<code>preferredContentSizeChanged</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">preferredContentSizeChanged</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  tableView.reloadData()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这段代码的作用是让Tableview重新加载可见的Cell，在更新时就会触发<code>preferredFontForTextStyle()</code>方法，将新设置的字体样式应用到Tableview的Cell中。</p>
+<p>再次编译运行应用，设置字体样式，然后看看我们的应用有没有正确的响应你的设置。</p>
+<h2 id="u4F7FCell_u9AD8_u5EA6_u81EA_u9002_u5E94"><a href="#u4F7FCell_u9AD8_u5EA6_u81EA_u9002_u5E94" class="headerlink" title="使Cell高度自适应"></a>使Cell高度自适应</h2><p>响应字体设置这部分到目前为止我们已经处理完了，效果也不错，但是当你把字体设置为一个足够小的，或者最小的字体时，在TableView中看起来就不怎么好看了，因为Cell的高度没有变化，而字体很小，所以看起来很不美观，比如下面左侧的截图一样：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-7.png" alt="pic"></p>
+<p>这个问题是iOS7中在Dynamic Type中比较坑爹的一个问题。想要使你的应用在不同字体样式下都显示的比较完美，你必须要让Cell的高度根据字体样式的大小做出相应的调整。虽然Auto Layout能帮你解决大部分布局适配上的问题，但在这个问题上，它就比较无力了，这得需要你自己去解决了。</p>
+<p>解决这个问题的原理很简单，就是让TableView的Cell高度根据字体样式的大小进行改变。那么可以通过实现<code>UITextViewDelegate</code>的<code>tableView(_:heightForRowAtIndexPath:)</code>方法来解决该问题。</p>
+<p>在<code>NotesListViewController.swift</code>中加入如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> label: <span class="type">UILabel</span> = &#123;</span><br><span class="line">  <span class="keyword">let</span> temporaryLabel = <span class="type">UILabel</span>(frame: <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: <span class="type">Int</span>.<span class="built_in">max</span>, height: <span class="type">Int</span>.<span class="built_in">max</span>))</span><br><span class="line">  temporaryLabel.text = <span class="string">"test"</span></span><br><span class="line">  <span class="keyword">return</span> temporaryLabel</span><br><span class="line">&#125;()</span><br><span class="line"> </span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!)</span></span> -&gt; <span class="type">CGFloat</span> &#123;</span><br><span class="line">  label.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleHeadline</span>)</span><br><span class="line">  label.sizeToFit()</span><br><span class="line">  <span class="keyword">return</span> label.frame.height * <span class="number">1.7</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码中，首先创建了一个<code>UILabel</code>的实例，用于计算TableView中Cell的高度，也就是这个<code>UILabel</code>的高度就是Cell的高度，然后在<code>tableView(_:heightForRowAtIndexPath:)</code>方法中设置该<code>UILabel</code>的字体样式，调用<code>sizeToFit</code>方法使Label的高度适配字体的高度，最后将Label的高度返回，也就相当于将Cell的高度设置为Label的高度了。这里需要注意的是当调用完<code>sizeToFit</code>方法后，Label与它里面字体之间几乎没有上下间隔，所以我们在返回高度的时候乘以一个上下间隔的比例系数。</p>
+<p>再次编译和运行你的应用，多更改几次字体样式，你会看到Cell的高度随着字体样式也进行着调整：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-8.png" alt="pic"></p>
+<h2 id="u7ED9_u6587_u672C_u6DFB_u52A0_u5370_u5237_u6548_u679C"><a href="#u7ED9_u6587_u672C_u6DFB_u52A0_u5370_u5237_u6548_u679C" class="headerlink" title="给文本添加印刷效果"></a>给文本添加印刷效果</h2><p>给文本添加一点高亮和阴影来达到文本像嵌入纸张的那种印刷效果。</p>
+<p>打开<code>NotesListViewController.swift</code>用下面的代码替换<code>tableView(_:cellForRowAtIndexPath:)</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!)</span></span> -&gt; <span class="type">UITableViewCell</span>? &#123;</span><br><span class="line">  <span class="keyword">let</span> cell = tableView.dequeueReusableCellWithIdentifier(<span class="string">"Cell"</span>, forIndexPath: indexPath) <span class="keyword">as</span> <span class="type">UITableViewCell</span></span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> note = notes[indexPath.row]</span><br><span class="line">  <span class="keyword">let</span> font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleHeadline</span>)</span><br><span class="line">  <span class="keyword">let</span> textColor = <span class="type">UIColor</span>(red: <span class="number">0.175</span>, green: <span class="number">0.458</span>, blue: <span class="number">0.831</span>, alpha: <span class="number">1</span>)</span><br><span class="line">  <span class="keyword">let</span> attributes = [</span><br><span class="line">    <span class="type">NSForegroundColorAttributeName</span> : textColor,</span><br><span class="line">    <span class="type">NSFontAttributeName</span> : font,</span><br><span class="line">    <span class="type">NSTextEffectAttributeName</span> : <span class="type">NSTextEffectLetterpressStyle</span></span><br><span class="line">  ]</span><br><span class="line">  <span class="keyword">let</span> attributedString = <span class="type">NSAttributedString</span>(string: note.title, attributes: attributes)</span><br><span class="line"> </span><br><span class="line">  cell.textLabel?.attributedText = attributedString</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">return</span> cell</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码给TableView的Cell中的文本添加了颜色和<code>NSTextEffectLetterpressStyle</code>文字样式。</p>
+<p>编译运行应用，你会看到更加立体的文本：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-9.png" alt="pic"></p>
+<p>这种印刷效果虽然只是一种较为细微的效果，但这并不代表你就能滥用这种效果，它虽然能使文本看起来有立体感，但是有可能会影响到文本的清晰度。</p>
+<h2 id="u6587_u672C_u7ED5_u884C_u6392_u7248"><a href="#u6587_u672C_u7ED5_u884C_u6392_u7248" class="headerlink" title="文本绕行排版"></a>文本绕行排版</h2><p>一般我们在常用的文本编辑器，比如Word中都能看到文本围绕图片或表格等其他元素的排版格式。TextKit也提供了能让文本按指定的路径排版或按一定形状排版的功能，叫做绕行路径。</p>
+<p>下面我们希望在笔记详细页中添加一个圆形的视图，放在右上角，用于显示这篇笔记的创建时间。</p>
+<p>当你创建完视图摆好位置后，你会发现这个圆形的视图会遮盖住笔记文本信息，所以我们需要给文本创建一个绕行路径来绕开这个圆形的视图。</p>
+<h3 id="u6DFB_u52A0_u5706_u5F62_u89C6_u56FE"><a href="#u6DFB_u52A0_u5706_u5F62_u89C6_u56FE" class="headerlink" title="添加圆形视图"></a>添加圆形视图</h3><p>打开<code>NoteEditorViewController.swift</code>，申明一个属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> timeView: <span class="type">TimeIndicatorView</span>!</span><br></pre></td></tr></table></figure>
+<p>然后在<code>viewDidLoad</code>方法的最后添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">timeView = <span class="type">TimeIndicatorView</span>(date: note.timestamp)</span><br><span class="line">textView.addSubview(timeView)</span><br></pre></td></tr></table></figure>
+<p>创建一个<code>timeView</code>的示例，然后将它作为一个子视图添加到<code>textView</code>中。</p>
+<p>刚才创建的视图需要合适的尺寸大小，你需要一种机制在ViewController绘制子视图调用<code>updateSize</code>方法来计算尺寸。</p>
+<p>所以我们加入如下两个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLayoutSubviews</span><span class="params">()</span></span> &#123;</span><br><span class="line">  updateTimeIndicatorFrame()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">updateTimeIndicatorFrame</span><span class="params">()</span></span> &#123;</span><br><span class="line">  timeView.updateSize()</span><br><span class="line">  timeView.frame = <span class="type">CGRectOffset</span>(timeView.frame, textView.frame.width - timeView.frame.width, <span class="number">0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的<code>viewDidLayoutSubviews</code>方法会调用<code>updateTimeIndicatorFrame</code>方法，该方法会处理两件事，一个是调用<code>updateSize</code>方法设置<code>timeView</code>的尺寸，另一个是设置<code>timeView</code>的位置，使它处于<code>textView</code>的右上角。</p>
+<p>之后每次当ViewController接收到文本字体样式更改的时候都会调用<code>updateTimeIndicatorFrame</code>方法，以便将<code>timeView</code>的尺寸和位置调整到合适的状态。所以我们更改一下<code>preferredContentSizeChanged</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">preferredContentSizeChanged</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  textView.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">  updateTimeIndicatorFrame()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在编译运行应用，点击笔记条目进入详细信息页后你就会在右上角看到一个显示创建时间的圆形视图：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-10.png" alt="pic"></p>
+<p>你可以在设置中改变字体样式，显示创建日期的视图会根据字体样式自动调整到合适的大小。</p>
+<p>但是你们会发现还有一些美中不足的地方，那就是日期视图把笔记文本信息给遮住了，幸运的是TextKit提供的文本绕行路径能帮我们解决这个问题。</p>
+<h3 id="u521B_u5EFA_u7ED5_u884C_u8DEF_u5F84"><a href="#u521B_u5EFA_u7ED5_u884C_u8DEF_u5F84" class="headerlink" title="创建绕行路径"></a>创建绕行路径</h3><p>打开<code>TimeIndicatorView.swift</code>，看看<code>curvePathWithOrigin</code>方法，日期视图在填充渲染背景色的时候会调用该方法，但是你可以通过该方法来决定文本的绕行路径，该方法会自己计算视图的贝塞尔曲线，也就相当于是文本的绕行路径了。</p>
+<p>打开<code>NoteEditorViewController.swift</code>，在<code>updateTimeIndicatorFrame</code>方法末尾中添加如下两行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> exclusionPath = timeView.curvePathWithOrigin(timeView.center)</span><br><span class="line">textView.textContainer.exclusionPaths = [exclusionPath]</span><br></pre></td></tr></table></figure>
+<p>上面的代码通过日期视图的<code>curvePathWithOrigin</code>方法基于贝塞尔曲线计算出绕行路径，然后放在数组中赋值给<code>textView.textContainter.exclusionPaths</code>属性。这里要注意的是绕行路径的起点和坐标与文本信息是相对位置。</p>
+<p>编译运行应用，现在你就可以看到文本信息都绕开了日期视图：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-11.png" alt="pic"></p>
+<p>这个简单的示例只是体现出了绕行路径强大功能的冰山一角，从上面的代码中你可能也注意到了，绕行路径是放在数组中进行赋值的，所以这就意味着每个容器，不管是文本容器还是其他容器都可以被设置多个绕行路径。</p>
+<p>除此之外，绕行路径可以随着你的想法变得简单或者复杂，你甚至可以让文本围绕着星星形状或者蝴蝶形状排版。</p>
+<p>每当绕行路径发生改变时，文本容器就会通知布局管理器，你可以让绕行路径进行动态的改变，比如从星星形状的路径变成蝴蝶形状的路径，此时文本容器也会动态的改变排版。但是这样做会得不偿失，因为用户在阅读的时候看到文字动来动去，估计会砸了手机！</p>
+<p>未完待续……</p>
+<p>原文地址：<a href="http://www.raywenderlich.com/77092/text-kit-tutorial-swift" target="_blank" rel="external">Text Kit Tutorial in Swift</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- DevTalking Banner1 -->
 <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
@@ -921,7 +996,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/13/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/15/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/13/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/15/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -959,7 +1034,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">100</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

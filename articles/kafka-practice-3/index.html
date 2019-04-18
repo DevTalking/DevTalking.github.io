@@ -106,7 +106,7 @@ PartitionKafka的Partition是">
 <meta property="og:image" content="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/29/1546055197464.png">
 <meta property="og:image" content="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/31/1546267108235.png">
 <meta property="og:image" content="http://devtalking.oss-cn-beijing.aliyuncs.com/2019/1/1/1546353684917.png">
-<meta property="og:updated_time" content="2019-04-18T07:52:17.089Z">
+<meta property="og:updated_time" content="2019-04-18T07:58:38.309Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka从上手到实践-庖丁解牛：Partition">
 <meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
@@ -353,6 +353,7 @@ PartitionKafka的Partition是">
 <li>Message默认是随机存储在一个Topic下的不同的Partition中的，如上图。除非显示的指定Partition。</li>
 <li>存储在Partition中的Message是有时效性的，默认是保存一周，可以通过配置更改（后续章节会介绍）。</li>
 </ul>
+<a id="more"></a>
 <p>在Kafka中，一个Partition对应物理机器上的一个文件夹，文件夹命名会以Topic名称加序号表示。换句话说，Partition在Broker中以文件夹的形式存在。每个Partition文件夹中会有多个大小相等的日志段文件（Segment File），消息生产者生产的消息发送到Broker后就会以追加到日志文件末尾的方式持久化到Partition中。</p>
 <h3 id="Replication"><a href="#Replication" class="headerlink" title="Replication"></a>Replication</h3><p>我们再来看一个和Partition相关的概念，Replication。从字面意思就可以看出，这是Partition副本的意思。Replication Factor决定了将Partition复制几份，也就是将数据复制几份。Partition的副本也是会随机被分配到任意Broker中。下图展示了它们之间的关系：</p>
 <p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/17/1545061968721.png" alt=""></p>
@@ -537,7 +538,7 @@ PartitionKafka的Partition是">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">100</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

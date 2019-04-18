@@ -1,0 +1,834 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Kafka," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这一节来看看Zookeeper的命令行工具。
+Zookeeper CLI在第七章节搭建单机Kafka中，我们已经发现了，Kafka是自带Zookeeper的，而且在启动Kafka之前，要先启动Zookeeper，相当于启动了单机Zo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka从上手到实践-Zookeeper CLI：CRUD zNode">
+<meta property="og:url" content="http://www.devtalking.com/articles/kafka-practice-13/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这一节来看看Zookeeper的命令行工具。
+Zookeeper CLI在第七章节搭建单机Kafka中，我们已经发现了，Kafka是自带Zookeeper的，而且在启动Kafka之前，要先启动Zookeeper，相当于启动了单机Zo">
+<meta property="og:updated_time" content="2019-04-18T08:24:45.921Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kafka从上手到实践-Zookeeper CLI：CRUD zNode">
+<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+
+
+(adsbygoogle = window.adsbygoogle || []).push({});
+
+
+
+这一节来看看Zookeeper的命令行工具。
+Zookeeper CLI在第七章节搭建单机Kafka中，我们已经发现了，Kafka是自带Zookeeper的，而且在启动Kafka之前，要先启动Zookeeper，相当于启动了单机Zo">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> Kafka从上手到实践-Zookeeper CLI：CRUD zNode | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Kafka从上手到实践-Zookeeper CLI：CRUD zNode
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2019-01-28T00:00:00+08:00" content="2019-01-28">
+              2019-01-28
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/kafka-practice-13/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-13/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这一节来看看Zookeeper的命令行工具。</p>
+<h2 id="Zookeeper_CLI"><a href="#Zookeeper_CLI" class="headerlink" title="Zookeeper CLI"></a>Zookeeper CLI</h2><p>在第七章节搭建单机Kafka中，我们已经发现了，Kafka是自带Zookeeper的，而且在启动Kafka之前，要先启动Zookeeper，相当于启动了单机Zookeeper，所以我们先说Zookeeper CLI，后面说Zookeeper集群时再具体说配置参数。</p>
+<h3 id="u5C55_u793AzNode"><a href="#u5C55_u793AzNode" class="headerlink" title="展示zNode"></a>展示zNode</h3><p>首先打开终端，连接至我们的服务器，进入<code>/root/kafka_2.12-2.0.0/bin</code>目录，执行如下命令：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sh zookeeper-shell.sh 127.0.0.1:2181</span><br></pre></td></tr></table></figure></p>
+<p>这是Zookeeper CLI Client连接Zookeeper的命令，当看到如下信息时，说明连接成功：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Connecting to 127.0.0.1:2181&#10;Welcome to ZooKeeper!&#10;JLine support is disabled</span><br></pre></td></tr></table></figure></p>
+<p>先来来看看目前Zookeeper里都有哪些zNode：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ls /&#10;&#10;[cluster, controller_epoch, controller, brokers, zookeeper, kafka-manager, admin, isr_change_notification, consumers, log_dir_event_notification, latest_producer_id_block, config]</span><br></pre></td></tr></table></figure></p>
+<p><code>ls</code>命令和Linux中的作用一样，在Zookeeper中是展示某个zNode下的所有zNode。这里的<code>/</code>表示根zNode。可以看到已经有很多zNode注册在了Zookeeper。再来看看<code>brokers</code>下还有哪些zNode：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ls /brokers&#10;&#10;[ids, topics, seqid]</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>再来看看有哪些Topic：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ls /brokers/topics&#10;&#10;[with_keys_topic, first_topic, __consumer_offsets, configured-topic]</span><br></pre></td></tr></table></figure></p>
+<h3 id="u67E5_u770BzNode_u5B58_u50A8_u7684_u6570_u636E"><a href="#u67E5_u770BzNode_u5B58_u50A8_u7684_u6570_u636E" class="headerlink" title="查看zNode存储的数据"></a>查看zNode存储的数据</h3><p>在上一章节中说过，Zookeeper中的zNode是可以存储数据的，那么我们来看看如何查看zNode中存储的数据，比如我们来看看<code>/brokers/ids</code>里保存了什么数据：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">get /brokers/ids&#10;&#10;null&#10;cZxid = 0x5&#10;ctime = Wed Dec 19 23:46:53 CST 2018&#10;mZxid = 0x5&#10;mtime = Wed Dec 19 23:46:53 CST 2018&#10;pZxid = 0x43d&#10;cversion = 51&#10;dataVersion = 0&#10;aclVersion = 0&#10;ephemeralOwner = 0x0&#10;dataLength = 0&#10;numChildren = 1</span><br></pre></td></tr></table></figure></p>
+<p><code>get</code>命令用于查看zNode中存储的数据，从上面的结果看到，<code>/brokers/ids</code>这个zNode里的数据是<code>null</code>，那么看看是否<code>/brokers/ids</code>下还有zNode：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ls /brokers/ids&#10;&#10;[0]</span><br></pre></td></tr></table></figure></p>
+<p>果然，<code>/brokers/ids</code>下还有zNode，这个zNode很明显是以Broker ID命名的。那再来看看<code>/brokers/ids/0</code>里存储了什么样的数据：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">get /brokers/ids/0&#10;&#10;&#123;&#34;listener_security_protocol_map&#34;:&#123;&#34;PLAINTEXT&#34;:&#34;PLAINTEXT&#34;&#125;,&#34;endpoints&#34;:[&#34;PLAINTEXT://ECS&#22806;&#32593;IP:9092&#34;],&#34;jmx_port&#34;:-1,&#34;host&#34;:&#34;ECS&#22806;&#32593;IP&#34;,&#34;timestamp&#34;:&#34;1546570570448&#34;,&#34;port&#34;:9092,&#34;version&#34;:4&#125;&#10;cZxid = 0x43d&#10;ctime = Fri Jan 04 10:56:10 CST 2019&#10;mZxid = 0x43d&#10;mtime = Fri Jan 04 10:56:10 CST 2019&#10;pZxid = 0x43d&#10;cversion = 0&#10;dataVersion = 0&#10;aclVersion = 0&#10;ephemeralOwner = 0x100363316d3004a&#10;dataLength = 192&#10;numChildren = 0</span><br></pre></td></tr></table></figure></p>
+<p>从上面的结果可以看到，第一行显示的就是zNode存储的数据，<code>/brokers/ids/0</code>这个zNode存储了Broker的IP、端口、注册时间戳、JMX端口等信息。这一行之后的信息都是zNode的标准属性了，有各种时间戳、版本号、数据长度、子节点数等。</p>
+<h3 id="u521B_u5EFAzNode"><a href="#u521B_u5EFAzNode" class="headerlink" title="创建zNode"></a>创建zNode</h3><p>我们可以使用Zookeeper CLI自行创建zNode：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">create /my_node &#34;some data&#34;&#10;&#10;Created /my_node&#10;&#10;ls /&#10;&#10;[cluster, controller, brokers, zookeeper, my_node, admin, isr_change_notification, log_dir_event_notification, controller_epoch, kafka-manager, consumers, latest_producer_id_block, config]</span><br></pre></td></tr></table></figure></p>
+<p>使用<code>create</code>命令创建zNode。这里要注意的是，在创建zNode时必须要带着存储数据，哪怕是空也可以：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">create /my_node &#34;&#34;</span><br></pre></td></tr></table></figure></p>
+<p>否则是无法创建zNode的。</p>
+<p>在创建zNode时不可以一次性创建多级zNode，如果还没有创建<code>my_node</code>，直接创建<code>deeper_node</code>是不可以的：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">create /my_node/deeper_node &#34;some data&#34;&#10;Node does not exist: /my_node/deeper_node</span><br></pre></td></tr></table></figure></p>
+<p>所以Zookeeper要一层一层创建zNode：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">create /my_node &#34;some data&#34;&#10;Created /my_node&#10;create /my_node/deeper_node &#34;some data&#34;&#10;Created /my_node/deeper_node&#10;&#10;get /my_node/deeper_node&#10;some data&#10;cZxid = 0x454&#10;ctime = Mon Jan 07 19:12:20 CST 2019&#10;mZxid = 0x454&#10;mtime = Mon Jan 07 19:12:20 CST 2019&#10;pZxid = 0x454&#10;cversion = 0</span><br></pre></td></tr></table></figure></p>
+<h2 id="u66F4_u65B0zNode_u7684_u6570_u636E"><a href="#u66F4_u65B0zNode_u7684_u6570_u636E" class="headerlink" title="更新zNode的数据"></a>更新zNode的数据</h2><p>我们可以通过<code>set</code>命令更新zNode中存储的数据：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">set /my_node &#34;new data&#34;&#10;cZxid = 0x453&#10;ctime = Mon Jan 07 19:12:07 CST 2019&#10;mZxid = 0x455&#10;mtime = Mon Jan 07 19:14:04 CST 2019&#10;pZxid = 0x454&#10;cversion = 1&#10;dataVersion = 1&#10;aclVersion = 0&#10;ephemeralOwner = 0x0&#10;dataLength = 8&#10;numChildren = 1&#10;&#10;get /my_node&#10;new data&#10;cZxid = 0x453&#10;ctime = Mon Jan 07 19:12:07 CST 2019&#10;mZxid = 0x455&#10;mtime = Mon Jan 07 19:14:04 CST 2019&#10;pZxid = 0x454&#10;cversion = 1&#10;dataVersion = 1&#10;aclVersion = 0&#10;ephemeralOwner = 0x0&#10;dataLength = 8&#10;numChildren = 1</span><br></pre></td></tr></table></figure></p>
+<p>可以看到<code>dataVersion</code>和<code>cversion</code>从0变成了1。这里注意一下，每当更新zNode存储的数据时，<code>dataVersion</code>会递增，之所以<code>cversion</code>也递增了是因为更新数据本身也是对zNode的修改，如果我们再更新一次数据，就只有<code>dataVersion</code>会递增了，因为第一次和第二次都是对zNode存储的数据的修改，只算作一次zNode的改变，所以<code>cversion</code>不会再更新：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">set /my_node &#34;again new data&#34;&#10;cZxid = 0x453&#10;ctime = Mon Jan 07 19:12:07 CST 2019&#10;mZxid = 0x456&#10;mtime = Mon Jan 07 19:16:24 CST 2019&#10;pZxid = 0x454&#10;cversion = 1&#10;dataVersion = 2&#10;aclVersion = 0&#10;ephemeralOwner = 0x0&#10;dataLength = 14&#10;numChildren = 1</span><br></pre></td></tr></table></figure></p>
+<p>如果想让<code>cversion</code>变化，那么给<code>my_node</code>再增加一个zNode：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">create /my_node/another_node &#34;some data&#34;&#10;Created /my_node/another_node&#10;get /my_node&#10;again new data&#10;cZxid = 0x453&#10;ctime = Mon Jan 07 19:12:07 CST 2019&#10;mZxid = 0x456&#10;mtime = Mon Jan 07 19:16:24 CST 2019&#10;pZxid = 0x457&#10;cversion = 2&#10;dataVersion = 2&#10;aclVersion = 0&#10;ephemeralOwner = 0x0&#10;dataLength = 14&#10;numChildren = 2</span><br></pre></td></tr></table></figure></p>
+<p>可以看到<code>cversion</code>和<code>numChildren</code>都变了。</p>
+<h3 id="u6DFB_u52A0zNode_Watcher"><a href="#u6DFB_u52A0zNode_Watcher" class="headerlink" title="添加zNode Watcher"></a>添加zNode Watcher</h3><p>上一章节同样说过，Zookeeper中的zNode的所有变更都可以被监控到。来看看如何通过CLI给zNode添加Watcher。我们给<code>/my_node/deeper_node</code>添加Watcher：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">get /my_node/deeper_node true&#10;some data&#10;cZxid = 0x454&#10;ctime = Mon Jan 07 19:12:20 CST 2019&#10;mZxid = 0x454&#10;mtime = Mon Jan 07 19:12:20 CST 2019&#10;pZxid = 0x454&#10;cversion = 0&#10;dataVersion = 0&#10;aclVersion = 0&#10;ephemeralOwner = 0x0&#10;dataLength = 9&#10;numChildren = 0</span><br></pre></td></tr></table></figure></p>
+<p>通过<code>get /zNode true</code>给zNode添加Watcher。当<code>/my_node/deeper_node</code>修改数据时，就会收到监听事件了：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">set /my_node/deeper_node &#34;new data&#34;&#10;&#10;WATCHER::&#10;&#10;WatchedEvent state:SyncConnected type:NodeDataChanged path:/my_node/deeper_node&#10;cZxid = 0x454&#10;ctime = Mon Jan 07 19:12:20 CST 2019&#10;mZxid = 0x458&#10;mtime = Mon Jan 07 19:24:05 CST 2019&#10;pZxid = 0x454&#10;cversion = 0&#10;dataVersion = 1&#10;aclVersion = 0&#10;ephemeralOwner = 0x0&#10;dataLength = 8&#10;numChildren = 0</span><br></pre></td></tr></table></figure></p>
+<h3 id="u5220_u9664zNode"><a href="#u5220_u9664zNode" class="headerlink" title="删除zNode"></a>删除zNode</h3><p>可以通过<code>rmr</code>命令删除zNode，该命令是递归删除，既可以删除指定zNode以及该zNode下的所有zNode：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rmr /my_node&#10;ls /&#10;[cluster, controller, brokers, zookeeper, admin, isr_change_notification, log_dir_event_notification, controller_epoch, kafka-manager, consumers, latest_producer_id_block, config]</span><br></pre></td></tr></table></figure></p>
+<h2 id="u5C0F_u7ED3"><a href="#u5C0F_u7ED3" class="headerlink" title="小结"></a>小结</h2><p>这一章节带大家实践了如何使用Zookeeper CLI操作Zookeeper，通过增删改查zNode进一步认知Zookeeper的结构，对之后认知Kafka集群做以铺垫。希望能给小伙伴们带来帮助。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Kafka/" rel="tag">#Kafka</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/kafka-practice-12/" rel="next" title="Kafka从上手到实践-初步认知：Zookeeper">
+                <i class="fa fa-chevron-left"></i> Kafka从上手到实践-初步认知：Zookeeper
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/kafka-practice-14/" rel="prev" title="Kafka从上手到实践-实践真知：搭建Zookeeper集群">
+                Kafka从上手到实践-实践真知：搭建Zookeeper集群 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">115</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">93</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper_CLI"><span class="nav-number">1.</span> <span class="nav-text">Zookeeper CLI</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u5C55_u793AzNode"><span class="nav-number">1.1.</span> <span class="nav-text">展示zNode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u67E5_u770BzNode_u5B58_u50A8_u7684_u6570_u636E"><span class="nav-number">1.2.</span> <span class="nav-text">查看zNode存储的数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u521B_u5EFAzNode"><span class="nav-number">1.3.</span> <span class="nav-text">创建zNode</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u66F4_u65B0zNode_u7684_u6570_u636E"><span class="nav-number">2.</span> <span class="nav-text">更新zNode的数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u6DFB_u52A0zNode_Watcher"><span class="nav-number">2.1.</span> <span class="nav-text">添加zNode Watcher</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u5220_u9664zNode"><span class="nav-number">2.2.</span> <span class="nav-text">删除zNode</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5C0F_u7ED3"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/kafka-practice-13/';
+      var disqus_title = 'Kafka从上手到实践-Zookeeper CLI：CRUD zNode';
+      var disqus_url = 'http://www.devtalking.com//articles/kafka-practice-13/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

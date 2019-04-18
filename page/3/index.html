@@ -241,8 +241,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/task-manage-omnifocus/" itemprop="url">
-                  基于OmniFocus的任务系统
+                <a class="post-title-link" href="/articles/kafka-practice-9/" itemprop="url">
+                  Kafka从上手到实践-Kafka CLI：Reseting Offset & Config CLI
                 </a>
               
             
@@ -252,8 +252,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-05-01T00:00:00+08:00" content="2018-05-01">
-              2018-05-01
+            <time itemprop="dateCreated" datetime="2018-12-01T00:00:00+08:00" content="2018-12-01">
+              2018-12-01
             </time>
           </span>
 
@@ -262,8 +262,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/能工巧匠/" itemprop="url" rel="index">
-                    <span itemprop="name">能工巧匠</span>
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
                   </a>
                 </span>
 
@@ -278,8 +278,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/task-manage-omnifocus/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/task-manage-omnifocus/" itemprop="commentsCount"></span>
+              <a href="/articles/kafka-practice-9/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-9/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -310,49 +310,19 @@
 </script>
 
 
-<h2 id="OmniFocus_u7684_u51E0_u4E2A_u4E3B_u8981_u6982_u5FF5"><a href="#OmniFocus_u7684_u51E0_u4E2A_u4E3B_u8981_u6982_u5FF5" class="headerlink" title="OmniFocus的几个主要概念"></a>OmniFocus的几个主要概念</h2><p>文章中所有的内容都是以OmniFocus 3为例。</p>
+<h2 id="Reseting_Offset"><a href="#Reseting_Offset" class="headerlink" title="Reseting Offset"></a>Reseting Offset</h2><p>在实际的业务场景中，经常需要重复消费Topic中的Message，所以来看看如何重置Offset。</p>
+<p>首先重置Offset可以通过如下的命令：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --group consumer_group_1 --reset-offsets [options] --execute --topic xxxx</span><br></pre></td></tr></table></figure></p>
+<p>Kafka为我们提供了6种重置Offset的方式，也就是命令中的<code>options</code>：</p>
 <ul>
-<li>文件夹：OmniFocus中任务的组织结构最顶级一层，但只是用于分类，本身没有什么属性。</li>
-<li>项目：顾名思义，用于定义我们生活和工作中大大小小的项目，项目本身也有属性设置，可设置标签、其内任务的关系（并行、串行、单个），截止日期等。项目下可包含多个任务。</li>
-<li>任务：OmniFocus中承载事件的最小颗粒。因为OmniFocus支持任务无限嵌套，所以当多个任务在一个任务下时该任务就成为一个任务组。</li>
-<li>任务组：任务组本身也是一个任务，但是它又是其他任务的父任务，所以任务组有子任务关系（并行、串行、单个）的设置。</li>
-<li>标签：任务、项目身上都可以设置一到多个标签。标签可以嵌套，并且标签支持设置地理位置，并且有根据进入，走出两个行为和距离范围设置通知。</li>
-<li>透视：根据各种条件筛选任务的视图。比如查看有标签“办公室”，即将截至的任务。条件可以按照包含任意、全部包含和不包含进行组合。然后还可以设置筛选出来任务的排列、分组方式。</li>
-</ul>
-<h2 id="u4EFB_u52A1_u7CFB_u7EDF"><a href="#u4EFB_u52A1_u7CFB_u7EDF" class="headerlink" title="任务系统"></a>任务系统</h2><p>我参照John Z. Sonmez的看板+番茄钟的系统，将其调整为OmniFocus+番茄钟的系统。</p>
-<h3 id="u7CFB_u7EDF_u8BBE_u7F6E"><a href="#u7CFB_u7EDF_u8BBE_u7F6E" class="headerlink" title="系统设置"></a>系统设置</h3><ul>
-<li>在截止日期这一项，将即将截止日期的表示设置为今天。</li>
-<li>今天和Watch这一项，设置为自定义透视的<strong>今日</strong>（该透视下面会讲到）。</li>
-</ul>
-<h3 id="u6784_u5EFA_u7CFB_u7EDF_u7684_u4E3B_u8981_u6807_u7B7E"><a href="#u6784_u5EFA_u7CFB_u7EDF_u7684_u4E3B_u8981_u6807_u7B7E" class="headerlink" title="构建系统的主要标签"></a>构建系统的主要标签</h3><ul>
-<li>仪式：周期性重复的任务会设置该标签。</li>
-<li>地点：标明某个任务能在何种场所进行。<ul>
-<li>办公室</li>
-<li>家</li>
-<li>通勤中</li>
-</ul>
-</li>
-<li>状态：进行任务时需要投入的专注度。<ul>
-<li>集中精力</li>
-<li>放松</li>
-</ul>
-</li>
-<li>跟踪：需要跟踪的任务会设置该标签，比如安排下去的任务需要在某个时间点知道完成的结果。</li>
-<li>采购：需要购买东西的任务会设置该标签。</li>
-<li>星期：规划一周任务时设置的标签。<ul>
-<li>周一</li>
-<li>周二</li>
-<li>周三</li>
-<li>周四</li>
-<li>周五</li>
-<li>周六</li>
-<li>周日</li>
-</ul>
-</li>
-<li>二分钟：能在很短时间内完成的任务会设置该标签。</li>
+<li><code>--to-earliest</code>：重置到最早的Offset。</li>
+<li><code>--to-latest</code>：重置到最后的Offset。</li>
+<li><code>--to-offset &lt;Long: offset&gt;</code>：重置到指定的Offset。</li>
+<li><code>--to-current</code>：重置到当前的Offset。</li>
+<li><code>--to-datetime &lt;String: datetime&gt;</code>：重置到指定时间的Offset，时间格式为<code>YYYY-MM-DDTHH:mm:SS.sss</code>。</li>
+<li><code>--shift-by &lt;Long: number-of-offsets&gt;</code>：左移或右移Offset。</li>
 </ul>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/task-manage-omnifocus/#more" rel="contents">
+            <a class="btn" href="/articles/kafka-practice-9/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -390,8 +360,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/machine-learning-11/" itemprop="url">
-                  机器学习笔记十一之决策边界
+                <a class="post-title-link" href="/articles/kafka-practice-8/" itemprop="url">
+                  Kafka从上手到实践-Kafka CLI：Consumer CLI
                 </a>
               
             
@@ -401,8 +371,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-04-30T00:00:00+08:00" content="2018-04-30">
-              2018-04-30
+            <time itemprop="dateCreated" datetime="2018-12-01T00:00:00+08:00" content="2018-12-01">
+              2018-12-01
             </time>
           </span>
 
@@ -411,8 +381,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
                   </a>
                 </span>
 
@@ -427,8 +397,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-11/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-11/" itemprop="commentsCount"></span>
+              <a href="/articles/kafka-practice-8/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-8/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -459,249 +429,15 @@
 </script>
 
 
-<h2 id="u51B3_u7B56_u8FB9_u754C"><a href="#u51B3_u7B56_u8FB9_u754C" class="headerlink" title="决策边界"></a>决策边界</h2><p>决策边界顾名思义就是需要分类的数据中，区分不同类别的边界，举个不恰当的例子，就像省的地界一样，你处在北京还是处在河北，全看你站在区分北京和河北的那条线的哪边。这节我们来看看使用逻辑回归算法如何绘制鸢尾花前两个分类的决策边界。</p>
-<h3 id="u7EBF_u6027_u51B3_u7B56_u8FB9_u754C"><a href="#u7EBF_u6027_u51B3_u7B56_u8FB9_u754C" class="headerlink" title="线性决策边界"></a>线性决策边界</h3><p>再来回顾一下逻辑回归，我们需要找到一组$\theta$值，让这组$\theta$和训练数据相乘，然后代入Sigmoid函数，求出某个类别的概率，并且假设，当概率大于等于0.5时，分类为1，当概率小于0.5时，分类为0：</p>
-<p>$$\hat p = \sigma(\theta^T X_b)=\frac 1 {1+e^{-\theta^{T}X_b}}$$</p>
-<p>$$\hat y =\left\{<br>\begin{aligned}<br>1, \ \ \ \hat p \ge 0.5 \\<br>0, \ \ \ \hat p &lt; 0.5 \\<br>\end{aligned}<br>\right.<br>$$</p>
-<p>在Sigmoid函数那节解释过，当$t&gt;0$时，$\hat p&gt;0.5$。当$t&lt;0$时，$\hat p&lt;0.5$，因为$t= \theta^T X_b $，所以：</p>
-<p>$$\hat y =\left\{<br>\begin{aligned}<br>1, \ \ \ \ \hat p \ge 0.5, \ \ \ \ \theta^T X_b \ge 0 \\<br>0, \ \ \ \ \hat p &lt; 0.5, \ \ \ \ \theta^T X_b &lt; 0 \\<br>\end{aligned}<br>\right.<br>$$</p>
-<p>那么当$\theta^T X_b =0$时，理论上$\hat p$就是0.5，分类既可以为0，也可以为1。只不过我们在这里将$\hat p=0.5$是，分类假设为1。由此可见$\theta^T X_b =0$就是逻辑回归中的决策边界，并且是线性决策边界。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-11/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/machine-learning-10/" itemprop="url">
-                  机器学习笔记十之逻辑回归
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2018-04-15T00:00:00+08:00" content="2018-04-15">
-              2018-04-15
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-10/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-10/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>在这一篇笔记中我们来学习目前应用比较广泛的一个分类算法逻辑回归（Logistic Regression）。</p>
-<h2 id="u4EC0_u4E48_u662F_u903B_u8F91_u56DE_u5F52"><a href="#u4EC0_u4E48_u662F_u903B_u8F91_u56DE_u5F52" class="headerlink" title="什么是逻辑回归"></a>什么是逻辑回归</h2><p>首先大家应该有会有一个疑问，为什么既然叫逻辑回归，但是解决的却是分类问题呢。因为逻辑回归是将样本的特征和样本发生的概率联系起来，在拟合样本数据发生概率的时候，其实是在解决一个回归问题，当概率计算出来后，再根据概率进行分类处理。所以逻辑回归在解决分类问题时，其实中间还是进行了回归问题的处理，但是逻辑回归只能解决二分类问题，这一点要注意。</p>
-<p>逻辑回归在解决概率这个回归问题时，和线性回归、多项式回归有一个不同的地方，那就是后者训练出的模型，预测其他样本数据的目标值时值域理论上是在负无穷到正无穷的，换句话说也就是对值域是没有什么限制的。而对于表示概率的数而言，一般值域都是在0到1之间，真实世界中，概率不都是按从0%到100%表示嘛。所以这就引出了逻辑回归和线性回归的相似和不同处，继而体现在公式模型上。在第四篇笔记中，我们知道多元线性回归的公式模型是：<br>$$ \hat y = \theta ^T X_b  $$</p>
-<p>因为$\hat y$的值域为$(-\infty,+\infty)$，所以如果要在逻辑回顾中运用在求解概率的公式模型上就需要另外一个函数将其值域限定在$(0, 1)$，我们将这个函数称为<strong>Sigmoid</strong>函数：</p>
-<p>$$\hat p = \sigma(\theta ^T X_b)$$</p>
-<p>$$\sigma(t) = \frac 1 {1+e^{-t}}$$</p>
-<p>最终逻辑回归求解概率的模型为：</p>
-<p>$$\hat p = \frac 1 {1+e^{-\theta ^T X_b}}$$</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-10/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/machine-learning-9/" itemprop="url">
-                  机器学习笔记九之交叉验证、模型正则化
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2018-03-30T00:00:00+08:00" content="2018-03-30">
-              2018-03-30
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分类于
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-9/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-9/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u9A8C_u8BC1_u6570_u636E_u96C6_u4E0E_u4EA4_u53C9_u9A8C_u8BC1"><a href="#u9A8C_u8BC1_u6570_u636E_u96C6_u4E0E_u4EA4_u53C9_u9A8C_u8BC1" class="headerlink" title="验证数据集与交叉验证"></a>验证数据集与交叉验证</h2><p>在上一篇笔记中我们又提到了训练数据集和测试数据集，拆分样本数据的这种做法目的就是通过测试数据集判断模型的好坏，如果我们发现训练出的模型产生了过拟合的现象，既在训练数据集上预测评分很好，但是在测试数据集上预测评分不好的情况，那可能就需要重新调整超参数训练模型，以此类推，最终找到一个或一组参数使得模型在测试数据集上的预测评分也很好，也就是训练出的模型泛化能力比较好。那么这种方式会产生一个问题，就是有可能会针对测试数据过拟合，因为每次都是找到参数训练模型，然后看看在测试数据集上的表现如何，这就让我们的模型又被测试数据集左右了，既可以理解为训练出的模型对特定的训练数据集和特定的测试数据集表现都不错，但是再来一种类似的样本数据，表现可能又不尽如人意了。</p>
-<p>那么要彻底解决这个问题，就要引入验证数据集的概念，既将样本数据分为三份，训练数据集、验证数据集、测试数据集。</p>
+<h2 id="Consumer_CLI"><a href="#Consumer_CLI" class="headerlink" title="Consumer CLI"></a>Consumer CLI</h2><p>这一节来看看使用命令行启动Consumer接收消息，通过如下的命令启动Consumer：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic</span><br></pre></td></tr></table></figure></p>
 <ul>
-<li>训练数据集和之前的用途一样，是用来训练模型的。</li>
-<li>验证数据集的作用和之前的测试数据集一样，是用来验证由训练数据集训练出的模型的好坏程度的，或者说是调整超参数使用的数据集。</li>
-<li>此时的测试数据集和之前的作用就不一样了，这里的测试数据集是当训练出的模型在训练数据集和验证数据集上都表现不错的前提下，最终衡量该模型性能的数据集。测试数据集在整个训练模型的过程中是不参与的。</li>
+<li><code>kafka-console-consumer.sh</code>是启动Consumer的命令。</li>
+<li><code>--bootstrap-server</code>指定要连接的Broker地址。</li>
+<li><code>--topic</code>指定Topic名称，既要从哪个Topic里读数据。</li>
 </ul>
-<h3 id="u4EA4_u53C9_u9A8C_u8BC1_uFF08Cross_Validation_uFF09"><a href="#u4EA4_u53C9_u9A8C_u8BC1_uFF08Cross_Validation_uFF09" class="headerlink" title="交叉验证（Cross Validation）"></a>交叉验证（Cross Validation）</h3><p>我们在验证数据集概念的基础上，再来看看交叉验证。交叉验证其实解决的是随机选取验证数据集的问题，因为如果验证数据集是固定的，那么万一验证数据集过拟合了，那就没有可用的验证数据集了，所以交叉验证提供了随机的、可持续的、客观的模型验证方式。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/9b3e80db3abbe355b5251935cb97e28b.jpg" alt=""></p>
-<p>交叉验证的思路是将训练数据分成若干份，假设分为A、B、C三份，分别将这三份各作为一次验证数据集，其他两份作为训练数据集训练模型，然后将训练出的三个模型评分取均值，将这个均值作为衡量算法训练模型的结果来调整参数，如果平均值不够好，那么再调整参数，再训练出三个模型，以此类推。</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2019/4/18/1555575057414.png" alt=""></p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-9/#more" rel="contents">
+            <a class="btn" href="/articles/kafka-practice-8/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -739,8 +475,8 @@
             
             
               
-                <a class="post-title-link" href="/articles/machine-learning-8/" itemprop="url">
-                  机器学习笔记八之多项式回归、拟合程度、模型泛化
+                <a class="post-title-link" href="/articles/kafka-practice-7/" itemprop="url">
+                  Kafka从上手到实践-Kafka CLI：Topic CLI & Producer CLI
                 </a>
               
             
@@ -750,8 +486,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2018-03-15T00:00:00+08:00" content="2018-03-15">
-              2018-03-15
+            <time itemprop="dateCreated" datetime="2018-11-15T00:00:00+08:00" content="2018-11-15">
+              2018-11-15
             </time>
           </span>
 
@@ -760,8 +496,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
                   </a>
                 </span>
 
@@ -776,8 +512,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-8/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-8/" itemprop="commentsCount"></span>
+              <a href="/articles/kafka-practice-7/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-7/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -808,23 +544,241 @@
 </script>
 
 
-<p>在前面的笔记中，我们使用的样本数据都是具有一定线性关系的，我们使用简单线性回归或者多元线性回归来拟合这些数据。但是这种具有强假设的数据集在实际应用中是比较少的，大多数的样本数据都没有明显的线性关系，那么这一节主要来看看如何对非线性关系的样本数据进行处理并预测。</p>
-<h2 id="u591A_u9879_u5F0F_u56DE_u5F52"><a href="#u591A_u9879_u5F0F_u56DE_u5F52" class="headerlink" title="多项式回归"></a>多项式回归</h2><p>多项式回归就是我们要使用的方法，其本质上还是基于线性回归的数学原理，只不过是对损失函数进行巧妙的改变使得原本我们用线性回归求得一条直线，变为求得一条曲线。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ba54b737f3717cf2fec01814463c4a4c.jpg" alt=""><br>在线性回归的问题中，对于这些数据（蓝色点），我们是要寻找一条直线，让这条直线尽可能的拟合这些数据，如果数据只有一个特征的话，我们的模型就是：</p>
-<p>$$ y=ax + b $$</p>
-<p>$x$就是数据的已知特征，$a$和$b$是我们的模型需要求出的参数。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/f6a83a4e5b65ca84c17ff6d5468c63e2.jpg" alt=""></p>
-<p>那如果我们的数据是像上图这种分布形态呢？显然红色那条直线无法拟合这些数据，而黄色那条曲线能更好的拟合这些数据。在样本数据特征数量不变的情况下，这条黄色曲线的模型其实就是一个一元二次方程：</p>
-<p>$$y = ax^2+bx+c$$</p>
-<p>我们抛开这个方程表示的坐标系形态来看，假设将$x^2$看作$x_1$，将$x$看作$x_2$，那么方式就可以写为：</p>
-<p>$$y=ax_1+bx_2+c$$</p>
-<p>这就变成了具有两个特征的样本数据的线性回归问题。现在大家就可以理解在本节开头所说的对损失函数进行巧妙改变的含义了吧。</p>
-<p>所以对与多项式回归而言，就是需要我们为样本数据增加一个特征，使之可以用线性回归的原理更好的拟合样本数据，但是求出的是对于原始样本而言的非线性的曲线。</p>
-<h3 id="u5B9E_u73B0_u591A_u9879_u5F0F_u56DE_u5F52"><a href="#u5B9E_u73B0_u591A_u9879_u5F0F_u56DE_u5F52" class="headerlink" title="实现多项式回归"></a>实现多项式回归</h3><p>这一节我们在Jupyter Notebook中看看如何实现多项式回归：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建样本数据，从-3到3的100个随机数</span></span><br><span class="line">x = np.random.uniform(-<span class="number">3</span>, <span class="number">3</span>, size=<span class="number">100</span>)</span><br><span class="line"><span class="comment"># 转换为100行1列的矩阵，既样本数据只有一个特征</span></span><br><span class="line">X = x.reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 求y的方程</span></span><br><span class="line">y = <span class="number">0.5</span> * x**<span class="number">2</span> + x + <span class="number">2</span> + np.random.normal(<span class="number">0</span>, <span class="number">1</span>, size=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将样本数据绘制出来</span></span><br><span class="line">plt.scatter(x, y)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ccfd43e57d544b2be620023d01b3cf2a.jpg" alt=""></p>
+<p>Kafka CLI是Kafka Command Line Interface。其实就是Kafka的命令行工具，可以让我们在终端里方面的进行Kafka的操作，比如创建Topic、Partition、Replication、Produce data、Consume data等等。后续的几个章节主要来介绍如何使用Kafka CLI。</p>
+<h2 id="Topic_CLI"><a href="#Topic_CLI" class="headerlink" title="Topic CLI"></a>Topic CLI</h2><p>首先我们可以通过下面的命令创建Topic：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-topics.sh &#8212;zookeeper 127.0.0.1:2181 &#8212;topic xxxx_topic &#8212;create &#8212;partitions 3 &#8212;replication-factor 1</span><br></pre></td></tr></table></figure></p>
+<p>这里需要注意一点，<code>replication-factor</code>不能大于Broker的数量，这个很好理解，前文中有过阐述。成功后可以看<code>Created topic &quot;first_topic&quot;.</code>这样的提示。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-8/#more" rel="contents">
+            <a class="btn" href="/articles/kafka-practice-7/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/kafka-practice-6/" itemprop="url">
+                  Kafka从上手到实践-实践真知：搭建单机Kafka
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2018-11-01T00:00:00+08:00" content="2018-11-01">
+              2018-11-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/kafka-practice-6/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-6/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这一节介绍如何在Linux服务器上搭建单机Kafka。</p>
+<h2 id="u79DF_u8D41_u670D_u52A1_u5668"><a href="#u79DF_u8D41_u670D_u52A1_u5668" class="headerlink" title="租赁服务器"></a>租赁服务器</h2><p>为了更加真实，本小册的实践内容都搭建在云服务器上。可以在阿里云或者腾讯云租赁服务器，如果想租赁国外的服务器，可以在<a href="https://www.vultr.com/?ref=7702774">Vultr</a>租赁。我选择在阿里云租赁了一台Linux服务器。配置不需要太高，入门级的就可以，系统可以选择CentOS或者Ubuntu。</p>
+<blockquote>
+<p>注意：在配置ECS时，宽带计费方式要选择按量计费，这样可以自动分配公网IP，并且价格实惠。</p>
+</blockquote>
+<h2 id="u5B89_u88C5JDK"><a href="#u5B89_u88C5JDK" class="headerlink" title="安装JDK"></a>安装JDK</h2><p>使用终端登录服务器，首先安装JDK：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apt update&#10;apt install openjdk-8-jdk</span><br></pre></td></tr></table></figure></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/kafka-practice-6/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/kafka-practice-5/" itemprop="url">
+                  Kafka从上手到实践-庖丁解牛：Consumer
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2018-10-15T00:00:00+08:00" content="2018-10-15">
+              2018-10-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/kafka-practice-5/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-5/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>了解完Producer，接下来介绍Kafka中的Consumer的概念，以及在消费Message时有什么样的策略。</p>
+<h2 id="Consumer"><a href="#Consumer" class="headerlink" title="Consumer"></a>Consumer</h2><p>Consumer负责从Topic中读取数据，我们已经知道了Topic是通过名称确定唯一的，所以指定Consumer从哪个Topic中读数据，同样使用Topic名称指定。Kafka中的Consumer有以下几点需要我们注意：</p>
+<ul>
+<li>我们只需要指定需要从哪个Topic中读取数据即可。不需要关心Consumer是从哪个Broker中的哪个Partition中读数据，这些工作由Kafka帮我们处理好了。</li>
+<li>当持有Topic的Broker挂掉，重新恢复后，Consumer可以自动重新从该Broker中读数据。</li>
+<li>在一个Partition中，Consumer是按Offset的顺序读取数据的。</li>
+<li>一个Consumer可以同时读取多个Broker中的不同Partition，但是Partition之间无法保证读取数据的顺序，因为是并行执行的。</li>
+</ul>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/kafka-practice-5/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -850,7 +804,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -888,7 +842,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">100</span>
+              <span class="site-state-item-count">115</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
