@@ -174,7 +174,7 @@
             
               <i class="menu-item-icon fa fa-home"></i> <br />
             
-            首頁
+            首页
           </a>
         </li>
       
@@ -184,7 +184,7 @@
             
               <i class="menu-item-icon fa fa-th"></i> <br />
             
-            分類
+            分类
           </a>
         </li>
       
@@ -194,7 +194,7 @@
             
               <i class="menu-item-icon fa fa-archive"></i> <br />
             
-            歸檔
+            归档
           </a>
         </li>
       
@@ -204,7 +204,7 @@
             
               <i class="menu-item-icon fa fa-tags"></i> <br />
             
-            標籤
+            标签
           </a>
         </li>
       
@@ -241,6 +241,255 @@
             
             
               
+                <a class="post-title-link" href="/articles/kafka-practice-2/" itemprop="url">
+                  Kafka从上手到实践-庖丁解牛：Topic&Broker
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2018-09-01T00:00:00+08:00" content="2018-09-01">
+              2018-09-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/kafka-practice-2/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-2/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>Apache Kafka正是上节描述的MQ系统，但不仅是MQ系统，它往往也被描述为<strong>分布式提交日志系统</strong>或者<strong>分布式流式处理系统</strong>。从这节开始，我们将逐步了解Kafka的核心概念。</p>
+<h2 id="Topic"><a href="#Topic" class="headerlink" title="Topic"></a>Topic</h2><p>在Kafka中，Topic可以理解为表示一组特殊的数据流。可以将它想象为关系性数据库中的表。</p>
+<ul>
+<li>数据库中的表存储着同一类的数据。那么Topic同样表示同一类的数据流。</li>
+<li>数据库中的表可以根据需求创建多张。那么Topic同样可以根据需求创建多个，但有一点区别是，Topic没有像数据库表中约束（Constraints）的概念。</li>
+<li>数据库中表的名称是不能重复的，表名能唯一确定一张表。那么Topic同样是以名称确定唯一的，Topic名称不能重复。</li>
+</ul>
+<h2 id="Broker"><a href="#Broker" class="headerlink" title="Broker"></a>Broker</h2><p>一个Kafka的Server就称之为Broker，可以每台物理服务器上只部署一个Broker，可以将多个Broker部署在一台物理服务器上。本身Broker这个单词的意思是中间代理的意思。Broker负责接收Producer发送的消息、对消息进行持久化、让Consumer获取消息。</p>
+<p>关于Broker，我们需要注意以下几点概念：</p>
+<ul>
+<li>Kafka集群就是由多个Broker组成的。</li>
+<li>每个Broker都有一个整数类型的唯一标识ID。</li>
+<li>当我们连接到任意一个Broker后，我们就已经连接到了整个Kafka集群。我们连接的第一个Broker称之为Bootstrap Broker。</li>
+<li>通常，最小的Kafka集群最好有三个Broker。</li>
+</ul>
+<p>我们来看看Broker、Topic、Partition（后续章节会介绍）之间的关系。假设有Broker 101、Broker 102、Broker 103三个Broker。Topic-A、Topic-B两个Topic，这两个Topic分别有三个Partition和两个Partition。他们的关系如下图所示：</p>
+<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/17/1545060563441.png" alt=""></p>
+<p>可以看到，Topic的Partition在Kafka集群中是随机分配给Broker的。也就是说Topic-A的数据会分别被持久化在这三个Broker中，而Topic-B的数据只会持久化在Broker 101和Broker 102中。如果Topic-A再加一个Partition 4，则它会随机被分配给任意一个Broker。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>这一章节介绍了Topic和Broker的概念，Topic承载了Message的输入输出，相当于Kafka对外的窗户。Broker则负责Kafka内部核心的功能，比如Message持久化、如何保证Kafka高可用性等等。。在后续的章节里，会详细介绍它们的各种配置和用法。希望能给小伙伴们带来帮助。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/kafka-practice-1/" itemprop="url">
+                  Kafka从上手到实践-初步认知：MQ系统
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2018-08-15T00:00:00+08:00" content="2018-08-15">
+              2018-08-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/kafka-practice-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>首先我们来认知什么是MQ系统既消息队列（Message Queue）系统。举个不恰当的例子，消息（Message）就相当于自来水，队列（Queue）就相当于自来水管道，错综复杂的管道将自来水送给千家万户。在计算机领域，消息其实就是数据，各种格式的数据，队列就是运输数据的管道，通过各种运输策略将数据送达使用它们的地方。</p>
+<h2 id="u6D88_u606F_u751F_u4EA7_u8005_uFF08Producer_uFF09"><a href="#u6D88_u606F_u751F_u4EA7_u8005_uFF08Producer_uFF09" class="headerlink" title="消息生产者（Producer）"></a>消息生产者（Producer）</h2><p>任何MQ系统都离不开消息生产者（后文中统一使用Producer），否则MQ系统也就没有了存在的意义。好比没有了水源，自来水管道也就没有意义了一样。MQ系统中的Producer既消息（数据）生产者，主要的作用就是生成数据，然后发送给MQ系统中的队列，通常情况下，消息生产者将生产出的消息丢给MQ系统的队列后通常就不再关心消息的去向了，所以它的职责主要就是生成数据，以及数据是否成功被队列接收。然后丢进队列。每个MQ系统都有自己的消息格式，以字节数组的形式在队列中传输。</p>
+<h2 id="u6D88_u606F_u4E3B_u9898_uFF08Topic_uFF09"><a href="#u6D88_u606F_u4E3B_u9898_uFF08Topic_uFF09" class="headerlink" title="消息主题（Topic）"></a>消息主题（Topic）</h2><p>消息主题指的是一类消息，相当于数据库中的表，或文件系统中的一个文件夹，是MQ系统中一切的基础。我们来引用《Kafka：The Definitive Guide》一书中的例图来举例：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/1/3/1681196f3e9a65e4?w=521&amp;h=242&amp;f=jpeg&amp;s=38367" alt=""></p>
+<p>图例展示的是一个独立的队列系统，图中的Metrics Pub/Sub，Logging Pub/Sub，Tracking Pub/Sub其实就是充当了Topic的作用，相当于对消息做了分类。</p>
+<h2 id="u6D88_u606F_uFF08Message_uFF09"><a href="#u6D88_u606F_uFF08Message_uFF09" class="headerlink" title="消息（Message）"></a>消息（Message）</h2><p>MQ系统的内部数据单元一般称为消息（Message），消息类似数据库中的一行或一条记录。不同的MQ系统有不同的消息协议，这个消息协议的作用是为了让消息生产者和消息消费者都能够明白消息所承载的信息，既消息生产者需要知道如何构造消息，消息消费者需要知道如何解析消息，所以就需要有一种统一的格式来描述消息，这个描述消息的格式就是消息协议。</p>
+<h2 id="u6570_u636E_u6301_u4E45_u5316_uFF08Data_Persistent_uFF09"><a href="#u6570_u636E_u6301_u4E45_u5316_uFF08Data_Persistent_uFF09" class="headerlink" title="数据持久化（Data Persistent）"></a>数据持久化（Data Persistent）</h2><p>在使用MQ系统时，数据的健壮性和一致性是至关重要的。试想一下，如果消息生产者生产了消息并且发送走了，但是在同时消息消费者掉线了，那么这条消息就很有可能丢失了，再或者消息生产者生产了一个很大的文件，需要将其序列化后送入队列，那么在消息被消费的时候，应该将序列化后的数据反序列化，如果序列化后的数据有个别丢失，那么就会导致反序列后的信息是不一致的。</p>
+<p>所以在MQ系统中，数据持久化就是用来避免上述情况发生的。通常数据持久化的方式有文件存储，数据库存储两大类，其中还有一些参杂各种缓存机制。对数据持久化的时机也不尽相同，有些是在消息生产者端持久化，有些是在队列中持久化，也有在消息消费者端做持久化。同时对应的重新消费消息的机制和策略也会不相同，比如有消息生产者重发，也有消息消费者重新拉取等。</p>
+<h2 id="u6D88_u606F_u6D88_u8D39_u8005_uFF08Consumer_uFF09"><a href="#u6D88_u606F_u6D88_u8D39_u8005_uFF08Consumer_uFF09" class="headerlink" title="消息消费者（Consumer）"></a>消息消费者（Consumer）</h2><p>消息消费者（后文中统一使用Consumer）顾名思义就是消息的使用者，通过订阅一个或多个不同的消息主题，获取到不同类别的消息进行使用。是整个MQ系统的最后一个环节。</p>
+<h2 id="u5C0F_u7ED3"><a href="#u5C0F_u7ED3" class="headerlink" title="小结"></a>小结</h2><p>这一章节概括了什么是MQ系统，它应该具备哪些基本的功能，这些功能能做什么事情。让大家在脑海里对MQ系统有初步的认知。后续章节在介绍Kafka时其实都是对这几个模块的庖丁解牛。希望能给小伙伴们带来帮助。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/machine-learning-17/" itemprop="url">
                   机器学习笔记十七之集成学习、随机森林
                 </a>
@@ -251,7 +500,7 @@
 
         <div class="post-meta">
           <span class="post-time">
-            發表於
+            发表于
             <time itemprop="dateCreated" datetime="2018-08-01T00:00:00+08:00" content="2018-08-01">
               2018-08-01
             </time>
@@ -259,7 +508,7 @@
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
+              &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/机器学习算法/" itemprop="url" rel="index">
@@ -314,7 +563,7 @@
 <h2 id="u96C6_u6210_u5B66_u4E60"><a href="#u96C6_u6210_u5B66_u4E60" class="headerlink" title="集成学习"></a>集成学习</h2><p>机器学习中的集成学习就是将选择若干算法，针对同一样本数据训练模型，然后看看结果，使用投票机制，少数服从多数，用多数算法给出的结果当作最终的决策依据，这就是集成学习的核心思路。下面我们先手动模拟一个使用集成学习解决回归问题的的示例：</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/articles/machine-learning-17/#more" rel="contents">
-              閱讀全文 &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
         
@@ -361,7 +610,7 @@
 
         <div class="post-meta">
           <span class="post-time">
-            發表於
+            发表于
             <time itemprop="dateCreated" datetime="2018-07-15T00:00:00+08:00" content="2018-07-15">
               2018-07-15
             </time>
@@ -369,7 +618,7 @@
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
+              &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/机器学习算法/" itemprop="url" rel="index">
@@ -435,7 +684,7 @@
 <p>可见基尼系数同样反应了数据不确定性的度量。这里就不再使用代码对基尼系数的方式进行模拟了，其实只需要将信息熵的公式换成基尼系数的既可。</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/articles/machine-learning-16/#more" rel="contents">
-              閱讀全文 &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
         
@@ -482,7 +731,7 @@
 
         <div class="post-meta">
           <span class="post-time">
-            發表於
+            发表于
             <time itemprop="dateCreated" datetime="2018-06-30T00:00:00+08:00" content="2018-06-30">
               2018-06-30
             </time>
@@ -490,7 +739,7 @@
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
+              &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/机器学习算法/" itemprop="url" rel="index">
@@ -547,252 +796,7 @@
 <p>我们再来看一个问题，上图中每一个根节点的输入信息都可以用<strong>是</strong>或<strong>否</strong>来做判断分类，但是机器学习的样本数据都是数字，那么此时如果做判断呢？我们先来使用Scikit Learn中提供的决策树直观的看一下通过决策树对样本数据的分类过程和分类结果。</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/articles/machine-learning-15/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/machine-learning-14/" itemprop="url">
-                  机器学习笔记十四之核函数（Kernel Function）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2018-06-15T00:00:00+08:00" content="2018-06-15">
-              2018-06-15
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-14/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-14/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="SVM_u5904_u7406_u975E_u7EBF_u6027_u95EE_u9898"><a href="#SVM_u5904_u7406_u975E_u7EBF_u6027_u95EE_u9898" class="headerlink" title="SVM处理非线性问题"></a>SVM处理非线性问题</h2><p>我们在<a href="http://www.devtalking.com/articles/machine-learning-8/"> 机器学习笔记八之多项式回归、拟合程度、模型泛化 </a>中讲过线性回归通过多项式回归方法处理非线性问题，同样SVM也可以使用多项式方法处理非线性问题。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用datasets提供的方法构建非线性数据</span></span><br><span class="line">X, y = datasets.make_moons()</span><br></pre></td></tr></table></figure>
-<p>我们可以使用<code>datasets</code>提供的<code>make_moons()</code>函数生成非线性数据，默认为100行2列的矩阵，既100个样本数据，每个样本数据2个特征。可以使用<code>n_samples</code>参数指定样本数据数量。我们将其绘制出来看看：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/df044e91c5054a81223e83ab5e339d9d.jpg" alt=""></p>
-<p>可以看到<code>make_moons()</code>默认生成的数据绘制出的图像是两个规整的半月牙曲线。但是作为样本数据有点太规整了，所以我们可以使用<code>noise</code>参数给生成的数据增加一点噪音：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X, y = datasets.make_moons(noise=<span class="number">0.15</span>)</span><br><span class="line"></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/e1409e9a5bd253d605c321d1edf4aa9c.jpg" alt=""></p>
-<p>可以看到，增加了噪音后虽然数据点较之前的分布分散随机了许多，但整体仍然是两个半月牙形状。下面我们就在SVM的基础上使用多项式来看看对这个样本数据决策边界的计算：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures, StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> LinearSVC</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br></pre></td></tr></table></figure>
-<p>首先我们需要引入我们用到的几个类：</p>
-<ul>
-<li>多项式自然要用到之前讲过的<code>PolynomialFeatures</code>类。</li>
-<li>数据归一化需要用到<code>StandardScaler</code>类。</li>
-<li>同样需要用到Pipeline将多个过程封装在一个函数里，所以要用到<code>Pipeline</code>类。</li>
-</ul>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-14/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/machine-learning-13/" itemprop="url">
-                  机器学习笔记十三之支撑向量机（SVM）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2018-05-30T00:00:00+08:00" content="2018-05-30">
-              2018-05-30
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-13/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-13/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>这一篇笔记主要讲机器学习算法中一个重要的分类算法，支撑向量机（Support Vector Machine）。它背后有严格的数学理论和统计学理论支撑的，这里我们只对它的原理和应用做以介绍，更深层次的数学理论有兴趣可以查阅其他资料。</p>
-<h2 id="u4EC0_u4E48_u662FSVM"><a href="#u4EC0_u4E48_u662FSVM" class="headerlink" title="什么是SVM"></a>什么是SVM</h2><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/5142c26ba0e86429631a63609c314a97.jpg" alt=""></p>
-<p>上面的图展示的是一个二分类问题，在逻辑回归的笔记中，我们知道了决策边界，图中橘黄色的直线就是决策边界，它看似很好的将样本数据的不同分类区分开了。我们在多项式回归的笔记中，讲过模型泛化的问题，一个模型的好坏程度很大程度上是体现了模型泛化能力的好坏，也就是对未知样本的预测能力。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/b26d6614606ac304144b99549eeb390e.jpg" alt=""></p>
-<p>如果新来一个样本数据A，按照决策边界划分它是被分为了蓝色分类，可事实真的是如此吗，因为点A和红色分类的点非常近，很有可能点A是属于红色分类的。所以上图中的决策边界可能并不是最优的，那最优的决策边界应该是什么样的呢？</p>
-<p>上面的决策边界之所以有缺陷，是因为它和红色类别的点太近了，当然肯定也不能和蓝色的点太近了，所以我们希望这条决策边界离红色分类和蓝色分类都尽可能的远，才能很好的避免上面出现的问题。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/990fbea083569d4503be599d202b049d.jpg" alt=""></p>
-<p>想要决策边界离红蓝两个分类都尽可能的远，也就是红蓝分类两边离决策边界最近的点的距离要远，并且两边的点到决策边界的距离要相等，这才说明决策边界是不偏不倚的，如上图所示。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/d4642c6673e5e75023088be725dcd4f8.jpg" alt=""></p>
-<p>过红蓝两边离决策边界最近的点画两条直线，并且平行于决策边界，那么就确定了一个区域，在这个区域内不应该再有任何数据点出现。那么SVM就是尝试寻找这个区域中间那条最优的决策边界。这个区域边界上的点称为支撑向量，换句话说，是支撑向量定义出了这个区域，那么最优的决策边界也是由支撑向量决定的，这也是支撑向量机这个名称的由来。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/f5af760ed417acf74d79d065b437807d.jpg" alt=""></p>
-<p>如上图所示，由支撑向量确定的区域之间的距离称为Margin。那么SVM要做的事情就是最大化Margin，既将问题转化为了求最优解的问题。</p>
-<p>以上对SVM的解释是基于线性可分问题的基础上，也就是能确确实实找到一条直线作为决策边界，这种问题称为Hard Margin SVM，但是很多真实的情况是线性不可分的，这类问题称为Soft Margin SVM，这两类问题都是支撑向量机可以处理的，但基础还是Hard Margin SVM。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-13/#more" rel="contents">
-              閱讀全文 &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
         
@@ -855,22 +859,22 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">96</span>
-              <span class="site-state-item-name">文章</span>
+              <span class="site-state-item-count">98</span>
+              <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
          <!-- <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">9</span>
-              <span class="site-state-item-name">分類</span>
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">分类</span>
               </a>
           </div> -->
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">91</span>
-              <span class="site-state-item-name">標籤</span>
+              <span class="site-state-item-count">92</span>
+              <span class="site-state-item-name">标签</span>
               </a>
           </div>
 
@@ -929,7 +933,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>
@@ -937,11 +941,11 @@
 </div>
 
 <div class="powered-by">
-  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
 </div>
 
 <div class="theme-info">
-  主題 -
+  主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
     NexT
   </a>

@@ -174,7 +174,7 @@
             
               <i class="menu-item-icon fa fa-home"></i> <br />
             
-            首頁
+            首页
           </a>
         </li>
       
@@ -184,7 +184,7 @@
             
               <i class="menu-item-icon fa fa-th"></i> <br />
             
-            分類
+            分类
           </a>
         </li>
       
@@ -194,7 +194,7 @@
             
               <i class="menu-item-icon fa fa-archive"></i> <br />
             
-            歸檔
+            归档
           </a>
         </li>
       
@@ -204,7 +204,7 @@
             
               <i class="menu-item-icon fa fa-tags"></i> <br />
             
-            標籤
+            标签
           </a>
         </li>
       
@@ -241,6 +241,251 @@
             
             
               
+                <a class="post-title-link" href="/articles/machine-learning-14/" itemprop="url">
+                  机器学习笔记十四之核函数（Kernel Function）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2018-06-15T00:00:00+08:00" content="2018-06-15">
+              2018-06-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-14/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-14/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="SVM_u5904_u7406_u975E_u7EBF_u6027_u95EE_u9898"><a href="#SVM_u5904_u7406_u975E_u7EBF_u6027_u95EE_u9898" class="headerlink" title="SVM处理非线性问题"></a>SVM处理非线性问题</h2><p>我们在<a href="http://www.devtalking.com/articles/machine-learning-8/"> 机器学习笔记八之多项式回归、拟合程度、模型泛化 </a>中讲过线性回归通过多项式回归方法处理非线性问题，同样SVM也可以使用多项式方法处理非线性问题。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用datasets提供的方法构建非线性数据</span></span><br><span class="line">X, y = datasets.make_moons()</span><br></pre></td></tr></table></figure>
+<p>我们可以使用<code>datasets</code>提供的<code>make_moons()</code>函数生成非线性数据，默认为100行2列的矩阵，既100个样本数据，每个样本数据2个特征。可以使用<code>n_samples</code>参数指定样本数据数量。我们将其绘制出来看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/df044e91c5054a81223e83ab5e339d9d.jpg" alt=""></p>
+<p>可以看到<code>make_moons()</code>默认生成的数据绘制出的图像是两个规整的半月牙曲线。但是作为样本数据有点太规整了，所以我们可以使用<code>noise</code>参数给生成的数据增加一点噪音：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X, y = datasets.make_moons(noise=<span class="number">0.15</span>)</span><br><span class="line"></span><br><span class="line">plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/e1409e9a5bd253d605c321d1edf4aa9c.jpg" alt=""></p>
+<p>可以看到，增加了噪音后虽然数据点较之前的分布分散随机了许多，但整体仍然是两个半月牙形状。下面我们就在SVM的基础上使用多项式来看看对这个样本数据决策边界的计算：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> PolynomialFeatures, StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> LinearSVC</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</span><br></pre></td></tr></table></figure>
+<p>首先我们需要引入我们用到的几个类：</p>
+<ul>
+<li>多项式自然要用到之前讲过的<code>PolynomialFeatures</code>类。</li>
+<li>数据归一化需要用到<code>StandardScaler</code>类。</li>
+<li>同样需要用到Pipeline将多个过程封装在一个函数里，所以要用到<code>Pipeline</code>类。</li>
+</ul>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/machine-learning-14/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/machine-learning-13/" itemprop="url">
+                  机器学习笔记十三之支撑向量机（SVM）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2018-05-30T00:00:00+08:00" content="2018-05-30">
+              2018-05-30
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-13/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-13/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这一篇笔记主要讲机器学习算法中一个重要的分类算法，支撑向量机（Support Vector Machine）。它背后有严格的数学理论和统计学理论支撑的，这里我们只对它的原理和应用做以介绍，更深层次的数学理论有兴趣可以查阅其他资料。</p>
+<h2 id="u4EC0_u4E48_u662FSVM"><a href="#u4EC0_u4E48_u662FSVM" class="headerlink" title="什么是SVM"></a>什么是SVM</h2><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/5142c26ba0e86429631a63609c314a97.jpg" alt=""></p>
+<p>上面的图展示的是一个二分类问题，在逻辑回归的笔记中，我们知道了决策边界，图中橘黄色的直线就是决策边界，它看似很好的将样本数据的不同分类区分开了。我们在多项式回归的笔记中，讲过模型泛化的问题，一个模型的好坏程度很大程度上是体现了模型泛化能力的好坏，也就是对未知样本的预测能力。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/b26d6614606ac304144b99549eeb390e.jpg" alt=""></p>
+<p>如果新来一个样本数据A，按照决策边界划分它是被分为了蓝色分类，可事实真的是如此吗，因为点A和红色分类的点非常近，很有可能点A是属于红色分类的。所以上图中的决策边界可能并不是最优的，那最优的决策边界应该是什么样的呢？</p>
+<p>上面的决策边界之所以有缺陷，是因为它和红色类别的点太近了，当然肯定也不能和蓝色的点太近了，所以我们希望这条决策边界离红色分类和蓝色分类都尽可能的远，才能很好的避免上面出现的问题。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/990fbea083569d4503be599d202b049d.jpg" alt=""></p>
+<p>想要决策边界离红蓝两个分类都尽可能的远，也就是红蓝分类两边离决策边界最近的点的距离要远，并且两边的点到决策边界的距离要相等，这才说明决策边界是不偏不倚的，如上图所示。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/d4642c6673e5e75023088be725dcd4f8.jpg" alt=""></p>
+<p>过红蓝两边离决策边界最近的点画两条直线，并且平行于决策边界，那么就确定了一个区域，在这个区域内不应该再有任何数据点出现。那么SVM就是尝试寻找这个区域中间那条最优的决策边界。这个区域边界上的点称为支撑向量，换句话说，是支撑向量定义出了这个区域，那么最优的决策边界也是由支撑向量决定的，这也是支撑向量机这个名称的由来。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/f5af760ed417acf74d79d065b437807d.jpg" alt=""></p>
+<p>如上图所示，由支撑向量确定的区域之间的距离称为Margin。那么SVM要做的事情就是最大化Margin，既将问题转化为了求最优解的问题。</p>
+<p>以上对SVM的解释是基于线性可分问题的基础上，也就是能确确实实找到一条直线作为决策边界，这种问题称为Hard Margin SVM，但是很多真实的情况是线性不可分的，这类问题称为Soft Margin SVM，这两类问题都是支撑向量机可以处理的，但基础还是Hard Margin SVM。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/machine-learning-13/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/machine-learning-12/" itemprop="url">
                   机器学习笔记十二之算法精准率、召回率、混淆矩阵
                 </a>
@@ -251,7 +496,7 @@
 
         <div class="post-meta">
           <span class="post-time">
-            發表於
+            发表于
             <time itemprop="dateCreated" datetime="2018-05-15T00:00:00+08:00" content="2018-05-15">
               2018-05-15
             </time>
@@ -259,7 +504,7 @@
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
+              &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/机器学习算法/" itemprop="url" rel="index">
@@ -334,7 +579,7 @@
 </ul>
           <div class="post-more-link text-center">
             <a class="btn" href="/articles/machine-learning-12/#more" rel="contents">
-              閱讀全文 &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
         
@@ -381,7 +626,7 @@
 
         <div class="post-meta">
           <span class="post-time">
-            發表於
+            发表于
             <time itemprop="dateCreated" datetime="2018-05-01T00:00:00+08:00" content="2018-05-01">
               2018-05-01
             </time>
@@ -389,7 +634,7 @@
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
+              &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/能工巧匠/" itemprop="url" rel="index">
@@ -483,7 +728,7 @@
 </ul>
           <div class="post-more-link text-center">
             <a class="btn" href="/articles/task-manage-omnifocus/#more" rel="contents">
-              閱讀全文 &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
         
@@ -530,7 +775,7 @@
 
         <div class="post-meta">
           <span class="post-time">
-            發表於
+            发表于
             <time itemprop="dateCreated" datetime="2018-04-30T00:00:00+08:00" content="2018-04-30">
               2018-04-30
             </time>
@@ -538,7 +783,7 @@
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
+              &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/机器学习算法/" itemprop="url" rel="index">
@@ -598,241 +843,7 @@
 <p>那么当$\theta^T X_b =0$时，理论上$\hat p$就是0.5，分类既可以为0，也可以为1。只不过我们在这里将$\hat p=0.5$是，分类假设为1。由此可见$\theta^T X_b =0$就是逻辑回归中的决策边界，并且是线性决策边界。</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/articles/machine-learning-11/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/machine-learning-10/" itemprop="url">
-                  机器学习笔记十之逻辑回归
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2018-04-15T00:00:00+08:00" content="2018-04-15">
-              2018-04-15
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-10/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-10/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>在这一篇笔记中我们来学习目前应用比较广泛的一个分类算法逻辑回归（Logistic Regression）。</p>
-<h2 id="u4EC0_u4E48_u662F_u903B_u8F91_u56DE_u5F52"><a href="#u4EC0_u4E48_u662F_u903B_u8F91_u56DE_u5F52" class="headerlink" title="什么是逻辑回归"></a>什么是逻辑回归</h2><p>首先大家应该有会有一个疑问，为什么既然叫逻辑回归，但是解决的却是分类问题呢。因为逻辑回归是将样本的特征和样本发生的概率联系起来，在拟合样本数据发生概率的时候，其实是在解决一个回归问题，当概率计算出来后，再根据概率进行分类处理。所以逻辑回归在解决分类问题时，其实中间还是进行了回归问题的处理，但是逻辑回归只能解决二分类问题，这一点要注意。</p>
-<p>逻辑回归在解决概率这个回归问题时，和线性回归、多项式回归有一个不同的地方，那就是后者训练出的模型，预测其他样本数据的目标值时值域理论上是在负无穷到正无穷的，换句话说也就是对值域是没有什么限制的。而对于表示概率的数而言，一般值域都是在0到1之间，真实世界中，概率不都是按从0%到100%表示嘛。所以这就引出了逻辑回归和线性回归的相似和不同处，继而体现在公式模型上。在第四篇笔记中，我们知道多元线性回归的公式模型是：<br>$$ \hat y = \theta ^T X_b  $$</p>
-<p>因为$\hat y$的值域为$(-\infty,+\infty)$，所以如果要在逻辑回顾中运用在求解概率的公式模型上就需要另外一个函数将其值域限定在$(0, 1)$，我们将这个函数称为<strong>Sigmoid</strong>函数：</p>
-<p>$$\hat p = \sigma(\theta ^T X_b)$$</p>
-<p>$$\sigma(t) = \frac 1 {1+e^{-t}}$$</p>
-<p>最终逻辑回归求解概率的模型为：</p>
-<p>$$\hat p = \frac 1 {1+e^{-\theta ^T X_b}}$$</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-10/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/machine-learning-9/" itemprop="url">
-                  机器学习笔记九之交叉验证、模型正则化
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2018-03-30T00:00:00+08:00" content="2018-03-30">
-              2018-03-30
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-9/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-9/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u9A8C_u8BC1_u6570_u636E_u96C6_u4E0E_u4EA4_u53C9_u9A8C_u8BC1"><a href="#u9A8C_u8BC1_u6570_u636E_u96C6_u4E0E_u4EA4_u53C9_u9A8C_u8BC1" class="headerlink" title="验证数据集与交叉验证"></a>验证数据集与交叉验证</h2><p>在上一篇笔记中我们又提到了训练数据集和测试数据集，拆分样本数据的这种做法目的就是通过测试数据集判断模型的好坏，如果我们发现训练出的模型产生了过拟合的现象，既在训练数据集上预测评分很好，但是在测试数据集上预测评分不好的情况，那可能就需要重新调整超参数训练模型，以此类推，最终找到一个或一组参数使得模型在测试数据集上的预测评分也很好，也就是训练出的模型泛化能力比较好。那么这种方式会产生一个问题，就是有可能会针对测试数据过拟合，因为每次都是找到参数训练模型，然后看看在测试数据集上的表现如何，这就让我们的模型又被测试数据集左右了，既可以理解为训练出的模型对特定的训练数据集和特定的测试数据集表现都不错，但是再来一种类似的样本数据，表现可能又不尽如人意了。</p>
-<p>那么要彻底解决这个问题，就要引入验证数据集的概念，既将样本数据分为三份，训练数据集、验证数据集、测试数据集。</p>
-<ul>
-<li>训练数据集和之前的用途一样，是用来训练模型的。</li>
-<li>验证数据集的作用和之前的测试数据集一样，是用来验证由训练数据集训练出的模型的好坏程度的，或者说是调整超参数使用的数据集。</li>
-<li>此时的测试数据集和之前的作用就不一样了，这里的测试数据集是当训练出的模型在训练数据集和验证数据集上都表现不错的前提下，最终衡量该模型性能的数据集。测试数据集在整个训练模型的过程中是不参与的。</li>
-</ul>
-<h3 id="u4EA4_u53C9_u9A8C_u8BC1_uFF08Cross_Validation_uFF09"><a href="#u4EA4_u53C9_u9A8C_u8BC1_uFF08Cross_Validation_uFF09" class="headerlink" title="交叉验证（Cross Validation）"></a>交叉验证（Cross Validation）</h3><p>我们在验证数据集概念的基础上，再来看看交叉验证。交叉验证其实解决的是随机选取验证数据集的问题，因为如果验证数据集是固定的，那么万一验证数据集过拟合了，那就没有可用的验证数据集了，所以交叉验证提供了随机的、可持续的、客观的模型验证方式。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/9b3e80db3abbe355b5251935cb97e28b.jpg" alt=""></p>
-<p>交叉验证的思路是将训练数据分成若干份，假设分为A、B、C三份，分别将这三份各作为一次验证数据集，其他两份作为训练数据集训练模型，然后将训练出的三个模型评分取均值，将这个均值作为衡量算法训练模型的结果来调整参数，如果平均值不够好，那么再调整参数，再训练出三个模型，以此类推。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-9/#more" rel="contents">
-              閱讀全文 &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
         
@@ -895,22 +906,22 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">96</span>
-              <span class="site-state-item-name">文章</span>
+              <span class="site-state-item-count">98</span>
+              <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
          <!-- <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">9</span>
-              <span class="site-state-item-name">分類</span>
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">分类</span>
               </a>
           </div> -->
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">91</span>
-              <span class="site-state-item-name">標籤</span>
+              <span class="site-state-item-count">92</span>
+              <span class="site-state-item-name">标签</span>
               </a>
           </div>
 
@@ -969,7 +980,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>
@@ -977,11 +988,11 @@
 </div>
 
 <div class="powered-by">
-  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
 </div>
 
 <div class="theme-info">
-  主題 -
+  主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
     NexT
   </a>

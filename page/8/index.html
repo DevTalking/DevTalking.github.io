@@ -174,7 +174,7 @@
             
               <i class="menu-item-icon fa fa-home"></i> <br />
             
-            首頁
+            首页
           </a>
         </li>
       
@@ -184,7 +184,7 @@
             
               <i class="menu-item-icon fa fa-th"></i> <br />
             
-            分類
+            分类
           </a>
         </li>
       
@@ -194,7 +194,7 @@
             
               <i class="menu-item-icon fa fa-archive"></i> <br />
             
-            歸檔
+            归档
           </a>
         </li>
       
@@ -204,7 +204,7 @@
             
               <i class="menu-item-icon fa fa-tags"></i> <br />
             
-            標籤
+            标签
           </a>
         </li>
       
@@ -241,6 +241,397 @@
             
             
               
+                <a class="post-title-link" href="/articles/tvOS-initial-impression/" itemprop="url">
+                   一个iOS开发者对tvOS SDK的初探
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-09-17T00:00:00+08:00" content="2015-09-17">
+              2015-09-17
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS-macOS-tvOS-watchOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS & macOS & tvOS & watchOS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/tvOS-initial-impression/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/tvOS-initial-impression/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>作者：<a href="http://www.raywenderlich.com/u/cwagdev" target="_blank" rel="external">Chris Wagner</a>  原文地址：<a href="http://www.raywenderlich.com/114313/tvos-initial-impressions" target="_blank" rel="external">tvOS SDK: An iOS Developer’s Initial Impressions</a></p>
+<p>在Walter Isaacson编写的《Steve Jobs》的最后一章中，Steve说过“我最终实现并让它拥有了你们能想象到的最简单的用户界面”。当时他指的就是Apple TV。</p>
+<p>Steve不幸离世已经过去很久了，但是人们一直翘首以盼着这款产品。就在昨天2015年9月9日，超过四个春秋的期盼，我们终于等来了这个礼物，虽然可能与Steve对这款产品的愿景和理想有所差距，但是革命的步伐已经坚实的迈出了第一步。</p>
+<p>作为一名iOS开发者，昨天的产品发布会让我心潮澎湃，因为Apple宣布，新的Apple TV集成了App Store，这就意味着我们可以为它开发专有的应用，并且会让我们重新认知已了解的iOS知识，以及会开启更多新的展现想法、创意的机会。</p>
+<p>我和其他教程团队的成员已经开始深入研究tvOS SDK，并且正在努力准备一些有价值的tvOS教程（通宵达旦！），在此同时，我想从一个iOS开发者的视角与大家分享我对tvOS的初步印象。</p>
+<p>让我们一探究竟吧！</p>
+<h2 id="u57FA_u672C_u6982_u5FF5"><a href="#u57FA_u672C_u6982_u5FF5" class="headerlink" title="基本概念"></a>基本概念</h2><p>老款的Apple TV其实类似一个机顶盒，主要提供的功能是让用户通过及其简单的操作界面导航或浏览视频内容。昨天发布的新Apple TV在此基础上进一步的扩充功能，使一些成熟的应用能在Apple TV中运行，比如购物应用，甚至是游戏。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_02-457x320.jpg" alt="tvOS-1"></p>
+<p>让我们来看看以下这些信息：</p>
+<ul>
+<li><strong>硬件规格：</strong> 值得一说规格是64位 A8处理器，32G或64G的存储空间，2G的内存，1080p的分辨率以及支持HDMI，Siri远程遥控，新的Apple TV遥控器。</li>
+<li><strong>价格：</strong> 新Apple TV的定价为32G 149美元，64G 199美元。这样的定价出乎大多人的以外，原以为新Apple TV的价格会更高一些。</li>
+<li><strong>发售时间：</strong> Apple在发布会上给出了一个非常模糊和不确定的发售时间“十月下旬”，但是Apple在发布会之后就立即向开发者们提供了tvOS SDK。现在离正式发售已时日不多，如果大家有针对新Apple TV好的想法，我建议你们要抓紧时间了。</li>
+<li><strong>开发硬件：</strong> Apple已经宣布了一个开发者计划允许已经注册的开发者们请求<a href="https://developer.apple.com/tvos/developer-kit/" target="_blank" rel="external">Apple TV Developer Kit</a>。该计划可以让开发者们提前对Apple TV进行开发测试。这看起来似乎是一件很美好的事，但是如果你真的要加入该开发者计划，那么仔细看看下面的建议：</li>
+</ul>
+<p>-> <strong>注意：</strong> 众所周知，iOS、OSX的开发者计划都是收费的，tvOS的开发者计划应该也不例外，不过之前对于该计划的收费信息是非常含糊不清的，但是现在我们通过Apple员工在开发者论坛上发的帖子中<a href="https://forums.developer.apple.com/thread/16984#51332" target="_blank" rel="external">确认</a>了该计划只需要话费1美元即可加入。如果大家有意为tvOS贡献一份力量，或者需要编写教程材料的话，强烈建议你们加入该开发计划。</p>
+<h2 id="u5F00_u53D1_tvOS__u5E94_u7528"><a href="#u5F00_u53D1_tvOS__u5E94_u7528" class="headerlink" title="开发 tvOS 应用"></a>开发 tvOS 应用</h2><p>啰嗦完一堆后，显然最重要的事就是怎样为新Apple TV开发应用，这应该也是大家最感兴趣的事！</p>
+<p>为新Apple TV开发应用实际就是在为tvOS开发应用，当然tvOS这个名字是由Apple根据不同设备而创造的。tvOS仍然是基于iOS开发的，所以有很多框架大家都应该非常熟悉了。</p>
+<p>如果要为tvOS开发应用，大家必须要从开发者中心下载<a href="https://developer.apple.com/xcode/download/" target="_blank" rel="external">Xcode7.1</a>进行开发。该版本是Xcode新的beta版，目前只有该版本支持tvOS以及提供tvOS的模拟器。如果你有需要的话，也可同时下载Xcode7 GM版本，他们可以共存于你们的电脑中。</p>
+<p>Apple提供了两种在tvOS上开发应用的方法：</p>
+<ol>
+<li><strong>TVML Apps：</strong> 这类应用是使用完整的新开发技术开发的，比如TVML、TVJS、TVMLKit。这对我们来说是一个巨大的惊喜，我们会在之后有较详细的介绍。</li>
+<li><strong>Custom Apps：</strong> 这类应用是使用我们已经比较熟悉的开发技术进行开发的，比如大家熟知的一些iOS框架，Storyboard、UIKit、Auto Layout等。</li>
+</ol>
+<p>当你们在为Apple TV开发应用时，你们会发现Xcode中会出现单独的程序目标（这意味着用户将会单独购买的形式购买tvOS应用）。虽然Apple在发布会上说Apple TV中的应用支持通用购买模式，也就是针对iOS和tvOS都支持的应用，用户只需要购买一次即可同时在iPhone和Apple TV上使用。但是从目前的情况来看，我们还不确定Apple是如何实现的，或许在Itunes Connect中支持连接两个程序目标的功能即将来临？</p>
+<h3 id="TVML_Apps"><a href="#TVML_Apps" class="headerlink" title="TVML Apps"></a>TVML Apps</h3><p>先前我提过，为tvOS开发应用有两种方式，第一种就是通过TVML、TVJS和TVMLKit技术。如果这些缩写对于你们来说非常陌生，那么不要着急，这就告诉你们他们都是什么：</p>
+<ul>
+<li><strong>TVML</strong>是一种基于“Television Markup Language”的XML格式。</li>
+<li><strong>TVJS</strong>是基于JavaScript APIs的脚本语言，它可以根据TVML中定义的内容展示应用。</li>
+<li><strong>TVMLKit</strong>是连接TVML、TVJS和原生tvOS应用的工具包。</li>
+</ul>
+<p>如果你是一名经常使用原生APIs开发原生iOS应用的开发者，那么看到这些类似前端的技术可能会有点退缩。但希望你能保持一颗学习的心，学习了解这些新的强大的特性。</p>
+<p>我在这列举一个非常典型的Apple TV的应用场景。大家可以想象一下：你们想把一些内容或信息展现给用户，这些内容和信息储存在你们的服务器上，并且这些内容的格式、查询方式都服务于iPhone或iPad中的应用，那么你肯定会希望你的tvOS中的应用也能方便的使用这些内容，并做到与iOS中应用有相似的展现、查询、导航方式。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_03-700x296.jpg" alt="tvOS-2"></p>
+<p>如果我列举的这个例子正好是你们tvOS应用的需求，那么你可能需要考虑如何使用TVMLKit工具包。Apple已经为我们开发者完成了一些主要的工作，比如提供了许多可重用的tvOS界面展示模板，这些模板大都与iOS应用的界面神似，所以用户们并不会感到陌生，这些模板大概有18种之多。大多数模板都可以让你创建出脱凡的、非常适合家中电视展示的界面。大家可以访问Apple的<a href="https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/TextboxTemplate.html#//apple_ref/doc/uid/TP40015064-CH2-SW8" target="_blank" rel="external">文档</a>查看这些我们强烈推荐使用的模板。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_04-700x296.jpg" alt="tvOS-3"></p>
+<p>我也推荐大家在tvOS模拟器运行<a href="https://developer.apple.com/library/prerelease/tvos/samplecode/TVMLCatalog/Introduction/Intro.html#//apple_ref/doc/uid/TP40016505" target="_blank" rel="external">TVML Catalog sample app</a>去查看每个模板。同时你需要启动一个本地的web服务器，便于tvOS应用通过模板展示内容时访问，所以你需要仔细查阅<strong>README.md</strong>文件去了解相关内容。</p>
+<p>诚然TVMLKit还有许多知识点，如果你希望基于它开发一款tvOS应用，那么我提到的一些文档是非常值得你们去查阅参考的。这里我着重推荐大家首先看看如何使用菜单导航类的模板，比如<strong>menuBarTemplate</strong>、<strong>mainTemplate</strong>、<strong>searchTemplate</strong>等。然而，如果你希望用户不只是被动的通过你的tvOS应用观看或收听内容，而是希望用户与应用有更多的交互，给用户高质量的用户体验，那么你们就需要了解如何开发完整的自定义的tvOS应用。</p>
+<h3 id="Custom_Apps"><a href="#Custom_Apps" class="headerlink" title="Custom Apps"></a>Custom Apps</h3><p>你所知道的大多数iOS框架，比如UIKit、Core Graphics、CloudKit等等都可以在tvOS中使用。你可以在Apple提供的这个<a href="https://developer.apple.com/library/prerelease/tvos/releasenotes/General/tvOS90APIDiffs/index.html#//apple_ref/doc/uid/TP40016577" target="_blank" rel="external">文档</a>中查看哪些框架可以用，哪些不可以使用。如果你现在正是一名iOS开发者，那么会对这个文档中的列表非常熟悉。而且不管使用Swift还是Objective-C或者C都可以开发tvOS应用。</p>
+<p>尽管如此，如果想开发自定义的tvOS应用，还是有许多新的知识需要我们学习，作为一名iOS开发者，也应该掌握甚至精通这些新的知识。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="Focus_Engine"><a href="#Focus_Engine" class="headerlink" title="Focus Engine"></a>Focus Engine</h2><p>其中一个对于iOS开发者比较陌生的概念是用户输入/选择方法。在使用Apple TV的过程中，用户不会用手指去按压或滑动屏幕，取而代之的是使用Apple提供的遥控器或者是一些游戏控制器。</p>
+<p>tvOS采用了一个被称为<strong>Focus Engine</strong>的引擎系统，它在整个tvOS中有且只有一个。该引擎负责响应当用户使用遥控器上的手势操作或按键操作对菜单或内容进行上下左右的选择。</p>
+<p>Focus Engine会自动根据用户的选择决定要聚焦或展示的视图，你不需要在代码中做任何类似选中或导航的处理。比如说，此时展示的界面是你已经在Storyboard中设计好的视图布局，其中有一个视图是当前聚焦状态，那么当用户通过手势往右滑动时，Focus Engine会自动根据当前聚焦的视图找到与之相邻的左边的视图，并将其选中和聚焦。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_05-700x328.jpg" alt="tvOS-4"></p>
+<p>作为一个开发者，你必须要学习与Focus Engine相关的API，比如当聚焦的视图发生变化时如何获取通知、如何通过编码触发聚焦视图的改变扥等。更多关于Focus Engine的API可以参阅App Programming Guide for tvOS文档中的<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/WorkingwiththeAppleTVRemote.html#//apple_ref/doc/uid/TP40015241-CH5-SW14" target="_blank" rel="external"> Supporting Focus Within Your App</a>章节。</p>
+<h2 id="TVServices"><a href="#TVServices" class="headerlink" title="TVServices"></a>TVServices</h2><p>虽然iOS开发者在tvOS应用的开发过程中，主要使用的是一些已经比较熟悉的iOS框架，但是也有一些tvOS特有的框架需要开发者们去了解掌握，比如像新加入的<code>TVServices</code>框架。</p>
+<p><code>TVServices</code>的主要作用是描述你的应用的内容，以便tvOS在首页的顶部栏位显示。在首页顶部栏位显示的应用都是用户自己设置的，用户可以将他们认为最为常用的或最为重要的应用放在首页顶部栏位，便于快速打开或浏览其中主要信息。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_06-478x320.jpg" alt="tvOS-5"></p>
+<p>你们的应用可以在用户不进入应用的情况下，向用户提供简短的、感兴趣的信息，这就会使你的应用有了额外价值，使用<code>TVServices</code>无疑是提高你的应用下载量的绝佳手段。比如一个游戏应用，通过<code>TVServices</code>显示游戏存档，那么用户就可以直接从首页通过游戏存档进入游戏。如果是一个社交应用，那么就可以在首页显示社交动态信息，如果是一个照片分享应用，那么就可以显示近期朋友和家人分享的照片。</p>
+<p>更多关于<code>TVServices</code>的信息可以查阅<a href="https://developer.apple.com/library/prerelease/tvos/documentation/TVServices/Reference/TVServices_Ref/index.html#//apple_ref/doc/uid/TP40016412" target="_blank" rel="external">TVServices Framework Reference</a>文档。使用好它对你的应用非常有益。</p>
+<h2 id="Parallax_Images"><a href="#Parallax_Images" class="headerlink" title="Parallax Images"></a>Parallax Images</h2><p>还有一件会让你疑惑的可能就是在发布会的Keynote中，Apple着重强调了图片和应用图标的视差效果。这是一个非常棒的视图效果，但是为什么这个特性会被放在Keynote中提及，它为什么这么重要呢？</p>
+<p>如果你使用了tvOS模拟器，你就会明白为什么这个特性如此重要。当移动聚焦视图时，你需要向左或向右滑动，但如果你只滑动了一点，Apple会对当前聚焦的视图做一个轻微的旋转处理，目的是让用户知道现在正在作以操作（但是还需要继续滑动来改变聚焦视图）。这是一个着眼于细节但又非常有用的特性。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_07.jpg" alt="tvOS-6"></p>
+<p>Apple把视差效果看做tvOS设计中的一个关键组成部分，并强烈建议应用图标和电影海报使用该特性。不过感谢Apple在App Programming Guide for tvOS文档中提供了<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/CreatingParallaxArtwork.html#//apple_ref/doc/uid/TP40015241-CH19-SW1" target="_blank" rel="external">Creating Parallax Artwork</a>章节，帮助我们创建视差特性的图片资源，以及为我们提供了视察图片资源的预览应用。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_08.jpg" alt="tvOS-7"></p>
+<h2 id="Controllers"><a href="#Controllers" class="headerlink" title="Controllers"></a>Controllers</h2><p>每一个购买了新Apple TV的用户，都会收到一个功能强大的新版遥控器。上一代只能上下左右简单选择方位以及只有几个简单导航按键的遥控器，而新一代的Apple TV遥控器增加了更多令人激动的新特性：</p>
+<ul>
+<li><strong>玻璃触控板：</strong>位于遥控器的顶部，可以让用户在其上面进行一些手势操作，比如滑动、轻拍、点击。</li>
+<li><strong>麦克风：</strong>可以让用户通过遥控器访问Siri（Siri有使用国家的限制）以及可以通过语音控制电视的音量。</li>
+<li><strong>陀螺仪：</strong>结合动作传感器可以为用户提供非常棒的游戏体验。用户可以通过倾斜遥控器在游戏中控制方向盘开车，或者控制英雄奔跑穿越山洞。</li>
+</ul>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_09.jpg" alt="tvOS-8"></p>
+<p>你可以使用你知道的处理手势操作的API去监听滑动或轻点，还有一些新的API去监听遥控器上不同的按钮，比如<code>pressesBegan()</code>、<code>pressesEnded()</code>、<code>pressesChanged()</code>和<code>pressesCancelled()</code>。</p>
+<p>遥控器通过蓝牙技术与Apple TV主机交互，这意味着为蓝牙游戏控制器敞开的大门（恕我直言，用Apple的遥控器玩游戏并不是很好的选择）。Apple已经宣布<a href="https://steelseries.com/gaming-controllers/nimbus" target="_blank" rel="external">Nimbus Steelseries Controller</a>将会支持新Apple TV。想了解更多关于这方面的信息请查阅<a href="https://developer.apple.com/library/prerelease/tvos/documentation/General/Conceptual/AppleTV_PG/WorkingwithGameControllers.html#//apple_ref/doc/uid/TP40015241-CH18-SW1" target="_blank" rel="external">Working with Game Controllers</a>。</p>
+<h2 id="tvOS_and_Games"><a href="#tvOS_and_Games" class="headerlink" title="tvOS and Games"></a>tvOS and Games</h2><p>我们衷心的希望游戏能在tvOS上火起来，Apple似乎是直接瞄准了任天堂漠不关心的一个游戏市场。</p>
+<p>tvOS有很健壮的游戏技术作为支撑，SpriteKit和SceneKit都可以在tvOS中正常工作，在Keynote中Crossy Roads开发者展示了他们的tvOS游戏，该游戏使用Unity开发，所以这也暗示着在不久的将来tvOS也会支持Unity开发的游戏。</p>
+<p>大多数用SceneKit开发的游戏都可以无缝移植到新Apple TV中。比如Ray就将教程中介绍过的Zombie Conga游戏移植到了新Apple TV中，花费时间还不到10分钟，几乎不需要修改任何代码。</p>
+<p>-> 注：游戏视频可前往原文查看，但需要科学上网。</p>
+<h2 id="Limitations"><a href="#Limitations" class="headerlink" title="Limitations"></a>Limitations</h2><p>或许目前关于tvOS比较有疑惑的两点就是本地存储和应用大小的限制。</p>
+<h3 id="Limitation_3A_Local_Storage"><a href="#Limitation_3A_Local_Storage" class="headerlink" title="Limitation: Local Storage"></a>Limitation: Local Storage</h3><p>关于本地存储，基本确定是没有！如果你的应用需要持久化用户的数据，那么你需要使用iCloud、CloudKit或者自己的备份服务去实现。任何试图存在Apple TV中的数据都不保证在下次打开应用时还嫩存在。如果你想同步不同设置之间的数据，那么你就需要将数据线存在某个地方，但绝不是Apple TV中。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/tvOS_10-480x313.jpg" alt="tvOS-9"></p>
+<p>一定要牢记这点，它对于你设计tvOS应用的结构时很关键。这里列出了一些规则：</p>
+<ul>
+<li><strong>如果你需要存储的数据量小于1MB</strong>，iCloud的key-value存储方式是一个可以选择的方案。但是要切记，iCloud KVS严格限制了只能有所属者才可以访问数据，并且不能共享给其他用户。</li>
+<li><strong>如果你需要分享事件或者数据给其他用户</strong>，CloudKit是一个不错的选择方案。</li>
+<li><strong>如果你开发的是一个跨平台的应用或者有特殊的需求</strong>，你就得使用你自己的备份服务了。</li>
+</ul>
+<h3 id="Limitation_3A_App_Size"><a href="#Limitation_3A_App_Size" class="headerlink" title="Limitation: App Size"></a>Limitation: App Size</h3><p>另一个限制是关于应用大小的限制，规定不能超过200MB。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/FlipTable-250x228.png" alt="tvOS-10"></p>
+<p>在你们掀桌之前，请回顾一下WWDC2015以及介绍过的“On-Demand Resources”相关API。这几乎像是Apple为tvOS提前铺垫的。</p>
+<p>这些API通过按需下载资源文件减小应用初始安装时的大小。开发者可以在Xcode中给多媒体资源文件用标签进行标记，将应用提交后，App Store会自动根据标记将多媒体资源文件拆分为一个一个下载包。当用户在使用应用时如果需要用到某类标记的资源文件，就可以请求下载该标记的资源文件。当然你得有预期的判断，要先于用户使用资源前开始下载他们需要的资源，这样对于用户来说他们根本不会感受到因为下载资源带来的不好的用户体验。</p>
+<p>举一个简单的例子，比如你有一款游戏应用有10个关卡。在用户安装该游戏时可以只包含两个关卡的多媒体资源文件。一旦用户完成了第一个关卡，你应该发送一个下载请求，下载第三个关卡的多媒体资源文件。当用户完成了第二个关卡时，第三个关卡需要的资源文件早已下载好准备妥当。在用户的整个游戏过程中，你就可以运用该机制一步一步去下载所需的资源文件。</p>
+<p>虽然这种机制对于开发者来说无疑增加了工作量，但是这对用户来说是一件非常愉悦的事情。你试想一下，用户是愿意等待下载一个1GB大小的游戏呢，还是更愿意下载一个100MB大小的游戏并立即开始游戏呢。不过该机制也存在一个隐患，如果用户的网络条件很差，他们一般都更愿意在晚上挂着下载。那么如果用户在白天玩你的游戏，然后同时用龟速的网络下载后面关卡的资源文件，这简直是令人发指的用户体验。不幸的是作为tvOS开发者，在这种情形下目前也无能为力。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/calayer-animation-replicator-animation/" itemprop="url">
+                  CALayer Animation - Replicator Animation
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-09-09T00:00:00+08:00" content="2015-09-09">
+              2015-09-09
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/calayer-animation-replicator-animation/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/calayer-animation-replicator-animation/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://www.csdn.net/article/2015-09-09/2825659" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+<p>上一篇文章通过两个动画示例带大家了解和认识了CALayer动画，包括如何使用CAShapeLayer、CABasicAnimation、CAAnimationGroup等。在这篇文章中，依然会通过两个示例向大家讲解更多CALayer动画的知识。</p>
+<p>老规矩，先让我们看看最终要实现的动画效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-17.gif" alt="ReplicatorAnimation-17"></p>
+<p>经常听音乐的人对第一个动画效果肯定有会觉得很眼熟，类似播放音乐时音频高低起伏的动画，这种动画在应用中常被用作标识正在播放音乐或广播。第二个动画依然是一个等待加载的动画，在我的印象中肯定是有应用使用过，具体的已经记不清了。下面就让我们来实现这两个动画吧。</p>
+<h2 id="Replicator_Animation"><a href="#Replicator_Animation" class="headerlink" title="Replicator Animation"></a>Replicator Animation</h2><p>新建一个项目，名为ReplicatorAnimation，打开<code>Main.storyboard</code>，添加一个UIView，颜色位置按大家喜好设定：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-1.png" alt="ReplicatorAnimation-1"></p>
+<p>添加该UIView在<code>ViewController.swift</code>中的Outlet：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-2.png" alt="ReplicatorAnimation-2"></p>
+<p>接下来我们在<code>ViewController.swift</code>中添加一个方法<code>firstReplicatorAnimation()</code>，在该方法中编写如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> replicatorLayer = <span class="type">CAReplicatorLayer</span>()</span><br><span class="line">replicatorLayer.bounds = <span class="type">CGRect</span>(x: replicatorAnimationView.frame.origin.x, y: replicatorAnimationView.frame.origin.y, width: replicatorAnimationView.frame.size.width, height: replicatorAnimationView.frame.size.height)</span><br><span class="line">replicatorLayer.anchorPoint = <span class="type">CGPoint</span>(x: <span class="number">0</span>, y: <span class="number">0</span>)</span><br><span class="line">replicatorLayer.backgroundColor = <span class="type">UIColor</span>.lightGrayColor().<span class="type">CGColor</span></span><br><span class="line">replicatorAnimationView.layer.addSublayer(replicatorLayer)</span><br></pre></td></tr></table></figure>
+<p>这里出现的CAReplicatorLayer是一个新面孔，它也是CALayer的子类，正如它的名称一样，CAReplicatorLayer可以对它自己的子Layer进行复制操作。创建了CAReplicatorLayer实例后，设置了它的尺寸大小、位置、锚点位置、背景色，并且将它添加到了<code>replicatorAnimationView</code>的Layer中:</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-4.png" alt="ReplicatorAnimation-4"></p>
+<p>这里要啰嗦几句，Layer的默认锚点坐标是(0.5, 0.5)，也就是Layer的中心点位置，而Layer的<code>position</code>又是根据锚点计算的，所以如果你设置Layer的<code>position</code>属性为(10, 10)，就相当于设置了Layer的中心位置为(10, 10)，并不是你期望的左上角位置。所以如果Layer想使用它父视图的坐标位置，就需要将锚点位置设置为(0, 0)，这样一来Layer的<code>position</code>属性标识的就是Layer左上角的位置：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-3.png" alt="ReplicatorAnimation-3"></p>
+<p>然后我们继续在<code>firstReplicatorAnimation()</code>方法中添加代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> rectangle = <span class="type">CALayer</span>()</span><br><span class="line">rectangle.bounds = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: <span class="number">30</span>, height: <span class="number">90</span>)</span><br><span class="line">rectangle.anchorPoint = <span class="type">CGPoint</span>(x: <span class="number">0</span>, y: <span class="number">0</span>)</span><br><span class="line">rectangle.position = <span class="type">CGPoint</span>(x: replicatorAnimationView.frame.origin.x + <span class="number">10</span>, y: replicatorAnimationView.frame.origin.y + <span class="number">110</span>)</span><br><span class="line">rectangle.cornerRadius = <span class="number">2</span></span><br><span class="line">rectangle.backgroundColor = <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span></span><br><span class="line">replicatorLayer.addSublayer(rectangle)</span><br></pre></td></tr></table></figure>
+<p>通过上面的代码，再次创建了一个Layer，这次使用的是CALayer，因为我们只需要一个很普通的Layer，为其设置位置、尺寸、背景色、圆角属性，然后添加在<code>replicatorLayer</code>中：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-5.png" alt="ReplicatorAnimation-5"></p>
+<p>动画的主体之一已经绘制好了，下面我们让它动起来。在上述代码后面，接着添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> moveRectangle = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"position.y"</span>)</span><br><span class="line">moveRectangle.toValue = rectangle.position.y - <span class="number">70</span></span><br><span class="line">moveRectangle.duration = <span class="number">0.7</span></span><br><span class="line">moveRectangle.autoreverses = <span class="literal">true</span></span><br><span class="line">moveRectangle.repeatCount = <span class="type">HUGE</span></span><br><span class="line">rectangle.addAnimation(moveRectangle, forKey: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>首先我们创建了按Y轴移动的动画实例，然后设置了移动的目标位置，动画持续时间，重复次数设置为无限大。这里有一个属性大家可能比较陌生，那就是<code>autoreverses</code>，这个属性为Bool类型，设置为true时，开启自动反向执行动画，比如示例中的白色长方形的移动动画为向上移动50个像素，如过<code>autoreverses</code>设置为false，那么动画结束后，会根据重复次数，白色长方形重新回到初始位置，继续向上移动，如果<code>autoreverses</code>设置为true，则当动画结束后，白色长方形会继续向下移动至初始位置，然后再开始第二次的向上移动动画。</p>
+<p>编译运行看看效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-6.gif" alt="ReplicatorAnimation-6"></p>
+<p>至此，大家应该也已经看出来了，这个白色的长方形就是动画中第一个上下移动的白色长方形，那么后两个如何创建呢？还需要再写两遍上面的代码吗？请大家在下面的文章中寻找答案。</p>
+<p>在上述代码下面再添加一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceCount = <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>显而易见，这是CAReplicatorLayer的能力了，这行代码的意思是将<code>replicatorLayer</code>的子Layer复制3份，复制Layer与原Layer的大小、位置、颜色、Layer上的动画等等所有属性都一模一样，所以这时编译运行代码我们看不到任何不同的效果，因为三个白色长方形是重合在一起的，所以我们需要设置每个白色长方形的间隔：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceTransform = <span class="type">CATransform3DMakeTranslation</span>(<span class="number">40</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>这行代码涉及到CAReplicatorLayer的另一个属性<code>instanceTransform</code>，它的作用是设置每个子Layer如何变化。<code>CATransform3DMakeTranslation</code>这个类的含义是使Layer根据X、Y、Z轴进行平移。现在再编译运行看看效果如何：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-7.gif" alt="ReplicatorAnimation-7"></p>
+<p>现在三个白色长方形的运动轨迹和时刻都是一直的，这显然不是我们想要的结果，我们需要三个白色长方形有上下起伏的视觉效果，所以我们继续添加一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceDelay = <span class="number">0.3</span></span><br></pre></td></tr></table></figure>
+<p><code>instanceDelay</code>这个属性使CAReplicatorLayer中的每个子Layer的动画起始时间逐个递增。这里我们设置为0.3秒，也就是第一个长方形先执行动画，过0.3秒后第二个开始执行动画，再过0.3秒后第三个开始执行动画。我们编译运行看看效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-8.gif" alt="ReplicatorAnimation-8"></p>
+<p>显然我们只想显示<code>replicatorLayer</code>区域里的内容，我们并不想看到超出它边界的内容，所以我们再添加一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.masksToBounds = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p><code>masksToBounds</code>是CALayer的属性，作用是将Layer视为一个遮罩，只显示遮罩区域内的内容。最后我们回到初始化<code>replicatorLayer</code>的地方，找到这行代码<code>replicatorLayer.backgroundColor = UIColor.lightGrayColor().CGColor</code>，将<code>replicatorLayer</code>的背景色改为无色<code>replicatorLayer.backgroundColor = UIColor.clearColor().CGColor</code>。再次编译运行看看最终效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-9.gif" alt="ReplicatorAnimation-9"></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="Replicator_Indicator_Animation"><a href="#Replicator_Indicator_Animation" class="headerlink" title="Replicator Indicator Animation"></a>Replicator Indicator Animation</h2><p>CAReplicatorLayer的功能是很强大的，这一节将通过另一个加载动画的实例向大家介绍它的其他特性。</p>
+<p>首先打开<code>Main.storyboard</code>，拖进一个新的UIView，位置颜色随大家喜好：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-10.png" alt="ReplicatorAnimation-10"></p>
+<p>随后添加该UIView在<code>ViewController.swift</code>中的Outlet <code>activityIndicatorView</code>：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-11.png" alt="ReplicatorAnimation-11"></p>
+<p>然后在<code>ViewController.swift</code>中添加一个方法<code>activityIndicatorAnimation</code>，和上一个动画示例一样，我们先创建一个CAReplicatorLayer：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> replicatorLayer = <span class="type">CAReplicatorLayer</span>()</span><br><span class="line">replicatorLayer.bounds = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: activityIndicatorView.frame.size.width, height: activityIndicatorView.frame.size.height)</span><br><span class="line">replicatorLayer.position = <span class="type">CGPoint</span>(x: activityIndicatorView.frame.size.width/<span class="number">2</span>, y: activityIndicatorView.frame.size.height/<span class="number">2</span>)</span><br><span class="line">replicatorLayer.backgroundColor = <span class="type">UIColor</span>.lightGrayColor().<span class="type">CGColor</span></span><br><span class="line">activityIndicatorView.layer.addSublayer(replicatorLayer)</span><br></pre></td></tr></table></figure>
+<p>上述代码和上个示例中的差不多，唯一不同的就是<code>replicatorLayer</code>的锚点使用的是默认值，即锚点就是中点，<code>position</code>属性代表亦是中点，所以将<code>position</code>属性设置为父视图的中点即可。这里意在让大家多多理解CALayer中<code>anchorPoint</code>与<code>position</code>属性。接下来添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> circle = <span class="type">CALayer</span>()</span><br><span class="line">circle.bounds = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: <span class="number">15</span>, height: <span class="number">15</span>)</span><br><span class="line">circle.position = <span class="type">CGPoint</span>(x: activityIndicatorView.frame.size.width/<span class="number">2</span>, y: activityIndicatorView.frame.size.height/<span class="number">2</span> - <span class="number">55</span>)</span><br><span class="line">circle.cornerRadius = <span class="number">7.5</span></span><br><span class="line">circle.backgroundColor = <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span></span><br><span class="line">replicatorLayer.addSublayer(circle)</span><br></pre></td></tr></table></figure>
+<p>上述代码的目的是用CALayer创建一个圆形，其实CALayer创建出的形状默认是矩形，但是把四个角的弧度设置为边宽的一半，矩形就变成了圆形。将这个圆形的位置设置在父Layer的中间靠上位置，背景色设置为白色。此时该圆形就是文章开头效果图中第二个动画里的主体了：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-12.png" alt="ReplicatorAnimation-12"></p>
+<p>不过在动画中我们看到有许多个小圆形组成一个大圆，如果重复上面的代码，一个一个设置位置，那绝对是令人发指的行为，好在我们有CAReplicatorLayer帮助我们实现，下面就来看看如何使用CAReplicatorLayer复制子Layer，并让子Layer形成一个圆形。让我们接着添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceCount = <span class="number">15</span></span><br><span class="line"><span class="keyword">let</span> angle = <span class="type">CGFloat</span>(<span class="number">2</span> * <span class="type">M_PI</span>) / <span class="type">CGFloat</span>(<span class="number">15</span>)</span><br><span class="line">replicatorLayer.instanceTransform = <span class="type">CATransform3DMakeRotation</span>(angle, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>上述的代码中，首先对子Layer，也就是白色圆形复制了15份。然后将360°除以15份，算出每一个圆形针对它前一个圆形应该偏移的角度。最后我们用到了<code>CATransform3DMakeRotation</code>，它同样是<code>CATransform3D</code>的一个结构，含义是使Layer在X、Y、Z轴根据给定的角度旋转。这样我们复制的15份圆形就会按照我们计算的角度排列，并形成一个大圆：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-13.png" alt="ReplicatorAnimation-13"></p>
+<p>接下来让我们分析一下这个动画，整体看上去感觉像一颗流星拖着尾巴在不停的转圈，但细看每一个小圆点，其实是在不停的进行放大缩小的动画，只不过每个小圆点的动画对于它前一个小圆点的动画有一定的延迟。所以首先我们需要实现小圆点放大缩小的动画，在上述代码后面接着添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> scale = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"transform.scale"</span>)</span><br><span class="line">scale.fromValue = <span class="number">1</span></span><br><span class="line">scale.toValue = <span class="number">0.1</span></span><br><span class="line">scale.duration = <span class="number">1</span></span><br><span class="line">scale.repeatCount = <span class="type">HUGE</span></span><br><span class="line">circle.addAnimation(scale, forKey: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>首先创建一个按比例缩放类型的动画，设置起始比例为1，也就是当前大小。再设置希望缩放到的比例为0.1。动画持续时间为1秒，重复无限次。最后将该动画添加在小圆点中。编译运行看看效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-14.gif" alt="ReplicatorAnimation-14"></p>
+<p>目前每个小圆点是同时执行动画，我们需要设置小圆点的动画延迟时间，接着添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">replicatorLayer.instanceDelay = <span class="number">1</span>/<span class="number">15</span></span><br></pre></td></tr></table></figure>
+<p>这里为什么是1/15呢，因为整个动画的时间是由每个小圆点的动画时间决定的，这里也就是1秒，所有小圆点的延迟时间加起来要等于整个动画的持续时间，所以这里就是用1秒除以小圆点的数量15。编译运行看看效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-15.gif" alt="ReplicatorAnimation-15"></p>
+<p>从效果图中可以看到，刚开始的动画不是很自然，那是因为小圆点的初始比例是1，所以一开始会先看到小圆点，然后才会慢慢开始正常的动画。这个问题很好解决，我们让小圆点的初始比例为0.1，也就是刚开始看不到小圆点，这样就可以避免这个情况了，我们接着加一行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">circle.transform = <span class="type">CATransform3DMakeScale</span>(<span class="number">0.01</span>, <span class="number">0.01</span>, <span class="number">0.01</span>)</span><br></pre></td></tr></table></figure>
+<p>同时将<code>replicatorLayer</code>的背景色改为无色，再次编译运行看看效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ReplicatorAnimation-16.gif" alt="ReplicatorAnimation-16"></p>
+<p>展现在我们眼前的是一个完美的加载动画。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>今天主要给大家介绍了CAReplicatorLayer的用法，大家领悟其核心功能复制、延迟后也可以尝试实现其他有趣的动画效果。下篇文章我会向大家介绍CALayer另一个子类的用法，敬请期待吧。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/calayer-animation-loading-lndicator/" itemprop="url">
                   CALayer Animation - Loading Indicator
                 </a>
@@ -251,7 +642,7 @@
 
         <div class="post-meta">
           <span class="post-time">
-            發表於
+            发表于
             <time itemprop="dateCreated" datetime="2015-09-07T00:00:00+08:00" content="2015-09-07">
               2015-09-07
             </time>
@@ -259,7 +650,7 @@
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
+              &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Swift/" itemprop="url" rel="index">
@@ -468,7 +859,7 @@
 
         <div class="post-meta">
           <span class="post-time">
-            發表於
+            发表于
             <time itemprop="dateCreated" datetime="2015-08-04T00:00:00+08:00" content="2015-08-04">
               2015-08-04
             </time>
@@ -476,7 +867,7 @@
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
+              &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Swift/" itemprop="url" rel="index">
@@ -676,7 +1067,7 @@
 
         <div class="post-meta">
           <span class="post-time">
-            發表於
+            发表于
             <time itemprop="dateCreated" datetime="2015-07-28T00:00:00+08:00" content="2015-07-28">
               2015-07-28
             </time>
@@ -684,7 +1075,7 @@
 
           
             <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
+              &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
                   <a href="/categories/Swift/" itemprop="url" rel="index">
@@ -821,404 +1212,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/uiview-animation-practice/" itemprop="url">
-                  iOS UIView Animation - Practice
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-07-21T00:00:00+08:00" content="2015-07-21">
-              2015-07-21
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/uiview-animation-practice/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/uiview-animation-practice/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<blockquote>
-<p> 本文首发<a href="http://www.csdn.net/article/2015-07-20/2825255-ios-uiview-animation-4-practice/1" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-</blockquote>
-<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>上三篇关于UIView Animation的文章向大家介绍了基础的UIView动画，包括移动位置、改变大小、旋转、弹簧动画、过渡动画。这些虽然看起来很简单，但是如果我们仔细分析、分解一个复杂动画时，就会发现这些复杂的动画其实是由若干基础的动画组合而成的。今天这篇文章是实践篇，我选择了Raywenderlich <a href="http://www.raywenderlich.com/73286/top-5-ios-7-animations" target="_blank" rel="external">Top 5 iOS 7 Animations</a>这篇文章中的一个动画效果，带大家一起实现。要实现这个动画效果，除了用到我们上三篇介绍过的知识点以外，还有两个知识点在这篇会介绍给大家，我们先看看实现的效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-1.gif" alt=""></p>
-<p>这个动画示例实现的是一个展示航班信息的应用，左右滑动显示不同的航班信息。我们可以分析一下都用到了哪些动画：</p>
-<ul>
-<li>淡入淡出：起飞地和目的地、起飞地和目的地下面的横线、底部的航班时间都使用了该动画。</li>
-<li>位置移动：起飞地和目的地、小飞机都使用了该动画。</li>
-<li>旋转：航站楼登机口前面的小箭头、小飞机都使用了该动画。</li>
-<li>过渡动画： 背景图片使用了淡入淡出效果的图片替换过渡动画。</li>
-<li>伪3D动画：顶部的时间、航班号、航站楼登机口信息、底部的起飞降落文字都是用了该动画。</li>
-</ul>
-<p>前三个动画我们之前已经介绍过了，现在我们来介绍后两个动画。</p>
-<h2 id="u4F2A3D_u52A8_u753B_u6548_u679C"><a href="#u4F2A3D_u52A8_u753B_u6548_u679C" class="headerlink" title="伪3D动画效果"></a>伪3D动画效果</h2><p>这个伪3D的效果模拟的是一个立体长方形由一面翻转到另一面。因为这不是真正的3D效果，所以我们可以分析一下它是如何模拟的，以上面动画中从下往上翻的效果为例。首先显示的是一个<code>UILabel</code>，当开始进行翻转时，当前显示的<code>UILabel</code>的高度开始慢慢变矮：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-1.png" alt="Practice-1"></p>
-<p>我们看看用代码怎么实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.transform = <span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.5</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>我们可以使用一个转换动画，使用<code>CGAffineTransformMakeScale</code>，它的第一个参数是x坐标的比例，第二个参数是y坐标的比例，这两个值的范围是1.0到0之间。上面的代码用白话文翻译出来就是在1秒内，<code>devtalkingLabel</code>的宽度不变，高度减少一半，减少的过程会自动生成补间动画。</p>
-<p>我们接着来分析，在<code>UILabel</code>高度减少的同时，它的位置也会向上移动，我们可以用另外一个转换的动画：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.transform = <span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.5</span>)</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.transform = <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, -<span class="keyword">self</span>.devtalkingLabel.frame.height / <span class="number">2</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p><code>CGFffineTransformMakeTranslation</code>这个转换动画可以移动UIView的位置，这里需要注意它是以初始位置为基础进行移动的，所以上述代码在字面上的意思是<code>devtalkingLabel</code>在高度变小的同时向上移动它初始宽度一半的距离：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-2.png" alt="Practice-2"></p>
-<p>但是当我们编译运行后发现事与愿违，转换动画不像动画属性动画那样可以在<code>animations</code>闭包中写多个进行组合，而是由另一个组合转换动画来实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.transform = <span class="type">CGAffineTransformConcat</span>(<span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.5</span>), <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, -<span class="keyword">self</span>.devtalkingLabel.frame.height / <span class="number">2</span>))</span><br><span class="line">    <span class="keyword">self</span>.devtalkingLabel.alpha = <span class="number">0</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>来看看效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-4.gif" alt="Practice-4"></p>
-<p>此时，3D翻转效果的一个面已经成型了，也就是当前显示的这一面被向上翻转到顶部去了。接下来我们要实现底部的面翻转到当前显示的这一面。很明显这需要两个面，但我们只有一个<code>UILabel</code>，所以在执行整个翻转效果前需要先复制一个当前<code>UILabel</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> devtalkingLabelCopy = <span class="type">UILabel</span>(frame: <span class="keyword">self</span>.devtalkingLabel.frame)</span><br><span class="line">devtalkingLabelCopy.alpha = <span class="number">0</span></span><br><span class="line">devtalkingLabelCopy.text = <span class="keyword">self</span>.devtalkingLabel.text</span><br><span class="line">devtalkingLabelCopy.font = <span class="keyword">self</span>.devtalkingLabel.font</span><br><span class="line">devtalkingLabelCopy.textAlignment = <span class="keyword">self</span>.devtalkingLabel.textAlignment</span><br><span class="line">devtalkingLabelCopy.textColor = <span class="keyword">self</span>.devtalkingLabel.textColor</span><br><span class="line">devtalkingLabelCopy.backgroundColor = <span class="type">UIColor</span>.clearColor()</span><br></pre></td></tr></table></figure>
-<p>这样我们就复制了一个<code>devtalkingLabel</code>，这个复制品将作为底部的那一面，而且在一开始它的透明度是零，因为底面是看不到的。我们可以想象一下底面向上翻转的效果，其实就是底面的高度从很小慢慢变大，位置从下慢慢向上移动，然后有一个淡入的效果，所以我们在复制出<code>devtalkingLabelCopy</code>后，要调整它的高度和位置，然后添加到父视图中：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">devtalkingLabelCopy.transform = <span class="type">CGAffineTransformConcat</span>(<span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.1</span>), <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, <span class="keyword">self</span>.devtalkingLabel.frame.height / <span class="number">2</span>))</span><br><span class="line"><span class="keyword">self</span>.view.addSubview(devtalkingLabelCopy)</span><br></pre></td></tr></table></figure>
-<p>上述代码将<code>devtalkingLabelCopy</code>的高度减小到原本的十分之一，位置向下移动半个高度的位置，然后在之前的<code>animateWithDuration</code>方法的<code>animations</code>闭包中添加如下两行代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">devtalkingLabelCopy.alpha = <span class="number">1</span></span><br><span class="line">devtalkingLabelCopy.transform = <span class="type">CGAffineTransformIdentity</span></span><br></pre></td></tr></table></figure>
-<p><code>CGAffineTransformIdentity</code>的作用是将<code>UIView</code>的<code>transform</code>恢复到初始状态，然后将透明度设为1。编译运行代码我们会看到<code>devtalkingLabel</code>的高度会慢慢变小，位置慢慢上移，最后淡出，<code>devtalkingLabelCopy</code>的高度慢慢变大，位置慢慢上移，最后淡入，整个效果看上去就像一个长方体在向上翻转，达到3D的效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-5.gif" alt="Practice-5"></p>
-<h2 id="u66FF_u6362UIView_u8FC7_u6E21_u52A8_u753B"><a href="#u66FF_u6362UIView_u8FC7_u6E21_u52A8_u753B" class="headerlink" title="替换UIView过渡动画"></a>替换UIView过渡动画</h2><p>在要实现的动画示例中，背景图做了淡入淡出的图片替换过渡动画，这个动画很简单，我们来看看这段伪代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(backgroundImageView, duration: <span class="number">2</span>, options: .<span class="type">TransitionCrossDissolve</span>, animations: &#123;</span><br><span class="line">    backgroundImageView.image = <span class="type">UIImage</span>(named: <span class="string">"imageName"</span>)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>这个方法在上一篇文章中已经介绍过，我们只需要设置动画选项为<code>.TransitionCrossDissolve</code>，在<code>animations</code>闭包中给目标<code>UIImageView</code>设置要过渡的图片即可。</p>
-<h2 id="u793A_u4F8B_u52A8_u753B"><a href="#u793A_u4F8B_u52A8_u753B" class="headerlink" title="示例动画"></a>示例动画</h2><p>至此，示例动画中用到的动画知识点都向大家介绍过了，在这一节我会将示例动画中主要的效果的伪代码贴出来给大家说说。关于左右滑动的手势以及<code>PageControl</code>在这里就不在累赘了。</p>
-<h3 id="u6570_u636E_u6E90"><a href="#u6570_u636E_u6E90" class="headerlink" title="数据源"></a>数据源</h3><p>为了方便，我们创建一个<code>Flight.plist</code>文件作为数据源：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Practice-6.png" alt="Practice-6"></p>
-<p>我们定义一个延迟加载的属性<code>flight</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">lazy</span> <span class="keyword">var</span> flight: <span class="type">NSArray</span> = &#123;</span><br><span class="line">    <span class="keyword">let</span> path = <span class="type">NSBundle</span>.mainBundle().pathForResource(<span class="string">"Flight"</span>, ofType: <span class="string">"plist"</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="type">NSArray</span>(contentsOfFile: path!)!</span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h3 id="u80CC_u666F_u56FE_u7247_u8FC7_u6E21"><a href="#u80CC_u666F_u56FE_u7247_u8FC7_u6E21" class="headerlink" title="背景图片过渡"></a>背景图片过渡</h3><figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.backgroundImageView, duration: <span class="number">2</span>, options: .<span class="type">TransitionCrossDissolve</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.backgroundImageView.image = <span class="type">UIImage</span>(named: flightItem[<span class="string">"bg"</span>] <span class="keyword">as</span>! <span class="type">String</span>)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>上一节刚介绍过，只是这里图片名称是从数据源中获取的。</p>
-<h3 id="3D_u7FFB_u8F6C"><a href="#3D_u7FFB_u8F6C" class="headerlink" title="3D翻转"></a>3D翻转</h3><p>因为有3D翻转动画效果的<code>UIView</code>比较多，而且有<code>UILabel</code>也有<code>UIImageView</code>，所以我们可以提炼成一个方法，将目标<code>UIView</code>和数据源作为参数：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">cubeAnimate</span><span class="params">(targetView: UIView, flightInfo: String)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 判断UIView的具体实现类</span></span><br><span class="line">    <span class="keyword">if</span> targetView.isKindOfClass(<span class="type">UILabel</span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> virtualTargetView = targetView <span class="keyword">as</span>! <span class="type">UILabel</span></span><br><span class="line">        <span class="comment">// 复制UIView，作为底面</span></span><br><span class="line">        <span class="keyword">let</span> viewCopy = <span class="type">UILabel</span>(frame: virtualTargetView.frame)</span><br><span class="line">        viewCopy.alpha = <span class="number">0</span></span><br><span class="line">        viewCopy.text = flightInfo</span><br><span class="line">        viewCopy.font = virtualTargetView.font</span><br><span class="line">        viewCopy.textAlignment = virtualTargetView.textAlignment</span><br><span class="line">        viewCopy.textColor = virtualTargetView.textColor</span><br><span class="line">        viewCopy.backgroundColor = <span class="type">UIColor</span>.clearColor()</span><br><span class="line">        <span class="comment">// 设置底面UIView的初始位置和高度</span></span><br><span class="line">        viewCopy.transform = <span class="type">CGAffineTransformConcat</span>(<span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.1</span>), <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, viewCopy.frame.height / <span class="number">2</span>))</span><br><span class="line">        <span class="keyword">self</span>.topView.addSubview(viewCopy)</span><br><span class="line">        <span class="type">UIView</span>.animateWithDuration(<span class="number">2</span>, animations: &#123;</span><br><span class="line">            <span class="comment">// 执行UIView和UIViewCopy的动画</span></span><br><span class="line">            virtualTargetView.transform = <span class="type">CGAffineTransformConcat</span>(<span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.1</span>), <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, -virtualTargetView.frame.height / <span class="number">2</span>))</span><br><span class="line">            virtualTargetView.alpha = <span class="number">0</span></span><br><span class="line">            viewCopy.alpha = <span class="number">1</span></span><br><span class="line">            viewCopy.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">        &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">            <span class="comment">// 当动画执行完毕后，将UIViewCopy的信息赋值给UIView，并还原UIView的状态，即与UIViewCopy相同的状态，然后移除UIViewCopy</span></span><br><span class="line">            virtualTargetView.alpha = <span class="number">1</span></span><br><span class="line">            virtualTargetView.text = viewCopy.text</span><br><span class="line">            virtualTargetView.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">            viewCopy.removeFromSuperview()</span><br><span class="line">        &#125;)</span><br><span class="line">     &#125; <span class="keyword">else</span> <span class="keyword">if</span> targetView.isKindOfClass(<span class="type">UIImageView</span>) &#123;</span><br><span class="line">         <span class="keyword">let</span> virtualTargetView = targetView <span class="keyword">as</span>! <span class="type">UIImageView</span></span><br><span class="line">         <span class="keyword">let</span> viewCopy = <span class="type">UIImageView</span>(frame: virtualTargetView.frame)</span><br><span class="line">         viewCopy.alpha = <span class="number">0</span></span><br><span class="line">         viewCopy.image = <span class="type">UIImage</span>(named: flightInfo)</span><br><span class="line">         viewCopy.transform = <span class="type">CGAffineTransformConcat</span>(<span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.1</span>), <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, viewCopy.frame.height / <span class="number">2</span>))</span><br><span class="line">         <span class="keyword">self</span>.topView.addSubview(viewCopy)</span><br><span class="line">         <span class="type">UIView</span>.animateWithDuration(<span class="number">2</span>, animations: &#123;</span><br><span class="line">             virtualTargetView.transform = <span class="type">CGAffineTransformConcat</span>(<span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.1</span>), <span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">1.0</span>, -virtualTargetView.frame.height / <span class="number">2</span>))</span><br><span class="line">             virtualTargetView.alpha = <span class="number">0</span></span><br><span class="line">             viewCopy.alpha = <span class="number">1</span></span><br><span class="line">             viewCopy.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">         &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">             virtualTargetView.alpha = <span class="number">1</span></span><br><span class="line">             virtualTargetView.image = viewCopy.image</span><br><span class="line">             virtualTargetView.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">             viewCopy.removeFromSuperview()</span><br><span class="line">         &#125;)</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>具体有这么几个步骤：</p>
-<ul>
-<li>判断<code>UIView</code>的具体实现类，判断是<code>UILabel</code>还是<code>UIImageView</code>。</li>
-<li>复制一份<code>UIView</code>，作为底面。</li>
-<li>设置<code>UIViewCopy</code>的初始位置和高度。</li>
-<li>执行UIView<code>和</code>UIViewCopy`的动画。</li>
-<li>当动画执行完毕后，将<code>UIViewCopy</code>的信息赋值给<code>UIView</code>，并还原<code>UIView</code>的状态，即与<code>UIViewCopy</code>相同的状态，然后移除<code>UIViewCopy</code>。</li>
-</ul>
-<h3 id="u5C0F_u7BAD_u5934_u65CB_u8F6C_u52A8_u753B"><a href="#u5C0F_u7BAD_u5934_u65CB_u8F6C_u52A8_u753B" class="headerlink" title="小箭头旋转动画"></a>小箭头旋转动画</h3><p>因为航班信息有已降落和即将起飞两种状态，所以小箭头旋转涉及到一个方向问题，我们可以先定义一个枚举类型：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">RotateDirection</span>: <span class="title">Int</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Positive</span> = <span class="number">1</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Negative</span> = -<span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后写一个箭头旋转的方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">rotateAnimate</span><span class="params">(direction: Int)</span></span> &#123;</span><br><span class="line">   <span class="type">UIView</span>.animateWithDuration(<span class="number">2</span>, animations: &#123;</span><br><span class="line">       <span class="comment">// 判断向上还是向下旋转</span></span><br><span class="line">       <span class="keyword">if</span> <span class="type">RotateDirection</span>.<span class="type">Positive</span>.rawValue == direction &#123;</span><br><span class="line">           <span class="comment">// 在这个示例中小箭头的初始状态是飞机已降落状态，所以想要箭头从起飞状态旋转到降落状态，只要恢复初始状态即可</span></span><br><span class="line">           <span class="keyword">self</span>.landedOrDepatureSmallArrowImageView.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="comment">// 向上旋转</span></span><br><span class="line">           <span class="keyword">let</span> rotation = <span class="type">CGAffineTransformMakeRotation</span>(<span class="type">CGFloat</span>(<span class="type">RotateDirection</span>.<span class="type">Negative</span>.rawValue) * <span class="type">CGFloat</span>(<span class="type">M_PI_2</span>))</span><br><span class="line">           <span class="keyword">self</span>.landedOrDepatureSmallArrowImageView.transform = rotation</span><br><span class="line">       &#125;</span><br><span class="line">    &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>给大家解释一下上述方法的几个步骤：</p>
-<ul>
-<li>首先判断旋转的方向，通过传入的<code>direction</code>参数。</li>
-<li>如果判断出是降落状态的箭头，也就是向下旋转的箭头，那么我们只需要将<code>landedOrDepatureSmallArrowImageView</code>的<code>transform</code>属性恢复初始值即可，因为在这个示例中小箭头的初始状态就是飞机降落状态。</li>
-<li>向上旋转时创建一个<code>CGAffineTransformMakeRotation</code>，然后设置正确地方向和角度即可。</li>
-</ul>
-<blockquote>
-<p> 注：<code>CGAffineTransformMakeRotation</code>转换每次都是以初始位置为准，<code>CGAffineTransformRotation</code>转换是以每次的旋转位置为准。</p>
-</blockquote>
-<h3 id="u5730_u70B9_u548C_u98DE_u673A_u52A8_u753B"><a href="#u5730_u70B9_u548C_u98DE_u673A_u52A8_u753B" class="headerlink" title="地点和飞机动画"></a>地点和飞机动画</h3><p>起飞地、目的地、飞机的动画是一个组合动画，因为这里面存在飞机出现和消失，以及旋转的时机问题，我们来看看这个方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">placeAndAirplaneAnimate</span><span class="params">(flightItem: NSDictionary)</span></span> &#123;</span><br><span class="line">    <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">        <span class="comment">// 将起飞地向上移动，同时淡出</span></span><br><span class="line">        <span class="keyword">self</span>.targetPlace.center.y += <span class="number">100</span></span><br><span class="line">        <span class="keyword">self</span>.targetPlace.alpha = <span class="number">0</span></span><br><span class="line">        <span class="comment">// 将目的地向下移动，同时淡出</span></span><br><span class="line">        <span class="keyword">self</span>.sourcePlace.center.y -= <span class="number">100</span></span><br><span class="line">        <span class="keyword">self</span>.sourcePlace.alpha = <span class="number">0</span></span><br><span class="line">        <span class="comment">// 将飞机向右移出屏幕</span></span><br><span class="line">        <span class="keyword">self</span>.airplaneImageView.center.x += <span class="keyword">self</span>.view.bounds.width / <span class="number">1.5</span></span><br><span class="line">        &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">            <span class="comment">// 根据传入的数据源更改起飞地和目的地</span></span><br><span class="line">            <span class="keyword">self</span>.targetPlace.text = flightItem[<span class="string">"targetPlace"</span>] <span class="keyword">as</span>? <span class="type">String</span></span><br><span class="line">            <span class="keyword">self</span>.sourcePlace.text = flightItem[<span class="string">"sourcePlace"</span>] <span class="keyword">as</span>? <span class="type">String</span></span><br><span class="line">            <span class="comment">// 将飞机移到屏幕左侧外，这里没有补间动画</span></span><br><span class="line">            <span class="keyword">self</span>.airplaneImageView.center.x -= <span class="keyword">self</span>.view.bounds.width * <span class="number">1.5</span></span><br><span class="line">            <span class="comment">// 将飞机向上旋转一个角度，这里没有补间动画</span></span><br><span class="line">            <span class="keyword">self</span>.airplaneImageView.transform = <span class="type">CGAffineTransformMakeRotation</span>(-<span class="number">3.14</span>/<span class="number">10</span>)</span><br><span class="line">            <span class="type">UIView</span>.animateWithDuration(<span class="number">1.0</span>, animations: &#123;</span><br><span class="line">                <span class="comment">// 将起飞地向下移动，也就是恢复到初始位值，同时淡入</span></span><br><span class="line">                <span class="keyword">self</span>.targetPlace.center.y -= <span class="number">100</span></span><br><span class="line">                <span class="keyword">self</span>.targetPlace.alpha = <span class="number">1</span></span><br><span class="line">                <span class="comment">// 将目的地向上移动，也就是恢复到初始位值，同时淡入</span></span><br><span class="line">                <span class="keyword">self</span>.sourcePlace.center.y += <span class="number">100</span></span><br><span class="line">                <span class="keyword">self</span>.sourcePlace.alpha = <span class="number">1</span></span><br><span class="line">                <span class="comment">// 将飞机移动到初始位置</span></span><br><span class="line">                <span class="keyword">self</span>.airplaneImageView.center = <span class="keyword">self</span>.airplaneImageViewOriginalCenter</span><br><span class="line">            &#125;)</span><br><span class="line">            <span class="type">UIView</span>.animateWithDuration(<span class="number">0.7</span>, delay: <span class="number">0.5</span>, options: [], animations: &#123;</span><br><span class="line">                <span class="comment">// 将飞机的角度恢复到初始状态</span></span><br><span class="line">                <span class="keyword">self</span>.airplaneImageView.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">            &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>刨析一下这个方法：</p>
-<ul>
-<li>首先是起飞地向上移动同时淡出、目的地向下移动同时淡出、将飞机向右移出屏幕，这些动画属性的改变会产生补间动画。</li>
-<li>然后当上面这些动画结束后，根据数据源参数更改起飞地和目的地的值，同时将飞机移动屏幕左侧外并向上旋转一个角度，这些属性的改变是不会产生补间动画的，应为它们在<code>completion</code>闭包中。</li>
-<li>最后再使用两个动画方法将起飞地向下移动，也就是恢复到初始位值同时淡入，将目的地向上移动，也就是恢复到初始位值同时淡入，将飞机移动到初始位置，将飞机的角度恢复到初始状态。这里为什么不把恢复飞机角度和恢复位置放在一个动画方法里呢？因为恢复飞机角度需要一个延迟时间，也就是当飞机飞入屏幕一会后再恢复角度，表示一个降落的效果，使动画看起来更加逼真。</li>
-</ul>
-<p>还有底部的时间还有地点下地横线都是淡入淡出的动画比较简单，这里就不在累赘了。</p>
-<h2 id="u7ED3_u675F_u8BED"><a href="#u7ED3_u675F_u8BED" class="headerlink" title="结束语"></a>结束语</h2><p>再简单地动画效果只要组合的恰当，值设置的考究都可以做出出色的动画效果。这些简单地动画效果也是复杂动画效果的基础。上述动画示例的代码可能写的不够精细，还可以提炼的有层次，不过大家了解了知识点后可以自己实现更考究的代码结构，实现更精致的动画。</p>
-<p><a href="https://github.com/DevTalking/View-Animation-Practice" target="_blank" rel="external">Demo地址</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/uiview-transition-animation/" itemprop="url">
-                  iOS UIView Animation - Transition
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-07-08T00:00:00+08:00" content="2015-07-08">
-              2015-07-08
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/uiview-transition-animation/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/uiview-transition-animation/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<blockquote>
-<p> 本文首发<a href="http://www.csdn.net/article/2015-07-06/2825139-ios-uiview-animation-3" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-</blockquote>
-<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>在上两篇文章中向大家介绍了如何创建基于动画属性的视图动画，比如位置、透明度等。但是大家有没有想过添加或删除一个视图时怎样添加相应地动画呢？</p>
-<p>当然我们可以用第一篇文章中对用户名、密码输入框的处理办法，但是还有更好的办法处理这种状况。那就是在这篇文章中将向大家介绍的过渡转变（Transition）动画。</p>
-<p>过渡转变动画是Apple预定义的动画集，它没有更改视图某属性起始值和终止值的概念，而只需要你设定不同的动画选项即可。</p>
-<h2 id="u6DFB_u52A0_u65B0_u89C6_u56FE"><a href="#u6DFB_u52A0_u65B0_u89C6_u56FE" class="headerlink" title="添加新视图"></a>添加新视图</h2><p>在进行示例之前，大家需要注意一点过渡转变动画与动画属性动画的不同之处。我们在创建动画属性动画时只需要在<code>animations</code>闭包中添加对视图动画属性修改的代码即可，它没有作用域或作用视图的概念。而在过渡转变动画中有作用视图的概念，也就是说我们调用过渡转变动画方法时需要指定一个作用视图。</p>
-<p>明确这点不同之后，我们对作用视图再作进一步的说明。过渡转变动画中的作用视图并不是我们的目标视图，而是目标视图的容器视图，那么大家不难想象，如果该容器视图中有多个子视图，那么这些子视图都会有过渡转变动画效果。下面用示例像大家说明。</p>
-<p>先看看一个简单的视图结构：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/TransitionAnimation-1.png" alt="视图结构"></p>
-<p>很明显，我们添加了一个视图作为容器视图，并且尺寸等于屏幕尺寸。在<code>ViewController.swift</code>中有该容器视图的Outlet以及一个图片视图：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">weak</span> <span class="keyword">var</span> containerView: <span class="type">UIView</span>!</span><br><span class="line"><span class="keyword">let</span> ipadView = <span class="type">UIImageView</span>(frame: <span class="type">CGRectMake</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">151.5</span>))</span><br></pre></td></tr></table></figure>
-<p>在<code>viewDidLoad()</code>方法中给<code>ipadView</code>指定图片：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ipadView.image = <span class="type">UIImage</span>(named: <span class="string">"ipad"</span>)</span><br></pre></td></tr></table></figure>
-<p>然后在<code>viewDidAppear()</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.containerView, duration: <span class="number">1.5</span>, options: .<span class="type">TransitionFlipFromBottom</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.containerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>上述代码就是我们今天的主角，过渡转变方法之一，它同样是<code>UIView</code>的类方法，共有五个参数：</p>
-<ul>
-<li><code>view</code>：第一个参数，也就是作用视图，一般都是容器视图。</li>
-<li><code>duration</code>：动画持续时间。</li>
-<li><code>options</code>：过渡转变动画选项，由它来确定过渡转变的具体展现形式。</li>
-<li><code>animations</code>：动画闭包。</li>
-<li><code>completion</code>：动画结束后执行该闭包中的代码。</li>
-</ul>
-<p>除了第一个参数，其他四个参数大家应该都不会陌生。这段代码用文字解释出来就是将容器视图（<code>containerView</code>）添加子视图（<code>ipadView</code>）的过程使用<code>.TransitionFlipFromBottom</code>类型的过渡转变动画展示出来，持续时间为1.5秒。编译运行看看效果：</p>
-<iframe src="https://player.vimeo.com/video/132628194?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>我们再来添加一个子视图（该子视图的初始化代码不再累赘）：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.containerView, duration: <span class="number">1.5</span>, options: .<span class="type">TransitionFlipFromBottom</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.containerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">    <span class="keyword">self</span>.containerView.addSubview(<span class="keyword">self</span>.iphoneView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>编译运行看看效果：</p>
-<iframe src="https://player.vimeo.com/video/132628304?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>大家可以看到这两个子视图都依托与它们的容器视图进行了过渡转变动画。下面的列表是所有过渡转变动画的动画选项，大家可以在你们自己的项目中逐个实验：</p>
-<ul>
-<li><code>.TransitionFlipFromLeft</code></li>
-<li><code>.TransitionFlipFromRight</code></li>
-<li><code>.TransitionCurlUp</code></li>
-<li><code>.TransitionCurlDown</code></li>
-<li><code>.TransitionCrossDissolve</code></li>
-<li><code>.TransitionFlipFromTop</code></li>
-<li><code>.TransitionFlipFromBottom</code></li>
-</ul>
-<p>如果我们有多个目标视图，想进行不同的过渡转变动画怎么办？那我们就创建多个目标视图的容器视图，尺寸与目标视图一致，放置在合适的位置：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/TransitionAnimation-2.png" alt="视图结构"></p>
-<p>从上图中可以看出，我们在屏幕上放置了四个容器视图，显而易见，我们要分别对这四个容器视图添加过渡转变动画。当然容器视图里要添加什么样的视图随个人喜好。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>在<code>viewDidLoad()</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.ipadContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromBottom</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.ipadContainerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.iphoneContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromLeft</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.iphoneContainerView.addSubview(<span class="keyword">self</span>.iphoneView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.webContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromRight</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.webContainerView.addSubview(<span class="keyword">self</span>.webView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(textContainerView, duration: <span class="number">2</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionCrossDissolve</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.textContainerView.addSubview(<span class="keyword">self</span>.textView)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>通过上述代码可以看出，我们对四个容器视图分别添加了过渡转变动画，并且<code>options</code>参数使用了<code>.CurveEaseOut</code>和不同的过渡转变动画选项。编译运行看看效果：</p>
-<iframe src="https://player.vimeo.com/video/132628896?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>是不是有点儿意思！不过细心的朋友应该发现了，过渡转变动画的方法没有<code>delay</code>这个很有用的属性，这就导致过渡转变动画都是同时发生，不能设置延迟时间。不过我们可以曲线救国，自己写一个<code>delay</code>方法：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">delay</span><span class="params">(seconds: Double, completion:<span class="params">()</span></span></span>-&gt;()) &#123;</span><br><span class="line">    <span class="keyword">let</span> popTime = dispatch_time(<span class="type">DISPATCH_TIME_NOW</span>, <span class="type">Int64</span>( <span class="type">Double</span>(<span class="type">NSEC_PER_SEC</span>) * seconds ))</span><br><span class="line">    dispatch_after(popTime, dispatch_get_main_queue()) &#123;</span><br><span class="line">        completion()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后我们修改<code>viewDidLoad()</code>方法中的代码如下：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">delay(<span class="number">0</span>, completion: &#123;</span><br><span class="line">   <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.ipadContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromBottom</span>], animations: &#123;</span><br><span class="line">       <span class="keyword">self</span>.ipadContainerView.addSubview(<span class="keyword">self</span>.ipadView)</span><br><span class="line">   &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">delay(<span class="number">1</span>, completion: &#123;</span><br><span class="line">    <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.iphoneContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromLeft</span>], animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.iphoneContainerView.addSubview(<span class="keyword">self</span>.iphoneView)</span><br><span class="line">    &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"> &#125;)</span><br><span class="line">        </span><br><span class="line">delay(<span class="number">2</span>, completion: &#123;</span><br><span class="line">    <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.webContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromRight</span>], animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.webContainerView.addSubview(<span class="keyword">self</span>.webView)</span><br><span class="line">     &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">delay(<span class="number">3</span>, completion: &#123;</span><br><span class="line">    <span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.textContainerView, duration: <span class="number">2</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionCrossDissolve</span>], animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.textContainerView.addSubview(<span class="keyword">self</span>.textView)</span><br><span class="line">    &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
-<p>我们将每个过渡转变动画延迟1秒进行，编译运行看看效果：</p>
-<iframe src="https://player.vimeo.com/video/132629174?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>现在的效果是不是更好了呢！ : ]</p>
-<h2 id="u79FB_u9664_u89C6_u56FE"><a href="#u79FB_u9664_u89C6_u56FE" class="headerlink" title="移除视图"></a>移除视图</h2><p>过渡转变动画同样可以用来移除视图。我们在屏幕底部添加一个<code>UIButton</code>，当点击这个按钮的时候，通过过渡转变动画移除按钮上方的那两排字，并且改变屏幕背景色。<code>go()</code>方法是按钮连接在代码中的<strong>Touch Up Inside</strong>方法，在该方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.view.backgroundColor = <span class="type">UIColor</span>(red: <span class="number">252.0</span>/<span class="number">255.0</span>, green: <span class="number">155.0</span>/<span class="number">255.0</span>, blue: <span class="number">65.0</span>/<span class="number">255.0</span>, alpha: <span class="number">1</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p> 编译运行看看效果：</p>
- <iframe src="https://player.vimeo.com/video/132629842?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<h2 id="u66FF_u6362_u89C6_u56FE"><a href="#u66FF_u6362_u89C6_u56FE" class="headerlink" title="替换视图"></a>替换视图</h2><p> 在这一节我们将要学习过渡转变动画的另一个方法，替换视图方法。我设计的场景是当点击<strong>Go</strong>按钮后，除了上一节中的动画效果以外，iPad、iPhone、Web视图也会移位并且替换为别的视图，我们继续在<code>go()</code>方法中的添加如下代码：</p>
- <figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"> </span><br><span class="line"> <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">     <span class="keyword">self</span>.iphoneView.frame = <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">     <span class="keyword">self</span>.iphoneContainerView.frame = <span class="type">CGRectMake</span>(<span class="number">26</span>, <span class="number">130</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">  &#125;, completion: &#123;</span><br><span class="line">        (flag: <span class="type">Bool</span>) <span class="keyword">in</span></span><br><span class="line">                <span class="keyword">if</span> flag &#123;</span><br><span class="line">                        <span class="type">UIView</span>.transitionFromView(<span class="keyword">self</span>.iphoneContainerView, toView: <span class="keyword">self</span>.supportIphone, duration: <span class="number">0.33</span>, options: .<span class="type">TransitionCrossDissolve</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">                &#125;</span><br><span class="line"> &#125;)</span><br><span class="line">        </span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">1</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.ipadView.frame = <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">    <span class="keyword">self</span>.ipadContainerView.frame = <span class="type">CGRectMake</span>(<span class="number">26</span>, <span class="number">242</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">  &#125;, completion: &#123;</span><br><span class="line">        (flag: <span class="type">Bool</span>) <span class="keyword">in</span></span><br><span class="line">                <span class="keyword">if</span> flag &#123;</span><br><span class="line">                        <span class="type">UIView</span>.transitionFromView(<span class="keyword">self</span>.ipadContainerView, toView: <span class="keyword">self</span>.supportIpad, duration: <span class="number">0.33</span>, options: .<span class="type">TransitionCrossDissolve</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">                &#125;</span><br><span class="line">&#125;)</span><br><span class="line">        </span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">2</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.webView.frame = <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">    <span class="keyword">self</span>.webContainerView.frame = <span class="type">CGRectMake</span>(<span class="number">26</span>, <span class="number">354</span>, <span class="number">334</span>, <span class="number">72</span>)</span><br><span class="line">&#125;, completion: &#123;</span><br><span class="line">        (flag: <span class="type">Bool</span>) <span class="keyword">in</span></span><br><span class="line">                <span class="keyword">if</span> flag &#123;</span><br><span class="line">                        <span class="type">UIView</span>.transitionFromView(<span class="keyword">self</span>.webContainerView, toView: <span class="keyword">self</span>.supportWeb, duration: <span class="number">0.33</span>, options: .<span class="type">TransitionCrossDissolve</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">                &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p> 我们来解释一下上述的代码，拿iPhone视图为例，首先通过动画属性动画改变它的尺寸大小和位置。然后在<code>completion</code>闭包中添加替换视图方法，该方法有五个参数：</p>
-<ul>
-<li><code>fromView</code>：被替换的视图。</li>
-<li><code>toView</code>：替换之后的视图。</li>
-<li><code>duration</code>：动画持续时间。</li>
-<li><code>options</code>：动画选项。</li>
-<li><code>completion</code>：动画执行结束后执行该闭包中的代码。</li>
-</ul>
-<p>要注意的是该方法的作用视图可以是容器视图，也可以是目标视图。编译运行看看效果：</p>
-<iframe src="https://player.vimeo.com/video/132631364?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<h2 id="u663E_u793A/_u9690_u85CF_u89C6_u56FE"><a href="#u663E_u793A/_u9690_u85CF_u89C6_u56FE" class="headerlink" title="显示/隐藏视图"></a>显示/隐藏视图</h2><p>过渡转变动画也可以用于显示或隐藏视图，这里给出伪代码供参考：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.transitionWithView(<span class="keyword">self</span>.someContainerView, duration: <span class="number">1.5</span>, options: [.<span class="type">CurveEaseOut</span>, .<span class="type">TransitionFlipFromBottom</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.someView.hidden = <span class="literal">true</span></span><br><span class="line">    <span class="comment">// self.someView.hidden = false</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="u7ED3_u675F_u8BED"><a href="#u7ED3_u675F_u8BED" class="headerlink" title="结束语"></a>结束语</h2><p>过渡转变动画有很多动画选项，大家可以自行试试，找出自己喜欢的或最合适的过渡转变动画选项，并且可以尝试过渡转变动画和属性动画的组合，可以使你们的App更加有趣。好了今天就到这里。</p>
-<p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1261,22 +1254,22 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">96</span>
-              <span class="site-state-item-name">文章</span>
+              <span class="site-state-item-count">98</span>
+              <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
          <!-- <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">9</span>
-              <span class="site-state-item-name">分類</span>
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">分类</span>
               </a>
           </div> -->
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">91</span>
-              <span class="site-state-item-name">標籤</span>
+              <span class="site-state-item-count">92</span>
+              <span class="site-state-item-name">标签</span>
               </a>
           </div>
 
@@ -1335,7 +1328,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>
@@ -1343,11 +1336,11 @@
 </div>
 
 <div class="powered-by">
-  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
 </div>
 
 <div class="theme-info">
-  主題 -
+  主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
     NexT
   </a>
