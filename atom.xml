@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.devtalking.com/"/>
-  <updated>2021-02-03T16:09:48.619Z</updated>
+  <updated>2021-02-03T16:41:11.363Z</updated>
   <id>http://www.devtalking.com/</id>
   
   <author>
@@ -13,6 +13,269 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Serverless在游戏运营行业进行数据采集分析的最佳实践]]></title>
+    <link href="http://www.devtalking.com//articles/serverless-game-bigdata/"/>
+    <id>http://www.devtalking.com//articles/serverless-game-bigdata/</id>
+    <published>2020-06-19T16:00:00.000Z</published>
+    <updated>2021-02-03T16:41:11.363Z</updated>
+    <content type="html"><![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<p>众所周知，游戏行业在当今的互联网行业中算是一棵常青树。在疫情之前的2019年，中国游戏市场营收规模约2884.8亿元，同比增长17.1%。2020年因为疫情，游戏行业更是突飞猛进。玩游戏本就是中国网民最普遍的娱乐方式之一，疫情期间更甚。据不完全统计，截止2019年，中国移动游戏用户规模约6.6亿人，占中国总网民规模8.47亿的77.92%，足以说明，游戏作为一种低门槛、低成本的娱乐手段，已成为大部分人生活中习以为常的一部分。</p>
+<p>对于玩家而言，市面上的游戏数量多如牛毛，那么玩家如何能发现和认知到一款游戏，并且持续的玩下去恐怕是所有游戏厂商需要思考的问题。加之2018年游戏版号停发事件，游戏厂商更加珍惜每一个已获得版号的游戏产品，所以这也使得“深度打磨产品质量”和“提高运营精细程度”这两个游戏产业发展方向成为广大游戏厂商的发展思路，无论是新游戏还是老游戏都在努力落实这两点：</p>
+<ul>
+<li>新游戏：以更充足的推广资源和更完整的游戏内容面向玩家。</li>
+<li>老游戏：通过用户行为分析，投入更多的精力和成本，制作更优质的版本内容。</li>
+</ul>
+<p>这里我们重点来看新游戏。一家游戏企业辛辛苦苦研发三年，等着新游戏发售时一飞冲天。那么问题来了，新游戏如何被广大玩家看到？先来看看游戏行业公司的分类：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled.png" alt=""></p>
+<ul>
+<li>游戏研发商：研发游戏的公司，生产和制作游戏内容。比如王者荣耀的所有英雄设计、游戏战斗场景、战斗逻辑等等，这些全部由游戏研发公司提供。</li>
+<li><p>游戏发行商：游戏发行商的主要工作分三大块：市场工作、运营工作、客服工作。游戏发行商把控游戏命脉，市场工作核心是导入玩家，运营工作核心是将用户价值最大化、赚取更多利益。</p>
+<p>  <img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%201.png" alt=""></p>
+</li>
+<li><p>游戏平台/渠道商：游戏平台和渠道商的核心目的就是曝光游戏，让尽量多的人能发现你的游戏。</p>
+</li>
+</ul>
+<a id="more"></a>
+<p>这三种类型的公司做的事情有各自专注在某一块领域的独立公司，也有一家公司把这三种事情全部都做的，但无论那一种，这三者之间的关系是不会变的：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%202.png" alt=""></p>
+<p>所以不难理解，要想让更多的玩家看到你的游戏，游戏发行和运营是关键，通俗来讲就是如果你的游戏出现在所有目前大家熟知的平台的广告中，那么最起码游戏的新用户注册数量是很可观的。那么这就引出了一个关键词，买量。</p>
+<p>根据数据显示，2019年月均买量手游数达6000+款，而2018年仅为4200款。另一方面，随着抖音、微博等超级APP在游戏买量市场的资源倾斜，也助推手游买量的效果和效率都有所提升，游戏厂商也更愿意使用买量的方式来吸引用户。但需要注意的是，在游戏买量的精准化程度不断提高的同时，买量的成本也在节节攀升，唯有合理配置买量、渠道与整合营销之间的关系，才能将宣发资源发挥到最大的效果。</p>
+<p>通俗来讲，买量其实就是在各大主流平台投放广告，广大用户看到游戏广告后，有可能会点击广告，然后进入游戏厂商的宣传页面，同时会采集用户的一些信息，然后游戏厂商对采集到的用户信息进行大数据分析，进行进一步的定向推广。</p>
+<h1 id="u6E38_u620F_u8FD0_u8425_u6838_u5FC3_u8BC9_u6C42"><a href="#u6E38_u620F_u8FD0_u8425_u6838_u5FC3_u8BC9_u6C42" class="headerlink" title="游戏运营核心诉求"></a>游戏运营核心诉求</h1><p>游戏厂商花钱买量，换来用户信息以及新用户注册信息是为持续的游戏运营服务的，那么这个场景的核心诉求就是采集用户信息的完整性。比如说，某游戏厂商一天花5000w投放广告，在某平台某时段产生了每秒1w次的广告点击率，那么在这个时段内每一个点击广告的用户信息要完整的被采集到然后入库进行后续分析。这就对数据采集系统有着很高的要求，最核心的一点就是系统暴露接口的环节要能够平稳承载买量期间的不定时的流量脉冲。在买量期间，游戏厂商通常会在多个平台投放广告，每个平台投放广告的时间是不一样的，所以就出现全天不定时的流量脉冲现象。如果这个环节出现问题，那么相当于买量的钱就打水漂了。</p>
+<h1 id="u6570_u636E_u91C7_u96C6_u7CFB_u7EDF_u4F20_u7EDF_u67B6_u6784"><a href="#u6570_u636E_u91C7_u96C6_u7CFB_u7EDF_u4F20_u7EDF_u67B6_u6784" class="headerlink" title="数据采集系统传统架构"></a>数据采集系统传统架构</h1><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%203.png" alt=""></p>
+<p>上图是一个相对传统的数据采集系统的架构，最关键的就是暴露HTTP接口回传数据这部分，这部分如果出问题，那么采集数据的链路就断了。但这部分往往会面临两个挑战：</p>
+<ul>
+<li>当流量脉冲来的时候，这部分是否可以很快的扩容来应对流量冲击。</li>
+<li>游戏运营并不是天天都在进行的，是有潮汐特性的，那么这部分的资源利用率如何优化。</li>
+</ul>
+<p>在传统架构下，通常情况在游戏有运营活动之前，会提前通知运维同学，对这个环节的服务增加节点，但要增加多少其实是无法预估的，只能大概拍一个数字。这就会导致两个问题：</p>
+<ul>
+<li>流量太大，节点加少了，导致一部分流量的数据没有采集到。</li>
+<li>流量没有预期那么大，节点加多了，导致资源浪费。</li>
+</ul>
+<h1 id="u6570_u636E_u91C7_u96C6_u7CFB_u7EDFServerless_u67B6_u6784"><a href="#u6570_u636E_u91C7_u96C6_u7CFB_u7EDFServerless_u67B6_u6784" class="headerlink" title="数据采集系统Serverless架构"></a>数据采集系统Serverless架构</h1><p>我们可以通过Serverless<a href="https://help.aliyun.com/document_detail/52895.html?spm=5176.10695662.1112509.4.560f3821kjdWJB" target="_blank" rel="external">函数计算</a>（函数计算的基本概念可以参考<a href="http://www.devtalking.com/articles/serverless-online-coding/">这篇文章</a>）来取代传统架构中暴露HTTP回传数据这部分，从而完美的解决传统架构中存在问题，先来看架构图：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%204.png" alt=""></p>
+<p>传统架构中的两个问题均可以通过函数计算百毫秒弹性的特性来解决。我们并不需要去估算营销活动会带来多大的流量，也不需要去担心和考虑对数据采集系统的性能，运维同学更不需要提前预备ECS。</p>
+<p>因为函数计算的极致弹性特性，当没有买量，没有营销活动的时候，函数计算的运行实例是零。有买量活动时，流量脉冲的情况下，函数计算会快速拉起实例来承载流量压力，当流量减少时函数计算会及时释放没有请求的实例进行缩容。所以Serverless架构带来的优势有以下三点：</p>
+<ul>
+<li>无需运维介入，研发同学就可以很快的搭建出来。</li>
+<li>无论流量大小，均可以平稳的承接。</li>
+<li>函数计算拉起的实例数量可以紧贴流量大小的曲线，做到资源利用率最优化，再加上按量计费的模式，可以最大程度优化成本。</li>
+</ul>
+<h1 id="u67B6_u6784_u89E3_u6790"><a href="#u67B6_u6784_u89E3_u6790" class="headerlink" title="架构解析"></a>架构解析</h1><p>从上面的架构图可以看到，整个采集数据阶段，分了两个函数来实现，第一个函数的作用是单纯的暴露HTTP接口接收数据，第二个函数用于处理数据，然后将数据发送至消息队列Kafka和数据库RDS。</p>
+<h2 id="u63A5_u6536_u6570_u636E_u51FD_u6570"><a href="#u63A5_u6536_u6570_u636E_u51FD_u6570" class="headerlink" title="接收数据函数"></a>接收数据函数</h2><p>我们打开函数计算控制台，创建一个函数：</p>
+<ul>
+<li>函数类型：HTTP（即触发器为HTTP）</li>
+<li>函数名称：receiveData</li>
+<li>运行环境：Python3</li>
+</ul>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%205.png" alt=""></p>
+<ul>
+<li>函数实例类型：弹性实例</li>
+<li>函数执行内存：512MB</li>
+<li>函数运行超时时间：60秒</li>
+<li>函数单实例并发度：1</li>
+</ul>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%206.png" alt=""></p>
+<ul>
+<li>触发器类型：HTTP触发器</li>
+<li>触发器名称：defaultTrigger</li>
+<li>认证方式：anonymous（即无需认证）</li>
+<li>请求方式：GET，POST</li>
+</ul>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%207.png" alt=""></p>
+<p>创建好函数之后，我们通过在线编辑器编写代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> urllib.parse</span><br><span class="line">HELLO_WORLD = <span class="string">b'Hello world!\n'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handler</span><span class="params">(environ, start_response)</span>:</span></span><br><span class="line">    logger = logging.getLogger() </span><br><span class="line">    context = environ[<span class="string">'fc.context'</span>]</span><br><span class="line">    request_uri = environ[<span class="string">'fc.request_uri'</span>]</span><br><span class="line">    <span class="keyword">for</span> k, v <span class="keyword">in</span> environ.items():</span><br><span class="line">      <span class="keyword">if</span> k.startswith(<span class="string">'HTTP_'</span>):</span><br><span class="line">        <span class="comment"># process custom request headers</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">try</span>:        </span><br><span class="line">        request_body_size = int(environ.get(<span class="string">'CONTENT_LENGTH'</span>, <span class="number">0</span>))    </span><br><span class="line">    <span class="keyword">except</span> (ValueError):        </span><br><span class="line">        request_body_size = <span class="number">0</span>   </span><br><span class="line">    <span class="comment"># 接收回传的数据</span></span><br><span class="line">    request_body = environ[<span class="string">'wsgi.input'</span>].read(request_body_size)  </span><br><span class="line">    request_body_str = urllib.parse.unquote(request_body.decode(<span class="string">"GBK"</span>))</span><br><span class="line">    request_body_obj = json.loads(request_body_str)</span><br><span class="line">    logger.info(request_body_obj[<span class="string">"action"</span>])</span><br><span class="line">    logger.info(request_body_obj[<span class="string">"articleAuthorId"</span>])</span><br><span class="line">    </span><br><span class="line">    status = <span class="string">'200 OK'</span></span><br><span class="line">    response_headers = [(<span class="string">'Content-type'</span>, <span class="string">'text/plain'</span>)]</span><br><span class="line">    start_response(status, response_headers)</span><br><span class="line">    <span class="keyword">return</span> [HELLO_WORLD]</span><br></pre></td></tr></table></figure>
+<p>此时的代码非常简单，就是接收用户传来的参数，我们可以调用接口进行验证：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%208.png" alt=""></p>
+<p>可以在函数的日志查询中看到此次调用的日志：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%209.png" alt=""></p>
+<p>同时，我们也可以查看函数的链路追踪来分析每一个步骤的调用耗时，比如函数接到请求→冷启动（无活跃实例时）→准备代码→执行初始化方法→执行入口函数逻辑这个过程：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2010.png" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2011.png" alt=""></p>
+<p>从调用链路图中可以看到，刚才的那次请求包含了冷启动的时间，因为当时没有活跃实例，整个过程耗时418毫秒，真正执行入口函数代码的时间为8毫秒。</p>
+<p>当再次调用接口时，可以看到就直接执行了入口函数的逻辑，因为此时已经有实例在运行，整个耗时只有2.3毫秒：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2012.png" alt=""></p>
+<h2 id="u5904_u7406_u6570_u636E_u7684_u51FD_u6570"><a href="#u5904_u7406_u6570_u636E_u7684_u51FD_u6570" class="headerlink" title="处理数据的函数"></a>处理数据的函数</h2><p>第一个函数是通过在函数计算控制台在界面上创建的，选择了运行环境是Python3，我们可以在<a href="https://help.aliyun.com/document_detail/56316.html?spm=a2c4g.11186623.6.576.6057e341oS5CrS" target="_blank" rel="external">官方文档</a>中查看预置的Python3运行环境内置了哪些模块，因为第二个函数要操作Kafka和RDS，所以需要我们确认对应的模块。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2013.png" alt=""></p>
+<p>从文档中可以看到，内置的模块中包含RDS的SDK模块，但是没有Kafka的SDK模块，此时就需要我们手动安装Kafka SDK模块，并且创建函数也会使用另一种方式。</p>
+<h3 id="Funcraft"><a href="#Funcraft" class="headerlink" title="Funcraft"></a>Funcraft</h3><p>Funcraft是一个用于支持 Serverless 应用部署的命令行工具，能帮助我们便捷地管理函数计算、API 网关、日志服务等资源。它通过一个资源配置文件（<code>template.yml</code>），协助我们进行开发、构建、部署操作。</p>
+<p>所以第二个函数我们需要使用Fun来进行操作，整个操作分为四个步骤：</p>
+<ul>
+<li>安装fun工具。</li>
+<li>编写<code>template.yml</code>模板文件，用来描述函数。</li>
+<li>安装我们需要的第三方依赖。</li>
+<li>上传部署函数。</li>
+</ul>
+<h3 id="u5B89_u88C5Fun"><a href="#u5B89_u88C5Fun" class="headerlink" title="安装Fun"></a>安装Fun</h3><p>Fun提供了三种安装方式：</p>
+<ul>
+<li>通过 npm 包管理安装 —— 适合所有平台（Windows/Mac/Linux）且已经预装了 npm 的开发者。</li>
+<li>通过下载二进制安装 —— 适合所有平台（Windows/Mac/Linux）。</li>
+<li>通过 Homebrew 包管理器安装 —— 适合 Mac 平台，更符合 MacOS 开发者习惯。</li>
+</ul>
+<p>文本示例环境为Mac，所以使用npm方式安装，非常的简单，一行命令搞定：</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">sudo npm install @alicloud/fun -g</span><br></pre></td></tr></table></figure>
+<p>安装完成之后。在控制终端输入 fun 命令可以查看版本信息：</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">$ fun --version</span><br><span class="line"><span class="number">3.6</span>.<span class="number">20</span></span><br></pre></td></tr></table></figure>
+<p>在第一次使用 fun 之前需要先执行 <code>fun config</code> 命令进行配置，按照提示，依次配置 Account ID、Access Key Id、Secret Access Key、 Default Region Name 即可。其中 Account ID、Access Key Id 你可以从<a href="https://fc.console.aliyun.com/" target="_blank" rel="external">函数计算控制台</a>首页的右上方获得：</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">fun config</span><br><span class="line"></span><br><span class="line">? Aliyun Account ID ***************<span class="number">01</span></span><br><span class="line">? Aliyun Access Key ID ***********qef6j</span><br><span class="line">? Aliyun Access Key Secret ***********UFJG</span><br><span class="line">? Default region name cn-hangzhou</span><br><span class="line">? The timeout <span class="keyword">in</span> seconds <span class="keyword">for</span> each SDK client invoking <span class="number">60</span></span><br><span class="line">? The maximum number of retries <span class="keyword">for</span> each SDK client <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<h3 id="u7F16_u5199template-yml"><a href="#u7F16_u5199template-yml" class="headerlink" title="编写template.yml"></a>编写template.yml</h3><p>新建一个目录，在该目录下创建一个名为<code>template.yml</code>的YAML文件，该文件主要描述要创建的函数的各项配置，说白了就是将函数计算控制台上配置的那些配置信息以YAML格式写在文件里：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">ROSTemplateFormatVersion: &#39;2015-09-01&#39;&#10;Transform: &#39;Aliyun::Serverless-2018-04-03&#39;&#10;Resources:&#10;  FCBigDataDemo:&#10;    Type: &#39;Aliyun::Serverless::Service&#39;&#10;    Properties:&#10;      Description: &#39;local invoke demo&#39;&#10;      VpcConfig:&#10;       VpcId: &#39;vpc-xxxxxxxxxxx&#39;&#10;       VSwitchIds: [ &#39;vsw-xxxxxxxxxx&#39; ]&#10;       SecurityGroupId: &#39;sg-xxxxxxxxx&#39;&#10;      LogConfig:&#10;       Project: fcdemo&#10;       Logstore: fc_demo_store&#10;    dataToKafka:&#10;      Type: &#39;Aliyun::Serverless::Function&#39;&#10;      Properties:&#10;&#9;&#9;&#9;&#9;Initializer: index.my_initializer&#10;        Handler: index.handler&#10;        CodeUri: &#39;./&#39;&#10;        Description: &#39;&#39;&#10;        Runtime: python3</span><br></pre></td></tr></table></figure>
+<p>我们来解析以上文件的核心内容：</p>
+<ul>
+<li>FCBigDataDemo：自定义的服务名称。通过下面的<code>Type</code>属性标明是服务，即<code>Aliyun::Serverless::Service</code>。</li>
+<li>Properties：Properties下的属性都是该服务的各配置项。</li>
+<li>VpcConfig：服务的VPC配置，包含：<ul>
+<li>VpcId：VPC ID。</li>
+<li>VSwitchIds：交换机ID，这里是数组，可以配置多个交换机。</li>
+<li>SecurityGroupId：安全组ID。</li>
+</ul>
+</li>
+<li>LogConfig：服务绑定的日志服务（SLS）配置，包含：<ul>
+<li>Project：日志服务项目。</li>
+<li>Logstore：LogStore名称。</li>
+</ul>
+</li>
+<li>dataToKafka：该服务下自定义的函数名称。通过下面的<code>Type</code>属性标明是函数，即<code>Aliyun::Serverless::Function</code>。</li>
+<li>Properties：Properties下的属性都是该函数的各配置项。</li>
+<li>Initializer：配置初始化函数。</li>
+<li>Handler：配置入口函数。</li>
+<li>Runtime：函数运行环境。</li>
+</ul>
+<p>目录结构为：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2014.png" alt=""></p>
+<h3 id="u5B89_u88C5_u7B2C_u4E09_u65B9_u4F9D_u8D56"><a href="#u5B89_u88C5_u7B2C_u4E09_u65B9_u4F9D_u8D56" class="headerlink" title="安装第三方依赖"></a>安装第三方依赖</h3><p>服务和函数的模板创建好之后，我们来安装需要使用的第三方依赖。在这个示例的场景中，第二个函数需要使用Kafka SDK，所以可以通过fun工具结合Python包管理工具pip进行安装：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fun install --runtime python3 --package-type pip kafka-python</span><br></pre></td></tr></table></figure>
+<p>执行命令后有如下提示信息：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2015.png" alt=""></p>
+<p>此时我们会发现在目录下会生成一个<code>.fun</code>文件夹 ，我们安装的依赖包就在该目录下：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2016.png" alt=""></p>
+<h3 id="u90E8_u7F72_u51FD_u6570"><a href="#u90E8_u7F72_u51FD_u6570" class="headerlink" title="部署函数"></a>部署函数</h3><p>现在编写好了模板文件以及安装好了我们需要的Kafka SDK后，还需要添加我们的代码文件<code>index.py</code>，代码内容如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> urllib.parse</span><br><span class="line"><span class="keyword">from</span> kafka <span class="keyword">import</span> KafkaProducer</span><br><span class="line">producer = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">my_initializer</span><span class="params">(context)</span>:</span>    </span><br><span class="line">    logger = logging.getLogger() </span><br><span class="line">    logger.info(<span class="string">"init kafka producer"</span>)</span><br><span class="line">    <span class="keyword">global</span> producer</span><br><span class="line">    producer = KafkaProducer(bootstrap_servers=<span class="string">'XX.XX.XX.XX:9092,XX.XX.XX.XX:9092,XX.XX.XX.XX:9092'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handler</span><span class="params">(event, context)</span>:</span></span><br><span class="line">    logger = logging.getLogger()   </span><br><span class="line">    <span class="comment"># 接收回传的数据</span></span><br><span class="line">    event_str = json.loads(event)</span><br><span class="line">    event_obj = json.loads(event_str)</span><br><span class="line">    logger.info(event_obj[<span class="string">"action"</span>])</span><br><span class="line">    logger.info(event_obj[<span class="string">"articleAuthorId"</span>])</span><br><span class="line">    <span class="comment"># 向Kafka发送消息</span></span><br><span class="line">    <span class="keyword">global</span> producer</span><br><span class="line">    producer.send(<span class="string">'ikf-demo'</span>, json.dumps(event_str).encode(<span class="string">'utf-8'</span>))</span><br><span class="line">    producer.close()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="string">'hello world'</span></span><br></pre></td></tr></table></figure>
+<p>代码很简单，这里做以简单的解析：</p>
+<ul>
+<li><code>my_initializer</code>：函数实例被拉起时会先执行该函数，然后再执行<code>handler</code>函数 ，当函数实例在运行时，之后的请求都不会执行<code>my_initializer</code>函数 。一般用于各种连接的初始化工作，这里将初始化Kafka Producer的方法放在了这里，避免反复初始化Produer。</li>
+<li><code>handler</code>：该函数只有两个逻辑，接收回传的数据和将数据发送至Kafka的指定Topic。</li>
+</ul>
+<p>下面通过<code>fun deploy</code>命令部署函数，该命令会做两件事：</p>
+<ul>
+<li>根据<code>template.yml</code>中的配置创建服务和函数。</li>
+<li>将<code>index.py</code>和<code>.fun</code>上传至函数中。</li>
+</ul>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2017.png" alt=""></p>
+<p>登录函数计算控制台，可以看到通过<code>fun</code>命令部署的服务和函数：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2018.png" alt=""></p>
+<p>进入函数，也可以清晰的看到第三方依赖包的目录结构：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2019.png" alt=""></p>
+<h2 id="u51FD_u6570_u4E4B_u95F4_u8C03_u7528"><a href="#u51FD_u6570_u4E4B_u95F4_u8C03_u7528" class="headerlink" title="函数之间调用"></a>函数之间调用</h2><p>目前两个函数都创建好了，下面的工作就是由第一个函数接收到数据后拉起第二个函数发送消息给Kafka。我们只需要对第一个函数做些许改动即可：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> urllib.parse</span><br><span class="line"><span class="keyword">import</span> fc2</span><br><span class="line">HELLO_WORLD = <span class="string">b'Hello world!\n'</span></span><br><span class="line">client = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">my_initializer</span><span class="params">(context)</span>:</span>    </span><br><span class="line">    logger = logging.getLogger() </span><br><span class="line">    logger.info(<span class="string">"init fc client"</span>)</span><br><span class="line">    <span class="keyword">global</span> client</span><br><span class="line">    client = fc2.Client(</span><br><span class="line">        endpoint=<span class="string">"http://your_account_id.cn-hangzhou-internal.fc.aliyuncs.com"</span>,</span><br><span class="line">        accessKeyID=<span class="string">"your_ak"</span>,</span><br><span class="line">        accessKeySecret=<span class="string">"your_sk"</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handler</span><span class="params">(environ, start_response)</span>:</span></span><br><span class="line">    logger = logging.getLogger() </span><br><span class="line">    context = environ[<span class="string">'fc.context'</span>]</span><br><span class="line">    request_uri = environ[<span class="string">'fc.request_uri'</span>]</span><br><span class="line">    <span class="keyword">for</span> k, v <span class="keyword">in</span> environ.items():</span><br><span class="line">      <span class="keyword">if</span> k.startswith(<span class="string">'HTTP_'</span>):</span><br><span class="line">        <span class="comment"># process custom request headers</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">try</span>:        </span><br><span class="line">        request_body_size = int(environ.get(<span class="string">'CONTENT_LENGTH'</span>, <span class="number">0</span>))    </span><br><span class="line">    <span class="keyword">except</span> (ValueError):        </span><br><span class="line">        request_body_size = <span class="number">0</span>   </span><br><span class="line">    <span class="comment"># 接收回传的数据</span></span><br><span class="line">    request_body = environ[<span class="string">'wsgi.input'</span>].read(request_body_size)  </span><br><span class="line">    request_body_str = urllib.parse.unquote(request_body.decode(<span class="string">"GBK"</span>))</span><br><span class="line">    request_body_obj = json.loads(request_body_str)</span><br><span class="line">    logger.info(request_body_obj[<span class="string">"action"</span>])</span><br><span class="line">    logger.info(request_body_obj[<span class="string">"articleAuthorId"</span>])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">global</span> client</span><br><span class="line">    client.invoke_function(</span><br><span class="line">        <span class="string">'FCBigDataDemo'</span>,</span><br><span class="line">        <span class="string">'dataToKafka'</span>,</span><br><span class="line">        payload=json.dumps(request_body_str),</span><br><span class="line">        headers = &#123;<span class="string">'x-fc-invocation-type'</span>: <span class="string">'Async'</span>&#125;</span><br><span class="line">    )</span><br><span class="line">    </span><br><span class="line">    status = <span class="string">'200 OK'</span></span><br><span class="line">    response_headers = [(<span class="string">'Content-type'</span>, <span class="string">'text/plain'</span>)]</span><br><span class="line">    start_response(status, response_headers)</span><br><span class="line">    <span class="keyword">return</span> [HELLO_WORLD]</span><br></pre></td></tr></table></figure>
+<p>如上面代码所示，对第一个函数的代码做了三个地方的改动：</p>
+<ul>
+<li>导入函数计算的库：<code>import fc2</code></li>
+<li><p>添加初始化方法，用于创建函数计算Client：</p>
+  <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">my_initializer</span><span class="params">(context)</span>:</span>    </span><br><span class="line">    logger = logging.getLogger() </span><br><span class="line">    logger.info(<span class="string">"init fc client"</span>)</span><br><span class="line">    <span class="keyword">global</span> client</span><br><span class="line">    client = fc2.Client(</span><br><span class="line">        endpoint=<span class="string">"http://your_account_id.cn-hangzhou-internal.fc.aliyuncs.com"</span>,</span><br><span class="line">        accessKeyID=<span class="string">"your_ak"</span>,</span><br><span class="line">        accessKeySecret=<span class="string">"your_sk"</span></span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+<p>  这里需要注意的时，当我们在代码里增加了初始化方法后，需要在函数配置中指定初始化方法的入口：</p>
+<p>  <img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2020.png" alt=""></p>
+</li>
+<li><p>通过函数计算Client调用第二个函数：</p>
+  <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">global</span> client</span><br><span class="line">client.invoke_function(</span><br><span class="line">		<span class="string">'FCBigDataDemo'</span>,</span><br><span class="line">		<span class="string">'dataToKafka'</span>,</span><br><span class="line">	  payload=json.dumps(request_body_str),</span><br><span class="line">		headers = &#123;<span class="string">'x-fc-invocation-type'</span>: <span class="string">'Async'</span>&#125;</span><br><span class="line"> )</span><br></pre></td></tr></table></figure>
+<p>  <code>invoke_function</code>函数有四个参数：</p>
+<ul>
+<li>第一个参数：调用函数所在的服务名称。</li>
+<li>第二个参数：调用函数的函数名称。</li>
+<li>第三个参数：向调用函数传的数据。</li>
+<li>第四个参数：调用第二个函数Request Header信息。这里主要通过<code>x-fc-invocation-type</code>这个Key来设置是同步调用还是异步调用。这里设置<code>Async</code>为异步调用。</li>
+</ul>
+</li>
+</ul>
+<p>如此设置，我们便可以验证通过第一个函数提供的HTTP接口发起请求→采集数据→调用第二个函数→将数据作为消息传给Kafka这个流程了。</p>
+<h3 id="u4F7F_u7528_u4E24_u4E2A_u51FD_u6570_u7684_u76EE_u7684"><a href="#u4F7F_u7528_u4E24_u4E2A_u51FD_u6570_u7684_u76EE_u7684" class="headerlink" title="使用两个函数的目的"></a>使用两个函数的目的</h3><p>到这里有些同学可能会有疑问，为什么需要两个函数，而不在第一个函数里直接向Kafka发送数据呢？我们先来看这张图：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2021.png" alt=""></p>
+<p>当我们使用异步调用函数时，在函数内部会默认先将请求的数据放入消息队列进行第一道削峰填谷，然后每一个队列在对应函数实例，通过函数实例的弹性拉起多个实例进行第二道削峰填谷。所以这也就是为什么这个架构能稳定承载大并发请求的核心原因之一。</p>
+<h2 id="u914D_u7F6EKafka"><a href="#u914D_u7F6EKafka" class="headerlink" title="配置Kafka"></a>配置Kafka</h2><p>在游戏运营这个场景中，数据量是比较大的，所以对Kafka的性能要求也是比较高的，相比开源自建，使用云上的Kafka省去很多的运维操作，比如：</p>
+<ul>
+<li>我们不再需要再维护Kafka集群的各个节点。</li>
+<li>不需要关心主从节点数据同步问题。</li>
+<li>可以快速、动态扩展Kafka集群规格，动态增加Topic，动态增加分区数。</li>
+<li>完善的指标监控功能，消息查询功能。</li>
+</ul>
+<p>总的来说，就是一切SLA都有云上兜底，我们只需要关注在消息发送和消息消费即可。</p>
+<p>所以我们可以打开<a href="https://common-buy.aliyun.com/?commodityCode=alikafka_pre&amp;regionId=cn-hangzhou" target="_blank" rel="external">Kafka开通界面</a>，根据实际场景的需求一键开通Kafka实例，开通Kafka后登录<a href="https://kafka.console.aliyun.com/?spm=5176.167616.1kquk9v2l.2.6a3d5a1cqKUEUh#/InstanceList?instanceId=alikafka_post-cn-nif1osdl400w&amp;regionId=cn-hangzhou" target="_blank" rel="external">控制台</a>，在基本信息中可以看到Kafka的接入点：</p>
+<ul>
+<li>默认接入点：走VPC内网场景的接入点。</li>
+<li>SSL接入点：走公网场景的接入点。</li>
+</ul>
+<p>将默认接入点配置到函数计算的第二个函数中即可。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">....</span><br><span class="line">producer = KafkaProducer(bootstrap_servers=<span class="string">'XX.XX.XX.XX:9092,XX.XX.XX.XX:9092,XX.XX.XX.XX:9092'</span>)</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+<p>然后点击左侧控制台<strong>Topic管理</strong>，创建Topic：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2022.png" alt=""></p>
+<p>将创建好的Topic配置到函数计算的第二个函数中即可。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="comment"># 第一个参数为Topic名称</span></span><br><span class="line">producer.send(<span class="string">'ikf-demo'</span>, json.dumps(event_str).encode(<span class="string">'utf-8'</span>))</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>上文已经列举过云上Kafka的优势，比如动态增加Topic的分区数，我们可以在Topic列表中，对Topic的分区数进行动态调整：<br><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2023.png" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2024.png" alt=""></p>
+<p>单Topic最大支持到360个分区，这是开源自建无法做到的。</p>
+<p>接下来点击控制台左侧<strong>Consumer Group管理</strong>，创建Consumer Group：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2025.png" alt=""></p>
+<p>至此，云上的Kafka就算配置完毕了，即Producer可以往刚刚创建的Topic中发消息了，Consumer可以设置刚刚创建的GID以及订阅Topic进行消息接受和消费。</p>
+<h3 id="Flink_Kafka_u6D88_u8D39_u8005"><a href="#Flink_Kafka_u6D88_u8D39_u8005" class="headerlink" title="Flink Kafka消费者"></a>Flink Kafka消费者</h3><p>在这个场景中，Kafka后面往往会跟着Flink，所以这里简要给大家介绍一下在Flink中如何创建Kafka Consumer并消费数据。代码片段如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">final</span> ParameterTool parameterTool = ParameterTool.fromArgs(args);</span><br><span class="line">String kafkaTopic = parameterTool.get(<span class="string">"kafka-topic"</span>,<span class="string">"ikf-demo"</span>);</span><br><span class="line">String brokers = parameterTool.get(<span class="string">"brokers"</span>, <span class="string">"XX.XX.XX.XX:9092,XX.XX.XX.XX:9092,XX.XX.XX.XX:9092"</span>);</span><br><span class="line">Properties kafkaProps = <span class="keyword">new</span> Properties();</span><br><span class="line">kafkaProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);</span><br><span class="line">kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, <span class="string">"ikf-demo"</span>);</span><br><span class="line">FlinkKafkaConsumer&lt;UserBehaviorEvent&gt; kafka = <span class="keyword">new</span> FlinkKafkaConsumer&lt;&gt;(kafkaTopic, <span class="keyword">new</span> UserBehaviorEventSchema(), kafkaProps);</span><br><span class="line">kafka.setStartFromLatest();</span><br><span class="line">kafka.setCommitOffsetsOnCheckpoints(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();</span><br><span class="line">DataStreamSource&lt;UserBehaviorEvent&gt; dataStreamByEventTime = env.addSource(kafka);</span><br></pre></td></tr></table></figure>
+<p>以上就是构建Flink Kafka Consumer和添加Kafka Source的代码片段，还是非常简单的。</p>
+<h1 id="u538B_u6D4B_u9A8C_u8BC1"><a href="#u538B_u6D4B_u9A8C_u8BC1" class="headerlink" title="压测验证"></a>压测验证</h1><p>至此，整个数据采集的架构就搭建完毕了，下面我们通过压测来检验一下整个架构的性能。这里使用阿里云PTS来进行压测。</p>
+<h2 id="u521B_u5EFA_u538B_u6D4B_u573A_u666F"><a href="#u521B_u5EFA_u538B_u6D4B_u573A_u666F" class="headerlink" title="创建压测场景"></a>创建压测场景</h2><p>打开<a href="https://pts.console.aliyun.com/#/overviewpage" target="_blank" rel="external">PTS控制台</a>，点击左侧菜单<strong>创建压测/创建PTS场景</strong>：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2026.png" alt=""></p>
+<p>在场景配置中，将第一个函数计算函数暴露的HTTP接口作为串联链路，配置如下图所示：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2027.png" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2028.png" alt=""></p>
+<p>接口配置完后，我们来配置施压：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2029.png" alt=""></p>
+<ul>
+<li>压力模式：<ul>
+<li>并发模式：指定有多少并发用户同时发请求。</li>
+<li>RPS模式：指定每秒有多少请求数。</li>
+<li>递增模式：在压测过程中可以通过手动调节压力，也可以自动按百分比递增压力。</li>
+<li>最大并发：同时有多少个虚拟用户发起请求。</li>
+<li>递增百分比：如果是自动递增的话，按这里的百分比递增。</li>
+<li>单量级持续时长：在未完全达到压力全量的时候，每一级梯度的压力保持的时长。</li>
+<li>压测总时长：一共需要压测的时长。</li>
+</ul>
+</li>
+</ul>
+<p>这里因为资源成本原因，并发用户数设置为2500来进行验证。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2030.png" alt=""></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%2031.png" alt=""></p>
+<p>从上图压测中的情况来看，TPS达到了2w的封顶，549w+的请求，99.99%的请求是成功的，那369个异常也可以点击查看，都是压测工具请求超时导致的。</p>
+<h1 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h1><p>至此，整个基于Serverless搭建的大数据采集传输的架构就搭建好了，并且进行了压测验证，整体的性能也是不错的。并且整个架构搭建起来也是非常简单和容易理解的。这个架构不光适用于游戏运营行业，其实任何大数据采集传输的场景都是适用的，目前也已经有很多客户正在基于Serverless的架构跑在生产环境，或者正走在改造Serverless架构的路上。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<p>众所周知，游戏行业在当今的互联网行业中算是一棵常青树。在疫情之前的2019年，中国游戏市场营收规模约2884.8亿元，同比增长17.1%。2020年因为疫情，游戏行业更是突飞猛进。玩游戏本就是中国网民最普遍的娱乐方式之一，疫情期间更甚。据不完全统计，截止2019年，中国移动游戏用户规模约6.6亿人，占中国总网民规模8.47亿的77.92%，足以说明，游戏作为一种低门槛、低成本的娱乐手段，已成为大部分人生活中习以为常的一部分。</p>
+<p>对于玩家而言，市面上的游戏数量多如牛毛，那么玩家如何能发现和认知到一款游戏，并且持续的玩下去恐怕是所有游戏厂商需要思考的问题。加之2018年游戏版号停发事件，游戏厂商更加珍惜每一个已获得版号的游戏产品，所以这也使得“深度打磨产品质量”和“提高运营精细程度”这两个游戏产业发展方向成为广大游戏厂商的发展思路，无论是新游戏还是老游戏都在努力落实这两点：</p>
+<ul>
+<li>新游戏：以更充足的推广资源和更完整的游戏内容面向玩家。</li>
+<li>老游戏：通过用户行为分析，投入更多的精力和成本，制作更优质的版本内容。</li>
+</ul>
+<p>这里我们重点来看新游戏。一家游戏企业辛辛苦苦研发三年，等着新游戏发售时一飞冲天。那么问题来了，新游戏如何被广大玩家看到？先来看看游戏行业公司的分类：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled.png" alt=""></p>
+<ul>
+<li>游戏研发商：研发游戏的公司，生产和制作游戏内容。比如王者荣耀的所有英雄设计、游戏战斗场景、战斗逻辑等等，这些全部由游戏研发公司提供。</li>
+<li><p>游戏发行商：游戏发行商的主要工作分三大块：市场工作、运营工作、客服工作。游戏发行商把控游戏命脉，市场工作核心是导入玩家，运营工作核心是将用户价值最大化、赚取更多利益。</p>
+<p>  <img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2020/serverless_game_bigdata/Untitled%201.png" alt=""></p>
+</li>
+<li><p>游戏平台/渠道商：游戏平台和渠道商的核心目的就是曝光游戏，让尽量多的人能发现你的游戏。</p>
+</li>
+</ul>]]>
+    
+    </summary>
+    
+      <category term="Serverless" scheme="http://www.devtalking.com/tags/Serverless/"/>
+    
+      <category term="中间件" scheme="http://www.devtalking.com/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Serverless在SaaS领域中的实践]]></title>
@@ -1794,74 +2057,6 @@
 <li>当Message进入Partition后，它的Offset和内容就无法再修改了。</li>
 <li>Message默认是随机存储在一个Topic下的不同的Partition中的，如上图。除非显示的指定Partition。</li>
 <li>存储在Partition中的Message是有时效性的，默认是保存一周，可以通过配置更改（后续章节会介绍）。</li>
-</ul>]]>
-    
-    </summary>
-    
-      <category term="Kafka" scheme="http://www.devtalking.com/tags/Kafka/"/>
-    
-      <category term="中间件" scheme="http://www.devtalking.com/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Kafka从上手到实践-庖丁解牛：Topic&Broker]]></title>
-    <link href="http://www.devtalking.com//articles/kafka-practice-2/"/>
-    <id>http://www.devtalking.com//articles/kafka-practice-2/</id>
-    <published>2018-08-31T16:00:00.000Z</published>
-    <updated>2020-06-21T08:12:29.010Z</updated>
-    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>Apache Kafka正是上节描述的MQ系统，但不仅是MQ系统，它往往也被描述为<strong>分布式提交日志系统</strong>或者<strong>分布式流式处理系统</strong>。从这节开始，我们将逐步了解Kafka的核心概念。</p>
-<h2 id="Topic"><a href="#Topic" class="headerlink" title="Topic"></a>Topic</h2><p>在Kafka中，Topic可以理解为表示一组特殊的数据流。可以将它想象为关系性数据库中的表。</p>
-<ul>
-<li>数据库中的表存储着同一类的数据。那么Topic同样表示同一类的数据流。</li>
-<li>数据库中的表可以根据需求创建多张。那么Topic同样可以根据需求创建多个，但有一点区别是，Topic没有像数据库表中约束（Constraints）的概念。</li>
-<li>数据库中表的名称是不能重复的，表名能唯一确定一张表。那么Topic同样是以名称确定唯一的，Topic名称不能重复。</li>
-</ul>
-<a id="more"></a>
-<h2 id="Broker"><a href="#Broker" class="headerlink" title="Broker"></a>Broker</h2><p>一个Kafka的Server就称之为Broker，可以每台物理服务器上只部署一个Broker，可以将多个Broker部署在一台物理服务器上。本身Broker这个单词的意思是中间代理的意思。Broker负责接收Producer发送的消息、对消息进行持久化、让Consumer获取消息。</p>
-<p>关于Broker，我们需要注意以下几点概念：</p>
-<ul>
-<li>Kafka集群就是由多个Broker组成的。</li>
-<li>每个Broker都有一个整数类型的唯一标识ID。</li>
-<li>当我们连接到任意一个Broker后，我们就已经连接到了整个Kafka集群。我们连接的第一个Broker称之为Bootstrap Broker。</li>
-<li>通常，最小的Kafka集群最好有三个Broker。</li>
-</ul>
-<p>我们来看看Broker、Topic、Partition（后续章节会介绍）之间的关系。假设有Broker 101、Broker 102、Broker 103三个Broker。Topic-A、Topic-B两个Topic，这两个Topic分别有三个Partition和两个Partition。他们的关系如下图所示：</p>
-<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2018/12/17/1545060563441.png" alt=""></p>
-<p>可以看到，Topic的Partition在Kafka集群中是随机分配给Broker的。也就是说Topic-A的数据会分别被持久化在这三个Broker中，而Topic-B的数据只会持久化在Broker 101和Broker 102中。如果Topic-A再加一个Partition 4，则它会随机被分配给任意一个Broker。</p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>这一章节介绍了Topic和Broker的概念，Topic承载了Message的输入输出，相当于Kafka对外的窗户。Broker则负责Kafka内部核心的功能，比如Message持久化、如何保证Kafka高可用性等等。。在后续的章节里，会详细介绍它们的各种配置和用法。希望能给小伙伴们带来帮助。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>]]></content>
-    <summary type="html">
-    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>Apache Kafka正是上节描述的MQ系统，但不仅是MQ系统，它往往也被描述为<strong>分布式提交日志系统</strong>或者<strong>分布式流式处理系统</strong>。从这节开始，我们将逐步了解Kafka的核心概念。</p>
-<h2 id="Topic"><a href="#Topic" class="headerlink" title="Topic"></a>Topic</h2><p>在Kafka中，Topic可以理解为表示一组特殊的数据流。可以将它想象为关系性数据库中的表。</p>
-<ul>
-<li>数据库中的表存储着同一类的数据。那么Topic同样表示同一类的数据流。</li>
-<li>数据库中的表可以根据需求创建多张。那么Topic同样可以根据需求创建多个，但有一点区别是，Topic没有像数据库表中约束（Constraints）的概念。</li>
-<li>数据库中表的名称是不能重复的，表名能唯一确定一张表。那么Topic同样是以名称确定唯一的，Topic名称不能重复。</li>
 </ul>]]>
     
     </summary>
