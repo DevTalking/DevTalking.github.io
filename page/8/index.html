@@ -247,6 +247,122 @@
             
             
               
+                <a class="post-title-link" href="/articles/machine-learning-4/" itemprop="url">
+                  机器学习笔记四之kNN算法、超参数、数据归一化
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-01-27T00:00:00+08:00" content="2018-01-27">
+              2018-01-27
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-4/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-4/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>上一篇笔记主要介绍了NumPy，Matplotlib和Scikit Learn中Datasets三个库的用法，以及基于欧拉定理的kNN算法的基本实现。这一篇笔记的主要内容是通过PyCharm封装kNN算法并且在Jupyter Notebook中调用，以及计算器算法的封装规范，kNN的<code>k</code>值如何计算，如何使用Scikit Learn中的kNN算法，还有机器学习算法中的一些主要概念，比如训练数据集、测试数据集，分类准确度，超参数，数据归一化。另外会具体用代码实现第一篇笔记中介绍过的线性回归算法。</p>
+<h2 id="u5C01_u88C5kNN_u7B97_u6CD5"><a href="#u5C01_u88C5kNN_u7B97_u6CD5" class="headerlink" title="封装kNN算法"></a>封装kNN算法</h2><p>上一篇笔记中我们对kNN算法在Jupyter Notebook中进行了实现，但是想要复用这个算法就很不方便，所以我们来看看如何在PyCharm中封装算法，并且在Jupyter Notebook中进行调用。</p>
+<p>PyCharm的配置这里我就不再累赘，如图所示，我们创建了一个Python文件<code>kNN.py</code>，然后定义了<code>kNNClassify</code>方法，该方法有4个参数，分别是kNN算法的<code>k</code>值，训练样本特征数据集<code>XTrain</code>，训练样本类别数据集<code>yTrain</code>，预测特征数据集<code>x</code>。该方法中的实现和在Jupyter Notebook中实现的一模一样，只不过加了三个断言，让方法的健壮性更好一点。我们给出<strong>N维欧拉定理</strong>：</p>
+<p>$$ \sqrt {\sum_{i=1}^n(x_i^{(a)}-x_i^{(b)})^2} $$</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/574075757e0d0a820e2a8a7ef37f79ec.jpg" alt=""></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># kNN.py</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> sqrt</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">kNNClassify</span><span class="params">(k, XTrain, yTrain, x)</span>:</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">assert</span> <span class="number">1</span> &lt;= k &lt;= XTrain.shape[<span class="number">0</span>], <span class="string">"k 的取值范围不正确"</span></span><br><span class="line">	<span class="keyword">assert</span> XTrain.shape[<span class="number">0</span>] == yTrain.shape[<span class="number">0</span>], <span class="string">"训练样本数据行数应该与训练结果集行数相同"</span></span><br><span class="line">	<span class="keyword">assert</span> XTrain.shape[<span class="number">1</span>] == x.shape[<span class="number">0</span>], <span class="string">"训练样本数据特性个数应该与被预测数据特性个数相同"</span></span><br><span class="line"></span><br><span class="line">	distances = [sqrt(np.sum((xTrain - x) ** <span class="number">2</span>)) <span class="keyword">for</span> xTrain <span class="keyword">in</span> XTrain]</span><br><span class="line">	nearest = np.argsort(distances)</span><br><span class="line"></span><br><span class="line">	topKy = [yTrain[i] <span class="keyword">for</span> i <span class="keyword">in</span> nearest[:k]]</span><br><span class="line">	votes = Counter(topKy)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> votes.most_common(<span class="number">1</span>)[<span class="number">0</span>][<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<p>这样我们就在PyCharm中封装好了kNN算法的方法，我们再来看看如何在Jupyter Notebook中调用封装好的方法呢，这就需要使用<code>%run</code>这个命令：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">raw_data_X = [[<span class="number">3.393533211</span>, <span class="number">2.331273381</span>],</span><br><span class="line">			  [<span class="number">3.110073483</span>, <span class="number">1.781539638</span>],</span><br><span class="line">			  [<span class="number">1.343808831</span>, <span class="number">3.368360954</span>],</span><br><span class="line">			  [<span class="number">3.582294042</span>, <span class="number">4.679179110</span>],</span><br><span class="line">			  [<span class="number">2.280362439</span>, <span class="number">2.866990263</span>],</span><br><span class="line">			  [<span class="number">7.423436942</span>, <span class="number">4.696522875</span>],</span><br><span class="line">			  [<span class="number">5.745051997</span>, <span class="number">3.533989803</span>],</span><br><span class="line">			  [<span class="number">9.172168622</span>, <span class="number">2.511101045</span>],</span><br><span class="line">			  [<span class="number">7.792783481</span>, <span class="number">3.424088941</span>],</span><br><span class="line">			  [<span class="number">7.939820817</span>, <span class="number">0.791637231</span>]</span><br><span class="line">			 ]</span><br><span class="line">raw_data_y = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">XTrain = np.array(raw_data_X)</span><br><span class="line">yTrain = np.array(raw_data_y)</span><br><span class="line"></span><br><span class="line">x = np.array([<span class="number">8.093607318</span>, <span class="number">3.365731514</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用%run命令可以引入Python文件，并可使用该Python文件中定义的属性和方法</span></span><br><span class="line">%run ../pycharm/kNN.py</span><br><span class="line">predicty = kNNClassify(<span class="number">6</span>, XTrain, yTrain, x)</span><br><span class="line">predicty</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/machine-learning-4/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/machine-learning-3/" itemprop="url">
                   机器学习笔记三之NumPy、Matplotlib、kNN算法
                 </a>
@@ -734,137 +850,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/google-web-tech/" itemprop="url">
-                  《Google力推的那些前端技术，最近有何进展？》笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2017-01-09T00:00:00+08:00" content="2017-01-09">
-              2017-01-09
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/前端/" itemprop="url" rel="index">
-                    <span itemprop="name">前端</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/google-web-tech/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/google-web-tech/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>Google是一个伟大的公司，有很多伟大的产品。从Google一直不做桌面系统和对Chrome的大力发展来看，Google对前端事业是非常热衷的。</p>
-<h2 id="Angular"><a href="#Angular" class="headerlink" title="Angular"></a>Angular</h2><p>Angular、React、Vue是目前前端框架的三驾马车。我在16年9月写过一篇文章<a href="http://www.devtalking.com/articles/angularjs1x-guide/">《温故而知新-AngularJS 1.x 小记》</a>，当时还叫AngularJS，版本是1.X，那时已经很惊艳了，把前端解释性的脚本语言封装成了面向对象的编程模式，另外对HTML的元素维护提供了便利的方式方法。当时我负责的BPM产品，Process Builder的前端架构果断更新为了AngularJS。时隔两年多，Angular 6都已经发布了，如果我还有机会做前端产品的话，我应该还是会果断选择Angular。</p>
-<blockquote>
-<p>Angular 6 添加了ng update和ng add这样的新功能，让你的应用程序保持最新的状态，帮助Angular开发者加快创新的步伐。渲染器Project Ivy也有很大的改进，它能使Angular调试更容易，以更快地速度编译和运行，它还可以与现有的应用程序一起使用，Angular团队还在小型Hello World应用程序做了演示，不使用的Angular功能将自动从应用的JavaScript bundle自动删除。</p>
-</blockquote>
-<h2 id="PWA"><a href="#PWA" class="headerlink" title="PWA"></a>PWA</h2><p>在移动的世界里，Application是重中之重，是构建移动生态的核心。那么构建Mobile App的方式的问题就来了。</p>
-<ul>
-<li>Native App：既用iOS的原生语言OC、Swift或Android原生语言Java构建的App。</li>
-<li>Web App：既使用前端框架和技术（Angular、React、Vue，HTML 5，CSS 3等）构建的，在移动设备上运行展现的App。</li>
-<li>Native &amp; Web App：原生语言和Web技术混搭构建的App。这类App还孕育出了像React Native这种使用前端语言解析为原生语言的框架。</li>
-</ul>
-<p>以上三种类型各有利弊：</p>
-<ul>
-<li>Native App给用户的体验是最好的，交互动画效果平滑，可以基于硬件的性能做优化等。但是研发周期比较长，并且因为iOS和Android应用的审核机制，导致版本更新周期比较长，修复完问题或有新需求增加后无法做到及时更系用户设备上的App。</li>
-<li>Web App可以做到版本的热更新，研发周期短，Web端和移动端可共享研发资源。但是用户体验比较差，一些需要使用到硬件功能不好实现。</li>
-<li>Native &amp; Web App则致力于综合他们的优点，规避他们的缺点。</li>
-</ul>
-<p>Progressive Web App（<a href="https://lavas.baidu.com/pwa">PWA</a>）就是Google推出的提升Web App体验，给用户原生应用体验的框架。主要特点包括：</p>
-<ul>
-<li>可靠 - 即使在不稳定的网络环境下，也能瞬间加载并展现。</li>
-<li>体验 - 快速响应，并且有平滑的动画响应用户的操作</li>
-<li>粘性 - 像设备上的原生应用，具有沉浸式的用户体验，用户可以添加到桌面<br>目前已支持Android，iOS 11.3以后版本，Safari，Chrome，MS Edge。</li>
-</ul>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/google-web-tech/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -907,7 +892,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">116</span>
+              <span class="site-state-item-count">117</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
