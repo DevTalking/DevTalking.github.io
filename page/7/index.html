@@ -247,6 +247,129 @@
             
             
               
+                <a class="post-title-link" href="/articles/machine-learning-8/" itemprop="url">
+                  机器学习笔记八之多项式回归、拟合程度、模型泛化
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-03-15T00:00:00+08:00" content="2018-03-15">
+              2018-03-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-8/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-8/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>在前面的笔记中，我们使用的样本数据都是具有一定线性关系的，我们使用简单线性回归或者多元线性回归来拟合这些数据。但是这种具有强假设的数据集在实际应用中是比较少的，大多数的样本数据都没有明显的线性关系，那么这一节主要来看看如何对非线性关系的样本数据进行处理并预测。</p>
+<h2 id="u591A_u9879_u5F0F_u56DE_u5F52"><a href="#u591A_u9879_u5F0F_u56DE_u5F52" class="headerlink" title="多项式回归"></a>多项式回归</h2><p>多项式回归就是我们要使用的方法，其本质上还是基于线性回归的数学原理，只不过是对损失函数进行巧妙的改变使得原本我们用线性回归求得一条直线，变为求得一条曲线。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ba54b737f3717cf2fec01814463c4a4c.jpg" alt=""><br>在线性回归的问题中，对于这些数据（蓝色点），我们是要寻找一条直线，让这条直线尽可能的拟合这些数据，如果数据只有一个特征的话，我们的模型就是：</p>
+<p>$$ y=ax + b $$</p>
+<p>$x$就是数据的已知特征，$a$和$b$是我们的模型需要求出的参数。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/f6a83a4e5b65ca84c17ff6d5468c63e2.jpg" alt=""></p>
+<p>那如果我们的数据是像上图这种分布形态呢？显然红色那条直线无法拟合这些数据，而黄色那条曲线能更好的拟合这些数据。在样本数据特征数量不变的情况下，这条黄色曲线的模型其实就是一个一元二次方程：</p>
+<p>$$y = ax^2+bx+c$$</p>
+<p>我们抛开这个方程表示的坐标系形态来看，假设将$x^2$看作$x_1$，将$x$看作$x_2$，那么方式就可以写为：</p>
+<p>$$y=ax_1+bx_2+c$$</p>
+<p>这就变成了具有两个特征的样本数据的线性回归问题。现在大家就可以理解在本节开头所说的对损失函数进行巧妙改变的含义了吧。</p>
+<p>所以对与多项式回归而言，就是需要我们为样本数据增加一个特征，使之可以用线性回归的原理更好的拟合样本数据，但是求出的是对于原始样本而言的非线性的曲线。</p>
+<h3 id="u5B9E_u73B0_u591A_u9879_u5F0F_u56DE_u5F52"><a href="#u5B9E_u73B0_u591A_u9879_u5F0F_u56DE_u5F52" class="headerlink" title="实现多项式回归"></a>实现多项式回归</h3><p>这一节我们在Jupyter Notebook中看看如何实现多项式回归：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建样本数据，从-3到3的100个随机数</span></span><br><span class="line">x = np.random.uniform(-<span class="number">3</span>, <span class="number">3</span>, size=<span class="number">100</span>)</span><br><span class="line"><span class="comment"># 转换为100行1列的矩阵，既样本数据只有一个特征</span></span><br><span class="line">X = x.reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 求y的方程</span></span><br><span class="line">y = <span class="number">0.5</span> * x**<span class="number">2</span> + x + <span class="number">2</span> + np.random.normal(<span class="number">0</span>, <span class="number">1</span>, size=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将样本数据绘制出来</span></span><br><span class="line">plt.scatter(x, y)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/ccfd43e57d544b2be620023d01b3cf2a.jpg" alt=""></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/machine-learning-8/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/machine-learning-7/" itemprop="url">
                   机器学习笔记七之主成分分析法（PCA）、人脸识别应用
                 </a>
@@ -714,131 +837,11 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/machine-learning-3/" itemprop="url">
-                  机器学习笔记三之NumPy、Matplotlib、kNN算法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2018-01-20T00:00:00+08:00" content="2018-01-20">
-              2018-01-20
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-3/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-3/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="NumPy"><a href="#NumPy" class="headerlink" title="NumPy"></a>NumPy</h2><p>NumPy是Python中的一个类库，它支持高阶维度数组（矩阵）的创建及各种操作、运算，是我们在机器学习中经常会使用的一个类库。这一节再看一些NumPy的矩阵用法。</p>
-<h3 id="numpy-random"><a href="#numpy-random" class="headerlink" title="numpy.random"></a>numpy.random</h3><p>NumPy也提供了生成随机数和随机元素数组的方法，我们来看一下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 生成从0到10之间的随机数</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成元素从0到10，一共4个随机元素的数组</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=<span class="number">4</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([<span class="number">4</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成元素随机从0到10，3行5列的矩阵</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=(<span class="number">3</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">6</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">9</span>],</span><br><span class="line">	   [<span class="number">7</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">8</span>],</span><br><span class="line">	   [<span class="number">4</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">2</span>]])</span><br></pre></td></tr></table></figure>
-<p>如果我们希望每次使用随机方法生成的结果都是一样的，一般调试时候有这个需求，此时NumPy的<code>random()</code>方法也提供了方便简单的方式，既随机种子的概念：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 生成随机矩阵前给定一个种子</span></span><br><span class="line">np.random.seed(<span class="number">123</span>)</span><br><span class="line"><span class="comment"># 然后生成随机矩阵</span></span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=(<span class="number">4</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">2</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>]])</span><br><span class="line">	   </span><br><span class="line"><span class="comment"># 再次生成随机矩阵时，只要传入相同的种子，就可以得到相同结果的矩阵</span></span><br><span class="line">np.random.seed(<span class="number">123</span>)</span><br><span class="line">np.random.randint(<span class="number">0</span>, <span class="number">10</span>, size=(<span class="number">4</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[<span class="number">2</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">	   [<span class="number">9</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">3</span>],</span><br><span class="line">	   [<span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>]])</span><br><span class="line">	   </span><br><span class="line"><span class="comment"># 默认范围是从0.0到1.0，返回值为float型</span></span><br><span class="line">np.random.random()</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="number">0.18249173045349998</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 传入的参数是数组的大小</span></span><br><span class="line">np.random.random(<span class="number">10</span>)</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([ <span class="number">0.17545176</span>,  <span class="number">0.53155137</span>,  <span class="number">0.53182759</span>,  <span class="number">0.63440096</span>,  <span class="number">0.84943179</span>,</span><br><span class="line">		<span class="number">0.72445532</span>,  <span class="number">0.61102351</span>,  <span class="number">0.72244338</span>,  <span class="number">0.32295891</span>,  <span class="number">0.36178866</span>])</span><br><span class="line">		</span><br><span class="line"><span class="comment"># 创建4行5列，元素值的范围从0.0到1.0的矩阵</span></span><br><span class="line">np.random.random((<span class="number">4</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">array([[ <span class="number">0.22826323</span>,  <span class="number">0.29371405</span>,  <span class="number">0.63097612</span>,  <span class="number">0.09210494</span>,  <span class="number">0.43370117</span>],</span><br><span class="line">	   [ <span class="number">0.43086276</span>,  <span class="number">0.4936851</span> ,  <span class="number">0.42583029</span>,  <span class="number">0.31226122</span>,  <span class="number">0.42635131</span>],</span><br><span class="line">	   [ <span class="number">0.89338916</span>,  <span class="number">0.94416002</span>,  <span class="number">0.50183668</span>,  <span class="number">0.62395295</span>,  <span class="number">0.1156184</span> ],</span><br><span class="line">	   [ <span class="number">0.31728548</span>,  <span class="number">0.41482621</span>,  <span class="number">0.86630916</span>,  <span class="number">0.25045537</span>,  <span class="number">0.48303426</span>]])</span><br></pre></td></tr></table></figure>
-<h3 id="u6307_u5B9A_u5747_u503C_u548C_u6807_u51C6_u5DEE_u751F_u6210_u968F_u673A_u6570_u6570_u7EC4_u6216_u77E9_u9635"><a href="#u6307_u5B9A_u5747_u503C_u548C_u6807_u51C6_u5DEE_u751F_u6210_u968F_u673A_u6570_u6570_u7EC4_u6216_u77E9_u9635" class="headerlink" title="指定均值和标准差生成随机数数组或矩阵"></a>指定均值和标准差生成随机数数组或矩阵</h3><p>我们先来看看均值、方差、标准差的概念。均值很好理解，就是所有样本数据的平均值，描述了样本集合的中间点：</p>
-<p>$$ \overline X=\frac{\sum_{i=1}^nX_i}n $$</p>
-<p>方差是衡量样本点和样本期望值相差的度量值：</p>
-<p>$$ S^2 = \frac{\sum_{i=1}^n(X_i-\overline X)^2} n $$</p>
-<p>标准差描述的是样本集合的各个样本点到均值的距离之平均：</p>
-<p>$$ S = \sqrt {\frac{\sum_{i=1}^n(X_i-\overline X)^2} n } $$</p>
-<p>标准差也就是对方差开根号。举个例子，<code>[0, 8, 12, 20]</code>和<code>[8, 9, 11, 12]</code>，两个集合的均值都是10，但显然两个集合的差别是很大的，计算两者的标准差，前者是8.3后者是1.8，显然后者较为集中，标准差描述的就是这种散布度或者叫做波动大小。综上，方差的意义在于描述随机变量稳定与波动、集中与分散的状况。标准差则体现随机变量取值与其期望值的偏差。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-3/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -876,7 +879,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">115</span>
+              <span class="site-state-item-count">116</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -890,7 +893,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">92</span>
+              <span class="site-state-item-count">93</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
@@ -950,7 +953,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>

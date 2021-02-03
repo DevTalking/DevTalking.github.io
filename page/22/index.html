@@ -247,6 +247,263 @@
             
             
               
+                <a class="post-title-link" href="/articles/gojs-nodes/" itemprop="url">
+                  GOJS教程 -- 如何使用Nodes
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-07-23T00:00:00+08:00" content="2014-07-23">
+              2014-07-23
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/gojs-nodes/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/gojs-nodes/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>你可以自定义节点的样式和行为。</p>
+<h2 id="u5E38_u89C4_u8282_u70B9"><a href="#u5E38_u89C4_u8282_u70B9" class="headerlink" title="常规节点"></a>常规节点</h2><h3 id="u7B80_u5355_u7684_u6846_u56FE_u8282_u70B9"><a href="#u7B80_u5355_u7684_u6846_u56FE_u8282_u70B9" class="headerlink" title="简单的框图节点"></a>简单的框图节点</h3><p>大多数情况下，我们的节点都是一个框包含着文本信息（<code>TextBlock</code>），并且将排列属性设置为<code>Panel.Auto</code>。</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  $(go.Shape, &quot;Rectangle&quot;,
+    new go.Binding(&quot;fill&quot;, &quot;color&quot;)),
+  $(go.TextBlock,
+    { margin: 5 },
+    new go.Binding(&quot;text&quot;, &quot;key&quot;))
+);
+
+diagram.model.nodeDataArray = [
+    { key: &quot;Alpha&quot;, color: &quot;lightblue&quot; }
+];
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node1.jpg" alt="node"></p>
+<h3 id="u5176_u4ED6_u5F62_u72B6_u7684_u6846_u56FE_u8282_u70B9"><a href="#u5176_u4ED6_u5F62_u72B6_u7684_u6846_u56FE_u8282_u70B9" class="headerlink" title="其他形状的框图节点"></a>其他形状的框图节点</h3><p>下面的例子中展示其他几种形状的框图：</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  $(go.Shape,
+    new go.Binding(&quot;figure&quot;, &quot;fig&quot;),
+    new go.Binding(&quot;fill&quot;, &quot;color&quot;)),
+  $(go.TextBlock,
+    { margin: 5 },
+    new go.Binding(&quot;text&quot;, &quot;key&quot;))
+);
+
+diagram.model.nodeDataArray = [
+    { key: &quot;Alpha&quot;, color: &quot;lightblue&quot;, fig: &quot;RoundedRectangle&quot; },
+    { key: &quot;Beta&quot;, color: &quot;lightblue&quot;, fig: &quot;Ellipse&quot; },
+    { key: &quot;Gamma&quot;, color: &quot;lightblue&quot;, fig: &quot;Hexagon&quot; },
+    { key: &quot;Delta&quot;, color: &quot;lightblue&quot;, fig: &quot;FramedRectangle&quot; },
+    { key: &quot;Epsilon&quot;, color: &quot;lightblue&quot;, fig: &quot;Cloud&quot; },
+    { key: &quot;Zeta&quot;, color: &quot;lightblue&quot;, fig: &quot;Procedure&quot; }
+];
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node2.jpg" alt="node"></p>
+<h3 id="u8F83_u590D_u6742_u7684_u6846_u56FE_u8282_u70B9"><a href="#u8F83_u590D_u6742_u7684_u6846_u56FE_u8282_u70B9" class="headerlink" title="较复杂的框图节点"></a>较复杂的框图节点</h3><p>一个排列参数设置为<code>Panel.Auto</code>的节点中，你不必将<code>TextBlock</code>局限为一个，你可以根据情况自行组合<code>Panel</code>对象。下面的例子中就使用<code>TablePanel</code>包含了多个<code>TextBlock</code>。</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Auto&quot;,
+  $(go.Shape,
+    { fill: $(go.Brush, go.Brush.Linear, { 0: &quot;white&quot;, 1: &quot;lightblue&quot; }),
+      stroke: &quot;darkblue&quot;, strokeWidth: 2 }),
+  $(go.Panel, &quot;Table&quot;,
+    { defaultAlignment: go.Spot.Left, margin: 4 },
+    $(go.RowColumnDefinition, { column: 1, width: 4 }),
+    $(go.TextBlock,
+      { row: 0, column: 0, columnSpan: 3, alignment: go.Spot.Center },
+      { font: &quot;bold 12pt sans-serif&quot; },
+      new go.Binding(&quot;text&quot;, &quot;key&quot;)),
+    $(go.TextBlock, &quot;First: &quot;,
+      { row: 1, column: 0 }),
+    $(go.TextBlock,
+      { row: 1, column: 2 },
+      new go.Binding(&quot;text&quot;, &quot;prop1&quot;)),
+    $(go.TextBlock, &quot;Second: &quot;,
+      { row: 2, column: 0 }),
+    $(go.TextBlock,
+      { row: 2, column: 2 },
+      new go.Binding(&quot;text&quot;, &quot;prop2&quot;))
+  )
+);
+
+diagram.model.nodeDataArray = [
+    { key: &quot;Alpha&quot;, prop1: &quot;value of &apos;prop1&apos;&quot;, prop2: &quot;the other property&quot; }
+];
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node3.jpg" alt="node"></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u7B80_u5355_u7EC4_u5408_u8282_u70B9"><a href="#u7B80_u5355_u7EC4_u5408_u8282_u70B9" class="headerlink" title="简单组合节点"></a>简单组合节点</h2><h3 id="u56FE_u6807_u8282_u70B9"><a href="#u56FE_u6807_u8282_u70B9" class="headerlink" title="图标节点"></a>图标节点</h3><p>像下面例子这种的节点，一般元素的排列属性都设置为<code>Panel.Vertical</code>，也就是说上面是图，下面是文字信息。</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Vertical&quot;,
+  $(go.Picture,
+    { maxSize: new go.Size(50, 50) },
+    new go.Binding(&quot;source&quot;, &quot;img&quot;)),
+  $(go.TextBlock,
+    { margin: new go.Margin(3, 0, 0, 0),
+      maxSize: new go.Size(100, 30),
+      editable: true, isMultiline: false },
+    new go.Binding(&quot;text&quot;, &quot;text&quot;))
+);
+
+diagram.model.nodeDataArray = [
+    { text: &quot;kitten&quot;, img: &quot;images/50x40.png&quot; }
+];
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node4.jpg" alt="node"></p>
+<h3 id="u5C0F_u56FE_u6807_u8282_u70B9"><a href="#u5C0F_u56FE_u6807_u8282_u70B9" class="headerlink" title="小图标节点"></a>小图标节点</h3><p>一般这种节点元素的排列属性为<code>Panel.Horizontal</code>，水平排列，就是左边是图，右边是文字信息。</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Horizontal&quot;,
+  $(go.Picture,
+    { maxSize: new go.Size(16, 16) },
+    new go.Binding(&quot;source&quot;, &quot;img&quot;)),
+  $(go.TextBlock,
+    { margin: new go.Margin(0, 0, 0, 2) },
+    new go.Binding(&quot;text&quot;, &quot;text&quot;))
+);
+
+diagram.model.nodeDataArray = [
+    { text: &quot;kitten&quot;, img: &quot;images/50x40.png&quot; }
+];
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node5.jpg" alt="node"></p>
+<h2 id="u590D_u6742_u7EC4_u5408_u8282_u70B9"><a href="#u590D_u6742_u7EC4_u5408_u8282_u70B9" class="headerlink" title="复杂组合节点"></a>复杂组合节点</h2><p>有时候，你需要在节点中展示更多的信息。那么我们就需要将元素排列属性设置为<code>Panel.Spot</code>，这个属性的意思就是<code>Node</code>里的元素都排列在这个<code>Node</code>中的各个锚点上。</p>
+<pre><code>diagram.nodeTemplate =
+$(go.Node, &quot;Spot&quot;,
+  // the main content:
+  $(go.Panel, &quot;Vertical&quot;,
+    $(go.Picture,
+      { maxSize: new go.Size(50, 50) },
+      new go.Binding(&quot;source&quot;, &quot;img&quot;)),
+    $(go.TextBlock,
+      { margin: new go.Margin(3, 0, 0, 0) },
+      new go.Binding(&quot;text&quot;, &quot;text&quot;),
+      new go.Binding(&quot;stroke&quot;, &quot;error&quot;, function(err) { return err ? &quot;red&quot; : &quot;black&quot; }))
+  ),
+  // decorations:
+  $(go.Shape, &quot;TriangleUp&quot;,
+    { alignment: go.Spot.TopLeft,
+      fill: &quot;yellow&quot;, width: 14, height: 14,
+      visible: false },
+    new go.Binding(&quot;visible&quot;, &quot;info&quot;, function(i) { return i ? true : false; })),
+  $(go.Shape, &quot;StopSign&quot;,
+    { alignment: go.Spot.TopRight,
+      fill: &quot;red&quot;, width: 14, height: 14,
+      visible: false },
+    new go.Binding(&quot;visible&quot;, &quot;error&quot;)),
+  {
+    toolTip:
+      $(go.Adornment, &quot;Auto&quot;,
+        $(go.Shape, { fill: &quot;#FFFFCC&quot; },
+          new go.Binding(&quot;visible&quot;, &quot;info&quot;, function(i) { return i ? true : false; })),
+        $(go.TextBlock, { margin: 4 },
+          new go.Binding(&quot;text&quot;, &quot;info&quot;))
+      )
+  }
+);
+
+diagram.model.nodeDataArray = [
+    { text: &quot;kitten&quot;, img: &quot;images/50x40.png&quot;, info: &quot;&quot; },
+    { text: &quot;kitten&quot;, img: &quot;images/50x40.png&quot;, error: true, info: &quot;shredded curtains&quot; }
+];
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/node6.jpg" alt="node"></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/gojs-links/" itemprop="url">
                   GOJS教程 -- 如何使用Links
                 </a>
@@ -1262,212 +1519,11 @@ $(go.Node, &quot;Auto&quot;,
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/gojs-simple-diagram/" itemprop="url">
-                  JavaScript图表图形框架 -- GOJS简介
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-07-18T00:00:00+08:00" content="2014-07-18">
-              2014-07-18
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/前端/" itemprop="url" rel="index">
-                    <span itemprop="name">前端</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/gojs-simple-diagram/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/gojs-simple-diagram/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>gojs是一个能够让我们很容易的实现基于html5浏览器绘制具有交互性的图形图表的JavaScript框架。<br>gojs采用了面向对象的编程模式。以图形对象表示绘图模板。以用普通js对象存储数据作为数据模型，然后赋值给图形对象的属性作为数据绑定的模式。gojs同样提供了大量工具类来代表我们的交互行为。我们需要做的就是创建图形对象、构建数据模型、设置属性、绑定数据模型、使用工具类添加行为即可创建出具有丰富交互性能的各种图表。 </p>
-<h2 id="u4E00_u4E2A_u7B80_u5355_u7684gojs_u56FE_u8868"><a href="#u4E00_u4E2A_u7B80_u5355_u7684gojs_u56FE_u8868" class="headerlink" title="一个简单的gojs图表"></a>一个简单的gojs图表</h2><p>下面的代码定义了一个<code>node</code>模板和数据模型，并它们构建了一个简单的图表：  </p>
-<pre><code>// For conciseness. See the &quot;Building Parts&quot; intro page for more
-var $ = go.GraphObject.make;
-
-// the node template describes how each Node should be constructed
-diagram.nodeTemplate =
-  $(go.Node, &quot;Auto&quot;,  // the Shape automatically fits around the TextBlock
-    $(go.Shape, &quot;RoundedRectangle&quot;,
-      // bind Shape.fill to Node.data.color
-      new go.Binding(&quot;fill&quot;, &quot;color&quot;)),
-    $(go.TextBlock,
-      { margin: 3 },  // some room around the text
-      // bind TextBlock.text to Node.data.key
-      new go.Binding(&quot;text&quot;, &quot;key&quot;))
-  );
-
-// the Model holds only the essential information describing the diagram
-diagram.model = new go.GraphLinksModel(
-[ // a JavaScript Array of JavaScript objects, one per node
-  { key: &quot;Alpha&quot;, color: &quot;lightblue&quot; },
-  { key: &quot;Beta&quot;, color: &quot;orange&quot; },
-  { key: &quot;Gamma&quot;, color: &quot;lightgreen&quot; },
-  { key: &quot;Delta&quot;, color: &quot;pink&quot; }
-],
-[ // a JavaScript Array of JavaScript objects, one per link
-  { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },
-  { from: &quot;Alpha&quot;, to: &quot;Gamma&quot; },
-  { from: &quot;Beta&quot;, to: &quot;Beta&quot; },
-  { from: &quot;Gamma&quot;, to: &quot;Delta&quot; },
-  { from: &quot;Delta&quot;, to: &quot;Alpha&quot; }
-]);
-
-diagram.initialContentAlignment = go.Spot.Center;
-// enable Ctrl-Z to undo and Ctrl-Y to redo
-diagram.undoManager.isEnabled = true;
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/simpleDiagram.jpg" alt="Diagram">  </p>
-<p>虽然上面展示的是图片，但是实际上我们可以在这个图表上用鼠标中键滚动、选中、删除、重做、撤销等等交互。</p>
-<h2 id="gojs_u7684_u57FA_u672C_u6982_u5FF5"><a href="#gojs_u7684_u57FA_u672C_u6982_u5FF5" class="headerlink" title="gojs的基本概念"></a>gojs的基本概念</h2><p>上面的示例是让我们先在感官上认知一下gojs的产出物，下面我们来阐述一下gojs的基本概念。  </p>
-<p>gojs绘制的图表（<code>Diagram</code>）具有两个最基本的元素，就是点和线（<code>Node</code>和<code>Link</code>），并且他们可以自由组合组成一个组（<code>Group</code>）。所有的元素都处在图层（<code>Layer</code>）上，并且可以对它们进行布局（<code>Layout</code>）。  </p>
-<p>每个<code>Diagram</code>都是通过数据模型（<code>Model</code>）来填充和确定<code>Node</code>的信息和<code>Link</code>的所属关系的。并且我们只需要创建好<code>Node</code>和<code>Link</code>的模板以及数据模型，其他的是事情都交给gojs去处理。它会通过<code>Model.nodeDataArray</code>方法和<code>GraphLinksModel.linkDataArray</code>方法自动加载模型并构建元素。  </p>
-<p>每一个<code>Node</code>和<code>Link</code>都是通过模板来描述他们的文本、形状、颜色等信息以及交互行为。每个模板其实就是一个面板（<code>Panel</code>）（你可以将各种元素自由组合在它里面，也可以在它里面添加各种交互行为），比如说将<code>TextBlock</code>、<code>Shape</code>、<code>Picture</code>等元素添加到这个<code>Panel</code>中，鼠标进入离开的交互行为也可以添加到<code>Panel</code>中，那么这个<code>Panel</code>就是一个模板。</p>
-<p>每个<code>Node</code>的位置可以使用<code>Diagram.layout</code>或<code>Group.layout</code>进行初始化设置，也可以基于交互行为进行拖拽。  </p>
-<p>gojs里的工具类可以为<code>Diagram</code>添加鼠标、键盘事件。一般情况下<code>Diagram</code>都默认设置了几种交互行为，比如说拖拽、连线。我们也可以通过<code>ToolManager</code>对象来管理工具类，或者说来管理交互行为，比如说可以停止某些交互，或开启某些交互等。  </p>
-<p>每个<code>Diagram</code>同时也包含<code>CommandHandler</code>对象，它的作用是添加一些键盘命令，比如点<code>Delete</code>键删除元素，<code>Ctrl+C</code>复制、<code>Ctrl+V</code>粘贴、<code>Ctrl+Z</code>撤销等。但是<code>CommandHandler</code>也是被<code>ToolManager</code>管理的。  </p>
-<p><code>Diagram</code>也提供通过鼠标中键滚动视图、放大缩小视图。</p>
-<p>gojs还提供了图表的预览视图（<code>Overview</code>），用于了解大规模图表的概况，同时还提供了组件管理面板（<code>Palette</code>），用于管理创建的组件，并且支持将组件拖拽到<code>Diagram</code>中。</p>
-<p>在<code>Diagram</code>中，你可以选中<code>Node</code>或者<code>Link</code>，你会发现他们有少许的变化，比如在<code>Node</code>周围会增加选中框，选中<code>Link</code>会变色等。这些都是由<code>Adornment</code>对象控制的，你还可以用它来增加提示框、右键菜单等。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="Diagram_u9ED8_u8BA4_u7684_u4EA4_u4E92_u884C_u4E3A"><a href="#Diagram_u9ED8_u8BA4_u7684_u4EA4_u4E92_u884C_u4E3A" class="headerlink" title="Diagram默认的交互行为"></a>Diagram默认的交互行为</h2><ul>
-<li>选中<code>Node</code>或者<code>Link</code>，会出现蓝色选中框，<code>Link</code>也会变为蓝色。</li>
-<li>使用<code>Ctrl+鼠标左键</code>可以选中多个元素。</li>
-<li>在<code>Panel</code>中点击鼠标左键移动鼠标可以移动所有元素。</li>
-<li>使用<code>Ctrl+A</code>可以选中所有元素。</li>
-<li>选中元素，用鼠标可以拖动元素。</li>
-<li>使用<code>Ctrl+C</code>/<code>Ctrl+V</code>可以复制粘贴元素。</li>
-<li>使用<code>Delete</code>键可以删除元素。</li>
-<li>选中多个元素，然后使用<code>Ctrl+G</code>可以将这些选中的元素组合成一个组。</li>
-<li>使用<code>Ctrl+Shift+G</code>可以拆散组。</li>
-<li>当元素超出<code>Diagram</code>时，可自动出现滚动条。</li>
-<li>用鼠标拖拽<code>Node</code>边缘可以与其他<code>Node</code>进行连线。</li>
-<li>选中<code>Link</code>，可以重新选择目标<code>Node</code>，即可以重新连线。</li>
-</ul>
-<h2 id="u521B_u5EFA_u4E00_u4E2ADiagram"><a href="#u521B_u5EFA_u4E00_u4E2ADiagram" class="headerlink" title="创建一个Diagram"></a>创建一个Diagram</h2><p>每个<code>Diagram</code>都需要依托与一个HTML的<code>DIV</code>元素，虽然由gojs接管了这个<code>DIV</code>，但是<code>DIV</code>本身的属性依然可以由我们通过CSS设置，比如位置、高宽等。gojs实际上是在<code>DIV</code>中创建了一个<code>Canvas</code>元素，<code>Canvas</code>的高宽自动适配<code>DIV</code>的高宽。</p>
-<pre><code>&lt;!-- The DIV for a Diagram needs an explicit size or else we won&apos;t see anything.
- In this case we also add a border to help see the edges. --&gt;
-&lt;div id=&quot;myDiagramDiv&quot; style=&quot;border: solid 1px blue; width:400px; height:150px&quot;&gt;&lt;/div&gt;
-</code></pre><p>当然，当你准备开始创建<code>Diagram</code>前，首先要导入gojs的文件。gojs的文件分为Develop（<code>gojs-debug.js</code>）和Product（<code>gojs.js</code>）两种，前者是供开发人员使用的，因为它包含了一些用于调试的代码，后者用于正式发布，速度较快。gojs不依赖与任何JavaScript框架，所以它可以与任何JavaScript框架一起使用，而不会产生冲突。</p>
-<pre><code>&lt;!-- Include the GoJS library. --&gt;
-&lt;script src=&quot;gojs.js&quot;&gt;&lt;/script&gt;
-</code></pre><p>下面就可以使用gojs将上述的<code>DIV</code>构建为一个<code>Diagram</code>了，这里需要注意的是，使用gojs的api时，都要使用前缀<code>go.</code>。</p>
-<pre><code>&lt;!-- Create the Diagram in the DIV element using JavaScript. --&gt;
-&lt;!-- The &quot;go&quot; object is the &quot;namespace&quot; that holds all of the GoJS types. --&gt;
-&lt;script&gt;
-var diagram = new go.Diagram(&quot;myDiagramDiv&quot;);
-diagram.model = new go.GraphLinksModel(
-    [{ key: &quot;Hello&quot; },   // two node data, in an Array
-    { key: &quot;World!&quot; }],
-    [{ from: &quot;Hello&quot;, to: &quot;World!&quot;}]  // one link, in an Array
-);
-&lt;/script&gt;
-</code></pre><p>这样就构建了一个简单的<code>Diagram</code>。<br><img src="http://www.devtalking.com/postImages/anotherSimpleDiagram.jpg" alt="Diagram"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/21/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/23/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/21/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/">23</a><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/23/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1505,7 +1561,7 @@ diagram.model = new go.GraphLinksModel(
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">115</span>
+              <span class="site-state-item-count">116</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1519,7 +1575,7 @@ diagram.model = new go.GraphLinksModel(
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">92</span>
+              <span class="site-state-item-count">93</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
@@ -1579,7 +1635,7 @@ diagram.model = new go.GraphLinksModel(
       <div class="footer-inner"> <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>
