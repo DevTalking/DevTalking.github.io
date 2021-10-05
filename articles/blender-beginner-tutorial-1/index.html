@@ -1,0 +1,856 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-4115205380866695",
+          enable_page_level_ads: true
+     });
+</script>
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Blender," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="Blender基本操作和场景相关的基本操作
+按住鼠标中键，可以基于原点旋转场景。
+按住Shift+鼠标中键，移动场景。
+按下```，出现8个选项的轮盘，鼠标快速移到对应的方位即可触发效果。
+
+
+   这8个选项分别是：
+
+Top：从上往下看的正交视图。
+Bottom：从下往上看的正交视图。
+Left：从左往右看的正交视图。
+Right：从右往左看的正交视图。
+Front：从物体正前方看的视图。
+B">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Blender学习笔记一">
+<meta property="og:url" content="http://www.devtalking.com/articles/blender-beginner-tutorial-1/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="Blender基本操作和场景相关的基本操作
+按住鼠标中键，可以基于原点旋转场景。
+按住Shift+鼠标中键，移动场景。
+按下```，出现8个选项的轮盘，鼠标快速移到对应的方位即可触发效果。
+
+
+   这8个选项分别是：
+
+Top：从上往下看的正交视图。
+Bottom：从下往上看的正交视图。
+Left：从左往右看的正交视图。
+Right：从右往左看的正交视图。
+Front：从物体正前方看的视图。
+B">
+<meta property="og:image" content="https://res.craft.do/user/full/bfe2c8cd-7442-8ae7-5cb6-aebba1dc2b37/doc/2100B122-9D5B-476E-BDCA-1E41AFD7C342/58B1A745-F95F-4F1F-9BFF-244B9832EF61_2/Image.png">
+<meta property="og:image" content="https://res.craft.do/user/full/bfe2c8cd-7442-8ae7-5cb6-aebba1dc2b37/doc/2100B122-9D5B-476E-BDCA-1E41AFD7C342/0BEC09F0-3EAB-4135-9F07-4E5969AA7F71_2/Image.png">
+<meta property="og:image" content="https://res.craft.do/user/full/bfe2c8cd-7442-8ae7-5cb6-aebba1dc2b37/doc/2100B122-9D5B-476E-BDCA-1E41AFD7C342/B8109575-553F-4998-B6BA-136EB702F724_2/%2012x.jpeg">
+<meta property="og:updated_time" content="2021-10-05T16:57:10.605Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Blender学习笔记一">
+<meta name="twitter:description" content="Blender基本操作和场景相关的基本操作
+按住鼠标中键，可以基于原点旋转场景。
+按住Shift+鼠标中键，移动场景。
+按下```，出现8个选项的轮盘，鼠标快速移到对应的方位即可触发效果。
+
+
+   这8个选项分别是：
+
+Top：从上往下看的正交视图。
+Bottom：从下往上看的正交视图。
+Left：从左往右看的正交视图。
+Right：从右往左看的正交视图。
+Front：从物体正前方看的视图。
+B">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> Blender学习笔记一 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th"></i> <br />
+            
+            分類
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Blender学习笔记一
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2021-10-04T00:00:00+08:00" content="2021-10-04">
+              2021-10-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Blender/" itemprop="url" rel="index">
+                    <span itemprop="name">Blender</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/blender-beginner-tutorial-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/blender-beginner-tutorial-1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+<h2 id="Blender_u57FA_u672C_u64CD_u4F5C"><a href="#Blender_u57FA_u672C_u64CD_u4F5C" class="headerlink" title="Blender基本操作"></a>Blender基本操作</h2><h3 id="u548C_u573A_u666F_u76F8_u5173_u7684_u57FA_u672C_u64CD_u4F5C"><a href="#u548C_u573A_u666F_u76F8_u5173_u7684_u57FA_u672C_u64CD_u4F5C" class="headerlink" title="和场景相关的基本操作"></a>和场景相关的基本操作</h3><ul>
+<li>按住<code>鼠标中键</code>，可以基于原点旋转场景。</li>
+<li>按住<code>Shift+鼠标中键</code>，移动场景。</li>
+<li>按下```，出现8个选项的轮盘，鼠标快速移到对应的方位即可触发效果。</li>
+</ul>
+<p><img src="https://res.craft.do/user/full/bfe2c8cd-7442-8ae7-5cb6-aebba1dc2b37/doc/2100B122-9D5B-476E-BDCA-1E41AFD7C342/58B1A745-F95F-4F1F-9BFF-244B9832EF61_2/Image.png" alt="Image.png"></p>
+<p>   这8个选项分别是：</p>
+<ul>
+<li>Top：从上往下看的正交视图。</li>
+<li>Bottom：从下往上看的正交视图。</li>
+<li>Left：从左往右看的正交视图。</li>
+<li>Right：从右往左看的正交视图。</li>
+<li>Front：从物体正前方看的视图。</li>
+<li>Back：从物体正后方看的视图。</li>
+<li>View Camera：开启摄像机视图。</li>
+<li>View Selected：将视角拉近选中的物体。</li>
+</ul>
+<a id="more"></a>
+<h3 id="u548C_u7269_u4F53_u76F8_u5173_u7684_u57FA_u672C_u64CD_u4F5C"><a href="#u548C_u7269_u4F53_u76F8_u5173_u7684_u57FA_u672C_u64CD_u4F5C" class="headerlink" title="和物体相关的基本操作"></a>和物体相关的基本操作</h3><ul>
+<li>移动，快捷键<code>G</code></li>
+<li>旋转，快捷键<code>R</code></li>
+<li>变换，快捷键<code>S</code></li>
+</ul>
+<p>以上三个操作，都可以在按了对应快捷键后，再按下X或Y或Z，然后就可以沿着X轴、Y轴、Z轴进行移动、旋转或变换。或者当按下对应快捷键后，将鼠标移动到X轴、Y轴或Z轴附近，按下鼠标中键，也可以达到同样的效果。</p>
+<ul>
+<li><code>Shift + D</code>，可以复制选中的物体。</li>
+<li><code>X</code>或者<code>Delete</code>键可以删除选中的物体，比如删除初始化的正方体。</li>
+</ul>
+<p><img src="https://res.craft.do/user/full/bfe2c8cd-7442-8ae7-5cb6-aebba1dc2b37/doc/2100B122-9D5B-476E-BDCA-1E41AFD7C342/0BEC09F0-3EAB-4135-9F07-4E5969AA7F71_2/Image.png" alt="Image.png"></p>
+<ul>
+<li><code>Shift + A</code>，可以添加物体，比如添加一个圆环。</li>
+</ul>
+<p><img src="https://res.craft.do/user/full/bfe2c8cd-7442-8ae7-5cb6-aebba1dc2b37/doc/2100B122-9D5B-476E-BDCA-1E41AFD7C342/B8109575-553F-4998-B6BA-136EB702F724_2/%2012x.jpeg" alt="切片 1@2x.jpeg"></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Blender/" rel="tag">#Blender</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/serverless-game-bigdata/" rel="next" title="Serverless在游戏运营行业进行数据采集分析的最佳实践">
+                <i class="fa fa-chevron-left"></i> Serverless在游戏运营行业进行数据采集分析的最佳实践
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/articles/blender-beginner-tutorial-2/" rel="prev" title="Blender学习笔记二">
+                Blender学习笔记二 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">120</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">分類</span>
+              </a>
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">94</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Blender_u57FA_u672C_u64CD_u4F5C"><span class="nav-number">1.</span> <span class="nav-text">Blender基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u548C_u573A_u666F_u76F8_u5173_u7684_u57FA_u672C_u64CD_u4F5C"><span class="nav-number">1.1.</span> <span class="nav-text">和场景相关的基本操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u548C_u7269_u4F53_u76F8_u5173_u7684_u57FA_u672C_u64CD_u4F5C"><span class="nav-number">1.2.</span> <span class="nav-text">和物体相关的基本操作</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/blender-beginner-tutorial-1/';
+      var disqus_title = 'Blender学习笔记一';
+      var disqus_url = 'http://www.devtalking.com//articles/blender-beginner-tutorial-1/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

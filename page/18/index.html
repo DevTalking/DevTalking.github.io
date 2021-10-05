@@ -247,6 +247,308 @@
             
             
               
+                <a class="post-title-link" href="/articles/swift-final/" itemprop="url">
+                  Swift中的final修饰符（Xcode 6 GM）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-09-11T00:00:00+08:00" content="2014-09-11">
+              2014-09-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/swift-final/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/swift-final/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>Swift中的<code>final</code>修饰符可以防止类（class）被继承，还可以防止子类重写父类的属性、方法以及下标。需要注意的是，<code>final</code>修饰符只能用于类，不能修饰结构体（struct）和枚举（enum），因为结构体和枚举只能遵循协议（protocol）。虽然协议也可以遵循其他协议，但是它并不能重写遵循的协议的任何成员，这就是结构体和枚举不需要<code>final</code>修饰的原因。</p>
+<h2 id="final_u4FEE_u9970_u7B26_u7684_u51E0_u70B9_u4F7F_u7528_u539F_u5219"><a href="#final_u4FEE_u9970_u7B26_u7684_u51E0_u70B9_u4F7F_u7528_u539F_u5219" class="headerlink" title="final修饰符的几点使用原则"></a>final修饰符的几点使用原则</h2><ul>
+<li><code>final</code>修饰符只能修饰类，表明该类不能被其他类继承，也就是它没资格当父类。</li>
+<li><code>final</code>修饰符也可以修饰类中的属性、方法和下标，但前提是该类并没有被<code>final</code>修饰过。</li>
+<li><code>final</code>不能修饰结构体和枚举。</li>
+</ul>
+<h2 id="u4EE3_u7801_u793A_u4F8B"><a href="#u4EE3_u7801_u793A_u4F8B" class="headerlink" title="代码示例"></a>代码示例</h2><figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="comment">//Todo...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaglevTrain</span>: <span class="title">Train</span> </span>&#123;  <span class="comment">// 编译失败</span></span><br><span class="line">    <span class="comment">//Todo...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码中，因为<code>Train</code>类被<code>final</code>修饰过，所以当<code>MaglevTrain</code>类继承了<code>Train</code>后，编译器会提示错误。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="func"><span class="keyword">func</span> <span class="title">method</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="comment">//Todo...   </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaglevTrain</span>: <span class="title">Train</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">method</span><span class="params">()</span></span> &#123;  <span class="comment">// 编译失败</span></span><br><span class="line">        <span class="comment">//Todo...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码中，因为<code>Train</code>类中的<code>method</code>方法被<code>final</code>修饰过，所以当子类<code>MaglevTrain</code>重写父类的<code>method</code>方法时，编译器会提示错误。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/articles/patterns-playground/" itemprop="url">
+                  通过Playground展示一些编码模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-09-08T00:00:00+08:00" content="2014-09-08">
+              2014-09-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/patterns-playground/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/patterns-playground/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>在Swift中，根据已有的、明确的规则或约定，描述和匹配一组值的方式，我们可将其称之为一种编码模式，比如：</p>
+<ul>
+<li>所有的元组在取数据时是从0开始的。</li>
+<li>表示数字的范围我们可以使用<code>1...5</code>这种形式。</li>
+<li>匹配或判断某些类实例的类型。</li>
+</ul>
+<p>该Playground文件需要使用OS X Mavericks或OS X Yosemite beta系统中的Xcode6打开。</p>
+<h2 id="Patterns-playground"><a href="#Patterns-playground" class="headerlink" title="Patterns.playground"></a>Patterns.playground</h2><p>这个playground文件介绍了一些匹配模式的概念。在Swift中，你可以使用条件语句（比如<code>switch</code>语句）通过简明、易读的方式匹配多个值，这种方式就是一种模式。</p>
+<blockquote>
+<p>注意：<br>如果你看不到控制台输出界面，你可以通过View > Assistant Editor > Show Assistant Editor选项或使用Option-Command-Return快捷键打开Timeline区域。</p>
+</blockquote>
+<h3 id="u5339_u914D_u5143_u7EC4_u4E2D_u7684_u503C"><a href="#u5339_u914D_u5143_u7EC4_u4E2D_u7684_u503C" class="headerlink" title="匹配元组中的值"></a>匹配元组中的值</h3><p>下面这个例子向你展示了如何使用匹配模式写出简明、优雅的<code>switch</code>语句。在这个例子中使用了FizzBuzz游戏作为场景进行说明。我们先来简单介绍一下这个游戏，在FizzBuzz游戏中，你从1开始数数，如果你数到的数字能被3整除，那么你就不能说出该数字而要说“Fizz”。如果你数到的数字能被5整除，那么你就要说“Buzz”。如果你数到的数字既能被3整除又能被5整除，那么你就要说“FizzBuzz”。所以一般情况下数数的情形像这样：“1，2，Fizz，4，Buzz…”。那么在这个例子中我们用一个名为<code>fizzBuzz</code>的函数代表该游戏，这个函数有一个参数，代表我们要数的数字，因为我们需要说出“Fizz”、“Buzz”以及“FizzBuzz”，所以返回值为<code>String</code>类型。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">fizzBuzz</span><span class="params">(number: Int)</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> (number % <span class="number">3</span>, number % <span class="number">5</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> (<span class="number">0</span>, <span class="number">0</span>):</span><br><span class="line">        <span class="comment">// number既能被3整除又能被5整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"FizzBuzz!"</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">0</span>, <span class="number">_</span>):</span><br><span class="line">        <span class="comment">// number能被3整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Fizz!"</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">_</span>, <span class="number">0</span>):</span><br><span class="line">        <span class="comment">// number能被5整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Buzz!"</span></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">_</span>, <span class="number">_</span>):</span><br><span class="line">        <span class="comment">// number既不能被3整除也不能被5整除</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"<span class="subst">\(number)</span>"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们通过<code>for</code>循环语句，让<code>fizzBuzz</code>函数参数从1到100执行100次，模拟我们在游戏中从1数到100。然后看看控制台输出的结果。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span>...<span class="number">100</span> &#123;</span><br><span class="line">    <span class="built_in">println</span>(fizzBuzz(i))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>fizzBuzz</code>函数中的<code>switch</code>语句中，判断表达式是一个元组，它包含两个成员，这两个成员也是表达式。第一个表达式<code>number % 3</code>，意思是<code>number</code>取3的余数，第二个表达式<code>number % 5</code>，意思是<code>number</code>取5的余数。每一个<code>case</code>语句都对该元组中这两个表达式计算出的值进行匹配判断。</p>
+<p>比如，如果<code>number</code>等于15，那么<code>(number % 3, number % 5)</code>的结果就是<code>(0, 0)</code>，这代表15既能被3整除又能5整除。这符合<code>switch</code>语句中的第一个<code>case</code>判断，所以返回“FizzBuzz!”。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">fizzBuzz(<span class="number">15</span>)</span><br></pre></td></tr></table></figure>
+<p>如果<code>number</code>等于6，那么元组的结果为<code>(0, 1)</code>，这将符合<code>switch</code>语句中的第二个<code>case</code>判断<code>(0, _)</code>，因为下划线在Swift中约定是通配符，它代表任何值。所以将返回“Fizz!”。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">fizzBuzz(<span class="number">6</span>)</span><br></pre></td></tr></table></figure>
+<p>如果<code>number</code>等于11，那么元组的结果为<code>(2, 1)</code>，这将符合<code>switch</code>语句中的第四个<code>case</code>判断<code>(_, _)</code>，因为第四个<code>case</code>判断的是既不能被3整除又不能被5整除的情况，所以用两个下划线表示元组中的两个成员。返回结果为“11”。</p>
+<blockquote>
+<p>练习：<br>让<code>fizzBuzz</code>函数根据其他数字返回不同的消息。<br>再加一种数字的特殊情况，让该函数返回“Bang!”。使用返回“Fizz!”和“Buzz!”相同的模式，比如如果<code>number</code>能被7整除，就返回“Bang!”。别忘了还有“FizzBuzzBang!”这种情况，尽可能将<code>case</code>情况列举全。<br>如果最后一个<code>case</code>你用<code>default</code>代替<code>case (_ ,_)</code>会发生什么呢？这两种方式都能正确的返回不满足其他<code>case</code>的值么？</p>
+</blockquote>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h3 id="u679A_u4E3E_u548C_u5173_u8054_u503C"><a href="#u679A_u4E3E_u548C_u5173_u8054_u503C" class="headerlink" title="枚举和关联值"></a>枚举和关联值</h3><p>使用枚举和它的关联值匹配枚举中特定的<code>case</code>场景也是一种匹配模式。下面的例子使用枚举展示了火车的到站时间状态。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Status</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">OnTime</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Delayed</span>(minutes: <span class="type">Int</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果火车正点到站，那么它的状态为<code>Status.OnTime</code>，并且没有关联值。当火车晚点，那么它的状态为<code>Status.Delayed(Int)</code>，并需要传入一个关联值用于表示火车到底晚了多久。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> goodNews = <span class="type">Status</span>.<span class="type">OnTime</span></span><br><span class="line"><span class="keyword">let</span> badNews = <span class="type">Status</span>.<span class="type">Delayed</span>(minutes: <span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+<p>这里有一个名为<code>Train</code>的类，包含一个<code>status</code>属性，默认值为<code>Status.OnTime</code>。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> status = <span class="type">Status</span>.<span class="type">OnTime</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你可以使用匹配模式，将<code>Status.Delayed(Int)</code>这种情况的关联值提出来进行判断。下面的代码将<code>Train</code>类进行了扩展，使之遵循<code>Printable</code>协议，添加了一个只读属性<code>description</code>。这个扩展可以很容易的检索出包含火车晚点分钟数的<code>String</code>字符串，并返回。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Train</span>: <span class="title">Printable</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> description: <span class="type">String</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">switch</span> status &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> .<span class="type">OnTime</span>:</span><br><span class="line">            <span class="comment">// 满足正点到达的情况，返回“On time”</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">"On time"</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Delayed</span>(<span class="keyword">let</span> minutes) <span class="keyword">where</span> <span class="number">0</span>...<span class="number">5</span> ~= minutes:</span><br><span class="line">            <span class="comment">// 将传入的关联值通过“~=”操作符在一定范围内匹配</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Slight delay of <span class="subst">\(minutes)</span> min"</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Delayed</span>(<span class="number">_</span>):</span><br><span class="line">            <span class="comment">// 用下划线通配符匹配不在晚点分钟数范围内的情况</span></span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Delayed"</span></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>switch</code>语句中的第一个<code>case</code>用于匹配当火车状态为<code>OnTime</code>时的情况，并返回简单的字符串。</p>
+<p>第二个<code>case</code>要稍复杂一些，它创建了一个临时常量<code>minutes</code>来表示传入的关联值，并用<code>where</code>关键字申明一个0到5的范围，判断<code>minutes</code>是否在该范围内，如果在该范围内，那么将这个关联值嵌入字符串返回。</p>
+<p>第三个<code>case</code>用于匹配不在晚点范围内的情况。</p>
+<p>你现在可以创建一些<code>Train</code>类的实例验证一下。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> trainOne = <span class="type">Train</span>()</span><br><span class="line"><span class="keyword">let</span> trainTwo = <span class="type">Train</span>()</span><br><span class="line"><span class="keyword">let</span> trainThree = <span class="type">Train</span>()</span><br><span class="line"></span><br><span class="line">trainTwo.status = .<span class="type">Delayed</span>(minutes: <span class="number">2</span>)</span><br><span class="line">trainThree.status = .<span class="type">Delayed</span>(minutes: <span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+<p>然后使用<code>description</code>属性查看每个<code>Train</code>实例的状态值。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">trainOne.description</span><br><span class="line">trainTwo.description</span><br><span class="line">trainThree.description</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>练习：<br>改变<code>trainTwo</code>和<code>trainThree</code>的<code>status</code>属性，看看它们的<code>description</code>属性有何变化。<br>改变<code>Train</code>扩展中<code>switch</code>的最后一个<code>case</code>语句，让它返回包含关联值的字符串，比如“Delayed by 17 min”。<br>加分项，再增加一种<code>case</code>情况，当关联值大于60时，返回列车晚点几小时几分的字符串。<br>提示：可以使用<code>&gt;=</code>操作符。</p>
+</blockquote>
+<h3 id="u68C0_u67E5_u548C_u8F6C_u6362_u5B50_u7C7B_u578B"><a href="#u68C0_u67E5_u548C_u8F6C_u6362_u5B50_u7C7B_u578B" class="headerlink" title="检查和转换子类型"></a>检查和转换子类型</h3><p>还有一种模式可以让你动态的匹配类的实例。考虑一下下面代码中类的所属关系：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">cleanPassengerCars</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Clean the passenger cars"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaglevTrain</span>: <span class="title">Train</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">referToSpecialist</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Refer the maglev to a specialist"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> maglev = <span class="type">MaglevTrain</span>()</span><br><span class="line"><span class="keyword">let</span> train = <span class="type">Train</span>()</span><br></pre></td></tr></table></figure>
+<p>有一种简单的类型匹配模式，使用<code>is</code>关键字就可以进行父类与子类之间的匹配和判断。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">trainDescription</span><span class="params">(train: Train)</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> train &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="keyword">is</span> <span class="type">MaglevTrain</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"The fastest train on earth."</span></span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Some other kind of train."</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你可以将刚才创建的<code>Train</code>类和<code>MaglevTrain</code>类实例传入<code>trainDescription</code>函数，看看会有什么结果。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">trainDescription(maglev)</span><br><span class="line">trainDescription(train)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>练习：<br>在<code>trainDescription</code>函数中的<code>switch语句中</code>再添加一个<code>case</code>，用于匹配判断<code>train</code>是不是<code>Train</code>类型的，然后看看会提示什么错误？为什么呢？<br>再定义一个<code>Train</code>类的子类<code>SteamTrain</code>，然后在<code>trainDescription</code>函数的<code>switch</code>语句中添加一个<code>case</code>，用于匹配判断<code>train</code>的类型是不是<code>SteamTrain</code>，然后返回适当的字符串描述。将<code>SteamTrain</code>实例传入<code>trainDescription</code>函数，看看是否返回正确的描述。</p>
+</blockquote>
+<p>不过使用<code>is</code>关键字匹配类型只适用于检查子类。如果你想检查对象类型是不是某个类的子类，并且想使用父类的属性或方法时，可以使用<code>as</code>关键字（作用类似类型强制转换中的<code>as</code>）将判断的对象类型转换为父类型，这样在<code>switch</code>语句中就可以同时进行类型检查和类型转换了。使用<code>as</code>关键字时，需要先创建一个临时常量，用于表示需要判断或转换的对象。</p>
+<p>下面的代码中有一个名为<code>determineMaintenanceRequirements</code>的函数，在<code>switch</code>语句中判断对象的类型是不是<code>MaglevTrain</code>的子类，如果是<code>MaglevTrain</code>的子类，那么将该对象的类型转换为<code>MaglevTrain</code>。如果转换成功，就可以使用转换后类型的方法。如果失败则返回<code>default</code>的返回值。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">determineMaintenanceRequirements</span><span class="params">(train: Train)</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> train &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="keyword">let</span> maglev <span class="keyword">as</span> <span class="type">MaglevTrain</span>:</span><br><span class="line">        <span class="keyword">return</span> maglev.referToSpecialist()</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">return</span> train.cleanPassengerCars()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">determineMaintenanceRequirements(train)</span><br><span class="line">determineMaintenanceRequirements(maglev)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>练习：<br>在<code>SteamTrain</code>类中添加一个名为<code>cleanFirebox</code>的函数，在<code>determineMaintenanceRequirements</code>函数中的<code>switch</code>语句里添加一个<code>case</code>语句，用于判断对象的类型是不是<code>SteamTrain</code>的子类，如果是，将对象的类型转换为<code>SteamTrain</code>类型，并调用<code>SteamTrain</code>类的<code>cleanFirebox</code>函数。然后将<code>SteamTrain</code>类的实例传入<code>determineMaintenanceRequirements</code>函数看看是否能返回正确的描述信息。</p>
+</blockquote>
+<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=13" target="_blank" rel="external">Patterns Playground</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/pike5/" itemprop="url">
                   Rob Pike 程序开发五项原则
                 </a>
@@ -621,301 +923,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/closure-expressions-in-swift/" itemprop="url">
-                  Swift中的闭包（Closure）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-09-01T00:00:00+08:00" content="2014-09-01">
-              2014-09-01
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/closure-expressions-in-swift/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/closure-expressions-in-swift/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<p>闭包在Swift中非常有用。通俗的解释就是一个<code>Int</code>类型里存储着一个整数，一个<code>String</code>类型包含着一串字符，同样，闭包是一个包含着函数的类型。有了闭包，你就可以处理很多在一些古老的语言中不能处理的事情。这是因为闭包使用的多样性，比如你可以将闭包赋值给一个变量，你也可以将闭包作为一个函数的参数，你甚至可以将闭包作为一个函数的返回值。它的强大之处可见一斑。</p>
-<p>在Swift的很多文档教材中都说函数是“一等公民”，起初我还不是很理解“一等公民”是什么意思，但当我理解了闭包以及它的强大功能后，我恍然大悟、茅塞顿开、醍醐灌顶。原来闭包的这些特性就是“一等公民”的特性啊！参见维基百科<a href="http://en.wikipedia.org/wiki/First-class_citizen" target="_blank" rel="external">First-class citizen</a>。</p>
-<p>Swift中的闭包类似Objective-C中的Block。其实，如果你想在Swift中实现Objective-C里的Block功能，你可以直接使用闭包来代替。Block和闭包的区别只是语法的不同而已，而且闭包的可读性比较强。</p>
-<h2 id="u51FD_u6570_u662F_u95ED_u5305_u5417_uFF1F"><a href="#u51FD_u6570_u662F_u95ED_u5305_u5417_uFF1F" class="headerlink" title="函数是闭包吗？"></a>函数是闭包吗？</h2><p>虽然你还没有意识到，但我们确实已经在Swift中这么用了。Swift中的函数就是闭包，在Apple的官方文档中有这样的描述：</p>
-<blockquote>
-<p>闭包有三种形式：  </p>
-<ol>
-<li>全局函数是一个有名字但不会捕获任何值的闭包。  </li>
-<li>嵌套函数是一个有名字并可以捕获到其封闭函数域内的值的闭包。  </li>
-<li>闭包表达式是一个利用轻量级语法所写的，可以捕获其上下文中变量或常量值的匿名闭包。</li>
-</ol>
-</blockquote>
-<p>今天，我们要讨论的是第三种形式，尤其讨论它是如何将繁复的、可读性比较差的业务逻辑代码压缩成高可读性、简明明了的形式。</p>
-<p>大家还记得数组的<code>map</code>方法么？它的参数就是一个闭包，它会将数组里的每一个元素放在闭包中进行处理，然后返回一个新的数组，甚至是与原数组不同元素类型的新数组。</p>
-<p><code>map</code>函数的原型如下：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">map</span><span class="generics">&lt;U&gt;</span><span class="params">(transform: <span class="params">(T)</span></span></span> -&gt; <span class="type">U</span>) -&gt; [<span class="type">U</span>]</span><br></pre></td></tr></table></figure>
-<p>我们可以看到该函数使用了泛型。<code>(T) -&gt; U</code>是一个泛型闭包，它的意思就是类型<code>T</code>将会在闭包中进行逻辑处理，然后返回<code>U</code>类型。最后<code>map</code>函数会返回一个<code>U</code>类型的数组。</p>
-<p>用一个例子来说明。今天我办生日聚会，要迎接很多人，并且为每个人都准备了一句欢迎词。我们要怎么做呢？首先我们将迎接的人放进一个数组名叫<code>guestList</code>，然后用一个名叫<code>greetPeople</code>的函数为每个人生成欢迎词：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">greetPeople</span><span class="params">(person: String)</span></span> -&gt; <span class="type">String</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> guestList = [<span class="string">"Chris"</span>, <span class="string">"Jill"</span>, <span class="string">"Tim"</span>]</span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(greetPeople)</span><br></pre></td></tr></table></figure>
-<p>然后将<code>greetPeople</code>函数作为<code>guestList</code>数组的<code>map</code>函数的参数传入，并返回一个新的数组<code>fullGreetings</code>，这个数组就包含了每个人的欢迎词。</p>
-<p>如果我们想展示一下每个人的欢迎词，我们甚至可以这样写：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">fullGreetings.<span class="built_in">map</span>(<span class="built_in">println</span>)</span><br></pre></td></tr></table></figure>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<p>这时也许有人要质疑了，<code>println</code>函数不是没有返回值么？那么<code>map</code>函数会返回什么呢？其实每一个没有返回值的函数，都会返回一个空的元组（<code>tuple</code>），所以说上述代码的返回值其实是<code>Array&lt;()&gt;</code>。</p>
-<p>上面的例子中我们就是将一个全局函数<code>greetPeople</code>作为一个闭包来使用的。</p>
-<h2 id="u7B80_u660E_u627C_u8981_u7684_u95ED_u5305_u8868_u8FBE_u5F0F"><a href="#u7B80_u660E_u627C_u8981_u7684_u95ED_u5305_u8868_u8FBE_u5F0F" class="headerlink" title="简明扼要的闭包表达式"></a>简明扼要的闭包表达式</h2><p>其实Swift已经为我们提供了很多简化的语法，可以让我们保证代码的高可读性和维护性。还用上面的例子来说明，对于<code>greetPeople</code>这个全局函数来说，其实只需要使用一次，所以我们没必要单独定义这个函数。我们可以直接使用闭包表达式来处理：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123;(person: <span class="type">String</span>) -&gt; <span class="type">String</span> <span class="keyword">in</span> <span class="keyword">return</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span>&#125;)</span><br></pre></td></tr></table></figure>
-<p>闭包表达式其实是函数的字面值，官方一般称之为匿名函数。一般当我们需要使用函数快速的实现一个简短的处理逻辑并且只使用一次的时候，我们可以省去函数名，使用简化的语法。上面的代码中可以看到关键字<code>in</code>之前是闭包表达式的参数和返回值，<code>in</code>之后是闭包表达式实际处理逻辑的代码区域。</p>
-<p>下面我们将使用Swift更多的特性来进一步简化闭包表达式。</p>
-<p>我们知道Swift中有类型推断的特性，所以我们可以取掉参数类型：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123;(person) -&gt; <span class="type">String</span> <span class="keyword">in</span> <span class="keyword">return</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span> &#125;)</span><br></pre></td></tr></table></figure>
-<p>像我们示例中的这种单一闭包表达式，编译器可以根据<code>in</code>之前的返回值类型和<code>return</code>之后的返回数据类型自动判断，所以我们可以省略返回值和<code>return</code>关键字：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123;person <span class="keyword">in</span> <span class="string">"Hello, <span class="subst">\(person)</span>!"</span> &#125;)</span><br></pre></td></tr></table></figure>
-<p>其实在Swift中还提供了参数的简写方式：<code>$0</code>代表第一个参数、<code>$1</code>代表第二个参数以此类推。所以我们又可以将参数名称省略：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>(&#123; <span class="string">"Hello, <span class="subst">\($<span class="number">0</span>)</span>!"</span> &#125;)</span><br></pre></td></tr></table></figure>
-<p>当函数的最后一个参数是闭包时，可以将闭包写在<code>()</code>之外，这也是Swift的一个特性，所以我们还可以继续简化：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>()&#123; <span class="string">"Hello, <span class="subst">\($<span class="number">0</span>)</span>!"</span> &#125;</span><br></pre></td></tr></table></figure>
-<p>当函数有且仅有一个参数，并该参数是闭包时，不但可以将闭包写在<code>()</code>外，还可以省略<code>()</code>：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> fullGreetings = guestList.<span class="built_in">map</span>&#123; <span class="string">"Hello, <span class="subst">\($<span class="number">0</span>)</span>!"</span> &#125;</span><br></pre></td></tr></table></figure>
-<p>到目前为止，示例中的闭包表达式已经被我们根据Swift的特性，简化为简明扼要、高可读性的闭包表达式了，是不是很酷呢！</p>
-<p>参考原文：<a href="http://www.codingexplorer.com/closure-expressions-swift/?utm_source=feedly&amp;utm_reader=feedly&amp;utm_medium=rss&amp;utm_campaign=closure-expressions-swift" target="_blank" rel="external">Closure Expressions in Swift</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/optionals-case-study/" itemprop="url">
-                  Swift中Optional类型的使用案例分析：valuesForKeys
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-08-29T00:00:00+08:00" content="2014-08-29">
-              2014-08-29
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/optionals-case-study/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/optionals-case-study/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>这篇文章将带我们探索在Swift中如何使用<code>Optional</code>类型保证强类型的安全性。我们将创建一个Swift版本的Objective-C的API。虽然在Swift中这个API存在的意义不是很大，但是这将会是一个很有趣的例子。</p>
-<p>在Objective-C中，<code>NSDictionary</code>类有一个方法，名为<code>-objectsForKeys:notFoundMarker:</code>，它的作用是根据第一个<code>NSArray</code>类型参数中的值作为该字典的key，查找这些key对应的字典中的值，并放到一个新的<code>NSArray</code>中返回，如果找不到对应的值，那么就返回第二个参数指定的对象。在官方文档中对该方法有这么一句描述“返回的数组中的第N个对象，对应着第一个数组参数中的第N个值”。假如说以第一个数组参数中的第三个值作为key在字典中查不到值怎么办呢？这时候就需要<code>notFoundMarker</code>参数登场了。这种情况下就会返回<code>notFoundMarker</code>参数指定的对象了。在<code>Foundation</code>框架中还有专门针对该情况适用的一个类，那就是<code>NSNull</code>，就是当你也没有备选返回对象的时候，就可以返回<code>NSNull</code>对象。</p>
-<p>在Swift中，<code>Dictionary</code>类型并没有类似<code>objectsForKeys</code>的方法。所以接下来的练习中，我们将使用类型的扩展机制为<code>Dictionary</code>类型添加一个类似<code>objectsForKeys</code>的方法，为保持Swift的风格我们起名为<code>valuesForKeys:notFoundMarker:</code>。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [K], notFoundMarker: V)</span></span> -&gt; [<span class="type">V</span>] &#123;</span><br><span class="line">        <span class="comment">// To be implemented</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在Swift中实现该方法与Objective-C有点不同，因为Swift中强类型的特性使返回的数组中只能包含某一种类型的元素，也就是说我们不能在一个字符串数组中添加一个<code>NSNull</code>类型的元素，这就使<code>notFoundMarker</code>的参数类型显得非常尴尬。这怎么解决呢？别着急，在Swift中我们有更好的选择：我们可以返回一个<code>Optional</code>类型的数组。从<code>Dictionary</code>中查出的值全部被包在<code>Optional</code>类型中，这样当使用的key没有对应值的时候，我们就可以使用<code>nil</code>来替代<code>NSNull</code>类型了。</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key])</span></span> -&gt; [<span class="type">Value</span>?] &#123;</span><br><span class="line">        <span class="keyword">var</span> result = [<span class="type">Value</span>?]()</span><br><span class="line">        result.reserveCapacity(keys.<span class="built_in">count</span>)</span><br><span class="line">        <span class="keyword">for</span> key <span class="keyword">in</span> keys &#123;</span><br><span class="line">            result.append(<span class="keyword">self</span>[key])</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>注意：此时可能已经有人认为<code>Dictionary</code>类型中的这个方法可能没必要写的这么繁琐，你们可能已经想到了这种情形：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key])</span></span> -&gt; [<span class="type">Value</span>?] &#123;</span><br><span class="line">        <span class="keyword">return</span> keys.<span class="built_in">map</span> &#123; <span class="keyword">self</span>[$<span class="number">0</span>] &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这段代码和上面那段代码的作用和结果是完全一样的，当<code>keys</code>调用<code>map</code>方法时，其实已经将查出的所有值都包在了<code>Optional</code>类型中了。这就足以说明了为什么Swift中类型的API都那么短小精干，因为实现复杂逻辑就像上述代码中直接调用<code>map</code>方法一样简单。</p>
-<p>现在我们可以试着用我们扩展的方法做一些例子：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> dict = [<span class="string">"A"</span>: <span class="string">"Amir"</span>, <span class="string">"B"</span>: <span class="string">"Bertha"</span>, <span class="string">"C"</span>: <span class="string">"Ching"</span>]</span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"A"</span>, <span class="string">"C"</span>])</span><br><span class="line"><span class="comment">// [Optional("Amir"), Optional("Ching")]</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>])</span><br><span class="line"><span class="comment">// [Optional("Bertha"), nil]</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([])</span><br><span class="line"><span class="comment">// []</span></span><br></pre></td></tr></table></figure>
-<h2 id="u5185_u5D4COptional_u7C7B_u578B"><a href="#u5185_u5D4COptional_u7C7B_u578B" class="headerlink" title="内嵌Optional类型"></a>内嵌Optional类型</h2><p>现在我们来看看使用<code>last</code>属性返回数组的最后一个元素会发生什么？</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"A"</span>, <span class="string">"C"</span>]).last</span><br><span class="line"><span class="comment">// Optional(Optional("Ching"))</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>]).last</span><br><span class="line"><span class="comment">// Optional(nil)</span></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([]).last</span><br><span class="line"><span class="comment">// nil</span></span><br></pre></td></tr></table></figure>
-<p>看着结果我们是不是觉得很奇怪呢？我们在上述代码的第一种情况下得到了嵌套的<code>Optional</code>类型，而在第二种情况下缺得到了包含<code>nil</code>的<code>Optional</code>类型，为什么得到的不是<code>Optional(&quot;Ching&quot;)</code>和<code>nil</code>呢？</p>
-<p>冷静下来，我们回忆一下<code>last</code>属性的是如何申明的：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> last: <span class="type">T</span>? &#123; <span class="keyword">get</span> &#125;</span><br></pre></td></tr></table></figure>
-<p>恍然大悟，原来<code>last</code>属性的类型是<code>Optional</code>类型，这也就是说如果<code>T</code>是<code>Optional</code>类型的话，那么<code>T?</code>自然就是<code>Optional(Optional)</code>了，也就是<code>T??</code>。所以上面的情况就很容易解释了，因为<code>T</code>的类型是<code>Optional(String)</code>，所以我们得到的结果就是<code>Optional(Optional(String))</code>。</p>
-<p>那么<code>Optional(nil)</code>这种情况如何解释呢？为什么不是<code>Optional(Optional(nil))</code>呢？</p>
-<p>我们现在Objective-C中执行一下上面那三种情况看一看：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">[dict valuesForKeys:@[@<span class="string">"A"</span>, @<span class="string">"C"</span>] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// @"Ching"</span></span><br><span class="line"></span><br><span class="line">[dict valuesForKeys:@[@<span class="string">"B"</span>, @<span class="string">"D"</span>] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// NSNull</span></span><br><span class="line"></span><br><span class="line">[dict valuesForKeys:@[] notFoundMarker:[<span class="type">NSNull</span> null]].lastObject</span><br><span class="line"><span class="comment">// nil</span></span><br></pre></td></tr></table></figure>
-<p>我们看到，不论在Swift中还是在Objective-C中，当第一个参数的数组是空数组的时候，取最后一个元素的返回结果都是<code>nil</code>，意思就是“数组是空数组，那么最后一个元素肯定不存在啦”。那么在Swift中返回<code>Optional(nil)</code>和在Objective-C中返回<code>NSNull</code>的情况表明这个所谓的最后一个元素在数组中其实是存在的，只不过它就代表没有。当这种情况发生时，Objective-C只能用一个占位符对象来表示，而在Swift中就可以用一个系统类型来表示。</p>
-<h2 id="u63D0_u4F9B_u9ED8_u8BA4_u503C"><a href="#u63D0_u4F9B_u9ED8_u8BA4_u503C" class="headerlink" title="提供默认值"></a>提供默认值</h2><p>如果我们想当在<code>Dictionary</code>中查不到对应值的时候返回一个我们指定的默认值要怎么做呢？其实这也很简单：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Dictionary</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">valuesForKeys</span><span class="params">(keys: [Key], notFoundMarker: Value)</span></span> -&gt; [<span class="type">Value</span>] &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.valuesForKeys(keys).<span class="built_in">map</span> &#123; $<span class="number">0</span> ?? notFoundMarker &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dict.valuesForKeys([<span class="string">"B"</span>, <span class="string">"D"</span>], notFoundMarker: <span class="string">"Anonymous"</span>)</span><br><span class="line"><span class="comment">// ["Bertha", "Anonymous"]</span></span><br></pre></td></tr></table></figure>
-<p>当Objective-C只能用占位符对象来做到这一点的时候，Swift却可以使用系统类型来呈现，并且提供了丰富的语法支持多样化的返回结果。</p>
-<p>原文地址：<a href="https://developer.apple.com/swift/blog/?id=12" target="_blank" rel="external">Optionals Case Study: valuesForKeys</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -958,21 +965,21 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">118</span>
+              <span class="site-state-item-count">120</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
 
          <!-- <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">11</span>
               <span class="site-state-item-name">分類</span>
               </a>
           </div> -->
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">93</span>
+              <span class="site-state-item-count">94</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
