@@ -71,7 +71,7 @@
 
 
 
-  <meta name="keywords" content="Animation,Swift," />
+  <meta name="keywords" content="Blender," />
 
 
 
@@ -82,52 +82,57 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
 
 
-<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+<meta name="description" content="先来看一张真实的甜甜圈。
 
+一共有三个特点：
 
-(adsbygoogle = window.adsbygoogle || []).push({});
+甜甜圈腰部有一圈凹陷。
+流下来的糖衣是上小下大的形状，这个和密度大的液体从上往下流的道理是一样的。
+糖衣的边缘不是光滑的，是坑坑洼洼的。
 
-
-
-
-本文首发CSDN，如需转载请与CSDN联系。
-
-前言通过上一篇文章，大家应该学会了如何使用UIKit创建最基本的视图动画，包括如何指定视图某属性的起始值和结束值，以及动画持续时间、动画延迟时间、动画选项等概念。
-但是目前大家实现的">
+这一节就是使用Blender的雕刻功能，将甜甜圈和糖衣的这几个特点刻画出来。
+应用修改器在开始之前，先回忆一下前面我们给甜甜圈和糖衣添加过修改器，但是我们并没有让修改器真正的生效，那么在雕刻前，需要将修改器的内容">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS UIView Animation - Spring">
-<meta property="og:url" content="http://www.devtalking.com/articles/uiview-spring-animation/index.html">
+<meta property="og:title" content="用Blender做甜甜圈学习笔记五 - 雕刻糖衣白模">
+<meta property="og:url" content="http://www.devtalking.com/articles/blender-beginner-tutorial-5/index.html">
 <meta property="og:site_name" content="程序员说">
-<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+<meta property="og:description" content="先来看一张真实的甜甜圈。
 
+一共有三个特点：
 
-(adsbygoogle = window.adsbygoogle || []).push({});
+甜甜圈腰部有一圈凹陷。
+流下来的糖衣是上小下大的形状，这个和密度大的液体从上往下流的道理是一样的。
+糖衣的边缘不是光滑的，是坑坑洼洼的。
 
-
-
-
-本文首发CSDN，如需转载请与CSDN联系。
-
-前言通过上一篇文章，大家应该学会了如何使用UIKit创建最基本的视图动画，包括如何指定视图某属性的起始值和结束值，以及动画持续时间、动画延迟时间、动画选项等概念。
-但是目前大家实现的">
-<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/SpringAnimation-1.png">
-<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/SpringAnimation-2.png">
-<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/SpringAnimation-3.png">
-<meta property="og:updated_time" content="2019-04-20T16:38:12.126Z">
+这一节就是使用Blender的雕刻功能，将甜甜圈和糖衣的这几个特点刻画出来。
+应用修改器在开始之前，先回忆一下前面我们给甜甜圈和糖衣添加过修改器，但是我们并没有让修改器真正的生效，那么在雕刻前，需要将修改器的内容">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-1.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-2.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-3.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-4.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-5.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-6.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-7.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-8.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-9.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-10.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-11.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-12.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-13.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-14.jpg">
+<meta property="og:updated_time" content="2021-10-13T16:16:45.827Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS UIView Animation - Spring">
-<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+<meta name="twitter:title" content="用Blender做甜甜圈学习笔记五 - 雕刻糖衣白模">
+<meta name="twitter:description" content="先来看一张真实的甜甜圈。
 
+一共有三个特点：
 
-(adsbygoogle = window.adsbygoogle || []).push({});
+甜甜圈腰部有一圈凹陷。
+流下来的糖衣是上小下大的形状，这个和密度大的液体从上往下流的道理是一样的。
+糖衣的边缘不是光滑的，是坑坑洼洼的。
 
-
-
-
-本文首发CSDN，如需转载请与CSDN联系。
-
-前言通过上一篇文章，大家应该学会了如何使用UIKit创建最基本的视图动画，包括如何指定视图某属性的起始值和结束值，以及动画持续时间、动画延迟时间、动画选项等概念。
-但是目前大家实现的">
+这一节就是使用Blender的雕刻功能，将甜甜圈和糖衣的这几个特点刻画出来。
+应用修改器在开始之前，先回忆一下前面我们给甜甜圈和糖衣添加过修改器，但是我们并没有让修改器真正的生效，那么在雕刻前，需要将修改器的内容">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -139,7 +144,7 @@
 
 
 
-  <title> iOS UIView Animation - Spring | 程序员说 </title>
+  <title> 用Blender做甜甜圈学习笔记五 - 雕刻糖衣白模 | 程序员说 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
@@ -282,7 +287,7 @@
             
             
               
-                iOS UIView Animation - Spring
+                用Blender做甜甜圈学习笔记五 - 雕刻糖衣白模
               
             
           </h1>
@@ -291,8 +296,8 @@
         <div class="post-meta">
           <span class="post-time">
             發表於
-            <time itemprop="dateCreated" datetime="2015-07-02T00:00:00+08:00" content="2015-07-02">
-              2015-07-02
+            <time itemprop="dateCreated" datetime="2021-10-13T00:00:00+08:00" content="2021-10-13">
+              2021-10-13
             </time>
           </span>
 
@@ -301,8 +306,8 @@
               &nbsp; | &nbsp; 分類於
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
+                  <a href="/categories/Blender/" itemprop="url" rel="index">
+                    <span itemprop="name">Blender</span>
                   </a>
                 </span>
 
@@ -317,8 +322,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/uiview-spring-animation/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/uiview-spring-animation/" itemprop="commentsCount"></span>
+              <a href="/articles/blender-beginner-tutorial-5/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/blender-beginner-tutorial-5/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -337,84 +342,59 @@
       
 
       
-        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+        <span itemprop="articleBody"><script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 
+<p>先来看一张真实的甜甜圈。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-1.jpg" alt="5-1"></p>
+<p>一共有三个特点：</p>
+<ul>
+<li>甜甜圈腰部有一圈凹陷。</li>
+<li>流下来的糖衣是上小下大的形状，这个和密度大的液体从上往下流的道理是一样的。</li>
+<li>糖衣的边缘不是光滑的，是坑坑洼洼的。</li>
+</ul>
+<p>这一节就是使用Blender的雕刻功能，将甜甜圈和糖衣的这几个特点刻画出来。</p>
+<h2 id="u5E94_u7528_u4FEE_u6539_u5668"><a href="#u5E94_u7528_u4FEE_u6539_u5668" class="headerlink" title="应用修改器"></a>应用修改器</h2><p>在开始之前，先回忆一下前面我们给甜甜圈和糖衣添加过修改器，但是我们并没有让修改器真正的生效，那么在雕刻前，需要将修改器的内容应用生效。在应用生效修改器之前，我们先对现在的白模复制一份，做个备份，因为修改器一旦生效后，整个拓扑都会发生变化。</p>
+<p>选中甜甜圈和糖衣的白模，<code>Shift + D</code>复制一份，然后按下<code>M</code>键，新建一个集合，然后设置为不可见，相当于将复制出来的甜甜圈和糖衣做个备份。</p>
+<a id="more"></a>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-2.jpg" alt="5-2"></p>
+<p>然后选中甜甜圈，进入编辑模式，可以看到现在虽然有细分的修改器，但是拓扑结构还是之前精度比较小的样子，也就是四边形数量小，当我们应用修改器后，可以看到拓扑结构有明显的变化，四边形数量变多了，也就意味着我们能刻画更丰富的细节。</p>
 <blockquote>
-<p>本文首发<a href="http://www.csdn.net/article/2015-07-03/2825122-ios-uiview-animation-2" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+<p>应用修改器时需要切换回对象模式。</p>
 </blockquote>
-<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>通过上一篇文章，大家应该学会了如何使用<code>UIKit</code>创建最基本的视图动画，包括如何指定视图某属性的起始值和结束值，以及动画持续时间、动画延迟时间、动画选项等概念。</p>
-<p>但是目前大家实现的动画不论是位置移动还是大小改变都是以一个单一的方向在运动，比如位置从A点到B点，大小半径从1到2:</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/SpringAnimation-1.png" alt="图1"></p>
-<p>在这篇文章中，大家会学到更复杂一点的动画，让视图在一次动画中的运动轨迹像弹簧一样，有多次不同方向的运动，最后停止在终点：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/SpringAnimation-2.png" alt="图2"></p>
-<p>如果给位置移动的动画添加弹簧效果，那么视图的运动轨迹应该像下图中展现的一样：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/SpringAnimation-3.png" alt="图3"></p>
-<p>这会使你的动画看起来更逼真、更真实、更贴近现实。在某些情况下带给用户更好的用户体验。那么让我们开始学习吧。</p>
-<h2 id="Spring_u52A8_u753B"><a href="#Spring_u52A8_u753B" class="headerlink" title="Spring动画"></a>Spring动画</h2><p>我们还是以上一篇文章中的登录页面为例，大家应该发现了那个呆板的登录按钮吧，我们今天就让它Q弹起来。</p>
-<p>打开<code>ViewController.swift</code>，在<code>viewWillAppear()</code>方法的底部添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">self</span>.loginButton.center.y += <span class="number">30</span></span><br><span class="line"><span class="keyword">self</span>.loginButton.alpha = <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p>让登录按钮在屏幕呈现之前位置下移30，并且让它透明。然后在<code>viewDidAppear()</code>方法的底部添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, delay: <span class="number">0.5</span>, usingSpringWithDamping: <span class="number">0.5</span>, initialSpringVelocity: <span class="number">0</span>, options: .<span class="type">AllowUserInteraction</span>, animations: &#123;</span><br><span class="line">     <span class="keyword">self</span>.loginButton.center.y -= <span class="number">30</span></span><br><span class="line">     <span class="keyword">self</span>.loginButton.alpha = <span class="number">1</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>上述的代码大家是不是似曾相识，没错，依然是<code>UIView</code>的类方法，不过又多了两个参数：</p>
-<ul>
-<li><code>usingSpringWithDamping</code>：弹簧动画的阻尼值，也就是相当于摩擦力的大小，该属性的值从0.0到1.0之间，越靠近0，阻尼越小，弹动的幅度越大，反之阻尼越大，弹动的幅度越小，如果大道一定程度，会出现弹不动的情况。</li>
-<li><code>initialSpringVelocity</code>：弹簧动画的速率，或者说是动力。值越小弹簧的动力越小，弹簧拉伸的幅度越小，反之动力越大，弹簧拉伸的幅度越大。这里需要注意的是，如果设置为0，表示忽略该属性，由动画持续时间和阻尼计算动画的效果。</li>
-</ul>
-<p>下面我们先来看看不同动力的效果：</p>
-<ul>
-<li>持续时间为3秒，阻尼为0.5，动力为1：</li>
-</ul>
-<iframe src="https://player.vimeo.com/video/132389962?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<ul>
-<li>持续时间为3秒，阻尼为0.5，动力为20：</li>
-</ul>
-<iframe src="https://player.vimeo.com/video/132389963?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>当<code>initialSpringVelocity</code>的值为1时，登录按钮上下弹力并不是很强劲，当设置为20时，登录按钮直接冲过了密码输入框，这就是动力的效果。</p>
-<p>然后我们再看看不同阻尼的效果：</p>
-<ul>
-<li>持续时间为3秒，阻尼为0.1，动力为0：</li>
-</ul>
-<iframe src="https://player.vimeo.com/video/132389964?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<ul>
-<li>持续时间为3秒，阻尼为1，动力为0：</li>
-</ul>
-<iframe src="https://player.vimeo.com/video/132389966?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>当<code>usingSpringWithDamping</code>属性值为0.1时，表示阻尼很小，虽然没有动力因素的影响，但登录按钮弹动的幅度依然比较大，相当于在冰面滑行一样。当该属性为1时，表示阻尼非常大，可以看到登录按钮几乎是没有什么弹动的幅度。这就是阻尼的效果。</p>
-<p>大家需要注意的一点是，弹簧动画并不只作用于位置的变化，它可以作用于所有动画属性的变化，比如我们在<code>animations</code>的闭包中除了位置的变化外，还有透明度的变化，它也同样有弹簧动画的效果，只不过它没有位置变化那么明显和贴近真实，它会表现出一闪一闪的效果：</p>
-<iframe src="https://player.vimeo.com/video/132389969?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>大家可以尝试这几个属性不同值的组合，选出一个自己觉得满意的弹簧效果即可。</p>
-<h2 id="u5C06_u52A8_u753B_u8FD0_u7528_u5230_u4EBA_u673A_u4EA4_u4E92"><a href="#u5C06_u52A8_u753B_u8FD0_u7528_u5230_u4EBA_u673A_u4EA4_u4E92" class="headerlink" title="将动画运用到人机交互"></a>将动画运用到人机交互</h2><p>上一节讲的弹簧动画的确可以让我们的UI变得鲜活起来，但这仅仅是看在眼里的，对于用户的操作却并没有什么响应和反馈。在这节会教大家如何让视图在用户进行点击操作时以动画的形式给予响应和反馈。</p>
-<p>在<code>ViewController.swift</code>中有一个名为<code>login()</code>的方法，关联了登录按钮的<strong>Touch Up Inside</strong>事件，在该方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, delay: <span class="number">0.0</span>, usingSpringWithDamping: <span class="number">0.2</span>, initialSpringVelocity: <span class="number">0.0</span>, options: .<span class="type">AllowUserInteraction</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.loginButton.bounds.size.width += <span class="number">25</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>此时每当我们点击登录按钮一次，它就会变胖一些。编译运行看一下效果：</p>
-<iframe src="https://player.vimeo.com/video/132390547?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>我们可以再组合一个效果，使点击登录按钮时不仅让它变胖，还有轻微的向下弹跳效果。在<code>login()</code>方法底部添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.3</span>, delay: <span class="number">0.0</span>, usingSpringWithDamping: <span class="number">0.6</span>, initialSpringVelocity: <span class="number">0.0</span>, options: .<span class="type">AllowUserInteraction</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.loginButton.center.y += <span class="number">10</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>编译运行看一下效果：</p>
-<iframe src="https://player.vimeo.com/video/132390546?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>以上只是两个简单的将动画运用到人机交互的例子，大家可以在自己的项目中将一些用户的操作加上视图的动画反馈，让你的应用鲜活起来。</p>
-<h2 id="u7ED3_u675F_u8BED"><a href="#u7ED3_u675F_u8BED" class="headerlink" title="结束语"></a>结束语</h2><p>这一篇文章向大家讲解了<code>UIView</code>的Spring动画，以及将动画运用到人机交互中，使提升应用的用户体验，大家可以多多尝试Spring动画的各个属性，以及结合<a href="http://www.devtalking.com/articles/uiview-first-animation/">上一篇文章</a>的知识，组合出更美妙的动画效果。下一篇文章会给大家介绍<code>UIView</code>的Transition动画，敬请期待。</p>
-<p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-3.jpg" alt="5-3"></p>
+<h2 id="u96D5_u523B_u751C_u751C_u5708"><a href="#u96D5_u523B_u751C_u751C_u5708" class="headerlink" title="雕刻甜甜圈"></a>雕刻甜甜圈</h2><p>现在点击顶部<code>Sculpting</code>菜单进入雕刻视图。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-4.jpg" alt="5-4"></p>
+<p>左侧会有各种用于雕刻的工具，这里我们选择第一个工具<code>Draw</code>，然后按住<code>Ctrl</code>键，在甜甜圈腰部进行雕刻，会看到模型上会出现凹痕。</p>
+<blockquote>
+<p>如果不按住<code>Ctrl</code>键，那么雕刻的效果是凸痕。</p>
+</blockquote>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-5.jpg" alt="5-5"></p>
+<p>我们可以通过调整<code>Radius</code>和<code>Strength</code>来改变雕刻的作用范围和力度，也就是相当于调整凹痕或者凸痕的上下宽度和深度。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-6.jpg" alt="5-6"></p>
+<p>我们用<code>Draw</code>这个工具在甜甜圈腰部雕刻一圈凹痕，记得在甜甜圈内侧也要雕刻一圈。</p>
+<blockquote>
+<p>雕刻内侧时，可以将笔触和力度都缩小一些。</p>
+</blockquote>
+<p>雕刻完之后，我们还可以使用<code>Smooth</code>工具将凹痕不平整的地方完善一下，使其表现的更平滑细腻一些。该工具同样可以调整笔触大小和力度，方法同上。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-7.jpg" alt="5-7"></p>
+<p>经过调整后，我们第一步的雕刻就完成了，现在甜甜圈长着样。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-8.jpg" alt="5-8"></p>
+<p>接下来我们来雕刻流下来的糖衣部分，首先我们将加在糖衣上的修改器全部进行应用，方法同上，这里不在累赘。</p>
+<p>然后使用<code>Inflate</code>工具，请扫流下来的糖衣底部，这个工具的作用就是让所选部分膨胀。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-9.jpg" alt="5-9"></p>
+<p>在雕刻环节我们继续使用<code>Draw</code>工具将糖衣上面的表面做一点坑洼的感觉，因为真实糖衣表面不会是非常光滑的，一定是会有坑洼的。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-10.jpg" alt="5-10"></p>
+<h2 id="u8C03_u6574_u7CD6_u8863"><a href="#u8C03_u6574_u7CD6_u8863" class="headerlink" title="调整糖衣"></a>调整糖衣</h2><p>雕刻完成后，我们进入<code>Layout</code>视图，可以看到因为我们将甜甜圈腰部雕刻出了一圈凹痕，所以就导致了流下来的糖衣部分没有贴合在甜甜圈表面。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-11.jpg" alt="5-11"></p>
+<p>解决这个问题，可以进入编辑模式，选中这些翘起来糖衣拓扑结构上的点，通过移动和旋转操作，将它们拖拽到贴合甜甜圈的位置。</p>
+<blockquote>
+<p>这里需要注意的是，依然要开启<code>Proportional Editing</code>模式，并作用范围要包含整个流下来的糖衣部分。</p>
+</blockquote>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-12.jpg" alt="5-12"></p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-13.jpg" alt="5-13"></p>
+<p>最后来看看调整完的甜甜圈，是不是更加逼真了许多。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-5/5-14.jpg" alt="5-14"></p>
 </span>
       
     </div>
@@ -423,9 +403,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Animation/" rel="tag">#Animation</a>
-          
-            <a href="/tags/Swift/" rel="tag">#Swift</a>
+            <a href="/tags/Blender/" rel="tag">#Blender</a>
           
         </div>
       
@@ -434,17 +412,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/articles/uiview-first-animation/" rel="next" title="iOS UIView Animation - First Animation">
-                <i class="fa fa-chevron-left"></i> iOS UIView Animation - First Animation
+              <a href="/articles/blender-beginner-tutorial-4/" rel="next" title="用Blender做甜甜圈学习笔记四 - 完善糖衣白模">
+                <i class="fa fa-chevron-left"></i> 用Blender做甜甜圈学习笔记四 - 完善糖衣白模
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/articles/uiview-transition-animation/" rel="prev" title="iOS UIView Animation - Transition">
-                iOS UIView Animation - Transition <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -605,7 +579,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u524D_u8A00"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring_u52A8_u753B"><span class="nav-number">2.</span> <span class="nav-text">Spring动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u5C06_u52A8_u753B_u8FD0_u7528_u5230_u4EBA_u673A_u4EA4_u4E92"><span class="nav-number">3.</span> <span class="nav-text">将动画运用到人机交互</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u7ED3_u675F_u8BED"><span class="nav-number">4.</span> <span class="nav-text">结束语</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u5E94_u7528_u4FEE_u6539_u5668"><span class="nav-number">1.</span> <span class="nav-text">应用修改器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u96D5_u523B_u751C_u751C_u5708"><span class="nav-number">2.</span> <span class="nav-text">雕刻甜甜圈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u8C03_u6574_u7CD6_u8863"><span class="nav-number">3.</span> <span class="nav-text">调整糖衣</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -660,9 +634,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'jacefu';
-      var disqus_identifier = '/articles/uiview-spring-animation/';
-      var disqus_title = 'iOS UIView Animation - Spring';
-      var disqus_url = 'http://www.devtalking.com//articles/uiview-spring-animation/';
+      var disqus_identifier = '/articles/blender-beginner-tutorial-5/';
+      var disqus_title = '用Blender做甜甜圈学习笔记五 - 雕刻糖衣白模';
+      var disqus_url = 'http://www.devtalking.com//articles/blender-beginner-tutorial-5/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
