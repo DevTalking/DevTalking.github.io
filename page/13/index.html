@@ -247,6 +247,181 @@
             
             
               
+                <a class="post-title-link" href="/articles/calayer-animation-gradient-animation/" itemprop="url">
+                  CALayer Animation - Gradient Animation
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-09-22T00:00:00+08:00" content="2015-09-22">
+              2015-09-22
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/calayer-animation-gradient-animation/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/calayer-animation-gradient-animation/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://www.csdn.net/article/2015-09-22/2825765" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+<p>在很多人的心目中iPhone的经典机型应该是iPhone4，精湛的工艺、完美的屏幕配上暗色的锁屏壁纸，看着屏幕底部闪烁的<strong>slide to unlock</strong>字样，高逼格彰显无遗。时至今日无论iPhone机身样式如何改变，屏幕尺寸如何改变，iOS系统如何改变，唯有锁屏底部闪烁的<strong>滑动来解锁</strong>不变。它的动画效果是如何实现的呢，这篇文章会告诉你们答案。</p>
+<h2 id="CAGradientLayer"><a href="#CAGradientLayer" class="headerlink" title="CAGradientLayer"></a>CAGradientLayer</h2><p>新建一个应用名为<strong>GradientAnimation</strong>，打开<code>Main.storyboard</code>，将ViewController的View背景色设置为灰黑色，拖一个UIView到ViewController中，将其颜色设置为无色并设置好布局约束：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-1.png" alt="GradientAnimation - 1"></p>
+<p>接着我们拖一个UILabel到刚才拖入的UIView中，设置高宽等同于它的父视图：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-2.png" alt="GradientAnimation - 2"></p>
+<p>我对该UILabel的属性设置如下：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-4.png" alt="GradientAnimation - 4"></p>
+<p>之后，我们在<code>ViewController</code>中添加UIView和UILabel的Outlet：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-5.png" alt="GradientAnimation - 5"></p>
+<p>接下来回到<code>ViewController.swift</code>，我们添加一个常量属性<code>gradientLayer</code>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> gradientLayer = <span class="type">CAGradientLayer</span>()</span><br></pre></td></tr></table></figure>
+<p>这里出现了CALayer的另一个子类CAGradientLayer，这个类的作用就是能在Layer上绘制出渐变颜色的效果，然后在<code>viewDidLoad()</code>中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">gradientLayer.bounds = <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: backgroundView.frame.size.width, height: backgroundView.frame.size.height)</span><br><span class="line">gradientLayer.position = <span class="type">CGPoint</span>(x: backgroundView.frame.size.width/<span class="number">2</span>, y: backgroundView.frame.size.height/<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>上述两行的代码是设置Layer的大小及位置，这在上两篇文章中已经讲过，这里就不再累赘了。接着我们继续添加两行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">gradientLayer.startPoint = <span class="type">CGPoint</span>(x: <span class="number">0</span>, y: <span class="number">0.5</span>)</span><br><span class="line">gradientLayer.endPoint = <span class="type">CGPoint</span>(x: <span class="number">1</span>, y: <span class="number">0.5</span>)</span><br></pre></td></tr></table></figure>
+<p>既然CAGradientLayer可以绘制出渐变颜色的效果，那自然有颜色渐变的方向，所以这两行代码的作用就是设置颜色渐变的起始点和结束点，这两个属性共同决定了颜色渐变的方向：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-3.png" alt="GradientAnimation - 3"></p>
+<p>从上面的示意图中可以看出，CAGradientLayer是通过起始点和结束点的坐标位置来决定颜色渐变的方向的，起始点的默认值是(0.5, 0)，结束点的默认值是(0.5, 1)，也就是说默认的颜色渐变方向是沿垂直中线从上往下渐变的，我们在这里将它改成了沿水平中线从左往右渐变。</p>
+<p>接下来我们设置CAGradientLayer的渐变颜色，接着添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">gradientLayer.colors = [</span><br><span class="line">    <span class="type">UIColor</span>.blackColor().<span class="type">CGColor</span>,</span><br><span class="line">    <span class="type">UIColor</span>.whiteColor().<span class="type">CGColor</span>,</span><br><span class="line">    <span class="type">UIColor</span>.blackColor().<span class="type">CGColor</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>CAGradientLayer的<code>colors</code>属性类型是一个数组<code>[AnyObject]</code>，这就意味着我们可以实现多个颜色的渐变效果，并且可以规定各个颜色的顺序。不过在我们这个示例中我们只需要两种颜色，不过需要注意的是虽然颜色只有两种，但是整个颜色渐变的过程中有三个原色点，那就是黑、白、黑，所以我们在这个数组中也需要按照原色点的数量和顺序添加相应的颜色，哪怕颜色都是一样的。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>我们既然设置了渐变的三个原色，那么就要对这原色出现的位置进行设置，接着添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">gradientLayer.locations = [<span class="number">0.2</span>, <span class="number">0.5</span>, <span class="number">0.8</span>]</span><br></pre></td></tr></table></figure>
+<p>从上述代码中不难看出，我们将第一个黑色原色出现的位置设置在了整个Layer长度的十分之二的位置，第二个白色原色在中间，第三个黑色原色在十分之八的位置：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-6.png" alt="GradientAnimation - 6"></p>
+<p>设置完CAGradientLayer的相关属性后，我们将<code>gradientLayer</code>添加到<code>backgroundView</code>的Layer中：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">backgroundView.layer.addSublayer(gradientLayer)</span><br></pre></td></tr></table></figure>
+<p>现在我们编译运行一下代码看看效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-7.png" alt="GradientAnimation - 7"></p>
+<p>接下来我们需要让颜色渐变动起来，先创建一个方法<code>gradinetAnimate()</code>，在方法中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> gradient = <span class="type">CABasicAnimation</span>(keyPath: <span class="string">"locations"</span>)</span><br><span class="line">gradient.fromValue = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0.25</span>]</span><br><span class="line">gradient.toValue = [<span class="number">0.75</span>, <span class="number">1</span>, <span class="number">1</span>]</span><br><span class="line">gradient.duration = <span class="number">2.5</span></span><br><span class="line">gradient.repeatCount = <span class="type">HUGE</span></span><br><span class="line">gradientLayer.addAnimation(gradient, forKey: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>首先，创建了一个<code>locations</code>类型的动画实例<code>gradient</code>，将<code>fromValue</code>属性，也就是起始位置的属性设置为<code>[0, 0, 0.25]</code>，它的意思是动画开始前，黑色、白色这两个原色的位置在整个Layer的最前端，第二个黑色原色在0.25的位置：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-8.png" alt="GradientAnimation - 8"></p>
+<p>而结束位置<code>toValue</code>，将白色和第二个黑色原色位置设置在整个Layer的末端，第一个黑色原色在0.75的位置：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-9.png" alt="GradientAnimation - 9"></p>
+<p>从图中可以看出，此时整个Layer都变成了黑色。也就是说，在整个动画中，第一个黑色原色从0移动到0.75的位置，白色原色从0移动到1的位置，第二个黑色原色从0.25移动到1的位置。然后设置动画时间为2.5秒，无线重复次数，最后将<code>gradient</code>动画添加到<code>gradientLayer</code>中。我们在<code>viewDidAppear()</code>方法中调用该动画方法<code>gradientAnimate()</code>，编译运行看看效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-10.gif" alt="GradientAnimation - 10"></p>
+<p>动画效果还不赖，但是如何将颜色渐变的动画作用在UILabel的文字上呢？其实非常简单，就是让UILabel上的文字称为CAGradientLayer的遮罩即可，我们先在<code>ViewController</code>中定义一个常量：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> text = <span class="string">"DevTalking"</span></span><br></pre></td></tr></table></figure>
+<p>然后在<code>viewDidAppear()</code>中的<code>gradientAnimate()</code>方法之前添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">textLabel.text = text</span><br><span class="line">gradientLayer.mask = textLabel.layer</span><br></pre></td></tr></table></figure>
+<p>我们再编译运行代码看看效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-11.gif" alt="GradientAnimation - 11"></p>
+<p>到目前为止，锁屏中<strong>滑动来解锁</strong>的动画效果就完成了，这个动画效果在Facebook的Paper应用中也有使用。下一节，我们在该动画的基础上对文字再加点小动画。</p>
+<h2 id="Text_Animation"><a href="#Text_Animation" class="headerlink" title="Text Animation"></a>Text Animation</h2><p>首先我们打开<code>AppDelegate.swift</code>，在<code>import UIKit</code>下面添加一个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">delay</span><span class="params">(seconds seconds: Double, completion:<span class="params">()</span></span></span>-&gt;()) &#123;</span><br><span class="line">    <span class="keyword">let</span> intervalTime = dispatch_time(<span class="type">DISPATCH_TIME_NOW</span>, <span class="type">Int64</span>( <span class="type">Double</span>(<span class="type">NSEC_PER_SEC</span>) * seconds ))</span><br><span class="line">    </span><br><span class="line">    dispatch_after(intervalTime, dispatch_get_main_queue(), &#123;</span><br><span class="line">        completion()</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法的作用如其名称一样，是一个延迟方法，该方法的第一个参数是想要延迟的时间，第二个参数是一个闭包，也就是延迟的主体。这个方法用到了GCD的知识，<code>dispatch_time</code>主要是用于创建一个类型为<code>dispatch_time_t</code>的相对时间，它的第一个参数指的是起始时间，一般都是用预定义的<code>DISPATCH_TIME_NOW</code>作为第一个参数的值，代表当前的时间。第二个参数代表时间间隔，注意这个参数需要的时间单位是纳秒，所以我们使用预定义的<code>NSEC_PER_SEC</code>纳秒单位乘以希望间隔的秒数。</p>
+<p><code>dispatch_after</code>用于在队列中定时执行任务，当你想在一段时间后执行一个任务，那么就可以用这个函数。该函数的第一个参数指定延迟的时间，第二个参数指定一个队列，用于添加任务，第三个参数是一个闭包，也就是要执行的任务。</p>
+<p>然后回到<code>ViewController.swift</code>，添加如下方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">textAnimate</span><span class="params">(text: String)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> text.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">        textLabel.text = <span class="string">"<span class="subst">\(textLabel.text!)</span><span class="subst">\(text.substringToIndex(text.startIndex.successor()</span>))"</span></span><br><span class="line">        delay(seconds: <span class="number">0.4</span>, completion: &#123;</span><br><span class="line">            <span class="keyword">self</span>.textAnimate(text.substringFromIndex(text.startIndex.successor()))</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方法的参数<code>text</code>就是UILabel中要显示的文字内容。<code>substringToIndex(_ to: Int)</code>方法的作用是从字符串的开头一直截取到指定的位置，但不包括该指定位置的字符。<code>text.startIndex.successor()</code>这句意思是从<code>text</code>的起始位置开始取后面的一个字符。<code>substringFromIndex(_ from: Int)</code>方法的作用是以指定位置并包括指定位置的字符开始，一直截取之后的全部字符。所以整个方法的作用是每隔0.4秒显示一个字符，直到将整个字符串显示完。最后在<code>viewDidAppear()</code>中注释掉<code>textLabel.text = text</code>这行代码，并在方法最后调用<code>textAnimate(text)</code>方法。编译运行代码看看最终效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/GradientAnimation-12.gif" alt="GradientAnimation - 12"></p>
+<p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/tvOS-initial-impression/" itemprop="url">
                    一个iOS开发者对tvOS SDK的初探
                 </a>
@@ -1047,177 +1222,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/uiview-keyframe-animation/" itemprop="url">
-                  iOS UIView Animation - Keyframe
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-07-28T00:00:00+08:00" content="2015-07-28">
-              2015-07-28
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/uiview-keyframe-animation/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/uiview-keyframe-animation/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<blockquote>
-<p> 本文首发<a href="http://www.csdn.net/article/2015-07-28/2825314-ios-uiview-animation-5" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-</blockquote>
-<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>有些时候大家可能会遇到制作复杂、具有连贯性UIView动画的需求，这时大家可能会使用在<code>completion</code>闭包中衔接一段一段的动画，使之成为一段连续的动画。</p>
-<p>如果我们只是连接2个，或者3个动画，这种方式或许还行得通，但如果有更多的动画片段需要连接的时候，这种方式会带来灾难性的问题，你的代码会非常的冗余，不断的在<code>completion</code>闭包中嵌套代码，使代码维护起来相当的困难。所以今天向大家介绍能更好地实现这个需求的方法，Keyframe动画。</p>
-<p>Keyframe动画可以让我们有效的拆分由若干段动画连接而成的复杂动画，可以较为精准的定义每段动画的起始点及持续时间，并且在代码组织方面也非常清晰。先看看今天要带大家实现的动画Demo：</p>
-<iframe src="https://player.vimeo.com/video/134543973?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<h2 id="u4F7F_u7528_u573A_u666F"><a href="#u4F7F_u7528_u573A_u666F" class="headerlink" title="使用场景"></a>使用场景</h2><p>我们先来认识一下，在什么样的场景下需要使用Keyframe动画。如图下所示，这是一个由四段动画组成的一个复杂动画，让UIView沿着长方形的轨迹运动：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Keyframe-2.png" alt="Keyframe-1"></p>
-<p>我们来看看用代码如何实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    view.center.x += <span class="number">200.0</span></span><br><span class="line">&#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">    <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">        view.center.y += <span class="number">100.0</span></span><br><span class="line">    &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">        <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">            view.center.x -= <span class="number">200.0</span></span><br><span class="line">        &#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">            <span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">                view.center.y -= <span class="number">100.0</span></span><br><span class="line">            &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>通过上面的伪代码可以看到，我们使用了<code>completion</code>闭包的方式连接每一段的动画，代码看起来尚且算清晰，可读性也马马虎虎。但是大家想象一下，如果我们使UIView按照一个复杂的路线运行，这一段动画可能有十几、几十段动画组成的，那么如果再使用<code>completion</code>闭包这种方式连接，那代码是多么的惨不忍睹。幸好我们有Keyframe动画，下面就让我们来看看如何使用Keyframe动画。</p>
-<h2 id="Keyframe_u52A8_u753B"><a href="#Keyframe_u52A8_u753B" class="headerlink" title="Keyframe动画"></a>Keyframe动画</h2><p>首先我们会使用到UIView的另一个动画方法`animateKeyframesWithDuration(_: delay: options: animations: completion: )<br>`：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="comment">// add keyframes</span></span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>这个方法的几个参数与前几个使用过的动画方法参数一样。上面代码片段的意思是整个关键帧动画的持续时间为2秒、无延迟、无动画选项、执行完毕后无后续执行的代码。</p>
-<blockquote>
-<p>注：该方法的动画选项不再是<code>UIViewAnimationOptions</code>，而是<code>UIViewKeyframeAnimationOptions</code>。具体的内容大家可以去查阅Apple的文档。</p>
-</blockquote>
-<p>接下来我们要在<code>animations</code>闭包中添加关键帧了：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x += <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p><code>addKeyframeWithRelativeStartTime(_: relativeDuration: animations: )</code>是UIView添加关键帧的方法，该方法有三个参数：</p>
-<ul>
-<li>startTime：关键帧开始时间，该时间是相对整个关键帧动画持续时间的相对时间，一般值在0到1之间。如果为0，则表明这一关键帧从整个动画的第0秒开始执行，如果设为0.5，则表明从整个动画的中间开始执行。</li>
-<li>relativeDuration：关键帧持续时间，该时间同样是相对整个关键帧动画持续时间的相对时间，一般值也在0到1之间。如果设为0.25，则表明这一关键帧的持续时间为整个动画持续时间的四分之一。</li>
-<li>animations：设置视图动画属性的动画闭包。</li>
-</ul>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>我们解释一下上面这段代码。整个关键帧动画的持续时间为2秒，第一个关键帧从第0秒开始，运行0.5秒结束。下面我们完成其他三个关键帧：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">2</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x += <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.25</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.y += <span class="number">100.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.5</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.x -= <span class="number">200.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.75</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</span><br><span class="line">        view.center.y -= <span class="number">100.0</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>第二个关键帧的开始时间为0.25，也就是从整个动画时间的第0.5时开始执行，同样持续0.5秒。后两个关键帧的参数就不难理解了。</p>
-<p>现在整个代码看起来非常整洁，条理清晰，可读性非常好，而且可以有更精确的控制。即使再多几个关键帧也同样可以从容应对。</p>
-<p>关键帧动画不仅仅用于同一个视图的分段动画，也可使使用于不同视图的组合动画，由于我们还没讲到图层动画，所以，开篇的示例动画中就使用了关键帧动画实现了多个视图的组合动画。</p>
-<h2 id="u793A_u4F8B_u52A8_u753B"><a href="#u793A_u4F8B_u52A8_u753B" class="headerlink" title="示例动画"></a>示例动画</h2><p>在这个示例中虽然看起来是一个纸飞机视图的连续动画，但其实是由三个纸飞机视图组合而成的：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Keyframe-3.png" alt="Keyframe-2"></p>
-<p>从图中可以看到其实是有三个纸飞机视图，只不过在界面加载之前2号和3号纸飞机视图的透明度都是为零。</p>
-<p>整个动画是由这三个纸飞机视图通过关键帧动画组合而成：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIViewAnimation-Keyframe-4.png" alt="Keyframe-3"></p>
-<p>图中标示出了三个飞机视图的运行轨迹、视图大小、视图透明度的状态，我们来看看代码如何实现：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> zoomInScaleTransform = <span class="type">CGAffineTransformMakeScale</span>(<span class="number">0.2</span>, <span class="number">0.2</span>)</span><br><span class="line"><span class="type">UIView</span>.animateKeyframesWithDuration(<span class="number">3</span>, delay: <span class="number">0</span>, options: [], animations: &#123;</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0</span>, relativeDuration: <span class="number">0.2</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.center.x += <span class="keyword">self</span>.view.frame.width</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.center.y += -<span class="number">180</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplane.transform = zoomInScaleTransform</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.3</span>, relativeDuration: <span class="number">0.01</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.alpha = <span class="number">1</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.transform = zoomInScaleTransform</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.3</span>, relativeDuration: <span class="number">0.5</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.transform = <span class="type">CGAffineTransformIdentity</span></span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.center.x -= <span class="keyword">self</span>.view.frame.width</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneOpposite.center.y += <span class="number">90</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.9</span>, relativeDuration: <span class="number">0.01</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneComeBack.alpha = <span class="number">1</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.9</span>, relativeDuration: <span class="number">0.2</span>, animations: &#123;</span><br><span class="line">        <span class="keyword">self</span>.customHeaderView.paperAirplaneComeBack.center.x += <span class="number">33</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;, completion: &#123; <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">self</span>.restorePaperAirplaneStatus()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>大家看到这大家可能会有疑问了，三段动画怎么会有五个关键帧呢，我们来刨析一下：</p>
-<ul>
-<li>第一个关键帧：完成1号纸飞机视图运动到右上角并移出屏幕，视图逐渐变小的动画。该关键帧从整个动画的第0秒开始执行，持续时间为0.6秒。</li>
-<li>第二个关键帧：由于2号纸飞机视图的初始透明度为零，所以在第二个关键帧将透明度设为1，并且缩小视图。注意这两个动作需要在瞬间完成，所以<code>relativeDuration</code>设为0.01，一个极短的时间。开始时间为整个动画的第0.9秒开始，较第一个关键帧延迟0.3秒。</li>
-<li>第三个关键帧：与第二个关键帧同时开始执行，完成2号纸飞机视图从小变大、并且往左下角运动，一直移出屏幕。持续时间为1.5秒。</li>
-<li>第四个关键帧：与第二个关键帧作用相似，改变3号纸飞机视图的透明度，同样是在瞬间完成。</li>
-<li>第五个关键帧：与第四个关键帧同时执行， 完成向右移动的动画，持续0.6秒。</li>
-</ul>
-<p>关键帧完成之后，在<code>completion</code>闭包中调用<code>restorePaperAirplaneStatus()</code>方法，恢复3个纸飞机视图的状态及位置，以便再次执行动画。</p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>大家在使用关键帧动画时，对于关键帧的开始时间和持续时间需要仔细设置，保证每个关键帧在合适的时间开始，执行恰当的持续时间。在必要时候也需要在关键帧里修改视图的一些状态，但要设置极短的持续时间，表示瞬间完成。</p>
-<p>下一篇会向大家介绍在使用Auto Layout的情况下，如何通过约束实现动画，好了今天就先到这里吧。</p>
-<p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1260,7 +1264,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">123</span>
+              <span class="site-state-item-count">124</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1274,7 +1278,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">94</span>
+              <span class="site-state-item-count">95</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>

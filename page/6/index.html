@@ -247,6 +247,132 @@
             
             
               
+                <a class="post-title-link" href="/articles/kafka-practice-3/" itemprop="url">
+                  Kafka从上手到实践-庖丁解牛：Partition
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-09-15T00:00:00+08:00" content="2018-09-15">
+              2018-09-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/kafka-practice-3/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-3/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>了解了Kafka的窗户和内核之后，我们深入Broker中，看看Topic和Broker之间的关系，它们之间到底是用什么联系起来的。Broker对Message的持久化是如何处理的。</p>
+<h2 id="Partition"><a href="#Partition" class="headerlink" title="Partition"></a>Partition</h2><p>Kafka的Partition是分区的概念，在Kafka中，一个Topic可以有多个Partition，换句话说，就是一个Topic中的内容是被多个Partition分割的。对于Partition，我们需要注意以下几个要点：</p>
+<ul>
+<li>一个Topic下的所有Partition是有顺序的，或者说在创建Topic和Partition时，Partition的顺序就已经是确定了的。</li>
+<li>每条进入Partition中的Message都会获得一个自增的ID，这个ID称为Offset（消息的偏移量）。</li>
+<li>通常在说Message的Offset时，只是针对该条Message所在的Partition而言。举个例子，Partition-0中Offset为3的Message和Partition-1中Offset为3的Message没有任何关系。</li>
+<li>当说到Message的顺序时，通常有两种解读：<ul>
+<li>业务语义上的Message顺序，如下图所示，1至4条Message之间是有语义顺序的，可以理解为是消息生产者生产消息时的顺序。</li>
+<li>Partition中的Message顺序，如下图所示，Partition-1中的Message如果按照Offset的顺序，那么第一条和第二条Message其实是语义上的第一条和第三条Message。</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/kafka-message-order.png" alt=""></p>
+<ul>
+<li>当Message进入Partition后，它的Offset和内容就无法再修改了。</li>
+<li>Message默认是随机存储在一个Topic下的不同的Partition中的，如上图。除非显示的指定Partition。</li>
+<li>存储在Partition中的Message是有时效性的，默认是保存一周，可以通过配置更改（后续章节会介绍）。</li>
+</ul>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/kafka-practice-3/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/kafka-practice-2/" itemprop="url">
                   Kafka从上手到实践-庖丁解牛：Topic&Broker
                 </a>
@@ -687,118 +813,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/machine-learning-15/" itemprop="url">
-                  机器学习笔记十五之决策树、信息熵
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2018-06-30T00:00:00+08:00" content="2018-06-30">
-              2018-06-30
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-15/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-15/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>这篇笔记我们来看看机器学习中一个重要的非参数学习算法，决策树。</p>
-<h2 id="u4EC0_u4E48_u662F_u51B3_u7B56_u6811"><a href="#u4EC0_u4E48_u662F_u51B3_u7B56_u6811" class="headerlink" title="什么是决策树"></a>什么是决策树</h2><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/84205d722c59ef40b62804d2672f9435.jpg" alt=""></p>
-<p>上图是一个向银行申请信用卡的示例，图中的树状图展示了申请人需要在银行过几道关卡后才能成功申请到一张信用卡的流程图。在图中树状图的根节点是申请人输入的信息，叶子节点是银行作出的决策，也就相当于是对申请者输入信息作出的分类决策。从第一个根节点到最后一个叶子节点经过的根节点数量称为树状图的深度（depth）。上图示例中的树状图从第一个根节点<strong>申请人是否办理过信用卡</strong>，到最后一个<strong>发放信用卡</strong>叶子节点共经过了三个根节点，所以深度为3。那么像这样使用树状图对输入信息一步步分类的方式就称为决策树方式。</p>
-<p>我们再来看一个问题，上图中每一个根节点的输入信息都可以用<strong>是</strong>或<strong>否</strong>来做判断分类，但是机器学习的样本数据都是数字，那么此时如果做判断呢？我们先来使用Scikit Learn中提供的决策树直观的看一下通过决策树对样本数据的分类过程和分类结果。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-15/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -841,7 +855,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">123</span>
+              <span class="site-state-item-count">124</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -855,7 +869,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">94</span>
+              <span class="site-state-item-count">95</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>

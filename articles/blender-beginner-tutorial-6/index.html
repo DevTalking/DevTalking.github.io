@@ -1,0 +1,865 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121973094-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121973094-1');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-4115205380866695",
+          enable_page_level_ads: true
+     });
+</script>
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+ <script type="text/x-mathjax-config">
+ MathJax.Hub.Config({tex2jax: {inlineMath:[['$','$']]}});
+ </script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #272822; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #272822, 0 0 5px #272822; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #272822;    /*上边框颜色*/
+        border-left-color: #272822;    /*左边框颜色*/
+    }
+</style>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" />
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.2"/>
+
+
+
+
+  <meta name="keywords" content="Blender Level 1," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员说" type="application/atom+xml" />
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+<meta name="description" content="到目前位置，甜甜圈的模型基本都调整、雕刻完毕了，接下来需要将我们做的模型渲染出来看看效果。在渲染之前，我们需要先认识一个对于渲染很重要的元素，灯光。
+在整个视图中，除了甜甜圈的对象以外，我们应该也早已发现了另外两个对象，Light和Camera。
+
+灯光灯光的强弱可以通过灯光离物体的距离以及一些设置项来调整，比如我们将灯光移动到离甜甜圈比近的位置，然后选择右上角的渲染模式视图，可以看到甜甜圈被强光">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用Blender做甜甜圈学习笔记六 - 渲染甜甜圈">
+<meta property="og:url" content="http://www.devtalking.com/articles/blender-beginner-tutorial-6/index.html">
+<meta property="og:site_name" content="程序员说">
+<meta property="og:description" content="到目前位置，甜甜圈的模型基本都调整、雕刻完毕了，接下来需要将我们做的模型渲染出来看看效果。在渲染之前，我们需要先认识一个对于渲染很重要的元素，灯光。
+在整个视图中，除了甜甜圈的对象以外，我们应该也早已发现了另外两个对象，Light和Camera。
+
+灯光灯光的强弱可以通过灯光离物体的距离以及一些设置项来调整，比如我们将灯光移动到离甜甜圈比近的位置，然后选择右上角的渲染模式视图，可以看到甜甜圈被强光">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-1.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-2.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-3.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-4.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-5.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-6.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-7.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-8.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-9.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-10.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-11.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-12.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-13.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-14.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-15.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-16.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-17.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-18.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-19.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-20.png">
+<meta property="og:updated_time" content="2021-10-16T15:57:33.207Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用Blender做甜甜圈学习笔记六 - 渲染甜甜圈">
+<meta name="twitter:description" content="到目前位置，甜甜圈的模型基本都调整、雕刻完毕了，接下来需要将我们做的模型渲染出来看看效果。在渲染之前，我们需要先认识一个对于渲染很重要的元素，灯光。
+在整个视图中，除了甜甜圈的对象以外，我们应该也早已发现了另外两个对象，Light和Camera。
+
+灯光灯光的强弱可以通过灯光离物体的距离以及一些设置项来调整，比如我们将灯光移动到离甜甜圈比近的位置，然后选择右上角的渲染模式视图，可以看到甜甜圈被强光">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+
+
+  <title> 用Blender做甜甜圈学习笔记六 - 渲染甜甜圈 | 程序员说 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?980738dc41a50d91861a17ad4b768a1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  
+<script type="text/javascript">
+    //微信二维码点击背景关闭
+    $('body').delegate('.-mob-share-weixin-qrcode-bg','click', function(){
+         $(".-mob-share-weixin-qrcode-close").trigger("click");
+    }); 
+</script>
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">程序员说</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th"></i> <br />
+            
+            分類
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                用Blender做甜甜圈学习笔记六 - 渲染甜甜圈
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2021-10-16T00:00:00+08:00" content="2021-10-16">
+              2021-10-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Blender/" itemprop="url" rel="index">
+                    <span itemprop="name">Blender</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/blender-beginner-tutorial-6/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/blender-beginner-tutorial-6/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+<p>到目前位置，甜甜圈的模型基本都调整、雕刻完毕了，接下来需要将我们做的模型渲染出来看看效果。在渲染之前，我们需要先认识一个对于渲染很重要的元素，灯光。</p>
+<p>在整个视图中，除了甜甜圈的对象以外，我们应该也早已发现了另外两个对象，<code>Light</code>和<code>Camera</code>。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-1.jpg" alt="6-1"></p>
+<h2 id="u706F_u5149"><a href="#u706F_u5149" class="headerlink" title="灯光"></a>灯光</h2><p>灯光的强弱可以通过灯光离物体的距离以及一些设置项来调整，比如我们将灯光移动到离甜甜圈比近的位置，然后选择右上角的渲染模式视图，可以看到甜甜圈被强光照的都发白了。</p>
+<a id="more"></a>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-2.jpg" alt="6-2"></p>
+<p>灯光所处的位置不同，被照物体上的光源也会发生响应的变化。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-3.jpg" alt="6-3"></p>
+<p>为了更加真实，以及能更好的表现光源，我们需要创建一个平面，相当于桌面似的。<code>Shift + A</code>，选择<code>Mesh/Plane</code>。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-4.jpg" alt="6-4"></p>
+<p>使用缩放调整平面的大小。这时我们会发现，甜甜圈有一半在平面下面。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-5.jpg" alt="6-5"></p>
+<p>解决的办法很简单，那就是将整个甜甜圈向上移动。但这里有个问题，因为整个甜甜圈是有两个对象组成的，糖衣和甜甜圈蛋糕部分，所以移动时需要将两个对象都选中，才不至于错位，那么如果对象比较多的时候，这种多选移动的方式就很繁琐，而且容易出错。</p>
+<p>既然糖衣和甜甜圈蛋糕部分肯定是一个整体，那我们就可以将这两个对象合二为一，这个能力叫做联接。将一个对象作为子对象，和所选父对象进行关联，形成一个整体，并且子对象可以随意移动，不影响父对象，但移动父对象，会一并影响子对象。</p>
+<blockquote>
+<p>先选择的对象视为子对象，后选择的对象视为父对象。</p>
+</blockquote>
+<p>先选中糖衣，再按<code>Shift</code>选中甜甜圈蛋糕部分，然后快捷键<code>Ctrl + P</code>，会弹出<code>Set parent to</code>菜单，推荐选择<code>Object（Keep Transform）</code>，这样就完成的父子关联，从右上角的对象关系视图中也可以看到，<code>Icing</code>对象没有了。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-6.jpg" alt="6-6"></p>
+<p>此时不论是选择糖衣还是甜甜圈蛋糕部分，都可以选中整体的甜甜圈。然后我们切换到<code>Front</code>视角，将甜甜圈沿Z轴向上移动，完成甜甜圈放在平面上的效果。</p>
+<p>选中灯光对象，选择右侧<code>Object Data Properties</code>菜单，在<code>Light</code>一栏中可以可以调整灯光的颜色、灯光亮度（相当于瓦数），以及灯光照射范围。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-7.jpg" alt="6-7"></p>
+<h2 id="u6E32_u67D3_u5F15_u64CE"><a href="#u6E32_u67D3_u5F15_u64CE" class="headerlink" title="渲染引擎"></a>渲染引擎</h2><p>在Blender中有两种渲染引擎，<code>Eevee</code>和<code>Cycles</code>。前者是一个实时渲染引擎，渲染速度非常快，但渲染效果相对<code>Cycles</code>要弱一些。后者是通过CPU或者GPU进行渲染的引擎，渲染速度慢，但是渲染效果更加真实，当然对电脑的性能要求也更高。动画通常用<code>Cycles</code>渲染，像游戏之类通常用<code>Eevee</code>渲染。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-8.jpg" alt="6-8"></p>
+<blockquote>
+<p>这里先简单了解一下渲染引擎，之后我们再深入学习，我们做这个甜甜圈之后渲染成图时要使用Cycels渲染。</p>
+</blockquote>
+<h2 id="u6444_u50CF_u673A"><a href="#u6444_u50CF_u673A" class="headerlink" title="摄像机"></a>摄像机</h2><p>咱们在捏模型的时候，整个视图场景可以看作一个近似可以无限延伸的场景，但是当我们渲染的时候，不可能无限延伸去渲染所有的物体，所以需要画一个范围，而摄像机就是用来做这个事的，和拍电影、照相的道理一样。</p>
+<p>切换到摄像机视角有三种方式：</p>
+<ul>
+<li>小键盘0。</li>
+<li>按下`键，呼出的轮盘左下角有View Camera选项。</li>
+<li>编辑视图右侧有切换摄像机视角的按钮。</li>
+</ul>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-9.jpg" alt="6-9"></p>
+<p>将摄像机通过移动、缩放、旋转三个基本操作，调整都合适的位置，然后可以切换到摄像机视角。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-10.jpg" alt="6-10"></p>
+<h2 id="u6E32_u67D3"><a href="#u6E32_u67D3" class="headerlink" title="渲染"></a>渲染</h2><p>将灯光、摄像机都调整好，然后将充当桌面的平面换个颜色，这样能更加凸显甜甜圈。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-11.jpg" alt="6-11"></p>
+<p>然后按<code>F12</code>，就可以进行图片的渲染了，可以切换不同的渲染引擎，看看对比效果。这里用Cycles引擎渲染。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-12.jpg" alt="6-12"></p>
+<h2 id="u8C03_u6574_u989C_u8272"><a href="#u8C03_u6574_u989C_u8272" class="headerlink" title="调整颜色"></a>调整颜色</h2><p>下面我们给糖衣设置颜色，选中糖衣，点击右侧<code>Material Properties</code>菜单，新建一套材质，然后会看到很多关于颜色、材质的属性。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-13.jpg" alt="6-13"></p>
+<p>我们先来看<code>Base Color</code>基本色，可以给糖衣设置一个粉色。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-14.jpg" alt="6-14"></p>
+<p>然后再来看<code>Roughness</code>属性，这个属性可以调节物体表面的反光程度，也就是可以将物体表面调整为亚光面。同理还有一个<code>Specular</code>属性，通常调整其中一个属性即可，推荐调整<code>Roughness</code>属性。</p>
+<p>另外还可以通过<code>Subsurface</code>和<code>Subsurface Color</code>在<code>Base Color</code>的基础上再调整颜色。</p>
+<p>下面是经过这几个参数调整后的糖衣效果。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-15.jpg" alt="6-15"></p>
+<p>按照同样的方式，给甜甜圈调整颜色。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-16.jpg" alt="6-16"></p>
+<p>当我们将渲染的图片放大后，可以看到有很多噪点。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-17.jpg" alt="6-17"></p>
+<p>解决这个问题需要以下几个步骤。首先选中甜甜圈，选择右侧<code>View Layer Properties</code>，将<code>Denoising Data</code>打勾。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-18.jpg" alt="6-18"></p>
+<p>然后进入<code>Compositing</code>视图，选中左上角的<code>Use Nodes</code>。<code>Shift + A</code>添加<code>Denoise</code>组件，将<code>Render Layers</code>的<code>Nosiy Image</code>、<code>Denoising Normal</code>、<code>Denoising Albedo</code>三个属性分别连接到<code>Denoise</code>组件对应的属性上，然后将<code>Denoise</code>组件的<code>Image</code>属性连接到<code>Composite</code>的<code>Image</code>属性上。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-19.jpg" alt="6-19"></p>
+<p>然后重新渲染一次，就可以看到干净的渲染图了。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-20.png" alt="6-20"></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Blender-Level-1/" rel="tag">#Blender Level 1</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/articles/blender-beginner-tutorial-5/" rel="next" title="用Blender做甜甜圈学习笔记五 - 雕刻糖衣白模">
+                <i class="fa fa-chevron-left"></i> 用Blender做甜甜圈学习笔记五 - 雕刻糖衣白模
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!--MOB SHARE BEGIN-->
+<div class="-hoofoo-share-title">分享到：</div>
+<div class="-hoofoo-share-buttons">
+    <div class="-mob-share-weibo -hoofoo-share-weibo -hoofoo-share-ui-button"><i class="fa fa-weibo" aria-hidden="true"></i></div>
+    <div class="-mob-share-weixin -hoofoo-share-weixin -hoofoo-share-ui-button"><i class="fa fa-weixin" aria-hidden="true"></i></div>
+    <div class="-mob-share-twitter -hoofoo-share-twitter -hoofoo-share-ui-button"><i class="fa fa-twitter" aria-hidden="true"></i></div>
+    <div class="-hoofoo-share-more -hoofoo-share-ui-button -mob-share-open"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+</div><div class="-mob-share-ui -mob-share-ui-theme -mob-share-ui-theme-slide-left" style="display: none">
+    <ul class="-mob-share-list">
+        <li class="-mob-share-weixin"><p>微信</p></li>
+        <li class="-mob-share-pocket"><p>Pocket</p></li>
+        <li class="-mob-share-instapaper"><p>Instapaper</p></li>
+        <li class="-mob-share-linkedin"><p>Linkedin</p></li>
+        <li class="-mob-share-twitter"><p>Twitter</p></li>
+        <li class="-mob-share-weibo"><p>新浪微博</p></li>
+        <li class="-mob-share-douban"><p>豆瓣</p></li>
+        <li class="-mob-share-facebook"><p>Facebook</p></li>
+        <li class="-mob-share-google"><p>Google+</p></li>
+    </ul>
+    <div class="-mob-share-close">取消</div>
+</div>
+<div class="-mob-share-ui-bg"></div>
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=26252752de4d6"></script>
+<!--MOB SHARE END--> 
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://www.devtalking.com/devtalking.png" alt="DevTalking" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">DevTalking</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">124</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+         <!-- <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">分類</span>
+              </a>
+          </div> -->
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">95</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="menu-item-icon icon-next-feed"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/宇轩-付-5aa406a6" target="_blank">
+                  
+                    <i class="fa fa-linkedin"></i> linkedin
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:jace.fu@icloud.com" target="_blank">
+                  
+                    <i class="fa fa-envelope"></i> Email
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u706F_u5149"><span class="nav-number">1.</span> <span class="nav-text">灯光</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6E32_u67D3_u5F15_u64CE"><span class="nav-number">2.</span> <span class="nav-text">渲染引擎</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6444_u50CF_u673A"><span class="nav-number">3.</span> <span class="nav-text">摄像机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u6E32_u67D3"><span class="nav-number">4.</span> <span class="nav-text">渲染</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u8C03_u6574_u989C_u8272"><span class="nav-number">5.</span> <span class="nav-text">调整颜色</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DevTalking</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'jacefu';
+      var disqus_identifier = '/articles/blender-beginner-tutorial-6/';
+      var disqus_title = '用Blender做甜甜圈学习笔记六 - 渲染甜甜圈';
+      var disqus_url = 'http://www.devtalking.com//articles/blender-beginner-tutorial-6/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  
+
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.2" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+
+      motionIntegrator.bootstrap();
+    });
+  </script>
+
+  
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

@@ -247,6 +247,140 @@
             
             
               
+                <a class="post-title-link" href="/articles/watchkit-create-table/" itemprop="url">
+                  如何使用WatchKit创建Table
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-11-23T00:00:00+08:00" content="2014-11-23">
+              2014-11-23
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS-macOS-tvOS-watchOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS & macOS & tvOS & watchOS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/watchkit-create-table/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/watchkit-create-table/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>上篇文章向大家演示了如何创建一个Helloworld Apple Watch App。这篇文章向大家演示如何使用WatchKit给你的Watch App创建Table。我们在Helloworld项目的基础上进行完善。</p>
+<h2 id="u521B_u5EFA_u4E00_u4E2ATable"><a href="#u521B_u5EFA_u4E00_u4E2ATable" class="headerlink" title="创建一个Table"></a>创建一个Table</h2><p>打开<strong>Interface.storyboard</strong>文件，删除我们之前添加的Label，然后将一个Table组件拖拽到你的Watch屏幕中。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-1.png" alt="pic"></p>
+<p>这里要注意一下，WatchKit中每一个WKInterfaceTableRow都是一个<strong>Table Row Controller</strong>，如果你展开它，你会发现它里面有一个<strong>Group</strong>，我们分别将一个Label和Image组件拖拽至Group中。调整Label和Image的大小，调整到你觉得合适就可以。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-2.png" alt="pic"></p>
+<h2 id="u521B_u5EFA_u81EA_u5B9A_u4E49_u7684Table_Row_Controller"><a href="#u521B_u5EFA_u81EA_u5B9A_u4E49_u7684Table_Row_Controller" class="headerlink" title="创建自定义的Table Row Controller"></a>创建自定义的Table Row Controller</h2><p>我们选中TableRowController，然后选择右侧工具栏的Identify inspector，我们可以在<strong>Custom Class</strong>一栏中看到，其实TableRowController是一个<strong>NSObject</strong>。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-3.png" alt="pic"></p>
+<p>我们可以创建一个自己的NSObject，然后将TableRowController的class设置为我们创建的NSObject，这样就达到了自定义的目的。我们在<strong>HelloworldWatchKit WatchKit Extension</strong>目录中创建一个Swfit文件，让它继承NSObject，然后导入WatchKit框架。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-4.png" alt="pic"></p>
+<p>将TableRowController的class设置为<code>MyTableRowController</code>，并给它设置一个Identifier。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-5.png" alt="pic"></p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-6.png" alt="pic"></p>
+<p>现在你就可以在<code>MyTableRowController</code>中添加Label和Image的<strong>IBOutlet</strong>了。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-7.png" alt="pic"></p>
+<h2 id="u521B_u5EFA_u6570_u636E_u6E90"><a href="#u521B_u5EFA_u6570_u636E_u6E90" class="headerlink" title="创建数据源"></a>创建数据源</h2><p>我们知道，在UIKit的<code>UITableView</code>或者<code>UITableViewController</code>中都有DataSource，负责Table Row中的数据，但是在WatchKit中的TableRowController并没有DataSource，但是这个概念是有的，也就是说我们要为TableRowController创建一个数据源，不论是数组还是字典。在这里，我们创建一个数组，作为TableRowController的数据源，数组中的元素都是<code>String</code>。因为我们的TableRowController中有一个Image组件、一个Label组件，所以我们将图片的名字作为数组的元素。</p>
+<p>我们在<code>InterfaceController</code>中创建一个数据源<code>weather</code>数组，数组元素是图片名称，然后创建Table的IBOutlet。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-8.png" alt="pic"></p>
+<h2 id="u52A0_u8F7D_u6570_u636E_u6E90"><a href="#u52A0_u8F7D_u6570_u636E_u6E90" class="headerlink" title="加载数据源"></a>加载数据源</h2><p>我们在<code>InterfaceController</code>中添加<code>loadTableData()</code>方法，然后在<code>init()</code>方法中调用。</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-9.png" alt="pic"></p>
+<p>现在编译运行一下，你就会看到Watch中显示出了Table，是不是很酷呢！</p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-10.png" alt="pic"></p>
+<p><img src="http://www.devtalking.com/postImages/watchkit-create-table-11.png" alt="pic"></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/helloworld-watchkit-app/" itemprop="url">
                   Helloworld Apple Watch App
                 </a>
@@ -854,200 +988,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/adaptive-layout-for-iphone6-2/" itemprop="url">
-                  为iPhone6设计自适应布局（二）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-10-17T00:00:00+08:00" content="2014-10-17">
-              2014-10-17
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/adaptive-layout-for-iphone6-2/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/adaptive-layout-for-iphone6-2/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<h2 id="Size_Classes"><a href="#Size_Classes" class="headerlink" title="Size Classes"></a>Size Classes</h2><p>自适应布局的布局约束自然是好东西，但也不是万能的，有时候我们也需要使用最基本的布局，所以使用size classes将它们两者结合起来才能碰撞出更有激情的火花。</p>
-<blockquote>
-<p>引用我上篇译文中的一段话：<br>Size Classes并不代表真正的尺寸，而是我们从感官上感觉尺寸的种类，通过这种种类的组合，表示出不同屏幕尺寸设备的横屏及竖屏。</p>
-</blockquote>
-<p>我们在给storyboard中的对象添加约束时可以选择给某一个size class添加约束，所以在你选择特定的size class时，只能看到你添加的只适用于该size class的约束。</p>
-<p>这些特性能使我们有效的在不同的设备和屏幕方向中定义、设计不同的用户界面。</p>
-<h3 id="Size_Classes_u4E2D_u7684_u9AD8_u548C_u5BBD"><a href="#Size_Classes_u4E2D_u7684_u9AD8_u548C_u5BBD" class="headerlink" title="Size Classes中的高和宽"></a>Size Classes中的高和宽</h3><p>Size Classes为高和宽分别提供了三种类型：紧凑型（compact）、普通型（regular）、任意型（any）。用这三种高和宽的类型就可以组合出9种size class，来表示不同的设备屏幕。</p>
-<p>在实际运用中，我们发现并不是所有的尺寸都能在Size Classes中找到明确的组合（比如没有组合可以明确表示iPhone6 Plus的竖屏，iPad的横竖屏也不好区分），但是我们可以使用表示这个尺寸范围的组合。比如我们可以用Compact Width | Regular Height来表示iPhone6 Plus的竖屏。</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-23.png" alt="图片"></p>
-<p>接下来还是用一个活生生的示例来向大家介绍Size Classes。</p>
-<h3 id="u6211_u4EEC_u7684_u76EE_u6807"><a href="#u6211_u4EEC_u7684_u76EE_u6807" class="headerlink" title="我们的目标"></a>我们的目标</h3><p>这个示例是实现Instagram的一个详细信息页面，并让它自适应更大的屏幕尺寸，在竖屏和横屏中都展现出最合适的布局。</p>
-<p>我们的目标是让布局自适应iPhone6的屏幕（这里需要注意一下，我所说的自适应是指图片、文字信息的布局排版，对于个人信息的头像不会根据布局的变化而变化），在竖屏中各个信息按照堆栈方式从上到下布局，在横屏时各元素按照大小进行有序排列，而不再是堆栈的方式：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-24.png" alt="图片"></p>
-<h3 id="u7ED9_u901A_u7528_u7684size_class_u6DFB_u52A0_u7EA6_u675F"><a href="#u7ED9_u901A_u7528_u7684size_class_u6DFB_u52A0_u7EA6_u675F" class="headerlink" title="给通用的size class添加约束"></a>给通用的size class添加约束</h3><p>在这个示例中，我们不会像上个示例那样使用模拟器的实际尺寸来设计布局，我们使用Size Classes提供的抽象的屏幕尺寸，这里我们先使用通用的尺寸来设计布局，也就是<strong>w Any | h Any</strong>尺寸。我们要注意的是，在这个尺寸下添加的view或者约束必须是一些公用的，也就是说在任何尺寸，任何屏幕方向的情况下都适用的。</p>
-<p>这些约束包括：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-25.png" alt="图片"></p>
-<p>除了之前介绍过的页边间距约束、水平间距约束、等高等宽约束、方向比例约束外还有顶部、底部间距约束。</p>
-<p>添加完上述的view和约束后，storyboard里应该是这番景象：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-26.png" alt="图片"></p>
-<p>这里要注意一下，目前这个界面的布局还有很多关键点需要考虑横屏和竖屏的布局，但是这些工作不会在<strong>w Any | h Any</strong>尺寸下进行。大伙接着往下看。</p>
-<h3 id="u4E3AiPhone_u7684_u7AD6_u5C4F_u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F"><a href="#u4E3AiPhone_u7684_u7AD6_u5C4F_u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="为iPhone的竖屏添加布局约束"></a>为iPhone的竖屏添加布局约束</h3><p>现在在Size Classes选择器中选择<strong>w Compact | h Regular</strong>尺寸，这个size class适用于所有iPhone设备的竖屏界面，不论尺寸是多少。</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-27.gif" alt="图片"></p>
-<p>当你在Size Classes选择器中选择某一个size class后，storyboard<br>中的view controller会实时的反映出你改变后的尺寸大小。</p>
-<p>现在你就可以为iPhone的竖屏状态重新设计view的位置和添加新的布局约束了。下图中说明了我在竖屏状态下添加的约束：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-28.png" alt="图片"></p>
-<p>我的storyboard中看起来是这样的：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-29.png" alt="图片"></p>
-<p>在这个阶段，你可以在3.5、4、4.7、5.5这几个尺寸的模拟器中编译运行应用，在竖屏状态下看看它们的运行情况，尽管在横屏状态表现的还很糟糕。</p>
-<p>这里要注意的是我们并没有定义图片的宽度，我们只是给图片添加了相对父容器的左右边间距，并将其值设为了0。所以当屏幕尺寸增大的时候图片的宽度在布局约束的作用下也会增加，这时又因为我们给图片添加了高宽比例约束，所以图片的高度也会随之增加。</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-30.png" alt="图片"></p>
-<h3 id="u4E3AiPhone_u7684_u6A2A_u5C4F_u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F"><a href="#u4E3AiPhone_u7684_u6A2A_u5C4F_u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="为iPhone的横屏添加布局约束"></a>为iPhone的横屏添加布局约束</h3><p>打开Size Classes选择器，选择<strong>w Any | h Compact</strong>，这个size class适用于任何一个尺寸的横屏状态。我们将在这个size class下设计我们希望在iPhone横屏时显示的用户界面。</p>
-<p>此时图片的顶部、左侧、底部都添加了相对于父容器的边界约束。在显示评论的label上添加了右侧边界约束。</p>
-<p>当设备横屏时，图片在布局约束的作用下移到了左侧，个人信息label和评论label在约束的作用下被挤到了右侧，并且评论label的高度增加，宽度减少。</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-31.png" alt="图片"></p>
-<p>现在来看看我的storyboard中显示的内容。大家注意左侧的对象结构树中有很多个约束，但是有些是灰色的。那是因为这些灰色的约束在当前的size class下是禁用的，或者说不适用、不起作用。那些是竖屏时用到的约束。</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-32.png" alt="图片"></p>
-<p>现在在storyboard中切换size class时布局也会随之变化，更新非常及时和平滑。</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-33.gif" alt="图片"></p>
-<p>我们在模拟器中编译运行应用，切换横竖屏，可以看到布局切换的效果，过度非常自然平滑。</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-1.gif" alt="图片"></p>
-<blockquote>
-<p>为了能让大家看清楚布局变化过度的细节，我放慢了这个git动画。大家注意，在布局变化时屏幕上的组件有一个层级关系，从该示例中我们可以看到图片view的层级高于个人信息label和评论label。所以我们在设计布局的时候就要考虑如何给view分层，包括在普通布局中不会被覆盖的view。这是一个细节问题。</p>
-</blockquote>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<h3 id="u5C4F_u5E55_u9884_u89C8_u52A9_u624B_u7F16_u8F91_u5668"><a href="#u5C4F_u5E55_u9884_u89C8_u52A9_u624B_u7F16_u8F91_u5668" class="headerlink" title="屏幕预览助手编辑器"></a>屏幕预览助手编辑器</h3><p>Xcode6中另一个值得关注的功能是屏幕预览助手。它可以避免你一遍遍的在不同屏幕尺寸的模拟器中编译运行应用来检查布局的正确与否。你可以在屏幕预览编辑器中添加一个或多个你想查看的屏幕尺寸，并可以让他们呈现横屏或竖屏的状态。</p>
-<p>当然它也不是非常完美（因为在预览时导航栏的颜色会丢失），但是切换<em>Double Length Pseudolanguage</em>选项很方便，便于你检查问题。</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-34.gif" alt="图片"></p>
-<p>从上图中大家可以看到我在屏幕预览编辑器中显示了3.5寸屏幕的横屏和4寸屏幕的竖屏，整体布局没有问题，但是当选择<em>Double Length Pseudolanguage</em>使label中的文字都增加一倍时，问题就出现了，个人信息和评论的label长度没有自适应。</p>
-<h3 id="u4E3AiPad_u5E03_u5C40_u6DFB_u52A0_u7EA6_u675F"><a href="#u4E3AiPad_u5E03_u5C40_u6DFB_u52A0_u7EA6_u675F" class="headerlink" title="为iPad布局添加约束"></a>为iPad布局添加约束</h3><p>现在我们将Sizae Classes调整为<strong>w Regular | h Regular</strong>，这个size class表示了iPad的横屏和竖屏大小。</p>
-<p>和往常一样，我们先调整图片和各个label的位置及大小，调整满意后，再添加相关的约束。在iPad布局中我打算将图片的尺寸设置为固定尺寸（不像iPhone中那样随着横屏和竖屏改变图片的尺寸），并将个人信息和评论label紧跟在图片下面。</p>
-<p>我的storyboard现在看起来是这样的：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-35.png" alt="图片"></p>
-<p>以往，我们都是在特定的size class中添加相关的约束，但在iPad布局中，我们不仅仅只添加一些约束。</p>
-<p>因为在iPad布局中有很大的空余空间，所以我们不只是重新排列一下组件的位置和大小，我们还要添加一些其他的组件。在这个示例中，我们再添加两个图片view（分别表示当前显示图片的上一张图片和下一张图片）。</p>
-<p>再来看看我的storyboard：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-36.png" alt="图片"></p>
-<p>我们不需要对这两个图片手动的设置高宽，而是给它们设置对于主显示图片的相对高宽即可。</p>
-<p>这样做的好处是当主显示图片的尺寸更改时，我们不需要自己手动计算和更改这两个图片的尺寸，相对高宽会自动针对主显示图片的尺寸调整这两个图片的尺寸。</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-37.gif" alt="图片"></p>
-<p>我没有制作在iPad上运行的gif动画，但这里有iPad横屏竖屏的运行图片，大家可以看看：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-38.png" alt="图片"></p>
-<h2 id="u4F7F_u7528_u5E03_u5C40_u89C6_u56FE_u548C_u95F4_u8DDD_u89C6_u56FE"><a href="#u4F7F_u7528_u5E03_u5C40_u89C6_u56FE_u548C_u95F4_u8DDD_u89C6_u56FE" class="headerlink" title="使用布局视图和间距视图"></a>使用布局视图和间距视图</h2><p>目前Xcode提供的布局约束可以满足大部分的布局需求，但是有些场景下需要变通的使用约束才能达到我们想要的效果。</p>
-<h3 id="u5E03_u5C40_u89C6_u56FE_u793A_u4F8B"><a href="#u5E03_u5C40_u89C6_u56FE_u793A_u4F8B" class="headerlink" title="布局视图示例"></a>布局视图示例</h3><p>通过Xcode提供的约束，我们可以很容易设置组件与view controller view的边缘的间距，也可以很容易的让组件在view controller view中水平居中显示和垂直居中显示。但是却不太容易设置组件与view controller view的水平中线或垂直中线的间距。像这样：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-39.png" alt="图片"></p>
-<p>下面向大家介绍两种实现该需求的方法。首先我们先添加一个view，背景色设置为透明，让它在屏幕中垂直居中显示，它作为该需求中组件的父容器，因为父容器在屏幕中是垂直居中的，所以可以给组件添加相对于父容器的Center X约束，就可以达到我们的需求了：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-40.png" alt="图片"></p>
-<p>但是通过上述的方式未免会使我们的布局的层级关系太过复杂，我更希望布局比较扁平一些，不需要太多的层级关系。因为上述方法中的容器view主要是用于布局使用，所以这种view我称之为布局视图。</p>
-<p>我们来改进一下方法，首先也是在view controller view中添加一个布局视图，我习惯将高度设置为20（这个值随个人喜好或实际情况而定），然后将它和屏幕的顶部、左侧、右侧的间距设为0，这样的话这个布局视图就和状态栏重合了，我们将这个布局视图设置一个深一点的颜色，然后将它的<code>hidden</code>属性设置为<code>true</code>，这样布局视图的颜色就会变浅，也不太会影响我们的布局，而且在应用运行时是不会显示该视图的。现在我们的组件就可以设置相对于布局视图的Center X约束来实现我们的需求了。</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-41.png" alt="图片"></p>
-<h3 id="u95F4_u9694_u89C6_u56FE_u793A_u4F8B"><a href="#u95F4_u9694_u89C6_u56FE_u793A_u4F8B" class="headerlink" title="间隔视图示例"></a>间隔视图示例</h3><p>之前我们学习了如何使用约束设置视图和视图边缘的间距，并且当屏幕尺寸增加时视图也会相应的改变大小，但它们的间距不会改变。</p>
-<p>但是如果我们希望当屏幕增加尺寸时，视图的大小保持不变，只是增加间距呢？</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-42.png" alt="图片"></p>
-<p>从理论上讲，实现该需求可能可以使用类似等宽这样的约束，但是现实往往的是骨干感的。</p>
-<p>这时我们就需要间距视图出场了，和布局视图一样，间距视图可以设置一个深一点的颜色，<code>hidden</code>属性要设置为<code>true</code>。</p>
-<p>我们在每个视图与视图间距之间添加一个间距视图，设置每个视图与相邻间距视图的边缘间距约束，然后给所有的间距视图添加相对于view controller view的等宽约束，设置合适的比例即可。</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-for-iphone6-43.png" alt="图片"></p>
-<p>原文地址：<a href="http://mathewsanders.com/designing-adaptive-layouts-for-iphone-6-plus" target="_blank" rel="external">ADAPTIVE LAYOUTS FOR iPHONE 6</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1090,7 +1030,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">123</span>
+              <span class="site-state-item-count">124</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1104,7 +1044,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">94</span>
+              <span class="site-state-item-count">95</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>

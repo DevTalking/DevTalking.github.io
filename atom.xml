@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.devtalking.com/"/>
-  <updated>2021-10-13T16:39:45.444Z</updated>
+  <updated>2021-10-16T15:57:33.207Z</updated>
   <id>http://www.devtalking.com/</id>
   
   <author>
@@ -15,11 +15,97 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[用Blender做甜甜圈学习笔记六 - 渲染甜甜圈]]></title>
+    <link href="http://www.devtalking.com//articles/blender-beginner-tutorial-6/"/>
+    <id>http://www.devtalking.com//articles/blender-beginner-tutorial-6/</id>
+    <published>2021-10-15T16:00:00.000Z</published>
+    <updated>2021-10-16T15:57:33.207Z</updated>
+    <content type="html"><![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+<p>到目前位置，甜甜圈的模型基本都调整、雕刻完毕了，接下来需要将我们做的模型渲染出来看看效果。在渲染之前，我们需要先认识一个对于渲染很重要的元素，灯光。</p>
+<p>在整个视图中，除了甜甜圈的对象以外，我们应该也早已发现了另外两个对象，<code>Light</code>和<code>Camera</code>。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-1.jpg" alt="6-1"></p>
+<h2 id="u706F_u5149"><a href="#u706F_u5149" class="headerlink" title="灯光"></a>灯光</h2><p>灯光的强弱可以通过灯光离物体的距离以及一些设置项来调整，比如我们将灯光移动到离甜甜圈比近的位置，然后选择右上角的渲染模式视图，可以看到甜甜圈被强光照的都发白了。</p>
+<a id="more"></a>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-2.jpg" alt="6-2"></p>
+<p>灯光所处的位置不同，被照物体上的光源也会发生响应的变化。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-3.jpg" alt="6-3"></p>
+<p>为了更加真实，以及能更好的表现光源，我们需要创建一个平面，相当于桌面似的。<code>Shift + A</code>，选择<code>Mesh/Plane</code>。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-4.jpg" alt="6-4"></p>
+<p>使用缩放调整平面的大小。这时我们会发现，甜甜圈有一半在平面下面。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-5.jpg" alt="6-5"></p>
+<p>解决的办法很简单，那就是将整个甜甜圈向上移动。但这里有个问题，因为整个甜甜圈是有两个对象组成的，糖衣和甜甜圈蛋糕部分，所以移动时需要将两个对象都选中，才不至于错位，那么如果对象比较多的时候，这种多选移动的方式就很繁琐，而且容易出错。</p>
+<p>既然糖衣和甜甜圈蛋糕部分肯定是一个整体，那我们就可以将这两个对象合二为一，这个能力叫做联接。将一个对象作为子对象，和所选父对象进行关联，形成一个整体，并且子对象可以随意移动，不影响父对象，但移动父对象，会一并影响子对象。</p>
+<blockquote>
+<p>先选择的对象视为子对象，后选择的对象视为父对象。</p>
+</blockquote>
+<p>先选中糖衣，再按<code>Shift</code>选中甜甜圈蛋糕部分，然后快捷键<code>Ctrl + P</code>，会弹出<code>Set parent to</code>菜单，推荐选择<code>Object（Keep Transform）</code>，这样就完成的父子关联，从右上角的对象关系视图中也可以看到，<code>Icing</code>对象没有了。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-6.jpg" alt="6-6"></p>
+<p>此时不论是选择糖衣还是甜甜圈蛋糕部分，都可以选中整体的甜甜圈。然后我们切换到<code>Front</code>视角，将甜甜圈沿Z轴向上移动，完成甜甜圈放在平面上的效果。</p>
+<p>选中灯光对象，选择右侧<code>Object Data Properties</code>菜单，在<code>Light</code>一栏中可以可以调整灯光的颜色、灯光亮度（相当于瓦数），以及灯光照射范围。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-7.jpg" alt="6-7"></p>
+<h2 id="u6E32_u67D3_u5F15_u64CE"><a href="#u6E32_u67D3_u5F15_u64CE" class="headerlink" title="渲染引擎"></a>渲染引擎</h2><p>在Blender中有两种渲染引擎，<code>Eevee</code>和<code>Cycles</code>。前者是一个实时渲染引擎，渲染速度非常快，但渲染效果相对<code>Cycles</code>要弱一些。后者是通过CPU或者GPU进行渲染的引擎，渲染速度慢，但是渲染效果更加真实，当然对电脑的性能要求也更高。动画通常用<code>Cycles</code>渲染，像游戏之类通常用<code>Eevee</code>渲染。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-8.jpg" alt="6-8"></p>
+<blockquote>
+<p>这里先简单了解一下渲染引擎，之后我们再深入学习，我们做这个甜甜圈之后渲染成图时要使用Cycels渲染。</p>
+</blockquote>
+<h2 id="u6444_u50CF_u673A"><a href="#u6444_u50CF_u673A" class="headerlink" title="摄像机"></a>摄像机</h2><p>咱们在捏模型的时候，整个视图场景可以看作一个近似可以无限延伸的场景，但是当我们渲染的时候，不可能无限延伸去渲染所有的物体，所以需要画一个范围，而摄像机就是用来做这个事的，和拍电影、照相的道理一样。</p>
+<p>切换到摄像机视角有三种方式：</p>
+<ul>
+<li>小键盘0。</li>
+<li>按下`键，呼出的轮盘左下角有View Camera选项。</li>
+<li>编辑视图右侧有切换摄像机视角的按钮。</li>
+</ul>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-9.jpg" alt="6-9"></p>
+<p>将摄像机通过移动、缩放、旋转三个基本操作，调整都合适的位置，然后可以切换到摄像机视角。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-10.jpg" alt="6-10"></p>
+<h2 id="u6E32_u67D3"><a href="#u6E32_u67D3" class="headerlink" title="渲染"></a>渲染</h2><p>将灯光、摄像机都调整好，然后将充当桌面的平面换个颜色，这样能更加凸显甜甜圈。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-11.jpg" alt="6-11"></p>
+<p>然后按<code>F12</code>，就可以进行图片的渲染了，可以切换不同的渲染引擎，看看对比效果。这里用Cycles引擎渲染。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-12.jpg" alt="6-12"></p>
+<h2 id="u8C03_u6574_u989C_u8272"><a href="#u8C03_u6574_u989C_u8272" class="headerlink" title="调整颜色"></a>调整颜色</h2><p>下面我们给糖衣设置颜色，选中糖衣，点击右侧<code>Material Properties</code>菜单，新建一套材质，然后会看到很多关于颜色、材质的属性。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-13.jpg" alt="6-13"></p>
+<p>我们先来看<code>Base Color</code>基本色，可以给糖衣设置一个粉色。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-14.jpg" alt="6-14"></p>
+<p>然后再来看<code>Roughness</code>属性，这个属性可以调节物体表面的反光程度，也就是可以将物体表面调整为亚光面。同理还有一个<code>Specular</code>属性，通常调整其中一个属性即可，推荐调整<code>Roughness</code>属性。</p>
+<p>另外还可以通过<code>Subsurface</code>和<code>Subsurface Color</code>在<code>Base Color</code>的基础上再调整颜色。</p>
+<p>下面是经过这几个参数调整后的糖衣效果。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-15.jpg" alt="6-15"></p>
+<p>按照同样的方式，给甜甜圈调整颜色。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-16.jpg" alt="6-16"></p>
+<p>当我们将渲染的图片放大后，可以看到有很多噪点。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-17.jpg" alt="6-17"></p>
+<p>解决这个问题需要以下几个步骤。首先选中甜甜圈，选择右侧<code>View Layer Properties</code>，将<code>Denoising Data</code>打勾。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-18.jpg" alt="6-18"></p>
+<p>然后进入<code>Compositing</code>视图，选中左上角的<code>Use Nodes</code>。<code>Shift + A</code>添加<code>Denoise</code>组件，将<code>Render Layers</code>的<code>Nosiy Image</code>、<code>Denoising Normal</code>、<code>Denoising Albedo</code>三个属性分别连接到<code>Denoise</code>组件对应的属性上，然后将<code>Denoise</code>组件的<code>Image</code>属性连接到<code>Composite</code>的<code>Image</code>属性上。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-19.jpg" alt="6-19"></p>
+<p>然后重新渲染一次，就可以看到干净的渲染图了。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-20.png" alt="6-20"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+<p>到目前位置，甜甜圈的模型基本都调整、雕刻完毕了，接下来需要将我们做的模型渲染出来看看效果。在渲染之前，我们需要先认识一个对于渲染很重要的元素，灯光。</p>
+<p>在整个视图中，除了甜甜圈的对象以外，我们应该也早已发现了另外两个对象，<code>Light</code>和<code>Camera</code>。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-6/6-1.jpg" alt="6-1"></p>
+<h2 id="u706F_u5149"><a href="#u706F_u5149" class="headerlink" title="灯光"></a>灯光</h2><p>灯光的强弱可以通过灯光离物体的距离以及一些设置项来调整，比如我们将灯光移动到离甜甜圈比近的位置，然后选择右上角的渲染模式视图，可以看到甜甜圈被强光照的都发白了。</p>]]>
+    
+    </summary>
+    
+      <category term="Blender Level 1" scheme="http://www.devtalking.com/tags/Blender-Level-1/"/>
+    
+      <category term="Blender" scheme="http://www.devtalking.com/categories/Blender/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[用Blender做甜甜圈学习笔记五 - 雕刻糖衣白模]]></title>
     <link href="http://www.devtalking.com//articles/blender-beginner-tutorial-5/"/>
     <id>http://www.devtalking.com//articles/blender-beginner-tutorial-5/</id>
     <published>2021-10-12T16:00:00.000Z</published>
-    <updated>2021-10-13T16:39:45.444Z</updated>
+    <updated>2021-10-16T15:57:55.653Z</updated>
     <content type="html"><![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 
@@ -94,7 +180,7 @@
     
     </summary>
     
-      <category term="Blender" scheme="http://www.devtalking.com/tags/Blender/"/>
+      <category term="Blender Level 1" scheme="http://www.devtalking.com/tags/Blender-Level-1/"/>
     
       <category term="Blender" scheme="http://www.devtalking.com/categories/Blender/"/>
     
@@ -105,7 +191,7 @@
     <link href="http://www.devtalking.com//articles/blender-beginner-tutorial-4/"/>
     <id>http://www.devtalking.com//articles/blender-beginner-tutorial-4/</id>
     <published>2021-10-10T16:00:00.000Z</published>
-    <updated>2021-10-12T02:41:46.915Z</updated>
+    <updated>2021-10-16T15:58:01.350Z</updated>
     <content type="html"><![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 
@@ -172,7 +258,7 @@
     
     </summary>
     
-      <category term="Blender" scheme="http://www.devtalking.com/tags/Blender/"/>
+      <category term="Blender Level 1" scheme="http://www.devtalking.com/tags/Blender-Level-1/"/>
     
       <category term="Blender" scheme="http://www.devtalking.com/categories/Blender/"/>
     
@@ -183,7 +269,7 @@
     <link href="http://www.devtalking.com//articles/blender-beginner-tutorial-3/"/>
     <id>http://www.devtalking.com//articles/blender-beginner-tutorial-3/</id>
     <published>2021-10-06T16:00:00.000Z</published>
-    <updated>2021-10-12T02:30:26.529Z</updated>
+    <updated>2021-10-16T15:58:07.396Z</updated>
     <content type="html"><![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 
@@ -247,7 +333,7 @@
     
     </summary>
     
-      <category term="Blender" scheme="http://www.devtalking.com/tags/Blender/"/>
+      <category term="Blender Level 1" scheme="http://www.devtalking.com/tags/Blender-Level-1/"/>
     
       <category term="Blender" scheme="http://www.devtalking.com/categories/Blender/"/>
     
@@ -258,7 +344,7 @@
     <link href="http://www.devtalking.com//articles/blender-beginner-tutorial-2/"/>
     <id>http://www.devtalking.com//articles/blender-beginner-tutorial-2/</id>
     <published>2021-10-05T16:00:00.000Z</published>
-    <updated>2021-10-11T12:18:42.510Z</updated>
+    <updated>2021-10-16T15:58:13.357Z</updated>
     <content type="html"><![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 
@@ -316,7 +402,7 @@
     
     </summary>
     
-      <category term="Blender" scheme="http://www.devtalking.com/tags/Blender/"/>
+      <category term="Blender Level 1" scheme="http://www.devtalking.com/tags/Blender-Level-1/"/>
     
       <category term="Blender" scheme="http://www.devtalking.com/categories/Blender/"/>
     
@@ -327,7 +413,7 @@
     <link href="http://www.devtalking.com//articles/blender-beginner-tutorial-1/"/>
     <id>http://www.devtalking.com//articles/blender-beginner-tutorial-1/</id>
     <published>2021-10-03T16:00:00.000Z</published>
-    <updated>2021-10-11T11:49:42.609Z</updated>
+    <updated>2021-10-16T15:58:18.235Z</updated>
     <content type="html"><![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 
@@ -389,7 +475,7 @@
     
     </summary>
     
-      <category term="Blender" scheme="http://www.devtalking.com/tags/Blender/"/>
+      <category term="Blender Level 1" scheme="http://www.devtalking.com/tags/Blender-Level-1/"/>
     
       <category term="Blender" scheme="http://www.devtalking.com/categories/Blender/"/>
     
@@ -1829,84 +1915,6 @@
 <li><code>--to-datetime &lt;String: datetime&gt;</code>：重置到指定时间的Offset，时间格式为<code>YYYY-MM-DDTHH:mm:SS.sss</code>。</li>
 <li><code>--shift-by &lt;Long: number-of-offsets&gt;</code>：左移或右移Offset。</li>
 </ul>]]>
-    
-    </summary>
-    
-      <category term="Kafka" scheme="http://www.devtalking.com/tags/Kafka/"/>
-    
-      <category term="中间件" scheme="http://www.devtalking.com/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Kafka从上手到实践-Kafka CLI：Consumer CLI]]></title>
-    <link href="http://www.devtalking.com//articles/kafka-practice-8/"/>
-    <id>http://www.devtalking.com//articles/kafka-practice-8/</id>
-    <published>2018-11-30T16:00:00.000Z</published>
-    <updated>2020-06-21T08:12:29.011Z</updated>
-    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="Consumer_CLI"><a href="#Consumer_CLI" class="headerlink" title="Consumer CLI"></a>Consumer CLI</h2><p>这一节来看看使用命令行启动Consumer接收消息，通过如下的命令启动Consumer：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li><code>kafka-console-consumer.sh</code>是启动Consumer的命令。</li>
-<li><code>--bootstrap-server</code>指定要连接的Broker地址。</li>
-<li><code>--topic</code>指定Topic名称，既要从哪个Topic里读数据。</li>
-</ul>
-<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2019/4/18/1555575057414.png" alt=""></p>
-<a id="more"></a>
-<p>如上图所示，左边启动的是Consumer，右边启动的是Producer。Producer发送的消息可以实时的被Consumer接收到。但是有一个问题，那就是在上一节中，我们已经给<code>first_topic</code>这个Topic发送了一些数据。但是现在Consumer启动后并没有收到。这是因为通过上面的命令启动的Consumer接收的是最新的消息，如果想接收所有的消息，还需要带一个参数：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --from-beginning</span><br></pre></td></tr></table></figure></p>
-<p><code>--from-beginning</code>表示启动的Consumer要接收所有的消息。</p>
-<p>前文中说过，Consumer一般都是以组的形式存在，所以可以再加一个参数来创建一个Consumer Group：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --group consumer_group_1</span><br></pre></td></tr></table></figure></p>
-<p><code>--group</code>可以指定Consumer Group的名称。</p>
-<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2019/4/18/1555575079452.png" alt=""></p>
-<p>如上图所示，左边启动了三个Consumer，这三个Consumer都在同一个名为<code>consumer_group_1</code>的组里。因为<code>first_topic</code>这个Topic有三个Partitions，所以当一个Consumer Group中有三个Consumer时，他们的收到的信息不会重复。</p>
-<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2019/4/18/1555575103168.png" alt=""></p>
-<p>又如上图所示，左边启动了三个Consumer，但是前两个在<code>consumer_group_1</code>的组里，最后一个在<code>consumer_group_2</code>的组里，所以前两个Consumer是以轮询的方式收到消息的，而最后一个Consumer可以收到全部的消息。</p>
-<p>上面两个示例也充分证明了前文中所说的，<strong>不同的Consumer Group可以消费同一个Topic中相同的Partition的消息，但是Consumer Group内的Consumer不能消费同一个Topic中相同的Partition的消息</strong>。</p>
-<p>上面的命令是显示的创建Consumer Group。上文中说到过，Kafka中，Consumer都是以组的形式连接Broker消费数据的。那么如果只有一个Consumer的情况下，是否有Consumer Group呢？其实，当只有一个Consumer时，也会自动创建一个Consumer Group。我们可以通过另外一组Consumer Group CLI来看一下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --list&#10;&#10;console-consumer-40439&#10;console-consumer-81216&#10;consumer_group_1c&#10;console-consumer-14387&#10;consumer_group_2&#10;consumer_group_1&#10;console-consumer-40563</span><br></pre></td></tr></table></figure></p>
-<p>可以看到，已经存在的Consumer Group中，除了我们之前创建的，还有以<code>console-consumer-xxxxx</code>这种命名格式存在的Consumer Group。这就是当我们只启动一个Consumer时Kafka自动为这个Consumer创建的Consumer Group。这里可以做个实验，先启动一个Consumer：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic</span><br></pre></td></tr></table></figure></p>
-<p>然后再来看看Consumer Group是否有增加：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --list&#10;&#10;console-consumer-96752&#10;console-consumer-40439&#10;console-consumer-81216&#10;consumer_group_1c&#10;console-consumer-14387&#10;consumer_group_2&#10;consumer_group_1&#10;console-consumer-40563</span><br></pre></td></tr></table></figure></p>
-<p>我们看到增加了一个Consumer Group<code>console-consumer-96752</code>。</p>
-<p>Consumer Group列表看完了，再来看看某一个Consumer Group的详细信息，比如查看<code>consumer_group_1</code>的详细信息。可以使用如下命令：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --describe --group consumer_group_1&#10;&#10;Consumer group &#39;consumer_group_1&#39; has no active members.&#10;&#10;TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID     HOST            CLIENT-ID&#10;first_topic     0          17              17              0               -               -               -&#10;first_topic     2          17              17              0               -               -               -&#10;first_topic     1          18              18              0               -               -</span><br></pre></td></tr></table></figure></p>
-<p>首先会告诉我们该Consumer Group中是否有正在活跃的Consumer，目前没有启动任何Consumer，所以提示我们<code>Consumer group &#39;consumer_group_1&#39; has no active members.</code></p>
-<p>然后会列出该Consumer Group消费的Topic、Partition情况、Offset情况、延迟（LAG）情况、处于活跃状态的Consumer信息。</p>
-<p>可以看到<code>consumer_group_1</code>这个Consumer Group正在消费<code>first_topic</code>这个Topic中的Message，一共从三个Partition中消费了52条Messages，并且目前已经消费了全部的数据，因为每个Partition的延迟都是0，说明没有还未接收的Message。</p>
-<p>现在我们再往<code>first_topic</code>中发送一条Message，再来看看情况如何：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-console-producer.sh --broker-list 127.0.0.1:9092 --topic first_topic --producer-property acks=1&#10;&#62;this is another message.&#10;&#10;kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --describe --group consumer_group_1&#10;&#10;Consumer group &#39;consumer_group_1&#39; has no active members.&#10;&#10;TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID     HOST            CLIENT-ID&#10;first_topic     0          17              17              0               -               -               -&#10;first_topic     2          17              17              0               -               -               -&#10;first_topic     1          18              19              1               -               -               -</span><br></pre></td></tr></table></figure></p>
-<p>可以看到Partition 1 的<code>LOG-END-OFFSET</code>是19，而<code>CURRENT-OFFSET</code>是18，并且Partition 1 的<code>LAG</code>是1，说明现在<code>first-topic</code>一共接收到了19条Message，而<code>consumer-group-1</code>只消费了18条，有1条延迟。</p>
-<p>我们再启动<code>consumer_group_1</code>中的Consumer，然后再看看数据：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic --from-beginning --group consumer_group_1&#10;&#10;this is another message.&#10;&#10;kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --describe --group consumer_group_1&#10;&#10;TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                     HOST            CLIENT-ID&#10;first_topic     0          17              17              0               consumer-1-4ec288ac-e202-40b1-a2ec-d43abc49b38d /172.17.222.157 consumer-1&#10;first_topic     1          19              19              0               consumer-1-4ec288ac-e202-40b1-a2ec-d43abc49b38d /172.17.222.157 consumer-1&#10;first_topic     2          17              17              0               consumer-1-4ec288ac-e202-40b1-a2ec-d43abc49b38d /172.17.222.157 consumer-1</span><br></pre></td></tr></table></figure></p>
-<p>可以看到，目前有一个处于活跃的Consumer，并且Messages全部被消费。</p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>这一章节主要介绍了如何使用Kafka的Consumer CLI接收Producer生产的Message。同时能更直观的印证之前介绍概念时提到的内容，比如Consumer Group的机制、Offset机制等。下一章节进一步介绍Offset的操作以及Config CLI。希望能给小伙伴们带来帮助。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>]]></content>
-    <summary type="html">
-    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="Consumer_CLI"><a href="#Consumer_CLI" class="headerlink" title="Consumer CLI"></a>Consumer CLI</h2><p>这一节来看看使用命令行启动Consumer接收消息，通过如下的命令启动Consumer：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li><code>kafka-console-consumer.sh</code>是启动Consumer的命令。</li>
-<li><code>--bootstrap-server</code>指定要连接的Broker地址。</li>
-<li><code>--topic</code>指定Topic名称，既要从哪个Topic里读数据。</li>
-</ul>
-<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2019/4/18/1555575057414.png" alt=""></p>]]>
     
     </summary>
     

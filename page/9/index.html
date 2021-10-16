@@ -247,6 +247,126 @@
             
             
               
+                <a class="post-title-link" href="/articles/machine-learning-6/" itemprop="url">
+                  机器学习笔记六之梯度下降、优化梯度公式、随机梯度下降
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2018-02-15T00:00:00+08:00" content="2018-02-15">
+              2018-02-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/machine-learning-6/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-6/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这篇笔记主要介绍梯度下降法，梯度下降不是机器学习专属的算法，它是一种基于搜索的最优化方法，也就是通过不断的搜索然后找到损失函数的最小值。像上篇笔记中使用正规方程解实现多元线性回归，基于$X_b\theta$这个模型我们可以推导出$\theta$的数学解，但是很多模型是推导不出数学解的，所以就需要梯度下降法来搜索出最优解。</p>
+<h2 id="u68AF_u5EA6_u4E0B_u964D_u6CD5_u6982_u5FF5"><a href="#u68AF_u5EA6_u4E0B_u964D_u6CD5_u6982_u5FF5" class="headerlink" title="梯度下降法概念"></a>梯度下降法概念</h2><p>我们来看看在二维坐标里的一个曲线方程：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/8b3433626c22d7f31a236492458a58e0.jpg" alt=""></p>
+<p>纵坐标表示损失函数L的值，横坐标表示系数$\theta$。每一个$\theta$的值都会对应一个损失函数L的值，我们希望损失函数收敛，既找到一个$\theta$的值，使损失函数L的值最小。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/7d33b5dbd153029338804e42063e7dae.jpg" alt=""></p>
+<p>在曲线上定义一点A，对应一个$\theta$值，一个损失函数L的值，要判断点A是否是损失函数L的最小值，既求该点的导数，在第一篇笔记中我解释过，点A的导数就是直线M的斜率，直线M是点A的切线，所以导数描述了一个函数在某一点附近的变化率，并且导数大于零时，函数在区间内单调递增，导数小于零时函数在区间内单调递减。所以$\frac {d L}{d \theta}$表示损失函数L增大的变化率，$-\frac {d L}{d \theta}$表示损失函数L减小的变化率。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/79181d4455f5a40c4a652a41a743bc7b.jpg" alt=""></p>
+<p>再在曲线上定义一点B，在点A的下方，B点的$\theta$值就是A点的$\theta$值加上让损失函数L递减的变化率$-\eta \frac {d L}{d \theta}$，$\eta$称为步长，既B点在$-\frac {d L}{d \theta}$变化率的基础下移动了多少距离，在机器学习中$\eta$这个值也称为学习率。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/12d864def3bdafa3f3ecda683f2950e4.jpg" alt=""></p>
+<p>同理还可以再求得点C，然后看是否是损失函数的L的最小值。所以梯度下降法就是基于损失函数在某一点的变化率$-\frac {d L}{d \theta}$，以及寻找下一个点的步长$\eta$，不停的找到下一个点，然后判断该点处的损失函数值是否为最小值的过程。$-\eta \frac {d L}{d \theta}$就称为梯度。</p>
+<p>在第一篇笔记中将极值的时候提到过，当曲线或者曲面很复杂时，会有多个驻点，既局部极值，所以如果运行一次梯度下降法寻找损失函数极值的话很有可能找到的只是局部极小值点。所以在实际运用中我们需要多次运行算法，随机化初始点，然后进行比较找到真正的全局极小值点，所以初始点的位置是梯度下降法的一个超参数。</p>
+<p>不过在线性回归的场景中，我们的损失函数$\sum_{i=1}^m(y^{(i)}-\hat y^{(i)})^2$是有唯一极小值的，所以暂时不需要多次执行算法搜寻全局极值。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/machine-learning-6/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/machine-learning-5/" itemprop="url">
                   机器学习笔记五之线性回归、评测标准、多元线性回归
                 </a>
@@ -706,137 +826,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/machine-learning-1/" itemprop="url">
-                  机器学习笔记一之机器学习定义、导数、最小二乘
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2018-01-06T00:00:00+08:00" content="2018-01-06">
-              2018-01-06
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
-                    <span itemprop="name">机器学习算法</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/machine-learning-1/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/machine-learning-1/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="u673A_u5668_u5B66_u4E60_u7684_u5B9A_u4E49"><a href="#u673A_u5668_u5B66_u4E60_u7684_u5B9A_u4E49" class="headerlink" title="机器学习的定义"></a>机器学习的定义</h2><ul>
-<li>非正式定义：在不直接针对问题进行编程的情况下，赋予计算机学习能力的一个研究领域。</li>
-<li>正式定义：对于一个计算机程序来讲，给他一个任务T和一个性能测量方法P，如果在经验E的影响下P对T的测量结果得到了改进，那么就说该程序从E中得到了学习。</li>
-</ul>
-<p>举个机器下棋的例子，经验E对应着程序不断和自己下棋的经历，任务T是下棋，性能测量方法P可以是它在和人类棋手对弈的胜率。如果说机器与人类棋手对应的胜率不断提高，那说明机器从自己和自己下棋的过程中得到了学习。</p>
-<h2 id="u673A_u5668_u5B66_u4E60_u56DB_u5927_u5185_u5BB9_u7B80_u8FF0"><a href="#u673A_u5668_u5B66_u4E60_u56DB_u5927_u5185_u5BB9_u7B80_u8FF0" class="headerlink" title="机器学习四大内容简述"></a>机器学习四大内容简述</h2><ul>
-<li>监督学习（Supervised Learning）</li>
-<li>学习理论（Learning Theory）</li>
-<li>无监督学习（Unsupervised Learning）</li>
-<li>强化学习（Reinforcement Learning）</li>
-</ul>
-<h3 id="u76D1_u7763_u5B66_u4E60_uFF08Supervised_Learning_uFF09"><a href="#u76D1_u7763_u5B66_u4E60_uFF08Supervised_Learning_uFF09" class="headerlink" title="监督学习（Supervised Learning）"></a>监督学习（Supervised Learning）</h3><p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/34576cd0bbd2b3d3905c4c9f5a4db346.jpg" alt=""><br>如上图所示，描述了假定城市区域的房屋面积与售价的关系。横坐标是房屋面积，纵坐标是售价。如果我想在横轴随意取一个面积，就希望知道它的售价，那么就需要一个方法通过面积确定售价。图中的方法是通过一条标准线来找到对应的售价。那么这条线要如何得来呢？</p>
-<p>在这个示例中，我们已经给出了若干房屋面积和售价的数据集，即已经告知了机器若干问题和答案。机器通过这些数据集中面积和售价的关系，自我学习从而得出这条线，这种学习类型就属于监督学习类型。</p>
-<p>因为这种场景中的数据集取值都是连续的，所以这类问题都可以归为线性回归的问题。<br><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/da9d63e45fa11a781128bc64bb78ae92.jpg" alt=""></p>
-<p>如上图所示，描述了肿瘤大小与恶性良性的关系。横坐标是肿瘤的大小，纵坐标表示恶性或良性，与连续的房屋售价不同的是，这里的纵坐标只有两个值0或1。</p>
-<p>这个示例中，我们同样给出了一组肿瘤大小与恶性良性的数据集，我们希望机器通过这组答案数据集自我学习然后有能力通过肿瘤大小判断出恶性或良性。当然这里只是示例，实际中会有很多其他的横轴指标值用于判断学习。</p>
-<p>该示例中这种离散的数值问题可以归为分类的问题。</p>
-<h3 id="u5B66_u4E60_u7406_u8BBA_uFF08Learning_Theory_uFF09"><a href="#u5B66_u4E60_u7406_u8BBA_uFF08Learning_Theory_uFF09" class="headerlink" title="学习理论（Learning Theory）"></a>学习理论（Learning Theory）</h3><p>任何具体的方式方法背后都有一个或多个理论进行支撑，机器学习也不例外。</p>
-<p>这一大块的内容贯穿整个机器学习，包括人工智能和机器学习正式诞生之前的定理证明，理解为什么学习型算法是有效的。每种学习型算法需要多少训练数据，比如上面的房屋售价示例到底需要多少房屋的样本。以及机器学习渗透在我们生活中的真实应用场景等等。</p>
-<h3 id="u65E0_u76D1_u7763_u5B66_u4E60_uFF08Unsupervised_Learning_uFF09"><a href="#u65E0_u76D1_u7763_u5B66_u4E60_uFF08Unsupervised_Learning_uFF09" class="headerlink" title="无监督学习（Unsupervised Learning）"></a>无监督学习（Unsupervised Learning）</h3><p>如果我现在有一组不知道任何信息的数据集，然后需要机器进行分析然后给出这组数据集中的几种共性或者相似的结构，将其聚类，这个方式就称之为无监督学习。即我们不会提供机器问题和答案，只提供数据，需要机器自我学习和分析找出共性进行聚类。</p>
-<p>无监督学习的应用场景很多，当下流行的各种P图软件都或多或少的用到了这类算法，比如图的修复功能，抠图功能，像素化等一些滤镜都是对像素的聚类。还有声音驳杂功能，从嘈杂的声音中提取出有用的声音等。</p>
-<h3 id="u5F3A_u5316_u5B66_u4E60_uFF08Reinforcement_Learning_uFF09"><a href="#u5F3A_u5316_u5B66_u4E60_uFF08Reinforcement_Learning_uFF09" class="headerlink" title="强化学习（Reinforcement Learning）"></a>强化学习（Reinforcement Learning）</h3><p>强化学习是机器学习的精髓，更贴近机器的自我学习，用在不能通过一次决策下定论的情形中，比如分析病人肿瘤病情的例子，通过监督学习，我们给定了确切的答案，不是良性就是恶性，即我们做的决策要么对，要么错。但在强化学习中，在一段时间内会机器做出一系列决策。比如我们编写一个程序让一架无人机做出一系列特技表演动作，这种场景就不是一次决策能实现的了的。</p>
-<p>那么强化学习究竟是什么？在它背后有一个称为回报函数的概念。比如我们训练宠物狗坐下、握手等行为，每当小狗做出的正确的行为，我们都会给小狗奖励，比如摸摸头进行鼓励或者给一块小骨头。渐渐的小狗就知道做出怎样的行为有奖励，怎样的行为没有奖励，即学会了坐下和握手的行为。这就很类似强化学习的理论，我们需要找到一种方式，来定义我们想要什么，如何定义一个好的行为和一个坏的行为，然后就需要一个合适的学习型算法来获得更多的回报和更少的惩罚。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/machine-learning-1/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -879,7 +868,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">123</span>
+              <span class="site-state-item-count">124</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -893,7 +882,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">94</span>
+              <span class="site-state-item-count">95</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
