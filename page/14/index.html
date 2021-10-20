@@ -247,6 +247,214 @@
             
             
               
+                <a class="post-title-link" href="/articles/uistackview/" itemprop="url">
+                  UIStackView小窥
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-08-04T00:00:00+08:00" content="2015-08-04">
+              2015-08-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/uistackview/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/uistackview/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>本文首发<a href="http://www.csdn.net/article/2015-08-04/2825372/1" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
+<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>自适应、适配、布局这几个关键词一直伴随着iOS开发，从以前的单一尺寸屏幕，到现在的多尺寸屏幕，Apple一直致力于让开发人员尽可能少在这些事上耗费过多的精力，所以Apple在2012年推出了Auto Layout特性，2014年又推出了Adaptive Layout、Size Classes，2015年又推出了Stack View。这些无一不是我们开发者做适配的利器。今天就让我们看看StackView是怎么一回事。</p>
+<blockquote>
+<p>注：示例开发环境为Xcode7 Beta2</p>
+</blockquote>
+<p>我们先来看看下面这个常见的布局：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-1.png" alt="StackView-1"></p>
+<p>这是一种很常见的汉堡布局，如果我们需要让它自适应不同尺寸的屏幕，我们要添加哪些约束呢？</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-2.png" alt="StackView-2"></p>
+<p>看看图中这些约束，你们会不会感到莫名的烦躁呢，至少我是的。更让人抓狂的是，如果需要在中间再添加一个长方形，那么你要修改关联的好几个约束，有没有掀桌的冲动呢？</p>
+<p>不过，我们开发人员总是幸运的，Apple在Xcode7中添加了一个新的特性StackView，它能完美的解决这个闹心的问题。</p>
+<p>StackView其实一个视图容器，不过它会对它的子视图根据一定规则自动布局，将子视图按栈的排列方式进行布局，并且有几个主要的属性：</p>
+<ul>
+<li><p>方向<br>  StackView有水平和垂直两个方向的布局模式：<br><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-3.png" alt="StackView-3"></p>
+</li>
+<li><p>间隔<br>  StackView可以设置子视图之间的间隔：<br><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-4.png" alt="StackView-4"></p>
+</li>
+<li><p>对齐方式<br>StackView可以设置子视图的对齐方式（水平方向和垂直方向的该属性值有所区别）：<br><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-5.png" alt="StackView-5"></p>
+<ul>
+<li>Fill：子视图填充StackView。</li>
+<li>Leading：靠左对齐。</li>
+<li>Trailing：靠右对齐。</li>
+<li>Center：子视图以中线为基准对齐。</li>
+<li>Top：靠顶部对齐。</li>
+<li>Bottom：靠底部对齐。</li>
+<li>First Baseline：按照第一个子视图中文字的第一行对齐。</li>
+<li>Last Baseline：按照最后一个子视图中文字的最后一行对齐。</li>
+</ul>
+</li>
+<li><p>分布比例<br>  StackView可以设置子视图的分布比例：<br><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-6.png" alt="StackView-6"></p>
+<ul>
+<li>Fill：默认分布方式。</li>
+<li>Fill Equally：子视图的高度或宽度保持一致。</li>
+<li>Fill：Proportionally：StackView自己计算出它认为合适的分布方式。</li>
+<li>Equal Spacing：子视图保持同等间隔的分布方式。</li>
+<li>Equal Centering：每个子视图中心线之间保持一致的分布方式。</li>
+</ul>
+</li>
+</ul>
+<p>一切让示例来说话，在这篇文章中我们将逐步开发一个电影影评的应用来详细讲解如何使用StackView。</p>
+<h2 id="u7B2C_u4E00_u4E2AStackView"><a href="#u7B2C_u4E00_u4E2AStackView" class="headerlink" title="第一个StackView"></a>第一个StackView</h2><p>打开Xcode，新建一个项目，命名为MovieRate，语言选择Swift。打开Storyboard，删掉当前的ViewController视图，重新拖入TableViewController视图，然后内嵌一个NavigationController，配色大家随意：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-7.png" alt="StackView-7"></p>
+<p>然后再删掉初始的<code>ViewController.swfit</code>文件，新建一个UITableViewController名为<code>MovieListTableViewController.swift</code>，以及一个UITableViewCell名为<code>MovieTabelViewCell.swift</code>：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-8.png" alt="StackView-8"></p>
+<p>这两个文件的作用不言而喻：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-9.png" alt="StackView-9"></p>
+<p>接下来新建一个plist文件<code>Movie.plist</code>，当做TableView的数据源：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-10.png" alt="StackView-10"></p>
+<p>然后打开StoryBoard，选择<code>MovieListTableViewController</code>，给<code>MovieTableViewCell</code>设置一个标示符<code>MovieCell</code>，往<code>MovieTableViewCell</code>中拖入两个UIImageView和一个UILabel，不用理会他们的位置和尺寸：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-11.png" alt="StackView-11"></p>
+<p>按着command键，同时选中这三个视图，然后点击右下角的Stack按钮：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-12.png" alt="StackView-12"></p>
+<p>这时，我们便创建的一个UIStackView，包含刚才选中的那三个视图，或者说我们将选中的那三个视图组合成了一个UIStackView：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-13.png" alt="StackView-13"></p>
+<p>选中这个StackView，打开右侧的属性编辑窗口，可以看到在文章前言中讲过的四个主要属性：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-14.png" alt="StackView-14"></p>
+<p>虽然被包含的两个的UIImageView和UILabel可以由UIStackView的属性设置布局，但是就UIStackView本身而言，我们还是需要设置它的相关约束：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-15.png" alt="StackView-15"></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这两个UIImageView一个展示电影封面图片，一个展示评分，我们在StoryBoard中设置它们的image属性，并将Model设置为Aspect Fit，看看效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-16.png" alt="StackView-16"></p>
+<p>理想总是很丰满，现实总是很骨感，设置了图片后并不是我们想要的结果，图片的大小以及与文字的间隔都有问题。而且还出现了约束错误：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-17.png" alt="StackView-17"></p>
+<p>意思是StackView里的这三个内容没有指定x坐标的约束或者宽度的约束。但是作为StackView的子视图，它们的布局情况是由StackView通过各个属性设置的，断然不能在自身上添加约束，那么如何解决这个问题呢？其实很简单，我们选中中间的UILabel，然后打开右侧的尺寸属性面板，找到这两栏：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-18.png" alt="StackView-18"></p>
+<p><em>Content Hugging Priority</em>是水平、垂直方向的拉伸优先级，我们将<em>Horizontal</em>设置为250。这样就可以告诉StackView，中间的UILabel水平拉伸的优先级是最高的，当StackView的宽度变大时优先拉伸UILabel的宽度，这样前后两个UIImageView的宽度是保持不变的，否则会默认拉伸StackView中的第一个子视图，所以我们看到第一个UIImageView的宽度被拉伸了。</p>
+<p><em>Content Compression Resistance Priority</em>是水平、垂直方向的压缩优先级，道理和上面的拉伸优先级是一样的，我们将UILabel的水平压缩优先级设为749。</p>
+<p>现在你们会发现约束错误消失了，第一个UIImageView的宽度也正常了，而中间的UILabel被拉伸了：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-19.png" alt="StackView-19"></p>
+<p>接下来在<code>MovieTableViewCell</code>中添加这两个UIImageView和UILabel的<code>IBOutlet</code>：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-20.png" alt="StackView-20"></p>
+<p>然后在<code>MovieListTableViewController</code>中实现TableView的数据展示：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-21.png" alt="StackView-21"></p>
+<p>然后编译运行程序看看效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-22.png" alt="StackView-22"></p>
+<p>横屏也很完美：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-27.png" alt="StackView-27"></p>
+<p>一个完美的Movie List页面已经展现在我们眼前，电影封面、电影名称、电影评分被StackView按合理的布局组织在TableViewCell里，我们只是给StackView设置了简单的四个约束而已。可见StackView在视图布局方面可以给我们带来很大的便利。</p>
+<h2 id="StackView_u7684_u5D4C_u5957"><a href="#StackView_u7684_u5D4C_u5957" class="headerlink" title="StackView的嵌套"></a>StackView的嵌套</h2><p>既然UIStackView继承了UIView，那么UIStackView是否可以看做是一个UIView而被包含在UIStackView内呢？答案是肯定的，这一节向大家介绍UIStackView的嵌套。</p>
+<p>一些界面发杂的App，只要你仔细分析，总会发现StackView嵌套的布局，或看似相似的布局：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-23.png" alt="StackView-23"></p>
+<p>在MovieRate这个示例中，我们将StackView的嵌套运用在电影详情页面里：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-24.png" alt="StackView-24"></p>
+<p>上图是电影详情页的布局图，从图中我们可以看到一共有三个StackView，一个嵌套在一个里面。我们在Storyboard中把这个页面创建出来（StackView的创建方法在上一节中已经介绍过了，这里就不再累赘了）：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-25.png" alt="StackView-25"></p>
+<p>详情页的数据直接写在Storyboard中了，因为只是说明StackView的嵌套特性，所以界面比较粗糙。点击TableViewCell跳转到详情页的过程不再累赘了，编译运行看看效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/UIStackView-26.png" alt="StackView-26"></p>
+<p>虽然有点丑，但是这个页面展示出了StackView的嵌套特性。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>诚然UIStackView不是万能的，但是无疑它可以在布局和自适应方面给开发者带来便利，在恰当的情形下使用StackView可以事半功倍。而且因为UIStackView是UIView的子类，所以也可以将动画效果作用于UIStackView上，在方便布局之余还能提高用户体验，何乐而不为呢，那么让我们用起来吧。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/uiview-keyframe-animation/" itemprop="url">
                   iOS UIView Animation - Keyframe
                 </a>
@@ -975,206 +1183,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/uiview-first-animation/" itemprop="url">
-                  iOS UIView Animation - First Animation
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-06-28T00:00:00+08:00" content="2015-06-28">
-              2015-06-28
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/uiview-first-animation/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/uiview-first-animation/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<blockquote>
-<p>本文首发<a href="http://www.csdn.net/article/2015-07-02/2825115-ios-uiview-animation-1" target="_blank" rel="external">CSDN</a>，如需转载请与CSDN联系。</p>
-</blockquote>
-<h2 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h2><p>在一个看脸的社会中，不论什么事物，长的好看总是能多吸引一些目光。App同样不例外，一款面相不错的App就算功能已经被轮子千百遍，依然会有人买账，理由就是看的顺眼，于是平面设计人员越来越被重视。白驹过隙，斗转星移，人们已然不满足于静态的美感，于是动态的用户体验应运而生，平面设计人员捉襟见肘，是我们程序员出马的时候了。</p>
-<p>这篇文章是UIView Animation的第一篇，从极简的概念开始，为大家揭开Animation的神秘面纱。我们以一个登录界面为例。美丽的太阳，婀娜的云，还有几个小山包，中间静躺着用户名、密码输入框和登录按钮。搁以前，这个界面许是会亮瞎眼现如今尼玛狗都嫌。所以我们的目标是赋予这个界面生命力。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/FirstAnimation-LoginScreen.png" alt="登录页"></p>
-<blockquote>
-<p>注意：本文章基于Swift 2.0和Xcode 7 Beta2编写。登录界面中的所有元素都已经连接到了代码中（outlet），在这个示例中我们先不使用Auto Layout和SizeClasses。</p>
-</blockquote>
-<h2 id="u4F1A_u52A8_u7684_u8F93_u5165_u6846"><a href="#u4F1A_u52A8_u7684_u8F93_u5165_u6846" class="headerlink" title="会动的输入框"></a>会动的输入框</h2><p>我们的第一个场景应该是这样。用户打开App，启动画面过后显示登录界面，此时屏幕上还没有用户名和密码的输入框，下一秒他们从屏幕左侧飘然而至。</p>
-<h3 id="u9996_u5148"><a href="#u9996_u5148" class="headerlink" title="首先"></a>首先</h3><p>我们需要在登录界面还没有展现给用户的时候把用户名和密码的输入框移至屏幕外面。打开<code>ViewController.swift</code>，在<code>viewWillAppear()</code>方法中添加以下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">self</span>.username.center.x -= <span class="keyword">self</span>.view.bounds.width</span><br><span class="line"><span class="keyword">self</span>.password.center.x -= <span class="keyword">self</span>.view.bounds.width</span><br></pre></td></tr></table></figure>
-<p>这两行代码使用户名、密码输入框移出屏幕外，这里可以使用简单暴力的方式，直接让<code>center</code>的<code>x</code>减去屏幕宽度。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/FirstAnimation-LoginScreen-1.png" alt="输入框移出屏幕"></p>
-<h3 id="u7136_u540E"><a href="#u7136_u540E" class="headerlink" title="然后"></a>然后</h3><p>我们在<code>viewDidAppear()</code>方法中添加以下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.username.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line">    <span class="keyword">self</span>.password.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p><code>animationWithDuration(_:animations:)</code>是<code>UIView</code>的类方法，从方法名就可以看出，该方法可使<code>UIView</code>动起来。它有两个参数：</p>
-<ul>
-<li><code>duration</code>：动画的持续时间。</li>
-<li><code>animation</code>：动画闭包，在这个闭包中你可以改变<code>UIView</code>的各种动画属性。</li>
-</ul>
-<p>因为该方法是一个类方法，所以在闭包中你可以同时改变多个<code>views</code>的动画属性。所以在上述代码中，同时改变了用户名和密码输入框的位置。编译运行，我们可以看到如下效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/FirstAnimation-1.gif" alt="FirstAnimation-1"></p>
-<p>但是由于两个输入框是同时从屏幕外滑入，略显呆板，所以我们用另一个方法再来润色一下。</p>
-<h3 id="u6700_u540E"><a href="#u6700_u540E" class="headerlink" title="最后"></a>最后</h3><p>我们更新<code>viewDidAppear()</code>中的代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.username.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line"><span class="comment">//  self.password.center.x += self.view.bounds.width</span></span><br><span class="line">&#125;)</span><br><span class="line">        </span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, delay: <span class="number">0.3</span>, options: .<span class="type">AllowUserInteraction</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.password.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p><code>animationWithDuration(_:delay:options:animations:completion:)</code>方法同样是<code>UIView</code>的类方法，但是多了3个参数：</p>
-<ul>
-<li><code>delay</code>：顾名思义，动画迟延执行的时间。</li>
-<li><code>options</code>：自定义动画的一些效果，比如重复动画、前后运动等。这个参数在后面的文章中会说明。</li>
-<li><code>completion</code>：也是一个闭包，当动画执行完之后会执行该闭包中的逻辑，可以用来连接动画，或者是在动画结束后你需要做一些清理工作等。</li>
-</ul>
-<p>现在编译运行，可以看到如下效果：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/FirstAnimation-2.gif" alt="FirstAnimation-2"></p>
-<p>用户名输入框先滑入屏幕，在0.3秒的延迟后，密码输入框紧随其后。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<h2 id="u52A8_u753B_u5C5E_u6027"><a href="#u52A8_u753B_u5C5E_u6027" class="headerlink" title="动画属性"></a>动画属性</h2><p>在上一节，我们体验了视图的简单动画效果，不难发现，其实真正导致视图动起来的是<code>animations</code>闭包中的代码，也就是对视图属性的改变，然后<code>UIView</code>的类方法生成了视图某属性的起始值和终止值之间的补间动画。这引出了另一个概念，那就是视图的动画属性，诚然不是所有的视图属性都是动画属性，下面给大家介绍一下视图的动画属性。</p>
-<h3 id="u4F4D_u7F6E_u548C_u5927_u5C0F"><a href="#u4F4D_u7F6E_u548C_u5927_u5C0F" class="headerlink" title="位置和大小"></a>位置和大小</h3><ul>
-<li><code>bounds</code>：改变视图内容的位置和尺寸大小的属性。</li>
-<li><code>frame</code>：改变视图的位置和尺寸大小的属性。</li>
-<li><code>center</code>：改变视图位置的属性。</li>
-</ul>
-<h3 id="u5916_u89C2"><a href="#u5916_u89C2" class="headerlink" title="外观"></a>外观</h3><ul>
-<li><code>backgroundColor</code>：改变背景色时，<code>UIKit</code>会线性的从原始颜色转变为目标颜色。</li>
-<li><code>alpha</code>：改变透明度，<code>UIKit</code>会创建淡入淡出的效果。</li>
-</ul>
-<h3 id="u8F6C_u6362"><a href="#u8F6C_u6362" class="headerlink" title="转换"></a>转换</h3><p><code>transform</code>属性的类型为<code>CGAffineTransform</code>，它是一个结构体，<code>CoreGraphics</code>中有若干方法可生成不同的<code>CGAffineTransform</code>结构，使视图旋转、按比例缩放、翻转等，我们来看看它如何使用。在<code>viewDidAppear()</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> rotation = <span class="type">CGAffineTransformMakeRotation</span>(<span class="type">CGFloat</span>(<span class="type">M_PI</span>))</span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.sun.transform = rotation</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>首先创建了一个旋转的结构，参数是一个<code>CGFloat</code>类型的角度，这里我们使用预定义好的常量比如<code>M_PI</code>代表3.14…，也就是旋转一周、<code>M_PI_2</code>代表1.57…，也就是旋转半周等。</p>
-<p>然后在<code>animations</code>闭包中将创建的旋转结构赋值给屏幕上太阳视图的<code>transform</code>属性。编译运行可以看到如下效果：</p>
-<iframe src="https://player.vimeo.com/video/132005476?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>我们再来看看缩放，在<code>viewDidAppear()</code>方法中添加如下代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> scale = <span class="type">CGAffineTransformMakeScale</span>(<span class="number">0.5</span>, <span class="number">0.5</span>)       </span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">1</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.cloudBig.transform = scale</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>首先创建了一个缩放的结构，第一个参数是x轴的缩放比例，第二个参数是y轴的缩放比例。同样在<code>animations</code>闭包中将创建的缩放结构赋值给屏幕上云朵视图的<code>transform</code>属性。编译运行可以看到如下效果：</p>
-<iframe src="https://player.vimeo.com/video/132005775?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<h2 id="u52A8_u753B_u9009_u9879"><a href="#u52A8_u753B_u9009_u9879" class="headerlink" title="动画选项"></a>动画选项</h2><p>大家应该还记得我们之前使用过<code>animationWithDuration(_:delay:options:animations:completion:)</code>方法，其中的<code>options</code>当时没有详细的讲述，这节会向大家说明该属性。<code>options</code>选项可以使你自定义让<code>UIKit</code>如何创建你的动画。该属性需要一个或多个<code>UIAnimationOptions</code>枚举类型，让我们来看看都有哪些动画选项吧。</p>
-<h3 id="u91CD_u590D_u7C7B"><a href="#u91CD_u590D_u7C7B" class="headerlink" title="重复类"></a>重复类</h3><ul>
-<li><code>.Repeat</code>：该属性可以使你的动画永远重复的运行。</li>
-<li><code>.Autoreverse</code>：该属性可以使你的动画当运行结束后按照相反的行为继续运行回去。该属性只能和<code>.Repeat</code>属性组合使用。</li>
-</ul>
-<p>我们来看看怎么使用这两个属性，我们修改一个密码输入框的动画：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, delay: <span class="number">0.3</span>, options: .<span class="type">Repeat</span>, animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.password.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>编译运行看看效果：</p>
-<iframe src="https://player.vimeo.com/video/132008765?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>可以看到密码输入框不停的从左向右滑入。大家可以自己试试<code>.Autoreverse</code>的效果或者<code>[.Repeat, .Autoreverse]</code>组合效果。</p>
-<h3 id="u52A8_u753B_u7F13_u51B2"><a href="#u52A8_u753B_u7F13_u51B2" class="headerlink" title="动画缓冲"></a>动画缓冲</h3><p>在现实生活中，几乎没有什么东西可以突然开始运动，然后突然停止一动不动。可以运动的物体基本都是以较慢的速度启动，逐渐加速，达到一个稳定的速度，然后当要停止时，会逐渐减速，最后停止。所以要使动画更加逼真，也可以采用这种方式，那就是<strong>ease-in</strong>和<strong>ease-out</strong>。</p>
-<ul>
-<li><code>.CurveLinear</code> ：该属性既不会使动画加速也不会使动画减速，只是做以线性运动。</li>
-<li><code>.CurveEaseIn</code>：该属性使动画在开始时加速运行。</li>
-<li><code>.CurveEaseOut</code>：该属性使动画在结束时减速运行。</li>
-<li><code>.CurveEaseInOut</code>：该属性结合了上述两种情况，使动画在开始时加速，在结束时减速。</li>
-</ul>
-<p>下面依然以密码输入框作为示例，修改密码输入框的动画代码：</p>
-<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, delay: <span class="number">0.3</span>, options: [.<span class="type">Repeat</span>, .<span class="type">Autoreverse</span>, .<span class="type">CurveEaseOut</span>], animations: &#123;</span><br><span class="line">    <span class="keyword">self</span>.password.center.x += <span class="keyword">self</span>.view.bounds.width</span><br><span class="line">&#125;, completion: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
-<p>上面的代码中组合了三种动画选项，首先让动画重复执行，然后让动画在一次执行完毕后接着反方向再次执行，最后让动画在结束时减速。编译运行，这次我们减慢动画的运行速度来看看：</p>
-<iframe src="https://player.vimeo.com/video/132012000?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>从上面的效果中可以看到当密码输入框滑入屏幕的后半段时速度有明显的减慢。大家也可以在自己的项目中试试其他动画选项的组合。</p>
-<h2 id="u7ED3_u675F_u8BED"><a href="#u7ED3_u675F_u8BED" class="headerlink" title="结束语"></a>结束语</h2><p>看完这篇文章后，相信大家对iOS的动画有了大致的了解，也学会了如何实现简单的视图动画，当然这些只是iOS Animation的冰山一角，我会陆续向大家介绍iOS Animation的其他知识，今天就先到这吧。</p>
-<p>参考文献来自：<a href="http://www.raywenderlich.com/store/ios-animations-by-tutorials" target="_blank" rel="external">iOS Animations by Tutorials</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1217,7 +1225,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">124</span>
+              <span class="site-state-item-count">125</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1231,7 +1239,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">95</span>
+              <span class="site-state-item-count">96</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>

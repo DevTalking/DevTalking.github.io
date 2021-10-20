@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.devtalking.com/"/>
-  <updated>2021-10-16T15:57:33.207Z</updated>
+  <updated>2021-10-20T16:55:40.299Z</updated>
   <id>http://www.devtalking.com/</id>
   
   <author>
@@ -13,6 +13,95 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[用Blender做甜甜圈学习笔记七 - 制作糖衣上的糖粒]]></title>
+    <link href="http://www.devtalking.com//articles/blender-beginner-tutorial-7/"/>
+    <id>http://www.devtalking.com//articles/blender-beginner-tutorial-7/</id>
+    <published>2021-10-20T16:00:00.000Z</published>
+    <updated>2021-10-20T16:55:40.299Z</updated>
+    <content type="html"><![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+<p>这一节继续对糖衣进行完善，先来看一张实图：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-1.jpg" alt="7-1"></p>
+<p>可以看到糖衣上有五颜六色的糖粒（我猜应该是糖），呈小圆柱体，不规则的铺在糖衣上面。这一节就来实现糖衣上的小糖粒。</p>
+<h2 id="u6574_u7406_u5BF9_u8C61"><a href="#u6574_u7406_u5BF9_u8C61" class="headerlink" title="整理对象"></a>整理对象</h2><p>首先我们先通过集合的方式，对目前场景里的对象做一下分类和整理。选中一个或若干个对象，按下<code>M</code>，然后选择<code>New Collection</code>，就可以将对象放在一个集合中，在<a href="http://www.devtalking.com/articles/blender-beginner-tutorial-5/">《用Blender做甜甜圈学习笔记五 - 雕刻糖衣白模》</a>中使用过。</p>
+<p>为甜甜圈和糖衣创建<code>Donut</code>集合，将充当桌面的平面放在<code>Environment</code>集合中，将摄像机和灯光放在<code>Cam &amp; Light</code>集合中。</p>
+<a id="more"></a>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-2.jpg" alt="7-1"></p>
+<h2 id="u521B_u5EFA_u7CD6_u7C92_u767D_u6A21"><a href="#u521B_u5EFA_u7CD6_u7C92_u767D_u6A21" class="headerlink" title="创建糖粒白模"></a>创建糖粒白模</h2><p>先将场景中所有的对象都隐藏，然后按<code>Shift + A</code>选择<code>Mesh/UV Sphere</code>创建一个球体。将大小和拓扑面数都设置的小一些。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-3.jpg" alt="7-3"></p>
+<p>然后将这个球体移到甜甜圈旁边。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-4.jpg" alt="7-4"></p>
+<p>接下来要做的就是将这个球体编辑成一个小圆柱体。我们要做四步：</p>
+<ol>
+<li>选中球体，进入编辑模式。</li>
+<li>打开透视视图模式。</li>
+<li>选中球体的上半部分。</li>
+<li>使用<code>Extrude Region</code>工具，将上半部分拉长。</li>
+</ol>
+<blockquote>
+<p>以上操作在<a href="http://www.devtalking.com/articles/blender-beginner-tutorial-3/">用Blender做甜甜圈学习笔记三 - 捏出糖衣白模</a>和<a href="http://www.devtalking.com/articles/blender-beginner-tutorial-4/">用Blender做甜甜圈学习笔记四 - 完善糖衣白模</a>中有使用过。</p>
+</blockquote>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-5.jpg" alt="7-5"></p>
+<p>然后调整两头的形状，先选中一头的所有点，按下<code>S</code>，再按<code>Z</code>，将圆头调整为接近平头，另一侧同理，意思是将选中的部分按照Z轴缩放。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-6.jpg" alt="7-6"></p>
+<p>然后切换到对象模式，选中圆柱体，鼠标右键，选择<code>Shade Smooth</code>，将圆柱体的表面光滑的显示。在<a href="http://www.devtalking.com/articles/blender-beginner-tutorial-2/">用Blender做甜甜圈学习笔记二 - 捏出白模胚子</a>中我们使用过。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-7.jpg" alt="7-7"></p>
+<p>我们将糖粒的模型捏出来后，大家首先想到的一定就是将它铺满甜甜圈的糖衣，我们当然可以使用比较耗时耗力的方法，就是复制茫茫多个糖粒对象，然后手动移动到糖衣上，再调整方向和角度。那我们的心态一定会炸裂。</p>
+<p>在Blender中，肯定有更方便的方法来实现将糖粒铺满糖衣，并且分布密度和方向角度都是随机的。</p>
+<h2 id="u5C06_u7CD6_u7C92_u94FA_u6EE1_u7CD6_u8863"><a href="#u5C06_u7CD6_u7C92_u94FA_u6EE1_u7CD6_u8863" class="headerlink" title="将糖粒铺满糖衣"></a>将糖粒铺满糖衣</h2><p>实现这个效果，我们需要用到对象的粒子效果属性。选中糖衣，点击右侧的<code>Particle Properties</code>选项，然后添加粒子效果。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-8.png" alt="7-8"></p>
+<p>粒子效果有两种类型，<code>Emitter</code>和<code>Hair</code>，我们选择<code>Hair</code>，然后将<code>Render</code>设置下的<code>Render As</code>改为<code>Object</code>，即将渲染粒子方式改为对象。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-9.png" alt="7-9"></p>
+<p>然后将<code>Render</code>设置下的<code>Object</code>下的<code>Instance Object</code>设置为我们的糖粒对象。意思就是用糖粒对象来充当粒子。</p>
+<blockquote>
+<p>点击<code>Instance Object</code>旁边的吸管，然后选择糖粒对象。</p>
+</blockquote>
+<p>此时，我们就可以看到在糖衣上出现了密密麻麻的糖粒。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-10.jpg" alt="7-10"></p>
+<h2 id="u8C03_u6574_u7CD6_u7C92_u7684_u968F_u673A_u6027"><a href="#u8C03_u6574_u7CD6_u7C92_u7684_u968F_u673A_u6027" class="headerlink" title="调整糖粒的随机性"></a>调整糖粒的随机性</h2><p>将糖粒铺到糖衣上后，我们需要调增糖粒大小、分布范围、方向的随机性，这样显的更加真实。首先可以设置<code>Render</code>下的<code>Scale</code>属性，来调整糖粒的大小，或者说粒子的大小。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-11.jpg" alt="7-11"></p>
+<p>然后来调整糖粒的方向，我们首先要勾选<code>Advanced</code>，然后会出现<code>Rotation</code>设置，然后勾选<code>Rotation</code>，并将<code>Rotation</code>下的<code>Orientation Axis</code>属性设置为<code>Normal</code>，然后调整<code>Randomize Phase</code>的值，就可以看到所有糖粒的方向开始有了随机的变化。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-12.jpg" alt="7-12"></p>
+<p>真实的情况下，糖粒撒到糖衣上，不会完全是平铺的，肯定会有一些糖粒插进糖衣的情况，所以我们可以调整<code>Randomize</code>属性来实现这个效果。</p>
+<blockquote>
+<p><code>Randomize</code>调整一点即可，不然糖衣就变成刺猬了。</p>
+</blockquote>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-13.jpg" alt="7-13"></p>
+<p>最后我们再来调整糖粒的分布范围，因为正常情况糖粒一般会分布在糖衣表面，侧面是不太会有糖粒的，而现在我们的糖衣模型侧面也有糖粒。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-14.jpg" alt="7-14"></p>
+<p>解决这个问题，我们需要用到权重设置<code>Weight Paint</code>，我们在左上角的下拉菜单中可以切换到<code>Weight Paint</code>摸下，或者可以用快捷键<code>Ctrl + Tab</code>来切换。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-15.jpg" alt="7-15"></p>
+<p>切换到权重设置或权重绘制模式后，可以看到糖衣整个变成了蓝色，这表示此时的权重为0。当我们按鼠标左键在糖衣上滑动时，会看到像热力图似地样子出现，其中红色就表示权重为1，其他颜色就是1至0之间的权重。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-16.jpg" alt="7-16"></p>
+<p>我们可以通过调整顶部的<code>Radius</code>来调整绘制权重的笔触范围。调整好笔触范围后，我们将糖衣顶部都绘制为权重1。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-17.jpg" alt="7-17"></p>
+<p>然后将<code>Vertex Groups</code>下的<code>Density</code>设置为<code>Group</code>，此时就可以看到糖粒的范围基本都在刚才绘制的权重为1的范围内。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-18.jpg" alt="7-18"></p>
+<p>如果觉得糖粒太多太密，我们还可以调整<code>Emission</code>下的<code>Number</code>，可以控制粒子的数量。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-19.jpg" alt="7-19"></p>
+<p>到目前为止，糖粒的白模就制作完毕了，上一张渲染图看看效果。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-20.png" alt="7-20"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+<p>这一节继续对糖衣进行完善，先来看一张实图：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-7/7-1.jpg" alt="7-1"></p>
+<p>可以看到糖衣上有五颜六色的糖粒（我猜应该是糖），呈小圆柱体，不规则的铺在糖衣上面。这一节就来实现糖衣上的小糖粒。</p>
+<h2 id="u6574_u7406_u5BF9_u8C61"><a href="#u6574_u7406_u5BF9_u8C61" class="headerlink" title="整理对象"></a>整理对象</h2><p>首先我们先通过集合的方式，对目前场景里的对象做一下分类和整理。选中一个或若干个对象，按下<code>M</code>，然后选择<code>New Collection</code>，就可以将对象放在一个集合中，在<a href="http://www.devtalking.com/articles/blender-beginner-tutorial-5/">《用Blender做甜甜圈学习笔记五 - 雕刻糖衣白模》</a>中使用过。</p>
+<p>为甜甜圈和糖衣创建<code>Donut</code>集合，将充当桌面的平面放在<code>Environment</code>集合中，将摄像机和灯光放在<code>Cam &amp; Light</code>集合中。</p>]]>
+    
+    </summary>
+    
+      <category term="Blender Level 2" scheme="http://www.devtalking.com/tags/Blender-Level-2/"/>
+    
+      <category term="Blender" scheme="http://www.devtalking.com/categories/Blender/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[用Blender做甜甜圈学习笔记六 - 渲染甜甜圈]]></title>
@@ -1833,88 +1922,6 @@
 <p>这一节来看看如何使用Java编写Kafka Producer。</p>
 <h2 id="Create_Kafka_Project"><a href="#Create_Kafka_Project" class="headerlink" title="Create Kafka Project"></a>Create Kafka Project</h2><p>创建Maven工程，在POM文件中加入如下两个依赖：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.kafka<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>kafka-clients<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.0.0<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>slf4j-simple<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.7.25<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>第一个是Kafka的依赖包，用于创建Producer、ProducerRecord、Consumer等。第二个是Log4J的依赖包，用于输出日志。</p>]]>
-    
-    </summary>
-    
-      <category term="Kafka" scheme="http://www.devtalking.com/tags/Kafka/"/>
-    
-      <category term="中间件" scheme="http://www.devtalking.com/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Kafka从上手到实践-Kafka CLI：Reseting Offset & Config CLI]]></title>
-    <link href="http://www.devtalking.com//articles/kafka-practice-9/"/>
-    <id>http://www.devtalking.com//articles/kafka-practice-9/</id>
-    <published>2018-11-30T16:00:00.000Z</published>
-    <updated>2020-06-21T08:12:29.012Z</updated>
-    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="Reseting_Offset"><a href="#Reseting_Offset" class="headerlink" title="Reseting Offset"></a>Reseting Offset</h2><p>在实际的业务场景中，经常需要重复消费Topic中的Message，所以来看看如何重置Offset。</p>
-<p>首先重置Offset可以通过如下的命令：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --group consumer_group_1 --reset-offsets [options] --execute --topic xxxx</span><br></pre></td></tr></table></figure></p>
-<p>Kafka为我们提供了6种重置Offset的方式，也就是命令中的<code>options</code>：</p>
-<ul>
-<li><code>--to-earliest</code>：重置到最早的Offset。</li>
-<li><code>--to-latest</code>：重置到最后的Offset。</li>
-<li><code>--to-offset &lt;Long: offset&gt;</code>：重置到指定的Offset。</li>
-<li><code>--to-current</code>：重置到当前的Offset。</li>
-<li><code>--to-datetime &lt;String: datetime&gt;</code>：重置到指定时间的Offset，时间格式为<code>YYYY-MM-DDTHH:mm:SS.sss</code>。</li>
-<li><code>--shift-by &lt;Long: number-of-offsets&gt;</code>：左移或右移Offset。</li>
-</ul>
-<a id="more"></a>
-<p>举个例子来看看：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --group consumer_group_1 --topic first_topic --reset-offsets --shift-by -2 --execute&#10;&#10;TOPIC                          PARTITION  NEW-OFFSET&#10;first_topic                    2          15&#10;first_topic                    1          17&#10;first_topic                    0          15</span><br></pre></td></tr></table></figure></p>
-<p>上面的命令将<code>consumer_group_1</code>消费<code>first_topic</code>的三个Partitions的Offset向左移了2位。如此之后，相当于<code>consumer_group_1</code>还有6条Message没有消费。我们启动Consumer看一下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --group consumer_group_1 --topic first_topic&#10;&#10;C&#10;F&#10;E&#10;this is another message.&#10;A&#10;D</span><br></pre></td></tr></table></figure></p>
-<p>可以看到启动Consumer后，消费了6条Message。其他的Reset Options用法是一样的。这使得我们可以非常灵活的控制Consumer消费Message。</p>
-<h2 id="Config_CLI"><a href="#Config_CLI" class="headerlink" title="Config CLI"></a>Config CLI</h2><p>我们再来看看如何通过命令进行Kafka的配置。用到的命令是<code>kafka-config.sh</code>，该命令可以对Topic、Broker、Client进行配置。关键的属性有以下三个：</p>
-<ul>
-<li><code>--entity-type</code>：这个属性设置要对什么进行配置，可选值为<code>topics</code>、<code>brokers</code>、<code>clients</code>、<code>users</code>。</li>
-<li><code>--entity-name</code>：这个属性设置对应Type的名称，比如Topic名称、Broker Id、Client Id、User name。</li>
-<li><code>--alter</code>：确认修改。</li>
-</ul>
-<p>首先我们创建一个Topic：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-topics.sh --zookeeper 127.0.0.1:2181 --create --topic configured-topic --partitions 3 --replication-factor 1</span><br></pre></td></tr></table></figure></p>
-<p>看看新创建的Topic的信息：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic configured-topic --describe&#10;&#10;Topic:configured-topic&#9;PartitionCount:3&#9;ReplicationFactor:1&#9;Configs:&#10;Topic: configured-topic&#9;Partition: 0&#9;Leader: 0&#9;Replicas: 0&#9;Isr: 0&#10;Topic: configured-topic&#9;Partition: 1&#9;Leader: 0&#9;Replicas: 0&#9;Isr: 0&#10;Topic: configured-topic&#9;Partition: 2&#9;Leader: 0&#9;Replicas: 0&#9;Isr: 0</span><br></pre></td></tr></table></figure></p>
-<p>可以看到打印信息中的Configs是空的，说明这个Topic没有做额外的配置。或者也可以使用如下命令查看Topic的配置：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-configs.sh --zookeeper 127.0.0.1:2181 --entity-type topics --entity-name configured-topic --describe&#10;&#10;Configs for topic &#39;configured-topic&#39; are</span><br></pre></td></tr></table></figure></p>
-<p>看到打印信息只有<code>Configs for topic &#39;configured-topic&#39; are</code>，同样说明该Topic还没有额外配置信息。</p>
-<p>接下来该这个Topic设置<code>min.insync.replicas</code>属性：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-configs.sh --zookeeper 127.0.0.1:2181 --entity-type topics --entity-name configured-topic --add-config min.insync.replicas=2 --alter&#10;&#10;Completed Updating config for entity: topic &#39;configured-topic&#39;.</span><br></pre></td></tr></table></figure></p>
-<p>再来查看一下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-configs.sh --zookeeper 127.0.0.1:2181 --entity-type topics --entity-name configured-topic --describe&#10;&#10;Configs for topic &#39;configured-topic&#39; are min.insync.replicas=2&#10;&#10;kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic configured-topic --describe&#10;&#10;Topic:configured-topic&#9;PartitionCount:3&#9;ReplicationFactor:1&#9;Configs:min.insync.replicas=2&#10;Topic: configured-topic&#9;Partition: 0&#9;Leader: 0&#9;Replicas: 0&#9;Isr: 0&#10;Topic: configured-topic&#9;Partition: 1&#9;Leader: 0&#9;Replicas: 0&#9;Isr: 0&#10;Topic: configured-topic&#9;Partition: 2&#9;Leader: 0&#9;Replicas: 0&#9;Isr: 0</span><br></pre></td></tr></table></figure></p>
-<p>两种方式都可以看到刚才更新的配置信息。</p>
-<p>将<code>--add-config</code>换成<code>--delete-config</code>就可以删除配置项：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-configs.sh --zookeeper 127.0.0.1:2181 --entity-type topics --entity-name configured-topic --add-config min.insync.replicas=2 --alter&#10;&#10;Completed Updating config for entity: topic &#39;configured-topic&#39;.</span><br></pre></td></tr></table></figure></p>
-<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>这一章节进一步介绍了如何通过Kafka CLI操作Consumer Offset，以及如何使用Config CLI对Kafka进行配置。下一章节会介绍如何使用Kafka API编写Kafka Java Client。希望能给小伙伴们带来帮助。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>]]></content>
-    <summary type="html">
-    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="Reseting_Offset"><a href="#Reseting_Offset" class="headerlink" title="Reseting Offset"></a>Reseting Offset</h2><p>在实际的业务场景中，经常需要重复消费Topic中的Message，所以来看看如何重置Offset。</p>
-<p>首先重置Offset可以通过如下的命令：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --group consumer_group_1 --reset-offsets [options] --execute --topic xxxx</span><br></pre></td></tr></table></figure></p>
-<p>Kafka为我们提供了6种重置Offset的方式，也就是命令中的<code>options</code>：</p>
-<ul>
-<li><code>--to-earliest</code>：重置到最早的Offset。</li>
-<li><code>--to-latest</code>：重置到最后的Offset。</li>
-<li><code>--to-offset &lt;Long: offset&gt;</code>：重置到指定的Offset。</li>
-<li><code>--to-current</code>：重置到当前的Offset。</li>
-<li><code>--to-datetime &lt;String: datetime&gt;</code>：重置到指定时间的Offset，时间格式为<code>YYYY-MM-DDTHH:mm:SS.sss</code>。</li>
-<li><code>--shift-by &lt;Long: number-of-offsets&gt;</code>：左移或右移Offset。</li>
-</ul>]]>
     
     </summary>
     

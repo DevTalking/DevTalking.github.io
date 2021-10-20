@@ -247,6 +247,118 @@
             
             
               
+                <a class="post-title-link" href="/articles/kafka-practice-14/" itemprop="url">
+                  Kafka从上手到实践-实践真知：搭建Zookeeper集群
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2019-02-10T00:00:00+08:00" content="2019-02-10">
+              2019-02-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/kafka-practice-14/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-14/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>这一节我们来真正搭建一个Zookeeper集群。</p>
+<h2 id="u642D_u5EFAZookeeper_u96C6_u7FA4"><a href="#u642D_u5EFAZookeeper_u96C6_u7FA4" class="headerlink" title="搭建Zookeeper集群"></a>搭建Zookeeper集群</h2><p>首先要做的就是再租赁两个服务器，参照<strong>搭建单机Kafka</strong>章节中的步骤，租赁阿里云服务器、安装JDK、下载配置Kafka、配置安全组规则。</p>
+<h3 id="Zookeeper_u914D_u7F6E_u4FE1_u606F"><a href="#Zookeeper_u914D_u7F6E_u4FE1_u606F" class="headerlink" title="Zookeeper配置信息"></a>Zookeeper配置信息</h3><p>在<strong>搭建单机Kafka</strong>章节中，启动的是单机Zookeeper，所以<code>/root/kafka_2.12-2.0.0/config</code>目录下的<code>zookeeper.properties</code>配置文件中只配置了<code>dataDir</code>，也就是存储各种数据、日志、快照的路径。</p>
+<p>在搭建Zookeeper时，就需要额外再配置一些参数了。同样打开<code>/root/kafka_2.12-2.0.0/config</code>目录下的<code>zookeeper.properties</code>配置文件，额外添加如下内容：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">maxClientCnxns=0&#10;tickTime=2000&#10;initLimit=10&#10;syncLimit=5&#10;quorumListenOnAllIPs=true&#10;server.1=zookeeper.server.1:2888:3888&#10;server.2=zookeeper.server.2:2888:3888&#10;server.3=zookeeper.server.3:2888:3888</span><br></pre></td></tr></table></figure></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/kafka-practice-14/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/kafka-practice-13/" itemprop="url">
                   Kafka从上手到实践-Zookeeper CLI：CRUD zNode
                 </a>
@@ -687,125 +799,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/kafka-practice-9/" itemprop="url">
-                  Kafka从上手到实践-Kafka CLI：Reseting Offset & Config CLI
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2018-12-01T00:00:00+08:00" content="2018-12-01">
-              2018-12-01
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/中间件/" itemprop="url" rel="index">
-                    <span itemprop="name">中间件</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/kafka-practice-9/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/kafka-practice-9/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="Reseting_Offset"><a href="#Reseting_Offset" class="headerlink" title="Reseting Offset"></a>Reseting Offset</h2><p>在实际的业务场景中，经常需要重复消费Topic中的Message，所以来看看如何重置Offset。</p>
-<p>首先重置Offset可以通过如下的命令：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --group consumer_group_1 --reset-offsets [options] --execute --topic xxxx</span><br></pre></td></tr></table></figure></p>
-<p>Kafka为我们提供了6种重置Offset的方式，也就是命令中的<code>options</code>：</p>
-<ul>
-<li><code>--to-earliest</code>：重置到最早的Offset。</li>
-<li><code>--to-latest</code>：重置到最后的Offset。</li>
-<li><code>--to-offset &lt;Long: offset&gt;</code>：重置到指定的Offset。</li>
-<li><code>--to-current</code>：重置到当前的Offset。</li>
-<li><code>--to-datetime &lt;String: datetime&gt;</code>：重置到指定时间的Offset，时间格式为<code>YYYY-MM-DDTHH:mm:SS.sss</code>。</li>
-<li><code>--shift-by &lt;Long: number-of-offsets&gt;</code>：左移或右移Offset。</li>
-</ul>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/kafka-practice-9/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -848,7 +841,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">124</span>
+              <span class="site-state-item-count">125</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -862,7 +855,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">95</span>
+              <span class="site-state-item-count">96</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
