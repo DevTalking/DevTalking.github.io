@@ -247,6 +247,207 @@
             
             
               
+                <a class="post-title-link" href="/articles/gojs-simple-diagram/" itemprop="url">
+                  JavaScript图表图形框架 -- GOJS简介
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-07-18T00:00:00+08:00" content="2014-07-18">
+              2014-07-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/gojs-simple-diagram/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/gojs-simple-diagram/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>gojs是一个能够让我们很容易的实现基于html5浏览器绘制具有交互性的图形图表的JavaScript框架。<br>gojs采用了面向对象的编程模式。以图形对象表示绘图模板。以用普通js对象存储数据作为数据模型，然后赋值给图形对象的属性作为数据绑定的模式。gojs同样提供了大量工具类来代表我们的交互行为。我们需要做的就是创建图形对象、构建数据模型、设置属性、绑定数据模型、使用工具类添加行为即可创建出具有丰富交互性能的各种图表。 </p>
+<h2 id="u4E00_u4E2A_u7B80_u5355_u7684gojs_u56FE_u8868"><a href="#u4E00_u4E2A_u7B80_u5355_u7684gojs_u56FE_u8868" class="headerlink" title="一个简单的gojs图表"></a>一个简单的gojs图表</h2><p>下面的代码定义了一个<code>node</code>模板和数据模型，并它们构建了一个简单的图表：  </p>
+<pre><code>// For conciseness. See the &quot;Building Parts&quot; intro page for more
+var $ = go.GraphObject.make;
+
+// the node template describes how each Node should be constructed
+diagram.nodeTemplate =
+  $(go.Node, &quot;Auto&quot;,  // the Shape automatically fits around the TextBlock
+    $(go.Shape, &quot;RoundedRectangle&quot;,
+      // bind Shape.fill to Node.data.color
+      new go.Binding(&quot;fill&quot;, &quot;color&quot;)),
+    $(go.TextBlock,
+      { margin: 3 },  // some room around the text
+      // bind TextBlock.text to Node.data.key
+      new go.Binding(&quot;text&quot;, &quot;key&quot;))
+  );
+
+// the Model holds only the essential information describing the diagram
+diagram.model = new go.GraphLinksModel(
+[ // a JavaScript Array of JavaScript objects, one per node
+  { key: &quot;Alpha&quot;, color: &quot;lightblue&quot; },
+  { key: &quot;Beta&quot;, color: &quot;orange&quot; },
+  { key: &quot;Gamma&quot;, color: &quot;lightgreen&quot; },
+  { key: &quot;Delta&quot;, color: &quot;pink&quot; }
+],
+[ // a JavaScript Array of JavaScript objects, one per link
+  { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },
+  { from: &quot;Alpha&quot;, to: &quot;Gamma&quot; },
+  { from: &quot;Beta&quot;, to: &quot;Beta&quot; },
+  { from: &quot;Gamma&quot;, to: &quot;Delta&quot; },
+  { from: &quot;Delta&quot;, to: &quot;Alpha&quot; }
+]);
+
+diagram.initialContentAlignment = go.Spot.Center;
+// enable Ctrl-Z to undo and Ctrl-Y to redo
+diagram.undoManager.isEnabled = true;
+</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/simpleDiagram.jpg" alt="Diagram">  </p>
+<p>虽然上面展示的是图片，但是实际上我们可以在这个图表上用鼠标中键滚动、选中、删除、重做、撤销等等交互。</p>
+<h2 id="gojs_u7684_u57FA_u672C_u6982_u5FF5"><a href="#gojs_u7684_u57FA_u672C_u6982_u5FF5" class="headerlink" title="gojs的基本概念"></a>gojs的基本概念</h2><p>上面的示例是让我们先在感官上认知一下gojs的产出物，下面我们来阐述一下gojs的基本概念。  </p>
+<p>gojs绘制的图表（<code>Diagram</code>）具有两个最基本的元素，就是点和线（<code>Node</code>和<code>Link</code>），并且他们可以自由组合组成一个组（<code>Group</code>）。所有的元素都处在图层（<code>Layer</code>）上，并且可以对它们进行布局（<code>Layout</code>）。  </p>
+<p>每个<code>Diagram</code>都是通过数据模型（<code>Model</code>）来填充和确定<code>Node</code>的信息和<code>Link</code>的所属关系的。并且我们只需要创建好<code>Node</code>和<code>Link</code>的模板以及数据模型，其他的是事情都交给gojs去处理。它会通过<code>Model.nodeDataArray</code>方法和<code>GraphLinksModel.linkDataArray</code>方法自动加载模型并构建元素。  </p>
+<p>每一个<code>Node</code>和<code>Link</code>都是通过模板来描述他们的文本、形状、颜色等信息以及交互行为。每个模板其实就是一个面板（<code>Panel</code>）（你可以将各种元素自由组合在它里面，也可以在它里面添加各种交互行为），比如说将<code>TextBlock</code>、<code>Shape</code>、<code>Picture</code>等元素添加到这个<code>Panel</code>中，鼠标进入离开的交互行为也可以添加到<code>Panel</code>中，那么这个<code>Panel</code>就是一个模板。</p>
+<p>每个<code>Node</code>的位置可以使用<code>Diagram.layout</code>或<code>Group.layout</code>进行初始化设置，也可以基于交互行为进行拖拽。  </p>
+<p>gojs里的工具类可以为<code>Diagram</code>添加鼠标、键盘事件。一般情况下<code>Diagram</code>都默认设置了几种交互行为，比如说拖拽、连线。我们也可以通过<code>ToolManager</code>对象来管理工具类，或者说来管理交互行为，比如说可以停止某些交互，或开启某些交互等。  </p>
+<p>每个<code>Diagram</code>同时也包含<code>CommandHandler</code>对象，它的作用是添加一些键盘命令，比如点<code>Delete</code>键删除元素，<code>Ctrl+C</code>复制、<code>Ctrl+V</code>粘贴、<code>Ctrl+Z</code>撤销等。但是<code>CommandHandler</code>也是被<code>ToolManager</code>管理的。  </p>
+<p><code>Diagram</code>也提供通过鼠标中键滚动视图、放大缩小视图。</p>
+<p>gojs还提供了图表的预览视图（<code>Overview</code>），用于了解大规模图表的概况，同时还提供了组件管理面板（<code>Palette</code>），用于管理创建的组件，并且支持将组件拖拽到<code>Diagram</code>中。</p>
+<p>在<code>Diagram</code>中，你可以选中<code>Node</code>或者<code>Link</code>，你会发现他们有少许的变化，比如在<code>Node</code>周围会增加选中框，选中<code>Link</code>会变色等。这些都是由<code>Adornment</code>对象控制的，你还可以用它来增加提示框、右键菜单等。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="Diagram_u9ED8_u8BA4_u7684_u4EA4_u4E92_u884C_u4E3A"><a href="#Diagram_u9ED8_u8BA4_u7684_u4EA4_u4E92_u884C_u4E3A" class="headerlink" title="Diagram默认的交互行为"></a>Diagram默认的交互行为</h2><ul>
+<li>选中<code>Node</code>或者<code>Link</code>，会出现蓝色选中框，<code>Link</code>也会变为蓝色。</li>
+<li>使用<code>Ctrl+鼠标左键</code>可以选中多个元素。</li>
+<li>在<code>Panel</code>中点击鼠标左键移动鼠标可以移动所有元素。</li>
+<li>使用<code>Ctrl+A</code>可以选中所有元素。</li>
+<li>选中元素，用鼠标可以拖动元素。</li>
+<li>使用<code>Ctrl+C</code>/<code>Ctrl+V</code>可以复制粘贴元素。</li>
+<li>使用<code>Delete</code>键可以删除元素。</li>
+<li>选中多个元素，然后使用<code>Ctrl+G</code>可以将这些选中的元素组合成一个组。</li>
+<li>使用<code>Ctrl+Shift+G</code>可以拆散组。</li>
+<li>当元素超出<code>Diagram</code>时，可自动出现滚动条。</li>
+<li>用鼠标拖拽<code>Node</code>边缘可以与其他<code>Node</code>进行连线。</li>
+<li>选中<code>Link</code>，可以重新选择目标<code>Node</code>，即可以重新连线。</li>
+</ul>
+<h2 id="u521B_u5EFA_u4E00_u4E2ADiagram"><a href="#u521B_u5EFA_u4E00_u4E2ADiagram" class="headerlink" title="创建一个Diagram"></a>创建一个Diagram</h2><p>每个<code>Diagram</code>都需要依托与一个HTML的<code>DIV</code>元素，虽然由gojs接管了这个<code>DIV</code>，但是<code>DIV</code>本身的属性依然可以由我们通过CSS设置，比如位置、高宽等。gojs实际上是在<code>DIV</code>中创建了一个<code>Canvas</code>元素，<code>Canvas</code>的高宽自动适配<code>DIV</code>的高宽。</p>
+<pre><code>&lt;!-- The DIV for a Diagram needs an explicit size or else we won&apos;t see anything.
+ In this case we also add a border to help see the edges. --&gt;
+&lt;div id=&quot;myDiagramDiv&quot; style=&quot;border: solid 1px blue; width:400px; height:150px&quot;&gt;&lt;/div&gt;
+</code></pre><p>当然，当你准备开始创建<code>Diagram</code>前，首先要导入gojs的文件。gojs的文件分为Develop（<code>gojs-debug.js</code>）和Product（<code>gojs.js</code>）两种，前者是供开发人员使用的，因为它包含了一些用于调试的代码，后者用于正式发布，速度较快。gojs不依赖与任何JavaScript框架，所以它可以与任何JavaScript框架一起使用，而不会产生冲突。</p>
+<pre><code>&lt;!-- Include the GoJS library. --&gt;
+&lt;script src=&quot;gojs.js&quot;&gt;&lt;/script&gt;
+</code></pre><p>下面就可以使用gojs将上述的<code>DIV</code>构建为一个<code>Diagram</code>了，这里需要注意的是，使用gojs的api时，都要使用前缀<code>go.</code>。</p>
+<pre><code>&lt;!-- Create the Diagram in the DIV element using JavaScript. --&gt;
+&lt;!-- The &quot;go&quot; object is the &quot;namespace&quot; that holds all of the GoJS types. --&gt;
+&lt;script&gt;
+var diagram = new go.Diagram(&quot;myDiagramDiv&quot;);
+diagram.model = new go.GraphLinksModel(
+    [{ key: &quot;Hello&quot; },   // two node data, in an Array
+    { key: &quot;World!&quot; }],
+    [{ from: &quot;Hello&quot;, to: &quot;World!&quot;}]  // one link, in an Array
+);
+&lt;/script&gt;
+</code></pre><p>这样就构建了一个简单的<code>Diagram</code>。<br><img src="http://www.devtalking.com/postImages/anotherSimpleDiagram.jpg" alt="Diagram"></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/method-category-protocol/" itemprop="url">
                   Objective-C中的实例方法、类方法、Category、Protocol
                 </a>
@@ -1616,152 +1817,11 @@ void doBlockA() {
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/supplementary-brain/" itemprop="url">
-                  你要补脑 - Git|GitHub|Ruby|rbenv|brew|gem|jekyll
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-06-16T00:00:00+08:00" content="2014-06-16">
-              2014-06-16
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/能工巧匠/" itemprop="url" rel="index">
-                    <span itemprop="name">能工巧匠</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/supplementary-brain/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/supplementary-brain/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2><p>Git是一个分布式<strong>版本控制</strong>/<strong>软件配置管理</strong>软件，原是Linux内核开发者林纳斯·托瓦兹（Linus Torvalds）为更好的管理Linux内核开发而设计。</p>
-<blockquote>
-<p>版本控制是维护工程蓝图的标准做法，能追踪工程蓝图从诞生到定案的过程。此外，版本控制也是一种软件工程技巧，借此能在软件开发的过程中，确保由不同人所编辑的同一程式档案都得到同步。</p>
-<p>软件配置管理（Software Configuration Management），又称软件形态管理、或者软件建构管理，简称软件形管（SCM）。界定软件的组成项目，对每个项目的变更进行管控，并维护不同项目之间的版本关联，以使软件在开发过程中任一时间的内容都可以被追溯。</p>
-</blockquote>
-<p>Git是用于Linux内核开发的版本控制工具。与CVS、Subversion一类的集中式版本控制工具不同，它采用了分布式版本控制的做法，不需要服务器端软件，就可以运作版本控制，使得源代码的发布和交流极其方便。</p>
-<p>Git和其他版本控制（如CVS、SVN）有不少的差别，Git本身关心文件的整体性是否有改变，但多数的CVS和SVN系统则在乎文件内容的差异。因此Git更像一个文件系统，直接在本机上取得数据，不必连接到主机端获取数据。</p>
-<h2 id="GitHub"><a href="#GitHub" class="headerlink" title="GitHub"></a>GitHub</h2><p>GitHub是一个<strong>共享虚拟主机服务</strong>，用于存放使用Git版本控制的软件代码和内容项目。它由Github公司的开发者使用<strong>Ruby on Rails</strong>编写而成。</p>
-<blockquote>
-<p>共享虚拟主机是在一台虚拟主机上托管多个服务器的服务方式。</p>
-<p>Ruby on Rails，简称Rails，是一个使用Ruby语言写的开源Web应用框架，它是严格按照MVC结构开发的。</p>
-</blockquote>
-<p>GitHub同时提供付费账户和为开源项目提供的免费账户。除了允许个人和组织创建和访问代码库以外，它也提供了一些方便社会化软件开发的功能，包括允许用户跟踪其他用户、组织、软件库的动态，对软件代码的改动和 bug 提出评论等。GitHub也提供了图表功能，用于显示开发者们怎样在代码库上工作以及软件的开发活跃程度。</p>
-<h2 id="rbenv"><a href="#rbenv" class="headerlink" title="rbenv"></a>rbenv</h2><p><strong>Ruby</strong>常有不同的版本同时存在，目前OS X 10.9.3中的版本是2.0.0p451，目前最新的版本是2.1.1，但是有些开发者仍然使用1.8.x系列的版本，而且很多程序只针对特定的Ruby版本。所以对Ruby做版本管理是极为重要的。</p>
-<blockquote>
-<p>Ruby是一种面向对象、命令式、函数式、动态的通用编程语言。</p>
-</blockquote>
-<p>常用的几个Ruby版本管理工具有：rvm，rbenv，ry，rbfu。rvm 应该是最早出现、使用最多的，因为过于强大以至于违背了某个 Linux 软件开发原则，所以出现了很多轻便的替代者，其中来自 37signals 的 rbenv 就很受欢迎。ry 和 rbfu 看上去更轻便，不过使用不广泛。</p>
-<h2 id="Homebrew"><a href="#Homebrew" class="headerlink" title="Homebrew"></a>Homebrew</h2><blockquote>
-<p>Homebrew is the easiest and most flexible way to install the UNIX tools Apple didn’t include with OS X.</p>
-</blockquote>
-<p>我们能够通过终端方便的使用它安装管理苹果没有自带的Unix相关工具软件。被誉为OS X 不可或缺的套件管理器。</p>
-<h2 id="RubyGems"><a href="#RubyGems" class="headerlink" title="RubyGems"></a>RubyGems</h2><blockquote>
-<p>RubyGems is a sophisticated package manager for Ruby.</p>
-</blockquote>
-<p>RubyGems是一个方便而强大的Ruby程序包管理器，Ruby的第三方插件是用gem方式来管理，非常容易发布和共享，一个简单的命令就可以安装上第三方的扩展库。特点：能远程安装包，包之间依赖关系的管理，简单可靠的卸载，查询机制，能查询本地和远程服务器的包信息，能保持一个包的不同版本，基于Web的查看接口，能查看你安装的gem的信息。</p>
-<h2 id="Jekyll"><a href="#Jekyll" class="headerlink" title="Jekyll"></a>Jekyll</h2><p>Jekyll 是一个简单的博客形态的静态站点生产机器。它有一个模版目录，其中包含原始文本格式的文档，通过 Markdown （或者 Textile） 以及 Liquid 转化成一个完整的可发布的静态网站，你可以发布在任何你喜爱的服务器上。Jekyll 也可以运行在 GitHub Page 上，也就是说，你可以使用 GitHub 的服务来搭建你的项目页面、博客或者网站，而且是完全免费的。</p>
-<h2 id="Liquid"><a href="#Liquid" class="headerlink" title="Liquid"></a>Liquid</h2><p>Liquid是一个模板制作引擎，通过简单的标记语言制作强大的html、css页面模板。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/24/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span>
+    <a class="extend prev" rel="prev" href="/page/24/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><a class="extend next" rel="next" href="/page/26/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1799,7 +1859,7 @@ void doBlockA() {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">125</span>
+              <span class="site-state-item-count">126</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

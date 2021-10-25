@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.devtalking.com/"/>
-  <updated>2021-10-20T16:55:40.299Z</updated>
+  <updated>2021-10-25T15:47:17.490Z</updated>
   <id>http://www.devtalking.com/</id>
   
   <author>
@@ -13,6 +13,97 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[用Blender做甜甜圈学习笔记八 - 实现糖粒随机颜色和形态]]></title>
+    <link href="http://www.devtalking.com//articles/blender-beginner-tutorial-8/"/>
+    <id>http://www.devtalking.com//articles/blender-beginner-tutorial-8/</id>
+    <published>2021-10-24T16:00:00.000Z</published>
+    <updated>2021-10-25T15:47:17.490Z</updated>
+    <content type="html"><![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+<p>这一节来继续完善甜甜圈上的糖粒，我们需要完成两件事：</p>
+<ol>
+<li>给糖粒上色，而且是随机上色。</li>
+<li>给糖衣铺上其他形状、形态的糖粒。</li>
+</ol>
+<h2 id="u7ED9_u7CD6_u7C92_u968F_u673A_u4E0A_u8272"><a href="#u7ED9_u7CD6_u7C92_u968F_u673A_u4E0A_u8272" class="headerlink" title="给糖粒随机上色"></a>给糖粒随机上色</h2><p>通过上一节实操，我们知道甜甜圈糖衣上的糖粒是通过对糖衣添加了粒子效果实现的，而粒子的对象是一个母板糖粒，所以我们要更改糖粒的颜色，只能针对这个模板糖粒进行修改。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-1.jpg" alt="8-1"></p>
+<p>我们可以修改糖粒的颜色，但是可以看到糖衣上的所有糖粒都是同一种颜色。</p>
+<a id="more"></a>
+<blockquote>
+<p>可以在<a href="http://www.devtalking.com/articles/blender-beginner-tutorial-6/">用Blender做甜甜圈学习笔记六 - 渲染甜甜圈</a>这一节中回顾如何给对象添加颜色。</p>
+</blockquote>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-2.jpg" alt="8-2"></p>
+<p>这肯定不是我们期望的。要实现随机的上色效果，我们需要使用一个新的功能，材质生成着色器。我们点击顶部的<code>Shading</code>，进入着色器编辑视图。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-3.jpg" alt="8-3"></p>
+<p>在这个界面中，我们选中糖粒对象，在窗口下半部分，会看到和<a href="http://www.devtalking.com/articles/blender-beginner-tutorial-6/">用Blender做甜甜圈学习笔记六 - 渲染甜甜圈</a>中使用到的<code>Compositing</code>视图中类似的界面。但是里面的节点不一样，首先我们会看到一个叫<code>Principled BSDF</code>的节点。</p>
+<h3 id="Principled_BSDF"><a href="#Principled_BSDF" class="headerlink" title="Principled BSDF"></a>Principled BSDF</h3><p>这里简单地对<code>Principled BSDF</code>作以解释。<code>Principled BSDF</code>是将多个层组合成一个易于使用的节点。是一款综合型的材质生成着色器(Shader)，跟时下普遍使用的 PBR (Physically based rendering）是原理类似的技术。</p>
+<p><code>BSDF</code>是<code>Bidirectional Scattering Distribution Function</code>的缩写，意思是双向散射分布函数，因为想要正确模拟真实世界中的光照，需要理解光遇到物体表面时发生的反射和散射，<code>BSDF</code>就是帮助我们实现更逼真的光散射效果的函数。 </p>
+<blockquote>
+<p>对应的还有一个<code>BRDF(Bidirectional Reflectance Distribution Function)</code>双向反射分布函数。</p>
+</blockquote>
+<h3 id="u589E_u52A0Base_Color_u968F_u673A_u6548_u679C"><a href="#u589E_u52A0Base_Color_u968F_u673A_u6548_u679C" class="headerlink" title="增加Base Color随机效果"></a>增加Base Color随机效果</h3><p>我们使用快捷键<code>Shift + A</code>添加一个节点，在弹出的窗口中选择<code>input/Object Info</code>，然后将<code>Object Info</code>节点的<code>Random</code>属性连接到<code>Principled BSDF</code>节点的<code>Base Color</code>属性。</p>
+<blockquote>
+<p><code>Random</code>相当于提供了一组从0到1的随机数字，然后将这个随机的属性给了<code>Base Color</code>。</p>
+</blockquote>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-4.jpg" alt="8-4"></p>
+<p>可以看到甜甜圈上的糖粒的颜色已经是随机的了，只不过从0到1的随机数，映射到颜色的色域是从白色到黑色之间。我们也可以通过添加一个色谱节点来控制在哪些色域中进行随机。同样使用<code>Shift + A</code>，然后选择<code>Converter/ColorRamp</code>，然后将节点放在<code>Object Info</code>节点和<code>Principled BSDF</code>节点的连接上，Blender就可以自动的将<code>ColorRamp</code>节点和<code>Object Info</code>节点、<code>Principled BSDF</code>节点对接。</p>
+<p>当然我们也可以手动创建连接，将<code>Object Info</code>节点的<code>Random</code>属性和<code>ColorRamp</code>节点的<code>Fac</code>（因子）属性进行连接，然后将<code>ColorRamp</code>节点的<code>Color</code>属性和<code>Principled BSDF</code>节点的<code>Base Color</code>属性进行连接。</p>
+<p>我们可以改变<code>ColorRamp</code>节点中的颜色，可以看到随机的色域的也会发生变化。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-5.jpg" alt="8-5"></p>
+<p>然后我们可以在<code>ColorRamp</code>中增加色标，每个色标可以指定不同的颜色，就可以实现不同色域之间的随机颜色了。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-6.jpg" alt="8-6"></p>
+<p>来一张渲染图看看效果：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-7.jpg" alt="8-7"></p>
+<h2 id="u589E_u52A0_u4E0D_u540C_u5F62_u6001_u7684_u7CD6_u7C92"><a href="#u589E_u52A0_u4E0D_u540C_u5F62_u6001_u7684_u7CD6_u7C92" class="headerlink" title="增加不同形态的糖粒"></a>增加不同形态的糖粒</h2><p>实现了随机颜色后，我们来增加不同形态的糖粒。目前糖粒的形状都是一个圆柱体，我们可以多捏几种形态。</p>
+<p>先捏一个更长一点的圆柱体，操作方法是选择糖粒圆柱体，<code>Shift + D</code>复制一个，进入编辑模式，打开透视，选中圆柱体顶部的所有点，按下<code>G</code>和<code>Z</code>向上移动鼠标即可。可以回顾<a href="http://www.devtalking.com/tags/Blender-Level-1/">之前的笔记</a>。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-8.jpg" alt="8-8"></p>
+<p>那么如何将这个更长一点的糖粒添加到糖衣上呢？我们来看糖衣上粒子效果的<code>Render AS</code>属性，目前的值是<code>Object</code>，那意味着只能有一个指定的对象来充当粒子效果，<code>Render AS</code>其实还有其他的选项，这里可以选择<code>Collection</code>。此时大家应该很容易理解了，这个选项的意思就是选择一个集合，该集合下的所有对象都会成为充当粒子效果的对象。</p>
+<p>所以我们首先将两个糖粒对象放在一个集合中。可以回顾<a href="http://www.devtalking.com/articles/blender-beginner-tutorial-7/">用Blender做甜甜圈学习笔记七 - 制作糖衣上的糖粒</a>中如何创建集合。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-9.jpg" alt="8-9"></p>
+<p>然后选择糖衣，打开右侧<code>Particle Properties</code>菜单，找到<code>Render/Render AS</code>，将<code>Object</code>修改为<code>Collection</code>，然后将<code>Collection/Instance Collection</code>的值设置为糖粒的集合。然后我们就可以看到糖衣上的糖粒同时包含了短的圆柱体和长的圆柱体。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-10.jpg" alt="8-10"></p>
+<p>然后我们再多添加几个形态的糖粒。再复制一个长的圆柱体，移动到旁边，进入编辑模式，将其再拉长一点。然后选择<code>Loop Cut</code>工具，这个工具的作用是对选中的对象进行横向或纵向的换切，换句话说就是对物体在横向或纵向增加拓扑点。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-11.jpg" alt="8-11"></p>
+<p>在选择了<code>Loop Cut</code>工具后，滚动鼠标滑轮，可以增加或减少换切的数量。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-12.jpg" alt="8-12"></p>
+<p>这里我们对圆柱体进行两次横向的环切，然后调整两头，进入对象模式，对其进行<code>Shade Smooth</code>操作，呈现如下样子：</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-13.jpg" alt="8-13"></p>
+<p>现在糖衣上的糖粒就有了三种不同的形态。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-14.jpg" alt="8-14"></p>
+<p>我们现在选中一个糖粒圆柱体，可以看到他的原点在底部，我们可以将原点设置为它的中心点，更符合我们对原点理解的习惯，同时这样在糖衣上糖粒的形态会贴合一些，有一些糖粒就不会那么翘。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-15.jpg" alt="8-15"></p>
+<h3 id="u5355_u72EC_u8C03_u6574_u7CD6_u7C92_u6570_u91CF"><a href="#u5355_u72EC_u8C03_u6574_u7CD6_u7C92_u6570_u91CF" class="headerlink" title="单独调整糖粒数量"></a>单独调整糖粒数量</h3><p>为了让糖粒更加丰富一些，我们再来添加一个圆形糖粒。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-16.jpg" alt="8-16"></p>
+<p>我们希望圆形的糖粒只在糖衣上点缀几个即可，这时我们就需要调整每一种形态的糖粒的数量。进入对象模式，选择糖衣，打开右侧<code>Particle Properties</code>菜单，在<code>Render/Collection</code>下找到<code>Use Count</code>选项，打上勾，然后可以针对每一种形态的糖粒设置出现的次数，相当是在同一个集合下，该对象出现的比例。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-17.png" alt="8-17"></p>
+<p>我们将三种圆柱体形状的糖粒的<code>Count</code>设置为30，然后球形的糖粒<code>Count</code>保持为1，此时就可以看到糖衣上只有零星几个球形的糖粒。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-18.png" alt="8-18"></p>
+<p>到目前为止，糖粒的完善基本结束，上一张渲染图片看看效果。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-19.jpg" alt="8-19"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+<p>这一节来继续完善甜甜圈上的糖粒，我们需要完成两件事：</p>
+<ol>
+<li>给糖粒上色，而且是随机上色。</li>
+<li>给糖衣铺上其他形状、形态的糖粒。</li>
+</ol>
+<h2 id="u7ED9_u7CD6_u7C92_u968F_u673A_u4E0A_u8272"><a href="#u7ED9_u7CD6_u7C92_u968F_u673A_u4E0A_u8272" class="headerlink" title="给糖粒随机上色"></a>给糖粒随机上色</h2><p>通过上一节实操，我们知道甜甜圈糖衣上的糖粒是通过对糖衣添加了粒子效果实现的，而粒子的对象是一个母板糖粒，所以我们要更改糖粒的颜色，只能针对这个模板糖粒进行修改。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-8/8-1.jpg" alt="8-1"></p>
+<p>我们可以修改糖粒的颜色，但是可以看到糖衣上的所有糖粒都是同一种颜色。</p>]]>
+    
+    </summary>
+    
+      <category term="Blender Level 2" scheme="http://www.devtalking.com/tags/Blender-Level-2/"/>
+    
+      <category term="Blender" scheme="http://www.devtalking.com/categories/Blender/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[用Blender做甜甜圈学习笔记七 - 制作糖衣上的糖粒]]></title>
@@ -1856,72 +1947,6 @@
 <li>指定拉取Message范围的策略。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">"IP:Port"</span>);</span><br><span class="line">properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, <span class="string">"consumer_group_1"</span>);</span><br><span class="line">properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, <span class="string">"latest"</span>); <span class="comment">// earliest, none</span></span><br></pre></td></tr></table></figure>
 </li>
 </ul>]]>
-    
-    </summary>
-    
-      <category term="Kafka" scheme="http://www.devtalking.com/tags/Kafka/"/>
-    
-      <category term="中间件" scheme="http://www.devtalking.com/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Kafka从上手到实践-实践真知：Kafka Java Producer]]></title>
-    <link href="http://www.devtalking.com//articles/kafka-practice-10/"/>
-    <id>http://www.devtalking.com//articles/kafka-practice-10/</id>
-    <published>2018-12-14T16:00:00.000Z</published>
-    <updated>2020-06-21T08:12:29.008Z</updated>
-    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>这一节来看看如何使用Java编写Kafka Producer。</p>
-<h2 id="Create_Kafka_Project"><a href="#Create_Kafka_Project" class="headerlink" title="Create Kafka Project"></a>Create Kafka Project</h2><p>创建Maven工程，在POM文件中加入如下两个依赖：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.kafka<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>kafka-clients<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.0.0<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>slf4j-simple<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.7.25<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>第一个是Kafka的依赖包，用于创建Producer、ProducerRecord、Consumer等。第二个是Log4J的依赖包，用于输出日志。</p>
-<a id="more"></a>
-<h2 id="Java_Producer"><a href="#Java_Producer" class="headerlink" title="Java Producer"></a>Java Producer</h2><p>首先创建Producer需要的配置信息，最基本的有三个信息：</p>
-<ul>
-<li>Kafka集群的地址。</li>
-<li>发送的Message中Key的序列化方式。</li>
-<li>发送的Message中Value的序列化方式。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line"></span><br><span class="line">properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">"IP:Port"</span>);</span><br><span class="line"></span><br><span class="line">properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());</span><br><span class="line"></span><br><span class="line">properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>然后传入上面实例化好的配置信息，实例化Producer：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">KafkaProducer&lt;String, String&gt; kafkaProducer = <span class="keyword">new</span> KafkaProducer&lt;String, String&gt;(properties);</span><br></pre></td></tr></table></figure></p>
-<p>然后实例化Record对象，该对象承载了要往哪个Topic发送以及Message内容的信息：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ProducerRecord&lt;String, String&gt; producerRecord = <span class="keyword">new</span> ProducerRecord&lt;String, String&gt;(<span class="string">"first_topic"</span>, <span class="string">"hello world!"</span>);</span><br></pre></td></tr></table></figure></p>
-<p>再然后发送Record：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">kafkaProducer.send(producerRecord);</span><br></pre></td></tr></table></figure></p>
-<p>最后刷新和关闭Producer：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">kafkaProducer.flush();</span><br><span class="line">kafkaProducer.close();</span><br></pre></td></tr></table></figure></p>
-<p>以上就是最简单的Kafka Java Producer的编写方法。运行一下，可以看到类似如下的信息：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[main] INFO org.apache.kafka.common.utils.AppInfoParser - Kafka version : 2.0.0&#10;[main] INFO org.apache.kafka.common.utils.AppInfoParser - Kafka commitId : 3402a8361b734732&#10;[kafka-producer-network-thread | producer-1] INFO org.apache.kafka.clients.Metadata - Cluster ID: 4nh_0r5iQ_KsR_Fzf1HTGg&#10;[main] INFO org.apache.kafka.clients.producer.KafkaProducer - [Producer clientId=producer-1] Closing the Kafka producer with timeoutMillis = 9223372036854775807 ms.&#10;&#10;Process finished with exit code 0</span><br></pre></td></tr></table></figure></p>
-<h3 id="Java_Producer_with_Callback"><a href="#Java_Producer_with_Callback" class="headerlink" title="Java Producer with Callback"></a>Java Producer with Callback</h3><p>如果我们希望在发送Message后，能监控发送状态，或者在发送异常时对异常进行处理。那么我们就可以使用带有Callback的发送方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">kafkaProducer.send(producerRecord, <span class="keyword">new</span> Callback() &#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompletion</span><span class="params">(RecordMetadata recordMetadata, Exception e)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (e == <span class="keyword">null</span>) &#123;</span><br><span class="line">			logger.info(<span class="string">"Received new metadata. \n"</span> +</span><br><span class="line">                            <span class="string">"Topic: "</span> + recordMetadata.topic()  + <span class="string">"\n"</span> +</span><br><span class="line">                            <span class="string">"Partition: "</span> + recordMetadata.partition() + <span class="string">"\n"</span> +</span><br><span class="line">                            <span class="string">"Offset: "</span> + recordMetadata.offset() + <span class="string">"\n"</span> +</span><br><span class="line">                            <span class="string">"Timestamp: "</span> + recordMetadata.timestamp());</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			logger.error(<span class="string">"Error while producing: "</span>, e);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>这样每次发送Message后，都会进入<code>onCompletion</code>这个方法中，然后可以使用<code>RecordMetadata</code>中记录的各种元数据做一些跟踪和监控的事情，同时如果发送异常了，也可以对异常进行处理。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[main] INFO org.apache.kafka.common.utils.AppInfoParser - Kafka version : 2.0.0&#10;[main] INFO org.apache.kafka.common.utils.AppInfoParser - Kafka commitId : 3402a8361b734732&#10;[kafka-producer-network-thread | producer-1] INFO org.apache.kafka.clients.Metadata - Cluster ID: 4nh_0r5iQ_KsR_Fzf1HTGg&#10;[kafka-producer-network-thread | producer-1] INFO com.devtalking.jacefu.kafka.tutorial1.ProducerDemoWithCallback - Received new metadata. &#10;Topic: first_topic&#10;Partition: 0&#10;Offset: 22&#10;Timestamp: 1546421392063&#10;[main] INFO org.apache.kafka.clients.producer.KafkaProducer - [Producer clientId=producer-1] Closing the Kafka producer with timeoutMillis = 9223372036854775807 ms.&#10;&#10;Process finished with exit code 0</span><br></pre></td></tr></table></figure></p>
-<h3 id="Java_Producer_with_Keys"><a href="#Java_Producer_with_Keys" class="headerlink" title="Java Producer with Keys"></a>Java Producer with Keys</h3><p>在前文中，Partition的Compaction Cleanup Policy一节中介绍到，在压缩策略时，就涉及到了Message的Key和Value。我们来看看如何在发送Message时带着Key。</p>
-<p>首先来看看<code>ProducerRecord</code>的另一个构造函数：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ProducerRecord</span><span class="params">(String topic, K key, V value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(topic, (Integer)<span class="keyword">null</span>, (Long)<span class="keyword">null</span>, key, value, (Iterable)<span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>可以看到，刚才我们只使用了<code>topic</code>和<code>value</code>两个参数，其中还有一个<code>key</code>，所以我们在实例化<code>ProducerRecord</code>时传入Key就可以了：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ProducerRecord&lt;String, String&gt; producerRecord = <span class="keyword">new</span> ProducerRecord&lt;String, String&gt;(<span class="string">"first_topic"</span>, <span class="string">"This is the key"</span>, <span class="string">"hello world!"</span>);</span><br></pre></td></tr></table></figure></p>
-<h2 id="u5C0F_u7ED3"><a href="#u5C0F_u7ED3" class="headerlink" title="小结"></a>小结</h2><p>之前三个章节介绍了如何使用Kafka CLI操作Kafka，其中包括Producer CLI和Consumer CLI。这一章节主要带大家实践如何使用Kafka提供的API编写Java Producer，希望可以给使用Java语言的小伙伴们带来帮助。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>]]></content>
-    <summary type="html">
-    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>这一节来看看如何使用Java编写Kafka Producer。</p>
-<h2 id="Create_Kafka_Project"><a href="#Create_Kafka_Project" class="headerlink" title="Create Kafka Project"></a>Create Kafka Project</h2><p>创建Maven工程，在POM文件中加入如下两个依赖：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.kafka<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>kafka-clients<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.0.0<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>slf4j-simple<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.7.25<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>第一个是Kafka的依赖包，用于创建Producer、ProducerRecord、Consumer等。第二个是Log4J的依赖包，用于输出日志。</p>]]>
     
     </summary>
     

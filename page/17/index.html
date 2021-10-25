@@ -247,6 +247,230 @@
             
             
               
+                <a class="post-title-link" href="/articles/text-kit-tutorial-in-swift-1/" itemprop="url">
+                  如何在Swift中运用Text Kit框架（一）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2014-10-31T00:00:00+08:00" content="2014-10-31">
+              2014-10-31
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/text-kit-tutorial-in-swift-1/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/text-kit-tutorial-in-swift-1/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+
+<p>由于Apple近几年在iOS系统的不断改进过程中添加了许多新的特性和功能，这使得iOS系统对文本的渲染能力有了大大的提升。在iOS7中我们就已经能感觉到在文本渲染方面有了很大改进和提升。现在iOS8发布了，在文本渲染方面在延续了之前强大功能的基础上，又提升了其易用性。简单纵观iOS文本渲染的发展史，你也许对目前文本渲染的强大能有更深刻的体会。</p>
+<p>在iOS6之前，使用web视图渲染文本是当时最为容易的一种方式，因为它能较为有效的处理混合编排的文本，比如有粗体字、斜体字、有颜色的字等。</p>
+<p>2012年，iOS6在UIKit框架中添加一些支持字符串编辑或渲染的控件。这使得在渲染文本时，使用web视图不再是唯一的选择了。并且在文本排版方面不用再依赖通过HTML布局这种方式了。</p>
+<p>在iOS6中，UIKit中支持字符串编辑和渲染的控件是同时基于WebKit和Core Graphic的<code>String drawing</code>函数开发出的，整个如下图所示：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-1.png" alt="pic"></p>
+<blockquote>
+<p>注意：在这张图上有没有让你疑惑的地方呢？没错，<code>UITextView</code>是基于WebKit框架的。实际上，UIKit中与文本相关的这些控件在底层还是使用HTML渲染的。没有深入研究过相关框架的开发者是不太容易察觉这一点的。</p>
+</blockquote>
+<p>尽管iOS6中提供的这些文本控件在实际开发中的确带来了不少便利，但是当遇到复杂的布局、多行混合渲染等这种高级应用场景时，这些控件就显得捉襟见肘了，此时虽然Core Text是相对底层而且用法繁复的框架，但使用它来解决问题仍是唯一可以选择的方法。</p>
+<p>直到iOS7的问世，这种窘境得以改善。随着扁平化的设计思路，iOS的UI拚弃了沿用多年的拟物化风格，将重点和关注点集中在排版工艺上。比如<code>UIButton</code>在iOS7中去掉了整个外边框和阴影，只留下了按钮文字。所以Apple在iOS7中加入了用于文本编排和渲染的<strong>Text Kit</strong>框架就不足为奇了。</p>
+<p>在iOS7中关于文本渲染的控件及框架结构就比较清晰和合理了。因为所有UIKit中的文本控件都基于Text Kit框架，而不像iOS6中还有基于Web Kit框架的：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-2.png" alt="pic"></p>
+<p>Text Kit在继承了Core Text所有强大功能的基础上，将功能封装为面向对象的API，让开发者们都乐开了花。</p>
+<p>在这篇教程中，你要去探索Text Kit的各种功能特性，并且你要创建一个简单的但又功能丰富的iPhone笔记应用。</p>
+<p>本教程包含一个初始的项目，里面含有事先创建好的UI部分，以便使同学们只关注于Text Kit的部分。在这里可以下载该<a href="http://cdn2.raywenderlich.com/wp-content/uploads/2014/09/SwiftTextKitNotepad-starter6.zip" target="_blank" rel="external">项目</a>。下载完成后解压并在Xcode中打开项目，编译运行后你会看到如下的界面：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-3.png" alt="pic"></p>
+<p>该示例应用创建了一个初始的数组用于存放笔记实例，然后在TableViewController中将其渲染出来，当你点击选择某条笔记时，Storyboard和segue会捕获到你的行为，然后处理视图转换的先关工作，使你看到该条笔记的详细信息。</p>
+<h2 id="Dynamic_Type"><a href="#Dynamic_Type" class="headerlink" title="Dynamic Type"></a>Dynamic Type</h2><p><strong>Dynamic Type</strong>是iOS7中给我们的开发带来变化最多的特性之一，它的作用是让应用中的字体大小遵循你设置的字体大小和粗细。</p>
+<p>在iOS7中，打开设置，可以在 <strong>通用/辅助功能（General/Accessibility）</strong> 和 <strong>通用/字体大小（General/Text Size）</strong> 中查看和设置系统中应用显示字体的属性： </p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-4.png" alt="pic"></p>
+<p>在iOS8中，打开设置，可以在 <strong>通用/辅助功能/更大字体（General/Accessibility/Larger Text）</strong> 查看Dynamic Type的文本尺寸。</p>
+<p>不管是增加文字粗细还是改变文字大小，在支持Dynamic Type的应用中这都能给用户带来极大的便利，增加了文字的可读性。</p>
+<p>为了让应用支持Dynamic Type，你需要设置文本遵循某一<strong>风格</strong>，而不是明确的指定文本的字体名称和大小。在iOS7中已经为<code>UIFont</code>增加了一个新的方法<code>preferredFontForTextStyle</code>，它的作用是给创建出一个由用户在设置中根据自身需要设定的风格的字体。</p>
+<p>下表中展示了六种不同字体样式的不同大小和粗细程度：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-5.png" alt="pic"></p>
+<p>表中最左边的字体是用户可选择的最小的字体，中间是可选择的最大的字体，最右边是选择了辅助功能中给字体加粗后的样式。</p>
+<h2 id="u6700_u57FA_u672C_u7684_u529F_u80FD_u652F_u6301"><a href="#u6700_u57FA_u672C_u7684_u529F_u80FD_u652F_u6301" class="headerlink" title="最基本的功能支持"></a>最基本的功能支持</h2><p>实现动态文本的基本功能还是相对较简单的。应用中的字体不再是一个明确的字体，而是需要请求一个特殊的字体样式。在运行时，应用会根据用户在设置应用中对字体的设置以及请求到的字体样式中选择一个合适的字体样式。</p>
+<p>到了iOS8，Apple让实现Dynamic Type变得比iOS7更加容易了。尤其是TableView中的默认Label自动支持Dynamic Type，这个很赞！但是如果还想适配iOS7的话那就要在TableView中使用自定义的Label了。所以首先同学们要学会如何在iOS7中处理Dynamic Type，然后你就会发现到了iOS8后，生活是多么美好，晴空万里，没有雾霾！</p>
+<h2 id="u4E3A_u4EC0_u4E48iOS7_u662F_u4F18_u79C0_u7684_u7CFB_u7EDF_uFF0C_u800CiOS8_u662F_u8D8B_u8FD1_u5B8C_u7F8E_u7684_u7CFB_u7EDF"><a href="#u4E3A_u4EC0_u4E48iOS7_u662F_u4F18_u79C0_u7684_u7CFB_u7EDF_uFF0C_u800CiOS8_u662F_u8D8B_u8FD1_u5B8C_u7F8E_u7684_u7CFB_u7EDF" class="headerlink" title="为什么iOS7是优秀的系统，而iOS8是趋近完美的系统"></a>为什么iOS7是优秀的系统，而iOS8是趋近完美的系统</h2><p>该教程中初始项目的设置和配置是基于iOS8的。在我们开始学习之前，先编译运行应用，然后尝试改变默认的文本字体大小，多试几次不同的字体大小。你会发现不光是字体大小变了，TableView列表的Cell高度也相应发生了改变。但是你对这个项目还没动过一根手指。同时你也应该发现了点击选择一条笔记后，该笔的详细信息的文本字体却没有发生变化。</p>
+<p>但在iOS7中我们的确还要做一些额外的事，没有十全十美的事应该指的就是这个吧。如果你的编译环境是iOS7或iOS8（确保你使用的Xcode版本是6），那么本教程的绝大部分内容都是没问题的。现在我们需要将Xcode的编译环境设置为iOS7已经选择合适的iOS模拟器（iPhone5s）。如果你不打算支持iOS8之前的系统，那么你可以直接使用iOS8的编译环境。</p>
+<p>现在咱们在iOS7下编译运行应用，然后重复之前修改字体的操作，你会发现什么？没错，发现了悲剧。应用中的字体会忽略你对字体的设置，根本不起作用。所以，同学们必须要做点什么让Dynamic Type在iOS7跑起来。</p>
+<p>打开<strong>NoteEditorViewController.swift</strong>，在<code>viewDidLoad</code>方法中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">textView.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br></pre></td></tr></table></figure>
+<p>这里需要注意的是你并没有给<code>textView.font</code>设置具体的字体，比如Helvetica Neue之类。相反，你只是请求了一个适合主体文本的字体样式<code>UIFontTextStyleBody</code>。</p>
+<p>然后打开<strong>NotesListViewController.swift</strong>，在<code>tableView(_:cellForRowAtIndexPath:)</code>方法的<code>return</code>语句后添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">cell.textLabel?.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleHeadline</span>)</span><br></pre></td></tr></table></figure>
+<p>你依然没有给字体具体的类型，而是请求了一个合适的字体样式。</p>
+<p>使用语义接近的字体样式名称，比如<code>UIFontTextStyleSubHeadline</code>，可以避免在代码中对字体样式使用硬编码，并确保你的应用中的文本信息能正确的响应用户的设置。</p>
+<p>现在再编译和运行应用，你会发现TableView和笔记详细信息页面中的文本字体都发生了变化。下面的截图是设置不同字体大小后的笔记详细信息页面：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-6.png" alt="pic"></p>
+<p>目前看起来一起都很完美，但是细心的读者可能会发现这种解决方法只能解决一半的问题。让我们回到设置应用然后再次更改字体大小，然后我们通过后台程序回到我们的笔记应用中，我们发现了什么？没错，文本字体没有响应我们刚才的设置从而发生变化。</p>
+<p>我相信我们的用户是不会允许这种事情发生的。又一个挑战出现了，让我们来看看如何解决这个问题。</p>
+<h2 id="u5373_u65F6_u54CD_u5E94_u5B57_u4F53_u8BBE_u7F6E"><a href="#u5373_u65F6_u54CD_u5E94_u5B57_u4F53_u8BBE_u7F6E" class="headerlink" title="即时响应字体设置"></a>即时响应字体设置</h2><p>打开<code>NoteEditorViewController.swift</code>，在<code>viewDidLoad</code>方法中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSNotificationCenter</span>.defaultCenter().addObserver(<span class="keyword">self</span>, </span><br><span class="line">    selector: <span class="string">"preferredContentSizeChanged:"</span>, </span><br><span class="line">    name: <span class="type">UIContentSizeCategoryDidChangeNotification</span>,</span><br><span class="line">    object: <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>上面这段代码的作用是将我们的<code>NodeEditorViewController</code>注册到通知中心里，当字体发生改变时会通知<code>NodeEditorViewController</code>中的<code>preferredContentSizeChanged</code>方法。</p>
+<p>我们再来看看<code>preferredContentSizeChanged</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">preferredContentSizeChanged</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  textView.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个方法中我们就可以改变文本的字体样式了。</p>
+<blockquote>
+<p>注意：这里你可能会有疑惑，已经更改过字体样式了，为什么这里再次请求样式的时候还是<code>UIFontTextStyleBody</code>呢？当用户更改完字体样式后，你需要通过<code>preferredFontForTextStyle</code>方法重新请求一次字体样式，该方法的参数只代表文本的类型和所在位置，比如是Body里的还是Head中的等，所以<code>UIFont.preferredFontForTextStyle(UIFontTextStyleBody)</code>的意思就是请求类型和位置在Body中显示文本的字体样式，每次请求都是获取最新一次设置的字体样式。</p>
+</blockquote>
+<p>打开<code>NotesListViewController.swift</code>，重写<code>viewDidLoad</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">  <span class="type">NSNotificationCenter</span>.defaultCenter().addObserver(<span class="keyword">self</span>,</span><br><span class="line">      selector: <span class="string">"preferredContentSizeChanged:"</span>, </span><br><span class="line">      name: <span class="type">UIContentSizeCategoryDidChangeNotification</span>, </span><br><span class="line">      object: <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同学们应该注意到了，我们刚才添加的方法和<code>NoteEditorViewController.swift</code>中添加的方法一样。没错，给<code>NSNotificationCenter</code>注册的方法是相同的，但是<code>preferredContentSizeChanged</code>方法会有点区别。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<p>然后在<code>NotesListViewController.swift</code>中再添加<code>preferredContentSizeChanged</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">preferredContentSizeChanged</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  tableView.reloadData()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这段代码的作用是让Tableview重新加载可见的Cell，在更新时就会触发<code>preferredFontForTextStyle()</code>方法，将新设置的字体样式应用到Tableview的Cell中。</p>
+<p>再次编译运行应用，设置字体样式，然后看看我们的应用有没有正确的响应你的设置。</p>
+<h2 id="u4F7FCell_u9AD8_u5EA6_u81EA_u9002_u5E94"><a href="#u4F7FCell_u9AD8_u5EA6_u81EA_u9002_u5E94" class="headerlink" title="使Cell高度自适应"></a>使Cell高度自适应</h2><p>响应字体设置这部分到目前为止我们已经处理完了，效果也不错，但是当你把字体设置为一个足够小的，或者最小的字体时，在TableView中看起来就不怎么好看了，因为Cell的高度没有变化，而字体很小，所以看起来很不美观，比如下面左侧的截图一样：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-7.png" alt="pic"></p>
+<p>这个问题是iOS7中在Dynamic Type中比较坑爹的一个问题。想要使你的应用在不同字体样式下都显示的比较完美，你必须要让Cell的高度根据字体样式的大小做出相应的调整。虽然Auto Layout能帮你解决大部分布局适配上的问题，但在这个问题上，它就比较无力了，这得需要你自己去解决了。</p>
+<p>解决这个问题的原理很简单，就是让TableView的Cell高度根据字体样式的大小进行改变。那么可以通过实现<code>UITextViewDelegate</code>的<code>tableView(_:heightForRowAtIndexPath:)</code>方法来解决该问题。</p>
+<p>在<code>NotesListViewController.swift</code>中加入如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> label: <span class="type">UILabel</span> = &#123;</span><br><span class="line">  <span class="keyword">let</span> temporaryLabel = <span class="type">UILabel</span>(frame: <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, width: <span class="type">Int</span>.<span class="built_in">max</span>, height: <span class="type">Int</span>.<span class="built_in">max</span>))</span><br><span class="line">  temporaryLabel.text = <span class="string">"test"</span></span><br><span class="line">  <span class="keyword">return</span> temporaryLabel</span><br><span class="line">&#125;()</span><br><span class="line"> </span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!)</span></span> -&gt; <span class="type">CGFloat</span> &#123;</span><br><span class="line">  label.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleHeadline</span>)</span><br><span class="line">  label.sizeToFit()</span><br><span class="line">  <span class="keyword">return</span> label.frame.height * <span class="number">1.7</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码中，首先创建了一个<code>UILabel</code>的实例，用于计算TableView中Cell的高度，也就是这个<code>UILabel</code>的高度就是Cell的高度，然后在<code>tableView(_:heightForRowAtIndexPath:)</code>方法中设置该<code>UILabel</code>的字体样式，调用<code>sizeToFit</code>方法使Label的高度适配字体的高度，最后将Label的高度返回，也就相当于将Cell的高度设置为Label的高度了。这里需要注意的是当调用完<code>sizeToFit</code>方法后，Label与它里面字体之间几乎没有上下间隔，所以我们在返回高度的时候乘以一个上下间隔的比例系数。</p>
+<p>再次编译和运行你的应用，多更改几次字体样式，你会看到Cell的高度随着字体样式也进行着调整：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-8.png" alt="pic"></p>
+<h2 id="u7ED9_u6587_u672C_u6DFB_u52A0_u5370_u5237_u6548_u679C"><a href="#u7ED9_u6587_u672C_u6DFB_u52A0_u5370_u5237_u6548_u679C" class="headerlink" title="给文本添加印刷效果"></a>给文本添加印刷效果</h2><p>给文本添加一点高亮和阴影来达到文本像嵌入纸张的那种印刷效果。</p>
+<p>打开<code>NotesListViewController.swift</code>用下面的代码替换<code>tableView(_:cellForRowAtIndexPath:)</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!)</span></span> -&gt; <span class="type">UITableViewCell</span>? &#123;</span><br><span class="line">  <span class="keyword">let</span> cell = tableView.dequeueReusableCellWithIdentifier(<span class="string">"Cell"</span>, forIndexPath: indexPath) <span class="keyword">as</span> <span class="type">UITableViewCell</span></span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> note = notes[indexPath.row]</span><br><span class="line">  <span class="keyword">let</span> font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleHeadline</span>)</span><br><span class="line">  <span class="keyword">let</span> textColor = <span class="type">UIColor</span>(red: <span class="number">0.175</span>, green: <span class="number">0.458</span>, blue: <span class="number">0.831</span>, alpha: <span class="number">1</span>)</span><br><span class="line">  <span class="keyword">let</span> attributes = [</span><br><span class="line">    <span class="type">NSForegroundColorAttributeName</span> : textColor,</span><br><span class="line">    <span class="type">NSFontAttributeName</span> : font,</span><br><span class="line">    <span class="type">NSTextEffectAttributeName</span> : <span class="type">NSTextEffectLetterpressStyle</span></span><br><span class="line">  ]</span><br><span class="line">  <span class="keyword">let</span> attributedString = <span class="type">NSAttributedString</span>(string: note.title, attributes: attributes)</span><br><span class="line"> </span><br><span class="line">  cell.textLabel?.attributedText = attributedString</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">return</span> cell</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码给TableView的Cell中的文本添加了颜色和<code>NSTextEffectLetterpressStyle</code>文字样式。</p>
+<p>编译运行应用，你会看到更加立体的文本：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-9.png" alt="pic"></p>
+<p>这种印刷效果虽然只是一种较为细微的效果，但这并不代表你就能滥用这种效果，它虽然能使文本看起来有立体感，但是有可能会影响到文本的清晰度。</p>
+<h2 id="u6587_u672C_u7ED5_u884C_u6392_u7248"><a href="#u6587_u672C_u7ED5_u884C_u6392_u7248" class="headerlink" title="文本绕行排版"></a>文本绕行排版</h2><p>一般我们在常用的文本编辑器，比如Word中都能看到文本围绕图片或表格等其他元素的排版格式。TextKit也提供了能让文本按指定的路径排版或按一定形状排版的功能，叫做绕行路径。</p>
+<p>下面我们希望在笔记详细页中添加一个圆形的视图，放在右上角，用于显示这篇笔记的创建时间。</p>
+<p>当你创建完视图摆好位置后，你会发现这个圆形的视图会遮盖住笔记文本信息，所以我们需要给文本创建一个绕行路径来绕开这个圆形的视图。</p>
+<h3 id="u6DFB_u52A0_u5706_u5F62_u89C6_u56FE"><a href="#u6DFB_u52A0_u5706_u5F62_u89C6_u56FE" class="headerlink" title="添加圆形视图"></a>添加圆形视图</h3><p>打开<code>NoteEditorViewController.swift</code>，申明一个属性：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> timeView: <span class="type">TimeIndicatorView</span>!</span><br></pre></td></tr></table></figure>
+<p>然后在<code>viewDidLoad</code>方法的最后添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">timeView = <span class="type">TimeIndicatorView</span>(date: note.timestamp)</span><br><span class="line">textView.addSubview(timeView)</span><br></pre></td></tr></table></figure>
+<p>创建一个<code>timeView</code>的示例，然后将它作为一个子视图添加到<code>textView</code>中。</p>
+<p>刚才创建的视图需要合适的尺寸大小，你需要一种机制在ViewController绘制子视图调用<code>updateSize</code>方法来计算尺寸。</p>
+<p>所以我们加入如下两个方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLayoutSubviews</span><span class="params">()</span></span> &#123;</span><br><span class="line">  updateTimeIndicatorFrame()</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">updateTimeIndicatorFrame</span><span class="params">()</span></span> &#123;</span><br><span class="line">  timeView.updateSize()</span><br><span class="line">  timeView.frame = <span class="type">CGRectOffset</span>(timeView.frame, textView.frame.width - timeView.frame.width, <span class="number">0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的<code>viewDidLayoutSubviews</code>方法会调用<code>updateTimeIndicatorFrame</code>方法，该方法会处理两件事，一个是调用<code>updateSize</code>方法设置<code>timeView</code>的尺寸，另一个是设置<code>timeView</code>的位置，使它处于<code>textView</code>的右上角。</p>
+<p>之后每次当ViewController接收到文本字体样式更改的时候都会调用<code>updateTimeIndicatorFrame</code>方法，以便将<code>timeView</code>的尺寸和位置调整到合适的状态。所以我们更改一下<code>preferredContentSizeChanged</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">preferredContentSizeChanged</span><span class="params">(notification: NSNotification)</span></span> &#123;</span><br><span class="line">  textView.font = <span class="type">UIFont</span>.preferredFontForTextStyle(<span class="type">UIFontTextStyleBody</span>)</span><br><span class="line">  updateTimeIndicatorFrame()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在编译运行应用，点击笔记条目进入详细信息页后你就会在右上角看到一个显示创建时间的圆形视图：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-10.png" alt="pic"></p>
+<p>你可以在设置中改变字体样式，显示创建日期的视图会根据字体样式自动调整到合适的大小。</p>
+<p>但是你们会发现还有一些美中不足的地方，那就是日期视图把笔记文本信息给遮住了，幸运的是TextKit提供的文本绕行路径能帮我们解决这个问题。</p>
+<h3 id="u521B_u5EFA_u7ED5_u884C_u8DEF_u5F84"><a href="#u521B_u5EFA_u7ED5_u884C_u8DEF_u5F84" class="headerlink" title="创建绕行路径"></a>创建绕行路径</h3><p>打开<code>TimeIndicatorView.swift</code>，看看<code>curvePathWithOrigin</code>方法，日期视图在填充渲染背景色的时候会调用该方法，但是你可以通过该方法来决定文本的绕行路径，该方法会自己计算视图的贝塞尔曲线，也就相当于是文本的绕行路径了。</p>
+<p>打开<code>NoteEditorViewController.swift</code>，在<code>updateTimeIndicatorFrame</code>方法末尾中添加如下两行代码：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> exclusionPath = timeView.curvePathWithOrigin(timeView.center)</span><br><span class="line">textView.textContainer.exclusionPaths = [exclusionPath]</span><br></pre></td></tr></table></figure>
+<p>上面的代码通过日期视图的<code>curvePathWithOrigin</code>方法基于贝塞尔曲线计算出绕行路径，然后放在数组中赋值给<code>textView.textContainter.exclusionPaths</code>属性。这里要注意的是绕行路径的起点和坐标与文本信息是相对位置。</p>
+<p>编译运行应用，现在你就可以看到文本信息都绕开了日期视图：</p>
+<p><img src="http://www.devtalking.com/postImages/text-kit-tutorial-in-swift-11.png" alt="pic"></p>
+<p>这个简单的示例只是体现出了绕行路径强大功能的冰山一角，从上面的代码中你可能也注意到了，绕行路径是放在数组中进行赋值的，所以这就意味着每个容器，不管是文本容器还是其他容器都可以被设置多个绕行路径。</p>
+<p>除此之外，绕行路径可以随着你的想法变得简单或者复杂，你甚至可以让文本围绕着星星形状或者蝴蝶形状排版。</p>
+<p>每当绕行路径发生改变时，文本容器就会通知布局管理器，你可以让绕行路径进行动态的改变，比如从星星形状的路径变成蝴蝶形状的路径，此时文本容器也会动态的改变排版。但是这样做会得不偿失，因为用户在阅读的时候看到文字动来动去，估计会砸了手机！</p>
+<p>未完待续……</p>
+<p>原文地址：<a href="http://www.raywenderlich.com/77092/text-kit-tutorial-swift" target="_blank" rel="external">Text Kit Tutorial in Swift</a></p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/failable-initializers/" itemprop="url">
                   可失败构造器（Failable Initializers）
                 </a>
@@ -963,224 +1187,11 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/adaptive-layout-1/" itemprop="url">
-                  Swift自适应布局（Adaptive Layout）教程（一）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-10-11T00:00:00+08:00" content="2014-10-11">
-              2014-10-11
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/adaptive-layout-1/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/adaptive-layout-1/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<h2 id="u901A_u7528_u7684Storyboard"><a href="#u901A_u7528_u7684Storyboard" class="headerlink" title="通用的Storyboard"></a>通用的Storyboard</h2><p>通用的<code>stroyboard</code>文件是通向自适应布局光明大道的第一步。在一个<code>storyboard</code>文件中适配iPad和iPhone的布局在iOS8中已不再是梦想。我们不必再为不同尺寸的Apple移动设备创建不同的<code>storyboard</code>文件，不用再苦逼的同步若干个<code>storyboard</code>文件中的内容。这真是一件美好的事情。</p>
-<p>我们打开Xcode，新建一个项目： </p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-1.png" alt="图片"></p>
-<p>选择<code>iOS\Application\Single View Application</code>创建一个单视图应用：  </p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-2.png" alt="图片"></p>
-<p>设置项目名称<strong>AdaptiveWeather</strong>，语言选择<strong>Swift</strong>，设备选择<strong>Universal</strong>：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-3.png" alt="图片"></p>
-<p>创建好项目后，我们在项目目录结构中可以看到只存在一个<code>storyboard</code>文件：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-4.png" alt="图片"></p>
-<p><strong>Main.storyboard</strong>文件就是一个通用的<code>storyboard</code>文件，它可以适配目前所有屏幕尺寸的Apple移动设备。打开该文件，同学们会看到一个View Controller，以及一个我们不太熟悉的界面尺寸：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-5.png" alt="图片"></p>
-<p>同学们不要吃惊，没错，你们看到的就是一个简单的、有点大的正方形！大伙都知道，在上一个版本的Xcode中，<code>storyboard</code>里的屏幕尺寸都对应着我们所选的目标设备的尺寸，但是这样无法让我们达到“用一个<code>storyboard</code>搞定所有设备”的宏伟目标。所以在iOS8中，Apple将<code>storyboard</code>中屏幕的尺寸进行了抽象处理，也就是说我们看到的这个正方形是一个抽象的屏幕尺寸。</p>
-<p>我们接着往下走，选中<code>Main.storyboard</code>文件，然后在右侧工具栏中选择<strong>File Inspector</strong>页签，然后勾选<strong>Use Size Classes</strong>选项：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-6.png" alt="图片"></p>
-<p>在新的iOS8项目中，该选项默认是勾选的。但当你使用老版本的项目创建新的<code>storyboard</code>文件时就需要你手动进行勾选了。</p>
-<h3 id="u8BBE_u7F6E_u4F60_u7684Storyboard_u6587_u4EF6"><a href="#u8BBE_u7F6E_u4F60_u7684Storyboard_u6587_u4EF6" class="headerlink" title="设置你的Storyboard文件"></a>设置你的Storyboard文件</h3><p>首先，我们打开<code>Main.storyboard</code>文件，从组件库（Object Library）中选择<strong>Image View</strong>拖拽到View Controller中。选中刚刚拖入的Image View，在右侧工具栏选择<strong>Size Inspector</strong>页签，设置<strong>X</strong>坐标为150，<strong>Y</strong>坐标为20，<strong>宽</strong>为300，<strong>高</strong>为265。</p>
-<p>然后再拖入一个<strong>View</strong>组件，设置<strong>X</strong>坐标为150，<strong>Y</strong>坐标为315，<strong>宽</strong>为300，<strong>高</strong>为265。</p>
-<p>选择你刚才拖入的View，在右侧工具栏中选择<strong>Identity Inspector</strong>页签，在<strong>Document</strong>面板中的<strong>Label</strong>属性输入框中输入<strong>TextContainer</strong>。这个属性的作用就是给View起一个名字，方便我们辨认。这里要注意一下，<strong>Document</strong>面板有可能是隐藏的，我们需要点击它后面的 <strong>Show</strong>按钮来显示它。我们拖入的这个View最后是显示城市和温度Label的容器。</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-7.png" alt="图片"></p>
-<p>完成上面的设置后，同学们可能会发现刚才拖入的View貌似看不到，这是因为它的背景色和View Controller的背景色是相同的，都是白色，所以我们不太容易辨别。我们来解决这个问题，选中View Controller的View，然后在右侧工具栏中选择<strong>Attribute Inspector</strong>页签，设置背景色为 <strong>红：74，绿：171，蓝：247</strong>。然后再选择TextContainer，就是我们拖入的View，设置背景色为 <strong>红：55，绿：128，蓝：186</strong>。此时<code>Main.storyboard</code>文件中应该是这番景象：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-8.png" alt="图片"></p>
-<p>到目前为止，我们在View Controller中添加了两个组件Image View和View，这也是仅有的两个组件，接下来我们就要给它们添加一些布局约束了。</p>
-<h3 id="u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F"><a href="#u6DFB_u52A0_u5E03_u5C40_u7EA6_u675F" class="headerlink" title="添加布局约束"></a>添加布局约束</h3><p>选择image view，点击底部自动布局工具栏中的<strong>Align</strong>按钮，勾选<strong>Horizontal Center in Container</strong>选项，将后面的值设置为0，点击 <strong>Add 1 Constraint</strong>按钮添加第一个约束。</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-9.png" alt="图片"></p>
-<p>这个约束的意思是让image view在它的容器（View Controller的View）中保持居中。</p>
-<p>然后再点击底部自动布局工具栏中的<strong>Pin</strong>按钮，添加一个image view顶部与容器顶部间距的约束，我们设置为0：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-10.png" alt="图片"></p>
-<p>上面这两个约束使image view处于容器居中的位置，并且它的顶部与容器顶部有一个固定的间距。现在我们需要添加image view和text container view之间的约束。同学们先选中image view，然后按住<strong>Ctrl</strong>键和鼠标左键，从image view往text container view移动鼠标：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-11.png" alt="图片"></p>
-<p>松开鼠标左键后会弹出一个约束菜单，我们选择<strong>Vertical Spacing</strong>：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-12.png" alt="图片"></p>
-<p>这个约束决定了image view底部和text container view顶部之间的距离。</p>
-<p>现在选中image view然后点击右侧工具栏中的<strong>Size Inspector</strong>页签，同学们会发现这里在Xcode6中和之前的Xcode版本有所不同：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-13.png" alt="图片"></p>
-<p>你会看到之前添加的三个布局约束，你可以在<strong>Size Inspector</strong>中很方便的修改这些布局约束。比如点击<strong>Bottom Space To: TextContainer</strong>约束后的 <strong>Edit</strong>按钮，会弹出约束属性编辑框，我们让<strong>Constant</strong>的值等于20：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-14.png" alt="图片"></p>
-<p>然后点击该弹出框之外的任意地方关闭该弹出框。</p>
-<p>你先已经将TextContainer view顶部与image view底部的间距调整到了20，我们还需要添加TextContainer view另外三个边的间距约束。</p>
-<p>继续选择TextContainer view，点击底部的<strong>Pin</strong>按钮弹出 <strong>Add New Constraints</strong>窗口，在 <strong>Spacing to nearest neighbor</strong>面板中设置左、右、底部的约束，将值设置为0，然后点击<strong>Add 3 Constraints</strong>按钮添加约束。这里要注意的是，在设置约束时要将 <strong>Constrain to margins</strong>选项的勾去掉，这样可以避免TextContainer view产生内边距：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-15.png" alt="图片"></p>
-<p>这三个约束会让TextContainer view的左、右、底部三个边与容器的左、右、底部的间距始终为0。</p>
-<p>现在<strong>Main.storyboard</strong>中应该是这番景象：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-16.png" alt="图片"></p>
-<p>此时同学们应该会注意到在view上有几个橘黄色的约束线，这意味着还有一些约束上的问题需要我们注意。不过在运行时<code>storyboard</code>会自动更新view的大小来满足它与容器的约束条件。我们也可以点击底部 <strong>Resolve Auto Layout Issues</strong> 按钮，在弹出框中选择 <strong>All Views in View Controller/Update Frames</strong> 来修复提示的约束问题，但是如果我们这样做，那么image view的尺寸就会压缩成零，也就是会看不到image view。</p>
-<p>这是因为我们的image view还有没有任何内容，但是它有一个缺省的高和宽，并且值为0。进行自动布局的时候，如果被约束的view没有实际的高和宽，那么会依照缺省的高和宽来满足约束条件。</p>
-<p>我们接着学习，在项目结构中打开 <strong>Images.xcassets</strong> ，然后点击左下角的 <strong>+</strong>号，在弹出菜单中选择 <strong>New Image Set</strong>：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-17.png" alt="图片"></p>
-<p>双击左上角的 <strong>Image</strong> 标题将其改为 <strong>cloud</strong> ：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-18.png" alt="图片"></p>
-<p>我们刚才新建的这个image set其实就是若干图片文件的一个集合，其中的每一个图片都会对应一个特定的应用场景，也就是针对与不同分辨率的Apple移动设备。比如说，一个图片集合可能会包含针对非视网膜、视网膜、视网膜高清三种分辨率的图片。自从Xcode中的资源库与UIKit完美结合后，在代码中引入图片时我们只需要写图片的名称，程序在运行时会根据当前运行的设备自动选择对应分辨率的图片。</p>
-<blockquote>
-<p>注意：如果你以前使用过通过资源库管理图片，那么你可能会发现在Xcode6中会有所不同。那就是3x图片是怎么回事？</p>
-<p>这个新的分片率是专为iPhone 6 Plus提供的。这意味着每一个点是由3个像素点组成，也就是说3x的图片比1x图片的像素多9倍。</p>
-</blockquote>
-<p>目前你的图片集合中还是空的，同学们可以在这里下载需要的图片<a href="http://cdn2.raywenderlich.com/wp-content/uploads/2014/09/cloud_images.zip" target="_blank" rel="external">cloud_images.zip </a>，然后将图片拖入刚才创建的名为cloud的图片集合中，将 <strong>cloud_small.png</strong>图片拖到 <strong>1x</strong>图片区域：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-19.png" alt="图片"></p>
-<p>由于我们的图片背景颜色是透明的，所以在图片集合中看到的都是白色的图片。你可以选中某一个图片，然后按下空格键来预览图片。比如选中 <strong>1x</strong> 图片，按下空格：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-20.png" alt="图片"></p>
-<p>现在将 <strong>cloud_small@2x.png</strong> 图片拖至 <strong>2x</strong> 图片区域，将 <strong>cloud_small@3x.png</strong> 图片拖至 <strong>3x</strong> 图片区域。和之前情况一样，我们看到的只是白色的图片，但我们可以通过空格键来预览图片集合中的图片。</p>
-<p>现在你就可以在image view中设置图片了。我们回到 <strong>Main.storyboard</strong> 中，选中image view，在右侧工具栏中选择 <strong>Attribute Inspector</strong> 页签，将 <strong>Image View</strong> 面板中的 <strong>Image</strong> 属性设置为 <strong>cloud</strong>，然后将 <strong>View</strong> 面板中的 <strong>Mode</strong> 属性设置为 <strong>Aspect Fit</strong> ：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-21.png" alt="图片"></p>
-<p>现在你的<strong>Main.storyboard</strong>中应该是这番景象：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-22.png" alt="图片"></p>
-<p>我们看到<code>storyboard</code>中一直有橘黄色的约束提示，是时候让我们来修复它们了。首先选中view controller的view：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-23.png" alt="图片"></p>
-<p>然后点击底部的 <strong>Resolve Auto Layout Issues</strong> 按钮，在弹出菜单的 <strong>All Views in View Controller</strong> 面板中选择 <strong>Update Frames</strong> ：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-24.png" alt="图片"></p>
-<p>这时，<code>storyboard</code>会自动根据约束条件重新计算view的大小以满足约束：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-25.png" alt="图片"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<h3 id="u9884_u89C8_u52A9_u624B_u7F16_u8F91_u5668_uFF08Preview_Assistant_Editor_uFF09"><a href="#u9884_u89C8_u52A9_u624B_u7F16_u8F91_u5668_uFF08Preview_Assistant_Editor_uFF09" class="headerlink" title="预览助手编辑器（Preview Assistant Editor）"></a>预览助手编辑器（Preview Assistant Editor）</h3><p>一般情况下，在这个时候我们应该会在iPad、iPhone4s、iPhone5s、iPhone6、iPhone6 Plus这几个不同尺寸的设备上编译运行程序，以便测试通用的<code>storyboard</code>是否能在不同尺寸的设备上正确的自适应。但这确实是个体力活，一遍一遍的更改设备、编译、运行，多么苦逼。但上天总是会眷顾我们这些苦逼的程序员，Xcode6提供了Preview Assistant Editor，能在一个界面上显示出不同尺寸设备的程序运行情况，是否有问题一目了然。</p>
-<p>我们打开 <strong>Main.storyboard</strong> ，然后选择 <strong>View\Assistant Editor\Show Assistant Editor</strong> ，这时编辑区会分隔为两部分。再点击顶部导航栏中的 <strong>Automatic</strong> ，在弹出菜单中选择 <strong>Preview</strong> ，最后选择 <strong>Main.storyboard (Preview)</strong> ：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-26.png" alt="图片"></p>
-<p>现在在 <strong>Assistant Editor</strong> 区域会显示一个4寸的界面：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-27.png" alt="图片"></p>
-<p>我们还可以点击预览界面底部，名字（比如图中的iPhone 4-inch）旁边的地方让屏幕翻转为横屏：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-28.png" alt="图片"></p>
-<p>这无疑是针对检查不同尺寸设备的自适应情况的一项重大改进，但还远远不止于此！点击预览界面左下角的 <strong>+</strong> 按钮，会弹出当前<code>storyboard</code>文件支持的各种尺寸的设备，可供我们预览：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-29.png" alt="图片"></p>
-<p>分别选择iPhone 5.5-inch和iPad，此时我们在预览界面就可以同时显示三种尺寸的屏幕：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-30.png" alt="图片"></p>
-<p>此时同学们是否注意到4寸的横屏显示有点别扭呢？没错，它的那朵元太大了，我们可以通过对image view添加其他的约束条件来改善这个问题。</p>
-<p>回到 <strong>Main.storyboard</strong> ，选择image view，然后按住 <strong>Ctrl</strong>建和鼠标左键，拖动鼠标到View Controller的View上，松开鼠标后会弹出一个菜单，我们选择 <strong>Equal Heights</strong> ：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-31.png" alt="图片"></p>
-<p>这时会出现一些红色的约束提示，这是因为我们刚才加的这个约束条件与之前加过的约束条件有冲突。因为之前我们添加过image view和TextContainer view之间的垂直间距（Vertical Margins）约束，所以image view的高度不可能等于它容器（View Controller的View）的高度。</p>
-<p>让我们来修复该问题，首先在<code>storyboard</code>的结构目录中选择我们刚才添加的 <strong>Equal Heights</strong> 约束，然后选择右侧工具栏中的 <strong>Attribute Inspect</strong> 页签，如果 <strong>First Item</strong> 属性不是 <strong>cloud.Height</strong> ，那么在下拉菜单中选择 <strong>Reverse First and Second Item</strong> 这一项让 <strong>First Item</strong> 的值成为 <strong>cloud.Height</strong> ：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-32.png" alt="图片"></p>
-<p>接下来将 <strong>Relation</strong> 属性的值设置为 <strong>Less Than or Equal</strong> ，将 <strong>Multiplier</strong> 的值设置为 <strong>0.4</strong> ：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-33.png" alt="图片"></p>
-<p>这一系列设置的作用是让cloud这张图片的高度要么等于它自身的高度，要么等于屏幕高度的40%，最后呈现的效果选择这两者中较小的一个高度。</p>
-<p>现在你应该注意到了在预览面板中，4寸的横屏显示即时的对你刚才的约束改动做出了响应：</p>
-<p><img src="http://www.devtalking.com/postImages/adaptive-layout-34.png" alt="图片"></p>
-<p>你看看其他尺寸的预览自动更新了么？答案那是必须的，所以说 <strong>Preview Assistant Editor</strong> 确实是一项重大改进，是程序员和设计人员的福音！</p>
-<p>由于本文的示例是一个天气应用，所以光有天气图标不行，我们还得加上城市和温度才行。</p>
-<p>未完待续……</p>
-<p>原文地址：<a href="http://www.raywenderlich.com/83276/beginning-adaptive-layout-tutorial" target="_blank" rel="external">Beginning Adaptive Layout Tutorial</a></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/25/">25</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/26/">26</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1218,7 +1229,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">125</span>
+              <span class="site-state-item-count">126</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
