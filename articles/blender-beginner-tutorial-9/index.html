@@ -71,7 +71,7 @@
 
 
 
-  <meta name="keywords" content="GOJS,JavaScript," />
+  <meta name="keywords" content="Blender Level 2," />
 
 
 
@@ -82,39 +82,39 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
 
 
-<meta name="description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+<meta name="description" content="这一节我们来优化甜甜圈的主体部分，目前我们只是捏出了形状和简单的设置了基本颜色，看上去还是有点假。所以我们通过使用Texture Paint能力将其完善的更加真实一些。
+先来看一张真实的甜甜圈照片，可以看到在主体部分的腰部凹陷那一圈，颜色是比较浅的，因为那个部位被烘烤的力度较小，越是顶部和底部，颜色会越深，这和我们煎炸其他食品的道理是一样的。
 
-
-(adsbygoogle = window.adsbygoogle || []).push({});
-
-
-
-gojs是一个能够让我们很容易的实现基于html5浏览器绘制具有交互性的图形图表的JavaScript框架。gojs采用了面向对象的编程模式。以图形对象表示绘图模板。以用普通js对象存储数据作为数据模型，然后赋值给图形对象的属性作为">
+Texture Paint在使用Texture Pa">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JavaScript图表图形框架 -- GOJS简介">
-<meta property="og:url" content="http://www.devtalking.com/articles/gojs-simple-diagram/index.html">
+<meta property="og:title" content="用Blender做甜甜圈学习笔记九 - 优化甜甜圈主体">
+<meta property="og:url" content="http://www.devtalking.com/articles/blender-beginner-tutorial-9/index.html">
 <meta property="og:site_name" content="程序员说">
-<meta property="og:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+<meta property="og:description" content="这一节我们来优化甜甜圈的主体部分，目前我们只是捏出了形状和简单的设置了基本颜色，看上去还是有点假。所以我们通过使用Texture Paint能力将其完善的更加真实一些。
+先来看一张真实的甜甜圈照片，可以看到在主体部分的腰部凹陷那一圈，颜色是比较浅的，因为那个部位被烘烤的力度较小，越是顶部和底部，颜色会越深，这和我们煎炸其他食品的道理是一样的。
 
-
-(adsbygoogle = window.adsbygoogle || []).push({});
-
-
-
-gojs是一个能够让我们很容易的实现基于html5浏览器绘制具有交互性的图形图表的JavaScript框架。gojs采用了面向对象的编程模式。以图形对象表示绘图模板。以用普通js对象存储数据作为数据模型，然后赋值给图形对象的属性作为">
-<meta property="og:image" content="http://www.devtalking.com/postImages/simpleDiagram.jpg">
-<meta property="og:image" content="http://www.devtalking.com/postImages/anotherSimpleDiagram.jpg">
-<meta property="og:updated_time" content="2020-06-21T08:12:29.004Z">
+Texture Paint在使用Texture Pa">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-1.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-2.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-3.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-4.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-5.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-6.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-7.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-8.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-9.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-10.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-11.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-12.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-13.jpg">
+<meta property="og:image" content="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-14.png">
+<meta property="og:updated_time" content="2021-10-26T15:12:50.980Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JavaScript图表图形框架 -- GOJS简介">
-<meta name="twitter:description" content="&amp;lt;!-- DevTalking Banner1 --&amp;gt;
+<meta name="twitter:title" content="用Blender做甜甜圈学习笔记九 - 优化甜甜圈主体">
+<meta name="twitter:description" content="这一节我们来优化甜甜圈的主体部分，目前我们只是捏出了形状和简单的设置了基本颜色，看上去还是有点假。所以我们通过使用Texture Paint能力将其完善的更加真实一些。
+先来看一张真实的甜甜圈照片，可以看到在主体部分的腰部凹陷那一圈，颜色是比较浅的，因为那个部位被烘烤的力度较小，越是顶部和底部，颜色会越深，这和我们煎炸其他食品的道理是一样的。
 
-
-(adsbygoogle = window.adsbygoogle || []).push({});
-
-
-
-gojs是一个能够让我们很容易的实现基于html5浏览器绘制具有交互性的图形图表的JavaScript框架。gojs采用了面向对象的编程模式。以图形对象表示绘图模板。以用普通js对象存储数据作为数据模型，然后赋值给图形对象的属性作为">
+Texture Paint在使用Texture Pa">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -126,7 +126,7 @@ gojs是一个能够让我们很容易的实现基于html5浏览器绘制具有�
 
 
 
-  <title> JavaScript图表图形框架 -- GOJS简介 | 程序员说 </title>
+  <title> 用Blender做甜甜圈学习笔记九 - 优化甜甜圈主体 | 程序员说 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
@@ -269,7 +269,7 @@ gojs是一个能够让我们很容易的实现基于html5浏览器绘制具有�
             
             
               
-                JavaScript图表图形框架 -- GOJS简介
+                用Blender做甜甜圈学习笔记九 - 优化甜甜圈主体
               
             
           </h1>
@@ -278,8 +278,8 @@ gojs是一个能够让我们很容易的实现基于html5浏览器绘制具有�
         <div class="post-meta">
           <span class="post-time">
             發表於
-            <time itemprop="dateCreated" datetime="2014-07-18T00:00:00+08:00" content="2014-07-18">
-              2014-07-18
+            <time itemprop="dateCreated" datetime="2021-10-26T00:00:00+08:00" content="2021-10-26">
+              2021-10-26
             </time>
           </span>
 
@@ -288,8 +288,8 @@ gojs是一个能够让我们很容易的实现基于html5浏览器绘制具有�
               &nbsp; | &nbsp; 分類於
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/前端/" itemprop="url" rel="index">
-                    <span itemprop="name">前端</span>
+                  <a href="/categories/Blender/" itemprop="url" rel="index">
+                    <span itemprop="name">Blender</span>
                   </a>
                 </span>
 
@@ -304,8 +304,8 @@ gojs是一个能够让我们很容易的实现基于html5浏览器绘制具有�
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/articles/gojs-simple-diagram/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/gojs-simple-diagram/" itemprop="commentsCount"></span>
+              <a href="/articles/blender-beginner-tutorial-9/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/blender-beginner-tutorial-9/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -324,110 +324,77 @@ gojs是一个能够让我们很容易的实现基于html5浏览器绘制具有�
       
 
       
-        <span itemprop="articleBody"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+        <span itemprop="articleBody"><script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 
-<p>gojs是一个能够让我们很容易的实现基于html5浏览器绘制具有交互性的图形图表的JavaScript框架。<br>gojs采用了面向对象的编程模式。以图形对象表示绘图模板。以用普通js对象存储数据作为数据模型，然后赋值给图形对象的属性作为数据绑定的模式。gojs同样提供了大量工具类来代表我们的交互行为。我们需要做的就是创建图形对象、构建数据模型、设置属性、绑定数据模型、使用工具类添加行为即可创建出具有丰富交互性能的各种图表。 </p>
-<h2 id="u4E00_u4E2A_u7B80_u5355_u7684gojs_u56FE_u8868"><a href="#u4E00_u4E2A_u7B80_u5355_u7684gojs_u56FE_u8868" class="headerlink" title="一个简单的gojs图表"></a>一个简单的gojs图表</h2><p>下面的代码定义了一个<code>node</code>模板和数据模型，并它们构建了一个简单的图表：  </p>
-<pre><code>// For conciseness. See the &quot;Building Parts&quot; intro page for more
-var $ = go.GraphObject.make;
-
-// the node template describes how each Node should be constructed
-diagram.nodeTemplate =
-  $(go.Node, &quot;Auto&quot;,  // the Shape automatically fits around the TextBlock
-    $(go.Shape, &quot;RoundedRectangle&quot;,
-      // bind Shape.fill to Node.data.color
-      new go.Binding(&quot;fill&quot;, &quot;color&quot;)),
-    $(go.TextBlock,
-      { margin: 3 },  // some room around the text
-      // bind TextBlock.text to Node.data.key
-      new go.Binding(&quot;text&quot;, &quot;key&quot;))
-  );
-
-// the Model holds only the essential information describing the diagram
-diagram.model = new go.GraphLinksModel(
-[ // a JavaScript Array of JavaScript objects, one per node
-  { key: &quot;Alpha&quot;, color: &quot;lightblue&quot; },
-  { key: &quot;Beta&quot;, color: &quot;orange&quot; },
-  { key: &quot;Gamma&quot;, color: &quot;lightgreen&quot; },
-  { key: &quot;Delta&quot;, color: &quot;pink&quot; }
-],
-[ // a JavaScript Array of JavaScript objects, one per link
-  { from: &quot;Alpha&quot;, to: &quot;Beta&quot; },
-  { from: &quot;Alpha&quot;, to: &quot;Gamma&quot; },
-  { from: &quot;Beta&quot;, to: &quot;Beta&quot; },
-  { from: &quot;Gamma&quot;, to: &quot;Delta&quot; },
-  { from: &quot;Delta&quot;, to: &quot;Alpha&quot; }
-]);
-
-diagram.initialContentAlignment = go.Spot.Center;
-// enable Ctrl-Z to undo and Ctrl-Y to redo
-diagram.undoManager.isEnabled = true;
-</code></pre><p>结果：<br><img src="http://www.devtalking.com/postImages/simpleDiagram.jpg" alt="Diagram">  </p>
-<p>虽然上面展示的是图片，但是实际上我们可以在这个图表上用鼠标中键滚动、选中、删除、重做、撤销等等交互。</p>
-<h2 id="gojs_u7684_u57FA_u672C_u6982_u5FF5"><a href="#gojs_u7684_u57FA_u672C_u6982_u5FF5" class="headerlink" title="gojs的基本概念"></a>gojs的基本概念</h2><p>上面的示例是让我们先在感官上认知一下gojs的产出物，下面我们来阐述一下gojs的基本概念。  </p>
-<p>gojs绘制的图表（<code>Diagram</code>）具有两个最基本的元素，就是点和线（<code>Node</code>和<code>Link</code>），并且他们可以自由组合组成一个组（<code>Group</code>）。所有的元素都处在图层（<code>Layer</code>）上，并且可以对它们进行布局（<code>Layout</code>）。  </p>
-<p>每个<code>Diagram</code>都是通过数据模型（<code>Model</code>）来填充和确定<code>Node</code>的信息和<code>Link</code>的所属关系的。并且我们只需要创建好<code>Node</code>和<code>Link</code>的模板以及数据模型，其他的是事情都交给gojs去处理。它会通过<code>Model.nodeDataArray</code>方法和<code>GraphLinksModel.linkDataArray</code>方法自动加载模型并构建元素。  </p>
-<p>每一个<code>Node</code>和<code>Link</code>都是通过模板来描述他们的文本、形状、颜色等信息以及交互行为。每个模板其实就是一个面板（<code>Panel</code>）（你可以将各种元素自由组合在它里面，也可以在它里面添加各种交互行为），比如说将<code>TextBlock</code>、<code>Shape</code>、<code>Picture</code>等元素添加到这个<code>Panel</code>中，鼠标进入离开的交互行为也可以添加到<code>Panel</code>中，那么这个<code>Panel</code>就是一个模板。</p>
-<p>每个<code>Node</code>的位置可以使用<code>Diagram.layout</code>或<code>Group.layout</code>进行初始化设置，也可以基于交互行为进行拖拽。  </p>
-<p>gojs里的工具类可以为<code>Diagram</code>添加鼠标、键盘事件。一般情况下<code>Diagram</code>都默认设置了几种交互行为，比如说拖拽、连线。我们也可以通过<code>ToolManager</code>对象来管理工具类，或者说来管理交互行为，比如说可以停止某些交互，或开启某些交互等。  </p>
-<p>每个<code>Diagram</code>同时也包含<code>CommandHandler</code>对象，它的作用是添加一些键盘命令，比如点<code>Delete</code>键删除元素，<code>Ctrl+C</code>复制、<code>Ctrl+V</code>粘贴、<code>Ctrl+Z</code>撤销等。但是<code>CommandHandler</code>也是被<code>ToolManager</code>管理的。  </p>
-<p><code>Diagram</code>也提供通过鼠标中键滚动视图、放大缩小视图。</p>
-<p>gojs还提供了图表的预览视图（<code>Overview</code>），用于了解大规模图表的概况，同时还提供了组件管理面板（<code>Palette</code>），用于管理创建的组件，并且支持将组件拖拽到<code>Diagram</code>中。</p>
-<p>在<code>Diagram</code>中，你可以选中<code>Node</code>或者<code>Link</code>，你会发现他们有少许的变化，比如在<code>Node</code>周围会增加选中框，选中<code>Link</code>会变色等。这些都是由<code>Adornment</code>对象控制的，你还可以用它来增加提示框、右键菜单等。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<h2 id="Diagram_u9ED8_u8BA4_u7684_u4EA4_u4E92_u884C_u4E3A"><a href="#Diagram_u9ED8_u8BA4_u7684_u4EA4_u4E92_u884C_u4E3A" class="headerlink" title="Diagram默认的交互行为"></a>Diagram默认的交互行为</h2><ul>
-<li>选中<code>Node</code>或者<code>Link</code>，会出现蓝色选中框，<code>Link</code>也会变为蓝色。</li>
-<li>使用<code>Ctrl+鼠标左键</code>可以选中多个元素。</li>
-<li>在<code>Panel</code>中点击鼠标左键移动鼠标可以移动所有元素。</li>
-<li>使用<code>Ctrl+A</code>可以选中所有元素。</li>
-<li>选中元素，用鼠标可以拖动元素。</li>
-<li>使用<code>Ctrl+C</code>/<code>Ctrl+V</code>可以复制粘贴元素。</li>
-<li>使用<code>Delete</code>键可以删除元素。</li>
-<li>选中多个元素，然后使用<code>Ctrl+G</code>可以将这些选中的元素组合成一个组。</li>
-<li>使用<code>Ctrl+Shift+G</code>可以拆散组。</li>
-<li>当元素超出<code>Diagram</code>时，可自动出现滚动条。</li>
-<li>用鼠标拖拽<code>Node</code>边缘可以与其他<code>Node</code>进行连线。</li>
-<li>选中<code>Link</code>，可以重新选择目标<code>Node</code>，即可以重新连线。</li>
-</ul>
-<h2 id="u521B_u5EFA_u4E00_u4E2ADiagram"><a href="#u521B_u5EFA_u4E00_u4E2ADiagram" class="headerlink" title="创建一个Diagram"></a>创建一个Diagram</h2><p>每个<code>Diagram</code>都需要依托与一个HTML的<code>DIV</code>元素，虽然由gojs接管了这个<code>DIV</code>，但是<code>DIV</code>本身的属性依然可以由我们通过CSS设置，比如位置、高宽等。gojs实际上是在<code>DIV</code>中创建了一个<code>Canvas</code>元素，<code>Canvas</code>的高宽自动适配<code>DIV</code>的高宽。</p>
-<pre><code>&lt;!-- The DIV for a Diagram needs an explicit size or else we won&apos;t see anything.
- In this case we also add a border to help see the edges. --&gt;
-&lt;div id=&quot;myDiagramDiv&quot; style=&quot;border: solid 1px blue; width:400px; height:150px&quot;&gt;&lt;/div&gt;
-</code></pre><p>当然，当你准备开始创建<code>Diagram</code>前，首先要导入gojs的文件。gojs的文件分为Develop（<code>gojs-debug.js</code>）和Product（<code>gojs.js</code>）两种，前者是供开发人员使用的，因为它包含了一些用于调试的代码，后者用于正式发布，速度较快。gojs不依赖与任何JavaScript框架，所以它可以与任何JavaScript框架一起使用，而不会产生冲突。</p>
-<pre><code>&lt;!-- Include the GoJS library. --&gt;
-&lt;script src=&quot;gojs.js&quot;&gt;&lt;/script&gt;
-</code></pre><p>下面就可以使用gojs将上述的<code>DIV</code>构建为一个<code>Diagram</code>了，这里需要注意的是，使用gojs的api时，都要使用前缀<code>go.</code>。</p>
-<pre><code>&lt;!-- Create the Diagram in the DIV element using JavaScript. --&gt;
-&lt;!-- The &quot;go&quot; object is the &quot;namespace&quot; that holds all of the GoJS types. --&gt;
-&lt;script&gt;
-var diagram = new go.Diagram(&quot;myDiagramDiv&quot;);
-diagram.model = new go.GraphLinksModel(
-    [{ key: &quot;Hello&quot; },   // two node data, in an Array
-    { key: &quot;World!&quot; }],
-    [{ from: &quot;Hello&quot;, to: &quot;World!&quot;}]  // one link, in an Array
-);
-&lt;/script&gt;
-</code></pre><p>这样就构建了一个简单的<code>Diagram</code>。<br><img src="http://www.devtalking.com/postImages/anotherSimpleDiagram.jpg" alt="Diagram"></p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
+<p>这一节我们来优化甜甜圈的主体部分，目前我们只是捏出了形状和简单的设置了基本颜色，看上去还是有点假。所以我们通过使用Texture Paint能力将其完善的更加真实一些。</p>
+<p>先来看一张真实的甜甜圈照片，可以看到在主体部分的腰部凹陷那一圈，颜色是比较浅的，因为那个部位被烘烤的力度较小，越是顶部和底部，颜色会越深，这和我们煎炸其他食品的道理是一样的。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-1.jpg" alt="9-1"></p>
+<h2 id="Texture_Paint"><a href="#Texture_Paint" class="headerlink" title="Texture Paint"></a>Texture Paint</h2><p>在使用Texture Paint之前，我们先看看材质、纹理等这些概念的区别和关系。</p>
+<a id="more"></a>
+<table>
+<thead>
+<tr>
+<th>英文</th>
+<th>中文</th>
+<th>本质</th>
+<th>释义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Material</td>
+<td>材质</td>
+<td>数据集</td>
+<td>表现物体对光的交互，供渲染器读取的数据集，包括贴图纹理、光照算法等</td>
+</tr>
+<tr>
+<td>Texture mapping</td>
+<td>纹理贴图</td>
+<td>图像映射规则</td>
+<td>把存储在内存里的位图，通过 UV 坐标映射到渲染物体的表面</td>
+</tr>
+<tr>
+<td>Shading</td>
+<td>底纹、阴影</td>
+<td>光影效果</td>
+<td>根据表面法线、光照、视角等计算得出的光照结果</td>
+</tr>
+<tr>
+<td>Shader</td>
+<td>着色器</td>
+<td>程序</td>
+<td>编写显卡渲染画面的算法来即时演算生成贴图的程序</td>
+</tr>
+</tbody>
+</table>
+<p>我们今天操作的是在Texture这一层。先将糖衣隐藏，点击顶部<code>Texture Paint</code>菜单，进入纹理绘制视图。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-2.jpg" alt="9-2"></p>
+<p>新建一张纹理图片，将宽度设置为2048px。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-3.jpg" alt="9-3"></p>
+<p>这就是我们要绘制的图片了。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-4.jpg" alt="9-4"></p>
+<p>然后选中甜甜圈主体，进入<code>Shading</code>视图，<code>Shift + A</code>，选择<code>Texture/Image Texture</code>，添加一个<code>Image Texture</code>节点。将<code>Image Texture</code>节点的<code>Color</code>属性连接到<code>Principled BSDF</code>的<code>Base Color</code>属性。在<code>Image Texture</code>节点中选择我们刚才创建的那张图片<code>Donut_Texture</code>。然后我们就可以看到甜甜圈主体的颜色变成了<code>Donut_Texture</code>这张图片的颜色。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-5.jpg" alt="9-5"></p>
+<p>回到<code>Texture Paint</code>视图，当我们在右侧的甜甜圈上涂色时，左侧的图片上就会出现对应的图案或颜色。反过来，在左侧的图片上涂色时，也会反应到右侧的甜甜圈上。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-6.jpg" alt="9-6"></p>
+<p>将鼠标放在左侧，按下<code>N</code>呼出工具栏，设置合适的颜色后，将图片涂成基本色。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-7.jpg" alt="9-7"></p>
+<p>然后再将颜色设置为白色，调整好笔触大小和力度大小，在右侧甜甜圈腰部涂色，来实现因受火不均产生的白色效果。</p>
+<p>当我们画完之后，其实可以看到，白色非常死板，而且有重叠的笔痕。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-8.jpg" alt="9-8"></p>
+<p>为了让白色绘制的比较自然，我们可以使用<code>Texture Mask</code>功能。将鼠标移动到左侧，按下<code>N</code>呼出工具栏，在<code>Brush Settings</code>下找到<code>Texture Mask</code>新建一个纹理模板。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-9.jpg" alt="9-9"></p>
+<p>选择右侧<code>Texture Properties</code>菜单，从<code>Brush</code>改为<code>Brush Mask</code>，然后将<code>Type</code>改为<code>Clouds</code>。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-10.jpg" alt="9-10"></p>
+<p>然后重新在甜甜圈主体凹陷位置进行绘制，此时可以看到白色就不会显得太僵硬。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-11.jpg" alt="9-11"></p>
+<p>接下来实现顶部和底部烤焦的效果。鼠标移动到左侧，按下<code>N</code>，呼出工具栏，将<code>Brush Settings</code>下的<code>Blend</code>属性改为<code>Overlay</code>，将颜色设置为黑色。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-12.jpg" alt="9-12"></p>
+<p>然后在甜甜圈主体的顶部和底部进行绘制，就可以实现烤焦的效果。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-13.jpg" alt="9-13"></p>
+<p>好，目前为止，甜甜圈主体的优化工作就完成了，来一张渲染图看看效果。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-14.png" alt="9-14"></p>
 </span>
       
     </div>
@@ -436,9 +403,7 @@ diagram.model = new go.GraphLinksModel(
       
         <div class="post-tags">
           
-            <a href="/tags/GOJS/" rel="tag">#GOJS</a>
-          
-            <a href="/tags/JavaScript/" rel="tag">#JavaScript</a>
+            <a href="/tags/Blender-Level-2/" rel="tag">#Blender Level 2</a>
           
         </div>
       
@@ -447,17 +412,13 @@ diagram.model = new go.GraphLinksModel(
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/articles/method-category-protocol/" rel="next" title="Objective-C中的实例方法、类方法、Category、Protocol">
-                <i class="fa fa-chevron-left"></i> Objective-C中的实例方法、类方法、Category、Protocol
+              <a href="/articles/blender-beginner-tutorial-8/" rel="next" title="用Blender做甜甜圈学习笔记八 - 实现糖粒随机颜色和形态">
+                <i class="fa fa-chevron-left"></i> 用Blender做甜甜圈学习笔记八 - 实现糖粒随机颜色和形态
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/articles/gojs-build-diagram/" rel="prev" title="GOJS教程 -- 如何构建Parts">
-                GOJS教程 -- 如何构建Parts <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -618,7 +579,7 @@ diagram.model = new go.GraphLinksModel(
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u4E00_u4E2A_u7B80_u5355_u7684gojs_u56FE_u8868"><span class="nav-number">1.</span> <span class="nav-text">一个简单的gojs图表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gojs_u7684_u57FA_u672C_u6982_u5FF5"><span class="nav-number">2.</span> <span class="nav-text">gojs的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Diagram_u9ED8_u8BA4_u7684_u4EA4_u4E92_u884C_u4E3A"><span class="nav-number">3.</span> <span class="nav-text">Diagram默认的交互行为</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u521B_u5EFA_u4E00_u4E2ADiagram"><span class="nav-number">4.</span> <span class="nav-text">创建一个Diagram</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Texture_Paint"><span class="nav-number">1.</span> <span class="nav-text">Texture Paint</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -673,9 +634,9 @@ diagram.model = new go.GraphLinksModel(
 
     <script type="text/javascript">
       var disqus_shortname = 'jacefu';
-      var disqus_identifier = '/articles/gojs-simple-diagram/';
-      var disqus_title = 'JavaScript图表图形框架 -- GOJS简介';
-      var disqus_url = 'http://www.devtalking.com//articles/gojs-simple-diagram/';
+      var disqus_identifier = '/articles/blender-beginner-tutorial-9/';
+      var disqus_title = '用Blender做甜甜圈学习笔记九 - 优化甜甜圈主体';
+      var disqus_url = 'http://www.devtalking.com//articles/blender-beginner-tutorial-9/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.devtalking.com/"/>
-  <updated>2021-10-25T15:47:17.490Z</updated>
+  <updated>2021-10-26T15:12:50.980Z</updated>
   <id>http://www.devtalking.com/</id>
   
   <author>
@@ -13,6 +13,101 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[用Blender做甜甜圈学习笔记九 - 优化甜甜圈主体]]></title>
+    <link href="http://www.devtalking.com//articles/blender-beginner-tutorial-9/"/>
+    <id>http://www.devtalking.com//articles/blender-beginner-tutorial-9/</id>
+    <published>2021-10-25T16:00:00.000Z</published>
+    <updated>2021-10-26T15:12:50.980Z</updated>
+    <content type="html"><![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+<p>这一节我们来优化甜甜圈的主体部分，目前我们只是捏出了形状和简单的设置了基本颜色，看上去还是有点假。所以我们通过使用Texture Paint能力将其完善的更加真实一些。</p>
+<p>先来看一张真实的甜甜圈照片，可以看到在主体部分的腰部凹陷那一圈，颜色是比较浅的，因为那个部位被烘烤的力度较小，越是顶部和底部，颜色会越深，这和我们煎炸其他食品的道理是一样的。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-1.jpg" alt="9-1"></p>
+<h2 id="Texture_Paint"><a href="#Texture_Paint" class="headerlink" title="Texture Paint"></a>Texture Paint</h2><p>在使用Texture Paint之前，我们先看看材质、纹理等这些概念的区别和关系。</p>
+<a id="more"></a>
+<table>
+<thead>
+<tr>
+<th>英文</th>
+<th>中文</th>
+<th>本质</th>
+<th>释义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Material</td>
+<td>材质</td>
+<td>数据集</td>
+<td>表现物体对光的交互，供渲染器读取的数据集，包括贴图纹理、光照算法等</td>
+</tr>
+<tr>
+<td>Texture mapping</td>
+<td>纹理贴图</td>
+<td>图像映射规则</td>
+<td>把存储在内存里的位图，通过 UV 坐标映射到渲染物体的表面</td>
+</tr>
+<tr>
+<td>Shading</td>
+<td>底纹、阴影</td>
+<td>光影效果</td>
+<td>根据表面法线、光照、视角等计算得出的光照结果</td>
+</tr>
+<tr>
+<td>Shader</td>
+<td>着色器</td>
+<td>程序</td>
+<td>编写显卡渲染画面的算法来即时演算生成贴图的程序</td>
+</tr>
+</tbody>
+</table>
+<p>我们今天操作的是在Texture这一层。先将糖衣隐藏，点击顶部<code>Texture Paint</code>菜单，进入纹理绘制视图。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-2.jpg" alt="9-2"></p>
+<p>新建一张纹理图片，将宽度设置为2048px。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-3.jpg" alt="9-3"></p>
+<p>这就是我们要绘制的图片了。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-4.jpg" alt="9-4"></p>
+<p>然后选中甜甜圈主体，进入<code>Shading</code>视图，<code>Shift + A</code>，选择<code>Texture/Image Texture</code>，添加一个<code>Image Texture</code>节点。将<code>Image Texture</code>节点的<code>Color</code>属性连接到<code>Principled BSDF</code>的<code>Base Color</code>属性。在<code>Image Texture</code>节点中选择我们刚才创建的那张图片<code>Donut_Texture</code>。然后我们就可以看到甜甜圈主体的颜色变成了<code>Donut_Texture</code>这张图片的颜色。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-5.jpg" alt="9-5"></p>
+<p>回到<code>Texture Paint</code>视图，当我们在右侧的甜甜圈上涂色时，左侧的图片上就会出现对应的图案或颜色。反过来，在左侧的图片上涂色时，也会反应到右侧的甜甜圈上。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-6.jpg" alt="9-6"></p>
+<p>将鼠标放在左侧，按下<code>N</code>呼出工具栏，设置合适的颜色后，将图片涂成基本色。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-7.jpg" alt="9-7"></p>
+<p>然后再将颜色设置为白色，调整好笔触大小和力度大小，在右侧甜甜圈腰部涂色，来实现因受火不均产生的白色效果。</p>
+<p>当我们画完之后，其实可以看到，白色非常死板，而且有重叠的笔痕。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-8.jpg" alt="9-8"></p>
+<p>为了让白色绘制的比较自然，我们可以使用<code>Texture Mask</code>功能。将鼠标移动到左侧，按下<code>N</code>呼出工具栏，在<code>Brush Settings</code>下找到<code>Texture Mask</code>新建一个纹理模板。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-9.jpg" alt="9-9"></p>
+<p>选择右侧<code>Texture Properties</code>菜单，从<code>Brush</code>改为<code>Brush Mask</code>，然后将<code>Type</code>改为<code>Clouds</code>。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-10.jpg" alt="9-10"></p>
+<p>然后重新在甜甜圈主体凹陷位置进行绘制，此时可以看到白色就不会显得太僵硬。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-11.jpg" alt="9-11"></p>
+<p>接下来实现顶部和底部烤焦的效果。鼠标移动到左侧，按下<code>N</code>，呼出工具栏，将<code>Brush Settings</code>下的<code>Blend</code>属性改为<code>Overlay</code>，将颜色设置为黑色。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-12.jpg" alt="9-12"></p>
+<p>然后在甜甜圈主体的顶部和底部进行绘制，就可以实现烤焦的效果。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-13.jpg" alt="9-13"></p>
+<p>好，目前为止，甜甜圈主体的优化工作就完成了，来一张渲染图看看效果。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-14.png" alt="9-14"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+<p>这一节我们来优化甜甜圈的主体部分，目前我们只是捏出了形状和简单的设置了基本颜色，看上去还是有点假。所以我们通过使用Texture Paint能力将其完善的更加真实一些。</p>
+<p>先来看一张真实的甜甜圈照片，可以看到在主体部分的腰部凹陷那一圈，颜色是比较浅的，因为那个部位被烘烤的力度较小，越是顶部和底部，颜色会越深，这和我们煎炸其他食品的道理是一样的。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-9/9-1.jpg" alt="9-1"></p>
+<h2 id="Texture_Paint"><a href="#Texture_Paint" class="headerlink" title="Texture Paint"></a>Texture Paint</h2><p>在使用Texture Paint之前，我们先看看材质、纹理等这些概念的区别和关系。</p>]]>
+    
+    </summary>
+    
+      <category term="Blender Level 2" scheme="http://www.devtalking.com/tags/Blender-Level-2/"/>
+    
+      <category term="Blender" scheme="http://www.devtalking.com/categories/Blender/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[用Blender做甜甜圈学习笔记八 - 实现糖粒随机颜色和形态]]></title>
@@ -1882,70 +1977,6 @@
 <li>每个zNode都可以存储数据。</li>
 <li>zNode不能重命名。</li>
 <li>每个zNode的任何变化都可以被监控。</li>
-</ul>]]>
-    
-    </summary>
-    
-      <category term="Kafka" scheme="http://www.devtalking.com/tags/Kafka/"/>
-    
-      <category term="中间件" scheme="http://www.devtalking.com/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Kafka从上手到实践-实践真知：Kafka Java Consumer]]></title>
-    <link href="http://www.devtalking.com//articles/kafka-practice-11/"/>
-    <id>http://www.devtalking.com//articles/kafka-practice-11/</id>
-    <published>2018-12-31T16:00:00.000Z</published>
-    <updated>2021-02-09T02:24:16.027Z</updated>
-    <content type="html"><![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-
-
-
-<p>这一节来看看如何使用Java编写Kafka Consumer。</p>
-<h2 id="Java_Consumer"><a href="#Java_Consumer" class="headerlink" title="Java Consumer"></a>Java Consumer</h2><p>首先创建Consumer需要的配置信息，最基本的有五个信息：</p>
-<ul>
-<li>Kafka集群的地址。</li>
-<li>发送的Message中Key的序列化方式。</li>
-<li>发送的Message中Value的序列化方式。</li>
-<li>指定Consumer Group。</li>
-<li>指定拉取Message范围的策略。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">"IP:Port"</span>);</span><br><span class="line">properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, <span class="string">"consumer_group_1"</span>);</span><br><span class="line">properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, <span class="string">"latest"</span>); <span class="comment">// earliest, none</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<a id="more"></a>
-<p>然后传入上面实例化好的配置信息，实例化Consumer：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">KafkaConsumer&lt;String, String&gt; consumer = <span class="keyword">new</span> KafkaConsumer&lt;String, String&gt;(properties);</span><br></pre></td></tr></table></figure></p>
-<p>然后通过Consumer的<code>subscribe(Collection&lt;String&gt; topics)</code>方法订阅Topic：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">consumer.subscribe(Arrays.asList(<span class="string">"first_topic"</span>));</span><br></pre></td></tr></table></figure></p>
-<p>最后获取Topic里的Message，将Message信息输出到日志中：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">	ConsumerRecords&lt;String, String&gt; records = consumer.poll(Duration.ofMillis(<span class="number">100</span>));</span><br><span class="line">	<span class="keyword">for</span>(ConsumerRecord&lt;String, String&gt; record : records) &#123;</span><br><span class="line">		logger.info(<span class="string">"Key: "</span> + record.key() + <span class="string">", Value: "</span> + record.value());</span><br><span class="line">		logger.info(<span class="string">"Partition: "</span> + record.partition() + <span class="string">", Offset: "</span> + record.offset());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>Consumer的<code>poll(Duration timeout)</code>方法可以设置获取数据的时间间隔，同时回忆一下在之前Consumer章节的<strong>Consumer Poll Options</strong>小节中，说过关于Consumer获取Message的四个配置项，都可以在Properties里进行设置。</p>
-<p>启动Java Consumer后，在控制台可以看到如下信息：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[main] INFO org.apache.kafka.common.utils.AppInfoParser - Kafka version : 2.0.0&#10;[main] INFO org.apache.kafka.common.utils.AppInfoParser - Kafka commitId : 3402a8361b734732&#10;[main] INFO org.apache.kafka.clients.Metadata - Cluster ID: 4nh_0r5iQ_KsR_Fzf1HTGg&#10;[main] INFO org.apache.kafka.clients.consumer.internals.AbstractCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] Discovered group coordinator IP:9092 (id: 2147483647 rack: null)&#10;[main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] Revoking previously assigned partitions []&#10;[main] INFO org.apache.kafka.clients.consumer.internals.AbstractCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] (Re-)joining group&#10;[main] INFO org.apache.kafka.clients.consumer.internals.AbstractCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] Successfully joined group with generation 1&#10;[main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] Setting newly assigned partitions [first_topic-0, first_topic-1, first_topic-2]&#10;[main] INFO org.apache.kafka.clients.consumer.internals.Fetcher - [Consumer clientId=consumer-1, groupId=consumer_group_1] Resetting offset for partition first_topic-0 to offset 23.&#10;[main] INFO org.apache.kafka.clients.consumer.internals.Fetcher - [Consumer clientId=consumer-1, groupId=consumer_group_1] Resetting offset for partition first_topic-1 to offset 24.&#10;[main] INFO org.apache.kafka.clients.consumer.internals.Fetcher - [Consumer clientId=consumer-1, groupId=consumer_group_1] Resetting offset for partition first_topic-2 to offset 21.</span><br></pre></td></tr></table></figure></p>
-<p>在上面的信息中，可以看到<code>Setting newly assigned partitions [first_topic-0, first_topic-1, first_topic-2]</code>这句话，说明当前这个Consumer会获取<code>first_topic</code>这个Topic中全部Partition中的Message。</p>
-<p>如果我们再启动一个Consumer，这个Consumer和第一个在同一个组里，看看会有什么输出信息：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[main] INFO org.apache.kafka.common.utils.AppInfoParser - Kafka version : 2.0.0&#10;[main] INFO org.apache.kafka.common.utils.AppInfoParser - Kafka commitId : 3402a8361b734732&#10;[main] INFO org.apache.kafka.clients.Metadata - Cluster ID: 4nh_0r5iQ_KsR_Fzf1HTGg&#10;[main] INFO org.apache.kafka.clients.consumer.internals.AbstractCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] Discovered group coordinator IP:9092 (id: 2147483647 rack: null)&#10;[main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] Revoking previously assigned partitions []&#10;[main] INFO org.apache.kafka.clients.consumer.internals.AbstractCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] (Re-)joining group&#10;[main] INFO org.apache.kafka.clients.consumer.internals.AbstractCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] Successfully joined group with generation 2&#10;[main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] Setting newly assigned partitions [first_topic-2]</span><br></pre></td></tr></table></figure></p>
-<p>可以看到新启动的Consumer会输出<code>Setting newly assigned partitions [first_topic-2]</code>这句话，说明新的这个Consumer只会获取<code>first_topic</code>这个Topic的一个Partition中的Message。</p>
-<p>再回去看看第一个Consumer的控制台：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[main] INFO org.apache.kafka.clients.consumer.internals.AbstractCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] Attempt to heartbeat failed since group is rebalancing&#10;[main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] Revoking previously assigned partitions [first_topic-0, first_topic-1, first_topic-2]&#10;[main] INFO org.apache.kafka.clients.consumer.internals.AbstractCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] (Re-)joining group&#10;[main] INFO org.apache.kafka.clients.consumer.internals.AbstractCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] Successfully joined group with generation 2&#10;[main] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=consumer-1, groupId=consumer_group_1] Setting newly assigned partitions [first_topic-0, first_topic-1]</span><br></pre></td></tr></table></figure></p>
-<p>第一个Consumer新输出在控制台中的信息很关键，首先看到<code>Attempt to heartbeat failed since group is rebalancing</code>这句话，说明Kafka会自动重新给Consumer Group里的Consumer分配Topic的Partition。</p>
-<p>再看<code>Setting newly assigned partitions [first_topic-0, first_topic-1]</code>这句，说明第一个Consumer不会再获取<code>first_topic-2</code>这个Partition里的Message了。这也印证了在Consumer章节的<strong>Consumer Group</strong>小节里讲过的概念。</p>
-<h3 id="Java_Consumer_with_Assign_and_Seek"><a href="#Java_Consumer_with_Assign_and_Seek" class="headerlink" title="Java Consumer with Assign and Seek"></a>Java Consumer with Assign and Seek</h3><p>如果我们有一个临时的Consumer，不想加入任何一个Consumer Group，而且需要指定Topic的Partition，以及指定从哪个Message Offset开始获取数据，怎么办？所幸，Kafka提供了这样的API。</p>
-<p>首先我们在实例化配置信息时，就不需要指定Consumer Group了：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaConstant.BOOTSTRAP_SERVER);</span><br><span class="line">properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, <span class="string">"earliest"</span>); <span class="comment">// earliest, none</span></span><br></pre></td></tr></table></figure></p>
-<p>然后实例化<code>TopicPartition</code>，指定Topic和Partition序号。使用Consumer的<code>assign(Collection&lt;TopicPartition&gt; partitions)</code>方法，分配给该Consumer：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">TopicPartition topicPartition = <span class="keyword">new</span> TopicPartition(<span class="string">"first_topic"</span>, <span class="number">0</span>);</span><br><span class="line">consumer.assign(Arrays.asList(topicPartition));</span><br></pre></td></tr></table></figure></p>
-<p>再然后指定Message Offset：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">long</span> offset = <span class="number">21L</span>;</span><br><span class="line">consumer.seek(topicPartition, offset);</span><br></pre></td></tr></table></figure></p>
-<p>运行该Consumer，可以看到如下输出信息：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[main] INFO org.apache.kafka.clients.consumer.internals.Fetcher - [Consumer clientId=consumer-1, groupId=] Fetch offset 21 is out of range for partition first_topic-0, resetting offset&#10;[main] INFO org.apache.kafka.clients.consumer.internals.Fetcher - [Consumer clientId=consumer-1, groupId=] Resetting offset for partition first_topic-0 to offset 22.&#10;[main] INFO com.devtalking.jacefu.kafka.tutorial.ConsumerDemoAssignSeek - Key: null, Value: hello world!&#10;[main] INFO com.devtalking.jacefu.kafka.tutorial.ConsumerDemoAssignSeek - Partition: 0, Offset: 22</span><br></pre></td></tr></table></figure></p>
-<p>如果我们使用Consumer Group CLI查看，会发现这种操作其实也是临时创建了一个Consumer Group：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">root@iZ2ze2booskait1cxxyrljZ:~# kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --list&#10;&#10;consumer_group_1&#10;KMOffsetCache-iZ2ze2booskait1cxxyrljZ</span><br></pre></td></tr></table></figure></p>
-<h2 id="u5C0F_u7ED3"><a href="#u5C0F_u7ED3" class="headerlink" title="小结"></a>小结</h2><p>这一章节带大家实践如何使用Kafka提供的API编写Java Consumer。上一节和这一节主要介绍了Kafka Java Client（Producer和Consumer）的使用方式，相比Kafka CLI，Java Client在实际的开发中可能使用的更加频繁，希望能给使用Java语言的小伙伴们带来帮助。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-
-
-
-<p>这一节来看看如何使用Java编写Kafka Consumer。</p>
-<h2 id="Java_Consumer"><a href="#Java_Consumer" class="headerlink" title="Java Consumer"></a>Java Consumer</h2><p>首先创建Consumer需要的配置信息，最基本的有五个信息：</p>
-<ul>
-<li>Kafka集群的地址。</li>
-<li>发送的Message中Key的序列化方式。</li>
-<li>发送的Message中Value的序列化方式。</li>
-<li>指定Consumer Group。</li>
-<li>指定拉取Message范围的策略。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, <span class="string">"IP:Port"</span>);</span><br><span class="line">properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());</span><br><span class="line">properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, <span class="string">"consumer_group_1"</span>);</span><br><span class="line">properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, <span class="string">"latest"</span>); <span class="comment">// earliest, none</span></span><br></pre></td></tr></table></figure>
-</li>
 </ul>]]>
     
     </summary>
