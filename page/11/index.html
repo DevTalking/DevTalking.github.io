@@ -247,6 +247,142 @@
             
             
               
+                <a class="post-title-link" href="/articles/testng-powermock/" itemprop="url">
+                  基于TestNG和PowerMock的单元测试指南
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2017-01-19T00:00:00+08:00" content="2017-01-19">
+              2017-01-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分類於
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/测试/" itemprop="url" rel="index">
+                    <span itemprop="name">测试</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/articles/testng-powermock/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/testng-powermock/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- DevTalking Banner1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-4115205380866695"
+     data-ad-slot="5844761160"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2 id="u4EC0_u4E48_u662FTestNG"><a href="#u4EC0_u4E48_u662FTestNG" class="headerlink" title="什么是TestNG"></a>什么是TestNG</h2><p>TestNG是一套开源测试框架，是从JUnit继承而来，TestNG意为test next generation。它的优势如下：</p>
+<ul>
+<li>支持注解。</li>
+<li>可以在任意的大线程池中，使用各种策略运行测试（所有方法都可以拥有自己的线程或者每个测试类拥有一个线程等等）。</li>
+<li>代码多线程安全测试。</li>
+<li>灵活的测试配置。</li>
+<li>支持数据驱动测试(@DataProvider)。</li>
+<li>支持参数。</li>
+<li>强大的执行模型（不再用TestSuite）。</li>
+<li>支持各种工具和插件（Eclipse、IDEA、Maven等）。</li>
+<li>可以更灵活地嵌入BeanShell。</li>
+<li>默认JDK运行时功能和日志记录（无依赖关系）。</li>
+<li>依赖应用服务测试的方式。</li>
+</ul>
+<h2 id="TestNG_u7684_u6700_u7B80_u5355_u793A_u4F8B"><a href="#TestNG_u7684_u6700_u7B80_u5355_u793A_u4F8B" class="headerlink" title="TestNG的最简单示例"></a>TestNG的最简单示例</h2><p>我们先来看一个TestNG最简单的示例：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.junit.AfterClass;</span><br><span class="line"><span class="keyword">import</span> org.junit.BeforeClass;</span><br><span class="line"><span class="keyword">import</span> org.testng.annotations.Test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"> <span class="annotation">@BeforeClass</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">beforeClass</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	System.out.println(<span class="string">"this is before class"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="annotation">@Test</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestHelloWorld</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	System.out.println(<span class="string">"this is HelloWorld test case"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="annotation">@AfterClass</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterClass</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	System.out.println(<span class="string">"this is after class"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从面上的简单示例中可以看出TestNG的生命周期，并且可以看到TestNG是使用注解来控制生命周期的。下面我们来看看TestNG支持的各种注解。</p>
+<h2 id="TestNG_u7684_u6CE8_u89E3"><a href="#TestNG_u7684_u6CE8_u89E3" class="headerlink" title="TestNG的注解"></a>TestNG的注解</h2><p>TestNG的注解大部分用在方法级别上，一共有六大类注解。</p>
+<h3 id="Before_u7C7B_u522B_u548CAfter_u7C7B_u522B_u6CE8_u89E3"><a href="#Before_u7C7B_u522B_u548CAfter_u7C7B_u522B_u6CE8_u89E3" class="headerlink" title="Before类别和After类别注解"></a>Before类别和After类别注解</h3><ul>
+<li>@BeforeSuite：被注解的方法将会在所有测试类执行之前运行。</li>
+<li>@AfterSuite：被注解的方法将会在所有测试类执行之后运行。</li>
+<li>@BeforeTest：被注解的方法将会在当前测试类中的所有测试方法执行之前运行。</li>
+<li>@AfterTest：被注解的方法将会在当前测试类中的所有测试方法执行之后运行。</li>
+<li>@BeforeClass：被注解的方法将会在当前测试类中的第一个测试方法执行之前运行。</li>
+<li>@AfterClass：被注解的方法将会在当前测试类中的最后一个测试方法执行之后运行。</li>
+<li>@BeforeMethod：被注解的方法将会在当前测试类中的每个测试方法执行之前运行。</li>
+<li>@AfterMethod：被注解的方法将会在当前测试类中的每个测试方法执行之后运行。<br>我们可以根据不同的场景来使用不同的注解。</li>
+</ul>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/articles/testng-powermock/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/articles/google-web-tech/" itemprop="url">
                   《Google力推的那些前端技术，最近有何进展？》笔记
                 </a>
@@ -752,117 +888,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/articles/shadowsocks-guide/" itemprop="url">
-                  使用ShadowSocks科学上网及突破公司内网
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-08-19T00:00:00+08:00" content="2016-08-19">
-              2016-08-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp; 分類於
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/能工巧匠/" itemprop="url" rel="index">
-                    <span itemprop="name">能工巧匠</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/articles/shadowsocks-guide/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="/articles/shadowsocks-guide/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-
-<h1 id="u4EC0_u4E48_u662FShadowSocks"><a href="#u4EC0_u4E48_u662FShadowSocks" class="headerlink" title="什么是ShadowSocks"></a>什么是ShadowSocks</h1><p>ShadowSocks是基于Socks5协议，使用类似SSH隧道的方式收发网络请求的一款开源软件，该软件由<a href="https://twitter.com/clowwindy" title="clowwindy"> @clowwindy </a>开发，最初只有Python版本，随后出现C++、C#、Go等多语言版本。ShadowSocks最大的特点是可以保护网络流量、加密数据传输，可有效防止GFW（Great Firewall of China）封杀网络请求。</p>
-<h1 id="u7528ShadowSocks_u79D1_u5B66_u4E0A_u7F51_u7684_u6982_u5FF5"><a href="#u7528ShadowSocks_u79D1_u5B66_u4E0A_u7F51_u7684_u6982_u5FF5" class="headerlink" title="用ShadowSocks科学上网的概念"></a>用ShadowSocks科学上网的概念</h1><p>在以前，我们访问互联网的资源都是简单而直接的，用户的请求发送到资源服务方，比如Google、Facebook等，然后资源服务方直接将内容响应给用户，世界多么美好。</p>
-<p> <img src="https://devtalking.oss-cn-beijing.aliyuncs.com/shadowsocksss-9.png" alt=""></p>
-<p>但是，在1998年时候，中国创建了互联网边界审查系统，称之为中国国家防火墙（GFW），这堵墙横在了用户和互联网资源服务方之间，用于监控和过滤互联网国际出口上的内容，监控国际网关的通讯，对认为不匹配国家官方要求的传输内容，进行干扰、阻断、屏蔽。</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/shaodwsocksss-10.png" alt=""></p>
-<p>从此之后好多有价值的网站就被堵在了墙后。</p>
-<p>但是由于对知识的渴望，人们想到了绕过GFW的办法，那就是在境外搭建一个国内用户的代理，国内用户与代理之间建立加密的通道，由境外代理请求被墙的网络资源，再通过加密通道返回给国内用户。代理的类型也有多种，像HTTP、Socks、VPN、SSH等。以SSH隧道为例：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/shadowsocksss-11.png" alt=""></p>
-<p>因为SSH本身基于RSA加密技术，所以GFW就无法对数据传输过程加密的数据进行分析，从而避免被重置链接、阻断、屏蔽等问题。</p>
-<p>但是GFW也不会懵B一世，人家也会学习，由于在创建SSH隧道的过程中有较为明显的特性，所以GFW还是可以通过分析连接的特性进行干扰。此时ShadowSocks横空出世，先看看图示：</p>
-<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/shadowsocksss-12.png" alt=""></p>
-<p>简单来说，ShadowSocks分为客户端和服务端，用户发出的请求基于Socks5协议与ShadowSocks客户端进行通信，一般情况下SS客户端都在本机，通过ShadowSocksX、GoAgentX等应用启动，所以这一步是不会经过GFW的，然后ShadowSocks提供了多种加密方式供客户端和服务端之间进行通信，并且在经过GFW时是普通的TCP协议数据包，没有明显的特征，而且GFW也无法解密分析，从而实现绕墙访问资源。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/articles/shadowsocks-guide/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -905,7 +930,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">127</span>
+              <span class="site-state-item-count">128</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

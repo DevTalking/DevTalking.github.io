@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.devtalking.com/"/>
-  <updated>2021-10-26T15:12:50.980Z</updated>
+  <updated>2021-11-01T16:37:29.295Z</updated>
   <id>http://www.devtalking.com/</id>
   
   <author>
@@ -13,6 +13,62 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[用Blender做甜甜圈学习笔记十 - 增加甜甜圈主体质感]]></title>
+    <link href="http://www.devtalking.com//articles/blender-beginner-tutorial-10/"/>
+    <id>http://www.devtalking.com//articles/blender-beginner-tutorial-10/</id>
+    <published>2021-11-01T16:00:00.000Z</published>
+    <updated>2021-11-01T16:37:29.295Z</updated>
+    <content type="html"><![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+<p>这一节继续优化甜甜圈主体部分，从下面这张真实的照片可以看出，甜甜圈主体表面是坑坑洼洼的（任何面点食物应该都不会很光滑），而目前我们的甜甜圈主体太过光滑，所以显得有点假。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-10/10-1.jpg" alt="10-1"></p>
+<h2 id="u7ED9_u751C_u751C_u5708_u589E_u52A0_u8D28_u611F"><a href="#u7ED9_u751C_u751C_u5708_u589E_u52A0_u8D28_u611F" class="headerlink" title="给甜甜圈增加质感"></a>给甜甜圈增加质感</h2><p>首先点击<code>Edit</code>菜单，选择<code>Preferences</code>，打开Blender设置菜单，然后选择<code>Add-ons</code>，在右侧搜索框搜索<code>node</code>，然后将<code>Node: Node Wrangle</code>插件打上勾。这个插件可以优化和加速节点效果的处理流程。</p>
+<a id="more"></a>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-10/10-2.jpg" alt="10-2"></p>
+<p>然后进入<code>Shading</code>模式，选中甜甜圈，<code>Shift + A</code>，选择<code>Texture/Nosie Texture</code>，增加<code>Noise Texture</code>节点。</p>
+<blockquote>
+<p><code>Noise Texture</code>：噪波纹理着色器节点，给材质增加不规则碎片形的纹理。可以调节缩放比例、碎片数量、粗糙度、变形程度。</p>
+</blockquote>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-10/10-3.jpg" alt="10-3"></p>
+<p>按下<code>Shift + Ctrl</code>，鼠标左键单击<code>Noise Texture</code>节点，就可以自动将该节点纳入流程中。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-10/10-4.jpg" alt="10-4"></p>
+<p><code>Shift + A</code>，选择<code>Input/Texture Coordinate</code>，添加<code>Texture Coordinate</code>节点。将<code>Object</code>属性连接到<code>Noise Texture</code>节点的<code>Vector</code>属性。调节<code>Noise Texture</code>节点的<code>Scale</code>属性。</p>
+<blockquote>
+<p><code>Texture Coordinate</code>：纹理坐标输入节点。<br><code>Object</code>属性：指定一个物体（对象），作为纹理映射的参考系。通常使用空物体，这是将图案投射到物体表面上某个固定点的一个简单办法。通过对指定物体进行变换（甚至动画），可以使纹理在被投射物体的表面移动。</p>
+</blockquote>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-10/10-5.jpg" alt="10-5"></p>
+<p>按下<code>Shift + A</code>，选择<code>Vector/Displacement</code>，添加<code>Displacement</code>节点。将<code>Noise Texture</code>节点的<code>Color</code>属性连接到<code>Displacement</code>节点的<code>Height</code>属性。将<code>Displacement</code>节点的<code>Displacement</code>属性连接到<code>Material Output</code>属性。</p>
+<blockquote>
+<p><code>Displacement</code>：置换着色器节点，置换节点用于沿表面法线置换表面，可以给几何体添加更多细节。<br><code>Height</code>属性：沿法线移动表面的距离。</p>
+</blockquote>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-10/10-6.jpg" alt="10-6"></p>
+<p>按下<code>Shift + Ctrl</code>，鼠标左键单击<code>Principled BSDF</code>节点，重新整理流程，此时就可以看到甜甜圈的变化了。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-10/10-7.jpg" alt="10-7"></p>
+<p>选中甜甜圈，选择右侧<code>Material Properties</code>菜单，找到<code>Settings</code>选项，将<code>Displacement</code>属性改为<code>Displacement and Bump</code>，然后调整<code>Displacement</code>节点的<code>Scale</code>属性。这样就可以让噪音作用在整个物体上，而不只是表面。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-10/10-8.jpg" alt="10-8"></p>
+<p>为了让甜甜圈表现的更细腻一些，可以对甜甜圈再添加一个细分修改器，然后再调整<code>Noise Texture</code>节点的<code>Scale</code>属性，将甜甜圈的质感调整的合适的感觉。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-10/10-9.jpg" alt="10-9"></p>
+<p>最后来一张渲染图片，看看甜甜圈的质感。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-10/10-10.png" alt="10-10"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<script data-ad-client="ca-pub-4115205380866695" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+<p>这一节继续优化甜甜圈主体部分，从下面这张真实的照片可以看出，甜甜圈主体表面是坑坑洼洼的（任何面点食物应该都不会很光滑），而目前我们的甜甜圈主体太过光滑，所以显得有点假。</p>
+<p><img src="https://devtalking.oss-cn-beijing.aliyuncs.com/2021/blender/blender-beginner-tutorial-10/10-1.jpg" alt="10-1"></p>
+<h2 id="u7ED9_u751C_u751C_u5708_u589E_u52A0_u8D28_u611F"><a href="#u7ED9_u751C_u751C_u5708_u589E_u52A0_u8D28_u611F" class="headerlink" title="给甜甜圈增加质感"></a>给甜甜圈增加质感</h2><p>首先点击<code>Edit</code>菜单，选择<code>Preferences</code>，打开Blender设置菜单，然后选择<code>Add-ons</code>，在右侧搜索框搜索<code>node</code>，然后将<code>Node: Node Wrangle</code>插件打上勾。这个插件可以优化和加速节点效果的处理流程。</p>]]>
+    
+    </summary>
+    
+      <category term="Blender Level 2" scheme="http://www.devtalking.com/tags/Blender-Level-2/"/>
+    
+      <category term="Blender" scheme="http://www.devtalking.com/categories/Blender/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[用Blender做甜甜圈学习笔记九 - 优化甜甜圈主体]]></title>
@@ -1897,87 +1953,6 @@
 <p>这是Zookeeper CLI Client连接Zookeeper的命令，当看到如下信息时，说明连接成功：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Connecting to 127.0.0.1:2181&#10;Welcome to ZooKeeper!&#10;JLine support is disabled</span><br></pre></td></tr></table></figure></p>
 <p>先来来看看目前Zookeeper里都有哪些zNode：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ls /&#10;&#10;[cluster, controller_epoch, controller, brokers, zookeeper, kafka-manager, admin, isr_change_notification, consumers, log_dir_event_notification, latest_producer_id_block, config]</span><br></pre></td></tr></table></figure></p>
 <p><code>ls</code>命令和Linux中的作用一样，在Zookeeper中是展示某个zNode下的所有zNode。这里的<code>/</code>表示根zNode。可以看到已经有很多zNode注册在了Zookeeper。再来看看<code>brokers</code>下还有哪些zNode：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ls /brokers&#10;&#10;[ids, topics, seqid]</span><br></pre></td></tr></table></figure></p>]]>
-    
-    </summary>
-    
-      <category term="Kafka" scheme="http://www.devtalking.com/tags/Kafka/"/>
-    
-      <category term="中间件" scheme="http://www.devtalking.com/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Kafka从上手到实践-初步认知：Zookeeper]]></title>
-    <link href="http://www.devtalking.com//articles/kafka-practice-12/"/>
-    <id>http://www.devtalking.com//articles/kafka-practice-12/</id>
-    <published>2019-01-06T16:00:00.000Z</published>
-    <updated>2020-06-21T08:12:29.008Z</updated>
-    <content type="html"><![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>这一节我们来认识一下在Kafka中有着超然地位的Zookeeper。</p>
-<h2 id="Zookeeper_u521D_u8BC6"><a href="#Zookeeper_u521D_u8BC6" class="headerlink" title="Zookeeper初识"></a>Zookeeper初识</h2><p>ZooKeeper 分布式服务框架是Apache Hadoop 的一个子项目，它主要是用来解决分布式应用中经常遇到的一些数据管理问题，如：统一命名服务、状态同步服务、集群管理、分布式应用配置项的管理等。简化分布式应用协调及其管理的难度，提供高性能的分布式服务。ZooKeeper的目标就是封装好复杂、易出错的关键服务，将简单易用的接口和性能高效、功能稳定的系统提供给用户。</p>
-<p>Zookeeper有以下一些特点：</p>
-<ul>
-<li>Zookeeper的内部数据结构是树状结构的。</li>
-<li>每个节点称为zNode。</li>
-<li>每个zNode都有一个唯一路径（path）。</li>
-<li>zNode分长久存在的和临时存在的。</li>
-<li>每个zNode都可以存储数据。</li>
-<li>zNode不能重命名。</li>
-<li>每个zNode的任何变化都可以被监控。</li>
-</ul>
-<a id="more"></a>
-<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2019/1/7/1546826442789.png" alt=""></p>
-<p>所以Zookeeper作为一个分布式的服务框架，主要用来解决分布式集群中应用系统的一致性问题，它能提供基于类似于文件系统的目录节点树方式的数据存储，Zookeeper作用主要是用来维护和监控存储的数据的状态变化，通过监控这些数据状态的变化，从而达到基于数据的集群管理，可以说，Zookeeper相当于带有通知机制的文件系统。</p>
-<h2 id="Role_of_Zookeeper_in_Kafka"><a href="#Role_of_Zookeeper_in_Kafka" class="headerlink" title="Role of Zookeeper in Kafka"></a>Role of Zookeeper in Kafka</h2><p>Zookeeper在Kafka中的地位是超然的。它的主要作用有以下几点：</p>
-<ul>
-<li>Zookeeper管理着Kafka集群中的若干个Broker，保存着一份完整的Broker列表。</li>
-<li>维护Topic信息，比如Partitions、Replication Factor、ISR等。</li>
-<li>Zookeeper帮助选举Partition的Leader.</li>
-<li>当有任何变动时，由Zookeeper给Kafka发送通知，比如添加一个新的Topic、Broker挂掉了、删除Topic等等。</li>
-<li>Zookeeper集群中也有Leader和Follower的概念。Leader负责写数据，Follower负责读数据.</li>
-<li>存储Kafka集群ID。</li>
-<li>存储访问控制列表（ACL，Access Control List）。控制Topic、Consumer Group、User等访问权限。</li>
-</ul>
-<p><img src="http://devtalking.oss-cn-beijing.aliyuncs.com/2019/4/18/1555575649583.png" alt=""></p>
-<h2 id="Size_of_Zookeeper"><a href="#Size_of_Zookeeper" class="headerlink" title="Size of Zookeeper"></a>Size of Zookeeper</h2><p>Zookeeper对于Kafka有一个很重要的投票选举功能。所以通常情况下Zookeeper集群最少使用三个Server。如果增加更多Server，那最好是奇数个Server（3，5，7，9，2N+1）。因为Zookeeper有一个特性，就是集群中只要有过半的机器是正常工作的，那么整个集群对外就是可用的。也就是说如果有2个Zookeeper Server，那么只要有1个Zookeeper Server宕机，整个集群就不能用了，因为1没有过半，所以我们要搭建奇数个Server，这样就可以保证最大允许1，2，3，4，N个Server宕机，而保证整个系统不受影响。</p>
-<h2 id="u5C0F_u7ED3"><a href="#u5C0F_u7ED3" class="headerlink" title="小结"></a>小结</h2><p>这一章节带大家初步认知了Zookeeper是什么，以及他在Kafka中为何具有超然的地位。和Kafka CLI一样，Zookeeper也有命令行工具，下一章节将会进行Zookeeper CLI的介绍，希望可以给小伙伴们带来帮助。</p>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-4115205380866695" data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>]]></content>
-    <summary type="html">
-    <![CDATA[<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- DevTalking Banner1 -->
-<ins class="adsbygoogle"
-     style="display:inline-block;width:728px;height:90px"
-     data-ad-client="ca-pub-4115205380866695"
-     data-ad-slot="5844761160"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-<p>这一节我们来认识一下在Kafka中有着超然地位的Zookeeper。</p>
-<h2 id="Zookeeper_u521D_u8BC6"><a href="#Zookeeper_u521D_u8BC6" class="headerlink" title="Zookeeper初识"></a>Zookeeper初识</h2><p>ZooKeeper 分布式服务框架是Apache Hadoop 的一个子项目，它主要是用来解决分布式应用中经常遇到的一些数据管理问题，如：统一命名服务、状态同步服务、集群管理、分布式应用配置项的管理等。简化分布式应用协调及其管理的难度，提供高性能的分布式服务。ZooKeeper的目标就是封装好复杂、易出错的关键服务，将简单易用的接口和性能高效、功能稳定的系统提供给用户。</p>
-<p>Zookeeper有以下一些特点：</p>
-<ul>
-<li>Zookeeper的内部数据结构是树状结构的。</li>
-<li>每个节点称为zNode。</li>
-<li>每个zNode都有一个唯一路径（path）。</li>
-<li>zNode分长久存在的和临时存在的。</li>
-<li>每个zNode都可以存储数据。</li>
-<li>zNode不能重命名。</li>
-<li>每个zNode的任何变化都可以被监控。</li>
-</ul>]]>
     
     </summary>
     
